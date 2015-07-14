@@ -38,5 +38,21 @@ class AppController extends Controller
     {
         parent::initialize();
         $this->loadComponent('Flash');
+        $this->loadComponent('Auth', [
+            'loginAction' => [
+                'controller' => 'Users',
+                'action' => 'login'
+            ],
+            'logoutRedirect' => [
+                'controller' => 'Pages',
+                'action' => 'home'
+            ],
+            'authenticate' => [
+                'Form' => [
+                    'fields' => ['username' => 'email']
+                ]
+            ],
+            'authorize' => ['Controller']
+        ]);
     }
 }
