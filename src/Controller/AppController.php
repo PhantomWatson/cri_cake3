@@ -74,4 +74,14 @@ class AppController extends Controller
         // Clients and consultants can access the respective role-prefixed actions
         return $this->request->params['prefix'] === $user['role'];
     }
+
+    protected function chooseClientToImpersonate()
+    {
+        $this->redirect([
+            'prefix' => 'admin',
+            'controller' => 'Users',
+            'action' => 'choose_client',
+            'redirect' => urlencode(Router::url([]))
+        ]);
+    }
 }
