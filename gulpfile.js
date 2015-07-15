@@ -14,6 +14,15 @@ var _ = require('lodash');
 var concat = require('gulp-concat');
 var runSequence = require('run-sequence');
 
+function customNotify(message) {
+	return notify({
+        title: 'CRI',
+        message: function(file) {
+            return message + ': ' + file.relative;
+        }
+    })
+}
+
 gulp.task('default', ['less', 'js', 'php', 'watch']);
 
 
@@ -78,7 +87,7 @@ gulp.task('js_lint', function () {
     return gulp.src(srcJsFiles)
         .pipe(jshint())
         .pipe(jshint.reporter(stylish))
-        .pipe(notify('JS linted'));
+        .pipe(customNotify('JS linted'));
 });
 
 gulp.task('js_minify', function () {
@@ -88,7 +97,7 @@ gulp.task('js_minify', function () {
             extname: '.min.js'
         }))
         .pipe(gulp.dest('webroot/js'))
-        .pipe(notify('JS minified'));
+        .pipe(customNotify('JS minified'));
 });
 
 // Concatenate vendor files and script(.min).js
@@ -105,7 +114,7 @@ gulp.task('js_concat', function () {
 	return gulp.src(concatFiles)
 		.pipe(concat('script.concat.min.js'))
 		.pipe(gulp.dest('webroot/js/'))
-		.pipe(notify('JS concatenated'));
+		.pipe(customNotify('JS concatenated'));
 });
 
 
@@ -119,7 +128,7 @@ gulp.task('less', function () {
     gulp.src('webroot/css/style.less')
         .pipe(less({plugins: [cleanCSSPlugin]}))
         .pipe(gulp.dest('webroot/css'))
-        .pipe(notify('LESS compiled'));
+        .pipe(customNotify('LESS compiled'));
 });
 
 
@@ -134,7 +143,7 @@ gulp.task('watch', function() {
     watchLess('webroot/css/style.less', ['less'])
         .pipe(less({plugins: [cleanCSSPlugin]}))
         .pipe(gulp.dest('webroot/css'))
-        .pipe(notify('LESS compiled'));
+        .pipe(customNotify('LESS compiled'));
     
     // JavaScript
     gulp.watch(watchFiles, ['js']);
