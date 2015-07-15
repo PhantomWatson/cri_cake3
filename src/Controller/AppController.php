@@ -99,4 +99,30 @@ class AppController extends Controller
 
         return $this->chooseClientToImpersonate();
     }
+
+    /**
+     * Accepts an array of stringy variables and returns a comma-delimited list with an optional conjunction before the last element
+     * @param array $array
+     * @param string $conjunction
+     * @return string
+     */
+    protected function arrayToList($array, $conjunction = 'and')
+    {
+        $count = count($array);
+        if (! $count) {
+            return '';
+        } elseif ($count == 1) {
+            return $array[0];
+        } elseif ($count > 1) {
+            if ($conjunction) {
+                $lastElement = array_pop($array);
+                array_push($array, $conjunction.' '.$lastElement);
+            }
+            if ($count == 2) {
+                return implode(' ', $array);
+            } else {
+                return implode(', ', $array);
+            }
+        }
+    }
 }
