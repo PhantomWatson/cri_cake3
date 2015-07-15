@@ -84,4 +84,19 @@ class AppController extends Controller
             'redirect' => urlencode(Router::url([]))
         ]);
     }
+
+    protected function getClientId()
+    {
+        // $client_id is the logged-in user's ID by default,
+        // but can be overridden by administrators
+        if ($this->Auth->user('role') === 'admin') {
+            $clientId = $this->Cookie->read('client_id');
+            if (! $clientId) {
+                $this->chooseClientToImpersonate();
+            }
+        } else {
+            $clientId = $this->Auth->user('id');
+        }
+        return $clientId;
+    }
 }
