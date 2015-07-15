@@ -87,16 +87,16 @@ class AppController extends Controller
 
     protected function getClientId()
     {
-        // $client_id is the logged-in user's ID by default,
-        // but can be overridden by administrators
-        if ($this->Auth->user('role') === 'admin') {
-            $clientId = $this->Cookie->read('client_id');
-            if (! $clientId) {
-                $this->chooseClientToImpersonate();
-            }
-        } else {
-            $clientId = $this->Auth->user('id');
+        if ($this->Auth->user('role') != 'admin') {
+            return $this->Auth->user('id');
         }
-        return $clientId;
+
+        // Admins can set the ID of the client they're impersonating
+        $clientId = $this->Cookie->read('clientId');
+        if ($clientId) {
+            return $clientId;
+        }
+
+        return $this->chooseClientToImpersonate();
     }
 }
