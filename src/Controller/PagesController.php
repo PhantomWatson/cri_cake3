@@ -27,5 +27,50 @@ use Cake\View\Exception\MissingTemplateException;
  */
 class PagesController extends AppController
 {
+    public function initialize()
+    {
+        parent::initialize();
+        $this->Auth->allow();
+        $this->Auth->deny('admin_guide');
+    }
 
+    public function home()
+    {
+        $this->set('title_for_layout', '');
+    }
+
+    public function glossary()
+    {
+        $this->set('title_for_layout', 'Glossary');
+    }
+
+    public function faq_community()
+    {
+        $this->set('title_for_layout', 'Frequently Asked Questions for Communities');
+    }
+
+    public function faq_consultants()
+    {
+        $this->set('title_for_layout', 'Frequently Asked Questions for CRI Consultants');
+    }
+
+    public function fasttrack()
+    {
+        $this->set('title_for_layout', 'CRI Fast Track');
+    }
+
+    public function credits()
+    {
+        $this->set('title_for_layout', 'Credits and Sources');
+    }
+
+    public function enroll()
+    {
+        $this->redirect('https://www.surveymonkey.com/s/XFT6CSZ');
+    }
+
+    public function admin_guide()
+    {
+        $this->set('title_for_layout', 'Admin Guide');
+    }
 }
