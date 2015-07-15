@@ -59,4 +59,19 @@ class AppController extends Controller
             'authorize' => ['Controller']
         ]);
     }
+
+    public function isAuthorized($user)
+    {
+        if (! isset($user['role'])) {
+            return false;
+        }
+
+        // Admin can access every action
+        if ($user['role'] === 'admin') {
+            return true;
+        }
+
+        // Clients and consultants can access the respective role-prefixed actions
+        return $this->request->params['prefix'] === $user['role'];
+    }
 }
