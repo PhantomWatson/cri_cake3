@@ -53,9 +53,14 @@ Router::scope('/', function ($routes) {
     $routes->connect('/communityFAQ',       ['controller' => 'Pages', 'action' => 'faqCommunity']);
     $routes->connect('/consultantFAQ',      ['controller' => 'Pages', 'action' => 'faqConsultants']);
     $routes->connect('/clear_cache',        ['controller' => 'Pages', 'action' => 'clearCache']);
-    $routes->connect('/guide',              ['prefix' => 'admin', 'controller' => 'Pages', 'action' => 'guide']);
     $routes->redirect('/consultantfaq',     '/consultantFAQ');
     $routes->redirect('/communityfaq',      '/communityFAQ');
+
+    Router::prefix('admin', function ($routes) {
+        $routes->connect('/guide',          ['controller' => 'Pages', 'action' => 'guide']);
+
+        $routes->fallbacks('InflectedRoute');
+    });
 
     /**
      * Connect catchall routes for all controllers.
