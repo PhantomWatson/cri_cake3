@@ -85,16 +85,16 @@ class AreasTable extends Table
      */
     public function getPwrBarChart($areaId)
     {
-        $area = $this->find('first', [
-            'conditions' => ['Area.id' => $areaId],
-            'fields' => ['Area.id'],
-            'contain' => [
-                'Statistic' => [
-                    'conditions' => ['Statistic.stat_category_id' => range(1, 17)],
-                    'StatCategory'
-                ]
-            ]
-        ]);
+        $area = $this->find('all')
+            ->select(['Area.id'])
+            ->where(['Area.id' => $areaId])
+            ->contain([
+                'Statistic' => function ($q) {
+                    return $q->where(['Statistic.stat_category_id' => range(1, 17)])
+                        ->contain(['StatCategory']);
+                }
+            ])
+            ->first();
 
         // Initialize chart
         $chart = new GoogleCharts();
