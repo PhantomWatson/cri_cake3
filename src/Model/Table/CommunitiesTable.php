@@ -42,6 +42,32 @@ class CommunitiesTable extends Table
         $this->hasMany('SurveysBackup', [
             'foreignKey' => 'community_id'
         ]);
+        $this->hasOne('OfficialSurveys', [
+            'className' => 'Surveys',
+            'foreignKey' => 'community_id',
+            'conditions' => ['OfficialSurveys.type' => 'official'],
+            'dependent' => true
+        ]);
+        $this->hasOne('OrganizationSurveys', [
+            'className' => 'Surveys',
+            'foreignKey' => 'community_id',
+            'conditions' => ['OrganizationSurveys.type' => 'organization'],
+            'dependent' => true
+        ]);
+        $this->belongsToMany('Consultant', [
+            'className' => 'User',
+            'joinTable' => 'communities_consultants',
+            'foreignKey' => 'community_id',
+            'targetForeignKey' => 'consultant_id',
+            'saveStrategy' => 'replace'
+        ]);
+        $this->belongsToMany('Client', [
+            'className' => 'User',
+            'joinTable' => 'clients_communities',
+            'foreignKey' => 'community_id',
+            'associationForeignKey' => 'client_id',
+            'saveStrategy' => 'replace'
+        ]);
     }
 
     /**
@@ -55,26 +81,26 @@ class CommunitiesTable extends Table
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
-            
+
         $validator
             ->requirePresence('name', 'create')
             ->notEmpty('name');
-            
+
         $validator
             ->add('public', 'valid', ['rule' => 'boolean'])
             ->requirePresence('public', 'create')
             ->notEmpty('public');
-            
+
         $validator
             ->add('fast_track', 'valid', ['rule' => 'boolean'])
             ->requirePresence('fast_track', 'create')
             ->notEmpty('fast_track');
-            
+
         $validator
             ->add('score', 'valid', ['rule' => 'decimal'])
             ->requirePresence('score', 'create')
             ->notEmpty('score');
-            
+
         $validator
             ->add('town_meeting_date', 'valid', ['rule' => 'date'])
             ->allowEmpty('town_meeting_date');
