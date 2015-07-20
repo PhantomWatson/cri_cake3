@@ -40,10 +40,12 @@ class AppController extends Controller
         $this->loadComponent('Flash');
         $this->loadComponent('Auth', [
             'loginAction' => [
+                'prefix' => false,
                 'controller' => 'Users',
                 'action' => 'login'
             ],
             'logoutRedirect' => [
+                'prefix' => false,
                 'controller' => 'Pages',
                 'action' => 'home'
             ],
