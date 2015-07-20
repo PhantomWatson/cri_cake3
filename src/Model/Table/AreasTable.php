@@ -263,4 +263,40 @@ class AreasTable extends Table
 
         return $chart;
     }
+
+    /**
+     * @param $area_id int
+     * @return array
+     */
+    public function getPwrTable($area_id)
+    {
+        $area = $this->find('all')
+            ->select(['Area.id'])
+            ->where(['Area.id' => $area_id])
+            ->contain([
+                'Statistic' => function ($q) {
+                    return $q->where(['Statistic.stat_category_id' => range(1,17)]);
+                },
+                'StatCategory'
+            ])
+            ->first();
+        $table = [];
+        foreach ($area['Statistic'] as $stat) {
+            $category_id = $stat['stat_category_id'];
+            if ($category_id <= 2) {
+                $group = 'Production';
+            } elseif ($category_id > 2 && $category_id <= 5) {
+                $group = 'Wholesale';
+            } elseif ($category_id > 5 && $category_id <= 8) {
+                $group = 'Retail';
+            } elseif ($category_id > 8 && $category_id <= 12) {
+                $group = 'Residential';
+            } elseif ($category_id > 12 && $category_id <= 17) {
+                $group = 'Recreation';
+            }
+            $category = $stat['StatCategory']['name'];
+            $table[$group][$category] = $stat['value'];
+        }
+        return $table;
+    }
 }
