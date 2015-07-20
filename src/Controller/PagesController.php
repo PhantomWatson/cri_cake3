@@ -44,12 +44,12 @@ class PagesController extends AppController
         $this->set('title_for_layout', 'Glossary');
     }
 
-    public function faq_community()
+    public function faqCommunity()
     {
         $this->set('title_for_layout', 'Frequently Asked Questions for Communities');
     }
 
-    public function faq_consultants()
+    public function faqConsultants()
     {
         $this->set('title_for_layout', 'Frequently Asked Questions for CRI Consultants');
     }
