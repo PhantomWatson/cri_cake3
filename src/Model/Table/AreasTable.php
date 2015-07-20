@@ -394,4 +394,81 @@ class AreasTable extends Table
 
         return $chart;
     }
+
+    /**
+     * @param $area_id int
+     * @return array
+     */
+    public function getEmploymentGrowthTableData($area_id)
+    {
+        // Get the most recent year
+        $result = $this->find('all')
+            ->select(['Area.id'])
+            ->where(['Area.id' => $area_id])
+            ->contain([
+                'Statistic' => function ($q) {
+                    return $q
+                        ->select(['Statistic.year'])
+                        ->where(['Statistic.stat_category_id' => [18,19]])
+                        ->order(['Statistic.year' => 'DESC'])
+                        ->limit(1);
+                }
+            ])
+            ->first();
+
+        $later_year = $result['statistic'][0]['year'];
+        $earlier_year = $later_year - 5;
+
+        // Collect data for table
+        $area = $this->find('all')
+            ->select(['Area.id'])
+            ->where(['Area.id' => $area_id])
+            ->contain([
+                'Statistic' => function ($q) {
+                    return $q->where([
+                        'Statistic.stat_category_id' => [18,19],
+                        'Statistic.year' => [$later_year, $earlier_year]
+                    ]);
+                }
+            ])
+            ->first();
+
+        $statistics = [];
+        foreach ($area['Statistic'] as $i => $stat) {
+            $year = $stat['year'];
+            $value = $stat['value'];
+            $category_id = $stat['stat_category_id'];
+            $label = ($category_id == 18) ? 'Exportable' : 'Non-exportable';
+            $statistics[$label][$year] = $value;
+        }
+
+        $table = [
+            'earlier_year' => $earlier_year,
+            'later_year' => $later_year,
+            'rows' => []
+        ];
+        foreach ($statistics as $label => $years) {
+            $row = ['label' => $label];
+            foreach ($years as $year => $value) {
+                $row[$year] = $value;
+            }
+            $later_value = $row[$later_year];
+            $earlier_value = $row[$earlier_year];
+            $difference = $later_value - $earlier_value;
+            if ($difference == 0) {
+                $row['change'] = 'No change';
+            } else {
+                $percent_difference = round(($difference / $earlier_value) * 100);
+                $row['change'] = "$percent_difference% ";
+                if ($percent_difference > 0) {
+                    $row['change'] .= '<img src="/img/chart-up-color.png" />';
+                } elseif ($percent_difference < 0) {
+                    $row['change'] .= '<img src="/img/chart-down-color.png" />';
+                }
+            }
+            $table['rows'][] = $row;
+        }
+
+        return $table;
+    }
 }
