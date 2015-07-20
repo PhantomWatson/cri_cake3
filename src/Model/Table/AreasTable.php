@@ -275,7 +275,7 @@ class AreasTable extends Table
             ->where(['Area.id' => $area_id])
             ->contain([
                 'Statistic' => function ($q) {
-                    return $q->where(['Statistic.stat_category_id' => range(1,17)]);
+                    return $q->where(['Statistic.stat_category_id' => range(1, 17)]);
                 },
                 'StatCategory'
             ])
