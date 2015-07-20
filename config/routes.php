@@ -42,7 +42,20 @@ use Cake\Routing\Router;
 Router::defaultRouteClass('Route');
 
 Router::scope('/', function ($routes) {
-    $routes->connect('/', ['controller' => 'Pages', 'action' => 'home']);
+    $routes->connect('/',                   ['controller' => 'Pages', 'action' => 'home']);
+    $routes->connect('/glossary',           ['controller' => 'Pages', 'action' => 'glossary']);
+    $routes->connect('/credits',            ['controller' => 'Pages', 'action' => 'credits']);
+    $routes->connect('/login',              ['controller' => 'users', 'action' => 'login']);
+    $routes->connect('/logout',             ['controller' => 'users', 'action' => 'logout']);
+    $routes->connect('/enroll',             ['controller' => 'Pages', 'action' => 'enroll']);
+    $routes->connect('/fasttrack',          ['controller' => 'Pages', 'action' => 'fasttrack']);
+    $routes->connect('/faq',                ['controller' => 'Pages', 'action' => 'home']);
+    $routes->connect('/communityFAQ',       ['controller' => 'Pages', 'action' => 'faqCommunity']);
+    $routes->connect('/consultantFAQ',      ['controller' => 'Pages', 'action' => 'faqConsultants']);
+    $routes->connect('/clear_cache',        ['controller' => 'Pages', 'action' => 'clearCache']);
+    $routes->connect('/guide',              ['prefix' => 'admin', 'controller' => 'Pages', 'action' => 'guide']);
+    $routes->redirect('/consultantfaq',     '/consultantFAQ');
+    $routes->redirect('/communityfaq',      '/communityFAQ');
 
     /**
      * Connect catchall routes for all controllers.
