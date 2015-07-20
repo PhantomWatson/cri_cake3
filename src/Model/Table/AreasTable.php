@@ -299,4 +299,98 @@ class AreasTable extends Table
         }
         return $table;
     }
+
+    /**
+     * @param $area_id int
+     * @return GoogleCharts
+     */
+    public function getEmploymentLineChart($area_id)
+    {
+        $chart = new GoogleCharts();
+        $chart->type('LineChart');
+        $chart->columns([
+            'year' => [
+                'type' => 'number',
+                'label' => 'Year'
+            ],
+            'exportable' => [
+                'type' => 'number',
+                'label' => 'Exportable'
+            ],
+            'non_exportable' => [
+                'type' => 'number',
+                'label' => 'Non-Exportable'
+            ],
+            'annotation' => [
+                'type' => 'string',
+                'role' => 'annotation',
+                'label' => 'Annotation'
+            ]
+        ]);
+
+        $area = $this->find('all')
+            ->select(['Area.id'])
+            ->where(['Area.id' => $area_id])
+            ->contain([
+                'Statistic' => function ($q) {
+                    return $q
+                        ->where(['Statistic.stat_category_id' => [18,19]])
+                        ->order(['Statistic.year' => 'ASC']);
+                }
+            ])
+            ->first();
+
+        // Collect data in an easier array to loop through
+        $statistics = [];
+        foreach ($area['Statistic'] as $i => $stat) {
+            $year = $stat['year'];
+            $value = $stat['value'];
+            $category_id = $stat['stat_category_id'];
+            $category_key = ($category_id == 18) ? 'exportable' : 'non_exportable';
+            $statistics[$year][$category_key] = $value;
+        }
+
+        // Add rows
+        $recession_years = [1977, 2006];
+        foreach ($statistics as $year => $stat_set) {
+            $row = ['year' => $year];
+            foreach ($stat_set as $key => $value) {
+                $row[$key] = $value;
+            }
+            $row['recessions'] = 0;
+            $row['annotation'] = '';
+            $chart->addRow($row);
+        }
+
+        // Get a date range that begins/ends with divisible-by-five years
+        $years = array_keys($statistics);
+        $min_year = min($years);
+        $min_year = 5 * (floor($min_year / 5));
+        $max_year = max($years);
+        $max_year = 5 * (ceil($max_year / 5));
+
+        $chart->options([
+            'chartArea' => [
+                'width' => '600',
+                'height' => '200'
+            ],
+            'hAxis' => [
+                'format' => '####',
+                'gridlines' => ['color' => 'transparent'],
+                'slantedText' => false,
+                'ticks' => range($min_year, $max_year, 5)
+            ],
+            'legend' => 'bottom',
+            'series' => [
+                ['color' => '#ce845f'],
+                ['color' => '#8baebc'],
+                ['color' => '#e8f0f0']
+            ],
+            'seriesType' => 'line',
+            'titlePosition' => 'none',
+            'width' => 725
+        ]);
+
+        return $chart;
+    }
 }
