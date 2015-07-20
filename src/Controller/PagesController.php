@@ -31,7 +31,6 @@ class PagesController extends AppController
     {
         parent::initialize();
         $this->Auth->allow();
-        $this->Auth->deny('admin_guide');
     }
 
     public function home()
@@ -67,10 +66,5 @@ class PagesController extends AppController
     public function enroll()
     {
         $this->redirect('https://www.surveymonkey.com/s/XFT6CSZ');
-    }
-
-    public function admin_guide()
-    {
-        $this->set('title_for_layout', 'Admin Guide');
     }
 }
