@@ -266,14 +266,14 @@ class AreasTable extends Table
     }
 
     /**
-     * @param $area_id int
+     * @param $areaId int
      * @return array
      */
-    public function getPwrTable($area_id)
+    public function getPwrTable($areaId)
     {
         $area = $this->find('all')
             ->select(['Area.id'])
-            ->where(['Area.id' => $area_id])
+            ->where(['Area.id' => $areaId])
             ->contain([
                 'Statistic' => function ($q) {
                     return $q->where(['Statistic.stat_category_id' => range(1, 17)]);
@@ -283,16 +283,16 @@ class AreasTable extends Table
             ->first();
         $table = [];
         foreach ($area['Statistic'] as $stat) {
-            $category_id = $stat['stat_category_id'];
-            if ($category_id <= 2) {
+            $categoryId = $stat['stat_category_id'];
+            if ($categoryId <= 2) {
                 $group = 'Production';
-            } elseif ($category_id > 2 && $category_id <= 5) {
+            } elseif ($categoryId > 2 && $categoryId <= 5) {
                 $group = 'Wholesale';
-            } elseif ($category_id > 5 && $category_id <= 8) {
+            } elseif ($categoryId > 5 && $categoryId <= 8) {
                 $group = 'Retail';
-            } elseif ($category_id > 8 && $category_id <= 12) {
+            } elseif ($categoryId > 8 && $categoryId <= 12) {
                 $group = 'Residential';
-            } elseif ($category_id > 12 && $category_id <= 17) {
+            } elseif ($categoryId > 12 && $categoryId <= 17) {
                 $group = 'Recreation';
             }
             $category = $stat['StatCategory']['name'];
@@ -302,10 +302,10 @@ class AreasTable extends Table
     }
 
     /**
-     * @param $area_id int
+     * @param $areaId int
      * @return GoogleCharts
      */
-    public function getEmploymentLineChart($area_id)
+    public function getEmploymentLineChart($areaId)
     {
         $chart = new GoogleCharts();
         $chart->type('LineChart');
@@ -331,7 +331,7 @@ class AreasTable extends Table
 
         $area = $this->find('all')
             ->select(['Area.id'])
-            ->where(['Area.id' => $area_id])
+            ->where(['Area.id' => $areaId])
             ->contain([
                 'Statistic' => function ($q) {
                     return $q
@@ -346,16 +346,16 @@ class AreasTable extends Table
         foreach ($area['Statistic'] as $i => $stat) {
             $year = $stat['year'];
             $value = $stat['value'];
-            $category_id = $stat['stat_category_id'];
-            $category_key = ($category_id == 18) ? 'exportable' : 'non_exportable';
-            $statistics[$year][$category_key] = $value;
+            $categoryId = $stat['stat_category_id'];
+            $categoryKey = ($categoryId == 18) ? 'exportable' : 'non_exportable';
+            $statistics[$year][$categoryKey] = $value;
         }
 
         // Add rows
         $recession_years = [1977, 2006];
-        foreach ($statistics as $year => $stat_set) {
+        foreach ($statistics as $year => $statSet) {
             $row = ['year' => $year];
-            foreach ($stat_set as $key => $value) {
+            foreach ($statSet as $key => $value) {
                 $row[$key] = $value;
             }
             $row['recessions'] = 0;
@@ -365,10 +365,10 @@ class AreasTable extends Table
 
         // Get a date range that begins/ends with divisible-by-five years
         $years = array_keys($statistics);
-        $min_year = min($years);
-        $min_year = 5 * (floor($min_year / 5));
-        $max_year = max($years);
-        $max_year = 5 * (ceil($max_year / 5));
+        $minYear = min($years);
+        $minYear = 5 * (floor($minYear / 5));
+        $maxYear = max($years);
+        $maxYear = 5 * (ceil($maxYear / 5));
 
         $chart->options([
             'chartArea' => [
@@ -379,7 +379,7 @@ class AreasTable extends Table
                 'format' => '####',
                 'gridlines' => ['color' => 'transparent'],
                 'slantedText' => false,
-                'ticks' => range($min_year, $max_year, 5)
+                'ticks' => range($minYear, $maxYear, 5)
             ],
             'legend' => 'bottom',
             'series' => [
@@ -396,15 +396,15 @@ class AreasTable extends Table
     }
 
     /**
-     * @param $area_id int
+     * @param $areaId int
      * @return array
      */
-    public function getEmploymentGrowthTableData($area_id)
+    public function getEmploymentGrowthTableData($areaId)
     {
         // Get the most recent year
         $result = $this->find('all')
             ->select(['Area.id'])
-            ->where(['Area.id' => $area_id])
+            ->where(['Area.id' => $areaId])
             ->contain([
                 'Statistic' => function ($q) {
                     return $q
@@ -416,18 +416,18 @@ class AreasTable extends Table
             ])
             ->first();
 
-        $later_year = $result['statistic'][0]['year'];
-        $earlier_year = $later_year - 5;
+        $laterYear = $result['statistic'][0]['year'];
+        $earlierYear = $laterYear - 5;
 
         // Collect data for table
         $area = $this->find('all')
             ->select(['Area.id'])
-            ->where(['Area.id' => $area_id])
+            ->where(['Area.id' => $areaId])
             ->contain([
                 'Statistic' => function ($q) {
                     return $q->where([
                         'Statistic.stat_category_id' => [18,19],
-                        'Statistic.year' => [$later_year, $earlier_year]
+                        'Statistic.year' => [$laterYear, $earlierYear]
                     ]);
                 }
             ])
@@ -437,14 +437,14 @@ class AreasTable extends Table
         foreach ($area['Statistic'] as $i => $stat) {
             $year = $stat['year'];
             $value = $stat['value'];
-            $category_id = $stat['stat_category_id'];
-            $label = ($category_id == 18) ? 'Exportable' : 'Non-exportable';
+            $categoryId = $stat['stat_category_id'];
+            $label = ($categoryId == 18) ? 'Exportable' : 'Non-exportable';
             $statistics[$label][$year] = $value;
         }
 
         $table = [
-            'earlier_year' => $earlier_year,
-            'later_year' => $later_year,
+            'earlier_year' => $earlierYear,
+            'later_year' => $laterYear,
             'rows' => []
         ];
         foreach ($statistics as $label => $years) {
@@ -452,17 +452,17 @@ class AreasTable extends Table
             foreach ($years as $year => $value) {
                 $row[$year] = $value;
             }
-            $later_value = $row[$later_year];
-            $earlier_value = $row[$earlier_year];
-            $difference = $later_value - $earlier_value;
+            $laterValue = $row[$laterYear];
+            $earlierValue = $row[$earlierYear];
+            $difference = $laterValue - $earlierValue;
             if ($difference == 0) {
                 $row['change'] = 'No change';
             } else {
-                $percent_difference = round(($difference / $earlier_value) * 100);
-                $row['change'] = "$percent_difference% ";
-                if ($percent_difference > 0) {
+                $percentDifference = round(($difference / $earlierValue) * 100);
+                $row['change'] = "$percentDifference% ";
+                if ($percentDifference > 0) {
                     $row['change'] .= '<img src="/img/chart-up-color.png" />';
-                } elseif ($percent_difference < 0) {
+                } elseif ($percentDifference < 0) {
                     $row['change'] .= '<img src="/img/chart-down-color.png" />';
                 }
             }
