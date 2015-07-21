@@ -281,4 +281,19 @@ class CommunitiesTable extends Table
         }
         return Hash::combine($results, '{n}.client_communities.{n}.id', '{n}.client_communities.{n}.name');
     }
+
+    /**
+     * Returns the ID of the (first) Community associated with the specified client, or NULL if no such community is found.
+     * @param int $clientId
+     * @return int|null
+     */
+    public function getClientCommunityId($clientId)
+    {
+        $communities = $this->getClientCommunityList($clientId);
+        if (empty($communities)) {
+            return null;
+        }
+        $communityIds = array_keys($communities);
+        return $communityIds[0];
+    }
 }
