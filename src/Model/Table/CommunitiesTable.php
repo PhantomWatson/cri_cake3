@@ -222,4 +222,27 @@ class CommunitiesTable extends Table
         }
         return $retval;
     }
+
+    /**
+     * Returns the consultants assigned to this community
+     * @param int $community_id
+     * @return array
+     */
+    public function getConsultants($communityId)
+    {
+        $result = $this->find('all')
+            ->select(['id'])
+            ->where(['id' => $communityId])
+            ->contain([
+                'Consultants' => function ($q) {
+                    return $q->select([
+                        'Consultants.id',
+                        'Consultants.name',
+                        'Consultants.email'
+                    ]);
+                }
+            ])
+            ->first();
+        return isset($result['consultants']) ? $result['consultants'] : [];
+    }
 }
