@@ -191,4 +191,35 @@ class CommunitiesTable extends Table
         }
         return 0;
     }
+
+    /**
+     * Returns a an array of communities that a consultant is assigned to
+     * @param int $consultant_id
+     * @return array $community_id => $community_name
+     */
+    public function getConsultantCommunityList($consultantId)
+    {
+        $consultant = $this->Consultants->get($consultantId);
+        if ($consultant->all_communities) {
+            return $this->find('list')
+                ->order(['Communities.name' => 'ASC']);
+        }
+        $result = $this->Consultants->find('all')
+            ->where(['Consultants.id' => $consultantId])
+            ->contain([
+                'ConsultantCommunities' => function ($q) {
+                    return $q
+                        ->select(['id', 'name'])
+                        ->order(['ConsultantCommunities.name' => 'ASC']);
+                }
+            ])
+            ->first();
+        $retval = [];
+        foreach ($result['consultant_communities'] as $community) {
+            $id = $community['id'];
+            $name = $community['name'];
+            $retval[$id] = $name;
+        }
+        return $retval;
+    }
 }
