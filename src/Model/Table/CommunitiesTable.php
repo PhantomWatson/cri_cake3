@@ -121,6 +121,10 @@ class CommunitiesTable extends Table
         return $rules;
     }
 
+    /**
+     * @param int $communityId
+     * @return int
+     */
     public function getAreaId($communityId)
     {
         $community = $this->get($communityId);
