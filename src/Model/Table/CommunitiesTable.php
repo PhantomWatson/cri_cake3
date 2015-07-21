@@ -316,4 +316,32 @@ class CommunitiesTable extends Table
             ->first();
         return $result ? $result['client']['client_id'] : null;
     }
+
+    /**
+     * @param int $communityId
+     * @return array
+     */
+    public function getClients($communityId)
+    {
+        $result = $this->find('all')
+            ->select(['id'])
+            ->where(['id' => $communityId])
+            ->contain([
+                'Client' => function ($q) {
+                    return $q
+                        ->select(['id', 'name', 'email'])
+                        ->order(['Client.name' => 'ASC']);
+                }
+            ])
+            ->first();
+
+        $retval = [];
+        if (isset($result['clients'])) {
+            foreach ($result['clients'] as $client) {
+                unset($client['clients_communities']);
+                $retval[] = $client;
+            }
+        }
+        return $retval;
+    }
 }
