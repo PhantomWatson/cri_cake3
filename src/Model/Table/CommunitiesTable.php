@@ -132,7 +132,7 @@ class CommunitiesTable extends Table
     }
 
     /**
-     * @param $community_id int
+     * @param int $community_id
      * @return GoogleCharts
      */
     public function getPwrBarChart($communityId)
@@ -142,7 +142,7 @@ class CommunitiesTable extends Table
     }
 
     /**
-     * @param $community_id int
+     * @param int $community_id
      * @return array
      */
     public function getPwrTable($communityId)
@@ -152,7 +152,7 @@ class CommunitiesTable extends Table
     }
 
     /**
-     * @param $community_id int
+     * @param int $community_id
      * @return GoogleCharts
      */
     public function getEmploymentLineChart($communityId)
