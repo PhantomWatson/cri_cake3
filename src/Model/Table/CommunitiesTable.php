@@ -344,4 +344,14 @@ class CommunitiesTable extends Table
         }
         return $retval;
     }
+
+    /**
+     * @param int $communityId
+     * @return int
+     */
+    public function getClientCount($communityId)
+    {
+        $clients = $this->getClients($communityId);
+        return count($clients);
+    }
 }
