@@ -132,7 +132,7 @@ class CommunitiesTable extends Table
     }
 
     /**
-     * @param int $community_id
+     * @param int $communityId
      * @return GoogleCharts
      */
     public function getPwrBarChart($communityId)
@@ -142,7 +142,7 @@ class CommunitiesTable extends Table
     }
 
     /**
-     * @param int $community_id
+     * @param int $communityId
      * @return array
      */
     public function getPwrTable($communityId)
@@ -152,7 +152,7 @@ class CommunitiesTable extends Table
     }
 
     /**
-     * @param int $community_id
+     * @param int $communityId
      * @return GoogleCharts
      */
     public function getEmploymentLineChart($communityId)
@@ -195,7 +195,7 @@ class CommunitiesTable extends Table
     /**
      * Returns a an array of communities that a consultant is assigned to
      * @param int $consultant_id
-     * @return array $community_id => $community_name
+     * @return array $communityId => $community_name
      */
     public function getConsultantCommunityList($consultantId)
     {
@@ -225,7 +225,7 @@ class CommunitiesTable extends Table
 
     /**
      * Returns the consultants assigned to this community
-     * @param int $community_id
+     * @param int $communityId
      * @return array
      */
     public function getConsultants($communityId)
@@ -249,7 +249,7 @@ class CommunitiesTable extends Table
     /**
      * Returns a an array of communities that a client is assigned to
      * @param int $clientId
-     * @return array $community_id => $community_name
+     * @return array $communityId => $community_name
      */
     public function getClientCommunityList($clientId = null)
     {
@@ -295,5 +295,25 @@ class CommunitiesTable extends Table
         }
         $communityIds = array_keys($communities);
         return $communityIds[0];
+    }
+
+    /**
+     * Returns an arbitrary client ID associated with the selected community
+     * @param int $communityId
+     * @return int
+     */
+    public function getCommunityClientId($communityId)
+    {
+        $result = $this->find('all')
+            ->select(['client_id'])
+            ->join([
+                'alias' => 'Client',
+                'conditions' => ['Client.community_id' => 'Community.id'],
+                'table' => 'clients_communities',
+                'type' => 'LEFT',
+
+            ])
+            ->first();
+        return $result ? $result['client']['client_id'] : null;
     }
 }
