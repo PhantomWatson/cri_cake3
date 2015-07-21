@@ -140,4 +140,14 @@ class CommunitiesTable extends Table
         $areaId = $this->getAreaId($communityId);
         return $this->Area->getPwrBarChart($areaId);
     }
+
+    /**
+     * @param $community_id int
+     * @return array
+     */
+    public function getPwrTable($communityId)
+    {
+        $areaId = $this->getAreaId($communityId);
+        return $this->Areas->getPwrTable($areaId);
+    }
 }
