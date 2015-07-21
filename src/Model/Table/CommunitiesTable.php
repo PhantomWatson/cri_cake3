@@ -120,4 +120,10 @@ class CommunitiesTable extends Table
         $rules->add($rules->existsIn(['area_id'], 'Areas'));
         return $rules;
     }
+
+    public function getAreaId($communityId)
+    {
+        $community = $this->get($communityId);
+        return $community->area_id;
+    }
 }
