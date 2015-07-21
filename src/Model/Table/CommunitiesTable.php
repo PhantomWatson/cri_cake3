@@ -354,4 +354,235 @@ class CommunitiesTable extends Table
         $clients = $this->getClients($communityId);
         return count($clients);
     }
+
+    /**
+     * @param int $communityId
+     * @param boolean $isAdmin
+     * @return array
+     */
+    public function getProgress($communityId, $isAdmin = false)
+    {
+        $Products = TableRegistry::get('Product');
+        $Surveys = TableRegistry::get('Survey');
+        $Respondents = TableRegistry::get('Respondent');
+        $criteria = [];
+
+
+        // Step 1
+        $criteria[1]['client_assigned'] = [
+            'At least one client account has been created for this community',
+            $this->getClientCount($communityId) > 0
+        ];
+
+        $criteria[1]['survey_purchased'] = [
+            'Purchased Community Leadership Alignment Assessment ($3,500)',
+            $Products->isPurchased($communityId, 1)
+        ];
+
+
+        // If survey is not ready, put this at the end of step one
+        // Otherwise, at the beginning of step two
+        $surveyId = $Surveys->getSurveyId($communityId, 'official');
+        $survey = $Surveys->get($surveyId);
+        $surveyCreated = $Surveys->hasBeenCreated($communityId, 'official');
+        if ($surveyCreated) {
+            $note = '<br />Survey URL: <a href="'.$survey->sm_url.'">'.$survey->sm_url.'</a>';
+        } else {
+            $note =  '';
+        }
+        $step = $surveyCreated ? 2 : 1;
+        $criteria[$step]['survey_created'] = [
+            'Leadership alignment assessment survey has been prepared'.$note,
+            $surveyCreated
+        ];
+
+
+        // Step 2
+        if ($surveyId) {
+            $count = $Respondents->getInvitedCount($surveyId);
+            $note = $count ? " ($count ".__n('invitation', 'invitations', $count).' sent)' : '';
+        } else {
+            $count = 0;
+            $note = '';
+        }
+        $criteria[2]['invitations_sent'] = [
+            'Community leaders have been sent survey invitations'.$note,
+            $surveyId && $count > 0
+        ];
+
+        if ($surveyId) {
+            $Responses = TableRegistry::get('Response');
+            $count = $Responses->getDistinctCount($surveyId);
+            $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
+        } else {
+            $count = 0;
+            $note = '';
+        }
+        $criteria[2]['responses_received'] = [
+            'Responses to the survey have been collected'.$note,
+            $surveyId && $count > 0
+        ];
+
+        $criteria[2]['response_threshhold_reached'] = [
+            'At least 50% of invited community leaders have responded to the survey',
+            $Surveys->getInvitedResponsePercentage($surveyId) >= 50
+        ];
+
+        if ($Surveys->hasUninvitedResponses($surveyId)) {
+            $criteria[2]['unapproved_addressed'] = [
+                'All unapproved responses have been approved or dismissed',
+                ! $Surveys->hasUnaddressedUnapprovedRespondents($surveyId)
+            ];
+        }
+
+        $criteria[2]['alignment_calculated'] = [
+            'Community leadership alignment calculated',
+            $survey->alignment_passed != 0
+        ];
+
+        if ($survey->alignment_passed == 0) {
+            $note = ' (alignment not yet calculated)';
+        } elseif ($isAdmin) {
+            $alignment = $survey->alignment;
+            $note = " ($alignment% aligned)";
+        } else {
+            $note = '';
+        }
+        $purchasedLeadershipSummit = $Products->isPurchased($communityId, 2);
+        if (! $purchasedLeadershipSummit) {
+            $criteria[2]['alignment_passed'] = [
+                'Passed leadership alignment assessment'.$note,
+                 $survey->alignment_passed == 1
+            ];
+        }
+
+        if ($survey->alignment_passed == -1 || $purchasedLeadershipSummit) {
+            $criteria[2]['consultant_assigned'] = [
+                'At least one consultant has been assigned to this community',
+                $this->getConsultantCount($communityId) > 0
+            ];
+
+            $criteria[2]['summit_purchased'] = [
+                'Purchased Leadership Summit ($1,500)',
+                $purchasedLeadershipSummit
+            ];
+        }
+
+        if (! $purchasedLeadershipSummit && ($survey->alignment_passed == 0 || $survey->alignment_passed == 1)) {
+            $criteria[2]['survey_purchased'] = [
+                'Purchased Community Organizations Alignment Assessment ($3,500)',
+                $Products->isPurchased($communityId, 3)
+            ];
+        }
+
+
+        // Step 2.5
+        if ($purchasedLeadershipSummit) {
+            $criteria['2.5']['alignment_passed'] = [
+                'Passed leadership alignment assessment'.$note,
+                 $survey->alignment_passed == 1
+            ];
+        }
+
+        if ($survey->alignment_passed == -1 || $purchasedLeadershipSummit) {
+            $criteria['2.5']['survey_purchased'] = [
+                'Purchased Community Organizations Alignment Assessment ($3,500)',
+                $Products->isPurchased($communityId, 3)
+            ];
+        }
+
+
+        // Step 3
+        $surveyId = $Surveys->getSurveyId($communityId, 'organization');
+        $survey->get($surveyId);
+        $surveyCreated = $Surveys->hasBeenCreated($communityId, 'organization');
+        if ($surveyCreated) {
+            $note = '<br />Survey URL: <a href="'.$survey->sm_url.'">'.$survey->sm_url.'</a>';
+        } else {
+            $note =  '';
+        }
+        $criteria[3]['survey_created'] = [
+            'Community organization alignment assessment survey has been prepared'.$note,
+            $surveyCreated
+        ];
+
+        if ($surveyId) {
+            $count = $Respondents->getCount($surveyId);
+            $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
+        }
+        $criteria[3]['responses_received'] = [
+            'Responses to the survey have been collected'.$note,
+            $surveyId && $count > 0
+        ];
+
+        $criteria[3]['alignment_calculated'] = [
+            'Community organization alignment calculated',
+            $survey->alignment_passed != 0
+        ];
+
+        if ($survey->alignment_passed == 0) {
+            $note = ' (alignment not yet calculated)';
+        } elseif ($isAdmin) {
+            $note = " ({$survey->alignment}% aligned)";
+        } else {
+            $note = '';
+        }
+        $purchasedCommunitySummit = $Products->isPurchased($communityId, 4);
+        if (! $purchasedCommunitySummit) {
+            $criteria[3]['alignment_passed'] = [
+                'Passed community alignment assessment'.$note,
+                 $survey->alignment_passed == 1
+            ];
+        }
+
+        if ($survey->alignment_passed == -1 || $purchasedCommunitySummit) {
+            $criteria[3]['consultant_assigned'] = [
+                'At least one consultant has been assigned to this community',
+                $this->getConsultantCount($communityId) > 0
+            ];
+
+            $criteria[3]['summit_purchased'] = [
+                'Purchased Facilitated Community Awareness Conversation ($1,500)',
+                $purchasedCommunitySummit
+            ];
+        }
+
+        if (! $purchasedCommunitySummit) {
+            $criteria[3]['policy_dev_purchased'] = [
+                'Purchased PwR3 Policy Development ($5,000)',
+                $Products->isPurchased($communityId, 5)
+            ];
+        }
+
+
+        // Step 3.5
+        if ($purchasedCommunitySummit) {
+            $criteria['3.5']['alignment_passed'] = [
+                'Passed community alignment assessment'.$note,
+                 $survey->alignment_passed == 1
+            ];
+
+            $criteria['3.5']['policy_dev_purchased'] = [
+                'Purchased PwR3 Policy Development ($5,000)',
+                $Products->isPurchased($communityId, 5)
+            ];
+        }
+
+
+        // Step 4
+        $community = $this->get($communityId);
+        $note = $community->town_meeting_date ? ' ('.date('F jS, Y', strtotime($community->town_meeting_date)).')': '';
+        $criteria[4]['meeting_scheduled'] = [
+            'Scheduled town meeting'.$note,
+            $community->town_meeting_date != null
+        ];
+        if ($meetingDate != null) {
+            $criteria[4]['meeting_held'] = [
+                'Held town meeting',
+                $community->town_meeting_date <= date('Y-m-d')
+            ];
+        }
+
+        return $criteria;
+    }
 }
