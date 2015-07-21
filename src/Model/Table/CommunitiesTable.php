@@ -245,4 +245,40 @@ class CommunitiesTable extends Table
             ->first();
         return isset($result['consultants']) ? $result['consultants'] : [];
     }
+
+    /**
+     * Returns a an array of communities that a client is assigned to
+     * @param int $clientId
+     * @return array $community_id => $community_name
+     */
+    public function getClientCommunityList($clientId = null)
+    {
+        $Users = TableRegistry::get('Users');
+        $query = $Users->find('all')
+            ->select(['id'])
+            ->contain([
+                'ClientCommunities' => function ($q) {
+                    return $q
+                        ->select([
+                            'ClientCommunities.id',
+                            'ClientCommunities.name'
+                        ])
+                        ->order(['ClientCommunities.name' => 'ASC']);
+                }
+            ]);
+        $conditions = ['User.role' => 'client'];
+        if ($clientId) {
+            $conditions['User.id'] = $clientId;
+        }
+        $query->where($conditions);
+        if ($clientId) {
+            $query->first();
+        }
+        $results = $query->toArray();
+
+        if ($clientId) {
+            return Hash::combine($results['client_communities'], '{n}.id', '{n}.name');
+        }
+        return Hash::combine($results, '{n}.client_communities.{n}.id', '{n}.client_communities.{n}.name');
+    }
 }
