@@ -130,4 +130,14 @@ class CommunitiesTable extends Table
         $community = $this->get($communityId);
         return $community->area_id;
     }
+
+    /**
+     * @param $community_id int
+     * @return GoogleCharts
+     */
+    public function getPwrBarChart($communityId)
+    {
+        $areaId = $this->getAreaId($communityId);
+        return $this->Area->getPwrBarChart($areaId);
+    }
 }
