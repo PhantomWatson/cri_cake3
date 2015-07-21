@@ -155,7 +155,8 @@ class CommunitiesTable extends Table
      * @param $community_id int
      * @return GoogleCharts
      */
-    public function getEmploymentLineChart($communityId) {
+    public function getEmploymentLineChart($communityId)
+    {
         $areaId = $this->getAreaId($communityId);
         return $this->Areas->getEmploymentLineChart($areaId);
     }
