@@ -170,4 +170,25 @@ class CommunitiesTable extends Table
         $areaId = $this->getAreaId($communityId);
         return $this->Areas->getEmploymentGrowthTableData($areaId);
     }
+
+    /**
+     * @param int $communityId
+     * @return int
+     */
+    public function getConsultantCount($communityId)
+    {
+        $result = $this->find('all')
+            ->select(['Communities.id'])
+            ->where(['Communities.id' => $communityId])
+            ->contain([
+                'Consultant' => function ($q) {
+                    return $q->select(['Consultant.id']);
+                }
+            ])
+            ->first();
+        if ($result) {
+            return count($result['consultants']);
+        }
+        return 0;
+    }
 }
