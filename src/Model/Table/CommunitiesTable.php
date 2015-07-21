@@ -160,4 +160,14 @@ class CommunitiesTable extends Table
         $areaId = $this->getAreaId($communityId);
         return $this->Areas->getEmploymentLineChart($areaId);
     }
+
+    /**
+     * @param int $communityId
+     * @return array
+     */
+    public function getEmploymentGrowthTableData($communityId)
+    {
+        $areaId = $this->getAreaId($communityId);
+        return $this->Areas->getEmploymentGrowthTableData($areaId);
+    }
 }
