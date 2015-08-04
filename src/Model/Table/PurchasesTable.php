@@ -43,6 +43,7 @@ class PurchasesTable extends Table
             'joinType' => 'INNER'
         ]);
         $this->belongsTo('Refunders', [
+            'className' => 'App\Model\Table\UsersTable',
             'foreignKey' => 'refunder_id'
         ]);
     }
@@ -58,11 +59,11 @@ class PurchasesTable extends Table
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
-            
+
         $validator
             ->requirePresence('postback', 'create')
             ->notEmpty('postback');
-            
+
         $validator
             ->add('refunded', 'valid', ['rule' => 'datetime'])
             ->allowEmpty('refunded');
