@@ -47,7 +47,7 @@ var surveyInvitationForm = {
 		var new_name = new_container.find('input[type=text]');
 		new_name.prop('disabled', false);
 		new_name.attr('id', '');
-		var fieldname = new_name.attr('name').replace('0', this.counter);
+		fieldname = new_name.attr('name').replace('0', this.counter);
 		new_name.attr('name', fieldname);
 		
 		new_container.find('button.remove').click(function () {
@@ -66,16 +66,17 @@ var surveyInvitationForm = {
 	
 	checkEmail: function (field) {
 		var email = field.val();
-		if (email == '') {
+		if (email === '') {
 			return;
 		}
 		var container = field.closest('.form-inline');
 		container.children('.error-message').remove();
+		var error_msg = null;
 		if (this.isInvitedRespondent(email)) {
-			var error_msg = $('<div class="error-message already_invited">An invitation has already been sent to '+email+'</div>');
+			error_msg = $('<div class="error-message already_invited">An invitation has already been sent to '+email+'</div>');
 			container.append(error_msg);
 		} else {
-			var error_msg = field.parent('div').children('.error-message');
+			error_msg = field.parent('div').children('.error-message');
 			error_msg.removeClass('already_invited');
 			error_msg.slideUp(function () {
 				$(this).remove();
@@ -221,12 +222,13 @@ var unapprovedRespondents = {
 				link.closest('td').find('p.text-danger, p.text-success, p.text-warning').slideUp();
 			},
 			success: function (data) {
+			    var result = null;
 				if (data == 'success') {
 					if (link.hasClass('dismiss')) {
-						var result = $('<p class="text-warning">Dismissed</p>');
+						result = $('<p class="text-warning">Dismissed</p>');
 						link.closest('tr').addClass('bg-warning');
 					} else {
-						var result = $('<p class="text-success">Approved</p>');
+						result = $('<p class="text-success">Approved</p>');
 						link.closest('tr').addClass('bg-success');
 					}
 					result.hide();
@@ -235,7 +237,7 @@ var unapprovedRespondents = {
 						result.slideDown();
 					});
 				} else {
-					var result = $('<p class="text-danger">Error</p>');
+					result = $('<p class="text-danger">Error</p>');
 					link.closest('td').append(result);
 				}				
 			},
