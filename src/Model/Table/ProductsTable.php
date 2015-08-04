@@ -58,4 +58,16 @@ class ProductsTable extends Table
 
         return $validator;
     }
+
+    public function isPurchased($communityId, $productId)
+    {
+        $count = $this->Purchases->find('all')
+            ->where([
+                'product_id' => $productId,
+                'community_id' => $communityId,
+                'refunded' => null
+            ])
+            ->count();
+        return $count > 0;
+    }
 }
