@@ -196,4 +196,14 @@ class ProductsTable extends Table
 
         return $retval;
     }
+
+    public function getIdFromItemCode($item_code)
+    {
+        $result = $this->find('all')
+            ->select(['id'])
+            ->where(['item_code' => $item_code])
+            ->first()
+            ->toArray();
+        return isset($result['id']) ? $result['id'] : null;
+    }
 }
