@@ -585,4 +585,14 @@ class CommunitiesTable extends Table
 
         return $criteria;
     }
+
+    public function removeAllClientAssociations($communityId)
+    {
+        $community = $this->get($communityId);
+        $clients = $this->Clients->find('all')
+            ->select(['id'])
+            ->where(['community_id' => $communityId])
+            ->toArray();
+        return $this->Clients->unlink($community, $clients);
+    }
 }
