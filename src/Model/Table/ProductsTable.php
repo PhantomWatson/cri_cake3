@@ -170,4 +170,30 @@ class ProductsTable extends Table
         $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);
         return [1, 'Can be purchased', $purchaseUrl];
     }
+
+    public function getPurchaseUrl($productId, $clientId, $communityId)
+    {
+        $retval = 'https://commerce.cashnet.com/';
+        $retval .= (Configure::read('debug') == 0) ? 'BALL_EMC001' : 'BALL_EMC001_TEST';
+        $retval .= '?itemcnt=1';
+
+        // Add client info
+        $retval .= '&custcode='.$clientId;
+        $Users = TableRegistry::get('Users');
+        $user = $Users->get($clientId);
+        $nameSplit = explode(' ', $user->name);
+        $retval .= '&lname='.array_pop($nameSplit);
+        $retval .= '&fname='.implode(' ', $nameSplit);
+
+        // Add product info
+        $product = $this->get($productId);
+        $retval .= '&itemcode1=EMC001-'.$this->item_code;
+        $retval .= '&desc1='.urlencode($this->description);
+        $retval .= '&amount1='.$this->price;
+
+        // Add extra custom variables
+        $retval .= '&ref1type1=community_id&ref1val1='.$communityId;
+
+        return $retval;
+    }
 }
