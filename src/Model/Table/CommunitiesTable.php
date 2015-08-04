@@ -595,4 +595,14 @@ class CommunitiesTable extends Table
             ->toArray();
         return $this->Clients->unlink($community, $clients);
     }
+
+    public function removeAllConsultantAssociations($communityId)
+    {
+        $community = $this->get($communityId);
+        $consultants = $this->Consultants->find('all')
+            ->select(['id'])
+            ->where(['community_id' => $communityId])
+            ->toArray();
+        return $this->Consultants->unlink($community, $consultants);
+    }
 }
