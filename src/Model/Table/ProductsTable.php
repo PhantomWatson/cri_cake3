@@ -24,7 +24,7 @@ class ProductsTable extends Table
     public function initialize(array $config)
     {
         $this->table('products');
-        $this->displayField('id');
+        $this->displayField('description');
         $this->primaryKey('id');
         $this->hasMany('Purchases', [
             'foreignKey' => 'product_id'
@@ -42,15 +42,15 @@ class ProductsTable extends Table
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
-            
+
         $validator
             ->requirePresence('description', 'create')
             ->notEmpty('description');
-            
+
         $validator
             ->requirePresence('item_code', 'create')
             ->notEmpty('item_code');
-            
+
         $validator
             ->add('price', 'valid', ['rule' => 'numeric'])
             ->requirePresence('price', 'create')
