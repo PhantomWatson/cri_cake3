@@ -30,15 +30,11 @@ function showFlashMessages() {
 }
 
 function insertFlashMessage(message, classname) {
-	switch (classname) {
-		case 'error':
-			var bootstrap_class = 'alert-danger';
-			break;
-		case 'success':
-			var bootstrap_class = 'alert-success';
-			break;
-		default:
-			var bootstrap_class = 'alert-info';
+    var bootstrap_class = 'alert-info';
+    if (classname == 'error') {
+		bootstrap_class = 'alert-danger';
+    } else if (classname == 'success') {
+		bootstrap_class = 'alert-success';
 	}
 	
 	var alert = $('<div class="alert alert-dismissible '+bootstrap_class+'" role="alert"></div>');
