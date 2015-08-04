@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use PHPExcel;
 
 /**
  * Communities Model
@@ -604,5 +605,136 @@ class CommunitiesTable extends Table
             ->where(['community_id' => $communityId])
             ->toArray();
         return $this->Consultants->unlink($community, $consultants);
+    }
+
+    public function getSpreadsheetObject($communities)
+    {
+        // Start up
+        PHPExcel_Cell::setValueBinder(new PHPExcel_Cell_AdvancedValueBinder());
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
+
+        // Metadata
+        $title = 'CRI Project Overview - '.date('F j, Y');
+        $author = 'Center for Business and Economic Research, Ball State University';
+        $objPHPExcel->getProperties()
+            ->setCreator($author)
+            ->setLastModifiedBy($author)
+            ->setTitle($title)
+            ->setSubject($title)
+            ->setDescription('');
+        $objPHPExcel->getDefaultStyle()->getFont()->setName('Arial');
+        $objPHPExcel->getDefaultStyle()->getFont()->setSize(11);
+
+        // Title
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 1, $title);
+        $objPHPExcel->getActiveSheet()->getStyle('A1:A1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 24
+            ]
+        ]);
+
+        // Headers
+        $columnTitles = [
+            'Community',
+            'Area',
+            'Stage',
+            'Fast Track',
+            'Officials Survey created',
+            'Officials Survey alignment',
+            'Officials Survey passed',
+            'Organizations Survey created',
+            'Organizations Survey alignment',
+            'Organizations Survey passed'
+        ];
+        $lastCol = 'B';
+        foreach ($columnTitles as $col => $colTitle) {
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col + 1, 2, $colTitle);
+            $lastCol++; // Huh. Turns out this works.
+        }
+        $objPHPExcel->getActiveSheet()->getStyle('B2:'.$lastCol.'2')->applyFromArray([
+            'font' => [
+                'bold' => true
+            ]
+        ]);
+
+        // Data
+        foreach ($communities as $ri => $community) {
+            $row = $ri + 3;
+            foreach ($columnTitles as $ci => $col) {
+                $value = null;
+                switch ($col) {
+                    case 'Community':
+                        $value = $community['Community']['name'];
+                        break;
+                    case 'Area':
+                        $value = $community['Area']['name'];
+                        break;
+                    case 'Stage':
+                        $value = $community['Community']['score'];
+                        break;
+                    case 'Fast Track':
+                        $value = $community['Community']['fast_track'] ? 'Yes' : 'No';
+                        break;
+                    case 'Officials Survey created':
+                        $value = isset($community['OfficialSurvey']['sm_id']) ? 'Yes' : 'No';
+                        break;
+                    case 'Officials Survey alignment':
+                        $value = $community['OfficialSurvey']['alignment'] ? $community['OfficialSurvey']['alignment'].'%' : 'Not set';
+                        break;
+                    case 'Officials Survey passed':
+                        $passed = $community['OfficialSurvey']['alignment_passed'];
+                        switch ($passed) {
+                            case 1:
+                                $value = 'Yes';
+                                break;
+                            case -1:
+                                $value = 'No';
+                                break;
+                            case 0:
+                                $value = 'TBD';
+                                break;
+                        }
+                        break;
+                    case 'Organizations Survey created':
+                        $value = isset($community['OrganizationSurvey']['sm_id']) ? 'Yes' : 'No';
+                        break;
+                    case 'Organizations Survey alignment':
+                        $value = $community['OrganizationSurvey']['alignment'] ? $community['OrganizationSurvey']['alignment'].'%' : 'Not set';
+                        break;
+                    case 'Organizations Survey passed':
+                        $passed = $community['OrganizationSurvey']['alignment_passed'];
+                        switch ($passed) {
+                            case 1:
+                                $value = 'Yes';
+                                break;
+                            case -1:
+                                $value = 'No';
+                                break;
+                            case 0:
+                                $value = 'TBD';
+                                break;
+                        }
+                        break;
+                }
+                $col = $ci + 1;
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+            }
+        }
+
+        // Reduce the width of the first column
+        //   (which contains only the title and will overflow over the unoccupied cells to the right)
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(1.5);
+
+        // Automatically adjust the width of all columns AFTER the first
+        $lastCol = count($columnTitles);
+        $colLetter = 'B';
+        for ($c = 1; $c <= $lastCol; $c++) {
+            $objPHPExcel->getActiveSheet()->getColumnDimension($colLetter)->setAutoSize(true);
+            $colLetter++;
+        }
+
+        return $objPHPExcel;
     }
 }
