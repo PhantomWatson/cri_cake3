@@ -18,7 +18,7 @@ var adminUserEdit = {
 			var select = $(this);
 			var c_id = select.val();
 			var preselected = $('li[data-community-id="'+c_id+'"]');
-			if (preselected.length == 0) {
+			if (preselected.length === 0) {
 				var c_name = select.find('option:selected').text();
 				adminUserEdit.addCommunity(c_id, c_name, true);
 			}
@@ -118,16 +118,17 @@ var communityForm = {
 		this.toggleDateFields(false);
 		
 		$('#CommunityAdminEditForm').submit(function (event) {
+		    var label = null;
 			if ($('#client_add').is(':visible')) {
-				if ($('#NewClientEntryName').val() != '' || $('#NewClientEntryEmail').val() != '') {
-					var label = $('#client_add button').html().trim();
+				if ($('#NewClientEntryName').val() !== '' || $('#NewClientEntryEmail').val() !== '') {
+					label = $('#client_add button').html().trim();
 					alert('To add a new client, click "'+label+'"');
 					event.preventDefault();
 				}
 			}
 			if ($('#consultant_add').is(':visible')) {
-				if ($('#NewConsultantEntryName').val() != '' || $('#NewConsultantEntryEmail').val() != '') {
-					var label = $('#consultant_add button').html().trim();
+				if ($('#NewConsultantEntryName').val() !== '' || $('#NewConsultantEntryEmail').val() !== '') {
+					label = $('#consultant_add button').html().trim();
 					alert('To add a new consultant, click "'+label+'"');
 					event.preventDefault();
 				}
@@ -231,7 +232,7 @@ var communityForm = {
 					return;
 				}
 				var preselected = $('li[data-user-id="'+user_id+'"]');
-				if (preselected.length == 0) {
+				if (preselected.length === 0) {
 					var user_name = select.find('option:selected').text();
 					communityForm.addExistingUser(user_type, user_id, user_name, true);
 				}
@@ -243,15 +244,17 @@ var communityForm = {
 		});
 		
 		// Show already-associated users
+		var i = 0;
+		var user = null;
 		if (selected_clients.length > 0) {
-			for (var i = 0; i < selected_clients.length; i++) {
-				var user = selected_clients[i];
+			for (i = 0; i < selected_clients.length; i++) {
+				user = selected_clients[i];
 				this.addExistingUser('client', user.id, user.name, false);
 			}
 		}
 		if (selected_consultants.length > 0) {
-			for (var i = 0; i < selected_consultants.length; i++) {
-				var user = selected_consultants[i];
+			for (i = 0; i < selected_consultants.length; i++) {
+				user = selected_consultants[i];
 				this.addExistingUser('consultant', user.id, user.name, false);
 			}
 		}
@@ -267,13 +270,8 @@ var communityForm = {
 			});
 		});
 		li.append(link);
-		if (type == 'client') {
-			var model = 'Client';
-			var counter = this.client_counter;
-		} else {
-			var model = 'Consultant';
-			var counter = this.consultant_counter;
-		}
+		var model = (type == 'client') ? 'Client' : 'Consultant';
+		var counter = (type == 'client') ? this.client_counter : this.consultant_counter;
 		li.append('<input type="hidden" name="data['+model+']['+counter+']" value="'+id+'" />');
 		if (type == 'client') {
 			this.client_counter++;
@@ -394,29 +392,32 @@ var communityForm = {
 				lookup_link.append(loading_indicator);
 			},
 			success: function (data) {
-				var data = jQuery.parseJSON(data);
+				data = jQuery.parseJSON(data);
 				results_container.empty();
-				if (data.length == 0) {
+				if (data.length === 0) {
 					results_container.append('<p class="alert alert-danger">Error: No surveys found</p>');
 					return;
 				}
 				results_container.append('<p>Please select the correct SurveyMonkey survey:</p>');
 				var list = $('<ul></ul>');
+				function clickCallback(event) {
+				    return function () {
+                        event.preventDefault();
+                        var sm_id = $(this).data('survey-id');
+                        var url = $(this).data('survey-url');
+                        communityForm.checkSurveyAssignment(container, sm_id, function () {
+                            communityForm.setQnaIds(container, sm_id, function () {
+                                communityForm.selectSurvey(container, sm_id, url);
+                            });
+                        });
+				    };
+				}
 				for (var i = 0; i < data.length; i++) {
-					var sm_id = data[i]['sm_id'];
-					var url = data[i]['url'];
-					var title = data[i]['title'];
+					var sm_id = data[i].sm_id;
+					var url = data[i].url;
+					var title = data[i].title;
 					var link = $('<a href="#" data-survey-id="'+sm_id+'" data-survey-url="'+url+'">'+title+'</a>');
-					link.click(function (event) {
-						event.preventDefault();
-						var sm_id = $(this).data('survey-id');
-						var url = $(this).data('survey-url');
-						communityForm.checkSurveyAssignment(container, sm_id, function () {
-							communityForm.setQnaIds(container, sm_id, function () {
-								communityForm.selectSurvey(container, sm_id, url);
-							});
-						});
-					});
+					link.click(clickCallback(event));
 					var li = $('<li></li>').append(link);
 					list.append(li);
 				}
@@ -490,7 +491,7 @@ var communityForm = {
 				link_label.html(loading_indicator);
 			},
 			success: function (data) {
-				var data = jQuery.parseJSON(data);
+				data = jQuery.parseJSON(data);
 				var success = data[0];
 				if (success) {
 					var fields = data[2];
@@ -554,11 +555,9 @@ var communityForm = {
 			},
 			error: function (jqXHR, errorType, exception) {
 				link_label.html('<span class="label label-danger">Error</span>');
-				if (jqXHR.responseText.indexOf(error_msg) != -1) {
-					var error_msg = '<span class="url_error">No URL found for this survey. Web link collector may not be configured yet.</span>';
-				} else {
-					var error_msg = '<span class="url_error">Error looking up URL</span>';
-				}
+				var error_msg = (jqXHR.responseText.indexOf(error_msg) != -1) ? 
+			        '<span class="url_error">No URL found for this survey. Web link collector may not be configured yet.</span>' : 
+		            '<span class="url_error">Error looking up URL</span>';
 				link_status.html(error_msg);
 				var retry_link = $('<a href="#" class="retry">Retry</a>');
 				retry_link.click(function (event) {
