@@ -242,7 +242,7 @@ class RespondentsTable extends Table
 
     /**
      * Returns list of unapproved and not-dismissed respondents with non-blank email addresses
-     * @param int $survey_id
+     * @param int $surveyId
      * @return array
      */
     public function getUnaddressedUnapprovedList($surveyId)
@@ -259,7 +259,7 @@ class RespondentsTable extends Table
 
     /**
      * Returns list of approved respondents with non-blank email addresses
-     * @param int $survey_id
+     * @param int $surveyId
      * @return array
      */
     public function getApprovedList($surveyId)
@@ -284,5 +284,21 @@ class RespondentsTable extends Table
             ])
             ->order(['created' => 'DESC'])
             ->toArray();
+    }
+
+    /**
+     * Returns TRUE if the client is authorized to approved a given respondent
+     * @param int $clientId
+     * @param int $respondentId
+     * @return boolean
+     */
+    public function clientCanApproveRespondent($clientId, $respondentId)
+    {
+        $respondent = $this->get($respondentId);
+        $survey = $this->Surveys->get($respondent->survey_id);
+        $assignedCommunityId = $this->Surveys->Communities->getClientCommunityId($clientId);
+        $idsFound = (boolean) ($respondent->survey_id && $survey->community_id);
+        $communityIsAssigned = $survey->community_id == $assignedCommunityId;
+        return $idsFound && $communityIsAssigned;
     }
 }
