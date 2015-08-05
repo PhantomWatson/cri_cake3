@@ -370,4 +370,21 @@ class SurveysTable extends Table
         }
         return $survey->id;
     }
+
+    public function getQnaIdFieldNames()
+    {
+        return [
+            'pwrrr_qid',
+            'production_aid',
+            'wholesale_aid',
+            'recreation_aid',
+            'retail_aid',
+            'residential_aid',
+            '1_aid',
+            '2_aid',
+            '3_aid',
+            '4_aid',
+            '5_aid'
+        ];
+    }
 }
