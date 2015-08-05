@@ -256,4 +256,21 @@ class RespondentsTable extends Table
             ->order(['created' => 'DESC'])
             ->toArray();
     }
+
+    /**
+     * Returns list of approved respondents with non-blank email addresses
+     * @param int $survey_id
+     * @return array
+     */
+    public function getApprovedList($surveyId)
+    {
+        return $this->find('list')
+            ->where([
+                'survey_id' => $surveyId,
+                'approved' => 1,
+                'email NOT' => ''
+            ])
+            ->order(['email'])
+            ->toArray();
+    }
 }
