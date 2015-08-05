@@ -180,4 +180,43 @@ class SurveysTable extends Table
         }
         return $retval;
     }
+
+    public function getSMSurveyUrl($smId = null)
+    {
+        // Validate ID
+        if (! $smId) {
+            throw new NotFoundException('SurveyMonkey ID not specified');
+        } elseif (! is_numeric($smId)) {
+            throw new NotFoundException('SurveyMonkey ID "'.$smId.'" is not numeric');
+        }
+
+        // Pull from cache if possible
+        $cached = $this->getCachedSMSurveyUrl($smId);
+        if ($cached) {
+            return $cached;
+        }
+
+        // Nab URL from SurveyMonkey
+        $SurveyMonkey = $this->getSurveyMonkeyObject();
+        $params = [
+            'fields' => ['type', 'url']
+        ];
+        $collectors = $SurveyMonkey->getCollectorList($smId, $params);
+        $retval = false;
+        if (isset($collectors['data']['collectors']) && ! empty($collectors['data']['collectors'])) {
+            foreach ($collectors['data']['collectors'] as $collector) {
+                if ($collector['type'] == 'url') {
+                    $retval = $collector['url'];
+                    break;
+                }
+            }
+        }
+
+        if (empty($retval)) {
+            throw new NotFoundException("SurveyMonkey survey #$smId URL not found");
+        } else {
+            Cache::write($smId, $retval, 'survey_urls');
+            return $retval;
+        }
+    }
 }
