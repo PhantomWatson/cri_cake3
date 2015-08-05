@@ -225,4 +225,8 @@ class SurveysTable extends Table
         $survey = $this->get($surveyId);
         return $survey->community_id;
     }
+
+    public function getCachedSMSurveyUrl($smId) {
+        return Cache::read($smId, 'survey_urls');
+    }
 }
