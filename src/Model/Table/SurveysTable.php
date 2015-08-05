@@ -273,8 +273,57 @@ class SurveysTable extends Table
                 'community_id' => $communityId,
                 'type' => $surveyType
             ])
-            ->first()
-            ->toArray();
+            ->first();
         return ! empty($survey->sm_url);
+    }
+
+    /**
+     * Returns an array of invited_respondent_count, uninvited_respondent_count, and percent_invited_responded for a single survey type or an array of both
+     * @param int $communityId
+     * @param string $surveyType Optional
+     * @return array
+     */
+    public function getStatus($communityId, $surveyType = null)
+    {
+        $allTypes = ['official', 'organization'];
+        if ($surveyType) {
+            if (! in_array($surveyType, $allTypes)) {
+                throw new InternalErrorException('Unrecognized survey type: '.$surveyType);
+            }
+            $types = [$surveyType];
+        } else {
+            $types = $allTypes;
+        }
+
+        $respondentsTable = TableRegistry::get('Respondents');
+        $responsesTable = TableRegistry::get('Responses');
+        $survey_status = [];
+
+        foreach ($types as $type) {
+            $survey = $this->find('all')
+                ->select(['id', 'responses_checked'])
+                ->where([
+                    'community_id' => $communityId,
+                    'type' => $type
+                ])
+                ->first();
+            $invitedRespondentCount = $respondentsTable->getInvitedCount($survey->id);
+            $uninvitedRespondentCount = $respondentsTable->getUninvitedCount($survey->id);
+            $invitedResponseCount = $responsesTable->getInvitedCount($survey->id);
+            $percentInvitedResponded = empty($invitedRespondentCount)
+                ? 0
+                : $invitedResponseCount / $invitedRespondentCount;
+            $survey_status[$type] = [
+                'invited_respondent_count' => $invitedRespondentCount,
+                'uninvited_respondent_count' => $uninvitedRespondentCount,
+                'percent_invited_responded' => round($percentInvitedResponded) * 100,
+                'responses_checked' => strtotime($survey->responses_checked),
+                'survey_id' => $survey->id
+            ];
+        }
+        if ($surveyType) {
+            return array_pop($survey_status);
+        }
+        return $survey_status;
     }
 }
