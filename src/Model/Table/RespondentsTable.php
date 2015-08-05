@@ -192,4 +192,12 @@ class RespondentsTable extends Table
 
         return [true, $retval];
     }
+
+    public function getAllForSurvey($surveyId)
+    {
+        return $this->find('all')
+            ->select(['id', 'email', 'sm_respondent_id'])
+            ->where(['survey_id' => $surveyId])
+            ->toArray();
+    }
 }
