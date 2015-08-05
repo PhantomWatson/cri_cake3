@@ -326,4 +326,19 @@ class SurveysTable extends Table
         }
         return $survey_status;
     }
+
+    public function getSurveyId($communityId, $type)
+    {
+        $survey = $this->find('all')
+            ->select(['id'])
+            ->where([
+                'community_id' => $communityId,
+                'type' => $type
+            ])
+            ->first();
+        if (empty($result)) {
+            return null;
+        }
+        return $survey->id;
+    }
 }
