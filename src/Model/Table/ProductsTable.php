@@ -61,7 +61,8 @@ class ProductsTable extends Table
 
     public function isPurchased($communityId, $productId)
     {
-        $count = $this->Purchases->find('all')
+        $purchasesTable = TableRegistry::get('Purchases');
+        $count = $purchasesTable->find('all')
             ->where([
                 'product_id' => $productId,
                 'community_id' => $communityId,
@@ -96,8 +97,8 @@ class ProductsTable extends Table
             return [2, 'Purchased'];
         }
 
-        $Communities = TableRegistry::get('Communities');
-        $community = $Communities->get($communityId);
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->get($communityId);
 
         // Is this purchase not necessary because the community is on the fast track?
         if ($community->fast_track) {
@@ -113,10 +114,10 @@ class ProductsTable extends Table
         }
 
         // Is this purchase not possible because the community hasn't passed an alignment test?
-        $Surveys = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::get('Surveys');
         if ($productId > 1) {
-            $offSurveyId = $Surveys->getSurveyId($communityId, 'official');
-            $offSurvey = $Surveys->get($offSurveyId);
+            $offSurveyId = $surveysTable->getSurveyId($communityId, 'official');
+            $offSurvey = $surveysTable->get($offSurveyId);
             switch ($offSurvey->alignment_passed) {
                 case 0:
                     return [0, 'Community has not completed Step 2 yet.'];
@@ -128,8 +129,8 @@ class ProductsTable extends Table
                     return [0, 'Community has not completed Step 2 yet.'];
             }
             if (! $community->fast_track && $productId > 3) {
-                $orgSurveyId = $Surveys->getSurveyId($communityId, 'organization');
-                $orgSurvey = $Surveys->get($orgSurveyId);
+                $orgSurveyId = $surveysTable->getSurveyId($communityId, 'organization');
+                $orgSurvey = $surveysTable->get($orgSurveyId);
                 switch ($orgSurvey->alignment_passed) {
                     case 0:
                         return [0, 'Community has not completed Step 3 yet.'];
@@ -149,8 +150,8 @@ class ProductsTable extends Table
         // Is this half-setp product not ready to purchase or not necessary?
         if ($productId == 2 || $productId == 4) {     // Leadership Summit || Facilitated Community Awareness Conversation
             $surveyType = $productId == 2 ? 'official' : 'organization';
-            $surveyId = $Surveys->getSurveyId($communityId, $surveyType);
-            $survey = $Surveys->get($surveyId);
+            $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
+            $survey = $surveysTable->get($surveyId);
             switch ($survey->alignment_passed) {
                 case 0:
                     return [0, 'Your assessment results have not yet been analyzed.'];
@@ -179,8 +180,8 @@ class ProductsTable extends Table
 
         // Add client info
         $retval .= '&custcode='.$clientId;
-        $Users = TableRegistry::get('Users');
-        $user = $Users->get($clientId);
+        $usersTable = TableRegistry::get('Users');
+        $user = $usersTable->get($clientId);
         $nameSplit = explode(' ', $user->name);
         $retval .= '&lname='.array_pop($nameSplit);
         $retval .= '&fname='.implode(' ', $nameSplit);

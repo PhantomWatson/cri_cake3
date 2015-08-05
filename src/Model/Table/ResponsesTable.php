@@ -107,7 +107,8 @@ class ResponsesTable extends Table
      */
     public function getInvitedCount($surveyId)
     {
-        $results = $this->Respondents->find('all')
+        $respondentsTable = TableRegistry::get('Respondents');
+        $results = $respondentsTable->find('all')
             ->select(['id'])
             ->where([
                 'survey_id' => $surveyId,
@@ -142,8 +143,9 @@ class ResponsesTable extends Table
             return [true, 'No new respondents'];
         }
 
+        $surveysTable = TableRegistry::get('Surveys');
         try {
-            $survey = $this->Respondents->Surveys->get($surveyId);
+            $survey = $surveysTable->get($surveyId);
         } catch (RecordNotFoundException $e) {
             return [false, 'Survey #'.$surveyId.' not found'];
         }
@@ -242,8 +244,8 @@ class ResponsesTable extends Table
     public function calculateAlignment($actualRanks, $responseRanks)
     {
         // Determine sector weights
-        $surveys = TableRegistry::get('Surveys');
-        $sectors = $surveys->getSectors();
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
         $sectorWeight = [];
         foreach ($sectors as $sector) {
             $sectorWeight[$sector] = 1 - (0.2 * ($actualRanks[$sector] - 1)); // 1 for rank 1, 0.2 for rank 5

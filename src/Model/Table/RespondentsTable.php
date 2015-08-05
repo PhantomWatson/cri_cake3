@@ -123,8 +123,9 @@ class RespondentsTable extends Table
      */
     public function getNewFromSurveyMonkey($surveyId)
     {
+        $surveysTable = TableRegistry::get('Surveys');
         try {
-            $survey = $this->Surveys->get($surveyId);
+            $survey = $surveysTable->get($surveyId);
         } catch (RecordNotFoundException $e) {
             return [false, 'Survey #'.$surveyId.' not found'];
         }
@@ -295,8 +296,10 @@ class RespondentsTable extends Table
     public function clientCanApproveRespondent($clientId, $respondentId)
     {
         $respondent = $this->get($respondentId);
-        $survey = $this->Surveys->get($respondent->survey_id);
-        $assignedCommunityId = $this->Surveys->Communities->getClientCommunityId($clientId);
+        $surveysTable = TableRegistry::get('Surveys');
+        $survey = $surveysTable->get($respondent->survey_id);
+        $communitiesTable = TableRegistry::get('Communities');
+        $assignedCommunityId = $communitiesTable->getClientCommunityId($clientId);
         $idsFound = (boolean) ($respondent->survey_id && $survey->community_id);
         $communityIsAssigned = $survey->community_id == $assignedCommunityId;
         return $idsFound && $communityIsAssigned;

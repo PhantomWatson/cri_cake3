@@ -139,7 +139,8 @@ class CommunitiesTable extends Table
     public function getPwrBarChart($communityId)
     {
         $areaId = $this->getAreaId($communityId);
-        return $this->Areas->getPwrBarChart($areaId);
+        $areasTable = TableRegistry::get('Areas');
+        return $areasTable->getPwrBarChart($areaId);
     }
 
     /**
@@ -149,7 +150,8 @@ class CommunitiesTable extends Table
     public function getPwrTable($communityId)
     {
         $areaId = $this->getAreaId($communityId);
-        return $this->Areas->getPwrTable($areaId);
+        $areasTable = TableRegistry::get('Areas');
+        return $areasTable->getPwrTable($areaId);
     }
 
     /**
@@ -159,7 +161,8 @@ class CommunitiesTable extends Table
     public function getEmploymentLineChart($communityId)
     {
         $areaId = $this->getAreaId($communityId);
-        return $this->Areas->getEmploymentLineChart($areaId);
+        $areasTable = TableRegistry::get('Areas');
+        return $areasTable->getEmploymentLineChart($areaId);
     }
 
     /**
@@ -169,7 +172,8 @@ class CommunitiesTable extends Table
     public function getEmploymentGrowthTableData($communityId)
     {
         $areaId = $this->getAreaId($communityId);
-        return $this->Areas->getEmploymentGrowthTableData($areaId);
+        $areasTable = TableRegistry::get('Areas');
+        return $areasTable->getEmploymentGrowthTableData($areaId);
     }
 
     /**
@@ -200,12 +204,13 @@ class CommunitiesTable extends Table
      */
     public function getConsultantCommunityList($consultantId)
     {
-        $consultant = $this->Consultants->get($consultantId);
+        $consultantsTable = TableRegistry::get('Consultants');
+        $consultant = $consultantsTable->get($consultantId);
         if ($consultant->all_communities) {
             return $this->find('list')
                 ->order(['Communities.name' => 'ASC']);
         }
-        $result = $this->Consultants->find('all')
+        $result = $consultantsTable->find('all')
             ->where(['Consultants.id' => $consultantId])
             ->contain([
                 'ConsultantCommunities' => function ($q) {
@@ -254,8 +259,8 @@ class CommunitiesTable extends Table
      */
     public function getClientCommunityList($clientId = null)
     {
-        $Users = TableRegistry::get('Users');
-        $query = $Users->find('all')
+        $usersTable = TableRegistry::get('Users');
+        $query = $usersTable->find('all')
             ->select(['id'])
             ->contain([
                 'ClientCommunities' => function ($q) {
@@ -363,9 +368,9 @@ class CommunitiesTable extends Table
      */
     public function getProgress($communityId, $isAdmin = false)
     {
-        $Products = TableRegistry::get('Product');
-        $Surveys = TableRegistry::get('Survey');
-        $Respondents = TableRegistry::get('Respondent');
+        $productsTable = TableRegistry::get('Product');
+        $surveysTable = TableRegistry::get('Survey');
+        $respondentsTable = TableRegistry::get('Respondent');
         $criteria = [];
 
 
@@ -377,15 +382,15 @@ class CommunitiesTable extends Table
 
         $criteria[1]['survey_purchased'] = [
             'Purchased Community Leadership Alignment Assessment ($3,500)',
-            $Products->isPurchased($communityId, 1)
+            $productsTable->isPurchased($communityId, 1)
         ];
 
 
         // If survey is not ready, put this at the end of step one
         // Otherwise, at the beginning of step two
-        $surveyId = $Surveys->getSurveyId($communityId, 'official');
-        $survey = $Surveys->get($surveyId);
-        $surveyCreated = $Surveys->hasBeenCreated($communityId, 'official');
+        $surveyId = $surveysTable->getSurveyId($communityId, 'official');
+        $survey = $surveysTable->get($surveyId);
+        $surveyCreated = $surveysTable->hasBeenCreated($communityId, 'official');
         if ($surveyCreated) {
             $note = '<br />Survey URL: <a href="'.$survey->sm_url.'">'.$survey->sm_url.'</a>';
         } else {
@@ -400,7 +405,7 @@ class CommunitiesTable extends Table
 
         // Step 2
         if ($surveyId) {
-            $count = $Respondents->getInvitedCount($surveyId);
+            $count = $respondentsTable->getInvitedCount($surveyId);
             $note = $count ? " ($count ".__n('invitation', 'invitations', $count).' sent)' : '';
         } else {
             $count = 0;
@@ -412,8 +417,8 @@ class CommunitiesTable extends Table
         ];
 
         if ($surveyId) {
-            $Responses = TableRegistry::get('Response');
-            $count = $Responses->getDistinctCount($surveyId);
+            $responsesTable = TableRegistry::get('Response');
+            $count = $responsesTable->getDistinctCount($surveyId);
             $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
         } else {
             $count = 0;
@@ -426,13 +431,13 @@ class CommunitiesTable extends Table
 
         $criteria[2]['response_threshhold_reached'] = [
             'At least 50% of invited community leaders have responded to the survey',
-            $Surveys->getInvitedResponsePercentage($surveyId) >= 50
+            $surveysTable->getInvitedResponsePercentage($surveyId) >= 50
         ];
 
-        if ($Surveys->hasUninvitedResponses($surveyId)) {
+        if ($surveysTable->hasUninvitedResponses($surveyId)) {
             $criteria[2]['unapproved_addressed'] = [
                 'All unapproved responses have been approved or dismissed',
-                ! $Surveys->hasUnaddressedUnapprovedRespondents($surveyId)
+                ! $surveysTable->hasUnaddressedUnapprovedRespondents($surveyId)
             ];
         }
 
@@ -449,7 +454,7 @@ class CommunitiesTable extends Table
         } else {
             $note = '';
         }
-        $purchasedLeadershipSummit = $Products->isPurchased($communityId, 2);
+        $purchasedLeadershipSummit = $productsTable->isPurchased($communityId, 2);
         if (! $purchasedLeadershipSummit) {
             $criteria[2]['alignment_passed'] = [
                 'Passed leadership alignment assessment'.$note,
@@ -472,7 +477,7 @@ class CommunitiesTable extends Table
         if (! $purchasedLeadershipSummit && ($survey->alignment_passed == 0 || $survey->alignment_passed == 1)) {
             $criteria[2]['survey_purchased'] = [
                 'Purchased Community Organizations Alignment Assessment ($3,500)',
-                $Products->isPurchased($communityId, 3)
+                $productsTable->isPurchased($communityId, 3)
             ];
         }
 
@@ -488,15 +493,15 @@ class CommunitiesTable extends Table
         if ($survey->alignment_passed == -1 || $purchasedLeadershipSummit) {
             $criteria['2.5']['survey_purchased'] = [
                 'Purchased Community Organizations Alignment Assessment ($3,500)',
-                $Products->isPurchased($communityId, 3)
+                $productsTable->isPurchased($communityId, 3)
             ];
         }
 
 
         // Step 3
-        $surveyId = $Surveys->getSurveyId($communityId, 'organization');
+        $surveyId = $surveysTable->getSurveyId($communityId, 'organization');
         $survey->get($surveyId);
-        $surveyCreated = $Surveys->hasBeenCreated($communityId, 'organization');
+        $surveyCreated = $surveysTable->hasBeenCreated($communityId, 'organization');
         if ($surveyCreated) {
             $note = '<br />Survey URL: <a href="'.$survey->sm_url.'">'.$survey->sm_url.'</a>';
         } else {
@@ -508,7 +513,7 @@ class CommunitiesTable extends Table
         ];
 
         if ($surveyId) {
-            $count = $Respondents->getCount($surveyId);
+            $count = $respondentsTable->getCount($surveyId);
             $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
         }
         $criteria[3]['responses_received'] = [
@@ -528,7 +533,7 @@ class CommunitiesTable extends Table
         } else {
             $note = '';
         }
-        $purchasedCommunitySummit = $Products->isPurchased($communityId, 4);
+        $purchasedCommunitySummit = $productsTable->isPurchased($communityId, 4);
         if (! $purchasedCommunitySummit) {
             $criteria[3]['alignment_passed'] = [
                 'Passed community alignment assessment'.$note,
@@ -551,7 +556,7 @@ class CommunitiesTable extends Table
         if (! $purchasedCommunitySummit) {
             $criteria[3]['policy_dev_purchased'] = [
                 'Purchased PwR3 Policy Development ($5,000)',
-                $Products->isPurchased($communityId, 5)
+                $productsTable->isPurchased($communityId, 5)
             ];
         }
 
@@ -565,7 +570,7 @@ class CommunitiesTable extends Table
 
             $criteria['3.5']['policy_dev_purchased'] = [
                 'Purchased PwR3 Policy Development ($5,000)',
-                $Products->isPurchased($communityId, 5)
+                $productsTable->isPurchased($communityId, 5)
             ];
         }
 
