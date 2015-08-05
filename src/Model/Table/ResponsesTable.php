@@ -177,4 +177,17 @@ class ResponsesTable extends Table
 
         return [true, $retval];
     }
+
+    public function isRecorded($respondentId, $survey, $serializedResponse)
+    {
+        $conditions = ['respondent_id' => $respondentId];
+        $responseRanks = $this->getResponseRanks($serializedResponse, $survey);
+        foreach ($responseRanks as $sector => $rank) {
+            $conditions[$sector.'_rank'] = $rank;
+        }
+        $count = $this->find('all')
+            ->where($conditions)
+            ->count();
+        return $count > 0;
+    }
 }
