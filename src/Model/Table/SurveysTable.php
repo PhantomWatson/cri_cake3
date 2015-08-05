@@ -499,4 +499,16 @@ class SurveysTable extends Table
         }
         return round(($responses / $invitations) * 100);
     }
+
+    public function hasBeenCreated($communityId, $surveyType)
+    {
+        $count = $this->find('all')
+            ->where([
+                'community_id' => $communityId,
+                'type' => $surveyType,
+                'sm_url NOT' => ''
+            ])
+            ->count();
+        return $count > 0;
+    }
 }
