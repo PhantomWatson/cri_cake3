@@ -217,4 +217,14 @@ class RespondentsTable extends Table
             ->where(['survey_id' => $surveyId])
             ->count();
     }
+
+    public function getUninvitedCount($surveyId)
+    {
+        return $this->find('all')
+            ->where([
+                'survey_id' => $surveyId,
+                'invited' => false
+            ])
+            ->count();
+    }
 }
