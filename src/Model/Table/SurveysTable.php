@@ -348,4 +348,10 @@ class SurveysTable extends Table
         $survey->responses_checked = date('Y-m-d H:i:s');
         $this->save($survey);
     }
+
+    public function getChecked($surveyId)
+    {
+        $survey = $this->get($surveyId);
+        return $survey->responses_checked;
+    }
 }
