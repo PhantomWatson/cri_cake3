@@ -210,4 +210,11 @@ class RespondentsTable extends Table
             ])
             ->count();
     }
+
+    public function getCount($surveyId)
+    {
+        return $this->find('all')
+            ->where(['survey_id' => $surveyId])
+            ->count();
+    }
 }
