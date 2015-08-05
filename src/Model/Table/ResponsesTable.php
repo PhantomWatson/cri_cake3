@@ -25,7 +25,7 @@ class ResponsesTable extends Table
     public function initialize(array $config)
     {
         $this->table('responses');
-        $this->displayField('id');
+        $this->displayField('respondent_id');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
         $this->belongsTo('Respondents', [
@@ -49,35 +49,35 @@ class ResponsesTable extends Table
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
-            
+
         $validator
             ->requirePresence('response', 'create')
             ->notEmpty('response');
-            
+
         $validator
             ->add('production_rank', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('production_rank');
-            
+
         $validator
             ->add('wholesale_rank', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('wholesale_rank');
-            
+
         $validator
             ->add('retail_rank', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('retail_rank');
-            
+
         $validator
             ->add('residential_rank', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('residential_rank');
-            
+
         $validator
             ->add('recreation_rank', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('recreation_rank');
-            
+
         $validator
             ->add('alignment', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('alignment');
-            
+
         $validator
             ->add('response_date', 'valid', ['rule' => 'datetime'])
             ->allowEmpty('response_date');
