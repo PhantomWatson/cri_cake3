@@ -86,4 +86,20 @@ class PurchasesTable extends Table
         $rules->add($rules->existsIn(['refunder_id'], 'Refunders'));
         return $rules;
     }
+
+    public function getAllForCommunity($communityId)
+    {
+        return $this->find('all')
+            ->where(['community_id' => $communityId])
+            ->order(['created' => 'ASC'])
+            ->contain([
+                'Product' => function ($q) {
+                    return $q->select(['description', 'price']);
+                },
+                'User' => function ($q) {
+                    return $q->select(['name', 'email']);
+                }
+            ])
+            ->toArray();
+    }
 }
