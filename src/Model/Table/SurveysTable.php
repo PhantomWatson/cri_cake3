@@ -482,4 +482,21 @@ class SurveysTable extends Table
         }
         return [false, 'Error: Could not save question and answer IDs'];
     }
+
+    /**
+     * Returns the percent (0-100) of invited respondents who have responded
+     * @param $surveyId int
+     * @return int
+     */
+    public function getInvitedResponsePercentage($surveyId)
+    {
+        $respondentsTable = TableRegistry('Respondents');
+        $invitations = $respondentsTable->getInvitedCount($surveyId);
+        $responsesTable = TableRegistry('Responses');
+        $responses = $responsesTable->getInvitedCount($surveyId);
+        if (! $invitations || ! $responses) {
+            return 0;
+        }
+        return round(($responses / $invitations) * 100);
+    }
 }
