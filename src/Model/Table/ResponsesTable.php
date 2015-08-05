@@ -266,4 +266,10 @@ class ResponsesTable extends Table
 
         return $alignment;
     }
+
+    public function getDeviationWeight($actualRank, $responseRank)
+    {
+        $deviation = abs($actualRank - $responseRank);
+        return 1 - ($deviation * 0.2);
+    }
 }
