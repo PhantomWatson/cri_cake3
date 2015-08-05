@@ -273,4 +273,16 @@ class RespondentsTable extends Table
             ->order(['email'])
             ->toArray();
     }
+
+    public function getDismissed($surveyId)
+    {
+        return $this->find('all')
+            ->select(['id', 'email', 'name', 'approved'])
+            ->where([
+                'survey_id' => $surveyId,
+                'approved' => -1
+            ])
+            ->order(['created' => 'DESC'])
+            ->toArray();
+    }
 }
