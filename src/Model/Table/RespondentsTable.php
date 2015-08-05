@@ -200,4 +200,14 @@ class RespondentsTable extends Table
             ->where(['survey_id' => $surveyId])
             ->toArray();
     }
+
+    public function getInvitedCount($surveyId)
+    {
+        return $this->find('all')
+            ->where([
+                'survey_id' => $surveyId,
+                '.invited' => true
+            ])
+            ->count();
+    }
 }
