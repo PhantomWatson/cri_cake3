@@ -219,4 +219,10 @@ class SurveysTable extends Table
             return $retval;
         }
     }
+
+    public function getCommunityId($surveyId)
+    {
+        $survey = $this->get($surveyId);
+        return $survey->community_id;
+    }
 }
