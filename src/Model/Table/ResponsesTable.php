@@ -190,4 +190,19 @@ class ResponsesTable extends Table
             ->count();
         return $count > 0;
     }
+
+    public function extractRespondentInfo($response)
+    {
+        $retval = [
+            'name' => '',
+            'email' => ''
+        ];
+        if (isset($response[0]['answers'][0]['text'])) {
+            $retval['name'] = $response[0]['answers'][0]['text'];
+        }
+        if (isset($response[0]['answers'][3]['text'])) {
+            $retval['email'] = $response[0]['answers'][3]['text'];
+        }
+        return $retval;
+    }
 }
