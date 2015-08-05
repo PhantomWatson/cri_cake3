@@ -227,4 +227,15 @@ class RespondentsTable extends Table
             ])
             ->count();
     }
+
+    public function getUnaddressedUnapproved($surveyId)
+    {
+        return $this->find('all')
+            ->select(['id', 'email', 'name', 'approved'])
+            ->where([
+                'survey_id' => $surveyId,
+                'approved' => 0
+            ])
+            ->order(['created' => 'DESC']);
+    }
 }
