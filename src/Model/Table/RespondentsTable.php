@@ -115,4 +115,81 @@ class RespondentsTable extends Table
     {
         return $this->getList($surveyId, false);
     }
+
+    /**
+     * Collects any new SurveyMonkey respondents and returns an array
+     * @param int $surveyId Key for record in 'surveys' table, not the SurveyMonkey survey_id
+     * @return array [success, [respondent_id => date_modified] || error]
+     */
+    public function getNewFromSurveyMonkey($surveyId)
+    {
+        try {
+            $survey = $this->Surveys->get($surveyId);
+        } catch (RecordNotFoundException $e) {
+            return [false, 'Survey #'.$surveyId.' not found'];
+        }
+
+        if (! $survey->sm_id) {
+            return [false, 'Survey #'.$surveyId.' has not yet been linked to SurveyMonkey', null];
+        }
+
+        $recordedRespondents = $this->getAllForSurvey($surveyId);
+        $SurveyMonkey = $this->getSurveyMonkeyObject();
+        $page = 1;
+        $pageSize = 1000;
+        $lastDateChecked = $survey->respondents_last_modified_date;
+        $retval = [];
+        $lastModifiedDates = [];
+        while (true) {
+            $params = [
+                'order_asc' => true,
+                'order_by' => 'date_modified',
+                'fields' => [
+                    'email',
+                    'status',
+                    'date_modified'
+                ],
+                'page' => $page,
+                'page_size' => $pageSize,
+                'survey_id' => $survey->sm_id
+            ];
+            if ($lastDateChecked) {
+                $params['start_modified_date'] = $lastDateChecked;
+            }
+
+            $result = $SurveyMonkey->getRespondentList($survey->sm_id, $params);
+            if (! $result['success']) {
+                return [false, $result['message'], null];
+            }
+
+            $respondents = $result['data']['respondents'];
+            if (empty($respondents) && $page == 1) {
+                return [true, [], null];
+            }
+
+            foreach ($respondents as $respondent) {
+                if ($respondent['status'] == 'completed') {
+                    $respondentSmId = $respondent['respondent_id'];
+                    $retval[$respondentSmId] = $respondent['date_modified'];
+                }
+
+                if (! $lastDateChecked || $lastDateChecked < $respondent['date_modified']) {
+                    $lastDateChecked = $respondent['date_modified'];
+                }
+            }
+
+            // If there may be more respondents on additional pages of results, continue
+            if (count($respondents) == $pageSize) {
+                $page++;
+
+                // The SurveyMonkey API limits us to 2 API requests per second.
+                // For extra safety, we'll delay for one second before the second API call.
+                sleep(1);
+            } else {
+                break;
+            }
+        }
+
+        return [true, $retval];
+    }
 }
