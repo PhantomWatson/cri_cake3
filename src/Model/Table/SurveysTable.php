@@ -142,4 +142,42 @@ class SurveysTable extends Table
         $rules->add($rules->existsIn(['sm_id'], 'Sms'));
         return $rules;
     }
+
+    /**
+     * Returns an array of surveys (arrays with keys 'id' and 'title') currently hosted by SurveyMonkey
+     * @return array
+     */
+    public function getSMSurveyList($params)
+    {
+        $SurveyMonkey = $this->getSurveyMonkeyObject();
+        $page_size = 1000;
+        $page = 1;
+        $retval = [];
+        while (true) {
+            $default_params = [
+                'fields' => ['title'],
+                'page' => $page,
+                'page_size' => $page_size
+            ];
+            $params = array_merge($default_params, $params);
+            $result = $SurveyMonkey->getSurveyList($params);
+            if (isset($result['data']['surveys']) && ! empty($result['data']['surveys'])) {
+                foreach ($result['data']['surveys'] as $survey) {
+                    $retval[] = [
+                        'sm_id' => $survey['survey_id'],
+                        'title' => $survey['title'],
+                        'url' => $this->getCachedSMSurveyUrl($survey['survey_id'])
+                    ];
+                }
+                if (count($result['data']['surveys']) == $page_size) {
+                    $page++;
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+        return $retval;
+    }
 }
