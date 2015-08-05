@@ -102,7 +102,7 @@ class ResponsesTable extends Table
     /**
      * Returns the number of invited respondents who have any responses
      * (not the number of distinct responses including repeats)
-     * @param int $survey_id
+     * @param int $surveyId
      * @return int
      */
     public function getInvitedCount($surveyId)
@@ -128,5 +128,53 @@ class ResponsesTable extends Table
             }
         }
         return $count;
+    }
+
+    /**
+     * Retrieves SurveyMonkey responses for the specified respondents
+     * @param array $surveyId
+     * @param array $smRespondentIds
+     * @return array [success / fail, responses / error message]
+     */
+    public function getFromSurveyMonkeyForRespondents($surveyId, $smRespondentIds)
+    {
+        if (empty($smRespondentIds)) {
+            return [true, 'No new respondents'];
+        }
+
+        try {
+            $survey = $this->Respondents->Surveys->get($surveyId);
+        } catch (RecordNotFoundException $e) {
+            return [false, 'Survey #'.$surveyId.' not found'];
+        }
+
+        if (! $survey->sm_id) {
+            return [false, 'Survey #'.$surveyId.' has not yet been linked to SurveyMonkey'];
+        }
+
+        $SurveyMonkey = $this->getSurveyMonkeyObject();
+        $retval = [];
+
+        $smRespondentIdsSplit = array_chunk($smRespondentIds, 100);
+        foreach ($smRespondentIdsSplit as $smRespondentIdsChunk) {
+            /* The SurveyMonkey API limits us to 2 API requests per second and an API call was just
+             * made in Respondent::getNewFromSurveyMonkey(). For extra safety, we'll delay for one second before
+             * each additional API call. */
+            sleep(1);
+
+            $result = $SurveyMonkey->getResponses($survey->sm_id, array_values($smRespondentIdsChunk));
+            if (! $result['success']) {
+                return [false, $result['message']];
+            }
+
+            $responses = $result['data'];
+            foreach ($responses as $response) {
+                $smRespondentId = $response['respondent_id'];
+                $response = $response['questions'];
+                $retval[$smRespondentId] = $response;
+            }
+        }
+
+        return [true, $retval];
     }
 }
