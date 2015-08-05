@@ -53,26 +53,26 @@ class RespondentsTable extends Table
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
-            
+
         $validator
             ->add('email', 'valid', ['rule' => 'email'])
             ->requirePresence('email', 'create')
             ->notEmpty('email');
-            
+
         $validator
             ->requirePresence('name', 'create')
             ->notEmpty('name');
-            
+
         $validator
             ->add('invited', 'valid', ['rule' => 'boolean'])
             ->requirePresence('invited', 'create')
             ->notEmpty('invited');
-            
+
         $validator
             ->add('approved', 'valid', ['rule' => 'numeric'])
             ->requirePresence('approved', 'create')
             ->notEmpty('approved');
-            
+
         $validator
             ->add('response_date', 'valid', ['rule' => 'datetime'])
             ->allowEmpty('response_date');
@@ -93,5 +93,16 @@ class RespondentsTable extends Table
         $rules->add($rules->existsIn(['survey_id'], 'Surveys'));
         $rules->add($rules->existsIn(['sm_respondent_id'], 'SmRespondents'));
         return $rules;
+    }
+
+    public function getList($surveyId, $invited = null)
+    {
+        $conditions = ['survey_id' => $surveyId];
+        if (isset($invited)) {
+            $conditions['invited'] = $invited;
+        }
+        return $this->find('list')
+            ->where($conditions)
+            ->toArray();
     }
 }
