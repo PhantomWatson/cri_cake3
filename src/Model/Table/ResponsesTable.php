@@ -272,4 +272,30 @@ class ResponsesTable extends Table
         $deviation = abs($actualRank - $responseRank);
         return 1 - ($deviation * 0.2);
     }
+
+    /**
+     * Decodes the response and returns an array listing the ranks assigned to each sector by the respondent
+     * @param string $serializedResponse
+     * @param string $survey The result of a call to Survey::read()
+     * @return array
+     */
+    public function getResponseRanks($serializedResponse, $survey)
+    {
+        $retval = [];
+
+        // The question ID that covers PWRRR ranking
+        $pwrrrQid = $survey['Survey']['pwrrr_qid'];
+
+        $unserialized = unserialize(base64_decode($serializedResponse));
+        foreach ($unserialized as $section) {
+            if ($section['question_id'] != $pwrrrQid) {
+                continue;
+            }
+            foreach ($section['answers'] as $answer) {
+                list($sector, $rank) = $this->decodeAnswer($answer, $survey['Survey']);
+                $retval[$sector] = $rank;
+            }
+        }
+        return $retval;
+    }
 }
