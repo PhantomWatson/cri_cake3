@@ -105,4 +105,14 @@ class RespondentsTable extends Table
             ->where($conditions)
             ->toArray();
     }
+
+    public function getInvitedList($surveyId)
+    {
+        return $this->getList($surveyId, true);
+    }
+
+    public function getUninvitedList($surveyId)
+    {
+        return $this->getList($surveyId, false);
+    }
 }
