@@ -354,4 +354,20 @@ class SurveysTable extends Table
         $survey = $this->get($surveyId);
         return $survey->responses_checked;
     }
+
+    /**
+     * Returns the ID of the least-recently-imported survey
+     * @return null|int
+     */
+    public function getIdForAutomatedImport()
+    {
+        $survey = $this->find('all')
+            ->select(['id'])
+            ->order(['responses_checked' => 'ASC'])
+            ->first();
+        if ($survey->isEmpty()) {
+            return null;
+        }
+        return $survey->id;
+    }
 }
