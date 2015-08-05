@@ -232,4 +232,36 @@ class ResponsesTable extends Table
             ->where(['survey_id' => $surveyId])
             ->count();
     }
+
+    /**
+     * Returns calculated alignment for an individual response
+     * @param array $actualRanks ['sector_name' => rank, ...]
+     * @param array $responseRanks ['sector_name' => rank, ...]
+     * @return int
+     */
+    public function calculateAlignment($actualRanks, $responseRanks)
+    {
+        // Determine sector weights
+        $surveys = TableRegistry::get('Surveys');
+        $sectors = $surveys->getSectors();
+        $sectorWeight = [];
+        foreach ($sectors as $sector) {
+            $sectorWeight[$sector] = 1 - (0.2 * ($actualRanks[$sector] - 1)); // 1 for rank 1, 0.2 for rank 5
+        }
+
+        // Determine deviation weights
+        $deviation_weight = [];
+        foreach ($sectors as $sector) {
+            $deviation_weight[$sector] = $this->getDeviationWeight($actualRanks[$sector], $responseRanks[$sector]);
+        }
+
+        // Finally, determine alignment
+        $score = 0;
+        foreach ($sectors as $sector) {
+            $score += $sectorWeight[$sector] * $deviation_weight[$sector];
+        }
+        $alignment = (($score - 1) / 2) * 100;
+
+        return $alignment;
+    }
 }
