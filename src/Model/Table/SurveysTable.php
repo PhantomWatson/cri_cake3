@@ -387,4 +387,77 @@ class SurveysTable extends Table
             '5_aid'
         ];
     }
+
+    /**
+     * Queries SurveyMonkey to determine the IDs associated with the PWRRR-ranking question and its set of answers
+     * @param int $smId SurveyMonkey survey ID
+     * @return array First value is true/false for success/failure, second value is status message, third is data array for saving Survey with
+     */
+    public function getQuestionAndAnswerIds($smId)
+    {
+        $SurveyMonkey = $this->getSurveyMonkeyObject();
+        $result = $SurveyMonkey->getSurveyDetails($smId);
+        if (! isset($result['data'])) {
+            return [false, 'Could not get survey details from SurveyMonkey. This might be a temporary network error.'];
+        }
+
+        // Find the appropriate question
+        $pwrrrQuestion = null;
+        $keyPhrase = 'PWR3 is a tool for thinking about the economic future of your community.';
+        foreach ($result['data']['pages'] as $page) {
+            foreach ($page['questions'] as $question) {
+                if (strpos($question['heading'], $keyPhrase) !== false) {
+                    $pwrrrQuestion = $question;
+                    break 2;
+                }
+            }
+        }
+
+        if (! $pwrrrQuestion) {
+            return [false, 'Error: Could not find a question in this survey containing the phrase "'.$keyPhrase.'"'];
+        }
+
+        // Create an array to save this data with
+        $sectors = [
+            'production',
+            'wholesale',
+            'recreation',
+            'retail',
+            'residential',
+        ];
+        $qnaIdFields = $this->getQnaIdFieldNames();
+        $nulls = array_fill(0, count($qnaIdFields), null);
+        $data = array_combine($qnaIdFields, $nulls);
+        $data['pwrrr_qid'] = $pwrrrQuestion['question_id'];
+        foreach ($pwrrrQuestion['answers'] as $answer) {
+            // For some reason, in_array($answer['text'], range('1', '5')) doesn't work
+            switch ($answer['text']) {
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                    $field = $answer['text'].'_aid';
+                    $data[$field] = $answer['answer_id'];
+                    continue;
+            }
+            foreach ($sectors as $sector) {
+                if (stripos($answer['text'], $sector) !== false) {
+                    $field = $sector.'_aid';
+                    $data[$field] = $answer['answer_id'];
+                    break;
+                }
+            }
+        }
+
+        // Make sure all fields have values
+        foreach ($data as $field => $value) {
+            if (! $value) {
+                $answer = str_replace('_aid', '', $field);
+                return [false, 'Error: Could not find the answer ID for the answer "'.$answer.'".'];
+            }
+        }
+
+        return [true, '', $data];
+    }
 }
