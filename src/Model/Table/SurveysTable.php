@@ -460,4 +460,26 @@ class SurveysTable extends Table
 
         return [true, '', $data];
     }
+
+    /**
+     * Sets the SurveyMonkey Q&A IDs associated with the PWRRR-ranking question and its set of answers
+     * @param int $smId SurveyMonkey survey ID
+     * @return array [boolean success/failure indicator, result message]
+     */
+    public function setQuestionAndAnswerIds($smId)
+    {
+        $survey = $this->find('all')
+            ->select(['id'])
+            ->where(['sm_id' => $smId])
+            ->first();
+        if ($survey->isEmpty()) {
+            return [false, 'Error: No survey has been recorded with SurveyMonkey id "'.$smId.'".'];
+        }
+        $data = $this->getQuestionAndAnswerIds($smId)[2];
+        $this->patchEntity($survey, $data);
+        if ($this->save($survey)) {
+            return [true, 'Question and answer IDs saved.'];
+        }
+        return [false, 'Error: Could not save question and answer IDs'];
+    }
 }
