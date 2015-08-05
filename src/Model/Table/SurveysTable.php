@@ -34,9 +34,6 @@ class SurveysTable extends Table
             'foreignKey' => 'community_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Sms', [
-            'foreignKey' => 'sm_id'
-        ]);
         $this->hasMany('Respondents', [
             'foreignKey' => 'survey_id'
         ]);
@@ -56,75 +53,75 @@ class SurveysTable extends Table
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
-            
+
         $validator
             ->requirePresence('type', 'create')
             ->notEmpty('type');
-            
+
         $validator
             ->allowEmpty('sm_url');
-            
+
         $validator
             ->requirePresence('pwrrr_qid', 'create')
             ->notEmpty('pwrrr_qid');
-            
+
         $validator
             ->requirePresence('production_aid', 'create')
             ->notEmpty('production_aid');
-            
+
         $validator
             ->requirePresence('wholesale_aid', 'create')
             ->notEmpty('wholesale_aid');
-            
+
         $validator
             ->requirePresence('recreation_aid', 'create')
             ->notEmpty('recreation_aid');
-            
+
         $validator
             ->requirePresence('retail_aid', 'create')
             ->notEmpty('retail_aid');
-            
+
         $validator
             ->requirePresence('residential_aid', 'create')
             ->notEmpty('residential_aid');
-            
+
         $validator
             ->requirePresence('1_aid', 'create')
             ->notEmpty('1_aid');
-            
+
         $validator
             ->requirePresence('2_aid', 'create')
             ->notEmpty('2_aid');
-            
+
         $validator
             ->requirePresence('3_aid', 'create')
             ->notEmpty('3_aid');
-            
+
         $validator
             ->requirePresence('4_aid', 'create')
             ->notEmpty('4_aid');
-            
+
         $validator
             ->requirePresence('5_aid', 'create')
             ->notEmpty('5_aid');
-            
+
         $validator
             ->add('respondents_last_modified_date', 'valid', ['rule' => 'datetime'])
             ->allowEmpty('respondents_last_modified_date');
-            
+
         $validator
             ->add('responses_checked', 'valid', ['rule' => 'datetime'])
             ->allowEmpty('responses_checked');
-            
+
         $validator
             ->add('alignment', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('alignment');
-            
+
         $validator
             ->add('alignment_passed', 'valid', ['rule' => 'numeric'])
             ->requirePresence('alignment_passed', 'create')
             ->notEmpty('alignment_passed');
-            
+
         $validator
             ->add('alignment_calculated', 'valid', ['rule' => 'datetime'])
             ->allowEmpty('alignment_calculated');
