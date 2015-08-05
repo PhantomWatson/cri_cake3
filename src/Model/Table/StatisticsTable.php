@@ -25,7 +25,7 @@ class StatisticsTable extends Table
     public function initialize(array $config)
     {
         $this->table('statistic');
-        $this->displayField('id');
+        $this->displayField('value');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
         $this->belongsTo('Areas', [
