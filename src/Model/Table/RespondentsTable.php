@@ -236,7 +236,8 @@ class RespondentsTable extends Table
                 'survey_id' => $surveyId,
                 'approved' => 0
             ])
-            ->order(['created' => 'DESC']);
+            ->order(['created' => 'DESC'])
+            ->toArray();
     }
 
     /**
