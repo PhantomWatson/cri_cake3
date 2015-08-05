@@ -208,7 +208,7 @@ class ResponsesTable extends Table
 
     /**
      * Returns TRUE if any responses have been collected, FALSE otherwise
-     * @param int $survey_id
+     * @param int $surveyId
      * @return bool
      */
     public function responsesHaveBeenCollected($surveyId)
@@ -217,5 +217,19 @@ class ResponsesTable extends Table
             ->where(['survey_id' => $surveyId])
             ->count();
         return $count > 0;
+    }
+
+    /**
+     * Returns a count of responses for unique respondents (not counting repeats)
+     * @param int $surveyId
+     * @return int
+     */
+    public function getDistinctCount($surveyId)
+    {
+        return $this->find('all')
+            ->select(['respondent_id'])
+            ->distinct(['respondent_id'])
+            ->where(['survey_id' => $surveyId])
+            ->count();
     }
 }
