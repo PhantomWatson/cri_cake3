@@ -238,4 +238,21 @@ class RespondentsTable extends Table
             ])
             ->order(['created' => 'DESC']);
     }
+
+    /**
+     * Returns list of unapproved and not-dismissed respondents with non-blank email addresses
+     * @param int $survey_id
+     * @return array
+     */
+    public function getUnaddressedUnapprovedList($surveyId)
+    {
+        return $this->find('list')
+            ->where([
+                'survey_id' => $surveyId,
+                'approved' => 0,
+                'email NOT' => ''
+            ])
+            ->order(['created' => 'DESC'])
+            ->toArray();
+    }
 }
