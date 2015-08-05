@@ -249,4 +249,32 @@ class SurveysTable extends Table
         ]);
         return $email->send();
     }
+
+    /**
+     * Returns true if the survey exists and has its URL recorded
+     * @param int $communityId
+     * @param string $surveyType 'official' or 'organization'
+     * @return boolean
+     */
+    public function isOpen($communityId, $surveyType)
+    {
+        if ($surveyType != 'official' && $surveyType != 'organization') {
+            throw new InternalErrorException('Unrecognized survey type: '.$surveyType);
+        }
+
+        $communitiesTable = TableRegistry::get('Communities');
+        if (! $communitiesTable->exists(['id' => $communityId])) {
+            throw new NotFoundException('Could not get survey status. Community (#'.$communityId.') not found.');
+        }
+
+        $survey = $this->find('all')
+            ->select(['sm_url'])
+            ->where([
+                'community_id' => $communityId,
+                'type' => $surveyType
+            ])
+            ->first()
+            ->toArray();
+        return ! empty($survey->sm_url);
+    }
 }
