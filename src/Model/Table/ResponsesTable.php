@@ -98,4 +98,35 @@ class ResponsesTable extends Table
         $rules->add($rules->existsIn(['survey_id'], 'Surveys'));
         return $rules;
     }
+
+    /**
+     * Returns the number of invited respondents who have any responses
+     * (not the number of distinct responses including repeats)
+     * @param int $survey_id
+     * @return int
+     */
+    public function getInvitedCount($surveyId)
+    {
+        $results = $this->Respondents->find('all')
+            ->select(['id'])
+            ->where([
+                'survey_id' => $surveyId,
+                'invited' => true
+            ])
+            ->contain([
+                'Response' => function ($q) {
+                    return $q
+                        ->select(['id'])
+                        ->limit(1);
+                }
+            ])
+            ->toArray();
+        $count = 0;
+        foreach ($results as $respondent) {
+            if (! empty($respondent['responses'])) {
+                $count++;
+            }
+        }
+        return $count;
+    }
 }
