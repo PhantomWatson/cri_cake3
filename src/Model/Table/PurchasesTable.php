@@ -27,7 +27,7 @@ class PurchasesTable extends Table
     public function initialize(array $config)
     {
         $this->table('purchases');
-        $this->displayField('id');
+        $this->displayField('product_id');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
         $this->belongsTo('Users', [
