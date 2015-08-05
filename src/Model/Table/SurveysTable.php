@@ -341,4 +341,11 @@ class SurveysTable extends Table
         }
         return $survey->id;
     }
+
+    public function setChecked($surveyId)
+    {
+        $survey = $this->get($surveyId);
+        $survey->responses_checked = date('Y-m-d H:i:s');
+        $this->save($survey);
+    }
 }
