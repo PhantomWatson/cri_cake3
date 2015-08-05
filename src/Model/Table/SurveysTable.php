@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Mailer\Email;
 
 /**
  * Surveys Model
@@ -226,7 +227,26 @@ class SurveysTable extends Table
         return $survey->community_id;
     }
 
-    public function getCachedSMSurveyUrl($smId) {
+    public function getCachedSMSurveyUrl($smId)
+    {
         return Cache::read($smId, 'survey_urls');
+    }
+
+    public function sendInvitationEmail($respondentId)
+    {
+        $respondentsTable = TableRegistry::get('Respondents');
+        $respondent = $respondentsTable->get($respondentId);
+
+        $surveysTable = TableRegistry::get('Surveys');
+        $survey = $surveysTable->get($respondent->survey_id);
+
+        $email = new Email('survey_invitation');
+        $email->to($respondent->email);
+        $email->viewVars([
+            'criUrl' => Router::url('/', true),
+            'surveyType' => $survey->type,
+            'surveyUrl' => $survey->sm_url
+        ]);
+        return $email->send();
     }
 }
