@@ -205,4 +205,17 @@ class ResponsesTable extends Table
         }
         return $retval;
     }
+
+    /**
+     * Returns TRUE if any responses have been collected, FALSE otherwise
+     * @param int $survey_id
+     * @return bool
+     */
+    public function responsesHaveBeenCollected($surveyId)
+    {
+        $count = $this->find('all')
+            ->where(['survey_id' => $surveyId])
+            ->count();
+        return $count > 0;
+    }
 }
