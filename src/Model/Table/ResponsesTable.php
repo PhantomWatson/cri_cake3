@@ -298,4 +298,21 @@ class ResponsesTable extends Table
         }
         return $retval;
     }
+
+    /**
+     * Returns array($sector, $rank) (both strings) of the sector that an answer is about and the rank the respondent gave to it.
+     * @param array $answer
+     * @param array $answerIds ($survey['Survey'])
+     * @return array array($sector, $rank)
+     */
+    public function decodeAnswer($answer, $answerIds)
+    {
+        $sectorId = $answer['row'];
+        $sector = str_replace('_aid', '', array_search($sectorId, $answerIds));
+
+        $rankId = $answer['col'];
+        $rank = str_replace('_aid', '', array_search($rankId, $answerIds));
+
+        return [$sector, $rank];
+    }
 }
