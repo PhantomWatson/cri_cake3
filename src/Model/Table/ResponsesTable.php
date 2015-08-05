@@ -315,4 +315,17 @@ class ResponsesTable extends Table
 
         return [$sector, $rank];
     }
+
+    public function getAll($surveyId)
+    {
+        return $this->find('all')
+            ->select(['response', 'created'])
+            ->where(['survey_id' => $surveyId])
+            ->contain([
+                'Respondent' => function ($q) {
+                    return $q->select(['email', 'name', 'approved']);
+                }
+            ])
+            ->order(['created' => 'DESC']);
+    }
 }
