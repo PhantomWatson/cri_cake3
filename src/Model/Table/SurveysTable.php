@@ -552,7 +552,8 @@ class SurveysTable extends Table
      * @param int $surveyId
      * @return boolean
      */
-    public function newResponsesHaveBeenReceived($surveyId) {
+    public function newResponsesHaveBeenReceived($surveyId)
+    {
         try {
             $survey = $this->get($surveyId);
         } catch (RecordNotFoundException $e) {
