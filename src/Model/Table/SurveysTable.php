@@ -523,4 +523,16 @@ class SurveysTable extends Table
             ->count();
         return $count > 0;
     }
+
+    public function hasUnaddressedUnapprovedRespondents($surveyId)
+    {
+        $respondentsTable = TableRegistry::get('Respondents');
+        $count = $respondentsTable->find('all')
+            ->where([
+                'survey_id' => $surveyId,
+                'approved' => 0
+            ])
+            ->count();
+        return $count > 0;
+    }
 }
