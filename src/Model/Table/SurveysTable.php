@@ -535,4 +535,15 @@ class SurveysTable extends Table
             ->count();
         return $count > 0;
     }
+
+    public function getSectors()
+    {
+        return [
+            'production',
+            'wholesale',
+            'retail',
+            'residential',
+            'recreation'
+        ];
+    }
 }
