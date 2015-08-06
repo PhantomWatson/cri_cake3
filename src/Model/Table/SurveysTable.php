@@ -7,6 +7,8 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Mailer\Email;
+use Cake\Network\Exception\ForbiddenException;
+use Cake\Network\Exception\BadRequestException;
 
 /**
  * Surveys Model
@@ -567,5 +569,23 @@ class SurveysTable extends Table
             ])
             ->count();
         return $count > 0;
+    }
+
+    public function validateRespondentTypePlural($respondentTypePlural, $communityId)
+    {
+        switch ($respondentTypePlural) {
+            case 'officials':
+                if (! $this->isOpen($communityId, 'official')) {
+                    throw new ForbiddenException('This survey is not yet ready for invitations to be sent out.');
+                }
+                break;
+            case 'organizations':
+                if (! $this->isOpen($communityId, 'organization')) {
+                    throw new ForbiddenException('This survey is not yet ready for invitations to be sent out.');
+                }
+                break;
+            default:
+                throw new BadRequestException('Survey type not specified');
+        }
     }
 }
