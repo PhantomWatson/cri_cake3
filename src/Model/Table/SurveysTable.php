@@ -511,4 +511,16 @@ class SurveysTable extends Table
             ->count();
         return $count > 0;
     }
+
+    public function hasUninvitedResponses($surveyId)
+    {
+        $respondentsTable = TableRegistry::get('Respondents');
+        $count = $respondentsTable->find('all')
+            ->where([
+                'survey_id' => $surveyId,
+                'invited' => 0
+            ])
+            ->count();
+        return $count > 0;
+    }
 }
