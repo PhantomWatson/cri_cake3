@@ -658,4 +658,48 @@ class SurveysTable extends Table
     {
         return $this->find('autoImportCandidate')->count();
     }
+
+    /**
+     * Returns a string describing how frequently an auto-import-eligible survey gets its responses automatically imported.
+     * Returns a blank string if no automatic imports are taking place.
+     * NOTE: $interval must be updated whenever the CRON job's frequency is changed.
+     * Example output:
+     *      Every 2 days                    Days are left off if < 2
+     *      Every 30 hours and 15 minutes   Minutes are left off if < 10
+     *      Every 30 minutes
+     * @return string
+     */
+    public function getPerSurveyAutoImportFrequency()
+    {
+        // Length of time in seconds between each auto-import cron job
+        $siteInterval = 30 * 60; // 30 minutes
+
+        $count = $this->getAutoImportEligibleCount();
+
+        if (! $count) {
+            return '';
+        }
+
+        $individualInterval = $count * $siteInterval;
+
+        $days = floor($individualInterval / (60 * 60 * 24));
+        if ($days >= 2) {
+            return "every $days days";
+        }
+
+        $hours = floor($individualInterval / (60 * 60));
+        $minutesDivisor = $individualInterval % (60 * 60);
+        $minutes = floor($minutesDivisor / 60);
+
+        if ($hours > 0) {
+            $msg = ($hours == 1) ? 'every hour' : "every $hours hours";
+            if ($minutes >= 10) {
+                return $msg." and $minutes minutes";
+            }
+            return $msg;
+        }
+
+        $minutes = max($minutes, 1);
+        return ($minutes == 1) ? 'every minute' : "every $minutes minutes";
+    }
 }
