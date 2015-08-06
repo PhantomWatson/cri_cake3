@@ -9,6 +9,8 @@ use Cake\Validation\Validator;
 use Cake\Mailer\Email;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\NotFoundException;
+use Cake\Network\Exception\InternalErrorException;
 
 /**
  * Surveys Model
