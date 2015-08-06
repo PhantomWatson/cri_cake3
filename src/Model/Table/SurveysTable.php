@@ -546,4 +546,25 @@ class SurveysTable extends Table
             'recreation'
         ];
     }
+
+    /**
+     * Returns true if responses have been received since alignment was last set by an admin
+     * @param int $surveyId
+     * @return boolean
+     */
+    public function newResponsesHaveBeenReceived($surveyId) {
+        try {
+            $survey = $this->get($surveyId);
+        } catch (RecordNotFoundException $e) {
+            return false;
+        }
+        $responsesTable = TableRegistry::get('Responses');
+        $count = $responsesTable->find('all')
+            ->where([
+                'survey_id' => $surveyId,
+                'created >' => $survey->alignment_calculated
+            ])
+            ->count();
+        return $count > 0;
+    }
 }
