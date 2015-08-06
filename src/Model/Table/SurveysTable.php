@@ -642,4 +642,15 @@ class SurveysTable extends Table
             ])
             ->order(['responses_checked' => 'ASC']);
     }
+
+    /**
+     * Returns the ID of the least-recently-checked survey that is eligible for automatic
+     * response imports, or NULL if there are no eligible surveys.
+     * @return int|null
+     */
+    public function getNextAutoImportCandidate()
+    {
+        $survey = $this->find('autoImportCandidate')->first();
+        return $survey->isEmpty() ? null : $survey->id;
+    }
 }
