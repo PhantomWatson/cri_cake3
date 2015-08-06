@@ -653,4 +653,9 @@ class SurveysTable extends Table
         $survey = $this->find('autoImportCandidate')->first();
         return $survey->isEmpty() ? null : $survey->id;
     }
+
+    public function getAutoImportEligibleCount()
+    {
+        return $this->find('autoImportCandidate')->count();
+    }
 }
