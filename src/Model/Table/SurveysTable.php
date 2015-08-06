@@ -602,4 +602,44 @@ class SurveysTable extends Table
             ->first()
             ->toArray();
     }
+
+    public function findAutoImportCandidate(Query $query, array $options)
+    {
+        return $query
+            ->select(['id'])
+            ->where([
+                function ($exp, $q) {
+                    return $exp->isNotNull('Survey.sm_id');
+                },
+                'OR' => [
+                    [
+                        'Survey.type' => 'official',
+                        function ($exp, $q) {
+                            return $exp->gt('Community.score', '1');
+                        },
+                        function ($exp, $q) {
+                            return $exp->lt('Community.score', '3');
+                        }
+                    ],
+                    [
+                        'Survey.type' => 'organization',
+                        function ($exp, $q) {
+                            return $exp->gt('Community.score', '2');
+                        },
+                        function ($exp, $q) {
+                            return $exp->lt('Community.score', '4');
+                        }
+                    ]
+                ]
+            ])
+            ->joins([
+                'table' => 'communities',
+                'alias' => 'Community',
+                'type' => 'LEFT',
+                'conditions' => [
+                    'Community.id = Survey.community_id'
+                ]
+            ])
+            ->order(['responses_checked' => 'ASC']);
+    }
 }
