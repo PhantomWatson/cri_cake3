@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Mailer\Email;
 
 /**
  * Users Model
@@ -212,5 +213,24 @@ class UsersTable extends Table
     {
         $characters = str_shuffle('abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789');
         return substr($characters, 0, 6);
+    }
+
+    public function sendNewAccountEmail($user, $password)
+    {
+        $homeUrl = Router::url('/', true);
+        $loginUrl = Router::url([
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'login'
+        ], true);
+        $email = new Email('new_account');
+        $email->to($user->email);
+        $email->viewVars(compact(
+            'user',
+            'homeUrl',
+            'loginUrl',
+            'password'
+        ));
+        return $email->send();
     }
 }
