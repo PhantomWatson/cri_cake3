@@ -170,7 +170,7 @@ class UsersTable extends Table
      * @param int $communityId
      * @return boolean
      */
-    public function canAccessCommunity($userId = null, $communityId)
+    public function canAccessCommunity($userId, $communityId)
     {
         $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($communityId);
