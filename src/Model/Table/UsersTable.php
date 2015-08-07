@@ -46,7 +46,15 @@ class UsersTable extends Table
 
         $validator
             ->requirePresence('role', 'create')
-            ->notEmpty('role');
+            ->notEmpty('role')
+            ->add('role', 'valid', [
+                'rule' => function ($data, $provider) {
+                    if (in_array($data, ['admin', 'client', 'consultant'])) {
+                        return true;
+                    }
+                    return 'Role must be admin, client, or consultant.';
+                }
+            ]);
 
         $validator
             ->requirePresence('name', 'create')
