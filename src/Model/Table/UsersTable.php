@@ -196,4 +196,11 @@ class UsersTable extends Table
             ->where(['role' => 'client'])
             ->order(['name' => 'ASC']);
     }
+
+    public function getConsultantList()
+    {
+        return $this->find('list')
+            ->where(['role' => 'consultant'])
+            ->order(['name' => 'ASC']);
+    }
 }
