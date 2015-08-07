@@ -233,4 +233,20 @@ class UsersTable extends Table
         ));
         return $email->send();
     }
+
+    /**
+     * Returns TRUE if the user is a client for the specified community.
+     *
+     * A clearer name might be "user is this community's client".
+     *
+     * @param int $communityId
+     * @param int $userId
+     * @return boolean
+     */
+    public function isCommunityClient($communityId, $userId) {
+        return $this->ClientCommunity->exists([
+            'client_id' => $userId,
+            'community_id' => $communityId
+        ]);
+    }
 }
