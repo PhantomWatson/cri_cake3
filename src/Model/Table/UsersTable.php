@@ -43,36 +43,45 @@ class UsersTable extends Table
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
-            
+
         $validator
             ->requirePresence('role', 'create')
             ->notEmpty('role');
-            
+
         $validator
             ->requirePresence('name', 'create')
-            ->notEmpty('name');
-            
+            ->add('name', 'notEmpty', [
+                'rule' => 'notEmpty',
+                'message' => 'A non-blank name is required.'
+            ]);
+
         $validator
-            ->add('email', 'valid', ['rule' => 'email'])
+            ->add('email', 'valid', [
+                'rule' => 'email',
+                'message' => 'That doesn\'t appear to be a valid email address.'
+            ])
             ->requirePresence('email', 'create')
             ->notEmpty('email');
-            
+
         $validator
             ->requirePresence('phone', 'create')
             ->notEmpty('phone');
-            
+
         $validator
             ->requirePresence('title', 'create')
             ->notEmpty('title');
-            
+
         $validator
             ->requirePresence('organization', 'create')
             ->notEmpty('organization');
-            
+
         $validator
             ->requirePresence('password', 'create')
-            ->notEmpty('password');
-            
+            ->add('password', 'notEmpty', [
+                'rule' => 'notEmpty',
+                'message' => 'A non-blank password is required.'
+            ]);
+
         $validator
             ->add('all_communities', 'valid', ['rule' => 'boolean'])
             ->requirePresence('all_communities', 'create')
