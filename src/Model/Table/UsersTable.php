@@ -189,4 +189,11 @@ class UsersTable extends Table
             'community_id' => $communityId
         ]);
     }
+
+    public function getClientList()
+    {
+        return $this->find('list')
+            ->where(['role' => 'client'])
+            ->order(['name' => 'ASC']);
+    }
 }
