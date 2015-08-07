@@ -91,6 +91,12 @@ class UsersTable extends Table
             ]);
 
         $validator
+            ->add('new_password', 'validNewPassword', [
+                'rule' => ['compareWith', 'password'],
+                'message' => 'Sorry, those passwords did not match.'
+            ]);
+
+        $validator
             ->add('all_communities', 'valid', ['rule' => 'boolean'])
             ->requirePresence('all_communities', 'create')
             ->notEmpty('all_communities');
