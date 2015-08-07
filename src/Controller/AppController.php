@@ -60,6 +60,19 @@ class AppController extends Controller
             ],
             'authorize' => ['Controller']
         ]);
+        $this->Auth->deny();
+        $errorMessage = $this->Auth->user() ?
+            'Sorry, you are not authorized to access that page.'
+            : 'Please log in before accessing that page.';
+        $this->Auth->config('authError', $errorMessage);
+
+        // Using "rijndael" encryption because the default "cipher" type of encryption fails to decrypt when PHP has the Suhosin patch installed.
+        // See: http://cakephp.lighthouseapp.com/projects/42648/tickets/471-securitycipher-function-cannot-decrypt
+        $this->Cookie->type('rijndael');
+        $this->Cookie->key = Configure::read('cookie_key');
+
+        // Prevents cookies from being accessible in Javascript
+        $this->Cookie->httpOnly = true;
     }
 
     public function isAuthorized($user)
