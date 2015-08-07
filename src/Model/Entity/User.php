@@ -25,4 +25,9 @@ class User extends Entity
         'all_communities' => true,
         'purchases' => true,
     ];
+
+    protected function _setPassword($password)
+    {
+        return (new DefaultPasswordHasher)->hash($password);
+    }
 }
