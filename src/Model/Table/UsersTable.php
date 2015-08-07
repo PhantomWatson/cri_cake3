@@ -132,4 +132,34 @@ class UsersTable extends Table
         ]);
         return $rules;
     }
+
+    /**
+     * Returns the communities that this user has access to.
+     *
+     * @param int|null $userId
+     * @return array of $community_id => $community_name pairs
+     */
+    public function getAccessibleCommunities($userId = null)
+    {
+        try {
+            $user = $this->get($userId);
+            $role = $user->role;
+        } catch (RecordNotFoundException $e) {
+            $role = null;
+        }
+        $communitiesTable = TableRegistry::get('Communities');
+        switch ($role) {
+            case 'admin':
+                return $communitiesTable->find('list')
+                    ->order(['name' => 'ASC']);
+            case 'consultant':
+                return $communitiesTable->getConsultantCommunityList($userId);
+            case 'client':
+                return $communitiesTable->getClientCommunityList($userId);
+            default:
+                return $communitiesTable->find('list')
+                    ->where(['public' => true])
+                    ->order(['name' => 'ASC']);
+        }
+    }
 }
