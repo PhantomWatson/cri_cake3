@@ -75,6 +75,15 @@ class AppController extends Controller
         $this->Cookie->httpOnly = true;
     }
 
+    public function beforeFilter(Event $event)
+    {
+        // Set Accessible Communities
+        $usersTable = TableRegistry::get('Users');
+        $this->set([
+            'accessibleCommunities' => $usersTable->getAccessibleCommunities($this->Auth->user('id'))
+        ]);
+    }
+
     public function isAuthorized($user)
     {
         if (! isset($user['role'])) {
