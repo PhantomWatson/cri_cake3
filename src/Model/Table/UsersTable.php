@@ -30,6 +30,20 @@ class UsersTable extends Table
         $this->hasMany('Purchases', [
             'foreignKey' => 'user_id'
         ]);
+        $this->belongsToMany('ConsultantCommunity', [
+            'className' => 'Community',
+            'joinTable' => 'communities_consultants',
+            'foreignKey' => 'consultant_id',
+            'targetForeignKey' => 'community_id',
+            'saveStrategy' => 'replace'
+        ]);
+        $this->belongsToMany('ClientCommunity', [
+            'className' => 'Community',
+            'joinTable' => 'clients_communities',
+            'foreignKey' => 'client_id',
+            'targetForeignKey' => 'community_id',
+            'saveStrategy' => 'replace'
+        ]);
     }
 
     /**
