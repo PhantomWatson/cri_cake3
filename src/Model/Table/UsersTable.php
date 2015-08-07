@@ -203,4 +203,14 @@ class UsersTable extends Table
             ->where(['role' => 'consultant'])
             ->order(['name' => 'ASC']);
     }
+
+    /**
+     * Returns a random six-character string. Ambiguous-looking alphanumeric characters are excluded.
+     * @return string
+     */
+    public function generatePassword()
+    {
+        $characters = str_shuffle('abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789');
+        return substr($characters, 0, 6);
+    }
 }
