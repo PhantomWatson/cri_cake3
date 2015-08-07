@@ -137,7 +137,7 @@ class UsersTable extends Table
      * Returns the communities that this user has access to.
      *
      * @param int|null $userId
-     * @return array of $community_id => $community_name pairs
+     * @return array of $communityId => $community_name pairs
      */
     public function getAccessibleCommunities($userId = null)
     {
@@ -161,5 +161,32 @@ class UsersTable extends Table
                     ->where(['public' => true])
                     ->order(['name' => 'ASC']);
         }
+    }
+
+    /**
+     * Returns TRUE if the specified user is allowed to view the specified community
+     *
+     * @param int $userId
+     * @param int $communityId
+     * @return boolean
+     */
+    public function canAccessCommunity($userId = null, $communityId)
+    {
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->get($communityId);
+
+        if ($community->public) {
+            return true;
+        }
+
+        $user = $this->get($userId);
+        if ($user->all_communities || $user->role == 'admin') {
+            return true;
+        }
+
+        return $this->CommunitiesUser->exists([
+            'user_id' => $userId,
+            'community_id' => $communityId
+        ]);
     }
 }
