@@ -84,6 +84,21 @@ class AppController extends Controller
         ]);
     }
 
+    public function beforeRender(Event $event)
+    {
+        // Set up variables for sidebar
+        if ($this->layout == 'default' && $this->Auth->user('role') == 'admin') {
+            $communitiesTable = TableRegistry::get('Communities');
+            $this->set(array(
+                'sidebar' => array(
+                    'communities' => $communitiesTable->getClientCommunityList(),
+                    'communityId' => $this->Cookie->read('communityId'),
+                    'clientId' => $this->Cookie->read('clientId')
+                )
+            ));
+        }
+    }
+
     public function isAuthorized($user)
     {
         if (! isset($user['role'])) {
