@@ -250,4 +250,17 @@ class UsersTable extends Table
             'community_id' => $communityId
         ]);
     }
+
+    /**
+     * @param string $email
+     * @return int|null
+     */
+    public function getIdWithEmail($email)
+    {
+        $user = $this->find('all')
+            ->select(['id'])
+            ->where(['email' => $email])
+            ->first();
+        return $user->isEmpty() ? null : $user->id;
+    }
 }
