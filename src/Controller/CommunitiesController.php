@@ -35,6 +35,35 @@ class CommunitiesController extends AppController
         return parent::isAuthorized($user);
     }
 
+    private function validateSelectedSurveys()
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $communityId = isset($this->request->data['Community']['id']) ?
+            $this->request->data['Community']['id']
+            : null;
+
+        // Prevent one community from being linked to the survey of another community
+        foreach (['official', 'organization'] as $type) {
+            $model = ucwords($type).'Survey';
+            $surveySmId = $this->request->data[$model]['sm_id'];
+            $resultCommunityId = $surveysTable->getCommunityId($surveySmId);
+            if ($surveySmId && $resultCommunityId && $resultCommunityId != $communityId) {
+                $community = $this->Communities->get($communityId);
+                $this->Flash->error('Error: The selected '.$type.'s survey is already assigned to '.$community->name);
+                return false;
+            }
+        }
+
+        $officialSmId = $this->request->data['OfficialSurvey']['sm_id'];
+        $orgSmId = $this->request->data['OrganizationSurvey']['sm_id'];
+        if ($officialSmId && $orgSmId && $officialSmId == $orgSmId) {
+            $this->Flash->error("Error: You cannot select the same SurveyMonkey survey for both the officials survey <em>and</em> the organizations survey for this community.");
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Index method
      *
