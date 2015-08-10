@@ -16,6 +16,24 @@ class CommunitiesController extends AppController
         $this->getView()->loadHelper('GoogleCharts.GoogleCharts');
     }
 
+    public function isAuthorized($user)
+    {
+        if ($this->action == 'view') {
+            if (isset($this->request->pass[0]) && ! empty($this->request->pass[0])) {
+                $communityId = $this->request->pass[0];
+            } elseif (isset($_GET['cid']) && ! empty($_GET['cid'])) {
+                $communityId = $_GET['cid'];
+            } else {
+                throw new NotFoundException('Community ID not specified');
+            }
+            $userId = isset($user['id']) ? $user['id'] : null;
+            $usersTable = TableRegistry::get('Users');
+            return $usersTable->canAccessCommunity($userId, $communityId);
+        }
+
+        return parent::isAuthorized($user);
+    }
+
     /**
      * Index method
      *
