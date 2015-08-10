@@ -11,6 +11,11 @@ use App\Controller\AppController;
 class CommunitiesController extends AppController
 {
 
+    public function beforeRender(Event $event)
+    {
+        $this->getView()->loadHelper('GoogleCharts.GoogleCharts');
+    }
+
     /**
      * Index method
      *
