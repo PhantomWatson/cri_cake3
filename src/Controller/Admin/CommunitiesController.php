@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use Cake\Network\Exception\NotFoundException;
 
 class CommunitiesController extends AppController
 {
@@ -385,6 +386,123 @@ class CommunitiesController extends AppController
         $areasTable = TableRegistry::get('Areas');
         $this->set(array(
             'titleForLayout' => 'Add Community',
+            'qnaIdFields' => $surveysTable->getQnaIdFieldNames(),
+            'clients' => $usersTable->getClientList(),
+            'consultants' => $usersTable->getConsultantList(),
+            'selectedClients' => $selectedClients,
+            'selectedConsultants' => $selectedConsultants,
+            'areas' => $areasTable->find('list')
+        ));
+        $this->render('admin_form');
+    }
+
+    public function edit($communityId = null)
+    {
+        if (! $communityId) {
+            throw new NotFoundException('Community ID not specified');
+        }
+
+        if (! $this->Communities->exists(['id' => $communityId])) {
+            throw new NotFoundException('Community #'.$communityId.' not found');
+        }
+
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $this->request->data['id'] = $communityId;
+
+            if (! $this->request->data['Community']['meeting_date_set']) {
+                $this->request->data['Community']['town_meeting_date'] = null;
+            }
+
+            /* A workaround for deleting all of a community's clients/consultants.
+             * A missing $this->request->data['Client'] key or an empty array isn't deleting existing clients as expected.
+             * No clue why (Community->hasAndBelongsToMany->Client->unique is set to TRUE), but here's a hack. */
+            if (! isset($this->request->data['Client']) || empty($this->request->data['Client'])) {
+                $this->Communities->removeAllClientAssociations($communityId);
+            }
+            if (! isset($this->request->data['Consultant']) || empty($this->request->data['Consultant'])) {
+                $this->Communities->removeAllConsultantAssociations($communityId);
+            }
+
+            $clientErrors = array_merge(
+                $this->processNewAssociatedUsers('client'),
+                $this->validateClients()
+            );
+            $consultantErrors = $this->processNewAssociatedUsers('consultant');
+            if ($this->validateSelectedSurveys()) {
+                if ($this->questionAndAnswerIdsAreSet()) {
+                    $qnaSuccess = true;
+                } else {
+                    list($qnaSuccess, $qnaMsg) = $this->setSurveyQuestionAndAnswerIds();
+                }
+                $community = $this->Communities->newEntity($this->request->data);
+                $validates = $qnaSuccess
+                    && empty($community->errors())
+                    && empty($clientErrors)
+                    && empty($consultantErrors);
+                if ($validates && $this->Communities->save($community)) {
+                    $this->Flash->success('Community updated');
+                    $this->redirect([
+                        'prefix' => 'admin',
+                        'action' => 'index'
+                    ]);
+                } elseif (! $qnaSuccess) {
+                    $this->Flash->error($qnaMsg);
+                }
+            }
+            $this->set(compact('clientErrors', 'consultantErrors'));
+        } else {
+            $this->request->data = $this->Communities->find('all')
+                ->where(['id' => $communityId])
+                ->contain([
+                    'Client' => function ($q) {
+                        return $q->select(['id', 'name']);
+                    },
+                    'Consultant' => function ($q) {
+                        return $q->select(['id', 'name']);
+                    },
+                    'OfficialSurvey',
+                    'OrganizationSurvey'
+                ])
+                ->first()
+                ->toArray();
+            $this->request->data['OfficialSurvey']['community_id'] = $communityId;
+            $this->request->data['OfficialSurvey']['type'] = 'official';
+            $this->request->data['OrganizationSurvey']['community_id'] = $communityId;
+            $this->request->data['OrganizationSurvey']['type'] = 'organization';
+        }
+
+        // Prepare selected clients for JS
+        $usersTable = TableRegistry::get('Users');
+        $clients = $usersTable->getClientList();
+        $selectedClients = [];
+        if (isset($this->request->data['clients'])) {
+            foreach ($this->request->data['clients'] as $client) {
+                $clientId = isset($client['id']) ? $client['id'] : $client;
+                $selectedClients[] = [
+                    'id' => $clientId,
+                    'name' => $clients[$clientId]
+                ];
+            }
+        }
+
+        // Prepare selected consultants for JS
+        $consultants = $usersTable->getConsultantList();
+        $selectedConsultants = array();
+        if (isset($this->request->data['Consultant'])) {
+            foreach ($this->request->data['Consultant'] as $consultant) {
+                $consultantId = isset($consultant['id']) ? $consultant['id'] : $consultant;
+                $selectedConsultants[] = [
+                    'id' => $consultantId,
+                    'name' => $consultants[$consultantId]
+                ];
+            }
+        }
+
+        $surveysTable = TableRegistry::get('Surveys');
+        $areasTable = TableRegistry::get('Areas');
+        $this->set(array(
+            'communityId' => $communityId,
+            'titleForLayout' => 'Edit '.$this->Communities->field('name'),
             'qnaIdFields' => $surveysTable->getQnaIdFieldNames(),
             'clients' => $usersTable->getClientList(),
             'consultants' => $usersTable->getConsultantList(),
