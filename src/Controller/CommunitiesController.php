@@ -65,6 +65,40 @@ class CommunitiesController extends AppController
     }
 
     /**
+     * Queries the SurveyMonkey API to populate $this->request->data with the correct
+     * values for the fields pwrrr_qid, production_aid, wholesale_aid, etc. to prepare
+     * it for a call to saveAssociated()
+     * @return array [success/error, error msg, data array]
+     */
+    private function setSurveyQuestionAndAnswerIds()
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $first = true;
+        foreach (['OfficialSurvey', 'OrganizationSurvey'] as $type) {
+            if (! $first) {
+                // The SurveyMonkey API limits us to 2 API requests per second.
+                // For extra safety, we'll delay for one second before the second API call.
+                sleep(1);
+            }
+
+            if (! isset($this->request->data[$type]['sm_id']) || ! $this->request->data[$type]['sm_id']) {
+                continue;
+            }
+
+            $smId = $this->request->data[$type]['sm_id'];
+            $result = $surveysTable->getQuestionAndAnswerIds($smId);
+            if ($result[0]) {
+                $this->request->data[$type] = array_merge($this->request->data[$type], $result[2]);
+            } else {
+                return $result;
+            }
+
+            $first = false;
+        }
+        return $result;
+    }
+
+    /**
      * Index method
      *
      * @return void
