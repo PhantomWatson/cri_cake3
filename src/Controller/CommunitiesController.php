@@ -177,6 +177,54 @@ class CommunitiesController extends AppController
         return $retval;
     }
 
+    private function adminIndexFilter()
+    {
+        $cookieParentKey = 'AdminCommunityIndex';
+
+        // Remember selected filters
+        $filters = $this->request->query('filters');
+        foreach ($filters as $group => $filter) {
+            $this->Cookie->write("$cookieParentKey.filters.$group", $filter);
+        }
+
+        // Use remembered filters when no filters manually specified
+        foreach (['progress', 'track'] as $group) {
+            if (! isset($filters[$group])) {
+                $key = "$cookieParentKey.filters.$group";
+                if ($this->Cookie->check($key)) {
+                    $filters[$group] = $this->Cookie->read($key);
+                }
+            }
+        }
+
+        // Default filters if completely unspecified
+        if (! isset($filters['progress'])) {
+            $filters['progress'] = 'ongoing';
+        }
+
+        // Apply filters
+        foreach ($filters as $filter) {
+            switch ($filter) {
+                case 'ongoing':
+                    $this->paginate['conditions']['Community.score <'] = '5';
+                    break;
+                case 'completed':
+                    $this->paginate['conditions']['Community.score'] = '5';
+                    break;
+                case 'fast_track':
+                    $this->paginate['conditions']['Community.fast_track'] = true;
+                    break;
+                case 'normal_track':
+                    $this->paginate['conditions']['Community.fast_track'] = false;
+                    break;
+                case 'all':
+                default:
+                    // No action
+                    break;
+            }
+        }
+    }
+
     /**
      * Index method
      *
