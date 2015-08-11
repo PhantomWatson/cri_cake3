@@ -177,6 +177,10 @@ class CommunitiesController extends AppController
         return $retval;
     }
 
+    /**
+     * Alters $this->paginate settings according to $_GET and Cookie data,
+     * and remembers $_GET data with a cookie.
+     */
     private function adminIndexFilter()
     {
         $cookieParentKey = 'AdminCommunityIndex';
