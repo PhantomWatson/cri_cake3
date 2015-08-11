@@ -171,4 +171,85 @@ class CommunitiesController extends AppController
             'title_for_layout' => 'Indiana Communities'
         ));
     }
+
+    public function add()
+    {
+        if ($this->request->is('post')) {
+            if (! $this->request->data['meeting_date_set']) {
+                $this->request->data['town_meeting_date'] = null;
+            }
+
+            $community = $this->Communities->newEntity();
+            $clientErrors = array_merge(
+                $this->processNewAssociatedUsers('client'),
+                $this->validateClients()
+            );
+            $consultantErrors = $this->processNewAssociatedUsers('consultant');
+            if ($this->validateSelectedSurveys()) {
+                if ($this->questionAndAnswerIdsAreSet()) {
+                    $qnaSuccess = true;
+                } else {
+                    list($qnaSuccess, $qnaMsg) = $this->setSurveyQuestionAndAnswerIds();
+                }
+                $validates = $qnaSuccess
+                    && $this->Communities->validates($this->request->data)
+                    && empty($clientErrors)
+                    && empty($consultantErrors);
+                if ($validates && $this->Communities->saveAssociated($this->request->data)) {
+                    $this->Flash->success('Community added');
+                    $this->redirect([
+                        'prefix' => 'admin',
+                        'action' => 'index'
+                    ]);
+                } elseif (! $qnaSuccess) {
+                    $this->Flash->error($qnaMsg);
+                }
+            }
+            $this->set(compact('clientErrors', 'consultantErrors'));
+        } else {
+            $this->request->data['Community']['score'] = 0;
+            $this->request->data['Community']['public'] = 0;
+            $this->request->data['OfficialSurvey']['type'] = 'official';
+            $this->request->data['OrganizationSurvey']['type'] = 'organization';
+        }
+
+        // Prepare selected clients for JS
+        $this->loadModel('User');
+        $clients = $this->User->getClientList();
+        $selectedClients = [];
+        if (isset($this->request->data['Client'])) {
+            foreach ($this->request->data['Client'] as $clientId) {
+                $selectedClients[] = [
+                    'id' => $clientId,
+                    'name' => $clients[$clientId]
+                ];
+            }
+        }
+
+        // Prepare selected consultants for JS
+        $consultants = $this->User->getConsultantList();
+        $selectedConsultants = [];
+        if (isset($this->request->data['Consultant'])) {
+            foreach ($this->request->data['Consultant'] as $consultantId) {
+                $selectedConsultants[] = [
+                    'id' => $consultantId,
+                    'name' => $consultants[$consultantId]
+                ];
+            }
+        }
+
+        $usersTable = TableRegistry::get('Users');
+        $surveysTable = TableRegistry::get('Surveys');
+        $areasTable = TableRegistry::get('Areas');
+        $this->set(array(
+            'titleForLayout' => 'Add Community',
+            'qnaIdFields' => $surveysTable->getQnaIdFieldNames(),
+            'clients' => $usersTable->getClientList(),
+            'consultants' => $usersTable->getConsultantList(),
+            'selectedClients' => $selectedClients,
+            'selectedConsultants' => $selectedConsultants,
+            'areas' => $areasTable->find('list')
+        ));
+        $this->render('admin_form');
+    }
 }
