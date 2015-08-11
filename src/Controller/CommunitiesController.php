@@ -154,6 +154,30 @@ class CommunitiesController extends AppController
     }
 
     /**
+     * Used by admin_add and admin_edit
+     * @param int|null $communityId
+     * @return array An array of error messages
+     */
+    private function validateClients($communityId = null)
+    {
+        if (! isset($this->request->data['clients'])) {
+            return [];
+        }
+
+        $retval = [];
+        $usersTable = TableRegistry::get('Users');
+        foreach ($this->request->data['clients'] as $clientId) {
+            $associatedCommunityId = $this->Communities->getClientCommunityId($clientId);
+            if ($associatedCommunityId && $associatedCommunityId != $communityId) {
+                $community = $this->Communities->get($associatedCommunityId);
+                $user = $usersTable->get($clientId);
+                $retval[] = $user->name.' is already the client for '.$community->name;
+            }
+        }
+        return $retval;
+    }
+
+    /**
      * Index method
      *
      * @return void
