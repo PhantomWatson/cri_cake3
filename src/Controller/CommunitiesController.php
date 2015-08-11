@@ -194,17 +194,37 @@ class CommunitiesController extends AppController
     /**
      * View method
      *
-     * @param string|null $id Community id.
+     * @param string|null $communityId
      * @return void
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view($communityId = null)
     {
-        $community = $this->Communities->get($id, [
-            'contain' => ['Areas', 'Purchases', 'Surveys', 'SurveysBackup']
+        if (isset($_GET['cid'])) {
+            $communityId = $_GET['cid'];
+        }
+        if (empty($communityId)) {
+            throw new NotFoundException('Community ID not specified');
+        }
+
+        if (! $this->isAuthorized($this->Auth->user())) {
+            $this->Flash->error('You are not authorized to access that community.');
+            $this->redirect('/');
+        }
+
+        if (! $this->Communities->exists(['id' => $communityId])) {
+            throw new NotFoundException('Community not found');
+        }
+
+        $community = $this->Communities->get($communityId);
+        $this->set([
+            'titleForLayout' => $community->name.' Performance',
+            'community' => $community,
+            'barChart' => $this->Communities->getPwrBarChart($communityId),
+            'pwrTable' => $this->Communities->getPwrTable($communityId),
+            'lineChart' => $this->Communities->getEmploymentLineChart($communityId),
+            'growthTable' => $this->Communities->getEmploymentGrowthTableData($communityId)
         ]);
-        $this->set('community', $community);
-        $this->set('_serialize', ['community']);
     }
 
     /**
