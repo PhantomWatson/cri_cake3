@@ -99,6 +99,27 @@ class CommunitiesController extends AppController
     }
 
     /**
+     * Returns true if Q&A IDs are set for any Community's associated survey (assuming Survey.sm_id is set)
+     * @return boolean
+     */
+    private function questionAndAnswerIdsAreSet()
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $fieldnames = $surveysTable->getQnaIdFieldNames();
+        foreach (['OfficialSurvey', 'OrganizationSurvey'] as $type) {
+            if (! $this->request->data[$type]['sm_id']) {
+                continue;
+            }
+            foreach ($fieldnames as $fieldname) {
+                if (! isset($this->request->data[$type][$fieldname]) || ! $this->request->data[$type][$fieldname]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
      * Index method
      *
      * @return void
