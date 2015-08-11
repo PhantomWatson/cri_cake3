@@ -120,6 +120,40 @@ class CommunitiesController extends AppController
     }
 
     /**
+     * Used by admin_add and admin_edit
+     * @param string $role
+     * @return array An array of error messages
+     */
+    private function processNewAssociatedUsers($role)
+    {
+        $model = ucwords($role);
+        if (! isset($this->request->data["New$model"])) {
+            return [];
+        }
+
+        $retval = [];
+        $usersTable = TableRegistry::get('Users');
+        foreach ($this->request->data["New$model"] as $newUser) {
+            $user = $usersTable->newEntity($newUser);
+            $user->role = $role;
+
+            if ($user->errors()) {
+                foreach ($user->errors() as $field => $error) {
+                    $retval[] = $error;
+                }
+                continue;
+            }
+
+            if ($usersTable->save($user)) {
+                $this->request->data[$model][] = $user->id;
+            } else {
+                $retval[] = 'There was an error creating an account for '.$newUser['name'].' Please contact an administrator for assistance.';
+            }
+        }
+        return $retval;
+    }
+
+    /**
      * Index method
      *
      * @return void
