@@ -156,6 +156,148 @@ class CommunitiesController extends AppController
         $this->set('buttons', $buttons);
     }
 
+    private function validateSelectedSurveys()
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $communityId = isset($this->request->data['Community']['id']) ?
+            $this->request->data['Community']['id']
+            : null;
+
+        // Prevent one community from being linked to the survey of another community
+        foreach (['official', 'organization'] as $type) {
+            $model = ucwords($type).'Survey';
+            $surveySmId = $this->request->data[$model]['sm_id'];
+            $resultCommunityId = $surveysTable->getCommunityId($surveySmId);
+            if ($surveySmId && $resultCommunityId && $resultCommunityId != $communityId) {
+                $community = $this->Communities->get($communityId);
+                $this->Flash->error('Error: The selected '.$type.'s survey is already assigned to '.$community->name);
+                return false;
+            }
+        }
+
+        $officialSmId = $this->request->data['OfficialSurvey']['sm_id'];
+        $orgSmId = $this->request->data['OrganizationSurvey']['sm_id'];
+        if ($officialSmId && $orgSmId && $officialSmId == $orgSmId) {
+            $this->Flash->error("Error: You cannot select the same SurveyMonkey survey for both the officials survey <em>and</em> the organizations survey for this community.");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Queries the SurveyMonkey API to populate $this->request->data with the correct
+     * values for the fields pwrrr_qid, production_aid, wholesale_aid, etc. to prepare
+     * it for a call to saveAssociated()
+     * @return array [success/error, error msg, data array]
+     */
+    private function setSurveyQuestionAndAnswerIds()
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $first = true;
+        foreach (['OfficialSurvey', 'OrganizationSurvey'] as $type) {
+            if (! $first) {
+                // The SurveyMonkey API limits us to 2 API requests per second.
+                // For extra safety, we'll delay for one second before the second API call.
+                sleep(1);
+            }
+
+            if (! isset($this->request->data[$type]['sm_id']) || ! $this->request->data[$type]['sm_id']) {
+                continue;
+            }
+
+            $smId = $this->request->data[$type]['sm_id'];
+            $result = $surveysTable->getQuestionAndAnswerIds($smId);
+            if ($result[0]) {
+                $this->request->data[$type] = array_merge($this->request->data[$type], $result[2]);
+            } else {
+                return $result;
+            }
+
+            $first = false;
+        }
+        return $result;
+    }
+
+    /**
+     * Returns true if Q&A IDs are set for any Community's associated survey (assuming Survey.sm_id is set)
+     * @return boolean
+     */
+    private function questionAndAnswerIdsAreSet()
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $fieldnames = $surveysTable->getQnaIdFieldNames();
+        foreach (['OfficialSurvey', 'OrganizationSurvey'] as $type) {
+            if (! $this->request->data[$type]['sm_id']) {
+                continue;
+            }
+            foreach ($fieldnames as $fieldname) {
+                if (! isset($this->request->data[$type][$fieldname]) || ! $this->request->data[$type][$fieldname]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Used by admin_add and admin_edit
+     * @param string $role
+     * @return array An array of error messages
+     */
+    private function processNewAssociatedUsers($role)
+    {
+        $model = ucwords($role);
+        if (! isset($this->request->data["New$model"])) {
+            return [];
+        }
+
+        $retval = [];
+        $usersTable = TableRegistry::get('Users');
+        foreach ($this->request->data["New$model"] as $newUser) {
+            $user = $usersTable->newEntity($newUser);
+            $user->role = $role;
+
+            if ($user->errors()) {
+                foreach ($user->errors() as $field => $error) {
+                    $retval[] = $error;
+                }
+                continue;
+            }
+
+            if ($usersTable->save($user)) {
+                $this->request->data[$model][] = $user->id;
+            } else {
+                $retval[] = 'There was an error creating an account for '.$newUser['name'].' Please contact an administrator for assistance.';
+            }
+        }
+        return $retval;
+    }
+
+    /**
+     * Used by admin_add and admin_edit
+     * @param int|null $communityId
+     * @return array An array of error messages
+     */
+    private function validateClients($communityId = null)
+    {
+        if (! isset($this->request->data['clients'])) {
+            return [];
+        }
+
+        $retval = [];
+        $usersTable = TableRegistry::get('Users');
+        foreach ($this->request->data['clients'] as $clientId) {
+            $associatedCommunityId = $this->Communities->getClientCommunityId($clientId);
+            if ($associatedCommunityId && $associatedCommunityId != $communityId) {
+                $community = $this->Communities->get($associatedCommunityId);
+                $user = $usersTable->get($clientId);
+                $retval[] = $user->name.' is already the client for '.$community->name;
+            }
+        }
+        return $retval;
+    }
+
     public function index()
     {
         if (isset($_GET['search'])) {
