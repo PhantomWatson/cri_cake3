@@ -229,6 +229,49 @@ class CommunitiesController extends AppController
         }
     }
 
+    private function adminIndexSetupPagination()
+    {
+        $this->paginate['contain'] = [
+            'Client' => [
+                'fields' => [
+                    'Client.email',
+                    'Client.name'
+                ]
+            ],
+            'OfficialSurvey' => [
+                'fields' => [
+                    'OfficialSurvey.id',
+                    'OfficialSurvey.sm_id',
+                    'OfficialSurvey.alignment',
+                    'OfficialSurvey.alignment_passed',
+                    'OfficialSurvey.respondents_last_modified_date'
+                ]
+            ],
+            'OrganizationSurvey' => [
+                'fields' => [
+                    'OrganizationSurvey.id',
+                    'OrganizationSurvey.sm_id',
+                    'OrganizationSurvey.alignment',
+                    'OrganizationSurvey.alignment_passed',
+                    'OrganizationSurvey.respondents_last_modified_date'
+                ]
+            ],
+            'Area' => [
+                'fields' => [
+                    'Area.name'
+                ]
+            ]
+        ];
+        $this->paginate['group'] = 'Community.id';
+        $this->paginate['fields'] = [
+            'Community.id',
+            'Community.name',
+            'Community.fast_track',
+            'Community.score',
+            'Community.created'
+        ];
+    }
+
     /**
      * Index method
      *
