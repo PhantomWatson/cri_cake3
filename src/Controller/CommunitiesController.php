@@ -186,28 +186,28 @@ class CommunitiesController extends AppController
         $cookieParentKey = 'AdminCommunityIndex';
 
         // Remember selected filters
-        $filters = $this->request->query('filters');
-        foreach ($filters as $group => $filter) {
+        $this->filters = $this->request->query('filters');
+        foreach ($this->filters as $group => $filter) {
             $this->Cookie->write("$cookieParentKey.filters.$group", $filter);
         }
 
         // Use remembered filters when no filters manually specified
         foreach (['progress', 'track'] as $group) {
-            if (! isset($filters[$group])) {
+            if (! isset($this->filters[$group])) {
                 $key = "$cookieParentKey.filters.$group";
                 if ($this->Cookie->check($key)) {
-                    $filters[$group] = $this->Cookie->read($key);
+                    $this->filters[$group] = $this->Cookie->read($key);
                 }
             }
         }
 
         // Default filters if completely unspecified
-        if (! isset($filters['progress'])) {
-            $filters['progress'] = 'ongoing';
+        if (! isset($this->filters['progress'])) {
+            $this->filters['progress'] = 'ongoing';
         }
 
         // Apply filters
-        foreach ($filters as $filter) {
+        foreach ($this->filters as $filter) {
             switch ($filter) {
                 case 'ongoing':
                     $this->paginate['conditions']['Community.score <'] = '5';
@@ -270,6 +270,62 @@ class CommunitiesController extends AppController
             'Community.score',
             'Community.created'
         ];
+    }
+
+    private function adminIndexSetupFilterButtons()
+    {
+        $allFilters = [
+            'progress' => [
+                'all' => 'All',
+                'completed' => 'Completed',
+                'ongoing' => 'Ongoing'
+            ],
+            'track' => [
+                'all' => 'All',
+                'fast_track' => 'Fast Track',
+                'normal_track' => 'Normal Track'
+            ]
+        ];
+        foreach ($this->filters as $group => $filter) {
+            if ($filter == 'all') {
+                unset($this->filters[$group]);
+            }
+        }
+        $buttons = [];
+        foreach ($allFilters as $group => $filters) {
+            $groupLabel = ucwords($group);
+            $selectedFilterKey = isset($this->filters[$group]) ?
+                $this->filters[$group]
+                : null;
+            if ($selectedFilterKey != 'all') {
+                $selectedFilterLabel = isset($filters[$selectedFilterKey]) ?
+                    $filters[$selectedFilterKey]
+                    : null;
+                if ($selectedFilterLabel) {
+                    $groupLabel .= ': <strong>'.$selectedFilterLabel.'</strong>';
+                }
+            }
+
+            $links = array();
+            foreach ($filters as $filter => $label) {
+                // Only show 'all' link if filter is active
+                if ($filter == 'all' && ! isset($this->filters[$group])) {
+                    continue;
+                }
+
+                // Don't show links to active filters
+                if (isset($this->filters[$group]) && $this->filters[$group] == $filter) {
+                    continue;
+                }
+
+                $linkFilters = [$group => $filter];
+                $linkFilters = array_merge($this->filters, $linkFilters);
+                $links[$label] = $linkFilters;
+            }
+
+            $buttons[$groupLabel] = $links;
+        }
+        $this->set('buttons', $buttons);
     }
 
     /**
