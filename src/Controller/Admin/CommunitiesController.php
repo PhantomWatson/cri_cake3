@@ -552,4 +552,34 @@ class CommunitiesController extends AppController
             'clients' => $community->clients
         ]);
     }
+
+    public function progress($communityId)
+    {
+        if (! $this->Communities->exists(['id' => $communityId])) {
+            throw new NotFoundException('Sorry, we couldn\'t find a community with ID# '.$communityId);
+        }
+
+        $community = $this->Communities->get($communityId);
+        $returnedScore = $community->score;
+
+        if ($this->request->is('post')) {
+            $newScore = $this->request->data['score'];
+            if ($newScore != $community->score) {
+                $community->score = $newScore;
+                if ($this->Communities->save($community)) {
+                    $this->Flash->success('Community score '.($newScore > $community->score ? 'in' : 'de').'creased');
+                    $returnedScore = $newScore;
+                } else {
+                    $this->Flash->error('There was an error updating this community');
+                }
+            }
+        }
+
+        $this->set([
+            'titleForLayout' => $community->name.' Progress',
+            'score' => $returnedScore,
+            'criteria' => $this->Communities->getProgress($communityId, true),
+            'fastTrack' => $community->fast_track
+        ]);
+    }
 }
