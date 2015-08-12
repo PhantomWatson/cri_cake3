@@ -9,4 +9,9 @@ class StatCategoriesController extends AppController
     {
         $this->set('statCategories', $this->paginate());
     }
+
+    public function view($id = null)
+    {
+        $this->set('statCategory', $this->StatCategories->get($id));
+    }
 }
