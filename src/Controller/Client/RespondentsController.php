@@ -36,6 +36,19 @@ class RespondentsController extends AppController
         ];
     }
 
+    private function checkClientAuthorization($respondentId)
+    {
+        if (! $this->Respondents->exists(['id' => $respondentId])) {
+            throw new NotFoundException('Sorry, that respondent (#'.$respondentId.') could not be found.');
+        }
+
+        $clientId = $this->getClientId();
+        $isAuthorized = $this->Respondents->clientCanApproveRespondent($clientId, $respondentId);
+        if (! $isAuthorized) {
+            throw new ForbiddenException('You are not authorized to approve that respondent');
+        }
+    }
+
     public function index($surveyType = null)
     {
         if ($surveyType != 'official' && $surveyType != 'organization') {
