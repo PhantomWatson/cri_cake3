@@ -60,4 +60,31 @@ class RespondentsController extends AppController
             'surveyType'
         ));
     }
+
+    public function unapproved($surveyType = null)
+    {
+        if ($surveyType != 'official' && $surveyType != 'organization') {
+            throw new NotFoundException('Invalid survey type');
+        }
+
+        $communitiesTable = TableRegistry::get('Communities');
+        $clientId = $this->getClientId();
+        $communityId = $communitiesTable->getClientCommunityId($clientId);
+
+        if (! $communityId) {
+            throw new NotFoundException('Your account is not currently assigned to a community');
+        }
+
+        $community = $communitiesTable->get($communityId);
+        $surveysTable = TableRegistry::get('Surveys');
+        $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
+
+        $this->set([
+            'titleForLayout' => $community->name.' Uninvited '.ucwords($surveyType).' Survey Respondents',
+            'respondents' => [
+                'unaddressed' => $this->Respondents->getUnaddressedUnapproved($surveyId),
+                'dismissed' => $this->Respondents->getDismissed($surveyId)
+            ]
+        ]);
+    }
 }
