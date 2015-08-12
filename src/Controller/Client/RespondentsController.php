@@ -49,19 +49,6 @@ class RespondentsController extends AppController
         }
     }
 
-    private function approveUninvited($respondentId, $approved = 1)
-    {
-        $respondent = $this->Respondents->get($respondentId);
-        $respondent->approved = $approved;
-        $success = $this->Respondents->save($respondent);
-        $this->set(compact('success'));
-    }
-
-    private function dismissUninvited($respondentId)
-    {
-        $this->approveUninvited($respondentId, -1);
-    }
-
     public function index($surveyType = null)
     {
         if ($surveyType != 'official' && $surveyType != 'organization') {
@@ -111,6 +98,26 @@ class RespondentsController extends AppController
                 'unaddressed' => $this->Respondents->getUnaddressedUnapproved($surveyId),
                 'dismissed' => $this->Respondents->getDismissed($surveyId)
             ]
+        ]);
+    }
+
+    public function approveUninvited($respondentId)
+    {
+        $this->checkClientAuthorization($respondentId);
+        $respondent = $this->Respondents->get($respondentId);
+        $respondent->approved = 1;
+        $this->set([
+            'success' => (boolean) $this->Respondents->save($respondent)
+        ]);
+    }
+
+    public function dismissUninvited($respondentId)
+    {
+        $this->checkClientAuthorization($respondentId);
+        $respondent = $this->Respondents->get($respondentId);
+        $respondent->approved = -1;
+        $this->set([
+            'success' => (boolean) $this->Respondents->save($respondent)
         ]);
     }
 }
