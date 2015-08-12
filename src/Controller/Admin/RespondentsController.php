@@ -26,6 +26,6 @@ class RespondentsController extends AppController
             ],
             'survey_id' => $surveyId
         ]);
-        $this->render('unapproved');
+        $this->render('/Client/Respondents/unapproved');
     }
 }
