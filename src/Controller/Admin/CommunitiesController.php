@@ -582,4 +582,28 @@ class CommunitiesController extends AppController
             'fastTrack' => $community->fast_track
         ]);
     }
+
+    public function spreadsheet()
+    {
+        // Set up filters and sorting
+        if (isset($_GET['search'])) {
+            $this->paginate['conditions']['Community.name LIKE'] = '%'.$_GET['search'].'%';
+        } else {
+            $this->adminIndexFilter();
+        }
+        $this->cookieSort('AdminCommunityIndex');
+        $this->adminIndexSetupPagination();
+        $this->adminIndexSetupFilterButtons();
+        $this->paginate['limit'] = $this->Communities->find('all')->count();
+
+        $communities = $this->paginate();
+
+        $this->response->type(['excel2007' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+        $this->response->type('excel2007');
+        $this->response->download("CRI Overview.xlsx");
+        $this->layout = 'spreadsheet';
+        $this->set([
+            'objPHPExcel' => $this->Communities->getSpreadsheetObject($communities)
+        ]);
+    }
 }
