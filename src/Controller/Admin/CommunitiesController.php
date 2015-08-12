@@ -606,4 +606,16 @@ class CommunitiesController extends AppController
             'objPHPExcel' => $this->Communities->getSpreadsheetObject($communities)
         ]);
     }
+
+    public function clienthome($communityId)
+    {
+        $this->Cookie->write('communityId', $communityId);
+        $clientId = $this->Communities->getCommunityClientId($communityId);
+        $this->Cookie->write('clientId', $clientId);
+        $this->redirect([
+            'prefix' => 'client',
+            'controller' => 'Communities',
+            'action' => 'index'
+        ]);
+    }
 }
