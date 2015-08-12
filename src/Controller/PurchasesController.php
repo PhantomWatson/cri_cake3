@@ -11,6 +11,12 @@ use App\Controller\AppController;
 class PurchasesController extends AppController
 {
 
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->Auth->allow('postback');
+    }
+
     /**
      * Index method
      *
@@ -112,5 +118,25 @@ class PurchasesController extends AppController
             $this->Flash->error(__('The purchase could not be deleted. Please, try again.'));
         }
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * This gets requested by the CashNet payment system following a successful purchase,
+     * and logs a record of the purchase into the 'purchases' table. */
+    public function postback()
+    {
+        if (isset($_POST['respmessage']) && $_POST['respmessage'] == 'SUCCESS') {
+            $itemCode = explode('-', $_POST['itemcode1']);
+            $productsTable = TableRegistry::get('Products');
+            $this->Purchases->newEntity([
+                'user_id' => $_POST['custcode'],
+                'community_id' => $_POST['ref1val1'],
+                'product_id' => $productsTable->getIdFromItemCode($itemCode[1]),
+                'postback' => base64_encode(serialize($_POST))
+            ]);
+            $this->Purchase->save();
+        }
+
+        $this->layout = 'blank';
     }
 }
