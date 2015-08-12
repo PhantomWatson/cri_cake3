@@ -154,4 +154,38 @@ class CommunitiesController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+
+    public function autocomplete()
+    {
+        $_GET['term'] = Sanitize::clean($_GET['term']);
+        $limit = 10;
+
+        // Community.name will be compared via LIKE to each of these until $limit communities are found.
+        $patterns = [
+            $_GET['term'],
+            $_GET['term'].' %',
+            $_GET['term'].'%',
+            '% '.$_GET['term'].'%',
+            '%'.$_GET['term'].'%'
+        ];
+
+        // Collect communities up to $limit
+        $retval = [];
+        foreach ($patterns as $pattern) {
+            $results = $this->Communities->find('list')
+                ->where([function ($exp, $q) {
+                    return $exp
+                        ->like('name', $pattern)
+                        ->notIn('id', array_keys($retval));
+                }])
+                ->limit($limit - count($retval));
+            $retval = array_merge($retval, $results);
+            if (count($retval) == $limit) {
+                break;
+            }
+        }
+
+        $this->set(['communities' => $retval]);
+        $this->layout = 'json';
+    }
 }
