@@ -3,6 +3,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\AppController;
 use Cake\Network\Exception\NotFoundException;
+use Cake\Network\Exception\MethodNotAllowedException;
 
 class CommunitiesController extends AppController
 {
@@ -511,5 +512,22 @@ class CommunitiesController extends AppController
             'areas' => $areasTable->find('list')
         ));
         $this->render('admin_form');
+    }
+
+    public function delete($communityId = null)
+    {
+        if (! $this->request->is('post')) {
+            throw new MethodNotAllowedException();
+        }
+        if (! $this->Communities->exists(['id' => $communityId])) {
+            throw new NotFoundException('Invalid community');
+        }
+        $community = $this->Communities->get($communityId);
+        if ($this->Communities->delete($community)) {
+            $this->Flash->success('Community deleted');
+        } else {
+            $this->Flash->error('There was an error deleting that community');
+        }
+        $this->redirect($this->request->referer());
     }
 }
