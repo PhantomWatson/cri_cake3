@@ -55,7 +55,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         <footer>
         </footer>
     </div>
-    <?php echo $this->fetch('scriptBottom'); ?>
+    <?= $this->fetch('scriptBottom') ?>
     <script>
         $(document).ready(function () {
             <?= $this->fetch('buffered') ?>
