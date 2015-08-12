@@ -42,11 +42,14 @@ class CommunitiesController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['Areas']
-        ];
-        $this->set('communities', $this->paginate($this->Communities));
-        $this->set('_serialize', ['communities']);
+        $communities = $this->Communities->find('all')
+            ->select(['id', 'name', 'score'])
+            ->where(['public' => true])
+            ->order(['Community.name' => 'ASC']);
+        $this->set([
+            'communities' => $communities,
+            'titleForLayout' => 'Indiana Communities'
+        ]);
     }
 
     /**
