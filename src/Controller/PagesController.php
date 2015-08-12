@@ -35,32 +35,32 @@ class PagesController extends AppController
 
     public function home()
     {
-        $this->set('title_for_layout', '');
+        $this->set('titleForLayout', '');
     }
 
     public function glossary()
     {
-        $this->set('title_for_layout', 'Glossary');
+        $this->set('titleForLayout', 'Glossary');
     }
 
     public function faqCommunity()
     {
-        $this->set('title_for_layout', 'Frequently Asked Questions for Communities');
+        $this->set('titleForLayout', 'Frequently Asked Questions for Communities');
     }
 
     public function faqConsultants()
     {
-        $this->set('title_for_layout', 'Frequently Asked Questions for CRI Consultants');
+        $this->set('titleForLayout', 'Frequently Asked Questions for CRI Consultants');
     }
 
     public function fasttrack()
     {
-        $this->set('title_for_layout', 'CRI Fast Track');
+        $this->set('titleForLayout', 'CRI Fast Track');
     }
 
     public function credits()
     {
-        $this->set('title_for_layout', 'Credits and Sources');
+        $this->set('titleForLayout', 'Credits and Sources');
     }
 
     public function enroll()
