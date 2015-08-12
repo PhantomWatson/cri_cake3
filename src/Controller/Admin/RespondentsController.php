@@ -28,4 +28,22 @@ class RespondentsController extends AppController
         ]);
         $this->render('/Client/Respondents/unapproved');
     }
+
+    public function approveUninvited($respondentId)
+    {
+        $respondent = $this->Respondents->get($respondentId);
+        $respondent->approved = 1;
+        $this->set([
+            'success' => (boolean) $this->Respondents->save($respondent)
+        ]);
+    }
+
+    public function dismissUninvited($respondentId)
+    {
+        $respondent = $this->Respondents->get($respondentId);
+        $respondent->approved = -1;
+        $this->set([
+            'success' => (boolean) $this->Respondents->save($respondent)
+        ]);
+    }
 }
