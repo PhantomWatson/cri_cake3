@@ -5,7 +5,8 @@ use App\Controller\AppController;
 
 class StatCategoriesController extends AppController
 {
-    public function index() {
+    public function index()
+    {
         $this->set('statCategories', $this->paginate());
     }
 }
