@@ -530,4 +530,26 @@ class CommunitiesController extends AppController
         }
         $this->redirect($this->request->referer());
     }
+
+    public function clients($communityId)
+    {
+        $community = $this->Communities->find('all')
+            ->select(['id', 'name'])
+            ->where(['id' => $communityId])
+            ->contain([
+                'Client' => function ($q) {
+                    return $q
+                        ->select(['name', 'email'])
+                        ->order(['name' => 'ASC']);
+                }
+            ])
+            ->first();
+        if (! $result) {
+            throw new NotFoundException('Sorry, we couldn\'t find a community with ID# '.$communityId);
+        }
+        $this->set([
+            'titleForLayout' => $community->name.' Clients',
+            'clients' => $community->clients
+        ]);
+    }
 }
