@@ -6,6 +6,36 @@ use Cake\Network\Exception\BadRequestException;
 
 class RespondentsController extends AppController
 {
+    private function setupPagination($communityId, $surveyType)
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
+        $this->Paginator->settings = [
+            'conditions' => ['Respondent.survey_id' => $surveyId],
+            'contain' => [
+                'Response' => [
+                    'fields' => ['Response.response_date'],
+                    'limit' => 1,
+                    'order' => 'Response.response_date DESC'
+                ]
+            ],
+            'fields' => [
+                'Respondent.email',
+                'Respondent.name',
+                'Respondent.approved'
+            ],
+            'joins' => [
+                [
+                    'table' => 'responses',
+                    'type' => 'left',
+                    'alias' => 'Response',
+                    'conditions' => ['Respondent.id = Response.respondent_id']
+                ]
+            ],
+            'limit' => 50
+        ];
+    }
+
     public function index($surveyType = null)
     {
         if ($surveyType != 'official' && $surveyType != 'organization') {
