@@ -149,5 +149,8 @@ gulp.task('watch', function() {
     gulp.watch(watchFiles, ['js']);
     
     // PHP
+    // All tests if a .php file is changed
     gulp.watch('src/**/*.php', ['php']);
+    // Only unit tests if a .ctp file is changed until a proper ruleset for template files is added 
+    gulp.watch('src/**/*.ctp', ['php_unit']);
 });
