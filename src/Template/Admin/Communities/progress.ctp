@@ -72,4 +72,4 @@
 <?= $this->Form->end([
 	'label' => 'Update',
 	'class' => 'btn btn-primary'
-]); ?>
+]) ?>
