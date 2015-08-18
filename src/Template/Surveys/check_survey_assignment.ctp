@@ -1,0 +1,1 @@
+<?= $this->Js->object($community)
