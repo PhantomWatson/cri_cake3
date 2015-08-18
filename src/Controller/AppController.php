@@ -37,7 +37,27 @@ class AppController extends Controller
     public function initialize()
     {
         parent::initialize();
-        $this->loadComponent('Flash');
+        $this->loadComponent('DataCenter.Flash');
+        $this->loadComponent('DataCenter.Autologin', [
+            // Model settings
+            'model' => 'User',
+            'username' => 'email',
+            'password' => 'password',
+
+            // Controller settings
+            'plugin' => '',
+            'controller' => 'users',
+            'loginAction' => 'login',
+            'logoutAction' => 'logout',
+
+            // Cookie settings
+            'cookieName' => 'rememberMe',
+            'expires' => '+1 year',
+
+            // Process logic
+            'redirect' => false,
+            'requirePrompt' => true
+        ]);
         $this->loadComponent('Auth', [
             'loginAction' => [
                 'prefix' => false,
@@ -89,13 +109,14 @@ class AppController extends Controller
         // Set up variables for sidebar
         if ($this->layout == 'default' && $this->Auth->user('role') == 'admin') {
             $communitiesTable = TableRegistry::get('Communities');
-            $this->set(array(
-                'sidebar' => array(
+            $this->set([
+                'sidebar' => [
                     'communities' => $communitiesTable->getClientCommunityList(),
                     'communityId' => $this->Cookie->read('communityId'),
                     'clientId' => $this->Cookie->read('clientId')
-                )
-            ));
+                ],
+                'flashMessages' => $this->Flash->messages
+            ]);
         }
     }
 
