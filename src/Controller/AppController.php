@@ -38,26 +38,7 @@ class AppController extends Controller
     {
         parent::initialize();
         $this->loadComponent('DataCenter.Flash');
-        $this->loadComponent('DataCenter.Autologin', [
-            // Model settings
-            'model' => 'User',
-            'username' => 'email',
-            'password' => 'password',
-
-            // Controller settings
-            'plugin' => '',
-            'controller' => 'users',
-            'loginAction' => 'login',
-            'logoutAction' => 'logout',
-
-            // Cookie settings
-            'cookieName' => 'rememberMe',
-            'expires' => '+1 year',
-
-            // Process logic
-            'redirect' => false,
-            'requirePrompt' => true
-        ]);
+        $this->loadComponent('Cookie');
         $this->loadComponent('Auth', [
             'loginAction' => [
                 'prefix' => false,
@@ -76,7 +57,8 @@ class AppController extends Controller
                         'className' => 'Fallback',
                         'hashers' => ['Default', 'Legacy']
                     ]
-                ]
+                ],
+                'Xety/Cake3CookieAuth.Cookie'
             ],
             'authorize' => ['Controller']
         ]);
@@ -102,6 +84,16 @@ class AppController extends Controller
         $this->set([
             'accessibleCommunities' => $usersTable->getAccessibleCommunities($this->Auth->user('id'))
         ]);
+
+        // Automaticaly Login.
+        if (! $this->Auth->user() && $this->Cookie->read('CookieAuth')) {
+            $user = $this->Auth->identify();
+            if ($user) {
+                $this->Auth->setUser($user);
+            } else {
+                $this->Cookie->delete('CookieAuth');
+            }
+        }
     }
 
     public function beforeRender(\Cake\Event\Event $event)

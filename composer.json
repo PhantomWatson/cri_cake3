@@ -12,7 +12,8 @@
         "cakephp/plugin-installer": "*",
         "cakephp/cakephp-codesniffer": "*",
         "twbs/bootstrap": "~3.0",
-        "phpoffice/phpexcel": "~1.8"
+        "phpoffice/phpexcel": "~1.8",
+        "xety/cake3-cookieauth": "1.*"
     },
     "require-dev": {
         "psy/psysh": "@stable",

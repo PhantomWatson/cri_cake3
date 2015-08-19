@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "79540052b29492c952a310e728daa97a",
+    "hash": "305abadcb1178ace7e4ce59a609e6c99",
     "packages": [
         {
             "name": "aura/installer-default",
@@ -957,6 +957,57 @@
                 "web"
             ],
             "time": "2015-06-16 16:13:22"
+        },
+        {
+            "name": "xety/cake3-cookieauth",
+            "version": "v1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Xety/Cake3-CookieAuth.git",
+                "reference": "b3f278c03cd42999459d1fe7f1a357eb18171d45"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Xety/Cake3-CookieAuth/zipball/b3f278c03cd42999459d1fe7f1a357eb18171d45",
+                "reference": "b3f278c03cd42999459d1fe7f1a357eb18171d45",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "~3.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.1.*"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "Xety\\Cake3CookieAuth\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Xety",
+                    "email": "zoro.fmt@gmail.com",
+                    "homepage": "https://github.com/Xety"
+                }
+            ],
+            "description": "A simple Cake3 plugin to authenticate users with Cookies.",
+            "homepage": "https://github.com/Xety/Cake3-CookieAuth",
+            "keywords": [
+                "auth",
+                "authenticate",
+                "cake3",
+                "cakephp",
+                "cookie",
+                "login",
+                "plugin"
+            ],
+            "time": "2015-04-01 07:30:06"
         }
     ],
     "packages-dev": [

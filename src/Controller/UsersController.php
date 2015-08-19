@@ -28,7 +28,19 @@ class UsersController extends AppController
                     $user->password = $this->request->data('password');
                     $this->Users->save($user);
                 }
-                $this->AutoLogin->setCookie();
+
+                // Remember login information
+                if ($this->request->data('auto_login')) {
+                    $this->Cookie->configKey('CookieAuth', [
+                        'expires' => '+1 year',
+                        'httpOnly' => true
+                    ]);
+                    $this->Cookie->write('CookieAuth', [
+                        'email' => $this->request->data('email'),
+                        'password' => $this->request->data('password')
+                    ]);
+                }
+
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
                 $this->Flash->error('Email or password is incorrect');
@@ -45,18 +57,18 @@ class UsersController extends AppController
     {
         return $this->redirect($this->Auth->logout());
     }
-    
+
     public function isAuthorized($user)
     {
         if (! isset($user['role'])) {
             return false;
         }
-        
+
         // Admin can access every action
         if ($user['role'] === 'admin') {
             return true;
         }
-        
+
         // Other users can access their respective role-prefixed actions
         return $user['role'] === $this->request->params['prefix'];
     }

@@ -182,6 +182,8 @@ Request::addDetector('tablet', function ($request) {
 
 Plugin::load('Migrations');
 Plugin::load('GoogleCharts');
+Plugin::load('DataCenter', ['bootstrap' => false, 'routes' => true]);
+Plugin::load('Xety/Cake3CookieAuth');
 
 // Only try to load DebugKit in development mode
 // Debug Kit should not be installed on a production system
@@ -201,5 +203,3 @@ DispatcherFactory::add('ControllerFactory');
  * This is needed for matching the auto-localized string output of Time() class when parsing dates.
  */
 Type::build('datetime')->useLocaleParser();
-
-Plugin::load('DataCenter', ['bootstrap' => false, 'routes' => true]);
