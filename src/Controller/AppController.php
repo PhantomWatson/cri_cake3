@@ -95,7 +95,7 @@ class AppController extends Controller
         $this->Cookie->httpOnly = true;
     }
 
-    public function beforeFilter(Event $event)
+    public function beforeFilter(\Cake\Event\Event $event)
     {
         // Set Accessible Communities
         $usersTable = TableRegistry::get('Users');
@@ -104,7 +104,7 @@ class AppController extends Controller
         ]);
     }
 
-    public function beforeRender(Event $event)
+    public function beforeRender(\Cake\Event\Event $event)
     {
         // Set up variables for sidebar
         if ($this->layout == 'default' && $this->Auth->user('role') == 'admin') {

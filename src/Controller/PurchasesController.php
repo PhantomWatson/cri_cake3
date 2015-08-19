@@ -11,7 +11,7 @@ use App\Controller\AppController;
 class PurchasesController extends AppController
 {
 
-    public function beforeFilter()
+    public function beforeFilter(\Cake\Event\Event $event)
     {
         parent::beforeFilter();
         $this->Auth->allow('postback');

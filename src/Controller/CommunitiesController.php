@@ -12,7 +12,7 @@ use Cake\Network\Exception\NotFoundException;
 class CommunitiesController extends AppController
 {
 
-    public function beforeRender(Event $event)
+    public function beforeRender(\Cake\Event\Event $event)
     {
         $this->getView()->loadHelper('GoogleCharts.GoogleCharts');
     }
