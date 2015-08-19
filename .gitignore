@@ -3,6 +3,7 @@
 /config/app.php
 /tmp/*
 /logs/*
+/webroot/files/*
 
 # Node
 /node_modules/*
