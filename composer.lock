@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "305abadcb1178ace7e4ce59a609e6c99",
+    "hash": "e690ad1c93dcd3a1aca79a0877f71346",
     "packages": [
         {
             "name": "aura/installer-default",
@@ -124,6 +124,37 @@
                 "localization"
             ],
             "time": "2014-08-24 00:00:00"
+        },
+        {
+            "name": "ballstatecber/datacenter-plugin-cakephp3",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/BallStateCBER/datacenter-plugin-cakephp3.git",
+                "reference": "19e82fb471b5ca9952303bf2e9760f644bb51028"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/BallStateCBER/datacenter-plugin-cakephp3/zipball/19e82fb471b5ca9952303bf2e9760f644bb51028",
+                "reference": "19e82fb471b5ca9952303bf2e9760f644bb51028",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "~3.0",
+                "php": ">=5.4.16"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "DataCenter\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Ball State CBER DataCenter plugin for CakePHP 3",
+            "time": "2015-08-19 18:09:23"
         },
         {
             "name": "cakephp/cakephp",
@@ -1468,6 +1499,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "ballstatecber/datacenter-plugin-cakephp3": 20,
         "psy/psysh": 0
     },
     "prefer-stable": true,
