@@ -2,6 +2,7 @@
 namespace App\Controller\Client;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 class CommunitiesController extends AppController
 {

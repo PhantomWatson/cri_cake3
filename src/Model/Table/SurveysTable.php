@@ -5,6 +5,7 @@ use App\Model\Entity\Survey;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 use Cake\Mailer\Email;
 use Cake\Network\Exception\ForbiddenException;

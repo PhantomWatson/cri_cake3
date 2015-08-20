@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\Controller\AppController;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Network\Exception\MethodNotAllowedException;
+use Cake\ORM\TableRegistry;
 
 class CommunitiesController extends AppController
 {

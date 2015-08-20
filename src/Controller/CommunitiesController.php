@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Network\Exception\NotFoundException;
+use Cake\ORM\TableRegistry;
 
 /**
  * Communities Controller

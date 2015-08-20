@@ -5,8 +5,10 @@ use App\Model\Entity\Community;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 use PHPExcel;
+
 
 /**
  * Communities Model

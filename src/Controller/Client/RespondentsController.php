@@ -3,6 +3,7 @@ namespace App\Controller\Client;
 
 use App\Controller\AppController;
 use Cake\Network\Exception\BadRequestException;
+use Cake\ORM\TableRegistry;
 
 class RespondentsController extends AppController
 {
