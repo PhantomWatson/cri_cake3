@@ -31,10 +31,14 @@ class ResponsesController extends AppController
         $surveysTable = TableRegistry::get('Surveys');
         $areasTable = TableRegistry::get('Areas');
 
-        try {
-            $survey = $surveysTable->get($surveyId);
-        } catch (RecordNotFoundException $e) {
-            throw new NotFoundException('Sorry, we couldn\'t find a survey in the database with that ID number.');
+        if ($surveyId) {
+            try {
+                $survey = $surveysTable->get($surveyId);
+            } catch (RecordNotFoundException $e) {
+                throw new NotFoundException('Sorry, we couldn\'t find a survey in the database with that ID number.');
+            }
+        } else {
+            throw new NotFoundException('Survey ID not specified.');
         }
 
         $communitiesTable = TableRegistry::get('Communities');

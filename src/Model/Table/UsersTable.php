@@ -143,11 +143,15 @@ class UsersTable extends Table
      */
     public function getAccessibleCommunities($userId = null)
     {
-        try {
-            $user = $this->get($userId);
-            $role = $user->role;
-        } catch (RecordNotFoundException $e) {
+        if (! $userId) {
             $role = null;
+        } else {
+            try {
+                $user = $this->get($userId);
+                $role = $user->role;
+            } catch (RecordNotFoundException $e) {
+                $role = null;
+            }
         }
         $communitiesTable = TableRegistry::get('Communities');
         switch ($role) {

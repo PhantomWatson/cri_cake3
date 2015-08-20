@@ -14,9 +14,14 @@ class CommunitiesController extends AppController
         $clientId = $this->getClientId();
         $communityId = $this->Communities->getClientCommunityId($clientId);
 
-        try {
-            $community = $this->Communities->get($communityId);
-        } catch (RecordNotFoundException $e) {
+        if ($communityId) {
+            try {
+                $community = $this->Communities->get($communityId);
+            } catch (RecordNotFoundException $e) {
+                $this->set('titleForLayout', 'CRI Account Not Yet Ready For Use');
+                return $this->render('notready');
+            }
+        } else {
             $this->set('titleForLayout', 'CRI Account Not Yet Ready For Use');
             return $this->render('notready');
         }
