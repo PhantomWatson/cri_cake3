@@ -2,23 +2,23 @@
 	<img src="/img/cri_logo.png" alt="Community Readiness Initiative" />
 </a>
 
-<?php if (AuthComponent::user()): ?>
+<?php if ($authUser): ?>
 	<nav class="logged_in">
 		<h2 class="logged_in">
 			Logged in as
 			<?php if (Configure::read('debug')): ?>
 				<strong>
-					<?= AuthComponent::user('role') ?>
+					<?= $authUser->role ?>
 				</strong>
 			<?php endif; ?>
-			<?= AuthComponent::user('name') ?>
+			<?= $authUser->name ?>
 		</h2>
 
-		<?php if (AuthComponent::user('role') == 'admin'): ?>
+		<?php if ($authUser->role == 'admin'): ?>
 
 			<?= $this->element('Sidebar/admin') ?>
 
-		<?php elseif (AuthComponent::user('role') == 'client'): ?>
+		<?php elseif ($authUser->role == 'client'): ?>
 
 			<?= $this->element('Sidebar/client') ?>
 
@@ -104,7 +104,7 @@
 				]
 			) ?>
 		</li>
-		<?php if (! AuthComponent::user()): ?>
+		<?php if (! $authUser): ?>
 			<li class="link">
 				<?= $this->Html->link(
 					'Login',

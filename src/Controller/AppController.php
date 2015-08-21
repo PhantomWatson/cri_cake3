@@ -114,6 +114,8 @@ class AppController extends Controller
                 'flashMessages' => $this->Flash->messages
             ]);
         }
+
+        $this->set(['authUser' => $this->Auth->user()]);
     }
 
     public function isAuthorized($user)

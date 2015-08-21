@@ -1,8 +1,4 @@
-<?php
-    use Cake\Controller\Component\AuthComponent;
-?>
-
-<?php if (AuthComponent::user() && AuthComponent::user('role') == 'client'): ?>
+<?php if ($authUser->role == 'client'): ?>
     <p class="alert alert-info">
         Thank you for participating in the Community Readiness Initiative.
         <strong>
