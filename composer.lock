@@ -131,12 +131,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BallStateCBER/datacenter-plugin-cakephp3.git",
-                "reference": "19e82fb471b5ca9952303bf2e9760f644bb51028"
+                "reference": "cd0f0ea30674f85a80c86532268e8501cd727d25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BallStateCBER/datacenter-plugin-cakephp3/zipball/19e82fb471b5ca9952303bf2e9760f644bb51028",
-                "reference": "19e82fb471b5ca9952303bf2e9760f644bb51028",
+                "url": "https://api.github.com/repos/BallStateCBER/datacenter-plugin-cakephp3/zipball/cd0f0ea30674f85a80c86532268e8501cd727d25",
+                "reference": "cd0f0ea30674f85a80c86532268e8501cd727d25",
                 "shasum": ""
             },
             "require": {
@@ -154,7 +154,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "description": "Ball State CBER DataCenter plugin for CakePHP 3",
-            "time": "2015-08-19 18:09:23"
+            "time": "2015-08-21 17:43:51"
         },
         {
             "name": "cakephp/cakephp",
@@ -1044,16 +1044,16 @@
     "packages-dev": [
         {
             "name": "cakephp/bake",
-            "version": "1.0.12",
+            "version": "1.0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/bake.git",
-                "reference": "bac96a3a4489ca2d3bdb9d4e613b3ac33b92777a"
+                "reference": "36a58b1d953bd31c3d380394639850cbc726cd09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/bake/zipball/bac96a3a4489ca2d3bdb9d4e613b3ac33b92777a",
-                "reference": "bac96a3a4489ca2d3bdb9d4e613b3ac33b92777a",
+                "url": "https://api.github.com/repos/cakephp/bake/zipball/36a58b1d953bd31c3d380394639850cbc726cd09",
+                "reference": "36a58b1d953bd31c3d380394639850cbc726cd09",
                 "shasum": ""
             },
             "require": {
@@ -1086,7 +1086,7 @@
                 "bake",
                 "cakephp"
             ],
-            "time": "2015-08-15 19:47:51"
+            "time": "2015-08-21 16:51:34"
         },
         {
             "name": "cakephp/debug_kit",
