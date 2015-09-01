@@ -9,7 +9,6 @@ use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 use PHPExcel;
 
-
 /**
  * Communities Model
  *
