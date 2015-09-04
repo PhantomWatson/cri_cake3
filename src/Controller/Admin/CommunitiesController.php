@@ -137,7 +137,7 @@ class CommunitiesController extends AppController
                 }
             }
 
-            $links = array();
+            $links = [];
             foreach ($filters as $filter => $label) {
                 // Only show 'all' link if filter is active
                 if ($filter == 'all' && ! isset($this->filters[$group])) {
@@ -311,10 +311,10 @@ class CommunitiesController extends AppController
         $this->cookieSort('AdminCommunityIndex');
         $this->adminIndexSetupPagination();
         $this->adminIndexSetupFilterButtons();
-        $this->set(array(
+        $this->set([
             'communities' => $this->paginate(),
             'titleForLayout' => 'Indiana Communities'
-        ));
+        ]);
     }
 
     public function add()
@@ -386,7 +386,7 @@ class CommunitiesController extends AppController
         $usersTable = TableRegistry::get('Users');
         $surveysTable = TableRegistry::get('Surveys');
         $areasTable = TableRegistry::get('Areas');
-        $this->set(array(
+        $this->set([
             'titleForLayout' => 'Add Community',
             'qnaIdFields' => $surveysTable->getQnaIdFieldNames(),
             'clients' => $usersTable->getClientList(),
@@ -394,7 +394,7 @@ class CommunitiesController extends AppController
             'selectedClients' => $selectedClients,
             'selectedConsultants' => $selectedConsultants,
             'areas' => $areasTable->find('list')
-        ));
+        ]);
         $this->render('admin_form');
     }
 
@@ -489,7 +489,7 @@ class CommunitiesController extends AppController
 
         // Prepare selected consultants for JS
         $consultants = $usersTable->getConsultantList();
-        $selectedConsultants = array();
+        $selectedConsultants = [];
         if (isset($this->request->data['Consultant'])) {
             foreach ($this->request->data['Consultant'] as $consultant) {
                 $consultantId = isset($consultant['id']) ? $consultant['id'] : $consultant;
@@ -502,7 +502,7 @@ class CommunitiesController extends AppController
 
         $surveysTable = TableRegistry::get('Surveys');
         $areasTable = TableRegistry::get('Areas');
-        $this->set(array(
+        $this->set([
             'communityId' => $communityId,
             'titleForLayout' => 'Edit '.$this->Communities->field('name'),
             'qnaIdFields' => $surveysTable->getQnaIdFieldNames(),
@@ -511,7 +511,7 @@ class CommunitiesController extends AppController
             'selectedClients' => $selectedClients,
             'selectedConsultants' => $selectedConsultants,
             'areas' => $areasTable->find('list')
-        ));
+        ]);
         $this->render('admin_form');
     }
 

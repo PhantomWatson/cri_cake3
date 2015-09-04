@@ -48,9 +48,9 @@ class UsersController extends AppController
         } else {
             $this->request->data['auto_login'] = true;
         }
-        $this->set(array(
+        $this->set([
             'titleForLayout' => 'Log in'
-        ));
+        ]);
     }
 
     public function logout()
