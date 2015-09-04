@@ -313,7 +313,7 @@ class CommunitiesController extends AppController
         $this->adminIndexSetupFilterButtons();
         $this->set(array(
             'communities' => $this->paginate(),
-            'title_for_layout' => 'Indiana Communities'
+            'titleForLayout' => 'Indiana Communities'
         ));
     }
 

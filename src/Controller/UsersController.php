@@ -49,7 +49,7 @@ class UsersController extends AppController
             $this->request->data['auto_login'] = true;
         }
         $this->set(array(
-            'title_for_layout' => 'Log in'
+            'titleForLayout' => 'Log in'
         ));
     }
 
