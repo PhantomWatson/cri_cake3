@@ -70,7 +70,7 @@
 				[
 					'prefix' => false,
 					'controller' => 'Pages',
-					'action' => 'faq_community'
+					'action' => 'faqCommunity'
 				]
 			) ?>
 		</li>
@@ -80,7 +80,7 @@
 				[
 					'prefix' => false,
 					'controller' => 'Pages',
-					'action' => 'faq_consultants'
+					'action' => 'faqConsultants'
 				]
 			) ?>
 		</li>
