@@ -49,7 +49,8 @@ class UsersController extends AppController
             $this->request->data['auto_login'] = true;
         }
         $this->set([
-            'titleForLayout' => 'Log in'
+            'titleForLayout' => 'Log in',
+            'user' => $this->Users->newEntity()
         ]);
     }
 
