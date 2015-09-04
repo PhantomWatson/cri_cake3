@@ -1,6 +1,6 @@
 <div class="page-header">
 	<h1>
-		<?php echo $title_for_layout; ?>
+		<?php echo $titleForLayout; ?>
 	</h1>
 </div>
 
