@@ -273,9 +273,9 @@ class CommunitiesTable extends Table
                         ->order(['ClientCommunities.name' => 'ASC']);
                 }
             ]);
-        $conditions = ['User.role' => 'client'];
+        $conditions = ['Users.role' => 'client'];
         if ($clientId) {
-            $conditions['User.id'] = $clientId;
+            $conditions['Users.id'] = $clientId;
         }
         $query->where($conditions);
         if ($clientId) {
@@ -315,7 +315,7 @@ class CommunitiesTable extends Table
             ->select(['client_id'])
             ->join([
                 'alias' => 'Client',
-                'conditions' => ['Client.community_id' => 'Community.id'],
+                'conditions' => ['Clients.community_id' => 'Communities.id'],
                 'table' => 'clients_communities',
                 'type' => 'LEFT',
 
@@ -337,7 +337,7 @@ class CommunitiesTable extends Table
                 'Client' => function ($q) {
                     return $q
                         ->select(['id', 'name', 'email'])
-                        ->order(['Client.name' => 'ASC']);
+                        ->order(['Clients.name' => 'ASC']);
                 }
             ])
             ->first();

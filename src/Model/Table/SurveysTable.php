@@ -610,25 +610,25 @@ class SurveysTable extends Table
             ->select(['id'])
             ->where([
                 function ($exp, $q) {
-                    return $exp->isNotNull('Survey.sm_id');
+                    return $exp->isNotNull('Surveys.sm_id');
                 },
                 'OR' => [
                     [
-                        'Survey.type' => 'official',
+                        'Surveys.type' => 'official',
                         function ($exp, $q) {
-                            return $exp->gt('Community.score', '1');
+                            return $exp->gt('Communities.score', '1');
                         },
                         function ($exp, $q) {
-                            return $exp->lt('Community.score', '3');
+                            return $exp->lt('Communities.score', '3');
                         }
                     ],
                     [
-                        'Survey.type' => 'organization',
+                        'Surveys.type' => 'organization',
                         function ($exp, $q) {
-                            return $exp->gt('Community.score', '2');
+                            return $exp->gt('Communities.score', '2');
                         },
                         function ($exp, $q) {
-                            return $exp->lt('Community.score', '4');
+                            return $exp->lt('Communities.score', '4');
                         }
                     ]
                 ]
@@ -638,7 +638,7 @@ class SurveysTable extends Table
                 'alias' => 'Community',
                 'type' => 'LEFT',
                 'conditions' => [
-                    'Community.id = Survey.community_id'
+                    'Communities.id = Surveys.community_id'
                 ]
             ])
             ->order(['responses_checked' => 'ASC']);

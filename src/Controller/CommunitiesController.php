@@ -52,7 +52,7 @@ class CommunitiesController extends AppController
         $communities = $this->Communities->find('all')
             ->select(['id', 'name', 'score'])
             ->where(['public' => true])
-            ->order(['Community.name' => 'ASC']);
+            ->order(['Communities.name' => 'ASC']);
         $this->set([
             'communities' => $communities,
             'titleForLayout' => 'Indiana Communities'
@@ -100,7 +100,7 @@ class CommunitiesController extends AppController
         $_GET['term'] = Sanitize::clean($_GET['term']);
         $limit = 10;
 
-        // Community.name will be compared via LIKE to each of these until $limit communities are found.
+        // Communities.name will be compared via LIKE to each of these until $limit communities are found.
         $patterns = [
             $_GET['term'],
             $_GET['term'].' %',

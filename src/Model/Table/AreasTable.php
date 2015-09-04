@@ -86,8 +86,8 @@ class AreasTable extends Table
     public function getPwrBarChart($areaId)
     {
         $area = $this->find('all')
-            ->select(['Area.id'])
-            ->where(['Area.id' => $areaId])
+            ->select(['Areas.id'])
+            ->where(['Areas.id' => $areaId])
             ->contain([
                 'Statistic' => function ($q) {
                     return $q
@@ -272,8 +272,8 @@ class AreasTable extends Table
     public function getPwrTable($areaId)
     {
         $area = $this->find('all')
-            ->select(['Area.id'])
-            ->where(['Area.id' => $areaId])
+            ->select(['Areas.id'])
+            ->where(['Areas.id' => $areaId])
             ->contain([
                 'Statistic' => function ($q) {
                     return $q->where(['Statistic.stat_category_id' => range(1, 17)]);
@@ -330,8 +330,8 @@ class AreasTable extends Table
         ]);
 
         $area = $this->find('all')
-            ->select(['Area.id'])
-            ->where(['Area.id' => $areaId])
+            ->select(['Areas.id'])
+            ->where(['Areas.id' => $areaId])
             ->contain([
                 'Statistic' => function ($q) {
                     return $q
@@ -403,8 +403,8 @@ class AreasTable extends Table
     {
         // Get the most recent year
         $result = $this->find('all')
-            ->select(['Area.id'])
-            ->where(['Area.id' => $areaId])
+            ->select(['Areas.id'])
+            ->where(['Areas.id' => $areaId])
             ->contain([
                 'Statistic' => function ($q) {
                     return $q
@@ -421,8 +421,8 @@ class AreasTable extends Table
 
         // Collect data for table
         $area = $this->find('all')
-            ->select(['Area.id'])
-            ->where(['Area.id' => $areaId])
+            ->select(['Areas.id'])
+            ->where(['Areas.id' => $areaId])
             ->contain([
                 'Statistic' => function ($q) {
                     return $q->where([

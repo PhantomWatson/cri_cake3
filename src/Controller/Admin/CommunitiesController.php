@@ -41,16 +41,16 @@ class CommunitiesController extends AppController
         foreach ($this->filters as $filter) {
             switch ($filter) {
                 case 'ongoing':
-                    $this->paginate['conditions']['Community.score <'] = '5';
+                    $this->paginate['conditions']['Communities.score <'] = '5';
                     break;
                 case 'completed':
-                    $this->paginate['conditions']['Community.score'] = '5';
+                    $this->paginate['conditions']['Communities.score'] = '5';
                     break;
                 case 'fast_track':
-                    $this->paginate['conditions']['Community.fast_track'] = true;
+                    $this->paginate['conditions']['Communities.fast_track'] = true;
                     break;
                 case 'normal_track':
-                    $this->paginate['conditions']['Community.fast_track'] = false;
+                    $this->paginate['conditions']['Communities.fast_track'] = false;
                     break;
                 case 'all':
                 default:
@@ -65,8 +65,8 @@ class CommunitiesController extends AppController
         $this->paginate['contain'] = [
             'Client' => [
                 'fields' => [
-                    'Client.email',
-                    'Client.name'
+                    'Clients.email',
+                    'Clients.name'
                 ]
             ],
             'OfficialSurvey' => [
@@ -93,13 +93,13 @@ class CommunitiesController extends AppController
                 ]
             ]
         ];
-        $this->paginate['group'] = 'Community.id';
+        $this->paginate['group'] = 'Communities.id';
         $this->paginate['fields'] = [
-            'Community.id',
-            'Community.name',
-            'Community.fast_track',
-            'Community.score',
-            'Community.created'
+            'Communities.id',
+            'Communities.name',
+            'Communities.fast_track',
+            'Communities.score',
+            'Communities.created'
         ];
     }
 
@@ -304,7 +304,7 @@ class CommunitiesController extends AppController
     public function index()
     {
         if (isset($_GET['search'])) {
-            $this->paginate['conditions']['Community.name LIKE'] = '%'.$_GET['search'].'%';
+            $this->paginate['conditions']['Communities.name LIKE'] = '%'.$_GET['search'].'%';
         } else {
             $this->adminIndexFilter();
         }
@@ -588,7 +588,7 @@ class CommunitiesController extends AppController
     {
         // Set up filters and sorting
         if (isset($_GET['search'])) {
-            $this->paginate['conditions']['Community.name LIKE'] = '%'.$_GET['search'].'%';
+            $this->paginate['conditions']['Communities.name LIKE'] = '%'.$_GET['search'].'%';
         } else {
             $this->adminIndexFilter();
         }
