@@ -208,7 +208,7 @@ class RespondentsTable extends Table
         return $this->find('all')
             ->where([
                 'survey_id' => $surveyId,
-                '.invited' => true
+                'invited' => true
             ])
             ->count();
     }
