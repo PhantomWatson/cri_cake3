@@ -13,6 +13,12 @@ use Cake\ORM\TableRegistry;
 class CommunitiesController extends AppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->Auth->allow(['autocomplete', 'index', 'view']);
+    }
+
     public function beforeRender(\Cake\Event\Event $event)
     {
         $this->getView()->loadHelper('GoogleCharts.GoogleCharts');
