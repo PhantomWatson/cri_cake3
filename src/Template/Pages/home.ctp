@@ -1,4 +1,4 @@
-<?php if (isset($authUser->role) && $authUser->role == 'client'): ?>
+<?php if (isset($authUser['role']) && $authUser['role'] == 'client'): ?>
     <p class="alert alert-info">
         Thank you for participating in the Community Readiness Initiative.
         <strong>

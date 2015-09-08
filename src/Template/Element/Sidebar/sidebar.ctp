@@ -10,17 +10,17 @@
 			Logged in as
 			<?php if (Configure::read('debug')): ?>
 				<strong>
-					<?= $authUser->role ?>
+					<?= $authUser['role'] ?>
 				</strong>
 			<?php endif; ?>
-			<?= $authUser->name ?>
+			<?= $authUser['name'] ?>
 		</h2>
 
-		<?php if ($authUser->role == 'admin'): ?>
+		<?php if ($authUser['role'] == 'admin'): ?>
 
 			<?= $this->element('Sidebar/admin') ?>
 
-		<?php elseif ($authUser->role == 'client'): ?>
+		<?php elseif ($authUser['role'] == 'client'): ?>
 
 			<?= $this->element('Sidebar/client') ?>
 
