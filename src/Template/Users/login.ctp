@@ -42,7 +42,8 @@
 			'type' => 'checkbox'
 		]
 	);
-	echo $this->Form->end([
-		'label' => 'Login',
-		'class' => 'btn btn-primary'
-	]);
+	echo $this->Form->button(
+		'Login',
+		['class' => 'btn btn-primary']
+	);
+    echo $this->Form->end();

@@ -155,10 +155,11 @@
 
 <?php
 	$label = ($this->action == 'admin_add') ? 'Add User' : 'Update';
-	echo $this->Form->end([
-		'label' => $label,
-		'class' => 'btn btn-primary'
-	]);
+	echo $this->Form->button(
+		$label,
+		['class' => 'btn btn-primary']
+	);
+    echo $this->Form->end();
 	$this->Html->script('admin', ['block' => 'scriptBottom']);
 ?>
 <?php $this->append('buffered'); ?>

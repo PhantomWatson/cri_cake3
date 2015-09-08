@@ -130,11 +130,14 @@
 		Add another
 	</a>
 
-	<?= $this->Form->end([
-		'class' => 'btn btn-primary',
-		'div' => false,
-		'label' => 'Send invitations'
-	)) ?>
+    <?= $this->Form->button(
+        'Send invitations',
+        [
+            'class' => 'btn btn-primary',
+            'div' => false
+        ]
+	) ?>
+	<?= $this->Form->end() ?>
 </div>
 
 <?php $this->Html->script('client', ['block' => 'scriptBottom']); ?>

@@ -374,10 +374,11 @@
 	$label = $this->request->action == 'admin_add'
 		? 'Add Community'
 		: 'Update Community';
-	echo $this->Form->end([
-		'label' => $label,
-		'class' => 'btn btn-primary'
-	]);
+	echo $this->Form->button(
+		$label,
+		['class' => 'btn btn-primary']
+	);
+    echo $this->Form->end();
 
 	$this->Html->script('admin', ['block' => 'scriptBottom']);
 	if (! isset($community_id)) {

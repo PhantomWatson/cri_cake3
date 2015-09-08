@@ -20,7 +20,8 @@
 			'value' => $redirect
 		]
 	);
-	echo $this->Form->end([
-		'label' => 'Continue',
-		'class' => 'btn btn-primary'
-	]);
+	echo $this->Form->button(
+		'Continue',
+		['class' => 'btn btn-primary']
+	);
+    echo $this->Form->end();

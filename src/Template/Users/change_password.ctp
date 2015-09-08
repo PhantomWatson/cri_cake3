@@ -36,7 +36,8 @@
 			'type' => 'password'
 		]
 	);
-	echo $this->Form->end([
-		'class' => 'btn btn-primary',
-		'label' => 'Submit'
-	]);
+    echo $this->Form->button(
+	    'Submit',
+		['class' => 'btn btn-primary']
+	);
+    echo $this->Form->end();

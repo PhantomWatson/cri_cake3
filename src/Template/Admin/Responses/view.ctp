@@ -78,7 +78,8 @@
 		'type' => 'select'
 	]
 ) ?>
-<?= $this->Form->end([
-	'label' => 'Update',
-	'class' => 'btn btn-primary'
-]) ?>
+<?= $this->Form->button(
+	'Update',
+	['class' => 'btn btn-primary']
+) ?>
+<?= $this->Form->end() ?>

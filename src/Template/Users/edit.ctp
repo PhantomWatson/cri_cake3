@@ -28,8 +28,9 @@
 			'div' => ['class' => 'form-group']
 		]
 	);
-	echo $this->Form->end([
-		'label' => 'Update',
-		'class' => 'btn btn-primary'
-	]);
+	echo $this->Form->button(
+		'Update',
+		['class' => 'btn btn-primary']
+	);
+    echo $this->Form->end();
 ?>
