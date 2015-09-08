@@ -1,3 +1,5 @@
+<?php use Cake\Core\Configure; ?>
+
 <a href="/" id="sidebar_logo">
 	<img src="/img/cri_logo.png" alt="Community Readiness Initiative" />
 </a>
