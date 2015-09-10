@@ -8,7 +8,7 @@
 	<?php // Deliberately blank ?>
 <?php $this->end(); ?>
 
-<?php $this->start('script'); ?>
+<?php $this->start('scriptBottom'); ?>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script>$.fn.modal || document.write('<script src="/bootstrap/js/bootstrap.min.js"><\/script>')</script>
 <?php $this->end(); ?>
