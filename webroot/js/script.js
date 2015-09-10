@@ -24,12 +24,14 @@ var sidebar = {
     }
 };
 
-function showFlashMessages() {
-	var messages = $('#flash_messages_bootstrap');
-	if (! messages.is(':visible')) {
-		messages.slideDown(500);
-	}
-}
+var flashMessage = {
+    init: function () {
+    	var messages = $('#flash_messages_bootstrap');
+    	if (! messages.is(':visible')) {
+    		messages.slideDown(500);
+    	}
+    }
+};
 
 function insertFlashMessage(message, classname) {
     var bootstrap_class = 'alert-info';

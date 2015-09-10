@@ -5,7 +5,7 @@
 	 * so that asyncronous activity can load messages into it as needed. */
 	if (! empty($flash_messages)) {
 		$this->append('buffered');
-		  echo 'showFlashMessages();';
+		  echo 'flashMessage.init();';
         $this->end();
 	}
 ?>
