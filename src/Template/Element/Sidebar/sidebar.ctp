@@ -122,5 +122,5 @@
 </nav>
 
 <?php $this->append('buffered'); ?>
-    setupSidebar();
+    sidebar.init();
 <?php $this->end(); ?>
