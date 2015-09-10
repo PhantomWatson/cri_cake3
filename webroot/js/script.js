@@ -30,28 +30,27 @@ var flashMessage = {
     	if (! messages.is(':visible')) {
     		messages.slideDown(500);
     	}
-    }
+    },
+    insert: function (message, classname) {
+        var bootstrap_class = 'alert-info';
+        if (classname == 'error') {
+            bootstrap_class = 'alert-danger';
+        } else if (classname == 'success') {
+            bootstrap_class = 'alert-success';
+        }
+        
+        var alert = $('<div class="alert alert-dismissible '+bootstrap_class+'" role="alert"></div>');
+        alert.append('<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>');
+        alert.append(message);
+        
+        var container = $('#flash_messages_bootstrap');
+        if (container.is(':visible')) {
+            alert.hide();
+            container.append(alert);
+            alert.slideDown();
+        } else {
+            container.append(alert);
+            showBootstrapFlashMessages();
+        }
+    } 
 };
-
-function insertFlashMessage(message, classname) {
-    var bootstrap_class = 'alert-info';
-    if (classname == 'error') {
-		bootstrap_class = 'alert-danger';
-    } else if (classname == 'success') {
-		bootstrap_class = 'alert-success';
-	}
-	
-	var alert = $('<div class="alert alert-dismissible '+bootstrap_class+'" role="alert"></div>');
-	alert.append('<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>');
-	alert.append(message);
-	
-	var container = $('#flash_messages_bootstrap');
-	if (container.is(':visible')) {
-		alert.hide();
-		container.append(alert);
-		alert.slideDown();
-	} else {
-		container.append(alert);
-		showBootstrapFlashMessages();
-	}
-}
