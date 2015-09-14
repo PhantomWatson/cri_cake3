@@ -188,4 +188,30 @@ class UsersController extends AppController
             'action' => 'index'
         ]);
     }
+
+    public function chooseClient()
+    {
+        $communitiesTable = TableRegistry::get('Communities');
+        if ($this->request->is('post')) {
+            $communityId = $this->request->data['community_id'];
+            $this->Cookie->write('communityId', $communityId);
+            $clientId = $communitiesTable->getCommunityClientId($communityId);
+            $this->Cookie->write('clientId', $clientId);
+            if (isset($this->request->data['redirect'])) {
+                $this->redirect($this->request->data['redirect']);
+            } elseif ($this->request->is('ajax')) {
+                $this->render('/Pages/blank');
+                $this->layout = 'ajax';
+            } else {
+                $this->Flash->success('Client selected');
+            }
+        }
+        $this->set([
+            'communities' => $communitiesTable->getClientCommunityList(),
+            'titleForLayout' => 'Choose client'
+        ]);
+        if (isset($this->request->query['redirect'])) {
+            $this->set('redirect', urldecode($this->request->query['redirect']));
+        }
+    }
 }
