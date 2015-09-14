@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\ORM\TableRegistry;
 
 class UsersController extends AppController
@@ -168,5 +169,23 @@ class UsersController extends AppController
             'user' => $user
         ]);
         $this->render('/Admin/Users/form');
+    }
+
+    public function delete($id = null)
+    {
+        if (! $this->request->is('post')) {
+            throw new MethodNotAllowedException();
+        }
+        $user = $this->Users->get($id);
+
+        if ($this->Users->delete($user)) {
+            $this->Flash->success('User deleted');
+        } else {
+            $this->Flash->error('User was not deleted');
+        }
+        $this->redirect([
+            'prefix' => 'admin',
+            'action' => 'index'
+        ]);
     }
 }
