@@ -29,6 +29,12 @@ use Cake\ORM\TableRegistry;
 class AppController extends Controller
 {
 
+    public $helpers = [
+        'Form' => [
+            'templates' => 'bootstrap_form'
+        ]
+    ];
+
     /**
      * Initialization hook method.
      *
