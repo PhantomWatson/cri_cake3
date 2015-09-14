@@ -88,7 +88,7 @@
 							[
 								'prefix' => 'admin',
 								'action' => 'edit',
-								'id' => $user['id']
+								$user['id']
 							],
 							['class' => 'btn btn-default']
 						) ?>
@@ -97,7 +97,7 @@
 							[
 								'prefix' => 'admin',
 								'action' => 'delete',
-								'id' => $user['id']
+								$user['id']
 							],
 							['class' => 'btn btn-default'],
 							"Are you sure you want to delete {$user['name']}'s account?"
