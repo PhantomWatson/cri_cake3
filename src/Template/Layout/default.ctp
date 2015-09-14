@@ -1,7 +1,10 @@
 <?php
 	$this->extend('DataCenter.default');
 	$this->assign('sidebar', $this->element('Sidebar/sidebar'));
-	echo $this->Html->script('script.min.js', ['block' => 'scriptBottom']);
+
+    use Cake\Core\Configure;
+    $script = Configure::read('debug') ? 'script.js' : 'script.min.js';
+	echo $this->Html->script($script, ['block' => 'scriptBottom']);
 ?>
 
 <?php $this->start('subsite_title'); ?>
