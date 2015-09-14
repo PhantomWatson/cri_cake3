@@ -130,18 +130,16 @@
 </div>
 
 <div id="client_communities">
-    <?php
-        echo $this->Form->input(
-            'ClientCommunity.0',
-            [
-                'class' => 'form-control',
-                'empty' => 'Choose a community to assign this client to...',
-                'label' => false,
-                'options' => $communities,
-                'required' => false
-            ]
-        );
-    ?>
+    <?= $this->Form->input(
+        'ClientCommunity.0',
+        [
+            'class' => 'form-control',
+            'empty' => 'Choose a community to assign this client to...',
+            'label' => false,
+            'options' => $communities,
+            'required' => false
+        ]
+    ) ?>
 </div>
 
 <?php
