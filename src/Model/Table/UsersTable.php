@@ -120,6 +120,13 @@ class UsersTable extends Table
         return $validator;
     }
 
+    public function validationWithoutPassword(Validator $validator)
+    {
+        $validator = $this->validationDefault($validator);
+        $validator->remove('password');
+        return $validator;
+    }
+
     /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
