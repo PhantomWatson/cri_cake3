@@ -24,37 +24,32 @@
 	echo $this->Form->input(
 		'name',
 		[
-			'class' => 'form-control',
-			'div' => ['class' => 'form-group']
+			'class' => 'form-control'
 		]
 	);
 	echo $this->Form->input(
 		'title',
 		[
 			'class' => 'form-control',
-			'div' => ['class' => 'form-group'],
 			'label' => 'Job Title'
 		]
 	);
 	echo $this->Form->input(
 		'organization',
 		[
-			'class' => 'form-control',
-			'div' => ['class' => 'form-group']
+			'class' => 'form-control'
 		]
 	);
 	echo $this->Form->input(
 		'email',
 		[
-			'class' => 'form-control',
-			'div' => ['class' => 'form-group']
+			'class' => 'form-control'
 		]
 	);
 	echo $this->Form->input(
 		'phone',
 		[
-			'class' => 'form-control',
-			'div' => ['class' => 'form-group']
+			'class' => 'form-control'
 		]
 	);
 
@@ -63,15 +58,13 @@
 			'password',
 			[
 				'autocomplete' => 'off',
-				'class' => 'form-control',
-				'div' => ['class' => 'form-group']
+				'class' => 'form-control'
 			]
 		);
 		echo $this->Form->input(
 			'confirm_password',
 			[
 				'class' => 'form-control',
-				'div' => ['class' => 'form-group'],
 				'label' => 'Confirm password',
 				'type' => 'password'
 			]
@@ -82,7 +75,6 @@
 			[
 				'autocomplete' => 'off',
 				'class' => 'form-control',
-				'div' => ['class' => 'form-group'],
 				'label' => 'Change password',
 				'required' => false
 			]
@@ -91,7 +83,6 @@
 			'confirm_password',
 			[
 				'class' => 'form-control',
-				'div' => ['class' => 'form-group'],
 				'label' => 'Repeat new password'
 			]
 		);
@@ -102,7 +93,6 @@
 		[
 			'after' => '<span class="note">Admins automatically have access to all communities and site functions</span>',
 			'class' => 'form-control',
-			'div' => ['class' => 'form-group'],
 			'options' => $roles
 		]
 	);
@@ -114,21 +104,23 @@
 			'all_communities',
 			[
 				'before' => '<span class="fake_label">Which communities should this consultant have access to?</span><br />',
-				'div' => ['class' => 'form-group all_communities'],
 				'legend' =>  false,
 				'options' =>  [
 					1 => 'All communities',
 					0 => 'Only specific communities'
 				],
 				'separator' => '<br />',
-				'type'      =>  'radio'
+				'templates' => [
+                    'inputContainer' => '<div class="form-group all_communities {{type}}{{required}}">{{content}}</div>',
+                    'inputContainerError' => '<div class="form-group all_communities {{type}}{{required}} error">{{content}}{{error}}</div>'
+                ],
+				'type' => 'radio'
 			]
 		);
 		echo $this->Form->input(
 			'community',
 			[
 				'class' => 'form-control',
-				'div' => ['class' => 'form-group'],
 				'empty' => 'Choose one or more communities to allow this user access to...',
 				'label' => false,
 				'options' => $communities
@@ -143,7 +135,6 @@
 			'ClientCommunity.0',
 			[
 				'class' => 'form-control',
-				'div' => ['class' => 'form-group'],
 				'empty' => 'Choose a community to assign this client to...',
 				'label' => false,
 				'options' => $communities,
