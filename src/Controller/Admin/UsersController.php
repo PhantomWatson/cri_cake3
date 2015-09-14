@@ -46,4 +46,73 @@ class UsersController extends AppController
             ]
         ]);
     }
+
+    public function edit($id = null)
+    {
+        $user = $this->Users->get($id);
+
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $user = $this->Users->patchEntity($user, $this->request->data(), [
+                'validate' => 'WithoutPassword'
+            ]);
+
+            $errors = $user->errors();
+            if (empty($errors) && $this->request->data['new_password'] != '') {
+                $user->password = $this->request->data['new_password'];
+            }
+
+            // Force numerically-indexed array
+            if (! empty($this->request->data['consultant_community'])) {
+                $user->consultant_community = array_values($this->request->data['consultant_community']);
+            }
+
+            if ($this->Users->save($user)) {
+                $this->Flash->success('User info updated');
+                $this->redirect([
+                    'admin' => true,
+                    'action' => 'index'
+                ]);
+            }
+        } else {
+            $this->request->data = $this->Users->find('all')
+                ->select(['name'])
+                ->where(['Users.id' => $id])
+                ->contain([
+                    'ConsultantCommunities',
+                    'ClientCommunities'
+                ])
+                ->first()
+                ->toArray();
+        }
+
+        // Clear password fields
+        $this->request->data['password'] = '';
+        $this->request->data['confirm_password'] = '';
+
+        // Prepare selected communities for JS
+        $communities = $this->Users->ConsultantCommunities->find('list');
+        $selectedCommunities = [];
+        if (! empty($this->request->data['consultant_community'])) {
+            foreach ($this->request->data['consultant_community'] as $community) {
+                $communityId = isset($community['id']) ? $community['id'] : $community;
+                $selectedCommunities[] = [
+                    'id' => $communityId,
+                    'name' => $communities[$communityId]
+                ];
+            }
+        }
+
+        $this->set([
+            'communities' => $communities,
+            'roles' => [
+                'admin' => 'Admin',
+                'client' => 'Client',
+                'consultant' => 'Consultant'
+            ],
+            'selectedCommunities' => $selectedCommunities,
+            'titleForLayout' => $this->request->data['name'],
+            'user' => $user
+        ]);
+        $this->render('/Admin/Users/form');
+    }
 }
