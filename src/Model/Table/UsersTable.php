@@ -74,8 +74,8 @@ class UsersTable extends Table
 
         $validator
             ->requirePresence('name', 'create')
-            ->add('name', 'notEmpty', [
-                'rule' => 'notEmpty',
+            ->add('name', 'notBlank', [
+                'rule' => 'notBlank',
                 'message' => 'A non-blank name is required.'
             ]);
 
@@ -101,8 +101,8 @@ class UsersTable extends Table
 
         $validator
             ->requirePresence('password', 'create')
-            ->add('password', 'notEmpty', [
-                'rule' => 'notEmpty',
+            ->add('password', 'notBlank', [
+                'rule' => 'notBlank',
                 'message' => 'A non-blank password is required.'
             ]);
 
