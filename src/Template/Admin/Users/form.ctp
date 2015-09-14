@@ -154,7 +154,7 @@
 </div>
 
 <?php
-	$label = ($this->action == 'admin_add') ? 'Add User' : 'Update';
+	$label = ($this->request->action == 'add') ? 'Add User' : 'Update';
 	echo $this->Form->button(
 		$label,
 		['class' => 'btn btn-primary']
@@ -164,6 +164,6 @@
 ?>
 <?php $this->append('buffered'); ?>
 	adminUserEdit.init({
-		selected_communities: <?= $this->Js->object($selectedCommunities) ?>
+		selected_communities: <?= json_encode($selectedCommunities) ?>
 	});
 <?php $this->end(); ?>
