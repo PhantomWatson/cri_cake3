@@ -47,6 +47,60 @@ class UsersController extends AppController
         ]);
     }
 
+    public function add()
+    {
+        $user = $this->Users->newEntity();
+
+        if ($this->request->is('post') || $this->request->is('put')) {
+            // Force numerically-indexed array
+            if (! empty($this->request->data['consultant_communities'])) {
+                $this->request->data['consultant_communities'] = array_values($this->request->data['consultant_communities']);
+            }
+
+            // Ignore ClientCommunity if user is not a client
+            if ($this->request->data['role'] != 'client') {
+                unset($this->request->data['client_communities']);
+            }
+
+            $user = $this->Users->patchEntity($user, $this->request->data);
+
+            if ($this->Users->save($user)) {
+                $this->Flash->success('User added');
+                $this->redirect([
+                    'prefix' => 'admin',
+                    'action' => 'index'
+                ]);
+            }
+        } else {
+            $this->request->data['all_communities'] = false;
+        }
+
+        // Prepare selected communities for JS
+        $communities = $this->Users->ConsultantCommunities->find('list');
+        $selectedCommunities = [];
+        if (isset($this->request->data['consultant_communities'])) {
+            foreach ($this->request->data['consultant_communities'] as $communityId) {
+                $selectedCommunities[] = [
+                    'id' => $communityId,
+                    'name' => $communities[$communityId]
+                ];
+            }
+        }
+
+        $this->set([
+            'communities' => $communities,
+            'roles' => [
+                'admin' => 'Admin',
+                'client' => 'Client',
+                'consultant' => 'Consultant'
+            ],
+            'selectedCommunities' => $selectedCommunities,
+            'titleForLayout' => 'Add User',
+            'user' => $user
+        ]);
+        $this->render('/Admin/Users/form');
+    }
+
     public function edit($id = null)
     {
         $user = $this->Users->get($id);
