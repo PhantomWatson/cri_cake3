@@ -114,12 +114,13 @@ class AppController extends Controller
                     'communities' => $communitiesTable->getClientCommunityList(),
                     'communityId' => $this->Cookie->read('communityId'),
                     'clientId' => $this->Cookie->read('clientId')
-                ],
-                'flashMessages' => $this->Flash->messages
+                ]
             ]);
         }
-
-        $this->set(['authUser' => $this->Auth->user()]);
+        $this->set([
+            'authUser' => $this->Auth->user(),
+            'flashMessages' => $this->Flash->messages
+        ]);
     }
 
     public function isAuthorized($user)
