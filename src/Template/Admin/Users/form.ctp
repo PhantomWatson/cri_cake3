@@ -103,16 +103,16 @@
         echo $this->Form->input(
             'all_communities',
             [
-                'before' => '<span class="fake_label">Which communities should this consultant have access to?</span><br />',
-                'legend' =>  false,
+                'label' =>  false,
                 'options' =>  [
                     1 => 'All communities',
                     0 => 'Only specific communities'
                 ],
-                'separator' => '<br />',
                 'templates' => [
-                    'inputContainer' => '<div class="form-group all_communities {{type}}{{required}}">{{content}}</div>',
-                    'inputContainerError' => '<div class="form-group all_communities {{type}}{{required}} error">{{content}}{{error}}</div>'
+                    'inputContainer' => '<div class="form-group all_communities {{type}}{{required}}"><span class="fake_label">Which communities should this consultant have access to?</span><br />{{content}}</div>',
+                    'inputContainerError' => '<div class="form-group all_communities {{type}}{{required}} error"><span class="fake_label">Which communities should this consultant have access to?</span><br />{{content}}{{error}}</div>',
+                    'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
+                    'radioWrapper' => '{{label}}<br />'
                 ],
                 'type' => 'radio'
             ]

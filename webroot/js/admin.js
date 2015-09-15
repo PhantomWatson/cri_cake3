@@ -3,7 +3,7 @@ var adminUserEdit = {
 	
 	init: function (params) {
 		var community_container = $('<ul id="community_container"></ul>');
-		var community_select = $('#UserCommunity');
+		var community_select = $('#community');
 		community_select.after(community_container);
 		community_select.prop('selectedIndex', 0);
 		
@@ -25,12 +25,12 @@ var adminUserEdit = {
 			select.prop('selectedIndex', 0);
 		});
 		
-		$('#UserAllCommunities0, #UserAllCommunities1').change(function () {
+		$('#all-communities-0, #all-communities-1').change(function () {
 			adminUserEdit.toggleAllCommunities(true);
 		});
 		this.toggleAllCommunities(false);
 		
-		$('#UserRole').change(function () {
+		$('#role').change(function () {
 			adminUserEdit.onRoleChange(true);
 		});
 		this.onRoleChange(false);
@@ -58,27 +58,27 @@ var adminUserEdit = {
 	},
 	
 	toggleAllCommunities: function (animate) {
-		if ($('#UserAllCommunities0').is(':checked')) {
+		if ($('#all-communities-0').is(':checked')) {
 			if (animate) {
-				$('#UserCommunity').slideDown();
+				$('#community').slideDown();
 				$('#community_container').slideDown();
 			} else {
-				$('#UserCommunity').show();
+				$('#community').show();
 				$('#community_container').show();
 			}
 		} else {
 			if (animate) {
-				$('#UserCommunity').slideUp();
+				$('#community').slideUp();
 				$('#community_container').slideUp();
 			} else {
-				$('#UserCommunity').hide();
+				$('#community').hide();
 				$('#community_container').hide();
 			}
 		}
 	},
 	
 	onRoleChange: function (animate) {
-		var role = $('#UserRole').val();
+		var role = $('#role').val();
 		var duration = animate ? 300 : 0;
 		if (role == 'consultant') {
 			$('#consultant_communities').slideDown(duration);
