@@ -112,21 +112,25 @@ class UsersController extends AppController
             ]);
 
             $errors = $user->errors();
-            if (empty($errors) && $this->request->data['new_password'] != '') {
-                $user->password = $this->request->data['new_password'];
-            }
+            if (empty($errors)) {
+                if ($this->request->data['new_password'] != '') {
+                    $user->password = $this->request->data['new_password'];
+                }
 
-            // Force numerically-indexed array
-            if (! empty($this->request->data['consultant_community'])) {
-                $user->consultant_community = array_values($this->request->data['consultant_community']);
-            }
+                // Force numerically-indexed array
+                if (! empty($this->request->data['consultant_community'])) {
+                    $user->consultant_community = array_values($this->request->data['consultant_community']);
+                }
 
-            if ($this->Users->save($user)) {
-                $this->Flash->success('User info updated');
-                $this->redirect([
-                    'admin' => true,
-                    'action' => 'index'
-                ]);
+                if ($this->Users->save($user)) {
+                    $this->Flash->success('User info updated');
+                    $this->redirect([
+                        'admin' => true,
+                        'action' => 'index'
+                    ]);
+                }
+            } else {
+                $this->Flash->error('Please correct the indicated error(s)');
             }
         } else {
             $this->request->data = $this->Users->find('all')
