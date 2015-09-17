@@ -6,17 +6,6 @@
 	</div>
 
 	<p>
-		<?= $this->Html->link(
-			'Add Community',
-			[
-				'prefix' => 'admin',
-				'action' => 'add'
-			],
-			['class' => 'btn btn-success']
-		) ?>
-	</p>
-
-	<p>
 		<?php foreach ($buttons as $group_label => $button_group): ?>
 			<div class="btn-group">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -51,6 +40,15 @@
 		<a href="#" class="btn btn-link" id="glossary_toggler">
 			Icon Glossary
 		</a>
+
+		<?= $this->Html->link(
+            'Add Community',
+            [
+                'prefix' => 'admin',
+                'action' => 'add'
+            ],
+            ['class' => 'btn btn-success']
+        ) ?>
 	</p>
 
 	<div class="alert alert-info" id="glossary">
