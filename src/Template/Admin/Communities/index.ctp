@@ -89,6 +89,21 @@
 		<button type="submit" class="btn btn-default">Search</button>
 	</form>
 
+    <?php if (isset($this->request->query['search'])): ?>
+        <p class="alert alert-info" id="search_term">
+            Search term: <strong><?= $this->request->query['search'] ?></strong>
+            <?= $this->Html->link(
+                'clear search',
+                [
+                    'prefix' => 'admin',
+                    'controller' => 'communities',
+                    'action' => 'index',
+                    '?' => []
+                ]
+            ) ?>
+        </p>
+    <?php endif; ?>
+
 	<?= $this->element('pagination') ?>
 
 	<table class="table">
