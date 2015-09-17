@@ -437,8 +437,9 @@ class CommunitiesController extends AppController
                     list($qnaSuccess, $qnaMsg) = $this->setSurveyQuestionAndAnswerIds();
                 }
                 $community = $this->Communities->newEntity($this->request->data);
+                $communityErrors = $community->errors();
                 $validates = $qnaSuccess
-                    && empty($community->errors())
+                    && empty($communityErrors)
                     && empty($clientErrors)
                     && empty($consultantErrors);
                 if ($validates && $this->Communities->save($community)) {
