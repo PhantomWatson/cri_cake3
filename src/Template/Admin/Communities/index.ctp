@@ -141,49 +141,49 @@
 			<?php foreach ($communities as $community): ?>
 				<tr>
 					<td>
-						<?= $community['Community']['name'] ?>
+						<?= $community->name ?>
 						<br />
 						<span class="area_name">
-							<?= $community['Area']['name'] ?>
+							<?= $community->name ?>
 						</span>
 					</td>
 					<td>
-						<?= str_replace('.0', '', $community['Community']['score']) ?>
-						<?php if ($community['Community']['fast_track']): ?>
+						<?= str_replace('.0', '', $community->score) ?>
+						<?php if ($community->fast_track): ?>
 							<span class="glyphicon glyphicon-road fast_track" aria-hidden="true" title="Fast Track"></span>
 						<?php endif; ?>
 					</td>
 
 					<?php foreach (['OfficialSurvey', 'OrganizationSurvey'] as $survey_type): ?>
 						<td>
-							<?php if (isset($community[$survey_type]['sm_id']) && $community[$survey_type]['sm_id']): ?>
+							<?php if (isset($community->{$survey_type}['sm_id']) && $community->{$survey_type}['sm_id']): ?>
 								<?= $this->Html->link(
 									'Overview',
 									[
 										'prefix' => 'admin',
 										'controller' => 'Surveys',
 										'action' => 'view',
-										$community[$survey_type]['id']
+										$community->{$survey_type}['id']
 									]
 								) ?>
 								<br />
-								<?php if ($community[$survey_type]['alignment'] === null): ?>
+								<?php if ($community->{$survey_type}['alignment'] === null): ?>
 									Alignment: Not set
 								<?php else: ?>
-									Alignment: <?php echo $community[$survey_type]['alignment']; ?>%
+									Alignment: <?php echo $community->{$survey_type}['alignment']; ?>%
 
-									<?php if ($community[$survey_type]['alignment_passed'] == -1): ?>
+									<?php if ($community->{$survey_type}['alignment_passed'] == -1): ?>
 										<span class="glyphicon glyphicon-remove-sign" aria-hidden="true" title="Failed to pass"></span>
-									<?php elseif ($community[$survey_type]['alignment_passed'] == 1): ?>
+									<?php elseif ($community->{$survey_type}['alignment_passed'] == 1): ?>
 										<span class="glyphicon glyphicon-ok-sign" aria-hidden="true" title="Passed"></span>
 									<?php endif; ?>
 
 								<?php endif; ?>
 
-								<?php if (isset($community[$survey_type]['respondents_last_modified_date']) && $community[$survey_type]['respondents_last_modified_date']): ?>
+								<?php if (isset($community->{$survey_type}['respondents_last_modified_date']) && $community->{$survey_type}['respondents_last_modified_date']): ?>
 									<br /> Last response:
 									<?php
-										$timestamp = strtotime($community[$survey_type]['respondents_last_modified_date']);
+										$timestamp = strtotime($community->{$survey_type}['respondents_last_modified_date']);
 										echo date('n/j/Y', $timestamp);
 									?>
 								<?php endif; ?>
@@ -194,7 +194,7 @@
 										'prefix' => 'admin',
 										'controller' => 'communities',
 										'action' => 'edit',
-										$community['Community']['id']
+										$community->id
 									]
 								) ?>
 							<?php endif; ?>
@@ -213,28 +213,28 @@
 										[
 											'prefix' => 'admin',
 											'action' => 'progress',
-											$community['Community']['id']
+											$community->id
 										]
 									) ?>
 								</li>
 								<li>
 						    		<?= $this->Html->link(
-										'Clients ('.count($community['Client']).')',
+										'Clients ('.count($community->client).')',
 										[
 											'prefix' => 'admin',
 											'action' => 'clients',
-											$community['Community']['id']
+											$community->id
 										]
 									) ?>
 						    	</li>
-						    	<?php if (! empty($community['Client'])): ?>
+						    	<?php if (! empty($community->client)): ?>
 							    	<li>
 							    		<?= $this->Html->link(
 											'Client Home',
 											[
 												'prefix' => 'admin',
 												'action' => 'clienthome',
-												$community['Community']['id']
+												$community->id
 											]
 										) ?>
 							    	</li>
@@ -245,7 +245,7 @@
 										[
 											'prefix' => false,
 											'action' => 'view',
-											$community['Community']['id']
+											$community->id
 										]
 									) ?>
 								</li>
@@ -255,7 +255,7 @@
 										[
 											'prefix' => 'admin',
 											'action' => 'edit',
-											'id' => $community['Community']['id']
+											$community->id
 										]
 									) ?>
 						    	</li>
@@ -265,10 +265,10 @@
 										[
 											'prefix' => 'admin',
 											'action' => 'delete',
-											'id' => $community['Community']['id']
+											$community->id
 										],
 										[],
-										"Are you sure you want to delete {$community['Community']['name']}? This cannot be undone."
+										"Are you sure you want to delete {$community->name}? This cannot be undone."
 									); ?>
 								</li>
 							</ul>
