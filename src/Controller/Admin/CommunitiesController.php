@@ -22,6 +22,8 @@ class CommunitiesController extends AppController
             foreach ($this->filters as $group => $filter) {
                 $this->Cookie->write("$cookieParentKey.filters.$group", $filter);
             }
+        } else {
+            $this->filters = [];
         }
 
         // Use remembered filters when no filters manually specified
@@ -76,6 +78,10 @@ class CommunitiesController extends AppController
                 'normal_track' => 'Normal Track'
             ]
         ];
+        $this->filters = $this->request->query('filters');
+        if (! is_array($this->filters)) {
+            $this->filters = [];
+        }
         foreach ($this->filters as $group => $filter) {
             if ($filter == 'all') {
                 unset($this->filters[$group]);
