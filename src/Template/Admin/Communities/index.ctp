@@ -95,24 +95,23 @@
 		<thead>
 			<tr>
 				<?php
-					function getSortArrow($sort_field, $params) {
-						if (isset($params['named']['sort']) && $params['named']['sort'] == $sort_field) {
-							$direction = strtolower($params['named']['direction']) == 'desc' ? 'up' : 'down';
+					function getSortArrow($sortField, $query) {
+						if (isset($query['sort']) && $query['sort'] == $sortField) {
+							$direction = strtolower($query['direction']) == 'desc' ? 'up' : 'down';
 							return '<span class="glyphicon glyphicon-arrow-'.$direction.'" aria-hidden="true"></span>';
 						}
 						return '';
 					}
-					$paginator_options = ['escape' => false];
 				?>
 				<th>
 					<?php
-						$arrow = getSortArrow('name', $this->request->params);
-						echo $this->Paginator->sort('name', 'Community'.$arrow, $paginator_options);
+						$arrow = getSortArrow('Communities.name', $this->request->query);
+						echo $this->Paginator->sort('Communities.name', 'Community'.$arrow, ['escape' => false]);
 					?>
 					/
 					<?php
-						$arrow = getSortArrow('Area.name', $this->request->params);
-						echo $this->Paginator->sort('Area.name', 'Area'.$arrow, $paginator_options);
+						$arrow = getSortArrow('Area.name', $this->request->query);
+						echo $this->Paginator->sort('Area.name', 'Area'.$arrow, ['escape' => false]);
 					?>
 				</th>
 				<th>

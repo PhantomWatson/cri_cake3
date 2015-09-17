@@ -269,6 +269,7 @@ class CommunitiesController extends AppController
         }
         $this->cookieSort('AdminCommunityIndex');
         $this->paginate['finder'] = 'adminIndex';
+        $this->paginate['sortWhitelist'] = ['Communities.name', 'Area.name'];
         $this->adminIndexSetupFilterButtons();
         $this->set([
             'communities' => $this->paginate(),
