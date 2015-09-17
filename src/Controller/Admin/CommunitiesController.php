@@ -18,8 +18,10 @@ class CommunitiesController extends AppController
 
         // Remember selected filters
         $this->filters = $this->request->query('filters');
-        foreach ($this->filters as $group => $filter) {
-            $this->Cookie->write("$cookieParentKey.filters.$group", $filter);
+        if (is_array($this->filters)) {
+            foreach ($this->filters as $group => $filter) {
+                $this->Cookie->write("$cookieParentKey.filters.$group", $filter);
+            }
         }
 
         // Use remembered filters when no filters manually specified
