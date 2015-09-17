@@ -60,49 +60,6 @@ class CommunitiesController extends AppController
         }
     }
 
-    private function adminIndexSetupPagination()
-    {
-        $this->paginate['contain'] = [
-            'Client' => [
-                'fields' => [
-                    'Clients.email',
-                    'Clients.name'
-                ]
-            ],
-            'OfficialSurvey' => [
-                'fields' => [
-                    'OfficialSurvey.id',
-                    'OfficialSurvey.sm_id',
-                    'OfficialSurvey.alignment',
-                    'OfficialSurvey.alignment_passed',
-                    'OfficialSurvey.respondents_last_modified_date'
-                ]
-            ],
-            'OrganizationSurvey' => [
-                'fields' => [
-                    'OrganizationSurvey.id',
-                    'OrganizationSurvey.sm_id',
-                    'OrganizationSurvey.alignment',
-                    'OrganizationSurvey.alignment_passed',
-                    'OrganizationSurvey.respondents_last_modified_date'
-                ]
-            ],
-            'Area' => [
-                'fields' => [
-                    'Area.name'
-                ]
-            ]
-        ];
-        $this->paginate['group'] = 'Communities.id';
-        $this->paginate['fields'] = [
-            'Communities.id',
-            'Communities.name',
-            'Communities.fast_track',
-            'Communities.score',
-            'Communities.created'
-        ];
-    }
-
     private function adminIndexSetupFilterButtons()
     {
         $allFilters = [
@@ -309,7 +266,7 @@ class CommunitiesController extends AppController
             $this->adminIndexFilter();
         }
         $this->cookieSort('AdminCommunityIndex');
-        $this->adminIndexSetupPagination();
+        $this->paginate['finder'] = 'adminIndex';
         $this->adminIndexSetupFilterButtons();
         $this->set([
             'communities' => $this->paginate(),

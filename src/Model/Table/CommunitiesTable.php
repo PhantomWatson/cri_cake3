@@ -32,8 +32,9 @@ class CommunitiesTable extends Table
         $this->displayField('name');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
-        $this->belongsTo('Areas', [
-            'foreignKey' => 'area_id'
+        $this->belongsTo('Area', [
+            'className' => 'Areas',
+            'foreignKey' => 'area_id',
         ]);
         $this->hasMany('Purchases', [
             'foreignKey' => 'community_id'
@@ -44,30 +45,30 @@ class CommunitiesTable extends Table
         $this->hasMany('SurveysBackup', [
             'foreignKey' => 'community_id'
         ]);
-        $this->hasOne('OfficialSurveys', [
+        $this->hasOne('OfficialSurvey', [
             'className' => 'Surveys',
             'foreignKey' => 'community_id',
-            'conditions' => ['OfficialSurveys.type' => 'official'],
+            'conditions' => ['OfficialSurvey.type' => 'official'],
             'dependent' => true
         ]);
-        $this->hasOne('OrganizationSurveys', [
+        $this->hasOne('OrganizationSurvey', [
             'className' => 'Surveys',
             'foreignKey' => 'community_id',
-            'conditions' => ['OrganizationSurveys.type' => 'organization'],
+            'conditions' => ['OrganizationSurvey.type' => 'organization'],
             'dependent' => true
         ]);
         $this->belongsToMany('Consultant', [
-            'className' => 'User',
+            'className' => 'Users',
             'joinTable' => 'communities_consultants',
             'foreignKey' => 'community_id',
             'targetForeignKey' => 'consultant_id',
             'saveStrategy' => 'replace'
         ]);
         $this->belongsToMany('Client', [
-            'className' => 'User',
+            'className' => 'Users',
             'joinTable' => 'clients_communities',
             'foreignKey' => 'community_id',
-            'associationForeignKey' => 'client_id',
+            'targetForeignKey' => 'client_id',
             'saveStrategy' => 'replace'
         ]);
     }
@@ -742,5 +743,48 @@ class CommunitiesTable extends Table
         }
 
         return $objPHPExcel;
+    }
+
+    public function findAdminIndex(\Cake\ORM\Query $query, array $options)
+    {
+        $query
+            ->contain([
+                'Client' => function ($q) {
+                    return $q->select([
+                        'Client.email',
+                        'Client.name'
+                    ]);
+                },
+                'OfficialSurvey' => function ($q) {
+                    return $q->select([
+                        'OfficialSurvey.id',
+                        'OfficialSurvey.sm_id',
+                        'OfficialSurvey.alignment',
+                        'OfficialSurvey.alignment_passed',
+                        'OfficialSurvey.respondents_last_modified_date'
+                    ]);
+                },
+                'OrganizationSurvey' => function ($q) {
+                    return $q->select([
+                        'OrganizationSurvey.id',
+                        'OrganizationSurvey.sm_id',
+                        'OrganizationSurvey.alignment',
+                        'OrganizationSurvey.alignment_passed',
+                        'OrganizationSurvey.respondents_last_modified_date'
+                    ]);
+                },
+                'Area' => function ($q) {
+                    return $q->select(['Area.name']);
+                }
+            ])
+            ->group('Communities.id')
+            ->select([
+                'Communities.id',
+                'Communities.name',
+                'Communities.fast_track',
+                'Communities.score',
+                'Communities.created'
+            ]);
+        return $query;
     }
 }
