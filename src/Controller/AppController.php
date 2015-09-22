@@ -95,9 +95,10 @@ class AppController extends Controller
 
         // Automaticaly Login.
         if (! $this->Auth->user() && $this->Cookie->read('CookieAuth')) {
+            $this->request->data = $this->Cookie->read('CookieAuth');
             $user = $this->Auth->identify();
             if ($user) {
-                $this->Auth->setUser($user);
+                $this->Auth->setUser($user); $this->Flash->success('logged in via cookie');
             } else {
                 $this->Cookie->delete('CookieAuth');
             }
