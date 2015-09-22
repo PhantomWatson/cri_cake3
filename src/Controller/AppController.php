@@ -87,20 +87,24 @@ class AppController extends Controller
 
     public function beforeFilter(\Cake\Event\Event $event)
     {
-        // Set Accessible Communities
+        // Set accessible communities
         $usersTable = TableRegistry::get('Users');
         $this->set([
             'accessibleCommunities' => $usersTable->getAccessibleCommunities($this->Auth->user('id'))
         ]);
 
-        // Automaticaly Login.
+        // Automaticaly login
         if (! $this->Auth->user() && $this->Cookie->read('CookieAuth')) {
+            $rememberData = $this->request->data;
             $this->request->data = $this->Cookie->read('CookieAuth');
             $user = $this->Auth->identify();
             if ($user) {
                 $this->Auth->setUser($user);
             } else {
                 $this->Cookie->delete('CookieAuth');
+            }
+            if ($rememberData) {
+                $this->request->data = $rememberData;
             }
         }
     }
