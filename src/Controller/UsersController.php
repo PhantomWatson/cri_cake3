@@ -73,4 +73,21 @@ class UsersController extends AppController
         // Other users can access their respective role-prefixed actions
         return $user['role'] === $this->request->params['prefix'];
     }
+
+    public function changePassword()
+    {
+        $userId = $this->Auth->user('id');
+        $user = $this->Users->get($userId);
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $user->password = $this->request->data['new_password'];
+            if ($this->Users->save($user)) {
+                $this->Flash->success('Your password has been updated');
+            }
+        }
+        $this->request->data = [];
+        $this->set([
+            'titleForLayout' => 'Change Password',
+            'user' => $user
+        ]);
+    }
 }
