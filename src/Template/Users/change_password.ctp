@@ -18,12 +18,13 @@
 <?php
 	echo $this->Form->create($user);
 	echo $this->Form->input(
-		'password',
+		'new_password',
 		[
 			'autocomplete' => 'off',
 			'class' => 'form-control',
 			'div' => ['class' => 'form-group'],
-			'label' => 'Change password'
+			'label' => 'Change password',
+			'type' => 'password'
 		]
 	);
 	echo $this->Form->input(

@@ -53,6 +53,10 @@ class UsersController extends AppController
         $user = $this->Users->newEntity();
 
         if ($this->request->is('post') || $this->request->is('put')) {
+            if ($this->request->data['new_password'] != '') {
+                $user->password = $this->request->data['new_password'];
+            }
+
             // Force numerically-indexed array
             if (! empty($this->request->data['consultant_communities'])) {
                 $this->request->data['consultant_communities'] = array_values($this->request->data['consultant_communities']);

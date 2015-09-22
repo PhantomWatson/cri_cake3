@@ -55,10 +55,11 @@
 
     if ($this->request->action == 'add' && $this->request->prefix == 'admin') {
         echo $this->Form->input(
-            'password',
+            'new_password',
             [
                 'autocomplete' => 'off',
-                'class' => 'form-control'
+                'class' => 'form-control',
+                'type' => 'password'
             ]
         );
         echo $this->Form->input(
@@ -76,14 +77,16 @@
                 'autocomplete' => 'off',
                 'class' => 'form-control',
                 'label' => 'Change password',
-                'required' => false
+                'required' => false,
+                'type' => 'password'
             ]
         );
         echo $this->Form->input(
             'confirm_password',
             [
                 'class' => 'form-control',
-                'label' => 'Repeat new password'
+                'label' => 'Repeat new password',
+                'type' => 'password'
             ]
         );
     }

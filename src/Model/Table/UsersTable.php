@@ -119,10 +119,6 @@ class UsersTable extends Table
             ->allowEmpty('new_password');
 
         $validator
-            ->add('confirm_password', 'validNewPassword2', [
-                'rule' => ['compareWith', 'new_password'],
-                'message' => 'Sorry, those passwords did not match.'
-            ])
             ->allowEmpty('confirm_password');
 
         $validator
