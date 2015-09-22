@@ -28,7 +28,7 @@ class UsersController extends AppController
                 case 'client':
                 case 'consultant':
                 case 'admin':
-                    $this->Paginator->settings['conditions']['Users.role'] = $filter;
+                    $this->paginate['conditions']['Users.role'] = $filter;
                     break;
                 default:
                     // No action

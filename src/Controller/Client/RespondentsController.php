@@ -11,7 +11,7 @@ class RespondentsController extends AppController
     {
         $surveysTable = TableRegistry::get('Surveys');
         $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
-        $this->Paginator->settings = [
+        $this->paginate = [
             'conditions' => ['Respondent.survey_id' => $surveyId],
             'contain' => [
                 'Response' => [
