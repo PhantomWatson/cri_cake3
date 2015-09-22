@@ -98,7 +98,7 @@ class AppController extends Controller
             $this->request->data = $this->Cookie->read('CookieAuth');
             $user = $this->Auth->identify();
             if ($user) {
-                $this->Auth->setUser($user); $this->Flash->success('logged in via cookie');
+                $this->Auth->setUser($user);
             } else {
                 $this->Cookie->delete('CookieAuth');
             }
