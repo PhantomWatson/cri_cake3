@@ -112,23 +112,24 @@ class UsersTable extends Table
             ]);
 
         $validator
-            ->add('new_password', 'validNewPassword', [
-                'rule' => ['compareWith', 'password'],
+            ->add('new_password', 'validNewPassword1', [
+                'rule' => ['compareWith', 'confirm_password'],
                 'message' => 'Sorry, those passwords did not match.'
-            ]);
+            ])
+            ->allowEmpty('new_password');
+
+        $validator
+            ->add('confirm_password', 'validNewPassword2', [
+                'rule' => ['compareWith', 'new_password'],
+                'message' => 'Sorry, those passwords did not match.'
+            ])
+            ->allowEmpty('confirm_password');
 
         $validator
             ->add('all_communities', 'valid', ['rule' => 'boolean'])
             ->requirePresence('all_communities', 'create')
             ->notEmpty('all_communities');
 
-        return $validator;
-    }
-
-    public function validationWithoutPassword(Validator $validator)
-    {
-        $validator = $this->validationDefault($validator);
-        $validator->remove('password');
         return $validator;
     }
 

@@ -107,9 +107,6 @@ class UsersController extends AppController
         $user = $this->Users->get($id);
 
         if ($this->request->is('post') || $this->request->is('put')) {
-            $user = $this->Users->patchEntity($user, $this->request->data(), [
-                'validate' => 'WithoutPassword'
-            ]);
 
             $errors = $user->errors();
             if (empty($errors)) {
