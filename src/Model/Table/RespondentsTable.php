@@ -57,6 +57,11 @@ class RespondentsTable extends Table
 
         $validator
             ->add('email', 'valid', ['rule' => 'email'])
+            ->add('email', 'unique', [
+                'rule' => 'validateUnique',
+                'provider' => 'table',
+                'message' => 'Sorry, another account has already been created with that email address.'
+            ])
             ->requirePresence('email', 'create')
             ->notEmpty('email');
 
@@ -90,7 +95,6 @@ class RespondentsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['email']));
         $rules->add($rules->existsIn(['survey_id'], 'Surveys'));
         $rules->add($rules->existsIn(['sm_respondent_id'], 'SmRespondents'));
         return $rules;

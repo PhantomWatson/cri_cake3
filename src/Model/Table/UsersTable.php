@@ -84,6 +84,11 @@ class UsersTable extends Table
                 'rule' => 'email',
                 'message' => 'That doesn\'t appear to be a valid email address.'
             ])
+            ->add('email', 'unique', [
+                'rule' => 'validateUnique',
+                'provider' => 'table',
+                'message' => 'Sorry, another account has already been created with that email address.'
+            ])
             ->requirePresence('email', 'create')
             ->notEmpty('email');
 
@@ -136,9 +141,6 @@ class UsersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['email']), [
-            'message' => 'Sorry, another account has already been created with that email address.'
-        ]);
         return $rules;
     }
 
