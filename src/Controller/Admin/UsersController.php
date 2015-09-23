@@ -111,7 +111,7 @@ class UsersController extends AppController
         $user = $this->Users->get($id);
 
         if ($this->request->is('post') || $this->request->is('put')) {
-
+            $user = $this->Users->patchEntity($user, $this->request->data);
             $errors = $user->errors();
             if (empty($errors)) {
                 if ($this->request->data['new_password'] != '') {
