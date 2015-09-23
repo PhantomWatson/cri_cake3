@@ -308,7 +308,7 @@ class CommunitiesController extends AppController
                     && empty($consultantErrors);
                 if ($validates && $this->Communities->saveAssociated($this->request->data)) {
                     $this->Flash->success('Community added');
-                    $this->redirect([
+                    return $this->redirect([
                         'prefix' => 'admin',
                         'action' => 'index'
                     ]);
@@ -410,7 +410,7 @@ class CommunitiesController extends AppController
                     && empty($consultantErrors);
                 if ($validates && $this->Communities->save($community)) {
                     $this->Flash->success('Community updated');
-                    $this->redirect([
+                    return $this->redirect([
                         'prefix' => 'admin',
                         'action' => 'index'
                     ]);
@@ -496,7 +496,7 @@ class CommunitiesController extends AppController
         } else {
             $this->Flash->error('There was an error deleting that community');
         }
-        $this->redirect($this->request->referer());
+        return $this->redirect($this->request->referer());
     }
 
     public function clients($communityId)
@@ -580,7 +580,7 @@ class CommunitiesController extends AppController
         $this->Cookie->write('communityId', $communityId);
         $clientId = $this->Communities->getCommunityClientId($communityId);
         $this->Cookie->write('clientId', $clientId);
-        $this->redirect([
+        return $this->redirect([
             'prefix' => 'client',
             'controller' => 'Communities',
             'action' => 'index'

@@ -42,7 +42,7 @@ class PurchasesController extends AppController
             $purchase = $this->Purchases->get($purchaseId);
         } catch (RecordNotFoundException $e) {
             $this->Flash->error("Payment record #$purchaseId not found.");
-            $this->redirect(['action' => 'index']);
+            return $this->redirect(['action' => 'index']);
         }
 
         if ($this->request->is('post')) {
@@ -71,6 +71,6 @@ class PurchasesController extends AppController
             }
         }
 
-        $this->redirect(['action' => 'index']);
+        return $this->redirect(['action' => 'index']);
     }
 }

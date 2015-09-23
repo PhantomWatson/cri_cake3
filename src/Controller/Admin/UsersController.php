@@ -71,7 +71,7 @@ class UsersController extends AppController
 
             if ($this->Users->save($user)) {
                 $this->Flash->success('User added');
-                $this->redirect([
+                return $this->redirect([
                     'prefix' => 'admin',
                     'action' => 'index'
                 ]);
@@ -125,7 +125,7 @@ class UsersController extends AppController
 
                 if ($this->Users->save($user)) {
                     $this->Flash->success('User info updated');
-                    $this->redirect([
+                    return $this->redirect([
                         'admin' => true,
                         'action' => 'index'
                     ]);
@@ -188,7 +188,7 @@ class UsersController extends AppController
         } else {
             $this->Flash->error('User was not deleted');
         }
-        $this->redirect([
+        return $this->redirect([
             'prefix' => 'admin',
             'action' => 'index'
         ]);
@@ -203,7 +203,7 @@ class UsersController extends AppController
             $clientId = $communitiesTable->getCommunityClientId($communityId);
             $this->Cookie->write('clientId', $clientId);
             if (isset($this->request->data['redirect'])) {
-                $this->redirect($this->request->data['redirect']);
+                return $this->redirect($this->request->data['redirect']);
             } elseif ($this->request->is('ajax')) {
                 $this->render('/Pages/blank');
                 $this->layout = 'ajax';

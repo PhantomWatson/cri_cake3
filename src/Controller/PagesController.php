@@ -65,6 +65,6 @@ class PagesController extends AppController
 
     public function enroll()
     {
-        $this->redirect('https://www.surveymonkey.com/s/XFT6CSZ');
+        return $this->redirect('https://www.surveymonkey.com/s/XFT6CSZ');
     }
 }

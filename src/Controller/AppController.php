@@ -126,6 +126,7 @@ class AppController extends Controller
             'authUser' => $this->Auth->user(),
             'flashMessages' => $this->Flash->messages
         ]);
+        $this->request->session()->delete('FlashMessage');
     }
 
     public function isAuthorized($user)
@@ -145,7 +146,7 @@ class AppController extends Controller
 
     protected function chooseClientToImpersonate()
     {
-        $this->redirect([
+        return $this->redirect([
             'prefix' => 'admin',
             'controller' => 'Users',
             'action' => 'choose_client',
