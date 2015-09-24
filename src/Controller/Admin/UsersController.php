@@ -62,6 +62,10 @@ class UsersController extends AppController
                 $this->request->data['consultant_communities'] = array_values($this->request->data['consultant_communities']);
             }
 
+            if (empty($this->request->data['client_communities'][0]['id'])) {
+                $this->request->data['client_communities'] = [];
+            }
+
             // Ignore ClientCommunity if user is not a client
             if ($this->request->data['role'] != 'client') {
                 unset($this->request->data['client_communities']);
