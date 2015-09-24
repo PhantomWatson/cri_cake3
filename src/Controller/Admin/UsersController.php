@@ -139,7 +139,7 @@ class UsersController extends AppController
                     ]);
                 }
             } else {
-                $this->Flash->error('Please correct the indicated error(s): '.print_r($user->errors(), true));
+                $this->Flash->error('Please correct the indicated error(s)');
             }
         }
 
