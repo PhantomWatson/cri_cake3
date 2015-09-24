@@ -46,7 +46,7 @@ var adminUserEdit = {
 			});
 		});
 		li.append(link);
-		li.append('<input type="hidden" name="data[ConsultantCommunity]['+this.community_counter+']" value="'+id+'" />');
+		li.append('<input type="hidden" name="consultant_communities['+this.community_counter+'][id]" value="'+id+'" />');
 		this.community_counter++;
 		if (animate) {
 			li.hide();
