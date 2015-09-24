@@ -25,6 +25,8 @@ class User extends Entity
         'password' => true,
         'all_communities' => true,
         'purchases' => true,
+        'client_communities' => true
+
     ];
 
     protected function _setPassword($password)
