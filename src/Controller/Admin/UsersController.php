@@ -48,6 +48,34 @@ class UsersController extends AppController
         ]);
     }
 
+    private function prepareForm($user)
+    {
+        $communities = $this->Users->ConsultantCommunities->find('list')->toArray();
+        $selectedCommunities = [];
+        if (! empty($user->consultant_communities)) {
+            foreach ($user->consultant_communities as $community) {
+                $selectedCommunities[] = [
+                    'id' => $community->id,
+                    'name' => $communities[$community->id]
+                ];
+            }
+        }
+
+        $this->request->data['new_password'] = '';
+        $this->request->data['confirm_password'] = '';
+
+        $this->set([
+            'communities' => $communities,
+            'roles' => [
+                'admin' => 'Admin',
+                'client' => 'Client',
+                'consultant' => 'Consultant'
+            ],
+            'selectedCommunities' => $selectedCommunities,
+            'user' => $user
+        ]);
+    }
+
     public function add()
     {
         $user = $this->Users->newEntity();
@@ -79,28 +107,9 @@ class UsersController extends AppController
             $this->request->data['all_communities'] = false;
         }
 
-        // Prepare selected communities for JS
-        $communities = $this->Users->ConsultantCommunities->find('list')->toArray();
-        $selectedCommunities = [];
-        if (! empty($user->consultant_communities)) {
-            foreach ($user->consultant_communities as $community) {
-                $selectedCommunities[] = [
-                    'id' => $community->id,
-                    'name' => $communities[$community->id]
-                ];
-            }
-        }
-
+        $this->prepareForm($user);
         $this->set([
-            'communities' => $communities,
-            'roles' => [
-                'admin' => 'Admin',
-                'client' => 'Client',
-                'consultant' => 'Consultant'
-            ],
-            'selectedCommunities' => $selectedCommunities,
-            'titleForLayout' => 'Add User',
-            'user' => $user
+            'titleForLayout' => 'Add User'
         ]);
         $this->render('/Admin/Users/form');
     }
@@ -137,32 +146,9 @@ class UsersController extends AppController
             }
         }
 
-        // Clear password fields
-        $this->request->data['password'] = '';
-        $this->request->data['confirm_password'] = '';
-
-        // Prepare selected communities for JS
-        $communities = $this->Users->ConsultantCommunities->find('list')->toArray();
-        $selectedCommunities = [];
-        if (! empty($user->consultant_communities)) {
-            foreach ($user->consultant_communities as $community) {
-                $selectedCommunities[] = [
-                    'id' => $community->id,
-                    'name' => $communities[$community->id]
-                ];
-            }
-        }
-
+        $this->prepareForm($user);
         $this->set([
-            'communities' => $communities,
-            'roles' => [
-                'admin' => 'Admin',
-                'client' => 'Client',
-                'consultant' => 'Consultant'
-            ],
-            'selectedCommunities' => $selectedCommunities,
-            'titleForLayout' => $user->name,
-            'user' => $user
+            'titleForLayout' => $user->name
         ]);
         $this->render('/Admin/Users/form');
     }
