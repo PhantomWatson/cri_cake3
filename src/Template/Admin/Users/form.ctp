@@ -23,9 +23,7 @@
     echo $this->Form->create($user);
     echo $this->Form->input(
         'name',
-        [
-            'class' => 'form-control'
-        ]
+        ['class' => 'form-control']
     );
     echo $this->Form->input(
         'title',
@@ -36,21 +34,15 @@
     );
     echo $this->Form->input(
         'organization',
-        [
-            'class' => 'form-control'
-        ]
+        ['class' => 'form-control']
     );
     echo $this->Form->input(
         'email',
-        [
-            'class' => 'form-control'
-        ]
+        ['class' => 'form-control']
     );
     echo $this->Form->input(
         'phone',
-        [
-            'class' => 'form-control'
-        ]
+        ['class' => 'form-control']
     );
 
     if ($this->request->action == 'add' && $this->request->prefix == 'admin') {
