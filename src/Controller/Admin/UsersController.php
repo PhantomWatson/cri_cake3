@@ -108,10 +108,14 @@ class UsersController extends AppController
 
     public function edit($id = null)
     {
-        $user = $this->Users->get($id);
+        $user = $this->Users->get($id, ['contain' => ['ClientCommunities']]);
 
         if ($this->request->is('post') || $this->request->is('put')) {
-            $user = $this->Users->patchEntity($user, $this->request->data);
+            if (empty($this->request->data['client_communities'][0]['id'])) {
+                $this->request->data['client_communities'] = [];
+            }
+
+            $user = $this->Users->patchEntity($user, $this->request->data());
             $errors = $user->errors();
             if (empty($errors)) {
                 if ($this->request->data['new_password'] != '') {
@@ -131,18 +135,8 @@ class UsersController extends AppController
                     ]);
                 }
             } else {
-                $this->Flash->error('Please correct the indicated error(s)');
+                $this->Flash->error('Please correct the indicated error(s): '.print_r($user->errors(), true));
             }
-        } else {
-            $this->request->data = $this->Users->find('all')
-                ->select(['name'])
-                ->where(['Users.id' => $id])
-                ->contain([
-                    'ConsultantCommunities',
-                    'ClientCommunities'
-                ])
-                ->first()
-                ->toArray();
         }
 
         // Clear password fields
@@ -170,7 +164,7 @@ class UsersController extends AppController
                 'consultant' => 'Consultant'
             ],
             'selectedCommunities' => $selectedCommunities,
-            'titleForLayout' => $this->request->data['name'],
+            'titleForLayout' => $user->name,
             'user' => $user
         ]);
         $this->render('/Admin/Users/form');

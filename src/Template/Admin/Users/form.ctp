@@ -134,13 +134,15 @@
 
 <div id="client_communities">
     <?= $this->Form->input(
-        'ClientCommunity.0',
+        'client_communities.0.id',
         [
             'class' => 'form-control',
             'empty' => 'Choose a community to assign this client to...',
             'label' => false,
+            'multiple' => false,
             'options' => $communities,
-            'required' => false
+            'required' => false,
+            'type' => 'select'
         ]
     ) ?>
 </div>
