@@ -25,7 +25,8 @@ class User extends Entity
         'password' => true,
         'all_communities' => true,
         'purchases' => true,
-        'client_communities' => true
+        'client_communities' => true,
+        'consultant_communities' => true
 
     ];
 
