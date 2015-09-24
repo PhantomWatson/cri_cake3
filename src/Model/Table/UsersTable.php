@@ -105,21 +105,23 @@ class UsersTable extends Table
             ->notEmpty('organization');
 
         $validator
-            ->requirePresence('password', 'create')
             ->add('password', 'notBlank', [
                 'rule' => 'notBlank',
                 'message' => 'A non-blank password is required.'
             ]);
 
         $validator
+            ->requirePresence('new_password', 'create')
+            ->notEmpty('new_password', 'A password is required', 'create')
+            ->allowEmpty('new_password', 'update')
             ->add('new_password', 'validNewPassword1', [
                 'rule' => ['compareWith', 'confirm_password'],
                 'message' => 'Sorry, those passwords did not match.'
-            ])
-            ->allowEmpty('new_password');
+            ]);
 
         $validator
-            ->allowEmpty('confirm_password');
+            ->notEmpty('confirm_password', 'A password is required', 'create')
+            ->allowEmpty('confirm_password', 'update');
 
         $validator
             ->add('all_communities', 'valid', ['rule' => 'boolean'])
