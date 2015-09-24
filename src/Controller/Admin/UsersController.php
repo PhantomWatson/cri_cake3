@@ -57,11 +57,6 @@ class UsersController extends AppController
                 $user->password = $this->request->data['new_password'];
             }
 
-            // Force numerically-indexed array
-            if (! empty($this->request->data['consultant_communities'])) {
-                $this->request->data['consultant_communities'] = array_values($this->request->data['consultant_communities']);
-            }
-
             if (empty($this->request->data['client_communities'][0]['id'])) {
                 $this->request->data['client_communities'] = [];
             }
@@ -85,13 +80,13 @@ class UsersController extends AppController
         }
 
         // Prepare selected communities for JS
-        $communities = $this->Users->ConsultantCommunities->find('list');
+        $communities = $this->Users->ConsultantCommunities->find('list')->toArray();
         $selectedCommunities = [];
-        if (isset($this->request->data['consultant_communities'])) {
-            foreach ($this->request->data['consultant_communities'] as $communityId) {
+        if (! empty($user->consultant_communities)) {
+            foreach ($user->consultant_communities as $community) {
                 $selectedCommunities[] = [
-                    'id' => $communityId,
-                    'name' => $communities[$communityId]
+                    'id' => $community->id,
+                    'name' => $communities[$community->id]
                 ];
             }
         }
@@ -112,11 +107,15 @@ class UsersController extends AppController
 
     public function edit($id = null)
     {
-        $user = $this->Users->get($id, ['contain' => ['ClientCommunities']]);
+        $user = $this->Users->get($id, ['contain' => ['ClientCommunities', 'ConsultantCommunities']]);
 
         if ($this->request->is('post') || $this->request->is('put')) {
             if (empty($this->request->data['client_communities'][0]['id'])) {
                 $this->request->data['client_communities'] = [];
+            }
+
+            if (empty($this->request->data['consultant_communities'])) {
+                $this->request->data['consultant_communities'] = [];
             }
 
             $user = $this->Users->patchEntity($user, $this->request->data());
@@ -124,11 +123,6 @@ class UsersController extends AppController
             if (empty($errors)) {
                 if ($this->request->data['new_password'] != '') {
                     $user->password = $this->request->data['new_password'];
-                }
-
-                // Force numerically-indexed array
-                if (! empty($this->request->data['consultant_community'])) {
-                    $user->consultant_community = array_values($this->request->data['consultant_community']);
                 }
 
                 if ($this->Users->save($user)) {
@@ -148,14 +142,13 @@ class UsersController extends AppController
         $this->request->data['confirm_password'] = '';
 
         // Prepare selected communities for JS
-        $communities = $this->Users->ConsultantCommunities->find('list');
+        $communities = $this->Users->ConsultantCommunities->find('list')->toArray();
         $selectedCommunities = [];
-        if (! empty($this->request->data['consultant_community'])) {
-            foreach ($this->request->data['consultant_community'] as $community) {
-                $communityId = isset($community['id']) ? $community['id'] : $community;
+        if (! empty($user->consultant_communities)) {
+            foreach ($user->consultant_communities as $community) {
                 $selectedCommunities[] = [
-                    'id' => $communityId,
-                    'name' => $communities[$communityId]
+                    'id' => $community->id,
+                    'name' => $communities[$community->id]
                 ];
             }
         }
