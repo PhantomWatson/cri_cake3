@@ -139,8 +139,14 @@ class UsersController extends AppController
                     $user->password = $this->request->data['new_password'];
                 }
 
+                $roleChanged = $user->dirty('role');
+
                 if ($this->Users->save($user)) {
-                    $this->Flash->success('User info updated');
+                    $msg = 'User info updated';
+                    if ($roleChanged) {
+                        $msg .= '. The update to this user\'s <strong>role</strong> will take effect the next time they manually log in or when their session automatically refreshes.';
+                    }
+                    $this->Flash->success($msg);
                     return $this->redirect([
                         'admin' => true,
                         'action' => 'index'
