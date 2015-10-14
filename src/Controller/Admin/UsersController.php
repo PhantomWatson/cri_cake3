@@ -194,7 +194,7 @@ class UsersController extends AppController
                 return $this->redirect($this->request->data['redirect']);
             } elseif ($this->request->is('ajax')) {
                 $this->render('/Pages/blank');
-                $this->layout = 'ajax';
+                $this->viewBuilder()->layout('ajax');
             } else {
                 $this->Flash->success('Client selected');
             }

@@ -126,6 +126,6 @@ class CommunitiesController extends AppController
         }
 
         $this->set(['communities' => $retval]);
-        $this->layout = 'json';
+        $this->viewBuilder()->layout('json');
     }
 }

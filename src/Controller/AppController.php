@@ -112,7 +112,7 @@ class AppController extends Controller
     public function beforeRender(\Cake\Event\Event $event)
     {
         // Set up variables for sidebar
-        if ($this->layout == 'default' && $this->Auth->user('role') == 'admin') {
+        if ($this->viewBuilder()->layout() == 'default' && $this->Auth->user('role') == 'admin') {
             $communitiesTable = TableRegistry::get('Communities');
             $this->set([
                 'sidebar' => [
