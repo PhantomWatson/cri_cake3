@@ -27,32 +27,32 @@
         <?php foreach ($purchases as $purchase): ?>
             <tr>
                 <td>
-                    <?= $purchase['User']['name'] ?>
+                    <?= $purchase->user['name'] ?>
                 </td>
                 <td>
-                    <?php if ($purchase['Product']['description']): ?>
-                        <?= $purchase['Product']['description'] ?>
+                    <?php if ($purchase->product['description']): ?>
+                        <?= $purchase->product['description'] ?>
                     <?php else: ?>
                         <span class="unknown">
                             Unknown product
                         </span>
                     <?php endif; ?>
 
-                    <?php if ($purchase['Product']['price']): ?>
-                        ($<?= number_format($purchase['Product']['price'] / 100) ?>)
+                    <?php if ($purchase->product['price']): ?>
+                        ($<?= number_format($purchase->product['price'] / 100) ?>)
                     <?php endif; ?>
 
-                    <?php if ($purchase['Purchase']['refunded']): ?>
+                    <?php if ($purchase->purchase['refunded']): ?>
                         <p class="refunded">
                             Marked <strong>refunded</strong> by
-                            <?php if ($purchase['Refunder']['name']): ?>
-                                <?= $purchase['Refunder']['name'] ?>
+                            <?php if ($purchase->refunder['name']): ?>
+                                <?= $purchase->refunder['name'] ?>
                             <?php else: ?>
                                 an unknown user
                             <?php endif; ?>
                             on
                             <?php
-                                $timestamp = strtotime($purchase['Purchase']['refunded']);
+                                $timestamp = strtotime($purchase->purchase['refunded']);
                                 echo date('F j, Y', $timestamp);
                             ?>
                         </p>
@@ -60,24 +60,24 @@
                 </td>
                 <td>
                     <?php
-                        $timestamp = strtotime($purchase['Purchase']['created']);
+                        $timestamp = strtotime($purchase->purchase['created']);
                         echo date('F j, Y', $timestamp);
                     ?>
                 </td>
                 <td>
-                    <?php if (! $purchase['Purchase']['refunded']): ?>
+                    <?php if (! $purchase->purchase['refunded']): ?>
                         <?= $this->Form->postLink(
                             '<span class="glyphicon glyphicon-usd"></span><span class="glyphicon glyphicon-share-alt"></span>',
                             [
                                 'prefix' => 'admin',
                                 'action' => 'refund',
-                                $purchase['Purchase']['id']
+                                $purchase->purchase['id']
                             ],
                             [
                                 'class' => 'btn btn-default',
-                                'escape' => false
-                            ],
-                            'Are you sure you want to mark this payment as having been refunded?'
+                                'escape' => false,
+                                'confirm' => 'Are you sure you want to mark this payment as having been refunded?'
+                            ]
                         ) ?>
                     <?php endif; ?>
                 </td>
