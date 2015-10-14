@@ -96,8 +96,10 @@
 								'action' => 'delete',
 								$user['id']
 							],
-							['class' => 'btn btn-default'],
-							"Are you sure you want to delete {$user['name']}'s account?"
+							[
+                                'class' => 'btn btn-default',
+                                'confirm' => "Are you sure you want to delete {$user['name']}'s account?"
+                            ]
 						) ?>
 					</td>
 				</tr>

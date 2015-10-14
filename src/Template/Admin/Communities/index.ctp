@@ -279,8 +279,7 @@
 											'action' => 'delete',
 											$community->id
 										],
-										[],
-										"Are you sure you want to delete {$community->name}? This cannot be undone."
+										['confirm' => "Are you sure you want to delete {$community->name}? This cannot be undone."]
 									); ?>
 								</li>
 							</ul>
