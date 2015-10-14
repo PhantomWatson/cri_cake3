@@ -50,7 +50,10 @@ class UsersController extends AppController
 
     private function prepareForm($user)
     {
-        $communities = $this->Users->ConsultantCommunities->find('list')->toArray();
+        $communities = $this->Users->ConsultantCommunities
+            ->find('list')
+            ->order('name')
+            ->toArray();
         $selectedCommunities = [];
         if (! empty($user->consultant_communities)) {
             foreach ($user->consultant_communities as $community) {
@@ -60,6 +63,8 @@ class UsersController extends AppController
                 ];
             }
         }
+        $noCommunity = [0 => '(No community)'];
+        $communities = $noCommunity + $communities;
 
         $this->request->data['new_password'] = '';
         $this->request->data['confirm_password'] = '';
