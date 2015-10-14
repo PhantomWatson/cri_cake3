@@ -18,9 +18,7 @@
             <th>
                 Date
             </th>
-            <th>
-                Report Refund
-            </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -67,7 +65,7 @@
                 <td>
                     <?php if (! $purchase->purchase['refunded']): ?>
                         <?= $this->Form->postLink(
-                            '<span class="glyphicon glyphicon-usd"></span><span class="glyphicon glyphicon-share-alt"></span>',
+                            'Report Refund',
                             [
                                 'prefix' => 'admin',
                                 'action' => 'refund',
