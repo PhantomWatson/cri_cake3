@@ -77,10 +77,7 @@
 						<?= ucwords($user['role']) ?>
 					</td>
 					<td>
-						<?php
-							$timestamp = strtotime($user['created']);
-							echo date('F j, Y', $timestamp);
-						?>
+						<?= $user->created->format('F j, Y') ?>
 					</td>
 					<td class="actions btn-group">
 						<?= $this->Html->link(

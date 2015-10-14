@@ -57,10 +57,7 @@
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?php
-                        $timestamp = strtotime($purchase->purchase['created']);
-                        echo date('F j, Y', $timestamp);
-                    ?>
+                    <?= $purchase->created->format('F j, Y') ?>
                 </td>
                 <td>
                     <?php if (! $purchase->purchase['refunded']): ?>
