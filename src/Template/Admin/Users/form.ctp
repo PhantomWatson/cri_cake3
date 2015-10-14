@@ -44,54 +44,16 @@
         'phone',
         ['class' => 'form-control']
     );
-
-    if ($this->request->action == 'add' && $this->request->prefix == 'admin') {
-        echo $this->Form->input(
-            'new_password',
-            [
-                'autocomplete' => 'off',
-                'class' => 'form-control',
-                'type' => 'password'
-            ]
-        );
-        echo $this->Form->input(
-            'confirm_password',
-            [
-                'class' => 'form-control',
-                'label' => 'Confirm password',
-                'type' => 'password'
-            ]
-        );
-    } elseif ($this->request->action == 'edit' && $this->request->prefix == 'admin') {
-        echo $this->Form->input(
-            'new_password',
-            [
-                'autocomplete' => 'off',
-                'class' => 'form-control',
-                'label' => 'Change password',
-                'required' => false,
-                'type' => 'password'
-            ]
-        );
-        echo $this->Form->input(
-            'confirm_password',
-            [
-                'class' => 'form-control',
-                'label' => 'Repeat new password',
-                'type' => 'password'
-            ]
-        );
-    }
-
-    echo $this->Form->input(
-        'role',
-        [
-            'after' => '<span class="note">Admins automatically have access to all communities and site functions</span>',
-            'class' => 'form-control',
-            'options' => $roles
-        ]
-    );
 ?>
+
+<?= $this->Form->input(
+    'role',
+    [
+        'after' => '<span class="note">Admins automatically have access to all communities and site functions</span>',
+        'class' => 'form-control',
+        'options' => $roles
+    ]
+) ?>
 
 <div id="consultant_communities">
     <?php
@@ -138,6 +100,39 @@
         ]
     ) ?>
 </div>
+
+<?php
+    $passwordFields = $this->Form->input(
+        'new_password',
+        [
+            'autocomplete' => 'off',
+            'class' => 'form-control',
+            'label' => $this->request->action == 'add' ? 'Password' : 'New Password',
+            'type' => 'password'
+        ]
+    );
+    $passwordFields .= $this->Form->input(
+        'confirm_password',
+        [
+            'class' => 'form-control',
+            'label' => 'Confirm password',
+            'type' => 'password'
+        ]
+    );
+?>
+
+<?php if ($this->request->prefix == 'admin' && $this->request->action == 'edit'): ?>
+    <div id="password-fields-button" class="form-group">
+        <a href="#">
+            Change password
+        </a>
+    </div>
+    <div id="password-fields" style="display: none;">
+        <?= $passwordFields ?>
+    </div>
+<?php elseif ($this->request->prefix == 'admin' && $this->request->action == 'add'): ?>
+    <?= $passwordFields ?>
+<?php endif; ?>
 
 <?php
     $label = ($this->request->action == 'add') ? 'Add User' : 'Update';

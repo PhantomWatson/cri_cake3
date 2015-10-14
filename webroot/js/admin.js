@@ -34,6 +34,12 @@ var adminUserEdit = {
 			adminUserEdit.onRoleChange(true);
 		});
 		this.onRoleChange(false);
+		
+		$('#password-fields-button a').click(function (event) {
+		    event.preventDefault();
+		    $('#password-fields-button').slideUp(300);
+		    $('#password-fields').slideDown(300);
+		});
 	},
 	
 	addCommunity: function (id, name, animate) {
