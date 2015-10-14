@@ -8,23 +8,23 @@ class PurchasesController extends AppController
 {
     public $paginate = [
         'contain' => [
-            'Community' => [
+            'Communities' => [
                 'fields' => ['id', 'name']
             ],
-            'Product' => [
+            'Products' => [
                 'fields' => ['id', 'description', 'price']
             ],
-            'Refunder' => [
+            'Refunders' => [
                 'fields' => ['id', 'name']
             ],
-            'User' => [
+            'Users' => [
                 'fields' => ['id', 'name', 'email', 'phone', 'title', 'organization']
             ]
         ],
         'fields' => ['id', 'created', 'refunded'],
         'limit' => 50,
         'order' => [
-            'Purchase.created' => 'DESC'
+            'Purchases.created' => 'DESC'
         ]
     ];
 
