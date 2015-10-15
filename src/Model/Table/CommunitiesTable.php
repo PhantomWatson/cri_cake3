@@ -617,8 +617,8 @@ class CommunitiesTable extends Table
     {
         // Start up
         require_once(ROOT.DS.'vendor'.DS.'phpoffice'.DS.'phpexcel'.DS.'Classes'.DS.'PHPExcel.php');
-        PHPExcel_Cell::setValueBinder(new PHPExcel_Cell_AdvancedValueBinder());
-        $objPHPExcel = new PHPExcel();
+        \PHPExcel_Cell::setValueBinder(new \PHPExcel_Cell_AdvancedValueBinder());
+        $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
 
         // Metadata
