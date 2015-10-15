@@ -1,1 +1,1 @@
-<?= $this->Js->object($communities)
+<?php echo $this->Js->object($communities);
