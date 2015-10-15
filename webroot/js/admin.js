@@ -644,8 +644,10 @@ var adminCommunitiesIndex = {
 				$('#admin_community_search_form form').submit();
 			},
 			search: function (event, ui) {
-				var loading_indicator = '<img src="/data_center/img/loading_small.gif" class="loading" />';
-				$('#admin_community_search_form button').after(loading_indicator);
+			    if ($('#admin_community_search_form .loading').length == 0) {
+			        var loading_indicator = '<img src="/data_center/img/loading_small.gif" class="loading" />';
+	                $('#admin_community_search_form button').after(loading_indicator);
+			    }
 			},
 			response: function (event, ui) {
 				$('#admin_community_search_form .loading').remove();
