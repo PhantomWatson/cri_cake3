@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
@@ -115,14 +116,16 @@ class CommunitiesController extends AppController
             $results = $this->Communities->find('list')
                 ->where([
                     function ($exp, $q) use ($pattern, $retval) {
-                        return $exp
-                            ->like('name', $pattern)
-                            ->notIn('id', array_keys($retval));
+                        $exp->like('name', $pattern);
+                        if (! empty($retval)) {
+                            $exp->notIn('id', array_keys($retval));
+                        }
+                        return $exp;
                     }
                 ])
                 ->limit($limit - count($retval))
                 ->toArray();
-            $retval = array_merge($retval, $results);
+            $retval += $results;
             if (count($retval) == $limit) {
                 break;
             }
