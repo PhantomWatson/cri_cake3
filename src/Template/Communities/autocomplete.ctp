@@ -1,1 +1,1 @@
-<?php echo $this->Js->object($communities);
+<?php echo json_encode($communities);
