@@ -673,25 +673,25 @@ class CommunitiesTable extends Table
                 $value = null;
                 switch ($col) {
                     case 'Community':
-                        $value = $community['Community']['name'];
+                        $value = $community->name;
                         break;
                     case 'Area':
-                        $value = $community['Area']['name'];
+                        $value = $community->area['name'];
                         break;
                     case 'Stage':
-                        $value = $community['Community']['score'];
+                        $value = $community->score;
                         break;
                     case 'Fast Track':
-                        $value = $community['Community']['fast_track'] ? 'Yes' : 'No';
+                        $value = $community->fast_track ? 'Yes' : 'No';
                         break;
                     case 'Officials Survey created':
-                        $value = isset($community['OfficialSurvey']['sm_id']) ? 'Yes' : 'No';
+                        $value = isset($community->official_survey['sm_id']) ? 'Yes' : 'No';
                         break;
                     case 'Officials Survey alignment':
-                        $value = $community['OfficialSurvey']['alignment'] ? $community['OfficialSurvey']['alignment'].'%' : 'Not set';
+                        $value = $community->official_survey['alignment'] ? $community->official_survey['alignment'].'%' : 'Not set';
                         break;
                     case 'Officials Survey passed':
-                        $passed = $community['OfficialSurvey']['alignment_passed'];
+                        $passed = $community->official_survey['alignment_passed'];
                         switch ($passed) {
                             case 1:
                                 $value = 'Yes';
@@ -705,13 +705,13 @@ class CommunitiesTable extends Table
                         }
                         break;
                     case 'Organizations Survey created':
-                        $value = isset($community['OrganizationSurvey']['sm_id']) ? 'Yes' : 'No';
+                        $value = isset($community->organization_survey['sm_id']) ? 'Yes' : 'No';
                         break;
                     case 'Organizations Survey alignment':
-                        $value = $community['OrganizationSurvey']['alignment'] ? $community['OrganizationSurvey']['alignment'].'%' : 'Not set';
+                        $value = $community->organization_survey['alignment'] ? $community->organization_survey['alignment'].'%' : 'Not set';
                         break;
                     case 'Organizations Survey passed':
-                        $passed = $community['OrganizationSurvey']['alignment_passed'];
+                        $passed = $community->organization_survey['alignment_passed'];
                         switch ($passed) {
                             case 1:
                                 $value = 'Yes';
