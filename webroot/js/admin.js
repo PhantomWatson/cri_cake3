@@ -641,7 +641,7 @@ var adminCommunitiesIndex = {
 				$('#admin_community_search_form input[type="text"]').val(ui.item.label);
 				var loading_indicator = ' <img src="/data_center/img/loading_small.gif" class="loading" />';
 				$('#admin_community_search_form button').append(loading_indicator).addClass('disabled');
-				$('#admin_community_search_form form').submit();
+				$('#admin_community_search_form').submit();
 			},
 			search: function (event, ui) {
 			    if ($('#admin_community_search_form .loading').length == 0) {
