@@ -21,7 +21,8 @@ class CommunitiesController extends AppController
 
     public function beforeRender(\Cake\Event\Event $event)
     {
-        $this->getView()->loadHelper('GoogleCharts.GoogleCharts');
+        parent::beforeRender($event);
+        $this->viewBuilder()->helpers(['GoogleCharts.GoogleCharts']);
     }
 
     public function isAuthorized($user)
