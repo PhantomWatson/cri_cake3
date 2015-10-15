@@ -572,7 +572,8 @@ class CommunitiesController extends AppController
             $this->viewBuilder()->layout('spreadsheet');
         }
         $this->set([
-            'objPHPExcel' => $this->Communities->getSpreadsheetObject($communities)
+            'objPHPExcel' => $this->Communities->getSpreadsheetObject($communities),
+            'communities' => $communities
         ]);
     }
 
