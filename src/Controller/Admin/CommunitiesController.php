@@ -553,22 +553,21 @@ class CommunitiesController extends AppController
 
     public function spreadsheet()
     {
-        // Set up filters and sorting
         if (isset($_GET['search'])) {
             $this->paginate['conditions']['Communities.name LIKE'] = '%'.$_GET['search'].'%';
         } else {
             $this->adminIndexFilter();
         }
         $this->cookieSort('AdminCommunityIndex');
-        $this->adminIndexSetupPagination();
+        $this->paginate['finder'] = 'adminIndex';
+        $this->paginate['sortWhitelist'] = ['Communities.name', 'Area.name'];
         $this->adminIndexSetupFilterButtons();
-        $this->paginate['limit'] = $this->Communities->find('all')->count();
 
         $communities = $this->paginate();
 
         $this->response->type(['excel2007' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
         $this->response->type('excel2007');
-        $this->response->download("CRI Overview.xlsx");
+        $this->response->download('CRI Overview.xlsx');
         $this->viewBuilder()->layout('spreadsheet');
         $this->set([
             'objPHPExcel' => $this->Communities->getSpreadsheetObject($communities)
