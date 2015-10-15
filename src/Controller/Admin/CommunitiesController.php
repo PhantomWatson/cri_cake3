@@ -565,10 +565,12 @@ class CommunitiesController extends AppController
 
         $communities = $this->paginate();
 
-        $this->response->type(['excel2007' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
-        $this->response->type('excel2007');
-        $this->response->download('CRI Overview.xlsx');
-        $this->viewBuilder()->layout('spreadsheet');
+        if (! isset($_GET['debug'])) {
+            $this->response->type(['excel2007' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+            $this->response->type('excel2007');
+            $this->response->download('CRI Overview.xlsx');
+            $this->viewBuilder()->layout('spreadsheet');
+        }
         $this->set([
             'objPHPExcel' => $this->Communities->getSpreadsheetObject($communities)
         ]);
