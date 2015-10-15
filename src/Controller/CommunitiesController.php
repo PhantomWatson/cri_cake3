@@ -112,12 +112,15 @@ class CommunitiesController extends AppController
         $retval = [];
         foreach ($patterns as $pattern) {
             $results = $this->Communities->find('list')
-                ->where([function ($exp, $q) {
-                    return $exp
-                        ->like('name', $pattern)
-                        ->notIn('id', array_keys($retval));
-                }])
-                ->limit($limit - count($retval));
+                ->where([
+                    function ($exp, $q) use ($pattern, $retval) {
+                        return $exp
+                            ->like('name', $pattern)
+                            ->notIn('id', array_keys($retval));
+                    }
+                ])
+                ->limit($limit - count($retval))
+                ->toArray();
             $retval = array_merge($retval, $results);
             if (count($retval) == $limit) {
                 break;
