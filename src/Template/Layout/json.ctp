@@ -1,1 +1,1 @@
-<?= $this->fetch('content')
+<?php $this->fetch('content');
