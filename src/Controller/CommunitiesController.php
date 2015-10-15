@@ -97,7 +97,6 @@ class CommunitiesController extends AppController
 
     public function autocomplete()
     {
-        $_GET['term'] = Sanitize::clean($_GET['term']);
         $limit = 10;
 
         // Communities.name will be compared via LIKE to each of these until $limit communities are found.
