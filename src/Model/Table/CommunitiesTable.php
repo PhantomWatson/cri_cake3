@@ -7,7 +7,6 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
-use PHPExcel;
 
 /**
  * Communities Model
@@ -617,6 +616,7 @@ class CommunitiesTable extends Table
     public function getSpreadsheetObject($communities)
     {
         // Start up
+        require_once(ROOT.DS.'vendor'.DS.'phpoffice'.DS.'phpexcel'.DS.'Classes'.DS.'PHPExcel.php');
         PHPExcel_Cell::setValueBinder(new PHPExcel_Cell_AdvancedValueBinder());
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
