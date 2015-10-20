@@ -4,17 +4,6 @@
 	</h1>
 </div>
 
-<p>
-	<?= $this->Html->link(
-		'<span class="glyphicon glyphicon-arrow-left glyphicon-white"></span> Back to Account',
-		['action' => 'edit'],
-		[
-			'class' => 'btn btn-primary',
-			'escape' => false
-		]
-	) ?>
-</p>
-
 <?php
 	echo $this->Form->create($user);
 	echo $this->Form->input(

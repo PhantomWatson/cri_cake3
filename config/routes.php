@@ -65,6 +65,7 @@ Router::scope('/', function ($routes) {
 
     $routes->connect('/login',              ['controller' => 'Users', 'action' => 'login']);
     $routes->connect('/logout',             ['controller' => 'Users', 'action' => 'logout']);
+    $routes->connect('/update_contact',       ['controller' => 'Users', 'action' => 'updateContact']);
     $routes->connect('/change_password',    ['controller' => 'Users', 'action' => 'changePassword']);
 
 

@@ -14,6 +14,16 @@
 	</li>
 	<?php if ($authUser && $authUser['role'] == 'client'): ?>
 		<li class="link">
+            <?= $this->Html->link(
+                'Update Contact Info',
+                [
+                    'prefix' => false,
+                    'controller' => 'Users',
+                    'action' => 'updateContact'
+                ]
+            ) ?>
+        </li>
+		<li class="link">
 			<?= $this->Html->link(
 				'Change Password',
 				[

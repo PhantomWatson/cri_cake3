@@ -65,7 +65,7 @@ class UsersController extends AppController
             return true;
         }
 
-        $accessible = ['changePassword'];
+        $accessible = ['changePassword', 'updateContact'];
         return in_array($this->request->action, $accessible);
     }
 
@@ -82,6 +82,27 @@ class UsersController extends AppController
         $this->request->data = [];
         $this->set([
             'titleForLayout' => 'Change Password',
+            'user' => $user
+        ]);
+    }
+
+    public function updateContact()
+    {
+        $id = $this->Auth->user('id');
+        $user = $this->Users->get($id);
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $user = $this->Users->patchEntity($user, $this->request->data());
+            if (! $user->errors()) {
+                $saveResult = $this->Users->save($user, $this->request->data(), [
+                    'fieldList' => ['name', 'email']
+                ]);
+                if ($saveResult) {
+                    $this->Flash->success('Your account information has been updated');
+                }
+            }
+        }
+        $this->set([
+            'titleForLayout' => 'Update Account Contact Info',
             'user' => $user
         ]);
     }
