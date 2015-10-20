@@ -59,21 +59,6 @@ class UsersController extends AppController
         return $this->redirect($this->Auth->logout());
     }
 
-    public function isAuthorized($user)
-    {
-        if (! isset($user['role'])) {
-            return false;
-        }
-
-        // Admin can access every action
-        if ($user['role'] === 'admin') {
-            return true;
-        }
-
-        // Other users can access their respective role-prefixed actions
-        return $user['role'] === $this->request->params['prefix'];
-    }
-
     public function changePassword()
     {
         $userId = $this->Auth->user('id');
