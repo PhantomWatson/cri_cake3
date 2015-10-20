@@ -26,17 +26,13 @@
 			</thead>
 			<tbody>
 				<?php foreach ($communities as $community): ?>
-					<?php if ($community['Community']['score'] == 0): ?>
-						<tr class="no_score">
-					<?php else: ?>
-						<tr>
-					<?php endif; ?>
+				    <tr <?= ($community->score == 0 ? 'class="no_score"' : '') ?>>
 						<th>
-							<?= $community['Community']['name'] ?>
+							<?= $community->name ?>
 						</th>
 						<?php for ($n = 1; $n <= 5; $n++): ?>
 							<td>
-								<?php if ($community['Community']['score'] >= $n): ?>
+								<?php if ($community->score >= $n): ?>
 									<span class="glyphicon glyphicon-ok"></span>
 								<?php endif; ?>
 							</td>
