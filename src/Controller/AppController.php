@@ -141,7 +141,8 @@ class AppController extends Controller
         }
 
         // Clients and consultants can access the respective role-prefixed actions
-        return $this->request->params['prefix'] === $user['role'];
+        $prefix = isset($this->request->params['prefix']) ? $this->request->params['prefix'] : null;
+        return $prefix === $user['role'];
     }
 
     protected function chooseClientToImpersonate()
