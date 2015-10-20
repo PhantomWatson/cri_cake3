@@ -59,6 +59,16 @@ class UsersController extends AppController
         return $this->redirect($this->Auth->logout());
     }
 
+    public function isAuthorized($user)
+    {
+        if (parent::isAuthorized($user)) {
+            return true;
+        }
+
+        $accessible = ['changePassword'];
+        return in_array($this->request->action, $accessible);
+    }
+
     public function changePassword()
     {
         $userId = $this->Auth->user('id');
