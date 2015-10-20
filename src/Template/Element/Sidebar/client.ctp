@@ -12,7 +12,7 @@
 			]
 		) ?>
 	</li>
-	<?php if ($userRole == 'client'): ?>
+	<?php if ($authUser && $authUser['role'] == 'client'): ?>
 		<li class="link">
 			<?= $this->Html->link(
 				'Change Password',
