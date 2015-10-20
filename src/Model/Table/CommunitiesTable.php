@@ -279,13 +279,9 @@ class CommunitiesTable extends Table
             $conditions['Users.id'] = $clientId;
         }
         $query->where($conditions);
+        $results = $clientId ? $query->first() : $query->all();
         if ($clientId) {
-            $query->first();
-        }
-        $results = $query->toArray();
-
-        if ($clientId) {
-            return Hash::combine($results['client_communities'], '{n}.id', '{n}.name');
+            return Hash::combine($results->client_communities, '{n}.id', '{n}.name');
         }
         return Hash::combine($results, '{n}.client_communities.{n}.id', '{n}.client_communities.{n}.name');
     }
