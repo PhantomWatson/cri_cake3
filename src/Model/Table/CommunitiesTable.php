@@ -582,7 +582,7 @@ class CommunitiesTable extends Table
             'Scheduled town meeting'.$note,
             $community->town_meeting_date != null
         ];
-        if ($meetingDate != null) {
+        if ($community->town_meeting_date != null) {
             $criteria[4]['meeting_held'] = [
                 'Held town meeting',
                 $community->town_meeting_date <= date('Y-m-d')
