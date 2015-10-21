@@ -116,7 +116,7 @@ class ResponsesTable extends Table
                 'invited' => true
             ])
             ->contain([
-                'Response' => function ($q) {
+                'Responses' => function ($q) {
                     return $q
                         ->select(['id'])
                         ->limit(1);
