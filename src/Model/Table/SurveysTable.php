@@ -341,7 +341,7 @@ class SurveysTable extends Table
                 'type' => $type
             ])
             ->first();
-        if (empty($result)) {
+        if (empty($survey)) {
             return null;
         }
         return $survey->id;
