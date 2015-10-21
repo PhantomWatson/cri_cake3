@@ -417,7 +417,7 @@ class CommunitiesTable extends Table
         ];
 
         if ($surveyId) {
-            $responsesTable = TableRegistry::get('Response');
+            $responsesTable = TableRegistry::get('Responses');
             $count = $responsesTable->getDistinctCount($surveyId);
             $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
         } else {
