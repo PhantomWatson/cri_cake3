@@ -495,9 +495,9 @@ class SurveysTable extends Table
      */
     public function getInvitedResponsePercentage($surveyId)
     {
-        $respondentsTable = TableRegistry('Respondents');
+        $respondentsTable = TableRegistry::get('Respondents');
         $invitations = $respondentsTable->getInvitedCount($surveyId);
-        $responsesTable = TableRegistry('Responses');
+        $responsesTable = TableRegistry::get('Responses');
         $responses = $responsesTable->getInvitedCount($surveyId);
         if (! $invitations || ! $responses) {
             return 0;
