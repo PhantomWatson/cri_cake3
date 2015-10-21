@@ -190,9 +190,9 @@ class ProductsTable extends Table
 
         // Add product info
         $product = $this->get($productId);
-        $retval .= '&itemcode1=EMC001-'.$this->item_code;
-        $retval .= '&desc1='.urlencode($this->description);
-        $retval .= '&amount1='.$this->price;
+        $retval .= '&itemcode1=EMC001-'.$product->item_code;
+        $retval .= '&desc1='.urlencode($product->description);
+        $retval .= '&amount1='.$product->price;
 
         // Add extra custom variables
         $retval .= '&ref1type1=community_id&ref1val1='.$communityId;
