@@ -28,7 +28,7 @@
 				</td>
 				<td>
 					<?php if (! $criteria[1]['survey_purchased'][1]): ?>
-						<a href="<?= $purchase_urls[1] ?>" class="btn btn-primary">
+						<a href="<?= $purchaseUrls[1] ?>" class="btn btn-primary">
 							Purchase Now
 						</a>
 					<?php endif; ?>
@@ -36,7 +36,7 @@
 			</tr>
 
 			<?php if (isset($criteria[1]['survey_created'])): ?>
-				<?php $leadership_survey_created = $criteria[1]['survey_created'][1]; ?>
+				<?php $leadershipSurveyCreated = $criteria[1]['survey_created'][1]; ?>
 				<tr>
 					<td>
 						<?= glyphicon($criteria[1]['survey_created'][1]) ?>
@@ -63,7 +63,7 @@
 			</tr>
 
 			<?php if (isset($criteria[2]['survey_created'])): ?>
-				<?php $leadership_survey_created = $criteria[2]['survey_created'][1] ?>
+				<?php $leadershipSurveyCreated = $criteria[2]['survey_created'][1] ?>
 				<tr>
 					<td>
 						<?= glyphicon($criteria[2]['survey_created'][1]) ?>
@@ -89,7 +89,7 @@
 					<?= $criteria[2]['invitations_sent'][0] ?>
 				</td>
 				<td>
-					<?php if ($leadership_survey_created): ?>
+					<?php if ($leadershipSurveyCreated): ?>
 						<?= $this->Html->link(
 							'Send '.($criteria[2]['invitations_sent'][1] ? 'More ' : '').'Invitations',
 							[
@@ -117,22 +117,22 @@
 					<p class="importing_note" style="display: none;">
 						<?php if ($score < 3): ?>
 							Responses are automatically imported from
-							SurveyMonkey<?= $auto_import_frequency ? ' approximately '.$auto_import_frequency : '' ?>,
+							SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>,
 							but you can manually import them at any time.
 						<?php else: ?>
 							New responses to this survey are no longer being automatically imported from SurveyMonkey.
 						<?php endif; ?>
 					</p>
-					<?php if ($official_responses_checked): ?>
+					<?php if ($officialResponsesChecked): ?>
 						<p class="last_import alert alert-info">
 							New responses were last checked for
-							<?= $this->Time->timeAgoInWords($official_responses_checked, ['end' => '+1 year']) ?>
+							<?= $this->Time->timeAgoInWords($officialResponsesChecked, ['end' => '+1 year']) ?>
 						</p>
 					<?php endif; ?>
 				</td>
 				<td>
-					<?php if ($leadership_survey_created): ?>
-						<a href="#" class="btn btn-default import_button" data-survey-id="<?= $official_survey_id ?>">
+					<?php if ($leadershipSurveyCreated): ?>
+						<a href="#" class="btn btn-default import_button" data-survey-id="<?= $officialSurveyId ?>">
 							Import Responses
 						</a>
 						<br />
@@ -206,33 +206,33 @@
 					</td>
 					<td>
 						<?php if (! $criteria[2]['summit_purchased'][1]): ?>
-							<a href="<?= $purchase_urls[2]; ?>" class="btn btn-primary">
+							<a href="<?= $purchaseUrls[2]; ?>" class="btn btn-primary">
 								Purchase Now
 							</a>
 						<?php endif; ?>
 					</td>
 				</tr>
 
-				<?php if ($step_2_alignment): ?>
+				<?php if ($step2Alignment): ?>
 					<tr>
 						<td>
-							<?= glyphicon($step_2_alignment[1]) ?>
+							<?= glyphicon($step2Alignment[1]) ?>
 						</td>
 						<td>
-							<?= $step_2_alignment[0] ?>
+							<?= $step2Alignment[0] ?>
 						</td>
 						<td>
 						</td>
 					</tr>
 				<?php endif; ?>
 			<?php else: ?>
-				<?php if ($step_2_alignment): ?>
+				<?php if ($step2Alignment): ?>
 					<tr>
 						<td>
-							<?= glyphicon($step_2_alignment[1]) ?>
+							<?= glyphicon($step2Alignment[1]) ?>
 						</td>
 						<td>
-							<?= $step_2_alignment[0] ?>
+							<?= $step2Alignment[0] ?>
 						</td>
 						<td>
 						</td>
@@ -240,17 +240,17 @@
 				<?php endif; ?>
 			<?php endif; ?>
 
-			<?php if ($step_2_survey_purchased): ?>
+			<?php if ($step2SurveyPurchased): ?>
 				<tr>
 					<td>
-						<?= glyphicon($step_2_survey_purchased[1]) ?>
+						<?= glyphicon($step2SurveyPurchased[1]) ?>
 					</td>
 					<td>
-						<?= $step_2_survey_purchased[0] ?>
+						<?= $step2SurveyPurchased[0] ?>
 					</td>
 					<td>
-						<?php if (! $step_2_survey_purchased[1]): ?>
-							<a href="<?= $purchase_urls[3]; ?>" class="btn btn-primary">
+						<?php if (! $step2SurveyPurchased[1]): ?>
+							<a href="<?= $purchaseUrls[3]; ?>" class="btn btn-primary">
 								Purchase Now
 							</a>
 						<?php endif; ?>
@@ -259,7 +259,7 @@
 			<?php endif; ?>
 		</tbody>
 
-		<?php if ($fast_track): ?>
+		<?php if ($fastTrack): ?>
 			<tbody>
 				<tr>
 					<th colspan="3">
@@ -287,7 +287,7 @@
 						<?php endif; ?>
 					</td>
 					<td>
-						<?php if ($organization_survey_open): ?>
+						<?php if ($organizationSurveyOpen): ?>
 						    <?= $this->Html->link(
 								'Send Invitations',
 								[
@@ -315,7 +315,7 @@
 						<p class="importing_note" style="display: none;">
 							<?php if ($score < 4): ?>
 								Responses are automatically imported from
-								SurveyMonkey<?= $auto_import_frequency ? ' approximately '.$auto_import_frequency : '' ?>,
+								SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>,
 								but you can manually import them at any time.
 							<?php else: ?>
 								New responses to this survey are no longer being automatically imported from SurveyMonkey.
@@ -324,7 +324,7 @@
 					</td>
 					<td>
 						<?php if ($criteria[3]['survey_created'][1]): ?>
-							<a href="#" class="btn btn-default import_button" data-survey-id="<?= $organization_survey_id ?>">
+							<a href="#" class="btn btn-default import_button" data-survey-id="<?= $organizationSurveyId ?>">
 								Import Responses
 							</a>
 							<br />
@@ -364,33 +364,33 @@
 						</td>
 						<td>
 							<?php if (! $criteria[3]['summit_purchased'][1]): ?>
-								<a href="<?= $purchase_urls[4] ?>" class="btn btn-primary">
+								<a href="<?= $purchaseUrls[4] ?>" class="btn btn-primary">
 									Purchase Now
 								</a>
 							<?php endif; ?>
 						</td>
 					</tr>
 
-					<?php if ($step_3_alignment): ?>
+					<?php if ($step3Alignment): ?>
 						<tr>
 							<td>
-								<?= glyphicon($step_3_alignment[1]) ?>
+								<?= glyphicon($step3Alignment[1]) ?>
 							</td>
 							<td>
-								<?= $step_3_alignment[0] ?>
+								<?= $step3Alignment[0] ?>
 							</td>
 							<td>
 							</td>
 						</tr>
 					<?php endif; ?>
 				<?php else: ?>
-					<?php if ($step_3_alignment): ?>
+					<?php if ($step3Alignment): ?>
 						<tr>
 							<td>
-								<?= glyphicon($step_3_alignment[1]) ?>
+								<?= glyphicon($step3Alignment[1]) ?>
 							</td>
 							<td>
-								<?= $step_3_alignment[0] ?>
+								<?= $step3Alignment[0] ?>
 							</td>
 							<td>
 							</td>
@@ -398,17 +398,17 @@
 					<?php endif; ?>
 				<?php endif; ?>
 
-				<?php if ($step_3_policy_dev_purchased): ?>
+				<?php if ($step3PolicyDevPurchased): ?>
 					<tr>
 						<td>
-							<?= glyphicon($step_3_policy_dev_purchased[1]) ?>
+							<?= glyphicon($step3PolicyDevPurchased[1]) ?>
 						</td>
 						<td>
-							<?= $step_3_policy_dev_purchased[0] ?>
+							<?= $step3PolicyDevPurchased[0] ?>
 						</td>
 						<td>
-							<?php if (! $step_3_policy_dev_purchased[1]): ?>
-								<a href="<?= $purchase_urls[5] ?>" class="btn btn-primary">
+							<?php if (! $step3PolicyDevPurchased[1]): ?>
+								<a href="<?= $purchaseUrls[5] ?>" class="btn btn-primary">
 									Purchase Now
 								</a>
 							<?php endif; ?>
