@@ -261,29 +261,31 @@ class CommunitiesTable extends Table
      */
     public function getClientCommunityList($clientId = null)
     {
-        $usersTable = TableRegistry::get('Users');
-        $query = $usersTable->find('all')
-            ->select(['id'])
-            ->contain([
-                'ClientCommunities' => function ($q) {
-                    return $q
-                        ->select([
-                            'ClientCommunities.id',
-                            'ClientCommunities.name'
-                        ])
-                        ->order(['ClientCommunities.name' => 'ASC']);
-                }
-            ]);
-        $conditions = ['Users.role' => 'client'];
+        $joinTable = TableRegistry::get('ClientsCommunities');
+        $query = $joinTable->find('list')
+            ->select(['id' => 'community_id'])
+            ->distinct(['community_id']);
         if ($clientId) {
-            $conditions['Users.id'] = $clientId;
+            $query->where(['client_id' => $clientId]);
+        } else {
+            $usersTable = TableRegistry::get('Users');
+            $clients = $usersTable->getClientList();
+            $clientIds = array_keys($clients);
+
+            /* Seems redundant, but helps clean this list clean in the event of lingering
+             * "admin account was temporarily a client account associated with this community"
+             * situations. */
+            $query->where(function ($exp, $q) use ($clientIds) {
+                return $exp->in('client_id', $clientIds);
+            });
         }
-        $query->where($conditions);
-        $results = $clientId ? $query->first() : $query->all();
-        if ($clientId) {
-            return Hash::combine($results->client_communities, '{n}.id', '{n}.name');
-        }
-        return Hash::combine($results, '{n}.client_communities.{n}.id', '{n}.client_communities.{n}.name');
+        $results = $query->toArray();
+        $communityIds = array_values($results);
+        return $this->find('list')
+            ->where(function ($exp, $q) use ($communityIds) {
+                return $exp->in('id', $communityIds);
+            })
+            ->toArray();
     }
 
     /**
