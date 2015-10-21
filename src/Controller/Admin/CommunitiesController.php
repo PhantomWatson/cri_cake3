@@ -325,8 +325,8 @@ class CommunitiesController extends AppController
         }
 
         // Prepare selected clients for JS
-        $this->loadModel('User');
-        $clients = $this->User->getClientList();
+        $usersTable = TableRegistry::get('Users');
+        $clients = $usersTable->getClientList();
         $selectedClients = [];
         if (isset($this->request->data['Client'])) {
             foreach ($this->request->data['Client'] as $clientId) {
@@ -338,7 +338,7 @@ class CommunitiesController extends AppController
         }
 
         // Prepare selected consultants for JS
-        $consultants = $this->User->getConsultantList();
+        $consultants = $usersTable->getConsultantList();
         $selectedConsultants = [];
         if (isset($this->request->data['Consultant'])) {
             foreach ($this->request->data['Consultant'] as $consultantId) {
