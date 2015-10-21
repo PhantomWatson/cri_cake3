@@ -1,4 +1,9 @@
-<?php use Cake\Core\Configure; ?>
+<?php
+    use Cake\Core\Configure;
+    if (! isset($authUser)) {
+        $authUser = [];
+    }
+?>
 
 <a href="/" id="sidebar_logo">
 	<img src="/img/cri_logo.png" alt="Community Readiness Initiative" />
