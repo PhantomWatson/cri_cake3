@@ -336,7 +336,7 @@ class CommunitiesTable extends Table
                 'Client' => function ($q) {
                     return $q
                         ->select(['id', 'name', 'email'])
-                        ->order(['Clients.name' => 'ASC']);
+                        ->order(['Client.name' => 'ASC']);
                 }
             ])
             ->first();
