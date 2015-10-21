@@ -65,7 +65,7 @@ class CommunitiesController extends AppController
         $organizationSurveyId = $surveysTable->getSurveyId($communityId, 'organization');
         $respondentsTable = TableRegistry::get('Respondents');
         $this->set([
-            'titleForLayout' => $communityName.'\'s Progress in the CRI Program',
+            'titleForLayout' => $community->name.'\'s Progress in the CRI Program',
             'score' => $community->score,
             'officialSurveyOpen' => $surveysTable->isOpen($communityId, 'official'),
             'organizationSurveyOpen' => $surveysTable->isOpen($communityId, 'organization'),
