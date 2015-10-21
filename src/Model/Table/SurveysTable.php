@@ -635,7 +635,7 @@ class SurveysTable extends Table
                     ]
                 ]
             ])
-            ->joins([
+            ->join([
                 'table' => 'communities',
                 'alias' => 'Community',
                 'type' => 'LEFT',
