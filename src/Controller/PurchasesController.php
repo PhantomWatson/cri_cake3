@@ -26,13 +26,13 @@ class PurchasesController extends AppController
         if (isset($_POST['respmessage']) && $_POST['respmessage'] == 'SUCCESS') {
             $itemCode = explode('-', $_POST['itemcode1']);
             $productsTable = TableRegistry::get('Products');
-            $this->Purchases->newEntity([
+            $purchase = $this->Purchases->newEntity([
                 'user_id' => $_POST['custcode'],
                 'community_id' => $_POST['ref1val1'],
                 'product_id' => $productsTable->getIdFromItemCode($itemCode[1]),
                 'postback' => base64_encode(serialize($_POST))
             ]);
-            $this->Purchase->save();
+            $this->Purchases->save($purchase);
         }
 
         $this->viewBuilder()->layout('blank');
