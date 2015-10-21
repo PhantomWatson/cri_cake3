@@ -637,7 +637,7 @@ class SurveysTable extends Table
             ])
             ->join([
                 'table' => 'communities',
-                'alias' => 'Community',
+                'alias' => 'Communities',
                 'type' => 'LEFT',
                 'conditions' => [
                     'Communities.id = Surveys.community_id'
