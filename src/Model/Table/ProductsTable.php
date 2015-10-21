@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Product;
+use Cake\Core\Configure;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
