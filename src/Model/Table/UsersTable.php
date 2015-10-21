@@ -208,14 +208,16 @@ class UsersTable extends Table
     {
         return $this->find('list')
             ->where(['role' => 'client'])
-            ->order(['name' => 'ASC']);
+            ->order(['name' => 'ASC'])
+            ->toArray();
     }
 
     public function getConsultantList()
     {
         return $this->find('list')
             ->where(['role' => 'consultant'])
-            ->order(['name' => 'ASC']);
+            ->order(['name' => 'ASC'])
+            ->toArray();
     }
 
     /**
