@@ -368,9 +368,9 @@ class CommunitiesTable extends Table
      */
     public function getProgress($communityId, $isAdmin = false)
     {
-        $productsTable = TableRegistry::get('Product');
-        $surveysTable = TableRegistry::get('Survey');
-        $respondentsTable = TableRegistry::get('Respondent');
+        $productsTable = TableRegistry::get('Products');
+        $surveysTable = TableRegistry::get('Surveys');
+        $respondentsTable = TableRegistry::get('Respondents');
         $criteria = [];
 
 
