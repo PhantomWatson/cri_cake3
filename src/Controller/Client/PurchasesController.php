@@ -20,7 +20,7 @@ class PurchasesController extends AppController
             // Massage product data
             $product->description = str_ireplace('PwR3', 'PWR<sup>3</sup>', $product->description);
             $product->price = '$'.number_format($product->price, 0);
-            $product->status = $this->Product->getPurchaseStatus($communityId, $product->id, $clientId);
+            $product->status = $productsTable->getPurchaseStatus($communityId, $product->id, $clientId);
         }
 
         $community = $communitiesTable->get($communityId);

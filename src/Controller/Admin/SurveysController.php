@@ -9,7 +9,7 @@ class SurveysController extends AppController
     public function index()
     {
         $communitiesTable = TableRegistry::get('Communities');
-        $clientCommunities = $this->Community->getClientCommunityList();
+        $clientCommunities = $communitiesTable->getClientCommunityList();
         $clientCommunityIds = array_keys($clientCommunities);
         $this->paginate['Community'] = [
             'conditions' => ['id' => $clientCommunityIds],
