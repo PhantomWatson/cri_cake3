@@ -510,9 +510,11 @@ class SurveysTable extends Table
         $count = $this->find('all')
             ->where([
                 'community_id' => $communityId,
-                'type' => $surveyType,
-                'sm_url NOT' => ''
+                'type' => $surveyType
             ])
+            ->where(function ($exp, $q) {
+                return $exp->notEq('sm_url', '');
+            })
             ->count();
         return $count > 0;
     }
