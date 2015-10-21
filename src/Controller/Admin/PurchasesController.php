@@ -51,7 +51,6 @@ class PurchasesController extends AppController
                 $timestamp = strtotime($purchase->refunded);
                 $date = date('F j, Y', $timestamp);
                 $usersTable = TableRegistry::get('Users');
-                $this->Purchase->Refunder->id = $purchase->refunder_id;
                 try {
                     $user = $usersTable->get($purchase->refunder_id);
                     $admin = $user->name;
