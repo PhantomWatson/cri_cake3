@@ -402,7 +402,14 @@ div.all_communities {
 			font-weight: bold;
 		}
 		label {
+			font-weight: bold;
+			padding-left: 0;
+		}
+		label[for^="meeting"],
+		label[for^="public"], {
+			display: block;
 			font-weight: normal;
+			padding-left: 20px;
 		}
 		input[type=radio] {
 			margin-right: 10px;

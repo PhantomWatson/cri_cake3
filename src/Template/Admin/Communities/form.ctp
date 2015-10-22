@@ -99,13 +99,14 @@
             'maxYear' => date('Y') + 1
         ]
     );
-    echo $this->Form->input(
+?>
+<div class="custom_radio">
+    <?= $this->Form->input(
         'meeting_date_set',
         [
             'after' => $date_fields,
             'before' => '<span class="fake_label">Town meeting</span><br />',
             'default' => isset($this->request->data['Community']['town_meeting_date']),
-            'div' => ['class' => 'form-group custom_radio'],
             'legend' =>  false,
             'options' =>  [
                 0 => 'Has not been scheduled yet',
@@ -114,12 +115,11 @@
             'separator' => '<br />',
             'type'      =>  'radio'
         ]
-    );
-    echo $this->Form->input(
+    ) ?>
+    <?= $this->Form->input(
         'public',
         [
             'before' => '<span class="fake_label">Who should be able to see this community\'s performance report?</span><br />',
-            'div' => ['class' => 'form-group custom_radio'],
             'escape' => false,
             'legend' =>  false,
             'options' =>  [
@@ -129,8 +129,8 @@
             'separator' => '<br />',
             'type'      =>  'radio'
         ]
-    );
-?>
+    ) ?>
+</div>
 
 <div class="panel panel-default" id="client_interface">
     <div class="panel-heading">
