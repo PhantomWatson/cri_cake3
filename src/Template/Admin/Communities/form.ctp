@@ -393,5 +393,5 @@
         community_id: <?= isset($communityId) ? $communityId : 'null' ?>,
         selected_clients: <?= json_encode($selectedClients) ?>,
         selected_consultants: <?= json_encode($selectedConsultants) ?>
-    });");
+    });
 <?php $this->end();
