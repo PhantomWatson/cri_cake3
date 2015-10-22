@@ -57,14 +57,14 @@ class CommunitiesTable extends Table
             'conditions' => ['OrganizationSurvey.type' => 'organization'],
             'dependent' => true
         ]);
-        $this->belongsToMany('Consultant', [
+        $this->belongsToMany('Consultants', [
             'className' => 'Users',
             'joinTable' => 'communities_consultants',
             'foreignKey' => 'community_id',
             'targetForeignKey' => 'consultant_id',
             'saveStrategy' => 'replace'
         ]);
-        $this->belongsToMany('Client', [
+        $this->belongsToMany('Clients', [
             'className' => 'Users',
             'joinTable' => 'clients_communities',
             'foreignKey' => 'community_id',
