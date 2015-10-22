@@ -389,7 +389,7 @@
 <?php $this->append('buffered'); ?>
 	communityForm.init({
 		community_id: <?= $community_id ?>,
-		selected_clients: <?= $this->Js->object($selected_clients) ?>,
-		selected_consultants: <?= $this->Js->object($selected_consultants) ?>
+		selected_clients: <?= json_encode($selected_clients) ?>,
+		selected_consultants: <?= json_encode($selected_consultants) ?>
 	});");
 <?php $this->end();
