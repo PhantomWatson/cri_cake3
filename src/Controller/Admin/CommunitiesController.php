@@ -421,7 +421,7 @@ class CommunitiesController extends AppController
             $this->set(compact('clientErrors', 'consultantErrors'));
         } else {
             $this->request->data = $this->Communities->find('all')
-                ->where(['id' => $communityId])
+                ->where(['Communities.id' => $communityId])
                 ->contain([
                     'Client' => function ($q) {
                         return $q->select(['id', 'name']);
