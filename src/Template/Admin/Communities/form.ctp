@@ -56,7 +56,7 @@
                 'prefix' => 'admin',
                 'controller' => 'Communities',
                 'action' => 'progress',
-                $community_id
+                $communityId
             ]
         );
         $note .= ', which provides detailed information to help advise you.';
@@ -80,13 +80,13 @@
     );
 
     if (isset($this->request->data['Community']['town_meeting_date'])) {
-        $selected_date_split = explode('-', $this->request->data['Community']['town_meeting_date']);
-        $selected_year = $selected_date_split[0];
-        $min_year = min($selected_year, date('Y'));
+        $selectedDateSplit = explode('-', $this->request->data['Community']['town_meeting_date']);
+        $selectedYear = $selectedDateSplit[0];
+        $minYear = min($selectedYear, date('Y'));
     } else {
-        $min_year = date('Y');
+        $minYear = date('Y');
     }
-    $date_fields = $this->Form->input(
+    $dateFields = $this->Form->input(
         'town_meeting_date',
         [
             'class' => 'form-control',
@@ -95,7 +95,7 @@
                 'id' => 'meeting_date_fields'
             ],
             'label' => false,
-            'minYear' => $min_year,
+            'minYear' => $minYear,
             'maxYear' => date('Y') + 1
         ]
     );
@@ -104,7 +104,7 @@
     <?= $this->Form->input(
         'meeting_date_set',
         [
-            'after' => $date_fields,
+            'after' => $dateFields,
             'before' => '<span class="fake_label">Town meeting</span><br />',
             'default' => isset($this->request->data['Community']['town_meeting_date']),
             'legend' =>  false,
@@ -149,23 +149,23 @@
         <?php endif; ?>
     </div>
 
-    <?php if (isset($client_errors) && ! empty($client_errors)): ?>
+    <?php if (isset($clientErrors) && ! empty($clientErrors)): ?>
         <div class="alert alert-danger alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">
                 <span aria-hidden="true">
                     &times;
                 </span>
             </button>
-            <?php if (count($client_errors) > 1): ?>
+            <?php if (count($clientErrors) > 1): ?>
                 <ul>
-                    <?php foreach ($client_errors as $err_msg): ?>
+                    <?php foreach ($clientErrors as $errMsg): ?>
                         <li>
-                            <?= $err_msg ?>
+                            <?= $errMsg ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
-                <?= $client_errors[0] ?>
+                <?= $clientErrors[0] ?>
             <?php endif; ?>
         </div>
     <?php endif; ?>
@@ -260,23 +260,23 @@
         <?php endif; ?>
     </div>
 
-    <?php if (isset($consultant_errors) && ! empty($consultant_errors)): ?>
+    <?php if (isset($consultantErrors) && ! empty($consultantErrors)): ?>
         <div class="alert alert-danger alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">
                 <span aria-hidden="true">
                     &times;
                 </span>
             </button>
-            <?php if (count($consultant_errors) > 1): ?>
+            <?php if (count($consultantErrors) > 1): ?>
                 <ul>
-                    <?php foreach ($consultant_errors as $err_msg): ?>
+                    <?php foreach ($consultantErrors as $errMsg): ?>
                         <li>
-                            <?= $err_msg ?>
+                            <?= $errMsg ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
-                <?= $consultant_errors[0] ?>
+                <?= $consultantErrors[0] ?>
             <?php endif; ?>
         </div>
     <?php endif; ?>
@@ -386,15 +386,12 @@
     echo $this->Form->end();
 
     $this->Html->script('admin', ['block' => 'scriptBottom']);
-    if (! isset($community_id)) {
-        $community_id = 'null';
-    }
 ?>
 
 <?php $this->append('buffered'); ?>
     communityForm.init({
-        community_id: <?= $community_id ?>,
-        selected_clients: <?= json_encode($selected_clients) ?>,
-        selected_consultants: <?= json_encode($selected_consultants) ?>
+        community_id: <?= isset($communityId) ? $communityId : 'null' ?>,
+        selected_clients: <?= json_encode($selectedClients) ?>,
+        selected_consultants: <?= json_encode($selectedConsultants) ?>
     });");
 <?php $this->end();
