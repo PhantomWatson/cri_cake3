@@ -70,7 +70,10 @@
             'class' => 'form-control',
             'div' => ['class' => 'form-group'],
             'escape' => false,
-            'label' => 'PWR<sup>3</sup> &trade; Score',
+            'label' => [
+                'text' => 'PWR<sup>3</sup> &trade; Score',
+                'escape' => false
+            ],
             'options' => array_combine($scores, $scores),
             'type' => 'select'
         ]
