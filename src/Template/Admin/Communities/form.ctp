@@ -171,22 +171,18 @@
     <?php endif; ?>
 
     <div class="panel-body">
-        <?php
-            echo $this->Form->input(
+        <div id="client_select" class="form-group well">
+            <?= $this->Form->input(
                 'client_id',
                 [
                     'class' => 'form-control',
                     'data-user-type' => 'client',
-                    'div' => [
-                        'id' => 'client_select',
-                        'class' => 'form-group well'
-                    ],
                     'empty' => true,
                     'label' => 'Select client',
                     'options' => $clients
                 ]
-            );
-        ?>
+            ) ?>
+        </div>
         <div id="client_add" class="well">
             <?php
                 echo $this->Form->input(
@@ -282,22 +278,18 @@
     <?php endif; ?>
 
     <div class="panel-body">
-        <?php
-            echo $this->Form->input(
+        <div id="consultant_select" class="form-group well">
+            <?= $this->Form->input(
                 'consultant_id',
                 [
                     'class' => 'form-control',
                     'data-user-type' => 'consultant',
-                    'div' => [
-                        'id' => 'consultant_select',
-                        'class' => 'form-group well'
-                    ],
                     'empty' => true,
                     'label' => 'Select consultant',
                     'options' => $consultants
                 ]
-            );
-        ?>
+            ) ?>
+        </div>
         <div id="consultant_add" class="well">
             <?php
                 echo $this->Form->input(
