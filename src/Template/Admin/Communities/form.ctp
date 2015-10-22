@@ -69,6 +69,7 @@
 			'after' => $note,
 			'class' => 'form-control',
 			'div' => ['class' => 'form-group'],
+			'escape' => false,
 			'label' => 'PWR<sup>3</sup> &trade; Score',
 			'options' => array_combine($scores, $scores),
 			'type' => 'select'
@@ -116,6 +117,7 @@
 		[
 			'before' => '<span class="fake_label">Who should be able to see this community\'s performance report?</span><br />',
 			'div' => ['class' => 'form-group custom_radio'],
+            'escape' => false,
 			'legend' =>  false,
 			'options' =>  [
 				1 => '<strong>Public:</strong> Everyone',
