@@ -79,8 +79,8 @@
         ]
     );
 
-    if (isset($this->request->data['Community']['town_meeting_date'])) {
-        $selectedDateSplit = explode('-', $this->request->data['Community']['town_meeting_date']);
+    if (isset($community['town_meeting_date'])) {
+        $selectedDateSplit = explode('-', $community['town_meeting_date']);
         $selectedYear = $selectedDateSplit[0];
         $minYear = min($selectedYear, date('Y'));
     } else {
@@ -106,7 +106,7 @@
         [
             'after' => $dateFields,
             'before' => '<span class="fake_label">Town meeting</span><br />',
-            'default' => isset($this->request->data['Community']['town_meeting_date']),
+            'default' => isset($community['town_meeting_date']),
             'legend' =>  false,
             'options' =>  [
                 0 => 'Has not been scheduled yet',
