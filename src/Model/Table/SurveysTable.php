@@ -69,47 +69,47 @@ class SurveysTable extends Table
 
         $validator
             ->requirePresence('pwrrr_qid', 'create')
-            ->notEmpty('pwrrr_qid');
+            ->allowEmpty('pwrrr_qid');
 
         $validator
             ->requirePresence('production_aid', 'create')
-            ->notEmpty('production_aid');
+            ->allowEmpty('production_aid');
 
         $validator
             ->requirePresence('wholesale_aid', 'create')
-            ->notEmpty('wholesale_aid');
+            ->allowEmpty('wholesale_aid');
 
         $validator
             ->requirePresence('recreation_aid', 'create')
-            ->notEmpty('recreation_aid');
+            ->allowEmpty('recreation_aid');
 
         $validator
             ->requirePresence('retail_aid', 'create')
-            ->notEmpty('retail_aid');
+            ->allowEmpty('retail_aid');
 
         $validator
             ->requirePresence('residential_aid', 'create')
-            ->notEmpty('residential_aid');
+            ->allowEmpty('residential_aid');
 
         $validator
             ->requirePresence('1_aid', 'create')
-            ->notEmpty('1_aid');
+            ->allowEmpty('1_aid');
 
         $validator
             ->requirePresence('2_aid', 'create')
-            ->notEmpty('2_aid');
+            ->allowEmpty('2_aid');
 
         $validator
             ->requirePresence('3_aid', 'create')
-            ->notEmpty('3_aid');
+            ->allowEmpty('3_aid');
 
         $validator
             ->requirePresence('4_aid', 'create')
-            ->notEmpty('4_aid');
+            ->allowEmpty('4_aid');
 
         $validator
             ->requirePresence('5_aid', 'create')
-            ->notEmpty('5_aid');
+            ->allowEmpty('5_aid');
 
         $validator
             ->add('respondents_last_modified_date', 'valid', ['rule' => 'datetime'])
