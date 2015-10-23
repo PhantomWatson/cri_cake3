@@ -72,6 +72,13 @@
 
         <table class="table">
             <?php
+                $tableTemplate = [
+                    'formGroup' => '<tr><td>{{label}}</td><td>{{input}}</td></tr>',
+                    'inputContainer' => '<span class="form-group {{type}}{{required}}">{{content}}</span>',
+                    'inputContainerError' => '<span class="form-group {{type}}{{required}} error">{{content}}{{error}}</span>'
+                ];
+                $this->Form->templates($tableTemplate);
+
                 echo $this->Form->input(
                     "$associationName.sm_id",
                     [
@@ -120,6 +127,9 @@
                         ]
                     );
                 }
+
+                // Return to default Bootstrap form template
+                $this->Form->templates('bootstrap_form');
             ?>
         </table>
     </div>
