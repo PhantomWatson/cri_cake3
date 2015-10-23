@@ -85,11 +85,7 @@
                         'class' => 'form-control survey_sm_id',
                         'div' => false,
                         'label' => 'SurveyMonkey Survey ID',
-                        'type' => 'number',
-
-                        'before' => '<tr><td>',
-                        'between' => '</td><td>',
-                        'after' => '</td></tr>'
+                        'type' => 'number'
                     ]
                 );
                 echo $this->Form->input(
@@ -97,11 +93,7 @@
                     [
                         'class' => 'form-control survey_url',
                         'div' => false,
-                        'label' => 'SurveyMonkey Survey URL',
-
-                        'before' => '<tr><td>',
-                        'between' => '</td><td>',
-                        'after' => '</td></tr>'
+                        'label' => 'SurveyMonkey Survey URL'
                     ]
                 );
                 foreach ($qnaIdFields as $qnaIdField) {
@@ -119,11 +111,7 @@
                                 'escape' => false,
                                 'text' => $label
                             ],
-                            'type' => 'number',
-
-                            'before' => '<tr><td>',
-                            'between' => '</td><td>',
-                            'after' => '</td></tr>'
+                            'type' => 'number'
                         ]
                     );
                 }
