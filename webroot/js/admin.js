@@ -118,7 +118,7 @@ var communityForm = {
 		this.setupSurveyLinking();
 		this.setupAssociatedUserInterface(params.selected_clients, params.selected_consultants);
 		
-		$('#CommunityMeetingDateSet0, #CommunityMeetingDateSet1').change(function () {
+		$('#meeting-date-set-0, #meeting-date-set-1').change(function () {
 			communityForm.toggleDateFields(true);
 		});
 		this.toggleDateFields(false);
@@ -126,14 +126,14 @@ var communityForm = {
 		$('#CommunityAdminEditForm').submit(function (event) {
 		    var label = null;
 			if ($('#client_add').is(':visible')) {
-				if ($('#NewClientEntryName').val() !== '' || $('#NewClientEntryEmail').val() !== '') {
+				if ($('#newcliententry-name').val() !== '' || $('#newcliententry-email').val() !== '') {
 					label = $('#client_add button').html().trim();
 					alert('To add a new client, click "'+label+'"');
 					event.preventDefault();
 				}
 			}
 			if ($('#consultant_add').is(':visible')) {
-				if ($('#NewConsultantEntryName').val() !== '' || $('#NewConsultantEntryEmail').val() !== '') {
+				if ($('#newconsultantentry-name').val() !== '' || $('#newconsultantentry-email').val() !== '') {
 					label = $('#consultant_add button').html().trim();
 					alert('To add a new consultant, click "'+label+'"');
 					event.preventDefault();
@@ -159,14 +159,14 @@ var communityForm = {
 	},
 	
 	toggleDateFields: function (animate) {
-		if ($('#CommunityMeetingDateSet0').is(':checked')) {
+		if ($('#meeting-date-set-0').is(':checked')) {
 			if (animate) {
 				$('#meeting_date_fields').slideUp();
 			} else {
 				$('#meeting_date_fields').hide();
 			}
 		}
-		if ($('#CommunityMeetingDateSet1').is(':checked')) {
+		if ($('#meeting-date-set-1').is(':checked')) {
 			if (animate) {
 				$('#meeting_date_fields').slideDown();
 			} else {
@@ -228,7 +228,7 @@ var communityForm = {
 		});
 		
 		// Selecting existing users
-		$('#CommunityClientId, #CommunityConsultantId').each(function () {
+		$('#client-id, #consultant-id').each(function () {
 			$(this).selectedIndex = -1;
 			$(this).change(function () {
 				var select = $(this);
@@ -294,14 +294,15 @@ var communityForm = {
 	},
 	
 	addNewUser: function (type) {
-		var model = (type == 'client') ? 'NewClient' : 'NewConsultant';
+		var model = (type == 'client') ? 'NewClientEntry' : 'NewConsultantEntry';
+		var modelLower = model.toLowerCase();
 		var counter = (type == 'client') ? this.client_counter : this.consultant_counter;
-		var name = $('#'+model+'EntryName');
-		var title = $('#'+model+'EntryTitle');
-		var organization = $('#'+model+'EntryOrganization');
-		var email = $('#'+model+'EntryEmail');
-		var phone = $('#'+model+'EntryPhone');
-		var pass = $('#'+model+'EntryPassword');
+		var name = $('#'+modelLower+'-name');
+		var title = $('#'+modelLower+'-title');
+		var organization = $('#'+modelLower+'-organization');
+		var email = $('#'+modelLower+'-email');
+		var phone = $('#'+modelLower+'-phone');
+		var pass = $('#'+modelLower+'-password');
 		
 		if (! name.val()) {
 			alert('Please enter this user\'s name.');
@@ -325,12 +326,12 @@ var communityForm = {
 			});
 		});
 		li.append(link); 
-		li.append('<input type="hidden" name="data['+model+']['+counter+'][name]" value="'+name.val()+'" />');
-		li.append('<input type="hidden" name="data['+model+']['+counter+'][title]" value="'+title.val()+'" />');
-		li.append('<input type="hidden" name="data['+model+']['+counter+'][organization]" value="'+organization.val()+'" />');
-		li.append('<input type="hidden" name="data['+model+']['+counter+'][email]" value="'+email.val()+'" />');
-		li.append('<input type="hidden" name="data['+model+']['+counter+'][phone]" value="'+phone.val()+'" />');
-		li.append('<input type="hidden" name="data['+model+']['+counter+'][password]" value="'+pass.val()+'" />');
+		li.append('<input type="hidden" name="'+model+'['+counter+'][name]" value="'+name.val()+'" />');
+		li.append('<input type="hidden" name="'+model+'['+counter+'][title]" value="'+title.val()+'" />');
+		li.append('<input type="hidden" name="'+model+'['+counter+'][organization]" value="'+organization.val()+'" />');
+		li.append('<input type="hidden" name="'+model+'['+counter+'][email]" value="'+email.val()+'" />');
+		li.append('<input type="hidden" name="'+model+'['+counter+'][phone]" value="'+phone.val()+'" />');
+		li.append('<input type="hidden" name="'+model+'['+counter+'][password]" value="'+pass.val()+'" />');
 		if (type == 'client') {
 			this.client_counter++;
 		} else {
@@ -363,9 +364,9 @@ var communityForm = {
 		} else {
 			var random_password = getRandomPassword();
 			if (type == 'client') {
-				$('#NewClientEntryPassword').val(random_password);
+				$('#newcliententry-password').val(random_password);
 			} else {
-				$('#NewConsultantEntryPassword').val(random_password);
+				$('#newconsultantentry-password').val(random_password);
 			}
 			add_container.slideDown();
 		}
