@@ -1,3 +1,10 @@
+<?php
+    $tableTemplate = [
+        'formGroup' => '<tr><td>{{label}}</td><td>{{input}}</td></tr>',
+        'inputContainer' => '<span class="form-group {{type}}{{required}}">{{content}}</span>',
+        'inputContainerError' => '<span class="form-group {{type}}{{required}} error">{{content}}{{error}}</span>'
+    ];
+?>
 <div class="page-header">
     <h1>
         <?= $titleForLayout ?>
@@ -189,54 +196,58 @@
             ) ?>
         </div>
         <div id="client_add" class="well">
-            <?php
-                echo $this->Form->input(
-                    'NewClientEntry.name',
-                    [
-                        'class' => 'form-control',
-                        'div' => ['class' => 'form-group'],
-                        'label' => 'New client name'
-                    ]
-                );
-                echo $this->Form->input(
-                    'NewClientEntry.title',
-                    [
-                        'class' => 'form-control',
-                        'div' => ['class' => 'form-group'],
-                        'label' => 'Job Title'
-                    ]
-                );
-                echo $this->Form->input(
-                    'NewClientEntry.organization',
-                    [
-                        'class' => 'form-control',
-                        'div' => ['class' => 'form-group']
-                    ]
-                );
-                echo $this->Form->input(
-                    'NewClientEntry.email',
-                    [
-                        'class' => 'form-control',
-                        'div' => ['class' => 'form-group'],
-                        'type' => 'email'
-                    ]
-                );
-                echo $this->Form->input(
-                    'NewClientEntry.phone',
-                    [
-                        'class' => 'form-control',
-                        'div' => ['class' => 'form-group']
-                    ]
-                );
-                echo $this->Form->input(
-                    'NewClientEntry.password',
-                    [
-                        'class' => 'form-control',
-                        'div' => ['class' => 'form-group'],
-                        'type' => 'text'
-                    ]
-                );
-            ?>
+            <table class="table">
+                <?php
+                    $this->Form->templates($tableTemplate);
+                    echo $this->Form->input(
+                        'NewClientEntry.name',
+                        [
+                            'class' => 'form-control',
+                            'div' => ['class' => 'form-group'],
+                            'label' => 'New client name'
+                        ]
+                    );
+                    echo $this->Form->input(
+                        'NewClientEntry.title',
+                        [
+                            'class' => 'form-control',
+                            'div' => ['class' => 'form-group'],
+                            'label' => 'Job Title'
+                        ]
+                    );
+                    echo $this->Form->input(
+                        'NewClientEntry.organization',
+                        [
+                            'class' => 'form-control',
+                            'div' => ['class' => 'form-group']
+                        ]
+                    );
+                    echo $this->Form->input(
+                        'NewClientEntry.email',
+                        [
+                            'class' => 'form-control',
+                            'div' => ['class' => 'form-group'],
+                            'type' => 'email'
+                        ]
+                    );
+                    echo $this->Form->input(
+                        'NewClientEntry.phone',
+                        [
+                            'class' => 'form-control',
+                            'div' => ['class' => 'form-group']
+                        ]
+                    );
+                    echo $this->Form->input(
+                        'NewClientEntry.password',
+                        [
+                            'class' => 'form-control',
+                            'div' => ['class' => 'form-group'],
+                            'type' => 'text'
+                        ]
+                    );
+                    $this->Form->templates('bootstrap_form');
+                ?>
+            </table>
             <button class="add btn btn-default" data-user-type="client">
                 Add new client
             </button>
@@ -296,54 +307,58 @@
             ) ?>
         </div>
         <div id="consultant_add" class="well">
-            <?php
-                echo $this->Form->input(
-                    'NewConsultantEntry.name',
-                    [
-                        'class' => 'form-control',
-                        'div' => ['class' => 'form-group'],
-                        'label' => 'New consultant name'
-                    ]
-                );
-                echo $this->Form->input(
-                    'NewConsultantEntry.title',
-                    [
-                        'class' => 'form-control',
-                        'div' => ['class' => 'form-group'],
-                        'label' => 'Job Title'
-                    ]
-                );
-                echo $this->Form->input(
-                    'NewConsultantEntry.organization',
-                    [
-                        'class' => 'form-control',
-                        'div' => ['class' => 'form-group']
-                    ]
-                );
-                echo $this->Form->input(
-                    'NewConsultantEntry.email',
-                    [
-                        'class' => 'form-control',
-                        'div' => ['class' => 'form-group'],
-                        'type' => 'email'
-                    ]
-                );
-                echo $this->Form->input(
-                    'NewConsultantEntry.phone',
-                    [
-                        'class' => 'form-control',
-                        'div' => ['class' => 'form-group']
-                    ]
-                );
-                echo $this->Form->input(
-                    'NewConsultantEntry.password',
-                    [
-                        'class' => 'form-control',
-                        'div' => ['class' => 'form-group'],
-                        'type' => 'text'
-                    ]
-                );
-            ?>
+            <table class="table">
+                <?php
+                    $this->Form->templates($tableTemplate);
+                    echo $this->Form->input(
+                        'NewConsultantEntry.name',
+                        [
+                            'class' => 'form-control',
+                            'div' => ['class' => 'form-group'],
+                            'label' => 'New consultant name'
+                        ]
+                    );
+                    echo $this->Form->input(
+                        'NewConsultantEntry.title',
+                        [
+                            'class' => 'form-control',
+                            'div' => ['class' => 'form-group'],
+                            'label' => 'Job Title'
+                        ]
+                    );
+                    echo $this->Form->input(
+                        'NewConsultantEntry.organization',
+                        [
+                            'class' => 'form-control',
+                            'div' => ['class' => 'form-group']
+                        ]
+                    );
+                    echo $this->Form->input(
+                        'NewConsultantEntry.email',
+                        [
+                            'class' => 'form-control',
+                            'div' => ['class' => 'form-group'],
+                            'type' => 'email'
+                        ]
+                    );
+                    echo $this->Form->input(
+                        'NewConsultantEntry.phone',
+                        [
+                            'class' => 'form-control',
+                            'div' => ['class' => 'form-group']
+                        ]
+                    );
+                    echo $this->Form->input(
+                        'NewConsultantEntry.password',
+                        [
+                            'class' => 'form-control',
+                            'div' => ['class' => 'form-group'],
+                            'type' => 'text'
+                        ]
+                    );
+                    $this->Form->templates('bootstrap_form');
+                ?>
+            </table>
             <button class="add btn btn-default" data-user-type="consultant">
                 Add new consultant
             </button>
@@ -360,14 +375,20 @@
     <div class="panel-body">
         <?= $this->element(
             'Communities'.DS.'link_survey',
-            ['type' => 'Official']
+            [
+                'type' => 'Official',
+                'tableTemplate' => $tableTemplate
+            ]
         ) ?>
 
         <hr />
 
         <?= $this->element(
             'Communities'.DS.'link_survey',
-            ['type' => 'Organization']
+            [
+                'type' => 'Organization',
+                'tableTemplate' => $tableTemplate
+            ]
         ) ?>
     </div>
 </div>
