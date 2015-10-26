@@ -77,7 +77,6 @@
                     "$associationName.sm_id",
                     [
                         'class' => 'form-control survey_sm_id',
-                        'div' => false,
                         'label' => 'SurveyMonkey Survey ID',
                         'type' => 'number'
                     ]
@@ -86,7 +85,6 @@
                     "$associationName.sm_url",
                     [
                         'class' => 'form-control survey_url',
-                        'div' => false,
                         'label' => 'SurveyMonkey Survey URL'
                     ]
                 );
@@ -100,7 +98,6 @@
                         [
                             'class' => 'form-control',
                             'data-fieldname' => $qnaIdField,
-                            'div' => false,
                             'label' => [
                                 'escape' => false,
                                 'text' => $label
