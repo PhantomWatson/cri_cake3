@@ -195,7 +195,7 @@ class CommunitiesController extends AppController
     {
         $surveysTable = TableRegistry::get('Surveys');
         $fieldnames = $surveysTable->getQnaIdFieldNames();
-        foreach (['OfficialSurvey', 'OrganizationSurvey'] as $type) {
+        foreach (['official_survey', 'organization_survey'] as $type) {
             if (! $this->request->data[$type]['sm_id']) {
                 continue;
             }
