@@ -1,5 +1,6 @@
 <?php
 return [
+	'error' => '<div class="alert alert-danger">{{content}}</div>',
 	'inputContainer' => '<div class="form-group {{type}}{{required}}">{{content}}</div>',
 	'inputContainerError' => '<div class="form-group {{type}}{{required}} error">{{content}}{{error}}</div>'
 
