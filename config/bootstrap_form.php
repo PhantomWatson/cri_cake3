@@ -2,7 +2,7 @@
 return [
 	'error' => '<div class="alert alert-danger">{{content}}</div>',
 	'inputContainer' => '<div class="form-group {{type}}{{required}}">{{content}}</div>',
-	'inputContainerError' => '<div class="form-group {{type}}{{required}} error">{{content}}{{error}}</div>'
+	'inputContainerError' => '<div class="form-group has-error has-feedback {{type}}{{required}}">{{content}}{{error}}</div>'
 
 	/* defaults
 	'button' => '<button{{attrs}}>{{text}}</button>',
