@@ -424,26 +424,6 @@ class CommunitiesController extends AppController
                 }
             }
             $this->set(compact('clientErrors', 'consultantErrors'));
-        } else {
-            /* This miiiiight all already be covered by $community = $this->Communities->get($communityId); above
-             $this->request->data = $this->Communities->find('all')
-                ->where(['Communities.id' => $communityId])
-                ->contain([
-                    'Client' => function ($q) {
-                        return $q->select(['id', 'name']);
-                    },
-                    'Consultant' => function ($q) {
-                        return $q->select(['id', 'name']);
-                    },
-                    'OfficialSurvey',
-                    'OrganizationSurvey'
-                ])
-                ->first()
-                ->toArray();
-            $this->request->data['OfficialSurvey']['community_id'] = $communityId;
-            $this->request->data['OfficialSurvey']['type'] = 'official';
-            $this->request->data['OrganizationSurvey']['community_id'] = $communityId;
-            $this->request->data['OrganizationSurvey']['type'] = 'organization'; */
         }
 
         // Prepare selected clients for JS
