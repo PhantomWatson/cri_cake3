@@ -127,8 +127,8 @@ class CommunitiesController extends AppController
     private function validateSelectedSurveys()
     {
         $surveysTable = TableRegistry::get('Surveys');
-        $communityId = isset($this->request->data['Community']['id']) ?
-            $this->request->data['Community']['id']
+        $communityId = isset($this->request->data['id']) ?
+            $this->request->data['id']
             : null;
 
         // Prevent one community from being linked to the survey of another community
@@ -143,8 +143,8 @@ class CommunitiesController extends AppController
             }
         }
 
-        $officialSmId = $this->request->data['OfficialSurvey']['sm_id'];
-        $orgSmId = $this->request->data['OrganizationSurvey']['sm_id'];
+        $officialSmId = $this->request->data['official_survey']['sm_id'];
+        $orgSmId = $this->request->data['organization_survey']['sm_id'];
         if ($officialSmId && $orgSmId && $officialSmId == $orgSmId) {
             $this->Flash->error("Error: You cannot select the same SurveyMonkey survey for both the officials survey <em>and</em> the organizations survey for this community.");
             return false;
@@ -318,10 +318,10 @@ class CommunitiesController extends AppController
             }
             $this->set(compact('clientErrors', 'consultantErrors'));
         } else {
-            $this->request->data['Community']['score'] = 0;
-            $this->request->data['Community']['public'] = 0;
-            $this->request->data['OfficialSurvey']['type'] = 'official';
-            $this->request->data['OrganizationSurvey']['type'] = 'organization';
+            $this->request->data['score'] = 0;
+            $this->request->data['public'] = 0;
+            $this->request->data['official_survey']['type'] = 'official';
+            $this->request->data['organization_survey']['type'] = 'organization';
         }
 
         // Prepare selected clients for JS
