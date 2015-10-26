@@ -37,6 +37,7 @@ class ResponsesTable extends Table
             'foreignKey' => 'survey_id',
             'joinType' => 'INNER'
         ]);
+        $this->addBehavior('SurveyMonkey');
     }
 
     /**

@@ -46,6 +46,7 @@ class SurveysTable extends Table
         $this->hasMany('Responses', [
             'foreignKey' => 'survey_id'
         ]);
+        $this->addBehavior('SurveyMonkey');
     }
 
     /**
