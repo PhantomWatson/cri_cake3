@@ -135,7 +135,7 @@ class CommunitiesController extends AppController
         foreach (['official', 'organization'] as $type) {
             $model = $type.'_survey';
             $surveySmId = $this->request->data[$model]['sm_id'];
-            $resultCommunityId = $surveysTable->getCommunityId($surveySmId);
+            $resultCommunityId = $surveysTable->getCommunityId(['sm_id' => $surveySmId]);
             if ($surveySmId && $resultCommunityId && $resultCommunityId != $communityId) {
                 $community = $this->Communities->get($communityId);
                 $this->Flash->error('Error: The selected '.$type.'s survey is already assigned to '.$community->name);

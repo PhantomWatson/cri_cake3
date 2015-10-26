@@ -226,9 +226,17 @@ class SurveysTable extends Table
         }
     }
 
-    public function getCommunityId($surveyId)
+    /**
+     * Returns the community_id for the first survey that matches $conditions
+     * @param $conditions array
+     * @return int|null
+     */
+    public function getCommunityId($conditions)
     {
-        $survey = $this->get($surveyId);
+        $survey = $this->find('all')
+            ->select(['community_id'])
+            ->where($conditions)
+            ->first();
         return $survey->community_id;
     }
 
