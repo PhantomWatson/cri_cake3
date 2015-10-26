@@ -595,7 +595,8 @@ class CommunitiesTable extends Table
     public function removeAllClientAssociations($communityId)
     {
         $community = $this->get($communityId);
-        $clients = $this->Clients->find('all')
+        $joinTable = TableRegistry::get('ClientsCommunities');
+        $clients = $joinTable->find('all')
             ->select(['id'])
             ->where(['community_id' => $communityId])
             ->toArray();
@@ -605,7 +606,8 @@ class CommunitiesTable extends Table
     public function removeAllConsultantAssociations($communityId)
     {
         $community = $this->get($communityId);
-        $consultants = $this->Consultants->find('all')
+        $joinTable = TableRegistry::get('CommunitiesConsultants');
+        $consultants = $joinTable->find('all')
             ->select(['id'])
             ->where(['community_id' => $communityId])
             ->toArray();
