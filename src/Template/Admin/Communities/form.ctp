@@ -1,9 +1,9 @@
 <?php
     $tableTemplate = [
-        'formGroup' => '<tr><td>{{label}}</td><td>{{input}}</td></tr>',
+        'formGroup' => '<tr><td class="form-group {{type}}{{required}}">{{label}}</td><td>{{input}}</td></tr>',
         'inputContainer' => '<span class="form-group {{type}}{{required}}">{{content}}</span>',
         'inputContainerError' => '<span class="form-group {{type}}{{required}} error">{{content}}{{error}}</span>'
-    ];
+    ] + require(ROOT.DS.'config'.DS.'bootstrap_form.php');
 ?>
 <div class="page-header">
     <h1>
