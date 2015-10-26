@@ -133,7 +133,7 @@ class CommunitiesController extends AppController
 
         // Prevent one community from being linked to the survey of another community
         foreach (['official', 'organization'] as $type) {
-            $model = ucwords($type).'Survey';
+            $model = $type.'_survey';
             $surveySmId = $this->request->data[$model]['sm_id'];
             $resultCommunityId = $surveysTable->getCommunityId($surveySmId);
             if ($surveySmId && $resultCommunityId && $resultCommunityId != $communityId) {
