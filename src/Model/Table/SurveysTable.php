@@ -237,7 +237,10 @@ class SurveysTable extends Table
             ->select(['community_id'])
             ->where($conditions)
             ->first();
-        return $survey->community_id;
+        if ($survey) {
+            return $survey->community_id;
+        }
+        return null;
     }
 
     public function getCachedSMSurveyUrl($smId)
