@@ -163,7 +163,7 @@ class CommunitiesController extends AppController
     {
         $surveysTable = TableRegistry::get('Surveys');
         $first = true;
-        foreach (['OfficialSurvey', 'OrganizationSurvey'] as $type) {
+        foreach (['official_survey', 'organization_survey'] as $type) {
             if (! $first) {
                 // The SurveyMonkey API limits us to 2 API requests per second.
                 // For extra safety, we'll delay for one second before the second API call.
