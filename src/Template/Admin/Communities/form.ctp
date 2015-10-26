@@ -204,7 +204,8 @@
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group'],
-                            'label' => 'New client name'
+                            'label' => 'New client name',
+                            'required' => false
                         ]
                     );
                     echo $this->Form->input(
@@ -315,7 +316,8 @@
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group'],
-                            'label' => 'New consultant name'
+                            'label' => 'New consultant name',
+                            'required' => false
                         ]
                     );
                     echo $this->Form->input(
