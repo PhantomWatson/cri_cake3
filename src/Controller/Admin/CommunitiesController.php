@@ -370,24 +370,29 @@ class CommunitiesController extends AppController
             throw new NotFoundException('Community ID not specified');
         }
 
-        if (! $this->Communities->exists(['id' => $communityId])) {
-            throw new NotFoundException('Community #'.$communityId.' not found');
-        }
+        $community = $this->Communities->get($communityId, [
+            'contain' => [
+                'Clients',
+                'Consultants',
+                'OfficialSurvey',
+                'OrganizationSurvey'
+            ]
+        ]);
 
         if ($this->request->is('post') || $this->request->is('put')) {
             $this->request->data['id'] = $communityId;
 
-            if (! $this->request->data['Community']['meeting_date_set']) {
-                $this->request->data['Community']['town_meeting_date'] = null;
+            if (! $this->request->data['meeting_date_set']) {
+                $this->request->data['town_meeting_date'] = null;
             }
 
             /* A workaround for deleting all of a community's clients/consultants.
              * A missing $this->request->data['Client'] key or an empty array isn't deleting existing clients as expected.
              * No clue why (Community->hasAndBelongsToMany->Client->unique is set to TRUE), but here's a hack. */
-            if (! isset($this->request->data['Client']) || empty($this->request->data['Client'])) {
+            if (! isset($this->request->data['client']) || empty($this->request->data['client'])) {
                 $this->Communities->removeAllClientAssociations($communityId);
             }
-            if (! isset($this->request->data['Consultant']) || empty($this->request->data['Consultant'])) {
+            if (! isset($this->request->data['consultant']) || empty($this->request->data['consultant'])) {
                 $this->Communities->removeAllConsultantAssociations($communityId);
             }
 
@@ -402,7 +407,7 @@ class CommunitiesController extends AppController
                 } else {
                     list($qnaSuccess, $qnaMsg) = $this->setSurveyQuestionAndAnswerIds();
                 }
-                $community = $this->Communities->newEntity($this->request->data);
+                $community = $this->Communities->patchEntity($community, $this->request->data);
                 $communityErrors = $community->errors();
                 $validates = $qnaSuccess
                     && empty($communityErrors)
@@ -420,7 +425,8 @@ class CommunitiesController extends AppController
             }
             $this->set(compact('clientErrors', 'consultantErrors'));
         } else {
-            $this->request->data = $this->Communities->find('all')
+            /* This miiiiight all already be covered by $community = $this->Communities->get($communityId); above
+             $this->request->data = $this->Communities->find('all')
                 ->where(['Communities.id' => $communityId])
                 ->contain([
                     'Client' => function ($q) {
@@ -437,41 +443,38 @@ class CommunitiesController extends AppController
             $this->request->data['OfficialSurvey']['community_id'] = $communityId;
             $this->request->data['OfficialSurvey']['type'] = 'official';
             $this->request->data['OrganizationSurvey']['community_id'] = $communityId;
-            $this->request->data['OrganizationSurvey']['type'] = 'organization';
+            $this->request->data['OrganizationSurvey']['type'] = 'organization'; */
         }
 
         // Prepare selected clients for JS
         $usersTable = TableRegistry::get('Users');
         $clients = $usersTable->getClientList();
         $selectedClients = [];
-        if (isset($this->request->data['clients'])) {
-            foreach ($this->request->data['clients'] as $client) {
-                $clientId = isset($client['id']) ? $client['id'] : $client;
-                $selectedClients[] = [
-                    'id' => $clientId,
-                    'name' => $clients[$clientId]
-                ];
-            }
+        foreach ($community['clients'] as $client) {
+            $clientId = isset($client['id']) ? $client['id'] : $client;
+            $selectedClients[] = [
+                'id' => $clientId,
+                'name' => $clients[$clientId]
+            ];
         }
 
         // Prepare selected consultants for JS
         $consultants = $usersTable->getConsultantList();
         $selectedConsultants = [];
-        if (isset($this->request->data['Consultant'])) {
-            foreach ($this->request->data['Consultant'] as $consultant) {
-                $consultantId = isset($consultant['id']) ? $consultant['id'] : $consultant;
-                $selectedConsultants[] = [
-                    'id' => $consultantId,
-                    'name' => $consultants[$consultantId]
-                ];
-            }
+        foreach ($community['consultants'] as $consultant) {
+            $consultantId = isset($consultant['id']) ? $consultant['id'] : $consultant;
+            $selectedConsultants[] = [
+                'id' => $consultantId,
+                'name' => $consultants[$consultantId]
+            ];
         }
 
         $surveysTable = TableRegistry::get('Surveys');
         $areasTable = TableRegistry::get('Areas');
         $this->set([
             'communityId' => $communityId,
-            'titleForLayout' => 'Edit '.$this->Communities->field('name'),
+            'community' => $community,
+            'titleForLayout' => 'Edit '.$community->name,
             'qnaIdFields' => $surveysTable->getQnaIdFieldNames(),
             'clients' => $usersTable->getClientList(),
             'consultants' => $usersTable->getConsultantList(),
@@ -479,7 +482,7 @@ class CommunitiesController extends AppController
             'selectedConsultants' => $selectedConsultants,
             'areas' => $areasTable->find('list')
         ]);
-        $this->render('admin_form');
+        $this->render('form');
     }
 
     public function delete($communityId = null)
