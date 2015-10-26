@@ -93,31 +93,33 @@
         ]
     ) ?>
 
-    <?php
-        if (isset($community['town_meeting_date'])) {
-            $selectedDateSplit = explode('-', $community['town_meeting_date']);
-            $selectedYear = $selectedDateSplit[0];
-            $minYear = min($selectedYear, date('Y'));
-        } else {
-            $minYear = date('Y');
-        }
-        $template = [
-            'dateWidget' => '{{month}}{{day}}{{year}}',
-            'inputContainer' => '<div class="form-group form-inline {{type}}{{required}}" id="meeting_date_fields">{{content}}</div>',
-            'inputContainerError' => '<div class="form-group {{type}}{{required}} error" id="meeting_date_fields">{{content}}{{error}}</div>',
-            'select' => '<select name="{{name}}" class="form-control"{{attrs}}>{{content}}</select>'
-        ];
-        $this->Form->templates($template);
-        echo $this->Form->input(
-            'town_meeting_date',
-            [
-                'label' => 'Town Meeting',
-                'minYear' => $minYear,
-                'maxYear' => date('Y') + 1
-            ]
-        );
-        $this->Form->templates('bootstrap_form');
-    ?>
+    <div id="meeting_date_fields">
+        <?php
+            if (isset($community['town_meeting_date'])) {
+                $selectedDateSplit = explode('-', $community['town_meeting_date']);
+                $selectedYear = $selectedDateSplit[0];
+                $minYear = min($selectedYear, date('Y'));
+            } else {
+                $minYear = date('Y');
+            }
+            $template = [
+                'dateWidget' => '{{month}}{{day}}{{year}}',
+                'inputContainer' => '<div class="form-group form-inline {{type}}{{required}}">{{content}}</div>',
+                'inputContainerError' => '<div class="form-group {{type}}{{required}} error">{{content}}{{error}}</div>',
+                'select' => '<select name="{{name}}" class="form-control"{{attrs}}>{{content}}</select>'
+            ];
+            $this->Form->templates($template);
+            echo $this->Form->input(
+                'town_meeting_date',
+                [
+                    'label' => false,
+                    'minYear' => $minYear,
+                    'maxYear' => date('Y') + 1
+                ]
+            );
+            $this->Form->templates('bootstrap_form');
+        ?>
+    </div>
 
     <?= $this->Form->input(
         'public',
