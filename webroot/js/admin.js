@@ -654,7 +654,7 @@ var adminCommunitiesIndex = {
 				$('#admin_community_search_form').submit();
 			},
 			search: function (event, ui) {
-			    if ($('#admin_community_search_form .loading').length == 0) {
+			    if ($('#admin_community_search_form .loading').length === 0) {
 			        var loading_indicator = '<img src="/data_center/img/loading_small.gif" class="loading" alt="loading" />';
 	                $('#admin_community_search_form button').after(loading_indicator);
 			    }
