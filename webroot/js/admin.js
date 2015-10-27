@@ -432,7 +432,16 @@ var communityForm = {
 				results_container.slideDown();
 			},
 			error: function () {
-				results_container.append('<p class="alert alert-danger">Error: No surveys found</p>');
+			    var msg = '<p class="alert alert-danger">Error: No surveys found</p>';
+			    if (results_container.is(':visible')) {
+			        results_container.slideUp(300, function () {
+			            results_container.html(msg);
+			            results_container.slideDown(300);
+			        });
+			    } else {
+			        results_container.html(msg);
+			        results_container.slideDown(300);
+			    }
 			},
 			complete: function () {
 				lookup_link.removeClass('disabled');
