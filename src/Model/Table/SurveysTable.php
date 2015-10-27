@@ -146,7 +146,6 @@ class SurveysTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['community_id'], 'Communities'));
-        $rules->add($rules->existsIn(['sm_id'], 'Sms'));
         return $rules;
     }
 
