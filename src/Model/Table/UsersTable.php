@@ -93,25 +93,13 @@ class UsersTable extends Table
             ->notEmpty('email');
 
         $validator
-            ->requirePresence('phone', 'create')
-            ->notEmpty('phone');
-
-        $validator
-            ->requirePresence('title', 'create')
-            ->notEmpty('title');
-
-        $validator
-            ->requirePresence('organization', 'create')
-            ->notEmpty('organization');
-
-        $validator
+            ->requirePresence('password', 'create')
             ->add('password', 'notBlank', [
                 'rule' => 'notBlank',
                 'message' => 'A non-blank password is required.'
             ]);
 
         $validator
-            ->requirePresence('new_password', 'create')
             ->notEmpty('new_password', 'A password is required', 'create')
             ->allowEmpty('new_password', 'update')
             ->add('new_password', 'validNewPassword1', [
@@ -124,9 +112,7 @@ class UsersTable extends Table
             ->allowEmpty('confirm_password', 'update');
 
         $validator
-            ->add('all_communities', 'valid', ['rule' => 'boolean'])
-            ->requirePresence('all_communities', 'create')
-            ->notEmpty('all_communities');
+            ->add('all_communities', 'valid', ['rule' => 'boolean']);
 
         return $validator;
     }
