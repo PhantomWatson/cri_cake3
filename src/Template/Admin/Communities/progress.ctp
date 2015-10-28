@@ -32,15 +32,16 @@
     	function score_radio_input($step, $score, $view) {
     		$retval = $view->Form->radio(
     			'score',
-    			[$step => "Step $step"],
     			[
-    				'label' => false,
-    				'value' => false,
-    				'checked' => $score == $step
+                    [
+        				'text' => "Step $step",
+        				'value' => $step,
+        				'checked' => $score == $step
+    				]
     			]
     		);
-    		$retval = '<label>'.$retval.'</label>';
-    		$retval = '<div class="radio">'.$retval.'</div>';
+    		//$retval = '<label>'.$retval.'</label>';
+    		//$retval = '<div class="radio">'.$retval.'</div>';
     		return $retval;
     	}
 
