@@ -126,14 +126,14 @@ var communityForm = {
 		$('#CommunityAdminEditForm').submit(function (event) {
 		    var label = null;
 			if ($('#client_add').is(':visible')) {
-				if ($('#newcliententry-name').val() !== '' || $('#newcliententry-email').val() !== '') {
+				if ($('#new-clients-entry-name').val() !== '' || $('#new-clients-entry-email').val() !== '') {
 					label = $('#client_add button').html().trim();
 					alert('To add a new client, click "'+label+'"');
 					event.preventDefault();
 				}
 			}
 			if ($('#consultant_add').is(':visible')) {
-				if ($('#newconsultantentry-name').val() !== '' || $('#newconsultantentry-email').val() !== '') {
+				if ($('#new-consultants-entry-name').val() !== '' || $('#new-consultants-entry-email').val() !== '') {
 					label = $('#consultant_add button').html().trim();
 					alert('To add a new consultant, click "'+label+'"');
 					event.preventDefault();
@@ -276,9 +276,8 @@ var communityForm = {
 			});
 		});
 		li.append(link);
-		var model = (type == 'client') ? 'Client' : 'Consultant';
 		var counter = (type == 'client') ? this.client_counter : this.consultant_counter;
-		li.append('<input type="hidden" name="data['+model+']['+counter+']" value="'+id+'" />');
+		li.append('<input type="hidden" name="'+type+'s['+counter+']" value="'+id+'" />');
 		if (type == 'client') {
 			this.client_counter++;
 		} else {
@@ -294,15 +293,13 @@ var communityForm = {
 	},
 	
 	addNewUser: function (type) {
-		var model = (type == 'client') ? 'NewClientEntry' : 'NewConsultantEntry';
-		var modelLower = model.toLowerCase();
-		var counter = (type == 'client') ? this.client_counter : this.consultant_counter;
-		var name = $('#'+modelLower+'-name');
-		var title = $('#'+modelLower+'-title');
-		var organization = $('#'+modelLower+'-organization');
-		var email = $('#'+modelLower+'-email');
-		var phone = $('#'+modelLower+'-phone');
-		var pass = $('#'+modelLower+'-password');
+		var idPrefix = 'new-'+type+'s-entry';
+		var name = $('#'+idPrefix+'-name');
+		var title = $('#'+idPrefix+'-title');
+		var organization = $('#'+idPrefix+'-organization');
+		var email = $('#'+idPrefix+'-email');
+		var phone = $('#'+idPrefix+'-phone');
+		var pass = $('#'+idPrefix+'-password');
 		
 		if (! name.val()) {
 			alert('Please enter this user\'s name.');
@@ -326,6 +323,8 @@ var communityForm = {
 			});
 		});
 		li.append(link); 
+		var model = 'new_'+type+'s';
+		var counter = (type == 'client') ? this.client_counter : this.consultant_counter;
 		li.append('<input type="hidden" name="'+model+'['+counter+'][name]" value="'+name.val()+'" />');
 		li.append('<input type="hidden" name="'+model+'['+counter+'][title]" value="'+title.val()+'" />');
 		li.append('<input type="hidden" name="'+model+'['+counter+'][organization]" value="'+organization.val()+'" />');
@@ -363,11 +362,7 @@ var communityForm = {
 			add_container.slideUp();
 		} else {
 			var random_password = getRandomPassword();
-			if (type == 'client') {
-				$('#newcliententry-password').val(random_password);
-			} else {
-				$('#newconsultantentry-password').val(random_password);
-			}
+			$('#new-'+type+'s-entry-password').val(random_password);
 			add_container.slideDown();
 		}
 	},

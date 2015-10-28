@@ -172,7 +172,11 @@
                 <ul>
                     <?php foreach ($clientErrors as $errMsg): ?>
                         <li>
-                            <?= $errMsg ?>
+                            <?php if (is_array($errMsg)): ?>
+                                <?= implode('<br />', array_values($errMsg)) ?>
+                            <?php else: ?>
+                                <?= $errMsg ?>
+                            <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -200,7 +204,7 @@
                 <?php
                     $this->Form->templates($tableTemplate);
                     echo $this->Form->input(
-                        'NewClientEntry.name',
+                        'new_clients_entry.name',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group'],
@@ -209,7 +213,7 @@
                         ]
                     );
                     echo $this->Form->input(
-                        'NewClientEntry.title',
+                        'new_clients_entry.title',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group'],
@@ -217,14 +221,14 @@
                         ]
                     );
                     echo $this->Form->input(
-                        'NewClientEntry.organization',
+                        'new_clients_entry.organization',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group']
                         ]
                     );
                     echo $this->Form->input(
-                        'NewClientEntry.email',
+                        'new_clients_entry.email',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group'],
@@ -232,14 +236,14 @@
                         ]
                     );
                     echo $this->Form->input(
-                        'NewClientEntry.phone',
+                        'new_clients_entry.phone',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group']
                         ]
                     );
                     echo $this->Form->input(
-                        'NewClientEntry.password',
+                        'new_clients_entry.password',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group'],
@@ -284,7 +288,11 @@
                 <ul>
                     <?php foreach ($consultantErrors as $errMsg): ?>
                         <li>
-                            <?= $errMsg ?>
+                            <?php if (is_array($errMsg)): ?>
+                                <?= implode('<br />', array_values($errMsg)) ?>
+                            <?php else: ?>
+                                <?= $errMsg ?>
+                            <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -312,7 +320,7 @@
                 <?php
                     $this->Form->templates($tableTemplate);
                     echo $this->Form->input(
-                        'NewConsultantEntry.name',
+                        'new_consultants_entry.name',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group'],
@@ -321,7 +329,7 @@
                         ]
                     );
                     echo $this->Form->input(
-                        'NewConsultantEntry.title',
+                        'new_consultants_entry.title',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group'],
@@ -329,14 +337,14 @@
                         ]
                     );
                     echo $this->Form->input(
-                        'NewConsultantEntry.organization',
+                        'new_consultants_entry.organization',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group']
                         ]
                     );
                     echo $this->Form->input(
-                        'NewConsultantEntry.email',
+                        'new_consultants_entry.email',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group'],
@@ -344,14 +352,14 @@
                         ]
                     );
                     echo $this->Form->input(
-                        'NewConsultantEntry.phone',
+                        'new_consultants_entry.phone',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group']
                         ]
                     );
                     echo $this->Form->input(
-                        'NewConsultantEntry.password',
+                        'new_consultants_entry.password',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group'],

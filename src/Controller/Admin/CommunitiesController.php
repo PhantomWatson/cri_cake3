@@ -215,14 +215,14 @@ class CommunitiesController extends AppController
      */
     private function processNewAssociatedUsers($role)
     {
-        $model = ucwords($role);
-        if (! isset($this->request->data["New$model"])) {
+        $dataKey = "new_{$role}s";
+        if (! isset($this->request->data[$dataKey])) {
             return [];
         }
 
         $retval = [];
         $usersTable = TableRegistry::get('Users');
-        foreach ($this->request->data["New$model"] as $newUser) {
+        foreach ($this->request->data[$dataKey] as $newUser) {
             $user = $usersTable->newEntity($newUser);
             $user->role = $role;
 
@@ -328,8 +328,8 @@ class CommunitiesController extends AppController
         $usersTable = TableRegistry::get('Users');
         $clients = $usersTable->getClientList();
         $selectedClients = [];
-        if (isset($this->request->data['Client'])) {
-            foreach ($this->request->data['Client'] as $clientId) {
+        if (isset($this->request->data['clients'])) {
+            foreach ($this->request->data['clients'] as $clientId) {
                 $selectedClients[] = [
                     'id' => $clientId,
                     'name' => $clients[$clientId]
@@ -340,8 +340,8 @@ class CommunitiesController extends AppController
         // Prepare selected consultants for JS
         $consultants = $usersTable->getConsultantList();
         $selectedConsultants = [];
-        if (isset($this->request->data['Consultant'])) {
-            foreach ($this->request->data['Consultant'] as $consultantId) {
+        if (isset($this->request->data['consultants'])) {
+            foreach ($this->request->data['consultants'] as $consultantId) {
                 $selectedConsultants[] = [
                     'id' => $consultantId,
                     'name' => $consultants[$consultantId]
@@ -387,12 +387,12 @@ class CommunitiesController extends AppController
             }
 
             /* A workaround for deleting all of a community's clients/consultants.
-             * A missing $this->request->data['Client'] key or an empty array isn't deleting existing clients as expected.
+             * A missing $this->request->data['clients'] key or an empty array isn't deleting existing clients as expected.
              * No clue why (Community->hasAndBelongsToMany->Client->unique is set to TRUE), but here's a hack. */
-            if (! isset($this->request->data['client']) || empty($this->request->data['client'])) {
+            if (! isset($this->request->data['clients']) || empty($this->request->data['clients'])) {
                 $this->Communities->removeAllClientAssociations($communityId);
             }
-            if (! isset($this->request->data['consultant']) || empty($this->request->data['consultant'])) {
+            if (! isset($this->request->data['consultants']) || empty($this->request->data['consultants'])) {
                 $this->Communities->removeAllConsultantAssociations($communityId);
             }
 
