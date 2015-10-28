@@ -19,7 +19,7 @@
 	) ?>
 </p>
 
-<?php if ($fast_track): ?>
+<?php if ($fastTrack): ?>
 	<p class="alert alert-info">
 		This community is on Fast Track, so Step 3 and Step 4 are skipped.
 	</p>
@@ -43,7 +43,7 @@
 		return $retval;
 	}
 
-	if ($fast_track) {
+	if ($fastTrack) {
 		$steps = [1, 2, '2.5'];
 	} else {
 		$steps = [1, 2, '2.5', 3, '3.5', 4];

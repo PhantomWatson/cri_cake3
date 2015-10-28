@@ -528,6 +528,7 @@ class CommunitiesController extends AppController
 
         $this->set([
             'titleForLayout' => $community->name.' Progress',
+            'community' => $community,
             'score' => $returnedScore,
             'criteria' => $this->Communities->getProgress($communityId, true),
             'fastTrack' => $community->fast_track
