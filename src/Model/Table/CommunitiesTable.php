@@ -313,14 +313,14 @@ class CommunitiesTable extends Table
         $result = $this->find('all')
             ->select(['client_id'])
             ->join([
-                'alias' => 'Client',
+                'alias' => 'Clients',
                 'conditions' => ['Clients.community_id' => 'Communities.id'],
                 'table' => 'clients_communities',
                 'type' => 'LEFT',
 
             ])
             ->first();
-        return $result ? $result['client']['client_id'] : null;
+        return $result ? $result['clients']['client_id'] : null;
     }
 
     /**
@@ -333,10 +333,10 @@ class CommunitiesTable extends Table
             ->select(['id'])
             ->where(['id' => $communityId])
             ->contain([
-                'Client' => function ($q) {
+                'Clients' => function ($q) {
                     return $q
                         ->select(['id', 'name', 'email'])
-                        ->order(['Client.name' => 'ASC']);
+                        ->order(['Clients.name' => 'ASC']);
                 }
             ])
             ->first();
@@ -750,10 +750,10 @@ class CommunitiesTable extends Table
     {
         $query
             ->contain([
-                'Client' => function ($q) {
+                'Clients' => function ($q) {
                     return $q->select([
-                        'Client.email',
-                        'Client.name'
+                        'Clients.email',
+                        'Clients.name'
                     ]);
                 },
                 'OfficialSurvey' => function ($q) {
