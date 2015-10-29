@@ -100,7 +100,8 @@ class AreasTable extends Table
             ->first();
 
         // Initialize chart
-        $chart = new GoogleCharts();
+        require_once(ROOT.DS.'plugins'.DS.'GoogleCharts'.DS.'vendor'.DS.'GoogleCharts.php');
+        $chart = new \GoogleCharts();
         $chart->type('ComboChart');
 
         /* To have each group of bars share one color, each group needs to constitute its own series.
