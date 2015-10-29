@@ -31,7 +31,7 @@ class AreasTable extends Table
         $this->hasMany('Communities', [
             'foreignKey' => 'area_id'
         ]);
-        $this->hasMany('Statistic', [
+        $this->hasMany('Statistics', [
             'foreignKey' => 'area_id'
         ]);
     }
@@ -89,10 +89,12 @@ class AreasTable extends Table
             ->select(['Areas.id'])
             ->where(['Areas.id' => $areaId])
             ->contain([
-                'Statistic' => function ($q) {
+                'Statistics' => function ($q) {
                     return $q
-                        ->where(['Statistic.stat_category_id' => range(1, 17)])
-                        ->contain(['StatCategory']);
+                        ->where(function ($exp, $q) {
+                            return $exp->in('Statistics.stat_category_id', range(1, 17));
+                        })
+                        ->contain(['StatCategories']);
                 }
             ])
             ->first();
