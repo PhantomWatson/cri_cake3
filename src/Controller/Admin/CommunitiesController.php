@@ -511,25 +511,29 @@ class CommunitiesController extends AppController
         }
 
         $community = $this->Communities->get($communityId);
-        $returnedScore = $community->score;
+        $previousScore = $community->score;
 
-        if ($this->request->is('post')) {
-            $newScore = $this->request->data['score'];
-            if ($newScore != $community->score) {
-                $community->score = $newScore;
+        if ($this->request->is('put')) {
+            $community = $this->Communities->patchEntity($community, $this->request->data(), [
+                'fieldList' => ['score']
+            ]);
+            pr($this->request->data());
+            pr($community);
+            if ($community->dirty('score')) {
                 if ($this->Communities->save($community)) {
-                    $this->Flash->success('Community score '.($newScore > $community->score ? 'in' : 'de').'creased');
-                    $returnedScore = $newScore;
+                    $verbed = $community->score > $previousScore ? 'increased' : 'decreased';
+                    $this->Flash->success('Community score '.$verbed);
                 } else {
                     $this->Flash->error('There was an error updating this community');
                 }
+            } else {
+                $this->Flash->notification('Score not changed');
             }
         }
 
         $this->set([
             'titleForLayout' => $community->name.' Progress',
             'community' => $community,
-            'score' => $returnedScore,
             'criteria' => $this->Communities->getProgress($communityId, true),
             'fastTrack' => $community->fast_track
         ]);

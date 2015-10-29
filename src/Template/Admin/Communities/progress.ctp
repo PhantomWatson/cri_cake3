@@ -32,16 +32,9 @@
     	function score_radio_input($step, $score, $view) {
     		$retval = $view->Form->radio(
     			'score',
-    			[
-                    [
-        				'text' => "Step $step",
-        				'value' => $step,
-        				'checked' => $score == $step
-    				]
-    			]
+    			[$step => "Step $step"],
+    			['hiddenField' => false]
     		);
-    		//$retval = '<label>'.$retval.'</label>';
-    		//$retval = '<div class="radio">'.$retval.'</div>';
     		return $retval;
     	}
 
@@ -52,7 +45,7 @@
     	}
 
     	foreach ($steps as $step) {
-    		echo score_radio_input($step, $score, $this);
+    		echo score_radio_input($step, $community->score, $this);
     		if (isset($criteria[$step])) {
     			echo '<ul>';
     			foreach ($criteria[$step] as $item) {
@@ -69,7 +62,7 @@
     	}
     ?>
 
-    <?= score_radio_input(5, $score, $this) ?>
+    <?= score_radio_input(5, $community->score, $this) ?>
 
     <?= $this->Form->button(
     	'Update',
