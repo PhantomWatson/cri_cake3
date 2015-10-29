@@ -185,7 +185,7 @@ class AreasTable extends Table
                 }
                 $row[$columnGroup] = $value;
             }
-            $row['category'] = $stat['StatCategory']['name'];
+            $row['category'] = $stat['stat_category']['name'];
             $row['average'] = 1;
             $row['certainty'] = 'false';
 
@@ -229,7 +229,7 @@ class AreasTable extends Table
                 'textPosition' => 'none',
                 'viewWindow' => [
                     'min' => 1,
-                    'max' => count($area['Statistic']) + 1
+                    'max' => count($area['Statistics']) + 1
                 ]
             ],
             'isStacked' => true,
@@ -278,14 +278,15 @@ class AreasTable extends Table
             ->select(['Areas.id'])
             ->where(['Areas.id' => $areaId])
             ->contain([
-                'Statistic' => function ($q) {
-                    return $q->where(['Statistic.stat_category_id' => range(1, 17)]);
-                },
-                'StatCategory'
+                'Statistics' => function ($q) {
+                    return $q
+                        ->where(['Statistics.stat_category_id' => range(1, 17)])
+                        ->contain(['StatCategories']);
+                }
             ])
             ->first();
         $table = [];
-        foreach ($area['Statistic'] as $stat) {
+        foreach ($area['Statistics'] as $stat) {
             $categoryId = $stat['stat_category_id'];
             if ($categoryId <= 2) {
                 $group = 'Production';
@@ -298,7 +299,7 @@ class AreasTable extends Table
             } elseif ($categoryId > 12 && $categoryId <= 17) {
                 $group = 'Recreation';
             }
-            $category = $stat['StatCategory']['name'];
+            $category = $stat['stat_category']['name'];
             $table[$group][$category] = $stat['value'];
         }
         return $table;
@@ -336,17 +337,17 @@ class AreasTable extends Table
             ->select(['Areas.id'])
             ->where(['Areas.id' => $areaId])
             ->contain([
-                'Statistic' => function ($q) {
+                'Statistics' => function ($q) {
                     return $q
-                        ->where(['Statistic.stat_category_id' => [18,19]])
-                        ->order(['Statistic.year' => 'ASC']);
+                        ->where(['Statistics.stat_category_id' => [18,19]])
+                        ->order(['Statistics.year' => 'ASC']);
                 }
             ])
             ->first();
 
         // Collect data in an easier array to loop through
         $statistics = [];
-        foreach ($area['Statistic'] as $i => $stat) {
+        foreach ($area['statistics'] as $i => $stat) {
             $year = $stat['year'];
             $value = $stat['value'];
             $categoryId = $stat['stat_category_id'];
@@ -409,17 +410,17 @@ class AreasTable extends Table
             ->select(['Areas.id'])
             ->where(['Areas.id' => $areaId])
             ->contain([
-                'Statistic' => function ($q) {
+                'Statistics' => function ($q) {
                     return $q
-                        ->select(['Statistic.year'])
-                        ->where(['Statistic.stat_category_id' => [18,19]])
-                        ->order(['Statistic.year' => 'DESC'])
+                        ->select(['Statistics.year'])
+                        ->where(['Statistics.stat_category_id' => [18,19]])
+                        ->order(['Statistics.year' => 'DESC'])
                         ->limit(1);
                 }
             ])
             ->first();
 
-        $laterYear = $result['statistic'][0]['year'];
+        $laterYear = $result['statistics'][0]['year'];
         $earlierYear = $laterYear - 5;
 
         // Collect data for table
@@ -427,17 +428,17 @@ class AreasTable extends Table
             ->select(['Areas.id'])
             ->where(['Areas.id' => $areaId])
             ->contain([
-                'Statistic' => function ($q) {
+                'Statistics' => function ($q) {
                     return $q->where([
-                        'Statistic.stat_category_id' => [18,19],
-                        'Statistic.year' => [$laterYear, $earlierYear]
+                        'Statistics.stat_category_id' => [18,19],
+                        'Statistics.year' => [$laterYear, $earlierYear]
                     ]);
                 }
             ])
             ->first();
 
         $statistics = [];
-        foreach ($area['Statistic'] as $i => $stat) {
+        foreach ($area['statistics'] as $i => $stat) {
             $year = $stat['year'];
             $value = $stat['value'];
             $categoryId = $stat['stat_category_id'];
