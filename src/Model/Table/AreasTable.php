@@ -280,7 +280,9 @@ class AreasTable extends Table
             ->contain([
                 'Statistics' => function ($q) {
                     return $q
-                        ->where(['Statistics.stat_category_id' => range(1, 17)])
+                        ->where(function ($exp, $q) {
+                            return $exp->in('Statistics.stat_category_id', range(1, 17));
+                        })
                         ->contain(['StatCategories']);
                 }
             ])
