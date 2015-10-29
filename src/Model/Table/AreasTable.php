@@ -415,8 +415,10 @@ class AreasTable extends Table
             ->contain([
                 'Statistics' => function ($q) {
                     return $q
-                        ->select(['Statistics.year'])
-                        ->where(['Statistics.stat_category_id' => [18,19]])
+                        ->select(['area_id', 'year'])
+                        ->where(function ($exp, $q) {
+                            return $exp->in('Statistics.stat_category_id', [18,19]);
+                        })
                         ->order(['Statistics.year' => 'DESC'])
                         ->limit(1);
                 }
