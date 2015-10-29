@@ -100,8 +100,7 @@ class AreasTable extends Table
             ->first();
 
         // Initialize chart
-        require_once(ROOT.DS.'plugins'.DS.'GoogleCharts'.DS.'vendor'.DS.'GoogleCharts.php');
-        $chart = new \GoogleCharts();
+        $chart = $this->getGoogleChartsObject();
         $chart->type('ComboChart');
 
         /* To have each group of bars share one color, each group needs to constitute its own series.
@@ -313,7 +312,7 @@ class AreasTable extends Table
      */
     public function getEmploymentLineChart($areaId)
     {
-        $chart = new GoogleCharts();
+        $chart = $this->getGoogleChartsObject();
         $chart->type('LineChart');
         $chart->columns([
             'year' => [
@@ -476,5 +475,14 @@ class AreasTable extends Table
         }
 
         return $table;
+    }
+
+    /**
+     * @return GoogleCharts
+     */
+    public function getGoogleChartsObject()
+    {
+        require_once(ROOT.DS.'plugins'.DS.'GoogleCharts'.DS.'vendor'.DS.'GoogleCharts.php');
+        return new \GoogleCharts();
     }
 }
