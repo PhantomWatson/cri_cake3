@@ -287,7 +287,7 @@ class AreasTable extends Table
             ])
             ->first();
         $table = [];
-        foreach ($area['Statistics'] as $stat) {
+        foreach ($area['statistics'] as $stat) {
             $categoryId = $stat['stat_category_id'];
             if ($categoryId <= 2) {
                 $group = 'Production';
