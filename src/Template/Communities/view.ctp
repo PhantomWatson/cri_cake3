@@ -20,9 +20,9 @@
 		determine how to leverage those strengths for effective community growth.
 	</p>
 
-	<?php $bar_chart->div('bar_chart_container'); ?>
+	<?php $barChart->div('bar_chart_container'); ?>
 	<div id="bar_chart_container"></div>
-	<?php $this->GoogleCharts->createJsChart($bar_chart); ?>
+	<?php $this->GoogleCharts->createJsChart($barChart); ?>
 
 	<p class="footnote">
 		Data Source: Author calculations and Bureau of Economic Analysis
@@ -52,17 +52,17 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ($pwr_table as $broad_category => $specific_categories): ?>
-					<?php $first_row_in_bc = true; ?>
-					<?php foreach ($specific_categories as $specific_category => $score): ?>
+				<?php foreach ($pwrTable as $broadCategory => $specificCategories): ?>
+					<?php $firstRowInBc = true; ?>
+					<?php foreach ($specificCategories as $specificCategory => $score): ?>
 						<tr>
-							<?php if ($first_row_in_bc): ?>
-								<th rowspan="<?= count($specific_categories) ?>">
-									<?= $broad_category ?>
+							<?php if ($firstRowInBc): ?>
+								<th rowspan="<?= count($specificCategories) ?>">
+									<?= $broadCategory ?>
 								</th>
 							<?php endif; ?>
 							<td>
-								<?= $specific_category ?>
+								<?= $specificCategory ?>
 							</td>
 							<td>
 								<?php if ($score > 1): ?>
@@ -78,7 +78,7 @@
 								<?php endif; ?>
 							</td>
 						</tr>
-						<?php $first_row_in_bc = false; ?>
+						<?php $firstRowInBc = false; ?>
 					<?php endforeach; ?>
 				<?php endforeach; ?>
 			</tbody>
@@ -95,9 +95,9 @@
 		Note the changes around each recessionary period.
 	</p>
 
-	<?php $line_chart->div('line_chart_container'); ?>
+	<?php $lineChart->div('line_chart_container'); ?>
 	<div id="line_chart_container"></div>
-	<?php $this->GoogleCharts->createJsChart($line_chart); ?>
+	<?php $this->GoogleCharts->createJsChart($lineChart); ?>
 
 	<p>
 		<strong>Note: </strong> Recessions were declared by NBER during the following periods:
@@ -132,10 +132,10 @@
 						Sectors
 					</th>
 					<th>
-						<?= $growth_table['earlier_year'] ?>
+						<?= $growthTable['earlier_year'] ?>
 					</th>
 					<th>
-						<?= $growth_table['later_year'] ?>
+						<?= $growthTable['later_year'] ?>
 					</th>
 					<th>
 						Change
@@ -143,16 +143,16 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ($growth_table['rows'] as $row): ?>
+				<?php foreach ($growthTable['rows'] as $row): ?>
 					<tr>
 						<td>
 							<?= $row['label'] ?>
 						</td>
 						<td>
-							<?= number_format($row[$growth_table['earlier_year']]) ?>
+							<?= number_format($row[$growthTable['earlier_year']]) ?>
 						</td>
 						<td>
-							<?= number_format($row[$growth_table['later_year']]) ?>
+							<?= number_format($row[$growthTable['later_year']]) ?>
 						</td>
 						<td>
 							<?= $row['change'] ?>
