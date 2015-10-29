@@ -168,7 +168,7 @@ class AreasTable extends Table
         $firstRow['annotation'] = '';
         $chart->addRow($firstRow);
 
-        foreach ($area['Statistic'] as $i => $stat) {
+        foreach ($area['statistics'] as $i => $stat) {
             $categoryId = $stat['stat_category_id'];
             $row = [];
             foreach ($columnGroups as $columnGroup) {
