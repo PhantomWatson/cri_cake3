@@ -433,7 +433,7 @@ class AreasTable extends Table
             ->select(['Areas.id'])
             ->where(['Areas.id' => $areaId])
             ->contain([
-                'Statistics' => function ($q) {
+                'Statistics' => function ($q) use ($laterYear, $earlierYear) {
                     return $q->where([
                         'Statistics.stat_category_id' => [18,19],
                         'Statistics.year' => [$laterYear, $earlierYear]
