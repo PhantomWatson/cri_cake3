@@ -231,7 +231,7 @@
 								</li>
 								<li>
 						    		<?= $this->Html->link(
-										'Clients ('.count($community->client).')',
+										'Clients ('.count($community->clients).')',
 										[
 											'prefix' => 'admin',
 											'action' => 'clients',
@@ -239,7 +239,7 @@
 										]
 									) ?>
 						    	</li>
-						    	<?php if (! empty($community->client)): ?>
+						    	<?php if (! empty($community->clients)): ?>
 							    	<li>
 							    		<?= $this->Html->link(
 											'Client Home',
