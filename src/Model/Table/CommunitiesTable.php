@@ -311,7 +311,8 @@ class CommunitiesTable extends Table
     public function getCommunityClientId($communityId)
     {
         $result = $this->find('all')
-            ->select(['client_id'])
+            ->select(['id'])
+            ->where(['Communities.id' => $communityId])
             ->join([
                 'alias' => 'Clients',
                 'conditions' => ['Clients.community_id' => 'Communities.id'],
