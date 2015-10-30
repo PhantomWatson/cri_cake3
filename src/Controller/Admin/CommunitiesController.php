@@ -495,7 +495,7 @@ class CommunitiesController extends AppController
                 }
             ])
             ->first();
-        if (! $result) {
+        if (! $community) {
             throw new NotFoundException('Sorry, we couldn\'t find a community with ID# '.$communityId);
         }
         $this->set([
