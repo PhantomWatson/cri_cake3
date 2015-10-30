@@ -168,7 +168,7 @@ class AppController extends Controller
             return $clientId;
         }
 
-        return $this->chooseClientToImpersonate();
+        $this->chooseClientToImpersonate();
     }
 
     /**
