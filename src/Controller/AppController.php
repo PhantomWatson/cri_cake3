@@ -17,6 +17,7 @@ namespace App\Controller;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 
 /**
  * Application Controller
