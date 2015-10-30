@@ -434,10 +434,11 @@ class AreasTable extends Table
             ->where(['Areas.id' => $areaId])
             ->contain([
                 'Statistics' => function ($q) use ($laterYear, $earlierYear) {
-                    return $q->where([
-                        'Statistics.stat_category_id' => [18,19],
-                        'Statistics.year' => [$laterYear, $earlierYear]
-                    ]);
+                    return $q->where(function ($exp, $q) use ($laterYear, $earlierYear) {
+                        return $exp
+                            ->in('Statistics.stat_category_id', [18,19])
+                            ->in('Statistics.year', [$laterYear, $earlierYear]);
+                    });
                 }
             ])
             ->first();
