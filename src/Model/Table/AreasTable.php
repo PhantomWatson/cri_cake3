@@ -228,7 +228,7 @@ class AreasTable extends Table
                 'textPosition' => 'none',
                 'viewWindow' => [
                     'min' => 1,
-                    'max' => count($area['Statistics']) + 1
+                    'max' => count($area['statistics']) + 1
                 ]
             ],
             'isStacked' => true,
