@@ -160,7 +160,7 @@ class AppController extends Controller
         return $this->redirect([
             'prefix' => 'admin',
             'controller' => 'Users',
-            'action' => 'choose_client',
+            'action' => 'chooseClient',
             'redirect' => urlencode(Router::url([]))
         ]);
     }
