@@ -266,6 +266,42 @@ class CommunitiesController extends AppController
         return $retval;
     }
 
+    /**
+     * Passes $selectedClients and $selectedConsultants to the view to be used by Javascript
+     * @param Entity $community
+     */
+    private function prepareAssociatedUsersForJs($community)
+    {
+        // Prepare selected clients for JS
+        $usersTable = TableRegistry::get('Users');
+        $clients = $usersTable->getClientList();
+        $selectedClients = [];
+        if (isset($community->clients)) {
+            foreach ($community->clients as $client) {
+                $clientId = isset($client['id']) ? $client['id'] : $client;
+                $selectedClients[] = [
+                    'id' => $clientId,
+                    'name' => $clients[$clientId]
+                ];
+            }
+        }
+
+        // Prepare selected consultants for JS
+        $consultants = $usersTable->getConsultantList();
+        $selectedConsultants = [];
+        if (isset($community->consultants)) {
+            foreach ($community->consultants as $consultant) {
+                $consultantId = isset($consultant['id']) ? $consultant['id'] : $consultant;
+                $selectedConsultants[] = [
+                    'id' => $consultantId,
+                    'name' => $consultants[$consultantId]
+                ];
+            }
+        }
+
+        $this->set(compact('selectedClients', 'selectedConsultants'));
+    }
+
     public function index()
     {
         if (isset($_GET['search'])) {
@@ -286,9 +322,6 @@ class CommunitiesController extends AppController
     public function add()
     {
         $community = $this->Communities->newEntity();
-        // Verify that these aren't needed
-        //$community->official_survey['type'] = 'official';
-        //$community->organization_survey['type'] = 'organization';
 
         if ($this->request->is('post')) {
             if (! $this->request->data['meeting_date_set']) {
@@ -325,33 +358,8 @@ class CommunitiesController extends AppController
             $this->set(compact('clientErrors', 'consultantErrors'));
         }
 
-        // Prepare selected clients for JS
+        $this->prepareAssociatedUsersForJs($community);
         $usersTable = TableRegistry::get('Users');
-        $clients = $usersTable->getClientList();
-        $selectedClients = [];
-        if (isset($community->clients)) {
-            foreach ($community->clients as $client) {
-                $clientId = isset($client['id']) ? $client['id'] : $client;
-                $selectedClients[] = [
-                    'id' => $clientId,
-                    'name' => $clients[$clientId]
-                ];
-            }
-        }
-
-        // Prepare selected consultants for JS
-        $consultants = $usersTable->getConsultantList();
-        $selectedConsultants = [];
-        if (isset($community->consultants)) {
-            foreach ($community->consultants as $consultantId) {
-                $consultantId = isset($consultant['id']) ? $consultant['id'] : $consultant;
-                $selectedConsultants[] = [
-                    'id' => $consultantId,
-                    'name' => $consultants[$consultantId]
-                ];
-            }
-        }
-
         $surveysTable = TableRegistry::get('Surveys');
         $areasTable = TableRegistry::get('Areas');
         $this->set([
@@ -360,8 +368,6 @@ class CommunitiesController extends AppController
             'community' => $community,
             'consultants' => $usersTable->getConsultantList(),
             'qnaIdFields' => $surveysTable->getQnaIdFieldNames(),
-            'selectedClients' => $selectedClients,
-            'selectedConsultants' => $selectedConsultants,
             'titleForLayout' => 'Add Community'
         ]);
         $this->render('form');
@@ -429,29 +435,8 @@ class CommunitiesController extends AppController
             $this->set(compact('clientErrors', 'consultantErrors'));
         }
 
-        // Prepare selected clients for JS
+        $this->prepareAssociatedUsersForJs($community);
         $usersTable = TableRegistry::get('Users');
-        $clients = $usersTable->getClientList();
-        $selectedClients = [];
-        foreach ($community['clients'] as $client) {
-            $clientId = isset($client['id']) ? $client['id'] : $client;
-            $selectedClients[] = [
-                'id' => $clientId,
-                'name' => $clients[$clientId]
-            ];
-        }
-
-        // Prepare selected consultants for JS
-        $consultants = $usersTable->getConsultantList();
-        $selectedConsultants = [];
-        foreach ($community['consultants'] as $consultant) {
-            $consultantId = isset($consultant['id']) ? $consultant['id'] : $consultant;
-            $selectedConsultants[] = [
-                'id' => $consultantId,
-                'name' => $consultants[$consultantId]
-            ];
-        }
-
         $surveysTable = TableRegistry::get('Surveys');
         $areasTable = TableRegistry::get('Areas');
         $this->set([
@@ -461,8 +446,6 @@ class CommunitiesController extends AppController
             'qnaIdFields' => $surveysTable->getQnaIdFieldNames(),
             'clients' => $usersTable->getClientList(),
             'consultants' => $usersTable->getConsultantList(),
-            'selectedClients' => $selectedClients,
-            'selectedConsultants' => $selectedConsultants,
             'areas' => $areasTable->find('list')
         ]);
         $this->render('form');
