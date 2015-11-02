@@ -398,7 +398,7 @@ class CommunitiesController extends AppController
 
             $clientErrors = array_merge(
                 $this->processNewAssociatedUsers('client'),
-                $this->validateClients()
+                $this->validateClients($communityId)
             );
             $consultantErrors = $this->processNewAssociatedUsers('consultant');
             if ($this->validateSelectedSurveys()) {
