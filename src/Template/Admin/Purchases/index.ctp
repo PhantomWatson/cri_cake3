@@ -40,7 +40,7 @@
                         ($<?= number_format($purchase->product['price'] / 100) ?>)
                     <?php endif; ?>
 
-                    <?php if ($purchase->purchase['refunded']): ?>
+                    <?php if ($purchase->refunded): ?>
                         <p class="refunded">
                             Marked <strong>refunded</strong> by
                             <?php if ($purchase->refunder['name']): ?>
@@ -49,10 +49,7 @@
                                 an unknown user
                             <?php endif; ?>
                             on
-                            <?php
-                                $timestamp = strtotime($purchase->purchase['refunded']);
-                                echo date('F j, Y', $timestamp);
-                            ?>
+                            <?= $purchase->refunded->format('F j, Y') ?>
                         </p>
                     <?php endif; ?>
                 </td>
@@ -60,13 +57,13 @@
                     <?= $purchase->created->format('F j, Y') ?>
                 </td>
                 <td>
-                    <?php if (! $purchase->purchase['refunded']): ?>
+                    <?php if (! $purchase->refunded): ?>
                         <?= $this->Form->postLink(
                             'Report Refund',
                             [
                                 'prefix' => 'admin',
                                 'action' => 'refund',
-                                $purchase->purchase['id']
+                                $purchase->id
                             ],
                             [
                                 'class' => 'btn btn-default',
