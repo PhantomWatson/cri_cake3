@@ -146,6 +146,10 @@ class AppController extends Controller
         return $prefix === $user['role'];
     }
 
+    /**
+     * Redirects (returns a redirect Response object) to the page used by admins for choosing a client to impersonate
+     * @return Response
+     */
     protected function chooseClientToImpersonate()
     {
         return $this->redirect([
@@ -156,9 +160,14 @@ class AppController extends Controller
         ]);
     }
 
+    /**
+     * Return the logged-in client's ID, the previously-remembered client ID,
+     * or null if neither is possible.
+     * @return int|null
+     */
     protected function getClientId()
     {
-        if ($this->Auth->user('role') != 'admin') {
+        if ($this->Auth->user('role') == 'client') {
             return $this->Auth->user('id');
         }
 
@@ -168,7 +177,7 @@ class AppController extends Controller
             return $clientId;
         }
 
-        $this->chooseClientToImpersonate();
+        return null;
     }
 
     /**

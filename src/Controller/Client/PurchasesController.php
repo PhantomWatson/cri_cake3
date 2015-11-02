@@ -10,6 +10,9 @@ class PurchasesController extends AppController
     {
         $communitiesTable = TableRegistry::get('Communities');
         $clientId = $this->getClientId();
+        if (! $clientId) {
+            return $this->chooseClientToImpersonate();
+        }
         $communityId = $communitiesTable->getClientCommunityId($clientId);
 
         $productsTable = TableRegistry::get('Products');

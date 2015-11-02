@@ -12,6 +12,9 @@ class CommunitiesController extends AppController
     public function index()
     {
         $clientId = $this->getClientId();
+        if (! $clientId) {
+            return $this->chooseClientToImpersonate();
+        }
         $communityId = $this->Communities->getClientCommunityId($clientId);
 
         if ($communityId) {

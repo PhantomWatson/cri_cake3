@@ -37,13 +37,11 @@ class RespondentsController extends AppController
         ];
     }
 
-    private function checkClientAuthorization($respondentId)
+    private function checkClientAuthorization($respondentId, $clientId)
     {
         if (! $this->Respondents->exists(['id' => $respondentId])) {
             throw new NotFoundException('Sorry, that respondent (#'.$respondentId.') could not be found.');
         }
-
-        $clientId = $this->getClientId();
         $isAuthorized = $this->Respondents->clientCanApproveRespondent($clientId, $respondentId);
         if (! $isAuthorized) {
             throw new ForbiddenException('You are not authorized to approve that respondent');
@@ -57,6 +55,9 @@ class RespondentsController extends AppController
         }
 
         $clientId = $this->getClientId();
+        if (! $clientId) {
+            return $this->chooseClientToImpersonate();
+        }
         $communitiesTable = TableRegistry::get('Communities');
         $communityId = $communitiesTable->getClientCommunityId($clientId);
         if ($communityId) {
@@ -83,6 +84,9 @@ class RespondentsController extends AppController
 
         $communitiesTable = TableRegistry::get('Communities');
         $clientId = $this->getClientId();
+        if (! $clientId) {
+            return $this->chooseClientToImpersonate();
+        }
         $communityId = $communitiesTable->getClientCommunityId($clientId);
 
         if (! $communityId) {
@@ -104,7 +108,11 @@ class RespondentsController extends AppController
 
     public function approveUninvited($respondentId)
     {
-        $this->checkClientAuthorization($respondentId);
+        $clientId = $this->getClientId();
+        if (! $clientId) {
+            return $this->chooseClientToImpersonate();
+        }
+        $this->checkClientAuthorization($respondentId, $clientId);
         $respondent = $this->Respondents->get($respondentId);
         $respondent->approved = 1;
         $this->set([
@@ -114,7 +122,11 @@ class RespondentsController extends AppController
 
     public function dismissUninvited($respondentId)
     {
-        $this->checkClientAuthorization($respondentId);
+        $clientId = $this->getClientId();
+        if (! $clientId) {
+            return $this->chooseClientToImpersonate();
+        }
+        $this->checkClientAuthorization($respondentId, $clientId);
         $respondent = $this->Respondents->get($respondentId);
         $respondent->approved = -1;
         $this->set([
