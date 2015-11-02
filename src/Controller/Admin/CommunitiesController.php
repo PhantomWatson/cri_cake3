@@ -302,6 +302,25 @@ class CommunitiesController extends AppController
         $this->set(compact('selectedClients', 'selectedConsultants'));
     }
 
+    /**
+     * Passes necessary variables the view to be used by the adding/editing form
+     * @param Entity $community
+     */
+    private function prepareForm($community)
+    {
+        $this->prepareAssociatedUsersForJs($community);
+        $usersTable = TableRegistry::get('Users');
+        $surveysTable = TableRegistry::get('Surveys');
+        $areasTable = TableRegistry::get('Areas');
+        $this->set([
+            'areas' => $areasTable->find('list'),
+            'clients' => $usersTable->getClientList(),
+            'community' => $community,
+            'consultants' => $usersTable->getConsultantList(),
+            'qnaIdFields' => $surveysTable->getQnaIdFieldNames()
+        ]);
+    }
+
     public function index()
     {
         if (isset($_GET['search'])) {
@@ -358,16 +377,8 @@ class CommunitiesController extends AppController
             $this->set(compact('clientErrors', 'consultantErrors'));
         }
 
-        $this->prepareAssociatedUsersForJs($community);
-        $usersTable = TableRegistry::get('Users');
-        $surveysTable = TableRegistry::get('Surveys');
-        $areasTable = TableRegistry::get('Areas');
+        $this->prepareForm($community);
         $this->set([
-            'areas' => $areasTable->find('list'),
-            'clients' => $usersTable->getClientList(),
-            'community' => $community,
-            'consultants' => $usersTable->getConsultantList(),
-            'qnaIdFields' => $surveysTable->getQnaIdFieldNames(),
             'titleForLayout' => 'Add Community'
         ]);
         $this->render('form');
@@ -435,18 +446,10 @@ class CommunitiesController extends AppController
             $this->set(compact('clientErrors', 'consultantErrors'));
         }
 
-        $this->prepareAssociatedUsersForJs($community);
-        $usersTable = TableRegistry::get('Users');
-        $surveysTable = TableRegistry::get('Surveys');
-        $areasTable = TableRegistry::get('Areas');
+        $this->prepareForm($community);
         $this->set([
             'communityId' => $communityId,
-            'community' => $community,
-            'titleForLayout' => 'Edit '.$community->name,
-            'qnaIdFields' => $surveysTable->getQnaIdFieldNames(),
-            'clients' => $usersTable->getClientList(),
-            'consultants' => $usersTable->getConsultantList(),
-            'areas' => $areasTable->find('list')
+            'titleForLayout' => 'Edit '.$community->name
         ]);
         $this->render('form');
     }
