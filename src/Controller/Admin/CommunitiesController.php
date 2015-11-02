@@ -353,15 +353,16 @@ class CommunitiesController extends AppController
         $surveysTable = TableRegistry::get('Surveys');
         $areasTable = TableRegistry::get('Areas');
         $this->set([
-            'titleForLayout' => 'Add Community',
-            'qnaIdFields' => $surveysTable->getQnaIdFieldNames(),
+            'areas' => $areasTable->find('list'),
             'clients' => $usersTable->getClientList(),
+            'community' => $community,
             'consultants' => $usersTable->getConsultantList(),
+            'qnaIdFields' => $surveysTable->getQnaIdFieldNames(),
             'selectedClients' => $selectedClients,
             'selectedConsultants' => $selectedConsultants,
-            'areas' => $areasTable->find('list')
+            'titleForLayout' => 'Add Community'
         ]);
-        $this->render('admin_form');
+        $this->render('form');
     }
 
     public function edit($communityId = null)
