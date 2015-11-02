@@ -7,11 +7,29 @@
 <h2>Admin functions</h2>
 <ul>
     <li>
-        <strong><a href="http://cri.cberdata.org/admin/users">Manage users</a></strong>
+        <strong>
+            <?= $this->Html->link(
+                'Manage users',
+                [
+                    'prefix' => 'admin',
+                    'controller' => 'Users',
+                    'action' => 'index'
+                ]
+            ) ?>
+        </strong>
         <br />Here, additional admins, consultants, and clients can be added.
     </li>
     <li>
-        <strong><a href="http://cri.cberdata.org/admin/communities">Manage communities</a></strong>
+        <strong>
+            <?= $this->Html->link(
+                'Manage communities',
+                [
+                    'prefix' => 'admin',
+                    'controller' => 'Communities',
+                    'action' => 'index'
+                ]
+            ) ?>
+        </strong>
         <br />Here, you can add new communities as clients sign up. (more about adding communities further down)
         <br />This provides a list of communities and shows which have clients associated with them and which the general public can access charts and tables for.
         <br />For client communities, the following links are found under "Actions":
@@ -70,7 +88,17 @@
     </li>
 </ul>
 
-<h2><a href="http://cri.cberdata.org/client">Client Home</a></h2>
+<h2>
+    <a href="http://cri.cberdata.org/client"></a>
+    <?= $this->Html->link(
+        'Client Home',
+        [
+            'prefix' => 'client',
+            'controller' => 'Communities',
+            'action' => 'index'
+        ]
+    ) ?>
+</h2>
 <ul>
     <li>
         This is the primary page that clients should be visiting.
