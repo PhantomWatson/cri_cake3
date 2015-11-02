@@ -323,6 +323,22 @@ class CommunitiesController extends AppController
         ]);
     }
 
+    private function validateForm($community)
+    {
+        $communityErrors = $community->errors();
+        $validSurveySelection = $this->validateSelectedSurveys();
+        $clientErrors = array_merge(
+            $this->processNewAssociatedUsers('client'),
+            $this->validateClients()
+        );
+        $consultantErrors = $this->processNewAssociatedUsers('consultant');
+        $this->set(compact('clientErrors', 'consultantErrors'));
+        return empty($communityErrors)
+            && $validSurveySelection
+            && empty($clientErrors)
+            && empty($consultantErrors);
+    }
+
     public function index()
     {
         if (isset($_GET['search'])) {
@@ -349,40 +365,28 @@ class CommunitiesController extends AppController
                 $this->request->data['town_meeting_date'] = null;
             }
 
-            $clientErrors = array_merge(
-                $this->processNewAssociatedUsers('client'),
-                $this->validateClients()
-            );
-            $consultantErrors = $this->processNewAssociatedUsers('consultant');
-            if ($this->validateSelectedSurveys()) {
-                if ($this->questionAndAnswerIdsAreSet()) {
-                    $qnaSuccess = true;
-                } else {
-                    list($qnaSuccess, $qnaMsg) = $this->setSurveyQuestionAndAnswerIds();
-                }
-                $community = $this->Communities->patchEntity($community, $this->request->data);
-                $communityErrors = $community->errors();
-                $validates = $qnaSuccess
-                    && empty($communityErrors)
-                    && empty($clientErrors)
-                    && empty($consultantErrors);
-                if ($validates && $this->Communities->save($community)) {
-                    $this->Flash->success('Community added');
-                    return $this->redirect([
-                        'prefix' => 'admin',
-                        'action' => 'index'
-                    ]);
-                } elseif (! $qnaSuccess) {
+            if ($this->questionAndAnswerIdsAreSet()) {
+                $qnaSuccess = true;
+            } else {
+                list($qnaSuccess, $qnaMsg) = $this->setSurveyQuestionAndAnswerIds();
+                if (! $qnaSuccess) {
                     $this->Flash->error($qnaMsg);
                 }
             }
-            $this->set(compact('clientErrors', 'consultantErrors'));
+
+            $community = $this->Communities->patchEntity($community, $this->request->data);
+            $validates = $this->validateForm($community);
+            if ($validates && $qnaSuccess && $this->Communities->save($community)) {
+                $this->Flash->success('Community added');
+                return $this->redirect([
+                    'prefix' => 'admin',
+                    'action' => 'index'
+                ]);
+            }
         }
 
         $this->prepareForm($community);
-        $this->set([
-            'titleForLayout' => 'Add Community'
-        ]);
+        $this->set('titleForLayout', 'Add Community');
         $this->render('form');
     }
 
@@ -418,34 +422,24 @@ class CommunitiesController extends AppController
                 $this->Communities->removeAllConsultantAssociations($communityId);
             }
 
-            $clientErrors = array_merge(
-                $this->processNewAssociatedUsers('client'),
-                $this->validateClients($communityId)
-            );
-            $consultantErrors = $this->processNewAssociatedUsers('consultant');
-            if ($this->validateSelectedSurveys()) {
-                if ($this->questionAndAnswerIdsAreSet()) {
-                    $qnaSuccess = true;
-                } else {
-                    list($qnaSuccess, $qnaMsg) = $this->setSurveyQuestionAndAnswerIds();
-                }
-                $community = $this->Communities->patchEntity($community, $this->request->data);
-                $communityErrors = $community->errors();
-                $validates = $qnaSuccess
-                    && empty($communityErrors)
-                    && empty($clientErrors)
-                    && empty($consultantErrors);
-                if ($validates && $this->Communities->save($community)) {
-                    $this->Flash->success('Community updated');
-                    return $this->redirect([
-                        'prefix' => 'admin',
-                        'action' => 'index'
-                    ]);
-                } elseif (! $qnaSuccess) {
+            if ($this->questionAndAnswerIdsAreSet()) {
+                $qnaSuccess = true;
+            } else {
+                list($qnaSuccess, $qnaMsg) = $this->setSurveyQuestionAndAnswerIds();
+                if (! $qnaSuccess) {
                     $this->Flash->error($qnaMsg);
                 }
             }
-            $this->set(compact('clientErrors', 'consultantErrors'));
+
+            $community = $this->Communities->patchEntity($community, $this->request->data);
+            $validates = $this->validateForm($community);
+            if ($validates && $qnaSuccess && $this->Communities->save($community)) {
+                $this->Flash->success('Community updated');
+                return $this->redirect([
+                    'prefix' => 'admin',
+                    'action' => 'index'
+                ]);
+            }
         }
 
         $this->prepareForm($community);
