@@ -269,12 +269,12 @@ class CommunitiesController extends AppController
     /**
      * Passes $selectedClients and $selectedConsultants to the view to be used by Javascript
      * @param Entity $community
+     * @param array $clients
+     * @param array $consultants
      */
-    private function prepareAssociatedUsersForJs($community)
+    private function prepareAssociatedUsersForJs($community, $clients, $consultants)
     {
         // Prepare selected clients for JS
-        $usersTable = TableRegistry::get('Users');
-        $clients = $usersTable->getClientList();
         $selectedClients = [];
         if (isset($community->clients)) {
             foreach ($community->clients as $client) {
@@ -287,7 +287,6 @@ class CommunitiesController extends AppController
         }
 
         // Prepare selected consultants for JS
-        $consultants = $usersTable->getConsultantList();
         $selectedConsultants = [];
         if (isset($community->consultants)) {
             foreach ($community->consultants as $consultant) {
@@ -308,8 +307,11 @@ class CommunitiesController extends AppController
      */
     private function prepareForm($community)
     {
-        $this->prepareAssociatedUsersForJs($community);
         $usersTable = TableRegistry::get('Users');
+        $clients = $usersTable->getClientList();
+        $consultants = $usersTable->getConsultantList();
+        $this->prepareAssociatedUsersForJs($community, $clients, $consultants);
+
         $surveysTable = TableRegistry::get('Surveys');
         $areasTable = TableRegistry::get('Areas');
         $this->set([
