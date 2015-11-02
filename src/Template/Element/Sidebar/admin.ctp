@@ -45,7 +45,7 @@
 			[
 				'prefix' => false,
 				'controller' => 'Users',
-				'action' => 'change_password'
+				'action' => 'changePassword'
 			]
 		) ?>
 	</li>
