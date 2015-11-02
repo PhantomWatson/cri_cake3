@@ -285,12 +285,16 @@ class CommunitiesController extends AppController
 
     public function add()
     {
+        $community = $this->Communities->newEntity();
+        // Verify that these aren't needed
+        //$community->official_survey['type'] = 'official';
+        //$community->organization_survey['type'] = 'organization';
+
         if ($this->request->is('post')) {
             if (! $this->request->data['meeting_date_set']) {
                 $this->request->data['town_meeting_date'] = null;
             }
 
-            $community = $this->Communities->newEntity();
             $clientErrors = array_merge(
                 $this->processNewAssociatedUsers('client'),
                 $this->validateClients()
@@ -302,11 +306,13 @@ class CommunitiesController extends AppController
                 } else {
                     list($qnaSuccess, $qnaMsg) = $this->setSurveyQuestionAndAnswerIds();
                 }
+                $community = $this->Communities->patchEntity($community, $this->request->data);
+                $communityErrors = $community->errors();
                 $validates = $qnaSuccess
-                    && $this->Communities->validates($this->request->data)
+                    && empty($communityErrors)
                     && empty($clientErrors)
                     && empty($consultantErrors);
-                if ($validates && $this->Communities->saveAssociated($this->request->data)) {
+                if ($validates && $this->Communities->save($community)) {
                     $this->Flash->success('Community added');
                     return $this->redirect([
                         'prefix' => 'admin',
@@ -317,19 +323,15 @@ class CommunitiesController extends AppController
                 }
             }
             $this->set(compact('clientErrors', 'consultantErrors'));
-        } else {
-            $this->request->data['score'] = 0;
-            $this->request->data['public'] = 0;
-            $this->request->data['official_survey']['type'] = 'official';
-            $this->request->data['organization_survey']['type'] = 'organization';
         }
 
         // Prepare selected clients for JS
         $usersTable = TableRegistry::get('Users');
         $clients = $usersTable->getClientList();
         $selectedClients = [];
-        if (isset($this->request->data['clients'])) {
-            foreach ($this->request->data['clients'] as $clientId) {
+        if (isset($community->clients)) {
+            foreach ($community->clients as $client) {
+                $clientId = isset($client['id']) ? $client['id'] : $client;
                 $selectedClients[] = [
                     'id' => $clientId,
                     'name' => $clients[$clientId]
@@ -340,8 +342,9 @@ class CommunitiesController extends AppController
         // Prepare selected consultants for JS
         $consultants = $usersTable->getConsultantList();
         $selectedConsultants = [];
-        if (isset($this->request->data['consultants'])) {
-            foreach ($this->request->data['consultants'] as $consultantId) {
+        if (isset($community->consultants)) {
+            foreach ($community->consultants as $consultantId) {
+                $consultantId = isset($consultant['id']) ? $consultant['id'] : $consultant;
                 $selectedConsultants[] = [
                     'id' => $consultantId,
                     'name' => $consultants[$consultantId]
@@ -349,7 +352,6 @@ class CommunitiesController extends AppController
             }
         }
 
-        $usersTable = TableRegistry::get('Users');
         $surveysTable = TableRegistry::get('Surveys');
         $areasTable = TableRegistry::get('Areas');
         $this->set([
