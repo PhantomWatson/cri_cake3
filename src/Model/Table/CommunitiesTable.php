@@ -313,15 +313,17 @@ class CommunitiesTable extends Table
         $result = $this->find('all')
             ->select(['id'])
             ->where(['Communities.id' => $communityId])
-            ->join([
-                'alias' => 'Clients',
-                'conditions' => ['Clients.community_id' => 'Communities.id'],
-                'table' => 'clients_communities',
-                'type' => 'LEFT',
-
+            ->contain([
+                'Clients' => function ($q) {
+                    return $q
+                        ->autoFields(false)
+                        ->select(['id'])
+                        ->limit(1);
+                }
             ])
+            ->hydrate(false)
             ->first();
-        return $result ? $result['clients']['client_id'] : null;
+        return $result ? $result['clients'][0]['id'] : null;
     }
 
     /**
