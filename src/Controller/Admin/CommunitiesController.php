@@ -517,8 +517,6 @@ class CommunitiesController extends AppController
             $community = $this->Communities->patchEntity($community, $this->request->data(), [
                 'fieldList' => ['score']
             ]);
-            pr($this->request->data());
-            pr($community);
             if ($community->dirty('score')) {
                 if ($this->Communities->save($community)) {
                     $verbed = $community->score > $previousScore ? 'increased' : 'decreased';
