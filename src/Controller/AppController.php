@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
+use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 
@@ -149,9 +150,13 @@ class AppController extends Controller
     /**
      * Redirects (returns a redirect Response object) to the page used by admins for choosing a client to impersonate
      * @return Response
+     * @throws ForbiddenException
      */
     protected function chooseClientToImpersonate()
     {
+        if ($this->Auth->user('role') != 'admin') {
+            throw new ForbiddenException('Error: Client ID not found for '.$this->Auth->user('role').' account');
+        }
         return $this->redirect([
             'prefix' => 'admin',
             'controller' => 'Users',
