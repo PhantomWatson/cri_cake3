@@ -78,7 +78,7 @@
             'div' => ['class' => 'form-group'],
             'escape' => false,
             'label' => [
-                'text' => 'PWR<sup>3</sup> &trade; Score',
+                'text' => 'Stage / PWR<sup>3</sup> &trade; Score',
                 'escape' => false
             ],
             'options' => array_combine($scores, $scores),
