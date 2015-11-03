@@ -312,6 +312,11 @@ class CommunitiesController extends AppController
         $consultants = $usersTable->getConsultantList();
         $this->prepareAssociatedUsersForJs($community, $clients, $consultants);
 
+        if ($this->request->action == 'add' && ! $this->request->is(['post', 'put'])) {
+            $community->public = false;
+            $community->score = 0;
+        }
+
         $surveysTable = TableRegistry::get('Surveys');
         $areasTable = TableRegistry::get('Areas');
         $this->set([
