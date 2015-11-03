@@ -124,7 +124,7 @@ class CommunitiesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['area_id'], 'Areas'));
+        $rules->add($rules->existsIn('area_id', 'Area'));
         return $rules;
     }
 
