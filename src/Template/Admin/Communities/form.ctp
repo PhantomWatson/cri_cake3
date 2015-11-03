@@ -147,7 +147,7 @@
 <div class="panel panel-default" id="client_interface">
     <div class="panel-heading">
         <h2 class="panel-title">
-            Client
+            Clients
         </h2>
 
         <a href="#" class="btn btn-default btn-xs toggle_add" data-user-type="client">
@@ -263,7 +263,7 @@
 <div class="panel panel-default" id="consultant_interface">
     <div class="panel-heading">
         <h2 class="panel-title">
-            Consultant
+            Consultants
         </h2>
 
         <a href="#" class="btn btn-default btn-xs toggle_add" data-user-type="consultant">
