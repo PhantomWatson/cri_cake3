@@ -156,7 +156,7 @@
 						<?= $community->name ?>
 						<br />
 						<span class="area_name">
-							<?= $community->name ?>
+							<?= $community->area['name'] ?>
 						</span>
 					</td>
 					<td>
