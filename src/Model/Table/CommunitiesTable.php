@@ -90,6 +90,10 @@ class CommunitiesTable extends Table
             ->notEmpty('name');
 
         $validator
+            ->requirePresence('area_id', 'create')
+            ->notEmpty('area_id');
+
+        $validator
             ->add('public', 'valid', ['rule' => 'boolean'])
             ->requirePresence('public', 'create')
             ->notEmpty('public');
