@@ -25,5 +25,7 @@ class Community extends Entity
         'purchases' => true,
         'surveys' => true,
         'surveys_backup' => true,
+        'clients' => true,
+        'consultants' => true
     ];
 }

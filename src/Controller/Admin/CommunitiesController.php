@@ -255,11 +255,11 @@ class CommunitiesController extends AppController
 
         $retval = [];
         $usersTable = TableRegistry::get('Users');
-        foreach ($this->request->data['clients'] as $clientId) {
-            $associatedCommunityId = $this->Communities->getClientCommunityId($clientId);
+        foreach ($this->request->data['clients'] as $client) {
+            $associatedCommunityId = $this->Communities->getClientCommunityId($client['id']);
             if ($associatedCommunityId && $associatedCommunityId != $communityId) {
                 $community = $this->Communities->get($associatedCommunityId);
-                $user = $usersTable->get($clientId);
+                $user = $usersTable->get($client['id']);
                 $retval[] = $user->name.' is already the client for '.$community->name;
             }
         }
@@ -436,7 +436,10 @@ class CommunitiesController extends AppController
                 }
             }
 
-            $community = $this->Communities->patchEntity($community, $this->request->data);
+            $community = $this->Communities->patchEntity($community, $this->request->data(), [
+                'associated' => ['Clients', 'Consultants']
+            ]);
+            //pr($this->request->data()); echo '<hr />'; pr($community); exit();
             $validates = $this->validateForm($community);
             if ($validates && $qnaSuccess && $this->Communities->save($community)) {
                 $this->Flash->success('Community updated');

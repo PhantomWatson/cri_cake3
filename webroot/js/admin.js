@@ -277,7 +277,7 @@ var communityForm = {
 		});
 		li.append(link);
 		var counter = (type == 'client') ? this.client_counter : this.consultant_counter;
-		li.append('<input type="hidden" name="'+type+'s['+counter+']" value="'+id+'" />');
+		li.append('<input type="hidden" name="'+type+'s['+counter+'][id]" value="'+id+'" />');
 		if (type == 'client') {
 			this.client_counter++;
 		} else {
