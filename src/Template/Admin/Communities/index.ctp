@@ -166,7 +166,7 @@
 						<?php endif; ?>
 					</td>
 
-					<?php foreach (['OfficialSurvey', 'OrganizationSurvey'] as $survey_type): ?>
+					<?php foreach (['official_survey', 'organization_survey'] as $survey_type): ?>
 						<td>
 							<?php if (isset($community->{$survey_type}['sm_id']) && $community->{$survey_type}['sm_id']): ?>
 								<?= $this->Html->link(
