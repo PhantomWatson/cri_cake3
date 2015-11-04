@@ -274,31 +274,19 @@ class CommunitiesController extends AppController
      */
     private function prepareAssociatedUsersForJs($community, $clients, $consultants)
     {
-        // Prepare selected clients for JS
-        $selectedClients = [];
-        if (isset($community->clients)) {
-            foreach ($community->clients as $client) {
-                $clientId = isset($client['id']) ? $client['id'] : $client;
-                $selectedClients[] = [
-                    'id' => $clientId,
-                    'name' => $clients[$clientId]
-                ];
+        foreach (['clients', 'consultants'] as $role) {
+            $selectedUsers = [];
+            if (isset($community->$role)) {
+                foreach ($community->$role as $user) {
+                    $userId = isset($user['id']) ? $user['id'] : $user;
+                    $selectedUsers[] = [
+                        'id' => $userId,
+                        'name' => ${$role}[$userId]
+                    ];
+                }
             }
+            $this->set('selected'.ucwords($role), $selectedUsers);
         }
-
-        // Prepare selected consultants for JS
-        $selectedConsultants = [];
-        if (isset($community->consultants)) {
-            foreach ($community->consultants as $consultant) {
-                $consultantId = isset($consultant['id']) ? $consultant['id'] : $consultant;
-                $selectedConsultants[] = [
-                    'id' => $consultantId,
-                    'name' => $consultants[$consultantId]
-                ];
-            }
-        }
-
-        $this->set(compact('selectedClients', 'selectedConsultants'));
     }
 
     /**
