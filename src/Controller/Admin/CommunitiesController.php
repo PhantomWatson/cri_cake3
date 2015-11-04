@@ -334,7 +334,7 @@ class CommunitiesController extends AppController
         $validSurveySelection = $this->validateSelectedSurveys();
         $clientErrors = array_merge(
             $this->processNewAssociatedUsers('client'),
-            $this->validateClients()
+            $this->validateClients($community->id)
         );
         $consultantErrors = $this->processNewAssociatedUsers('consultant');
         $this->set(compact('clientErrors', 'consultantErrors'));
