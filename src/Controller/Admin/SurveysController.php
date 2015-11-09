@@ -6,6 +6,13 @@ use Cake\ORM\TableRegistry;
 
 class SurveysController extends AppController
 {
+
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('SurveyProcessing');
+    }
+
     public function index()
     {
         $communitiesTable = TableRegistry::get('Communities');
