@@ -1,11 +1,11 @@
 <div class="survey_overview">
-	<?php if (! $is_open): ?>
+	<?php if (! $isOpen): ?>
 		<p class="alert alert-info">
 			Note: This survey is not yet ready to be administered.
 		</p>
 	<?php endif; ?>
 
-	<?php if ($survey_url): ?>
+	<?php if ($surveyUrl): ?>
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">
@@ -14,12 +14,12 @@
 			</div>
 			<div class="panel-body">
 				<p>
-					<?= $invited_respondent_count ?>
+					<?= $invitedRespondentCount ?>
 					community
-					<?= __n("$survey_type has been sent a survey invitation", "{$survey_type}s have been sent survey invitations", $invited_respondent_count) ?>
+					<?= __n("$surveyType has been sent a survey invitation", "{$surveyType}s have been sent survey invitations", $invitedRespondentCount) ?>
 				</p>
 				<p>
-					<?php if ($invited_respondent_count > 0): ?>
+					<?php if ($invitedRespondentCount > 0): ?>
 						<a href="#" class="btn btn-default invitations_toggler">
 							View Invitations
 						</a>
@@ -30,12 +30,12 @@
 							'prefix' => 'admin',
 							'controller' => 'Surveys',
 							'action' => 'invite',
-							$survey_id
+							$surveyId
 						],
 						['class' => 'btn btn-default']
 					) ?>
 				</p>
-				<?php if ($invited_respondent_count > 0): ?>
+				<?php if ($invitedRespondentCount > 0): ?>
 					<div class="invitations_list">
 						<p>
 							Invitations sent out for this survey:
@@ -61,10 +61,10 @@
 			<div class="panel-body">
 				<p>
 					<span class="last_import_time">
-						<?php if ($responses_checked): ?>
+						<?php if ($responsesChecked): ?>
 							Responses were last imported
 							<strong>
-								<?= $this->Time->timeAgoInWords($responses_checked, ['end' => '+1 year']) ?>
+								<?= $this->Time->timeAgoInWords($responsesChecked, ['end' => '+1 year']) ?>
 							</strong>
 						<?php else: ?>
 							Responses have not been imported yet
@@ -72,15 +72,15 @@
 					</span>
 				</p>
 				<p>
-					<?php if ($is_automatically_imported): ?>
+					<?php if ($isAutomaticallyImported): ?>
 						Responses are automatically imported from
-						SurveyMonkey<?= $auto_import_frequency ? ' approximately '.$auto_import_frequency : '' ?>,
+						SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>,
 						but you can manually import them at any time.
 					<?php else: ?>
 						New responses to this survey are no longer being automatically imported from SurveyMonkey.
 					<?php endif; ?>
 				</p>
-				<a href="#" class="btn btn-default import_button" data-survey-id="<?= $survey_id ?>">
+				<a href="#" class="btn btn-default import_button" data-survey-id="<?= $surveyId ?>">
 					Import Responses
 				</a>
 			</div>
@@ -95,19 +95,19 @@
 			<div class="panel-body">
 				<p>
 					<?php
-						if ($percent_invited_responded < 33) {
+						if ($percentInvitedResponded < 33) {
 							echo '<span class="text-danger">';
-						} elseif ($percent_invited_responded < 66) {
+						} elseif ($percentInvitedResponded < 66) {
 							echo '<span class="text-warning">';
 						} else {
 							echo '<span class="text-success">';
 						}
-						echo $percent_invited_responded.'%</span>';
+						echo $percentInvitedResponded.'%</span>';
 					?>
 					of invited respondents have completed this survey
 				</p>
 
-				<?php if ($has_uninvited_unaddressed): ?>
+				<?php if ($hasUninvitedUnaddressed): ?>
 					<p>
 						<span class="text-warning">
 							This survey has uninvited responses that need to be approved or dismissed.
@@ -117,7 +117,7 @@
 					</p>
 				<?php endif; ?>
 
-				<?php if (isset($has_new_responses) && $has_new_responses): ?>
+				<?php if (isset($hasNewResponses) && $hasNewResponses): ?>
 					<p>
 						<strong>
 							New responses have been received
@@ -127,27 +127,27 @@
 				<?php endif; ?>
 
 				<?php
-					$button_class = (isset($has_new_responses) && $has_new_responses) ? 'primary' : 'default';
+					$buttonClass = (isset($hasNewResponses) && $hasNewResponses) ? 'primary' : 'default';
 					echo $this->Html->link(
 						'Review and Update Alignment',
 						[
 							'prefix' => 'admin',
 							'controller' => 'Responses',
 							'action' => 'view',
-							$survey_id
+							$surveyId
 						],
-						['class' => 'btn btn-'.$button_class]
+						['class' => 'btn btn-'.$buttonClass]
 					);
 				?>
 
-				<?php if ($uninvited_respondent_count > 0): ?>
+				<?php if ($uninvitedRespondentCount > 0): ?>
 					<?= $this->Html->link(
 						'Review / Approve Uninvited Responses',
 						[
 							'prefix' => 'admin',
 							'controller' => 'Respondents',
 							'action' => 'unapproved',
-							$survey_id
+							$surveyId
 						],
 						['class' => 'btn btn-default']
 					) ?>
@@ -156,14 +156,14 @@
 		</div>
 	<?php else: ?>
 		<p class="alert alert-info">
-			This community's <?= $survey_type ?>s survey URL has not yet been set. If the survey has been created,
+			This community's <?= $surveyType ?>s survey URL has not yet been set. If the survey has been created,
 			<?= $this->Html->link(
 				'edit this community',
 				[
 					'prefix' => 'admin',
 					'controller' => 'Communities',
 					'edit',
-					$community_id
+					$communityId
 				]
 			) ?>
 			and add its information.
