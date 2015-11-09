@@ -46,7 +46,7 @@
 </p>
 
 <?php
-	echo $this->element('surveys'.DS.'overview', compact(
+	echo $this->element('Surveys'.DS.'overview', compact(
 		'survey_type',
 		'is_admin',
 		'community_id',
