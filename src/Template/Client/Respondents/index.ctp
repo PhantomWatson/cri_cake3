@@ -41,10 +41,10 @@
 				<?php endif; ?>
 
 				<th>
-					<?= $this->Paginator->sort('Response.response_date', 'Completed Survey') ?>
+					<?= $this->Paginator->sort('Responses.response_date', 'Completed Survey') ?>
 				</th>
 				<th>
-					<?= $this->Paginator->sort('Response.response_date', 'Completion Date') ?>
+					<?= $this->Paginator->sort('Responses.response_date', 'Completion Date') ?>
 				</th>
 			</tr>
 		</thead>
@@ -52,22 +52,22 @@
 			<?php foreach ($respondents as $respondent): ?>
 				<tr>
 					<td>
-						<?= $respondent['Respondent']['email'] ?>
+						<?= $respondent->email ?>
 					</td>
 
 					<?php if ($surveyType == 'official'): ?>
 						<td class="boolean_icon">
-							<span class="glyphicon glyphicon-<?= empty($respondent['Respondent']['approved']) ? 'remove' : 'ok' ?>"></span>
+							<span class="glyphicon glyphicon-<?= empty($respondent->approved) ? 'remove' : 'ok' ?>"></span>
 						</td>
 					<?php endif; ?>
 
 					<td class="boolean_icon">
-						<span class="glyphicon glyphicon-<?= empty($respondent['Response']) ? 'remove' : 'ok' ?>"></span>
+						<span class="glyphicon glyphicon-<?= empty($respondent->responses) ? 'remove' : 'ok' ?>"></span>
 					</td>
 					<td>
 						<?php
-							if (isset($respondent['Response'][0]['response_date']) && $respondent['Response'][0]['response_date'] != null) {
-								$timestamp = strtotime($respondent['Response'][0]['response_date']);
+							if (isset($respondent->responses[0]['response_date']) && $respondent->responses[0]['response_date'] != null) {
+								$timestamp = strtotime($respondent->responses[0]['response_date']);
 								echo date('F j, Y', $timestamp);
 							}
 						?>
