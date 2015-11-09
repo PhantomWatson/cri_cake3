@@ -19,7 +19,10 @@ class SurveyProcessingComponent extends Component
         $uninvApprovedEmails = [];
         $errorEmails = [];
 
-        $invitees = empty($this->request->data('invitees')) ? [] : $this->request->data('invitees');
+        // Ensure $invitees is an array
+        $invitees = $this->request->data('invitees');
+        $invitees = empty($invitees) ? [] : $invitees;
+
         foreach ($invitees as $i => $invitee) {
             if (empty($invitee['email'])) {
                 continue;
