@@ -84,7 +84,7 @@ class SurveysController extends AppController
         $allRespondents = array_merge($approvedRespondents, $unaddressedUnapprovedRespondents);
 
         if ($this->request->is('post')) {
-            $this->processInvitations(compact(
+            $this->SurveyProcessing->processInvitations(compact(
                 'approvedRespondents',
                 'unaddressedUnapprovedRespondents',
                 'surveyId',
