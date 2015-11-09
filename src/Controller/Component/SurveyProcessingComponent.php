@@ -117,4 +117,29 @@ class SurveyProcessingComponent extends Component
             $this->Flash->success($msg);
         }
     }
+
+    /**
+     * Accepts an array of stringy variables and returns a comma-delimited list with an optional conjunction before the last element
+     * @param array $array
+     * @param string $conjunction
+     * @return string
+     */
+    public function arrayToList($array, $conjunction = 'and') {
+        $count = count($array);
+        if (! $count) {
+            return '';
+        } elseif ($count == 1) {
+            return $array[0];
+        } elseif ($count > 1) {
+            if ($conjunction) {
+                $last_element = array_pop($array);
+                array_push($array, $conjunction.' '.$last_element);
+            }
+            if ($count == 2) {
+                return implode(' ', $array);
+            } else {
+                return implode(', ', $array);
+            }
+        }
+    }
 }
