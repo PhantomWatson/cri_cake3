@@ -144,7 +144,7 @@
 <?php $this->append('buffered'); ?>
 	surveyInvitationForm.init({
 		counter: 1,
-		already_invited: <?= $this->Js->object(array_values($approvedRespondents)); ?>,
-		uninvited_respondents: <?= $this->Js->object(array_values($unaddressedUnapprovedRespondents)) ?>,
+		already_invited: <?= json_encode(array_values($approvedRespondents)); ?>,
+		uninvited_respondents: <?= json_encode(array_values($unaddressedUnapprovedRespondents)) ?>,
 	});
 <?php $this->end();
