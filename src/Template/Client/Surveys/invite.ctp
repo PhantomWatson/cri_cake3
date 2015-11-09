@@ -116,7 +116,7 @@
 				'placeholder' => 'Email',
 				'required' => true,
 				'type' => 'email'
-			)
+			]
 		);
 	?>
 	<button type="button" class="remove btn btn-danger">Remove</button>
