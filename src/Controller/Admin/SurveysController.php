@@ -85,12 +85,12 @@ class SurveysController extends AppController
 
         if ($this->request->is('post')) {
             $this->SurveyProcessing->processInvitations(compact(
+                'allRespondents',
                 'approvedRespondents',
-                'unaddressedUnapprovedRespondents',
-                'surveyId',
                 'communityId',
                 'respondentType',
-                'allRespondents'
+                'surveyId',
+                'unaddressedUnapprovedRespondents'
             ));
         }
 
@@ -102,12 +102,12 @@ class SurveysController extends AppController
         $titleForLayout = $community->name.': Invite Community '.$respondentTypePlural;
 
         $this->set(compact(
-            'respondentTypePlural',
-            'approvedRespondents',
-            'unaddressedUnapprovedRespondents',
             'allRespondents',
+            'approvedRespondents',
+            'respondentTypePlural',
+            'surveyId',
             'titleForLayout',
-            'surveyId'
+            'unaddressedUnapprovedRespondents'
         ));
         $this->render('..'.DS.'..'.DS.'Client'.DS.'Surveys'.DS.'invite');
     }
