@@ -6,6 +6,8 @@ use Cake\ORM\TableRegistry;
 
 class SurveyProcessingComponent extends Component
 {
+    public $components = ['Flash'];
+
     public function processInvitations($params)
     {
         extract($params);
@@ -83,5 +85,35 @@ class SurveyProcessingComponent extends Component
 
         $this->setInvitationFlashMessages($successEmails, $redundantEmails, $errorEmails, $uninvApprovedEmails);
         $this->request->data = [];
+    }
+
+    public function setInvitationFlashMessages($successEmails, $redundantEmails, $errorEmails, $uninvApprovedEmails) {
+        $seCount = count($successEmails);
+        if ($seCount) {
+            $list = $this->arrayToList($successEmails);
+            $msg = 'Survey '.__n('invitation', 'invitations', $seCount).' sent to '.$list;
+            $this->Flash->success($msg);
+        }
+
+        $reCount = count($redundantEmails);
+        if ($reCount) {
+            $list = $this->arrayToList($redundantEmails);
+            $msg = $list.__n(' has', ' have', $reCount).' already received a survey invitation';
+            $this->Flash->set($msg);
+        }
+
+        $eeCount = count($errorEmails);
+        if ($eeCount) {
+            $list = $this->arrayToList($errorEmails);
+            $msg = 'There was an error inviting '.$list.'. Please try again or contact an administrator if you need assistance.';
+            $this->Flash->error($msg);
+        }
+
+        $rieCount = count($uninvApprovedEmails);
+        if ($rieCount) {
+            $list = $this->arrayToList($uninvApprovedEmails);
+            $msg = 'The uninvited '.__n('response', 'responses', $rieCount).' received from '.$list.__n(' has', ' have', $rieCount).' been approved';
+            $this->Flash->success($msg);
+        }
     }
 }
