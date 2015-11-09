@@ -257,9 +257,11 @@ class RespondentsTable extends Table
         return $this->find('list')
             ->where([
                 'survey_id' => $surveyId,
-                'approved' => 0,
-                'email NOT' => ''
+                'approved' => 0
             ])
+            ->where(function ($exp, $q) {
+                return $exp->notEq('email', '');
+            })
             ->order(['created' => 'DESC'])
             ->toArray();
     }
@@ -274,10 +276,12 @@ class RespondentsTable extends Table
         return $this->find('list')
             ->where([
                 'survey_id' => $surveyId,
-                'approved' => 1,
-                'email NOT' => ''
+                'approved' => 1
             ])
-            ->order(['email'])
+            ->where(function ($exp, $q) {
+                return $exp->notEq('email', '');
+            })
+            ->order(['email' => 'ASC'])
             ->toArray();
     }
 
