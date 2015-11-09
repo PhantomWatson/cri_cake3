@@ -17,7 +17,7 @@ class RespondentsController extends AppController
                 'Response' => [
                     'fields' => ['Response.response_date'],
                     'limit' => 1,
-                    'order' => 'Response.response_date DESC'
+                    'order' => ['Response.response_date' => 'DESC']
                 ]
             ],
             'fields' => [
