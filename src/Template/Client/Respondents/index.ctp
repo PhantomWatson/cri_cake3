@@ -34,7 +34,7 @@
 					<?= $this->Paginator->sort('email', 'Respondent') ?>
 				</th>
 
-				<?php if ($survey_type == 'official'): ?>
+				<?php if ($surveyType == 'official'): ?>
 					<th>
 						<?= $this->Paginator->sort('approved', 'Approved') ?>
 					</th>
@@ -55,7 +55,7 @@
 						<?= $respondent['Respondent']['email'] ?>
 					</td>
 
-					<?php if ($survey_type == 'official'): ?>
+					<?php if ($surveyType == 'official'): ?>
 						<td class="boolean_icon">
 							<span class="glyphicon glyphicon-<?= empty($respondent['Respondent']['approved']) ? 'remove' : 'ok' ?>"></span>
 						</td>
