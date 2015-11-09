@@ -127,7 +127,8 @@ class SurveyProcessingComponent extends Component
      * @param string $conjunction
      * @return string
      */
-    public function arrayToList($array, $conjunction = 'and') {
+    public function arrayToList($array, $conjunction = 'and')
+    {
         $count = count($array);
         if (! $count) {
             return '';
