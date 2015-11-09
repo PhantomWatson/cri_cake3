@@ -87,7 +87,8 @@ class SurveyProcessingComponent extends Component
         $this->request->data = [];
     }
 
-    public function setInvitationFlashMessages($successEmails, $redundantEmails, $errorEmails, $uninvApprovedEmails) {
+    public function setInvitationFlashMessages($successEmails, $redundantEmails, $errorEmails, $uninvApprovedEmails)
+    {
         $seCount = count($successEmails);
         if ($seCount) {
             $list = $this->arrayToList($successEmails);
