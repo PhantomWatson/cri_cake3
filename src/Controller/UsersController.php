@@ -74,7 +74,8 @@ class UsersController extends AppController
         $userId = $this->Auth->user('id');
         $user = $this->Users->get($userId);
         if ($this->request->is('post') || $this->request->is('put')) {
-            $user->password = $this->request->data['new_password'];
+            $user = $this->Users->patchEntity($user, $this->request->data());
+            $user->password = $this->request->data('new_password');
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your password has been updated');
             }
