@@ -27,7 +27,8 @@ class RespondentsController extends AppController
                 'Respondents.name',
                 'Respondents.approved'
             ],
-            'limit' => 50
+            'limit' => 50,
+            'sortWhitelist' => ['email', 'approved']
         ];
     }
 
