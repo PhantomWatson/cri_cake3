@@ -113,6 +113,7 @@ class RespondentsController extends AppController
         $this->set([
             'success' => (boolean) $this->Respondents->save($respondent)
         ]);
+        $this->viewBuilder()->layout('blank');
     }
 
     public function dismissUninvited($respondentId)
@@ -127,5 +128,6 @@ class RespondentsController extends AppController
         $this->set([
             'success' => (boolean) $this->Respondents->save($respondent)
         ]);
+        $this->viewBuilder()->layout('blank');
     }
 }
