@@ -2,6 +2,7 @@
 namespace App\Controller\Component;
 
 use Cake\Controller\Component;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
 class SurveyProcessingComponent extends Component
@@ -83,6 +84,9 @@ class SurveyProcessingComponent extends Component
                 }
             } else {
                 $errorEmails[] = $invitee['email'];
+                if (Configure::read('debug')) {
+                    $this->Flash->dump($respondent->errors());
+                }
             }
         }
 
