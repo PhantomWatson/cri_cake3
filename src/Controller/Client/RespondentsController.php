@@ -14,7 +14,7 @@ class RespondentsController extends AppController
         $this->paginate = [
             'conditions' => ['Respondents.survey_id' => $surveyId],
             'contain' => [
-                'Responses' => function($q) {
+                'Responses' => function ($q) {
                     return $q
                         ->select(['respondent_id', 'response_date'])
                         ->limit(1)
