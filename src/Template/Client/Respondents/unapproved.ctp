@@ -92,7 +92,7 @@
 								[
 									$this->request->prefix => true,
 									'controller' => 'Respondents',
-									'action' => 'approve_uninvited',
+									'action' => 'approveUninvited',
 									$respondent['id']
 								],
 								[
@@ -105,7 +105,7 @@
 								[
 									$this->request->prefix => true,
 									'controller' => 'Respondents',
-									'action' => 'dismiss_uninvited',
+									'action' => 'dismissUninvited',
 									$respondent['id']
 								],
 								[
@@ -165,7 +165,7 @@
 									[
 										'prefix' => 'client',
 										'controller' => 'Respondents',
-										'action' => 'approve_uninvited',
+										'action' => 'approveUninvited',
 										$respondent['id']
 									],
 									[
