@@ -97,7 +97,7 @@
 					'class' => 'form-group'
 				],
 				'label' => false,
-				'name' => 'data[invitees][0][name]',
+				'name' => 'invitees[0][name]',
 				'placeholder' => 'Name',
 				'required' => true,
 				'type' => 'text'
@@ -112,7 +112,7 @@
 					'class' => 'form-group'
 				],
 				'label' => false,
-				'name' => 'data[invitees][0][email]',
+				'name' => 'invitees[0][email]',
 				'placeholder' => 'Email',
 				'required' => true,
 				'type' => 'email'
