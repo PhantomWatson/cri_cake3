@@ -1,4 +1,4 @@
-<?php use Cake\Validation; ?>
+<?php use Cake\Validation\Validation; ?>
 
 <div class="page-header">
 	<h1>
