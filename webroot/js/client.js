@@ -245,7 +245,7 @@ var unapprovedRespondents = {
 				console.log(jqXHR);
 				console.log(textStatus);
 				console.log(errorThrown);
-				alert('There was an error checking for new responses. Please try again or contact us for assistance.');
+				alert('There was an error updating this respondent\'s status. Please try again or contact us for assistance.');
 			},
 			complete: function () {
 				link.find('.loading').remove();
