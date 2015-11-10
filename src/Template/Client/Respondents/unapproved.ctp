@@ -69,20 +69,20 @@
 			<?php foreach ($respondents['unaddressed'] as $respondent): ?>
 				<tr>
 					<td>
-						<?php if ($respondent['Respondent']['name']): ?>
-							<?= $respondent['Respondent']['name'] ?>
+						<?php if ($respondent['name']): ?>
+							<?= $respondent['name'] ?>
 						<?php else: ?>
 							<span class="no_name">
 								No name provided
 							</span>
 						<?php endif; ?>
 						<br />
-						<?php if (Validation::email($respondent['Respondent']['email'])): ?>
-							<a href="mailto:<?= $respondent['Respondent']['email'] ?>">
-								<?= $respondent['Respondent']['email'] ?>
+						<?php if (Validation::email($respondent['email'])): ?>
+							<a href="mailto:<?= $respondent['email'] ?>">
+								<?= $respondent['email'] ?>
 							</a>
 						<?php else: ?>
-							<?= $respondent['Respondent']['email'] ?>
+							<?= $respondent['email'] ?>
 						<?php endif; ?>
 					</td>
 					<td>
@@ -93,11 +93,11 @@
 									$this->request->prefix => true,
 									'controller' => 'Respondents',
 									'action' => 'approve_uninvited',
-									$respondent['Respondent']['id']
+									$respondent['id']
 								],
 								[
 									'class' => 'btn btn-default approve',
-									'data-respondent-id' => $respondent['Respondent']['id']
+									'data-respondent-id' => $respondent['id']
 								]
 							) ?>
 							<?= $this->Html->link(
@@ -106,11 +106,11 @@
 									$this->request->prefix => true,
 									'controller' => 'Respondents',
 									'action' => 'dismiss_uninvited',
-									$respondent['Respondent']['id']
+									$respondent['id']
 								],
 								[
 									'class' => 'btn btn-default dismiss',
-									'data-respondent-id' => $respondent['Respondent']['id']
+									'data-respondent-id' => $respondent['id']
 								]
 							) ?>
 						</span>
@@ -146,16 +146,16 @@
 				<?php foreach ($respondents['dismissed'] as $respondent): ?>
 					<tr>
 						<td>
-							<?php if ($respondent['Respondent']['name']): ?>
-								<?= $respondent['Respondent']['name'] ?>
+							<?php if ($respondent['name']): ?>
+								<?= $respondent['name'] ?>
 								<br />
 							<?php endif; ?>
-							<?php if (Validation::email($respondent['Respondent']['email'])): ?>
-								<a href="mailto:<?= $respondent['Respondent']['email'] ?>">
-									<?= $respondent['Respondent']['email'] ?>
+							<?php if (Validation::email($respondent['email'])): ?>
+								<a href="mailto:<?= $respondent['email'] ?>">
+									<?= $respondent['email'] ?>
 								</a>
 							<?php else: ?>
-								<?= $respondent['Respondent']['email'] ?>
+								<?= $respondent['email'] ?>
 							<?php endif; ?>
 						</td>
 						<td>
@@ -166,11 +166,11 @@
 										'prefix' => 'client',
 										'controller' => 'Respondents',
 										'action' => 'approve_uninvited',
-										$respondent['Respondent']['id']
+										$respondent['id']
 									],
 									[
 										'class' => 'btn btn-default approve',
-										'data-respondent-id' => $respondent['Respondent']['id']
+										'data-respondent-id' => $respondent['id']
 									]
 								) ?>
 							</span>
