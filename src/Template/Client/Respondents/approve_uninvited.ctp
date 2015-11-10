@@ -1,1 +1,1 @@
-<?= $success ? 'success' : 'error'
+<?= $success ? 'success' : 'error' ?>
