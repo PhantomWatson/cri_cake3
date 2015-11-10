@@ -41,10 +41,10 @@
 				<?php endif; ?>
 
 				<th>
-					<?= $this->Paginator->sort('Responses.response_date', 'Completed Survey') ?>
+					Completed Survey
 				</th>
 				<th>
-					<?= $this->Paginator->sort('Responses.response_date', 'Completion Date') ?>
+					Completion Date
 				</th>
 			</tr>
 		</thead>
