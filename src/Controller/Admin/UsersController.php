@@ -23,17 +23,15 @@ class UsersController extends AppController
         }
 
         // Apply filters
-        if ($filter) {
-            switch ($filter) {
-                case 'client':
-                case 'consultant':
-                case 'admin':
-                    $this->paginate['conditions']['Users.role'] = $filter;
-                    break;
-                default:
-                    // No action
-                    break;
-            }
+        switch ($filter) {
+            case 'client':
+            case 'consultant':
+            case 'admin':
+                $this->paginate['conditions']['Users.role'] = $filter;
+                break;
+            default:
+                $filter = 'all';
+                break;
         }
 
         $this->set([
@@ -44,7 +42,8 @@ class UsersController extends AppController
                 'client' => 'Clients',
                 'consultant' => 'Consultants',
                 'admin' => 'Admins'
-            ]
+            ],
+            'currentFilter' => $filter
         ]);
     }
 

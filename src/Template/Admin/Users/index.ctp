@@ -19,13 +19,6 @@
 	<p>
 		<div class="btn-group">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				<?php
-					if (isset($this->request->query['filter'])) {
-						$currentFilter = $this->request->query['filter'];
-					} else {
-						$currentFilter = 'all';
-					}
-				?>
 				Type:
 				<strong>
 					<?= $buttons[$currentFilter] ?>
