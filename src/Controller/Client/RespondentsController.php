@@ -12,26 +12,20 @@ class RespondentsController extends AppController
         $surveysTable = TableRegistry::get('Surveys');
         $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
         $this->paginate = [
-            'conditions' => ['Respondent.survey_id' => $surveyId],
+            'conditions' => ['Respondents.survey_id' => $surveyId],
             'contain' => [
-                'Response' => [
-                    'fields' => ['Response.response_date'],
-                    'limit' => 1,
-                    'order' => ['Response.response_date' => 'DESC']
-                ]
+                'Responses' => function($q) {
+                    return $q
+                        ->select(['respondent_id', 'response_date'])
+                        ->limit(1)
+                        ->order(['Responses.response_date' => 'DESC']);
+                }
             ],
             'fields' => [
-                'Respondent.email',
-                'Respondent.name',
-                'Respondent.approved'
-            ],
-            'joins' => [
-                [
-                    'table' => 'responses',
-                    'type' => 'left',
-                    'alias' => 'Response',
-                    'conditions' => ['Respondent.id = Response.respondent_id']
-                ]
+                'Respondents.id',
+                'Respondents.email',
+                'Respondents.name',
+                'Respondents.approved'
             ],
             'limit' => 50
         ];
