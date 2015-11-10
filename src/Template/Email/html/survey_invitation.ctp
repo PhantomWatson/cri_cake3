@@ -1,14 +1,14 @@
 <p>
 	You have been invited to participate in a
-	<a href="<?= $cri_url ?>">
+	<a href="<?= $criUrl ?>">
 		Community Readiness Initiative
 	</a>
 	survey for your community. Please visit the following URL to begin.
 </p>
 
 <p style="font-weight: bold; text-align: center;">
-	<a href="<?= $survey_url ?>">
-		<?= $survey_url ?>
+	<a href="<?= $surveyUrl ?>">
+		<?= $surveyUrl ?>
 	</a>
 </p>
 

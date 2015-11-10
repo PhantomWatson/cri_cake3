@@ -1,6 +1,6 @@
-You have been invited to participate in a Community Readiness Initiative (<?= $cri_url ?>) survey for your community. Please visit the following URL to begin.
+You have been invited to participate in a Community Readiness Initiative (<?= $criUrl ?>) survey for your community. Please visit the following URL to begin.
 
-<?= $survey_url ?>
+<?= $surveyUrl ?>
 
 
 If you have any questions, please email cri@bsu.edu.
