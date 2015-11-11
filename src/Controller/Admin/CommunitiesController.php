@@ -367,7 +367,7 @@ class CommunitiesController extends AppController
                 }
             }
 
-            $community = $this->Communities->patchEntity($community, $this->request->data);
+            $community = $this->Communities->patchEntity($community, $this->request->data());
             $validates = $this->validateForm($community);
             if ($validates && $qnaSuccess && $this->Communities->save($community)) {
                 $this->Flash->success('Community added');
