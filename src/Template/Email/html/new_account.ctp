@@ -1,21 +1,21 @@
 <p>
-	<?= $user['User']['name'] ?>,
+	<?= $user->name ?>,
 </p>
 
 <p>
-	Your new account on the <a href="<?= $home_url ?>">Community Readiness Initiative website</a> has been created.
+	Your new account on the <a href="<?= $homeUrl ?>">Community Readiness Initiative website</a> has been created.
 </p>
 
 <p>
-	You can now <a href="<?= $login_url ?>">log in to the CRI website</a> using the following information:
+	You can now <a href="<?= $loginUrl ?>">log in to the CRI website</a> using the following information:
 </p>
 
 <ul>
 	<li>
-		Email: <?= $user['User']['email'] ?>
+		Email: <?= $user->email ?>
 	</li>
 	<li>
-		Password: <?= $user['User']['unhashed_password'] ?>
+		Password: <?= $password ?>
 	</li>
 </ul>
 
