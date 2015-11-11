@@ -101,7 +101,7 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->data);
 
             if ($this->Users->save($user)) {
-                if ($this->Users->sendNewAccountEmail($user, $user->password)) {
+                if ($this->Users->sendNewAccountEmail($user, $this->request->data['new_password'])) {
                     $this->Flash->success('User account created and login credentials emailed');
                     return $this->redirect([
                         'prefix' => 'admin',
