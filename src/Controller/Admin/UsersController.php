@@ -101,11 +101,18 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->data);
 
             if ($this->Users->save($user)) {
-                $this->Flash->success('User added');
-                return $this->redirect([
-                    'prefix' => 'admin',
-                    'action' => 'index'
-                ]);
+                if ($this->Users->sendNewAccountEmail($user, $user->password)) {
+                    $this->Flash->success('User account created and login credentials emailed');
+                    return $this->redirect([
+                        'prefix' => 'admin',
+                        'action' => 'index'
+                    ]);
+                } else {
+                    $this->Users->delete($user);
+                    $this->Flash->error('There was an error emailing this user with their login info. No new account was created. Please try again or contact an administrator for assistance.');
+                }
+            } else {
+                $this->Flash->error('There was an error creating this user\'s account. Please try again or contact an administrator for assistance.');
             }
         } else {
             $this->request->data['all_communities'] = false;
