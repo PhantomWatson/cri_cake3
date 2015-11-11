@@ -35,7 +35,7 @@
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
-                <?= $errors[0] ?>
+                <?= implode('<br />', array_values($errors[0])) ?>
             <?php endif; ?>
         </div>
     <?php endif; ?>
