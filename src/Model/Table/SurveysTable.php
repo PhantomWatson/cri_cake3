@@ -606,6 +606,11 @@ class SurveysTable extends Table
         }
     }
 
+    /**
+     * Returns an Area entity corresponding to a give survey
+     * @param int $surveyId
+     * @return Entity
+     */
     public function getArea($surveyId)
     {
         $survey = $this->get($surveyId);
