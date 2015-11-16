@@ -254,7 +254,10 @@ class RespondentsTable extends Table
      */
     public function getUnaddressedUnapprovedList($surveyId)
     {
-        return $this->find('list')
+        return $this->find('list', [
+                'keyField' => 'id',
+                'valueField' => 'email'
+            ])
             ->where([
                 'survey_id' => $surveyId,
                 'approved' => 0
@@ -273,7 +276,10 @@ class RespondentsTable extends Table
      */
     public function getApprovedList($surveyId)
     {
-        return $this->find('list')
+        return $this->find('list', [
+                'keyField' => 'id',
+                'valueField' => 'email'
+            ])
             ->where([
                 'survey_id' => $surveyId,
                 'approved' => 1
