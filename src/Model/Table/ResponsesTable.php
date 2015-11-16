@@ -278,7 +278,7 @@ class ResponsesTable extends Table
     /**
      * Decodes the response and returns an array listing the ranks assigned to each sector by the respondent
      * @param string $serializedResponse
-     * @param string $survey The result of a call to Survey::read()
+     * @param Entity $survey The result of a call to SurveysTable::get()
      * @return array
      */
     public function getResponseRanks($serializedResponse, $survey)
@@ -286,7 +286,7 @@ class ResponsesTable extends Table
         $retval = [];
 
         // The question ID that covers PWRRR ranking
-        $pwrrrQid = $survey['Survey']['pwrrr_qid'];
+        $pwrrrQid = $survey->pwrrr_qid;
 
         $unserialized = unserialize(base64_decode($serializedResponse));
         foreach ($unserialized as $section) {
@@ -294,7 +294,7 @@ class ResponsesTable extends Table
                 continue;
             }
             foreach ($section['answers'] as $answer) {
-                list($sector, $rank) = $this->decodeAnswer($answer, $survey['Survey']);
+                list($sector, $rank) = $this->decodeAnswer($answer, $survey);
                 $retval[$sector] = $rank;
             }
         }
