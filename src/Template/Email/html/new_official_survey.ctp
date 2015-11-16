@@ -16,7 +16,9 @@
 
 <p>
 	<br />
-	Ball State Center for Business and Economic Research
+    <strong>
+        Ball State Center for Business and Economic Research
+    </strong>
 	<br />
 	<a href="mailto:cber@bsu.edu">
 		cber@bsu.edu
