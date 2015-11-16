@@ -235,7 +235,7 @@ class CommunitiesController extends AppController
 
             if ($usersTable->save($user)) {
                 if ($usersTable->sendNewAccountEmail($user, $newUser['password'])) {
-                    $this->request->data[$model][] = $user->id;
+                    $this->request->data["{$role}s"][] = $user->id;
                 } else {
                     $retval[] = 'There was an error emailing account login info to '.$newUser['name'].' No new account was created. Please contact an administrator for assistance.';
                     $usersTable->delete($user);
