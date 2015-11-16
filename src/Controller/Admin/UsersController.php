@@ -85,9 +85,7 @@ class UsersController extends AppController
         $user = $this->Users->newEntity();
 
         if ($this->request->is('post') || $this->request->is('put')) {
-            if ($this->request->data['new_password'] != '') {
-                $user->password = $this->request->data['new_password'];
-            }
+            $this->request->data['password'] = $this->request->data['new_password'];
 
             if (empty($this->request->data['client_communities'][0]['id'])) {
                 $this->request->data['client_communities'] = [];
@@ -130,6 +128,10 @@ class UsersController extends AppController
         $user = $this->Users->get($id, ['contain' => ['ClientCommunities', 'ConsultantCommunities']]);
 
         if ($this->request->is('post') || $this->request->is('put')) {
+            if ($this->request->data['new_password'] != '') {
+                $this->request->data['password'] = $this->request->data['new_password'];
+            }
+
             if (empty($this->request->data['client_communities'][0]['id'])) {
                 $this->request->data['client_communities'] = [];
             }
@@ -141,9 +143,6 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->data());
             $errors = $user->errors();
             if (empty($errors)) {
-                if ($this->request->data['new_password'] != '') {
-                    $user->password = $this->request->data['new_password'];
-                }
 
                 $roleChanged = $user->dirty('role');
 
