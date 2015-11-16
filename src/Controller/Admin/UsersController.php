@@ -143,7 +143,6 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->data());
             $errors = $user->errors();
             if (empty($errors)) {
-
                 $roleChanged = $user->dirty('role');
 
                 if ($this->Users->save($user)) {
