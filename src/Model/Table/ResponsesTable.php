@@ -302,13 +302,15 @@ class ResponsesTable extends Table
     }
 
     /**
-     * Returns array($sector, $rank) (both strings) of the sector that an answer is about and the rank the respondent gave to it.
+     * Returns [$sector, $rank] (both strings) of the sector that an answer is about and the rank the respondent gave to it.
      * @param array $answer
-     * @param array $answerIds ($survey['Survey'])
-     * @return array array($sector, $rank)
+     * @param Entity $survey The result of a call to SurveysTable::get()
+     * @return array [$sector, $rank]
      */
-    public function decodeAnswer($answer, $answerIds)
+    public function decodeAnswer($answer, $survey)
     {
+        $answerIds = $survey->toArray();
+
         $sectorId = $answer['row'];
         $sector = str_replace('_aid', '', array_search($sectorId, $answerIds));
 
