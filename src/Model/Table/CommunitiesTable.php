@@ -192,8 +192,8 @@ class CommunitiesTable extends Table
             ->select(['Communities.id'])
             ->where(['Communities.id' => $communityId])
             ->contain([
-                'Consultant' => function ($q) {
-                    return $q->select(['Consultant.id']);
+                'Consultants' => function ($q) {
+                    return $q->select(['Consultants.id']);
                 }
             ])
             ->first();
