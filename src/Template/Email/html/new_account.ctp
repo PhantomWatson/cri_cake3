@@ -20,7 +20,7 @@
 </ul>
 
 <p>
-	Once logged in, you can change your password. If you have any questions, please email cri@bsu.edu.
+	Once logged in, you can change your password. If you have any questions, please email <a href="mailto:cri@bsu.edu">cri@bsu.edu</a>.
 </p>
 
 <p>
