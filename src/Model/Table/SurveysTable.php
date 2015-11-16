@@ -614,8 +614,7 @@ class SurveysTable extends Table
         $areasTable = TableRegistry::get('Areas');
         return $areasTable->find('all')
             ->where(['id' => $areaId])
-            ->first()
-            ->toArray();
+            ->first();
     }
 
     public function findAutoImportCandidate(Query $query, array $options)
