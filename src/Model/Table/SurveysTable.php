@@ -157,16 +157,16 @@ class SurveysTable extends Table
     public function getSMSurveyList($params)
     {
         $SurveyMonkey = $this->getSurveyMonkeyObject();
-        $page_size = 1000;
+        $pageSize = 1000;
         $page = 1;
         $retval = [];
         while (true) {
-            $default_params = [
+            $defaultParams = [
                 'fields' => ['title'],
                 'page' => $page,
-                'page_size' => $page_size
+                'page_size' => $pageSize
             ];
-            $params = array_merge($default_params, $params);
+            $params = array_merge($defaultParams, $params);
             $result = $SurveyMonkey->getSurveyList($params);
             if (isset($result['data']['surveys']) && ! empty($result['data']['surveys'])) {
                 foreach ($result['data']['surveys'] as $survey) {
@@ -176,7 +176,7 @@ class SurveysTable extends Table
                         'url' => $this->getCachedSMSurveyUrl($survey['survey_id'])
                     ];
                 }
-                if (count($result['data']['surveys']) == $page_size) {
+                if (count($result['data']['surveys']) == $pageSize) {
                     $page++;
                 } else {
                     break;
