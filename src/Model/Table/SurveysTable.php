@@ -208,7 +208,7 @@ class SurveysTable extends Table
         $params = [
             'fields' => ['type', 'url']
         ];
-        $collectors = $SurveyMonkey->getCollectorList($smId, $params);
+        $collectors = $SurveyMonkey->getCollectorList((string) $smId, $params);
         $retval = false;
         if (isset($collectors['data']['collectors']) && ! empty($collectors['data']['collectors'])) {
             foreach ($collectors['data']['collectors'] as $collector) {
@@ -413,7 +413,7 @@ class SurveysTable extends Table
     public function getQuestionAndAnswerIds($smId)
     {
         $SurveyMonkey = $this->getSurveyMonkeyObject();
-        $result = $SurveyMonkey->getSurveyDetails($smId);
+        $result = $SurveyMonkey->getSurveyDetails((string) $smId);
         if (! isset($result['data'])) {
             return [false, 'Could not get survey details from SurveyMonkey. This might be a temporary network error.'];
         }

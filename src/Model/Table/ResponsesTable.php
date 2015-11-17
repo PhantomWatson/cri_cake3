@@ -166,7 +166,7 @@ class ResponsesTable extends Table
              * each additional API call. */
             sleep(1);
 
-            $result = $SurveyMonkey->getResponses($survey->sm_id, array_values($smRespondentIdsChunk));
+            $result = $SurveyMonkey->getResponses((string) $survey->sm_id, array_values($smRespondentIdsChunk));
             if (! $result['success']) {
                 return [false, $result['message']];
             }

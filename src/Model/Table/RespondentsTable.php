@@ -147,6 +147,7 @@ class RespondentsTable extends Table
         $lastDateChecked = $survey->respondents_last_modified_date;
         $retval = [];
         $lastModifiedDates = [];
+        $surveyMonkeySurveyId = (string) $survey->sm_id;
         while (true) {
             $params = [
                 'order_asc' => true,
@@ -158,13 +159,13 @@ class RespondentsTable extends Table
                 ],
                 'page' => $page,
                 'page_size' => $pageSize,
-                'survey_id' => $survey->sm_id
+                'survey_id' => $surveyMonkeySurveyId
             ];
             if ($lastDateChecked) {
                 $params['start_modified_date'] = $lastDateChecked;
             }
 
-            $result = $SurveyMonkey->getRespondentList($survey->sm_id, $params);
+            $result = $SurveyMonkey->getRespondentList($surveyMonkeySurveyId, $params);
             if (! $result['success']) {
                 return [false, $result['message'], null];
             }
