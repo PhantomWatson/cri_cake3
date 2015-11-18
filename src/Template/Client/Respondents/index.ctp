@@ -52,7 +52,11 @@
 			<?php foreach ($respondents as $respondent): ?>
 				<tr>
 					<td>
-						<?= $respondent->email ?>
+						<?= $respondent->name ?>
+						<br />
+						<span class="email">
+						    <?= $respondent->email ?>
+					    </span>
 					</td>
 
 					<?php if ($surveyType == 'official'): ?>
