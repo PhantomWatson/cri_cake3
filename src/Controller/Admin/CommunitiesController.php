@@ -432,7 +432,6 @@ class CommunitiesController extends AppController
             $community = $this->Communities->patchEntity($community, $this->request->data(), [
                 'associated' => ['Clients', 'Consultants']
             ]);
-            //pr($this->request->data()); echo '<hr />'; pr($community); exit();
             $validates = $this->validateForm($community);
             if ($validates && $qnaSuccess && $this->Communities->save($community)) {
                 $this->Flash->success('Community updated');
