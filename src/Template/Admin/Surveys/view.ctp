@@ -46,21 +46,7 @@
 </p>
 
 <?php
-	echo $this->element('Surveys'.DS.'overview', compact(
-		'survey_type',
-		'is_admin',
-		'community_id',
-		'is_open',
-		'survey_url',
-		'invited_respondent_count',
-		'uninvited_respondent_count',
-		'percent_invited_responded',
-		'responses_checked',
-		'survey_id',
-		'invitations',
-		'has_new_responses',
-		'stageForAutoImport'
-	));
+	echo $this->element('Surveys'.DS.'overview');
 	$this->Html->script('client', ['block' => 'scriptBottom']);
 ?>
 <?php $this->append('buffered'); ?>
