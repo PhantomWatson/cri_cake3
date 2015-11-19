@@ -65,7 +65,7 @@ class SurveysController extends AppController
             'communityId' => $survey->community_id,
             'surveyType' => $survey->type,
             'surveyId' => $surveyId,
-            'invitations' => $respondentsTable->getInvitedList($surveyId),
+            'invitations' => $respondentsTable->getInvited($surveyId),
             'hasNewResponses' => $this->Surveys->newResponsesHaveBeenReceived($surveyId),
             'hasUninvitedUnaddressed' => $this->Surveys->hasUnaddressedUnapprovedRespondents($surveyId),
             'isAutomaticallyImported' => $isAutomaticallyImported,

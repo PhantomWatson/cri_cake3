@@ -1,3 +1,7 @@
+<?php
+    use Cake\Validation\Validation;
+?>
+
 <div class="survey_overview">
 	<?php if (! $isOpen): ?>
 		<p class="alert alert-info">
@@ -41,9 +45,18 @@
 							Invitations sent out for this survey:
 						</p>
 						<ul>
-							<?php foreach ($invitations as $i => $email): ?>
+							<?php foreach ($invitations as $invitation): ?>
 								<li>
-									<?= $email ?>
+									<?= $invitation->name ? $invitation->name : '(No name)' ?>
+                                    <span class="email">
+                                        <?php if (Validation::email($invitation->email)): ?>
+                                            <a href="mailto:<?= $invitation->email ?>">
+                                                <?= $invitation->email ?>
+                                            </a>
+                                        <?php else: ?>
+                                            <?= $invitation->email ? $invitation->email : '(No email)' ?>
+                                        <?php endif; ?>
+                                    </span>
 								</li>
 							<?php endforeach; ?>
 						</ul>
