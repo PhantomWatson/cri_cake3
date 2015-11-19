@@ -52,10 +52,10 @@
 			<?php foreach ($respondents as $respondent): ?>
 				<tr>
 					<td>
-						<?= $respondent->name ?>
+						<?= $respondent->name ? $respondent->name : '(No name)' ?>
 						<br />
 						<span class="email">
-						    <?= $respondent->email ?>
+						    <?= $respondent->email ? $respondent->email : '(No email)' ?>
 					    </span>
 					</td>
 
