@@ -58,7 +58,8 @@
 		'responses_checked',
 		'survey_id',
 		'invitations',
-		'has_new_responses'
+		'has_new_responses',
+		'stageForAutoImport'
 	));
 	$this->Html->script('client', ['block' => 'scriptBottom']);
 ?>

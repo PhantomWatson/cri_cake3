@@ -87,10 +87,12 @@
 				<p>
 					<?php if ($isAutomaticallyImported): ?>
 						Responses are automatically imported from
-						SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>,
+						SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>
+						while this community is in stage <?= $stageForAutoImport ?> of CRI,
 						but you can manually import them at any time.
 					<?php else: ?>
-						New responses to this survey are no longer being automatically imported from SurveyMonkey.
+						New responses to this survey are <strong>not</strong> being automatically imported from SurveyMonkey because
+						this community is not currently in stage <?= $stageForAutoImport ?> of CRI.
 					<?php endif; ?>
 				</p>
 				<a href="#" class="btn btn-default import_button" data-survey-id="<?= $surveyId ?>">

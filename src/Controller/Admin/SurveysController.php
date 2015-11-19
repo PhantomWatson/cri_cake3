@@ -49,6 +49,7 @@ class SurveysController extends AppController
         $officialSurveyAutoImported = $community->score >= 2 && $community->score < 3 && $survey->type == 'official';
         $organizationSurveyAutoImported = $community->score >= 3 && $community->score < 4 && $survey->type == 'organization';
         $isAutomaticallyImported = $officialSurveyAutoImported || $organizationSurveyAutoImported;
+        $stageForAutoImport = $survey->type == 'official' ? 2 : 3;
 
         $autoImportFrequency = $isAutomaticallyImported ? $this->Surveys->getPerSurveyAutoImportFrequency() : '';
 
@@ -69,7 +70,9 @@ class SurveysController extends AppController
             'hasNewResponses' => $this->Surveys->newResponsesHaveBeenReceived($surveyId),
             'hasUninvitedUnaddressed' => $this->Surveys->hasUnaddressedUnapprovedRespondents($surveyId),
             'isAutomaticallyImported' => $isAutomaticallyImported,
-            'autoImportFrequency' => $autoImportFrequency
+            'autoImportFrequency' => $autoImportFrequency,
+            'community' => $community,
+            'stageForAutoImport' => $stageForAutoImport
         ]);
     }
 
