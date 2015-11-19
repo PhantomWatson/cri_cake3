@@ -31,7 +31,10 @@
 		<thead>
 			<tr>
 				<th>
-					<?= $this->Paginator->sort('email', 'Respondent') ?>
+					Respondent
+					<?= $this->Paginator->sort('name', 'name') ?>
+					/
+					<?= $this->Paginator->sort('email', 'email') ?>
 				</th>
 
 				<?php if ($surveyType == 'official'): ?>
