@@ -53,24 +53,24 @@ class SurveysController extends AppController
 
         $respondentsTable = TableRegistry::get('Respondents');
         $this->set([
-            'titleForLayout' => $community->name.' '.ucwords($survey->type).'s Survey',
-            'isAdmin' => true,
-            'isOpen' => $this->Surveys->isOpen($survey->community_id, $survey->type),
-            'surveyUrl' => $survey->sm_url,
-            'invitedRespondentCount' => $surveyStatus['invited_respondent_count'],
-            'uninvitedRespondentCount' => $surveyStatus['uninvited_respondent_count'],
-            'percentInvitedResponded' => $surveyStatus['percent_invited_responded'],
-            'responsesChecked' => $surveyStatus['responses_checked'],
-            'communityId' => $survey->community_id,
-            'surveyType' => $survey->type,
-            'surveyId' => $surveyId,
-            'invitations' => $respondentsTable->getInvited($surveyId),
-            'hasNewResponses' => $this->Surveys->newResponsesHaveBeenReceived($surveyId),
-            'hasUninvitedUnaddressed' => $this->Surveys->hasUnaddressedUnapprovedRespondents($surveyId),
-            'isAutomaticallyImported' => $isAutomaticallyImported,
             'autoImportFrequency' => $autoImportFrequency,
             'community' => $community,
-            'stageForAutoImport' => $stageForAutoImport
+            'communityId' => $survey->community_id,
+            'hasNewResponses' => $this->Surveys->newResponsesHaveBeenReceived($surveyId),
+            'hasUninvitedUnaddressed' => $this->Surveys->hasUnaddressedUnapprovedRespondents($surveyId),
+            'invitations' => $respondentsTable->getInvited($surveyId),
+            'invitedRespondentCount' => $surveyStatus['invited_respondent_count'],
+            'isAdmin' => true,
+            'isAutomaticallyImported' => $isAutomaticallyImported,
+            'isOpen' => $this->Surveys->isOpen($survey->community_id, $survey->type),
+            'percentInvitedResponded' => $surveyStatus['percent_invited_responded'],
+            'responsesChecked' => $surveyStatus['responses_checked'],
+            'stageForAutoImport' => $stageForAutoImport,
+            'surveyId' => $surveyId,
+            'surveyType' => $survey->type,
+            'surveyUrl' => $survey->sm_url,
+            'titleForLayout' => $community->name.' '.ucwords($survey->type).'s Survey',
+            'uninvitedRespondentCount' => $surveyStatus['uninvited_respondent_count']
         ]);
     }
 
