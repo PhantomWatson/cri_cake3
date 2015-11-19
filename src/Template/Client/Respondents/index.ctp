@@ -1,3 +1,7 @@
+<?php
+    use Cake\Validation\Validation;
+?>
+
 <div class="page-header">
     <h1>
         <?= $titleForLayout ?>
@@ -58,7 +62,13 @@
                         <?= $respondent->name ? $respondent->name : '(No name)' ?>
                         <br />
                         <span class="email">
-                            <?= $respondent->email ? $respondent->email : '(No email)' ?>
+                            <?php if (Validation::email($respondent->email)): ?>
+                                <a href="mailto:<?= $respondent->email ?>">
+                                    <?= $respondent->email ?>
+                                </a>
+                            <?php else: ?>
+                                <?= $respondent->email ? $respondent->email : '(No email)' ?>
+                            <?php endif; ?>
                         </span>
                     </td>
 
