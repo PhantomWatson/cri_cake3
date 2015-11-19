@@ -47,14 +47,14 @@
 						<ul>
 							<?php foreach ($invitations as $invitation): ?>
 								<li>
-									<?= $invitation->name ? $invitation->name : '(No name)' ?>
+									<?= $invitation->name ?: '(No name)' ?>
                                     <span class="email">
                                         <?php if (Validation::email($invitation->email)): ?>
                                             <a href="mailto:<?= $invitation->email ?>">
                                                 <?= $invitation->email ?>
                                             </a>
                                         <?php else: ?>
-                                            <?= $invitation->email ? $invitation->email : '(No email)' ?>
+                                            <?= $invitation->email ?: '(No email)' ?>
                                         <?php endif; ?>
                                     </span>
 								</li>
