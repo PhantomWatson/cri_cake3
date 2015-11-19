@@ -177,7 +177,7 @@ class ProductsTable extends Table
     public function getPurchaseUrl($productId, $clientId, $communityId)
     {
         $retval = 'https://commerce.cashnet.com/';
-        $retval .= (Configure::read('debug') == 0) ? 'BALL_EMC001' : 'BALL_EMC001_TEST';
+        $retval .= Configure::read('debug') ? 'BALL_EMC001_TEST' : 'BALL_EMC001';
         $retval .= '?itemcnt=1';
 
         // Add client info
