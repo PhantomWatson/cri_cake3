@@ -117,6 +117,17 @@ class RespondentsTable extends Table
         return $this->getList($surveyId, true);
     }
 
+    public function getInvited($surveyId)
+    {
+        return $this->find('all')
+            ->select(['id', 'name', 'email'])
+            ->where([
+                'survey_id' => $surveyId,
+                'invited' => 1
+            ])
+            ->all();
+    }
+
     public function getUninvitedList($surveyId)
     {
         return $this->getList($surveyId, false);
