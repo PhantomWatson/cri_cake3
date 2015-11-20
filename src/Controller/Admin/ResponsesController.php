@@ -91,7 +91,7 @@ class ResponsesController extends AppController
             ];
         }
 
-        if ($this->Surveys->newResponsesHaveBeenReceived($surveyId)) {
+        if ($surveysTable->newResponsesHaveBeenReceived($surveyId)) {
             $this->Flash->set('New responses have been received since this community\'s alignment was last set.');
         }
 
@@ -109,7 +109,7 @@ class ResponsesController extends AppController
             'surveyType' => $survey->type,
             'responses' => $responsesReturned,
             'area' => $area,
-            'sectors' => $this->Surveys->getSectors(),
+            'sectors' => $surveysTable->getSectors(),
             'surveyId' => $surveyId,
             'alignmentLastSet' => $alignmentLastSet,
             'totalAlignment' => $approvedCount ? round($alignmentSum / $approvedCount) : 0
