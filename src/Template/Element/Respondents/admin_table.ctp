@@ -1,3 +1,7 @@
+<?php
+    use Cake\Validation\Validation;
+?>
+
 <div id="admin_responses_view">
 	<table class="table">
 		<thead class="actual">
