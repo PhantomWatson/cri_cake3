@@ -94,16 +94,16 @@ class ResponsesController extends AppController
 
         $community = $communitiesTable->get($survey->community_id);
         $this->set([
-            'titleForLayout' => 'View and Update Alignment',
-            'communityName' => $community->name,
-            'surveyType' => $survey->type,
-            'responses' => $responsesReturned,
-            'area' => $area,
-            'sectors' => $surveysTable->getSectors(),
-            'surveyId' => $surveyId,
             'alignmentLastSet' => $alignmentLastSet,
-            'totalAlignment' => $approvedCount ? round($alignmentSum / $approvedCount) : 0,
-            'survey' => $survey
+            'area' => $area,
+            'communityName' => $community->name,
+            'responses' => $responsesReturned,
+            'sectors' => $surveysTable->getSectors(),
+            'survey' => $survey,
+            'surveyId' => $surveyId,
+            'surveyType' => $survey->type,
+            'titleForLayout' => 'View and Update Alignment',
+            'totalAlignment' => $approvedCount ? round($alignmentSum / $approvedCount) : 0
         ]);
     }
 }
