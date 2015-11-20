@@ -163,7 +163,7 @@
 		</tfoot>
 	</table>
 </div>
-<?php $this->Html->script('admin', ['inline' => 'scriptBottom']); ?>
+<?php $this->Html->script('admin', ['block' => 'scriptBottom']); ?>
 <?php $this->append('buffered'); ?>
 	adminViewResponses.init();
 <?php $this->end(); ?>
