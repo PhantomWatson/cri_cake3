@@ -55,7 +55,10 @@
             'div' => [
                 'class' => 'form-group'
             ],
-            'label' => 'Administrator-determined alignment (percent)'.$alignmentLastSetMsg,
+            'label' => [
+                'text' => 'Administrator-determined alignment (percent)'.$alignmentLastSetMsg,
+                'escape' => false
+            ],
             'max' => 100,
             'min' => 0,
             'type' => 'number'
