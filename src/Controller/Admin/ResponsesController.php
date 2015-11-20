@@ -79,16 +79,6 @@ class ResponsesController extends AppController
             } else {
                 $this->Flash->error('There was an error updating this survey');
             }
-
-        // Set default form field values
-        } else {
-            $this->request->data = [
-                'Survey' => [
-                    'id' => $survey->id,
-                    'alignment' => $survey->alignment,
-                    'alignment_passed' => $survey->alignment_passed
-                ]
-            ];
         }
 
         if ($surveysTable->newResponsesHaveBeenReceived($surveyId)) {
@@ -112,7 +102,8 @@ class ResponsesController extends AppController
             'sectors' => $surveysTable->getSectors(),
             'surveyId' => $surveyId,
             'alignmentLastSet' => $alignmentLastSet,
-            'totalAlignment' => $approvedCount ? round($alignmentSum / $approvedCount) : 0
+            'totalAlignment' => $approvedCount ? round($alignmentSum / $approvedCount) : 0,
+            'survey' => $survey
         ]);
     }
 }
