@@ -71,11 +71,11 @@ class ResponsesController extends AppController
 
         // Process update
         if ($this->request->is('post') || $this->request->is('put')) {
-            $survey = $this->Surveys->patchEntity($this->request->data);
-            if ($this->Surveys->save($survey)) {
+            $survey = $surveysTable->patchEntity($survey, $this->request->data);
+            if ($surveysTable->save($survey)) {
                 $this->Flash->success('Alignment set');
                 $survey->alignment_calculated = $survey->modified;
-                $this->Surveys->save($survey);
+                $surveysTable->save($survey);
             } else {
                 $this->Flash->error('There was an error updating this survey');
             }
