@@ -1,9 +1,9 @@
 <div class="page-header">
-	<h1>
-		<?= $titleForLayout; ?>
-	</h1>
+    <h1>
+        <?= $titleForLayout; ?>
+    </h1>
 </div>
 
 <p>
-	Coming soon
+    Coming soon
 </p>
