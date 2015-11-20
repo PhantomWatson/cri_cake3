@@ -49,7 +49,7 @@
         $alignmentLastSetMsg = '';
     }
     echo $this->Form->input(
-        'Survey.alignment',
+        'alignment',
         [
             'class' => 'form-control',
             'div' => [
@@ -66,7 +66,7 @@
     );
 ?>
 <?= $this->Form->input(
-    'Survey.alignment_passed',
+    'alignment_passed',
     [
         'class' => 'form-control',
         'div' => [
