@@ -11,7 +11,7 @@
 			'prefix' => 'admin',
 			'controller' => 'Surveys',
 			'action' => 'view',
-			$survey_id
+			$surveyId
 		],
 		[
 			'class' => 'btn btn-default',
@@ -23,9 +23,9 @@
 <p>
 	These are the currently known responses to
 	<strong>
-		<?= $community_name ?>'s
+		<?= $communityName ?>'s
 		community
-		<?= $survey_type == 'official' ? 'leadership' : 'organization' ?>
+		<?= $surveyType == 'official' ? 'leadership' : 'organization' ?>
 	</strong>
 	survey. Incomplete responses are excluded, and recent responses may have not been imported yet.
 </p>
@@ -43,10 +43,10 @@
 </h1>
 <?= $this->Form->create($survey) ?>
 <?php
-	if ($alignment_last_set) {
-		$alignment_last_set_msg = '<br />Last modified: '.$alignment_last_set;
+	if ($alignmentLastSet) {
+		$alignmentLastSetMsg = '<br />Last modified: '.$alignmentLastSet;
 	} else {
-		$alignment_last_set_msg = '';
+		$alignmentLastSetMsg = '';
 	}
 	echo $this->Form->input(
 		'Survey.alignment',
@@ -55,7 +55,7 @@
 			'div' => [
 				'class' => 'form-group'
 			],
-			'label' => 'Administrator-determined alignment (percent)'.$alignment_last_set_msg,
+			'label' => 'Administrator-determined alignment (percent)'.$alignmentLastSetMsg,
 			'max' => 100,
 			'min' => 0,
 			'type' => 'number'

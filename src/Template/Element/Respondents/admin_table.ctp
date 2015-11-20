@@ -26,8 +26,8 @@
 				<th>
 				</th>
 				<?php
-					function getSortArrow($sort_field, $params) {
-						if (isset($params['named']['sort']) && $params['named']['sort'] == $sort_field) {
+					function getSortArrow($sortField, $params) {
+						if (isset($params['named']['sort']) && $params['named']['sort'] == $sortField) {
 							$direction = strtolower($params['named']['direction']) == 'desc' ? 'up' : 'down';
 							return '<span class="glyphicon glyphicon-arrow-'.$direction.'" aria-hidden="true"></span>';
 						}
@@ -107,9 +107,9 @@
 
 					<?php foreach ($sectors as $sector): ?>
 						<?php
-							$respondent_rank = $response['Response'][$sector.'_rank'];
-							$actual_rank = $area['Area']["{$sector}_rank"];
-							$difference = abs($respondent_rank - $actual_rank);
+							$respondentRank = $response['Response'][$sector.'_rank'];
+							$actualRank = $area['Area']["{$sector}_rank"];
+							$difference = abs($respondentRank - $actualRank);
 							if ($difference > 2) {
 								$class = 'incorrect';
 							} elseif ($difference > 0) {
@@ -119,7 +119,7 @@
 							}
 						?>
 						<td class="<?= $class ?>">
-							<?= $respondent_rank ?>
+							<?= $respondentRank ?>
 						</td>
 					<?php endforeach; ?>
 
@@ -152,12 +152,12 @@
 					</a>
 				</td>
 				<td>
-					<?= $total_alignment ?>%
+					<?= $totalAlignment ?>%
 				</td>
 				<td>
 				</td>
 				<td class="selected">
-					<?= $total_alignment ?>%
+					<?= $totalAlignment ?>%
 				</td>
 			</tr>
 		</tfoot>
