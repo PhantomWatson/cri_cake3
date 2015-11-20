@@ -7,13 +7,13 @@
 		<thead class="actual">
 			<td colspan="3">
 				<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-				<?= $area['Area']['name'] ?>
+				<?= $area['name'] ?>
 				<br />
 				(Actual rankings)
 			</td>
 			<?php foreach ($sectors as $sector): ?>
 				<td>
-					<?= $area['Area']["{$sector}_rank"] ?>
+					<?= $area["{$sector}_rank"] ?>
 				</td>
 			<?php endforeach; ?>
 			<td>
@@ -73,20 +73,20 @@
 				<tr>
 					<td>
 						<div class="respondent_popup">
-							<?php if ($response['Respondent']['name']): ?>
-								<?= $response['Respondent']['name'] ?>
+							<?php if ($response['respondent']['name']): ?>
+								<?= $response['respondent']['name'] ?>
 							<?php else: ?>
 								<span class="no_name">
 									No name provided
 								</span>
 							<?php endif; ?>
 							<br />
-							<?php if (Validation::email($response['Respondent']['email'])): ?>
-								<a href="mailto:<?= $response['Respondent']['email'] ?>">
-									<?= $response['Respondent']['email'] ?>
+							<?php if (Validation::email($response['respondent']['email'])): ?>
+								<a href="mailto:<?= $response['respondent']['email'] ?>">
+									<?= $response['respondent']['email'] ?>
 								</a>
 							<?php else: ?>
-								<?= $response['Respondent']['email'] ?>
+								<?= $response['respondent']['email'] ?>
 							<?php endif; ?>
 						</div>
 						<a href="#" class="respondent_popup_handle" title="Show respondent info">
@@ -96,7 +96,7 @@
 
 					<td>
 						<?php
-							$timestamp = strtotime($response['Response']['response_date']);
+							$timestamp = strtotime($response['response_date']);
 							echo date('n/j/y', $timestamp);
 						?>
 					</td>
@@ -107,8 +107,8 @@
 
 					<?php foreach ($sectors as $sector): ?>
 						<?php
-							$respondentRank = $response['Response'][$sector.'_rank'];
-							$actualRank = $area['Area']["{$sector}_rank"];
+							$respondentRank = $response[$sector.'_rank'];
+							$actualRank = $area["{$sector}_rank"];
 							$difference = abs($respondentRank - $actualRank);
 							if ($difference > 2) {
 								$class = 'incorrect';
@@ -124,11 +124,11 @@
 					<?php endforeach; ?>
 
 					<td>
-						<?= $response['Response']['alignment'] ?>%
+						<?= $response['alignment'] ?>%
 					</td>
 
 					<td>
-						<?php if ($response['Respondent']['approved']): ?>
+						<?php if ($response['respondent']['approved']): ?>
 							<span class="glyphicon glyphicon-ok"></span>
 						<?php else: ?>
 							<span class="glyphicon glyphicon-remove"></span>
@@ -136,8 +136,8 @@
 					</td>
 
 					<td class="selected">
-						<?php $checked = ($response['Respondent']['approved']) ? 'checked' : ''; ?>
-						<input type="checkbox" class="custom_alignment_calc" data-alignment="<?= $response['Response']['alignment'] ?>" <?= $checked ?> />
+						<?php $checked = ($response['respondent']['approved']) ? 'checked' : ''; ?>
+						<input type="checkbox" class="custom_alignment_calc" data-alignment="<?= $response['alignment'] ?>" <?= $checked ?> />
 					</td>
 				</tr>
 			<?php endforeach; ?>
