@@ -222,14 +222,14 @@ class AppController extends Controller
     {
         // Remember selected sort, but only remember direction if sort is specified
         $param = 'sort';
-        if (isset($this->request->params['named'][$param])) {
-            $value = $this->request->params['named'][$param];
+        if (isset($this->request->query($param))) {
+            $value = $this->request->query($param);
             $key = "$cookieParentKey.$param";
             $this->Cookie->write($key, $value);
 
             $param = 'direction';
-            if (isset($this->request->params['named'][$param])) {
-                $value = $this->request->params['named'][$param];
+            if (isset($this->request->query($param))) {
+                $value = $this->request->query($param);
                 $key = "$cookieParentKey.$param";
                 $this->Cookie->write($key, $value);
 
@@ -243,13 +243,13 @@ class AppController extends Controller
             $param = 'sort';
             $key = "$cookieParentKey.$param";
             if ($this->Cookie->check($key)) {
-                $this->request->params['named'][$param] = $this->Cookie->read($key);
+                $this->request->query($param) = $this->Cookie->read($key);
 
                 // And direction, if remembered
                 $param = 'direction';
                 $key = "$cookieParentKey.$param";
                 if ($this->Cookie->check($key)) {
-                    $this->request->params['named'][$param] = $this->Cookie->read($key);
+                    $this->request->query($param) = $this->Cookie->read($key);
                 }
             }
         }
