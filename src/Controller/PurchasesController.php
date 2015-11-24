@@ -23,14 +23,14 @@ class PurchasesController extends AppController
      * and logs a record of the purchase into the 'purchases' table. */
     public function postback()
     {
-        if (isset($_POST['respmessage']) && $_POST['respmessage'] == 'SUCCESS') {
-            $itemCode = explode('-', $_POST['itemcode1']);
+        if ($this->request->data('respmessage') == 'SUCCESS') {
+            $itemCode = explode('-', $this->request->data('itemcode1'));
             $productsTable = TableRegistry::get('Products');
             $purchase = $this->Purchases->newEntity([
-                'user_id' => $_POST['custcode'],
-                'community_id' => $_POST['ref1val1'],
+                'user_id' => $this->request->data('custcode'),
+                'community_id' => $this->request->data('ref1val1'),
                 'product_id' => $productsTable->getIdFromItemCode($itemCode[1]),
-                'postback' => base64_encode(serialize($_POST))
+                'postback' => base64_encode(serialize($this->request->data()))
             ]);
             $this->Purchases->save($purchase);
         }
