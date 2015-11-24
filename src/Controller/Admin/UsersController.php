@@ -152,7 +152,7 @@ class UsersController extends AppController
                     }
                     $this->Flash->success($msg);
                     return $this->redirect([
-                        'admin' => true,
+                        'prefix' => 'admin',
                         'action' => 'index'
                     ]);
                 }
