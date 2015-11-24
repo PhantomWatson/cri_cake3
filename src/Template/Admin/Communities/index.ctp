@@ -94,7 +94,7 @@
                 'clear search',
                 [
                     'prefix' => 'admin',
-                    'controller' => 'communities',
+                    'controller' => 'Communities',
                     'action' => 'index',
                     '?' => []
                 ]
@@ -204,7 +204,7 @@
                                     'Not set up yet',
                                     [
                                         'prefix' => 'admin',
-                                        'controller' => 'communities',
+                                        'controller' => 'Communities',
                                         'action' => 'edit',
                                         $community->id
                                     ]

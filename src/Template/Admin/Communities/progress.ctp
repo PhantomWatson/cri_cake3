@@ -9,7 +9,7 @@
         '<span class="glyphicon glyphicon-arrow-left"></span> Back to Communities',
         [
             'prefix' => 'admin',
-            'controller' => 'communities',
+            'controller' => 'Communities',
             'action' => 'index'
         ],
         [

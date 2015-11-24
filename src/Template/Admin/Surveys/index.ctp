@@ -73,7 +73,7 @@
                                 'View',
                                 [
                                     'prefix' => 'admin',
-                                    'controller' => 'surveys',
+                                    'controller' => 'Surveys',
                                     'action' => 'view',
                                     $community->official_survey->id
                                 ],
@@ -104,7 +104,7 @@
                                 'View',
                                 [
                                     'prefix' => 'admin',
-                                    'controller' => 'surveys',
+                                    'controller' => 'Surveys',
                                     'action' => 'view',
                                     $community->organization_survey->id
                                 ],
