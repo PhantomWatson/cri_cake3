@@ -23,7 +23,7 @@
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'edit',
-            'id' => $communityId
+            $communityId
         ],
         [
             'class' => 'btn btn-default',
