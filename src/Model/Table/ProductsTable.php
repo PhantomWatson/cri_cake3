@@ -67,9 +67,11 @@ class ProductsTable extends Table
         $count = $purchasesTable->find('all')
             ->where([
                 'product_id' => $productId,
-                'community_id' => $communityId,
-                'refunded' => null
+                'community_id' => $communityId
             ])
+            ->where(function ($exp, $q) {
+                return $exp->isNull('refunded');
+            })
             ->count();
         return $count > 0;
     }
