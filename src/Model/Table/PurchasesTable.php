@@ -91,12 +91,12 @@ class PurchasesTable extends Table
     {
         return $this->find('all')
             ->where(['community_id' => $communityId])
-            ->order(['created' => 'ASC'])
+            ->order(['Purchases.created' => 'ASC'])
             ->contain([
-                'Product' => function ($q) {
+                'Products' => function ($q) {
                     return $q->select(['description', 'price']);
                 },
-                'User' => function ($q) {
+                'Users' => function ($q) {
                     return $q->select(['name', 'email']);
                 }
             ])

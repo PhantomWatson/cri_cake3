@@ -16,7 +16,7 @@ class PurchasesController extends AppController
         $communityId = $communitiesTable->getClientCommunityId($clientId);
 
         $productsTable = TableRegistry::get('Products');
-        $products = $productsTable->find('all');
+        $products = $productsTable->find('all')->toArray();
         $purchases = $this->Purchases->getAllForCommunity($communityId); // just needed for debugging
 
         foreach ($products as &$product) {

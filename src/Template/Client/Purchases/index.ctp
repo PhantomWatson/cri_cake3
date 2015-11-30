@@ -19,9 +19,9 @@
         <?php foreach ($products as $product): ?>
             <tr>
                 <td>
-                    <?= $product['Product']['description'] ?>
+                    <?= $product['description'] ?>
                     <span class="price">
-                        <?= $product['Product']['price'] ?>
+                        <?= $product['price'] ?>
                     </span>
                 </td>
                 <td>
