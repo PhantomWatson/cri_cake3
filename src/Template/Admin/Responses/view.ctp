@@ -35,7 +35,7 @@
         No responses have been imported yet.
     </p>
 <?php else: ?>
-    <?= $this->element('respondents'.DS.'admin_table') ?>
+    <?= $this->element('Respondents'.DS.'admin_table') ?>
 <?php endif; ?>
 
 <h1>
