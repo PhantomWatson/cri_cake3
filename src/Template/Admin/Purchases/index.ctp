@@ -37,7 +37,7 @@
                     <?php endif; ?>
 
                     <?php if ($purchase->product['price']): ?>
-                        ($<?= number_format($purchase->product['price'] / 100) ?>)
+                        ($<?= number_format($purchase->product['price']) ?>)
                     <?php endif; ?>
 
                     <?php if ($purchase->refunded): ?>
