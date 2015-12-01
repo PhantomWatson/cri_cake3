@@ -349,7 +349,7 @@ class CommunitiesController extends AppController
         $this->paginate['sortWhitelist'] = ['Communities.name', 'Area.name'];
         $this->adminIndexSetupFilterButtons();
         $this->set([
-            'communities' => $this->paginate(),
+            'communities' => $this->paginate()->toArray(),
             'titleForLayout' => 'Indiana Communities'
         ]);
     }
