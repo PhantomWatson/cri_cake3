@@ -13,7 +13,7 @@
 namespace GoogleCharts\View\Helper;
 
 use Cake\View\Helper;
-use Cake\View\Helper\HTMLHelper;
+use Cake\View\Helper\HtmlHelper;
 
 class GoogleChartsHelper extends Helper
 {
@@ -35,7 +35,7 @@ class GoogleChartsHelper extends Helper
     /**
      * Constructor
      *
-     * 
+     *
      */
     public function __construct (\App\View\AppView $View, $settings = array ())
     {
@@ -100,41 +100,41 @@ class GoogleChartsHelper extends Helper
 
         //Make sure you are using jQuery
         $scriptOutput = "$(document).ready(function(){\n";
-        
+
         //create a uuid for chart variables in case we have multiples
         $chartOptionsId = !empty($variableId) ? "options_{$variableId}" : uniqid ("options_");
-        
+
         //encode chart options
         $options = json_encode ($chart->options);
-        
+
         $scriptOutput .= "{$chartOptionsId} = chartOptions = {$options};\n";
 
         //create a uuid for chart variables in case we have multiples
         $chartDataId = !empty($variableId) ? "js_{$variableId}" : uniqid ("js_");
 
         $scriptOutput .= "{$chartDataId} = chartData = new google.visualization.arrayToDataTable(";
-        
+
         $scriptOutput .= "[\n[";
-        
+
         $keys = array_keys($chart->columns);
         $last_key = end($keys);
         foreach ($chart->columns as $key => $column)
         {
             $scriptOutput .= "'" . addslashes($column['label']) . "'";
-            
+
             if($key !== $last_key){
                 $scriptOutput .= ",";
             }
         }
 
         $scriptOutput .= "],\n";
-        
+
         $keys = array_keys($chart->rows);
         $last_key = end($keys);
         foreach ($chart->rows as $key => $row)
         {
             $scriptOutput .= "[";
-            
+
             $rKeys = array_keys($row);
             $last_row_key = end($rKeys);
             foreach ($row as $rKey => $val)
@@ -149,7 +149,7 @@ class GoogleChartsHelper extends Helper
                     $jsVal = 'null';
                 }
                 $scriptOutput .= $jsVal;
-                
+
                 if ($rKey !== $last_row_key)
                 {
                     $scriptOutput .= ",";
@@ -178,15 +178,15 @@ class GoogleChartsHelper extends Helper
         		$scriptOutput .= "\nformatter.format(chartData, $numeric_key);";
         	}
         }
-        
+
         $chartVarId = !empty($variableId) ? "chart_{$variableId}" : uniqid ("chart_");
 
         $scriptOutput .= "{$chartVarId} = chart = new google.visualization.{$chart->type}(document.getElementById('{$chart->div}'));";
-        
+
         foreach ($chart->callbacks as $event => $function) {
           $scriptOutput .= "google.visualization.events.addListener({$chartVarId}, '{$event}', {$function});";
         }
-        
+
         $scriptOutput .= "{$chartVarId}.draw({$chartDataId}, {$chartOptionsId});";
 
         $scriptOutput .= "});";
