@@ -403,8 +403,8 @@ var communityForm = {
 				results_container.append('<p>Please select the correct SurveyMonkey survey:</p>');
 				var list = $('<ul></ul>');
 				function clickCallback(event) {
-				    return function () {
-                        event.preventDefault();
+				    return function (event) {
+				        event.preventDefault();
                         var sm_id = $(this).data('survey-id');
                         var url = $(this).data('survey-url');
                         communityForm.checkSurveyAssignment(container, sm_id, function () {
@@ -419,7 +419,7 @@ var communityForm = {
 					var url = data[i].url;
 					var title = data[i].title;
 					var link = $('<a href="#" data-survey-id="'+sm_id+'" data-survey-url="'+url+'">'+title+'</a>');
-					link.click(clickCallback(event));
+					link.click(clickCallback());
 					var li = $('<li></li>').append(link);
 					list.append(li);
 				}
