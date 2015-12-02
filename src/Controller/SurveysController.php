@@ -165,4 +165,24 @@ class SurveysController extends AppController
         $this->Surveys->save($survey);
         $this->set(compact('message'));
     }
+
+    public function getSurveyList()
+    {
+        $params = $this->request->query;
+        $result = $this->Surveys->getSMSurveyList($params);
+        $this->set([
+            'result' => json_encode($result)
+        ]);
+        $this->viewBuilder()->layout('json');
+        $this->render('api');
+    }
+
+    public function getSurveyUrl($smId = null)
+    {
+        $this->set([
+            'result' => $this->Surveys->getSMSurveyUrl($smId)
+        ]);
+        $this->viewBuilder()->layout('json');
+        $this->render('api');
+    }
 }
