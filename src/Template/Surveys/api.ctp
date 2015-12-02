@@ -1,1 +1,1 @@
-<?= $result
+<?php echo $result;
