@@ -149,19 +149,18 @@ class UsersTable extends Table
             }
         }
         $communitiesTable = TableRegistry::get('Communities');
-        switch ($role) {
-            case 'admin':
-                return $communitiesTable->find('list')
-                    ->order(['name' => 'ASC']);
-            case 'consultant':
-                return $communitiesTable->getConsultantCommunityList($userId);
-            case 'client':
-                return $communitiesTable->getClientCommunityList($userId);
-            default:
-                return $communitiesTable->find('list')
-                    ->where(['public' => true])
-                    ->order(['name' => 'ASC']);
+        if ($role == 'admin') {
+            return $communitiesTable->find('list')->order(['name' => 'ASC']);
         }
+        if ($role == 'consultant') {
+            return $communitiesTable->getConsultantCommunityList($userId);
+        }
+        if ($role == 'client') {
+            return $communitiesTable->getClientCommunityList($userId);
+        }
+        return $communitiesTable->find('list')
+            ->where(['public' => true])
+            ->order(['name' => 'ASC']);
     }
 
     /**
