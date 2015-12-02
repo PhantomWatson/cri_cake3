@@ -185,4 +185,24 @@ class SurveysController extends AppController
         $this->viewBuilder()->layout('json');
         $this->render('api');
     }
+
+    /**
+     * Used by a JS call to find out what community, if any, a survey has already been assigned to
+     */
+    public function checkSurveyAssignment($smSurveyId = null)
+    {
+        $survey = $this->Surveys->find('all')
+            ->select(['community_id'])
+            ->where(['sm_id' => $smSurveyId])
+            ->first();
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->get($survey->community_id);
+        $this->layout = 'json';
+        $this->set([
+            'community' => [
+                $survey->community_id,
+                $community->name
+            ]
+        ]);
+    }
 }
