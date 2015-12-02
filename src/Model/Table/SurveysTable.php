@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Survey;
+use Cake\Cache\Cache;
 use Cake\Mailer\Email;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
