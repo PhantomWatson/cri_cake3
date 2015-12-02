@@ -122,28 +122,26 @@ class ProductsTable extends Table
         if ($productId > 1) {
             $offSurveyId = $surveysTable->getSurveyId($communityId, 'official');
             $offSurvey = $surveysTable->get($offSurveyId);
-            switch ($offSurvey->alignment_passed) {
-                case 0:
-                    return [0, 'Community has not completed Step 2 yet.'];
-                case -1:
-                    if ($productId == 2) {
-                        $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);
-                        return [1, 'Can purchase (community is misaligned)', $purchaseUrl];
-                    }
-                    return [0, 'Community has not completed Step 2 yet.'];
+            if ($offSurvey->alignment_passed == 0) {
+                return [0, 'Community has not completed Step 2 yet.'];
+            } elseif ($offSurvey->alignment_passed == -1) {
+                if ($productId == 2) {
+                    $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);
+                    return [1, 'Can purchase (community is misaligned)', $purchaseUrl];
+                }
+                return [0, 'Community has not completed Step 2 yet.'];
             }
             if (! $community->fast_track && $productId > 3) {
                 $orgSurveyId = $surveysTable->getSurveyId($communityId, 'organization');
                 $orgSurvey = $surveysTable->get($orgSurveyId);
-                switch ($orgSurvey->alignment_passed) {
-                    case 0:
-                        return [0, 'Community has not completed Step 3 yet.'];
-                    case -1:
-                        if ($productId == 4) {
-                            $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);
-                            return [1, 'Can purchase (community is misaligned)', $purchaseUrl];
-                        }
-                        return [0, 'Community has not completed Step 3 yet.'];
+                if ($orgSurvey->alignment_passed == 0) {
+                    return [0, 'Community has not completed Step 3 yet.'];
+                } elseif ($orgSurvey->alignment_passed == -1) {
+                    if ($productId == 4) {
+                        $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);
+                        return [1, 'Can purchase (community is misaligned)', $purchaseUrl];
+                    }
+                    return [0, 'Community has not completed Step 3 yet.'];
                 }
                 if ($orgSurvey->alignment_passed < 1 && $productId == 5) {
                     return [0, 'Community has not completed Step 3 yet.'];
@@ -156,11 +154,10 @@ class ProductsTable extends Table
             $surveyType = $productId == 2 ? 'official' : 'organization';
             $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
             $survey = $surveysTable->get($surveyId);
-            switch ($survey->alignment_passed) {
-                case 0:
-                    return [0, 'Your assessment results have not yet been analyzed.'];
-                case 1:
-                    return [0, 'Not necessary'];
+            if ($survey->alignment_passed == 0) {
+                return [0, 'Your assessment results have not yet been analyzed.'];
+            } elseif ($survey->alignment_passed == 1) {
+                return [0, 'Not necessary'];
             }
         }
 
