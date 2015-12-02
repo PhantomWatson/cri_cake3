@@ -1,1 +1,1 @@
-<?= $this->Js->object($result)
+<?php echo json_encode($result);
