@@ -534,7 +534,7 @@ class CommunitiesController extends AppController
         $this->paginate['sortWhitelist'] = ['Communities.name', 'Area.name'];
         $this->adminIndexSetupFilterButtons();
 
-        $communities = $this->paginate();
+        $communities = $this->paginate()->toArray();
 
         if (! isset($_GET['debug'])) {
             $this->response->type(['excel2007' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);

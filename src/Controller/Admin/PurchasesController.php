@@ -32,7 +32,7 @@ class PurchasesController extends AppController
     {
         $this->set([
             'titleForLayout' => 'Payment Records',
-            'purchases' => $this->paginate()
+            'purchases' => $this->paginate()->toArray()
         ]);
     }
 
