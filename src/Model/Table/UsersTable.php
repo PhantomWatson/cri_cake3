@@ -246,10 +246,13 @@ class UsersTable extends Table
      */
     public function isCommunityClient($communityId, $userId)
     {
-        return $this->ClientCommunities->exists([
-            'client_id' => $userId,
-            'community_id' => $communityId
-        ]);
+        $count = $this->find('all')
+            ->where(['Users.id' => $userId])
+            ->matching('ClientCommunities', function ($q) use ($communityId) {
+                return $q->where(['ClientCommunities.id' => $communityId]);
+            })
+            ->count();
+        return $count > 0;
     }
 
     /**
