@@ -262,6 +262,6 @@ class UsersTable extends Table
             ->select(['id'])
             ->where(['email' => $email])
             ->first();
-        return $user->isEmpty() ? null : $user->id;
+        return $user->id;
     }
 }
