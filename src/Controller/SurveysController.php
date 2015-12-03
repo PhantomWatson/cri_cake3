@@ -195,14 +195,16 @@ class SurveysController extends AppController
             ->select(['community_id'])
             ->where(['sm_id' => $smSurveyId])
             ->first();
-        $communitiesTable = TableRegistry::get('Communities');
-        $community = $communitiesTable->get($survey->community_id);
-        $this->layout = 'json';
-        $this->set([
-            'community' => [
-                $survey->community_id,
-                $community->name
-            ]
-        ]);
+        if (! $survey) {
+            $community = null;
+        } else {
+            $communitiesTable = TableRegistry::get('Communities');
+            $community = [
+                'id' => $survey->community_id,
+                'name' => $communitiesTable->get($survey->community_id)->name
+            ];
+        }
+        $this->viewBuilder()->layout('json');
+        $this->set('community', $community);
     }
 }

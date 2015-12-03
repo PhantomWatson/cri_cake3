@@ -458,12 +458,12 @@ var communityForm = {
 				link_label.html(loading_indicator);
 			},
 			success: function (data) {
-				if (! data[0] || data[0] == communityForm.community_id) {
+				if (data === null || data.id == communityForm.community_id) {
 					link_label.html(' ');
 					success_callback();
 				} else {
 					link_label.html('<span class="label label-danger">Error</span>');
-					link_status.html('<span class="url_error">That survey is already assigned to another community: <a href="/admin/communities/edit/'+data[0]+'">'+data[1]+'</a></span>');
+					link_status.html('<span class="url_error">That survey is already assigned to another community: <a href="/admin/communities/edit/'+data.id+'">'+data.name+'</a></span>');
 				}
 			},
 			error: function (jqXHR, errorType, exception) {
