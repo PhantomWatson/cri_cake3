@@ -334,7 +334,7 @@ class SurveysTable extends Table
             $survey_status[$type] = [
                 'invited_respondent_count' => $invitedRespondentCount,
                 'uninvited_respondent_count' => $uninvitedRespondentCount,
-                'percent_invited_responded' => round($percentInvitedResponded) * 100,
+                'percent_invited_responded' => round($percentInvitedResponded * 100),
                 'responses_checked' => strtotime($survey->responses_checked),
                 'survey_id' => $survey->id
             ];
