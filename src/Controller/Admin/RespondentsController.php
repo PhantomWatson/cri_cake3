@@ -41,6 +41,8 @@ class RespondentsController extends AppController
         $this->set([
             'success' => (boolean) $this->Respondents->save($respondent)
         ]);
+        $this->viewBuilder()->layout('blank');
+        $this->render(DS.'Client'.DS.'Respondents'.DS.'approve_uninvited');
     }
 
     public function dismissUninvited($respondentId)
@@ -50,5 +52,7 @@ class RespondentsController extends AppController
         $this->set([
             'success' => (boolean) $this->Respondents->save($respondent)
         ]);
+        $this->viewBuilder()->layout('blank');
+        $this->render(DS.'Client'.DS.'Respondents'.DS.'dismiss_uninvited');
     }
 }
