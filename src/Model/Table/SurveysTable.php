@@ -432,7 +432,7 @@ class SurveysTable extends Table
         }
 
         if (! $pwrrrQuestion) {
-            return [false, 'Error: Could not find a question in this survey containing the phrase "'.$keyPhrase.'"'];
+            return [false, 'Error: This survey does not contain a PWR<sup>3</sup> ranking question.'];
         }
 
         // Create an array to save this data with
