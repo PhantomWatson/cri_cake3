@@ -47,6 +47,7 @@ class ResponsesController extends AppController
 
         $totalAlignment = 0;
         $this->adminViewPagination($surveyId);
+        $this->paginate['contain'] = ['Respondents'];
         $responses = $this->paginate();
 
         // Only return the most recent response for each respondent
@@ -54,7 +55,7 @@ class ResponsesController extends AppController
         $alignmentSum = 0;
         $approvedCount = 0;
         foreach ($responses as $i => $response) {
-            $respondentId = $response['Respondent']['id'];
+            $respondentId = $response['respondent']['id'];
 
             if (isset($responsesReturned[$respondentId]['revision_count'])) {
                 $responsesReturned[$respondentId]['revision_count']++;
@@ -63,8 +64,8 @@ class ResponsesController extends AppController
 
             $responsesReturned[$respondentId] = $response;
             $responsesReturned[$respondentId]['revision_count'] = 0;
-            if ($response['Respondent']['approved']) {
-                $alignmentSum += $response['Response']['alignment'];
+            if ($response['respondent']['approved']) {
+                $alignmentSum += $response->alignment;
                 $approvedCount++;
             }
         }
