@@ -74,9 +74,9 @@ Router::scope('/', function ($routes) {
 
     $routes->connect('/postback',           ['controller' => 'Purchases', 'action' => 'postback']);
 
-    $routes->connect('/surveys/get_survey_list',         ['controller' => 'Surveys', 'action' => 'getSurveyList']);
-    $routes->connect('/surveys/get_survey_url',          ['controller' => 'Surveys', 'action' => 'getSurveyUrl']);
-    $routes->connect('/surveys/check_survey_assignment', ['controller' => 'Surveys', 'action' => 'checkSurveyAssignment']);
+    $routes->connect('/surveys/get_survey_list',           ['controller' => 'Surveys', 'action' => 'getSurveyList']);
+    $routes->connect('/surveys/get_survey_url',            ['controller' => 'Surveys', 'action' => 'getSurveyUrl']);
+    $routes->connect('/surveys/check_survey_assignment/*', ['controller' => 'Surveys', 'action' => 'checkSurveyAssignment']);
 
     /**
      * Connect catchall routes for all controllers.
