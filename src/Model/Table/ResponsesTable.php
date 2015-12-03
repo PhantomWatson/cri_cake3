@@ -109,28 +109,13 @@ class ResponsesTable extends Table
      */
     public function getInvitedCount($surveyId)
     {
-        $respondentsTable = TableRegistry::get('Respondents');
-        $results = $respondentsTable->find('all')
-            ->select(['id'])
-            ->where([
-                'survey_id' => $surveyId,
-                'invited' => true
-            ])
-            ->contain([
-                'Responses' => function ($q) {
-                    return $q
-                        ->select(['id'])
-                        ->limit(1);
-                }
-            ])
-            ->toArray();
-        $count = 0;
-        foreach ($results as $respondent) {
-            if (! empty($respondent['responses'])) {
-                $count++;
-            }
-        }
-        return $count;
+        return $this->find('all')
+            ->select(['Responses.id', 'Respondents.id'])
+            ->where(['Responses.survey_id' => $surveyId])
+            ->matching('Respondents', function ($q) {
+                return $q->where(['Respondents.invited' => 1]);
+            })
+            ->count();
     }
 
     /**
