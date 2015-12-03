@@ -74,7 +74,7 @@
 
                     <?php if ($surveyType == 'official'): ?>
                         <td class="boolean_icon">
-                            <span class="glyphicon glyphicon-<?= empty($respondent->approved) ? 'remove' : 'ok' ?>"></span>
+                            <span class="glyphicon glyphicon-<?= $respondent->approved == 1 ? 'ok' : 'remove' ?>"></span>
                         </td>
                     <?php endif; ?>
 

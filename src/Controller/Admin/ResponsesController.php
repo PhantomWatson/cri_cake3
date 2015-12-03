@@ -64,7 +64,7 @@ class ResponsesController extends AppController
 
             $responsesReturned[$respondentId] = $response;
             $responsesReturned[$respondentId]['revision_count'] = 0;
-            if ($response['respondent']['approved']) {
+            if ($response['respondent']['approved'] == 1) {
                 $alignmentSum += $response->alignment;
                 $approvedCount++;
             }

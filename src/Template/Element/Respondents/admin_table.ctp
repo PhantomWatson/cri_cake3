@@ -128,7 +128,7 @@
                     </td>
 
                     <td>
-                        <?php if ($response['respondent']['approved']): ?>
+                        <?php if ($response['respondent']['approved'] == 1): ?>
                             <span class="glyphicon glyphicon-ok"></span>
                         <?php else: ?>
                             <span class="glyphicon glyphicon-remove"></span>
@@ -136,7 +136,7 @@
                     </td>
 
                     <td class="selected">
-                        <?php $checked = ($response['respondent']['approved']) ? 'checked' : ''; ?>
+                        <?php $checked = ($response['respondent']['approved'] == 1) ? 'checked' : ''; ?>
                         <input type="checkbox" class="custom_alignment_calc" data-alignment="<?= $response['alignment'] ?>" <?= $checked ?> />
                     </td>
                 </tr>
