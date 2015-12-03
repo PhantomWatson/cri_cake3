@@ -246,7 +246,7 @@ class UsersTable extends Table
      */
     public function isCommunityClient($communityId, $userId)
     {
-        return $this->ClientCommunity->exists([
+        return $this->ClientCommunities->exists([
             'client_id' => $userId,
             'community_id' => $communityId
         ]);
