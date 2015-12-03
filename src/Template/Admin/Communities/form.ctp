@@ -55,7 +55,7 @@
         ]
     );
     $scores = [0, 1, 2, 2.5, 3, 3.5, 4, 5];
-    if ($this->request->action == 'admin_edit') {
+    if ($this->request->prefix == 'admin') {
         $note = '<strong>Note:</strong> You\'re encouraged to edit this community\'s score through its ';
         $note .= $this->Html->link(
             'progress page',
@@ -186,7 +186,7 @@
 </div>
 
 <?php
-    $label = $this->request->action == 'admin_add'
+    $label = $this->request->prefix == 'admin'
         ? 'Add Community'
         : 'Update Community';
     echo $this->Form->button(

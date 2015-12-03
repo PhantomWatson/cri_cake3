@@ -8,7 +8,7 @@
 
 <p>
     <?php
-        if ($this->request->action == 'admin_unapproved') {
+        if ($this->request->prefix == 'admin') {
             echo $this->Html->link(
                 '<span class="glyphicon glyphicon-arrow-left"></span> Back to Survey Overview',
                 [
