@@ -78,6 +78,7 @@ Router::scope('/', function ($routes) {
     $routes->connect('/surveys/get_survey_url',            ['controller' => 'Surveys', 'action' => 'getSurveyUrl']);
     $routes->connect('/surveys/check_survey_assignment/*', ['controller' => 'Surveys', 'action' => 'checkSurveyAssignment']);
     $routes->connect('/surveys/get_qna_ids/*',             ['controller' => 'Surveys', 'action' => 'getQnaIds']);
+    $routes->connect('/surveys/cron_import',             ['controller' => 'Surveys', 'action' => 'cronImport']);
 
     /**
      * Connect catchall routes for all controllers.

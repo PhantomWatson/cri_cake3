@@ -215,4 +215,17 @@ class SurveysController extends AppController
         $this->viewBuilder()->layout('json');
         $this->render('api');
     }
+
+    public function cronImport()
+    {
+        $surveyId = $this->Surveys->getNextAutoImportCandidate();
+        if ($surveyId) {
+            echo 'Importing survey #'.$surveyId.'<br />';
+            $this->import($surveyId);
+        } else {
+            $this->set('message', 'No surveys are currently eligible for automatic imports');
+            $this->viewBuilder()->layout('blank');
+        }
+        $this->render('import');
+    }
 }
