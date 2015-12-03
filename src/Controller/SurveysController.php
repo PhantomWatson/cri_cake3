@@ -82,7 +82,7 @@ class SurveysController extends AppController
                 } else {
                     $userId = $usersTable->getIdWithEmail($respondent['email']);
                     if ($userId) {
-                        $approved = $usersTable->isCommunityClient($survey->communityId, $userId);
+                        $approved = $usersTable->isCommunityClient($survey->community_id, $userId);
                     }
                 }
 
