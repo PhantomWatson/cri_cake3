@@ -661,20 +661,27 @@ table.pwr {
 
 #CommunityAdminProgressForm {
 	.glyphicon {
-		margin-right: 10px;
+		margin-left: -23px;
+	    margin-right: 10px;
+	    width: 13px;
 	}
-	li.pass {
-		color: #050;
+	li {
+		list-style-type: none;
+		margin-bottom: 5px;
 
-		.glyphicon {
-			color: #0d0;
+		&.pass {
+			color: #050;
+
+			.glyphicon {
+				color: #0d0;
+			}
 		}
-	}
-	li.fail {
-		color: #500;
+		&.fail {
+			color: #500;
 
-		.glyphicon {
-			color: #d00;
+			.glyphicon {
+				color: #d00;
+			}
 		}
 	}
 	input[type="radio"] {
@@ -682,6 +689,12 @@ table.pwr {
 	}
 	label {
 		display: block;
+		font-size: 120%;
+		margin-top: 20px;
+
+		&:first-of-type {
+			margin-top: 0;
+		}
 	}
 }
 
