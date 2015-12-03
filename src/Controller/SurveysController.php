@@ -207,4 +207,12 @@ class SurveysController extends AppController
         $this->viewBuilder()->layout('json');
         $this->set('community', $community);
     }
+
+    public function getQnaIds($smId)
+    {
+        $result = $this->Surveys->getQuestionAndAnswerIds($smId);
+        $this->set('result', json_encode($result));
+        $this->viewBuilder()->layout('json');
+        $this->render('api');
+    }
 }
