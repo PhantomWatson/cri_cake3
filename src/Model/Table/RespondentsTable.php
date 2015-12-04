@@ -34,10 +34,6 @@ class RespondentsTable extends Table
             'foreignKey' => 'survey_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('SmRespondents', [
-            'foreignKey' => 'sm_respondent_id',
-            'joinType' => 'INNER'
-        ]);
         $this->hasMany('Responses', [
             'foreignKey' => 'respondent_id'
         ]);
@@ -92,7 +88,6 @@ class RespondentsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['survey_id'], 'Surveys'));
-        $rules->add($rules->existsIn(['sm_respondent_id'], 'SmRespondents'));
         return $rules;
     }
 

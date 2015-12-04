@@ -23,7 +23,6 @@ class Respondent extends Entity
         'approved' => true,
         'response_date' => true,
         'survey' => true,
-        'sm_respondent' => true,
         'responses' => true,
     ];
 }
