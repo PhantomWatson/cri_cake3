@@ -149,7 +149,6 @@ class SurveysController extends AppController
             } else {
                 $message = 'Error saving response.';
                 $message .= ' Validation errors: '.print_r($errors, true);
-                $message .= "\n<br />".print_r($newResponse, true);
                 $this->response->statusCode(500);
                 $this->set(compact('message'));
                 return;
