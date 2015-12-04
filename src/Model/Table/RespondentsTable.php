@@ -155,7 +155,7 @@ class RespondentsTable extends Table
         $SurveyMonkey = $this->getSurveyMonkeyObject();
         $page = 1;
         $pageSize = 1000;
-        $lastDateChecked = $survey->respondents_last_modified_date->format('Y-m-d H:i:s');
+        $lastDateChecked = $survey->respondents_last_modified_date ? $survey->respondents_last_modified_date->format('Y-m-d H:i:s') : null;
         $retval = [];
         $lastModifiedDates = [];
         $surveyMonkeySurveyId = (string) $survey->sm_id;
