@@ -192,12 +192,9 @@
 
                                 <?php endif; ?>
 
-                                <?php if (isset($community->{$survey_type}['respondents_last_modified_date']) && $community->{$survey_type}['respondents_last_modified_date']): ?>
+                                <?php if (isset($community->{$survey_type}['respondents_last_modified_date'])): ?>
                                     <br /> Last response:
-                                    <?php
-                                        $timestamp = strtotime($community->{$survey_type}['respondents_last_modified_date']);
-                                        echo date('n/j/Y', $timestamp);
-                                    ?>
+                                    <?= $community->{$survey_type}['respondents_last_modified_date']->format('n/j/Y') ?>
                                 <?php endif; ?>
                             <?php else: ?>
                                 <?= $this->Html->link(
