@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -135,7 +136,7 @@ class SurveysController extends AppController
                 'survey_id' => $surveyId,
                 'response' => $serializedResponse,
                 'alignment' => $alignment,
-                'response_date' => $respondents[$smRespondentId]
+                'response_date' => new Time($respondents[$smRespondentId])
             ];
             foreach ($responseRanks as $sector => $rank) {
                 $responseFields["{$sector}_rank"] = $rank;
