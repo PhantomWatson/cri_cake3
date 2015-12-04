@@ -130,16 +130,18 @@ class SurveysController extends AppController
             $alignment = $responsesTable->calculateAlignment($actualRanks, $responseRanks);
 
             // Save response
-            $newResponse = $responsesTable->newEntity([
+            $responseFields = [
                 'respondent_id' => $respondentId,
                 'survey_id' => $surveyId,
                 'response' => $serializedResponse,
                 'alignment' => $alignment,
                 'response_date' => $respondents[$smRespondentId]
-            ]);
+            ];
             foreach ($responseRanks as $sector => $rank) {
-                $newResponse = $responsesTable->patchEntity($newResponse, ["{$sector}_rank" => $rank]);
+                $responseFields["{$sector}_rank"] = $rank;
             }
+            $newResponse = $responsesTable->newEntity($responseFields);
+
             $errors = $newResponse->errors();
             if (empty($errors)) {
                 $responsesTable->save($newResponse);
@@ -147,6 +149,7 @@ class SurveysController extends AppController
             } else {
                 $message = 'Error saving response.';
                 $message .= ' Validation errors: '.print_r($errors, true);
+                $message .= "\n<br />".print_r($newResponse, true);
                 $this->response->statusCode(500);
                 $this->set(compact('message'));
                 return;
