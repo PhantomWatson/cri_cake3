@@ -72,17 +72,17 @@ class SurveysController extends AppController
 
             // Add new respondent
             if (empty($respondentRecord)) {
-                $approved = false;
+                $approved = 0;
 
                 // All organization survey responses are auto-approved
                 if ($survey->type == 'organization') {
-                    $approved = true;
+                    $approved = 1;
 
                 // Same with responses from a community's client
                 } else {
                     $userId = $usersTable->getIdWithEmail($respondent['email']);
                     if ($userId) {
-                        $approved = $usersTable->isCommunityClient($survey->community_id, $userId);
+                        $approved = $usersTable->isCommunityClient($survey->community_id, $userId) ? 1 : 0;
                     }
                 }
 

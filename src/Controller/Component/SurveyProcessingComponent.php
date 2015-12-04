@@ -41,7 +41,7 @@ class SurveyProcessingComponent extends Component
                 $respondent = $respondentsTable->findBySurveyIdAndEmail($surveyId, $invitee['email'])->first();
 
                 // Approve
-                $respondent->approved = true;
+                $respondent->approved = 1;
 
                 // If name is provided, update name
                 if ($invitee['name']) {
