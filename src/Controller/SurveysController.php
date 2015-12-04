@@ -164,7 +164,7 @@ class SurveysController extends AppController
         }
         $this->Surveys->setChecked($surveyId);
         $dates = array_values($respondents);
-        $survey->respondents_last_modified_date = max($dates);
+        $survey->respondents_last_modified_date = new Time(max($dates));
         $this->Surveys->save($survey);
         $this->set(compact('message'));
     }
