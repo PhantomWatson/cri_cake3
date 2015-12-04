@@ -58,11 +58,6 @@ class RespondentsTable extends Table
 
         $validator
             ->add('email', 'valid', ['rule' => 'email'])
-            ->add('email', 'unique', [
-                'rule' => 'validateUnique',
-                'provider' => 'table',
-                'message' => 'Sorry, another account has already been created with that email address.'
-            ])
             ->requirePresence('email', 'create')
             ->notEmpty('email');
 
