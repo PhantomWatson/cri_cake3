@@ -53,13 +53,10 @@ class RespondentsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->add('email', 'valid', ['rule' => 'email'])
-            ->requirePresence('email', 'create')
-            ->notEmpty('email');
+            ->requirePresence('email', 'create');
 
         $validator
-            ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->requirePresence('name', 'create');
 
         $validator
             ->add('invited', 'valid', ['rule' => 'boolean'])
