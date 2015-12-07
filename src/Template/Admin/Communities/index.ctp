@@ -248,6 +248,23 @@
                                         ) ?>
                                     </li>
                                 <?php endif; ?>
+
+                                <?php foreach (['official_survey', 'organization_survey'] as $survey_type): ?>
+                                    <?php if (isset($community->{$survey_type}['sm_id']) && $community->{$survey_type}['sm_id']): ?>
+                                        <li>
+                                            <?= $this->Html->link(
+                                                ucwords(str_replace('_', 's ', $survey_type)),
+                                                [
+                                                    'prefix' => 'admin',
+                                                    'controller' => 'Surveys',
+                                                    'action' => 'view',
+                                                    $community->{$survey_type}['id']
+                                                ]
+                                            ) ?>
+                                        </li>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+
                                 <li>
                                     <?= $this->Html->link(
                                         'Performance Charts',
