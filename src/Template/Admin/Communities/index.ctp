@@ -6,14 +6,14 @@
     </div>
 
     <p>
-        <?php foreach ($buttons as $group_label => $button_group): ?>
+        <?php foreach ($buttons as $groupLabel => $buttonGroup): ?>
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <?= $group_label ?>
+                    <?= $groupLabel ?>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <?php foreach ($button_group as $label => $filters): ?>
+                    <?php foreach ($buttonGroup as $label => $filters): ?>
                         <li>
                             <?= $this->Html->link($label, compact('filters')) ?>
                         </li>
@@ -166,35 +166,35 @@
                         <?php endif; ?>
                     </td>
 
-                    <?php foreach (['official_survey', 'organization_survey'] as $survey_type): ?>
+                    <?php foreach (['official_survey', 'organization_survey'] as $surveyType): ?>
                         <td>
-                            <?php if (isset($community->{$survey_type}['sm_id']) && $community->{$survey_type}['sm_id']): ?>
+                            <?php if (isset($community->{$surveyType}['sm_id']) && $community->{$surveyType}['sm_id']): ?>
                                 <?= $this->Html->link(
                                     'Overview',
                                     [
                                         'prefix' => 'admin',
                                         'controller' => 'Surveys',
                                         'action' => 'view',
-                                        $community->{$survey_type}['id']
+                                        $community->{$surveyType}['id']
                                     ]
                                 ) ?>
                                 <br />
-                                <?php if ($community->{$survey_type}['alignment'] === null): ?>
+                                <?php if ($community->{$surveyType}['alignment'] === null): ?>
                                     Alignment: Not set
                                 <?php else: ?>
-                                    Alignment: <?php echo $community->{$survey_type}['alignment']; ?>%
+                                    Alignment: <?php echo $community->{$surveyType}['alignment']; ?>%
 
-                                    <?php if ($community->{$survey_type}['alignment_passed'] == -1): ?>
+                                    <?php if ($community->{$surveyType}['alignment_passed'] == -1): ?>
                                         <span class="glyphicon glyphicon-remove-sign" aria-hidden="true" title="Failed to pass"></span>
-                                    <?php elseif ($community->{$survey_type}['alignment_passed'] == 1): ?>
+                                    <?php elseif ($community->{$surveyType}['alignment_passed'] == 1): ?>
                                         <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" title="Passed"></span>
                                     <?php endif; ?>
 
                                 <?php endif; ?>
 
-                                <?php if (isset($community->{$survey_type}['respondents_last_modified_date'])): ?>
+                                <?php if (isset($community->{$surveyType}['respondents_last_modified_date'])): ?>
                                     <br /> Last response:
-                                    <?= $community->{$survey_type}['respondents_last_modified_date']->format('n/j/Y') ?>
+                                    <?= $community->{$surveyType}['respondents_last_modified_date']->format('n/j/Y') ?>
                                 <?php endif; ?>
                             <?php else: ?>
                                 <?= $this->Html->link(
@@ -249,16 +249,16 @@
                                     </li>
                                 <?php endif; ?>
 
-                                <?php foreach (['official_survey', 'organization_survey'] as $survey_type): ?>
-                                    <?php if (isset($community->{$survey_type}['sm_id']) && $community->{$survey_type}['sm_id']): ?>
+                                <?php foreach (['official_survey', 'organization_survey'] as $surveyType): ?>
+                                    <?php if (isset($community->{$surveyType}['sm_id']) && $community->{$surveyType}['sm_id']): ?>
                                         <li>
                                             <?= $this->Html->link(
-                                                ucwords(str_replace('_', 's ', $survey_type)),
+                                                ucwords(str_replace('_', 's ', $surveyType)),
                                                 [
                                                     'prefix' => 'admin',
                                                     'controller' => 'Surveys',
                                                     'action' => 'view',
-                                                    $community->{$survey_type}['id']
+                                                    $community->{$surveyType}['id']
                                                 ]
                                             ) ?>
                                         </li>
