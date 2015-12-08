@@ -372,14 +372,20 @@ class CommunitiesController extends AppController
                 }
             }
 
-            $community = $this->Communities->patchEntity($community, $this->request->data());
+            $community = $this->Communities->patchEntity($community, $this->request->data(), [
+                'associated' => ['Clients', 'Consultants', 'OfficialSurvey', 'OrganizationSurvey']
+            ]);
+
             $validates = $this->validateForm($community);
-            if ($validates && $qnaSuccess && $this->Communities->save($community)) {
-                $this->Flash->success('Community added');
-                return $this->redirect([
-                    'prefix' => 'admin',
-                    'action' => 'index'
-                ]);
+            if ($validates && $qnaSuccess) {
+                pr($community); exit();
+                if ($this->Communities->save($community)) {
+                    $this->Flash->success('Community added');
+                    return $this->redirect([
+                        'prefix' => 'admin',
+                        'action' => 'index'
+                    ]);
+                }
             }
         }
 
@@ -430,7 +436,7 @@ class CommunitiesController extends AppController
             }
 
             $community = $this->Communities->patchEntity($community, $this->request->data(), [
-                'associated' => ['Clients', 'Consultants']
+                'associated' => ['Clients', 'Consultants', 'OfficialSurvey', 'OrganizationSurvey']
             ]);
             $validates = $this->validateForm($community);
             if ($validates && $qnaSuccess && $this->Communities->save($community)) {
