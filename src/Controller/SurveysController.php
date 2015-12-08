@@ -197,10 +197,11 @@ class SurveysController extends AppController
         $survey = $this->Surveys->find('all')
             ->select(['community_id'])
             ->where(['sm_id' => $smSurveyId])
-            ->first();
-        if (! $survey) {
+            ->limit(1);
+        if ($survey->isEmpty()) {
             $community = null;
         } else {
+            $survey = $survey->first();
             $communitiesTable = TableRegistry::get('Communities');
             $community = [
                 'id' => $survey->community_id,
