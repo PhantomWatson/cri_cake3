@@ -137,7 +137,7 @@ class CommunitiesController extends AppController
             $surveySmId = $this->request->data[$model]['sm_id'];
             $resultCommunityId = $surveysTable->getCommunityId(['sm_id' => $surveySmId]);
             if ($surveySmId && $resultCommunityId && $resultCommunityId != $communityId) {
-                $community = $this->Communities->get($communityId);
+                $community = $this->Communities->get($resultCommunityId);
                 $this->Flash->error('Error: The selected '.$type.'s survey is already assigned to '.$community->name);
                 return false;
             }
@@ -378,7 +378,6 @@ class CommunitiesController extends AppController
 
             $validates = $this->validateForm($community);
             if ($validates && $qnaSuccess) {
-                pr($community); exit();
                 if ($this->Communities->save($community)) {
                     $this->Flash->success('Community added');
                     return $this->redirect([
