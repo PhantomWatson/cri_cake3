@@ -294,11 +294,14 @@ class CommunitiesTable extends Table
 
     /**
      * Returns the ID of the (first) Community associated with the specified client, or NULL if no such community is found.
-     * @param int $clientId
+     * @param int|null $clientId
      * @return int|null
      */
     public function getClientCommunityId($clientId)
     {
+        if (empty($clientId)) {
+            return null;
+        }
         $communities = $this->getClientCommunityList($clientId);
         if (empty($communities)) {
             return null;
