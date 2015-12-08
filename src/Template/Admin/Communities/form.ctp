@@ -186,7 +186,7 @@
 </div>
 
 <?php
-    $label = $this->request->prefix == 'admin'
+    $label = $this->request->action == 'add'
         ? 'Add Community'
         : 'Update Community';
     echo $this->Form->button(
