@@ -194,13 +194,18 @@ class UsersController extends AppController
             $this->Cookie->write('communityId', $communityId);
             $clientId = $communitiesTable->getCommunityClientId($communityId);
             $this->Cookie->write('clientId', $clientId);
-            if (isset($this->request->data['redirect'])) {
+            if ($this->request->data('redirect')) {
                 return $this->redirect($this->request->data['redirect']);
             } elseif ($this->request->is('ajax')) {
                 $this->render('/Pages/blank');
                 $this->viewBuilder()->layout('ajax');
             } else {
                 $this->Flash->success('Client selected');
+                return $this->redirect([
+                    'prefix' => 'client',
+                    'controller' => 'Communities',
+                    'action' => 'index'
+                ]);
             }
         }
         $this->set([
