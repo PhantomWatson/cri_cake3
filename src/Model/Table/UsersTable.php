@@ -264,7 +264,10 @@ class UsersTable extends Table
         $user = $this->find('all')
             ->select(['id'])
             ->where(['email' => $email])
-            ->first();
-        return $user->id;
+            ->limit(1);
+        if ($user->isEmpty()) {
+            return null;
+        }
+        return $user->first()->id;
     }
 }
