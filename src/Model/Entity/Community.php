@@ -26,6 +26,8 @@ class Community extends Entity
         'surveys' => true,
         'surveys_backup' => true,
         'clients' => true,
-        'consultants' => true
+        'consultants' => true,
+        'official_survey' => true,
+        'organization_survey' => true
     ];
 }
