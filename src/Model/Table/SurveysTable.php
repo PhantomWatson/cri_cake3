@@ -235,14 +235,11 @@ class SurveysTable extends Table
      */
     public function getCommunityId($conditions)
     {
-        $survey = $this->find('all')
+        $results = $this->find('all')
             ->select(['community_id'])
             ->where($conditions)
-            ->first();
-        if ($survey) {
-            return $survey->community_id;
-        }
-        return null;
+            ->limit(1);
+        return $results->isEmpty() ? null : $results->first()->community_id;
     }
 
     public function getCachedSMSurveyUrl($smId)
@@ -285,14 +282,14 @@ class SurveysTable extends Table
             throw new NotFoundException('Could not get survey status. Community (#'.$communityId.') not found.');
         }
 
-        $survey = $this->find('all')
+        $results = $this->find('all')
             ->select(['sm_url'])
             ->where([
                 'community_id' => $communityId,
                 'type' => $surveyType
             ])
-            ->first();
-        return ! empty($survey->sm_url);
+            ->limit(1);
+        return $results->isEmpty() ? false : ! empty($results->first()->sm_url);
     }
 
     /**
@@ -347,17 +344,14 @@ class SurveysTable extends Table
 
     public function getSurveyId($communityId, $type)
     {
-        $survey = $this->find('all')
+        $results = $this->find('all')
             ->select(['id'])
             ->where([
                 'community_id' => $communityId,
                 'type' => $type
             ])
-            ->first();
-        if (empty($survey)) {
-            return null;
-        }
-        return $survey->id;
+            ->limit(1);
+        return $results->isEmpty() ? null : $results->first()->id;
     }
 
     public function setChecked($surveyId)
@@ -379,14 +373,11 @@ class SurveysTable extends Table
      */
     public function getIdForAutomatedImport()
     {
-        $survey = $this->find('all')
+        $results = $this->find('all')
             ->select(['id'])
             ->order(['responses_checked' => 'ASC'])
-            ->first();
-        if ($survey->isEmpty()) {
-            return null;
-        }
-        return $survey->id;
+            ->limit(1);
+        return $results->isEmpty() ? null : $results->first()->id;
     }
 
     public function getQnaIdFieldNames()
@@ -486,13 +477,14 @@ class SurveysTable extends Table
      */
     public function setQuestionAndAnswerIds($smId)
     {
-        $survey = $this->find('all')
+        $results = $this->find('all')
             ->select(['id'])
             ->where(['sm_id' => $smId])
-            ->first();
-        if ($survey->isEmpty()) {
+            ->limit(1);
+        if ($results->isEmpty()) {
             return [false, 'Error: No survey has been recorded with SurveyMonkey id "'.$smId.'".'];
         }
+        $survey = $results->first();
         $data = $this->getQuestionAndAnswerIds($smId)[2];
         $this->patchEntity($survey, $data);
         if ($this->save($survey)) {
@@ -670,8 +662,8 @@ class SurveysTable extends Table
      */
     public function getNextAutoImportCandidate()
     {
-        $survey = $this->find('autoImportCandidate')->first();
-        return $survey->isEmpty() ? null : $survey->id;
+        $results = $this->find('autoImportCandidate');
+        return $results->isEmpty() ? null : $results->first()->id;
     }
 
     public function getAutoImportEligibleCount()
