@@ -11,6 +11,22 @@
     }
 ?>
 
+<?php if ($authUser['role'] == 'admin'): ?>
+    <p>
+        <?= $this->Html->link(
+            'Change community / client',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Users',
+                'action' => 'chooseClient'
+            ],
+            [
+                'class' => 'btn btn-default'
+            ]
+        ) ?>
+    </p>
+<?php endif; ?>
+
 <div id="client_home">
     <table>
         <tbody <?php if ($score < 2) echo 'class="current"'; ?>>
