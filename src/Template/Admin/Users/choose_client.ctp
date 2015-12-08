@@ -13,13 +13,15 @@
             'div' => ['class' => 'form-group'],
         ]
     );
-    echo $this->Form->input(
-        'redirect',
-        [
-            'type' => 'hidden',
-            'value' => $redirect
-        ]
-    );
+    if ($redirect) {
+        echo $this->Form->input(
+            'redirect',
+            [
+                'type' => 'hidden',
+                'value' => $redirect
+            ]
+        );
+    }
     echo $this->Form->button(
         'Continue',
         ['class' => 'btn btn-primary']

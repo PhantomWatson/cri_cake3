@@ -205,10 +205,8 @@ class UsersController extends AppController
         }
         $this->set([
             'communities' => $communitiesTable->getClientCommunityList(),
+            'redirect' => urldecode($this->request->query('redirect')),
             'titleForLayout' => 'Choose client'
         ]);
-        if (isset($this->request->query['redirect'])) {
-            $this->set('redirect', urldecode($this->request->query['redirect']));
-        }
     }
 }
