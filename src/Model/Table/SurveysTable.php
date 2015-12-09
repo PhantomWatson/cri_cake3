@@ -363,8 +363,10 @@ class SurveysTable extends Table
 
     public function getChecked($surveyId)
     {
-        $survey = $this->get($surveyId);
-        return $survey->responses_checked;
+        if ($surveyId) {
+            return $this->get($surveyId)->responses_checked;
+        }
+        return null;
     }
 
     /**
