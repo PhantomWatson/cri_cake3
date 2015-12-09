@@ -510,7 +510,7 @@ class CommunitiesTable extends Table
 
         // Step 3
         $surveyId = $surveysTable->getSurveyId($communityId, 'organization');
-        $survey->get($surveyId);
+        $survey = $surveysTable->get($surveyId);
         $surveyCreated = $surveysTable->hasBeenCreated($communityId, 'organization');
         if ($surveyCreated) {
             $note = '<br />Survey URL: <a href="'.$survey->sm_url.'">'.$survey->sm_url.'</a>';
