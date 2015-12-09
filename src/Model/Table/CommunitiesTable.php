@@ -414,26 +414,16 @@ class CommunitiesTable extends Table
 
 
         // Step 2
-        if ($surveyId) {
-            $count = $respondentsTable->getInvitedCount($surveyId);
-            $note = $count ? " ($count ".__n('invitation', 'invitations', $count).' sent)' : '';
-        } else {
-            $count = 0;
-            $note = '';
-        }
+        $count = $surveyId ? $respondentsTable->getInvitedCount($surveyId) : 0;
+        $note = $count ? " ($count ".__n('invitation', 'invitations', $count).' sent)' : '';
         $criteria[2]['invitations_sent'] = [
             'Community leaders have been sent survey invitations'.$note,
             $surveyId && $count > 0
         ];
 
-        if ($surveyId) {
-            $responsesTable = TableRegistry::get('Responses');
-            $count = $responsesTable->getDistinctCount($surveyId);
-            $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
-        } else {
-            $count = 0;
-            $note = '';
-        }
+        $responsesTable = TableRegistry::get('Responses');
+        $count = $surveyId ? $responsesTable->getDistinctCount($surveyId) : 0;
+        $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
         $criteria[2]['responses_received'] = [
             'Responses to the survey have been collected'.$note,
             $surveyId && $count > 0
@@ -510,22 +500,16 @@ class CommunitiesTable extends Table
 
         // Step 3
         $surveyId = $surveysTable->getSurveyId($communityId, 'organization');
-        $survey = $surveysTable->get($surveyId);
-        $surveyCreated = $surveysTable->hasBeenCreated($communityId, 'organization');
-        if ($surveyCreated) {
-            $note = '<br />Survey URL: <a href="'.$survey->sm_url.'">'.$survey->sm_url.'</a>';
-        } else {
-            $note =  '';
-        }
+        $survey = $surveyId ? $surveysTable->get($surveyId) : null;
+        $surveyUrl = $survey ? $survey->sm_url : null;
+        $note = $surveyUrl ? '<br />Survey URL: <a href="'.$surveyUrl.'">'.$surveyUrl.'</a>' : '';
         $criteria[3]['survey_created'] = [
             'Community organization alignment assessment survey has been prepared'.$note,
             $surveyCreated
         ];
 
-        if ($surveyId) {
-            $count = $respondentsTable->getCount($surveyId);
-            $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
-        }
+        $count = $surveyId ? $respondentsTable->getCount($surveyId) : 0;
+        $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
         $criteria[3]['responses_received'] = [
             'Responses to the survey have been collected'.$note,
             $surveyId && $count > 0
@@ -533,10 +517,10 @@ class CommunitiesTable extends Table
 
         $criteria[3]['alignment_calculated'] = [
             'Community organization alignment calculated',
-            $survey->alignment_passed != 0
+            $survey && $survey->alignment_passed != 0
         ];
 
-        if ($survey->alignment_passed == 0) {
+        if ($survey && $survey->alignment_passed == 0) {
             $note = ' (alignment not yet calculated)';
         } elseif ($isAdmin) {
             $note = " ({$survey->alignment}% aligned)";
@@ -547,11 +531,11 @@ class CommunitiesTable extends Table
         if (! $purchasedCommunitySummit) {
             $criteria[3]['alignment_passed'] = [
                 'Passed community alignment assessment'.$note,
-                 $survey->alignment_passed == 1
+                 $survey && $survey->alignment_passed == 1
             ];
         }
 
-        if ($survey->alignment_passed == -1 || $purchasedCommunitySummit) {
+        if (($survey && $survey->alignment_passed == -1) || $purchasedCommunitySummit) {
             $criteria[3]['consultant_assigned'] = [
                 'At least one consultant has been assigned to this community',
                 $this->getConsultantCount($communityId) > 0
