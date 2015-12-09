@@ -30,4 +30,16 @@ class Community extends Entity
         'official_survey' => true,
         'organization_survey' => true
     ];
+
+    protected function _setOfficialSurvey($survey)
+    {
+        $survey['type'] = 'official';
+        return $survey;
+    }
+
+    protected function _setOrganizationSurvey($survey)
+    {
+        $survey['type'] = 'organization';
+        return $survey;
+    }
 }
