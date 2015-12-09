@@ -128,8 +128,7 @@ class SurveysTable extends Table
 
         $validator
             ->add('alignment_passed', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('alignment_passed', 'create')
-            ->notEmpty('alignment_passed');
+            ->allowEmpty('alignment');
 
         $validator
             ->add('alignment_calculated', 'valid', ['rule' => 'datetime'])
