@@ -18,6 +18,7 @@ class Purchase extends Entity
         'user_id' => true,
         'community_id' => true,
         'product_id' => true,
+        'admin_added' => true,
         'postback' => true,
         'notes' => true,
         'refunded' => true,
