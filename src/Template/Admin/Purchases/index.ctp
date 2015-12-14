@@ -4,13 +4,25 @@
     </h1>
 </div>
 
+<p>
+    <?= $this->Html->link(
+        'Add Purchase Record',
+        [
+            'prefix' => 'admin',
+            'controller' => 'Purchases',
+            'action' => 'add'
+        ],
+        ['class' => 'btn btn-success']
+    ) ?>
+</p>
+
 <?= $this->element('pagination') ?>
 
 <table class="table" id="purchases_index">
     <thead>
         <tr>
             <th>
-                User
+                Community
             </th>
             <th>
                 Product
@@ -25,7 +37,7 @@
         <?php foreach ($purchases as $purchase): ?>
             <tr>
                 <td>
-                    <?= $purchase->user['name'] ?>
+                    <?= $purchase->community['name'] ?>
                 </td>
                 <td>
                     <?php if ($purchase->product['description']): ?>
