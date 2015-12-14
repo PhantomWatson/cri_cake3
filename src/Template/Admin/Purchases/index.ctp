@@ -99,7 +99,7 @@
                         </li>
                         <?php if ($purchase->refunded): ?>
                             <li>
-                                Marked <strong>refunded</strong> by
+                                Marked refunded by
                                 <?php if ($purchase->refunder['name']): ?>
                                     <?= $purchase->refunder['name'] ?>
                                 <?php else: ?>
