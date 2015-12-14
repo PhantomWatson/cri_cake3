@@ -21,7 +21,7 @@ class PurchasesController extends AppController
                 'fields' => ['id', 'name', 'email', 'phone', 'title', 'organization']
             ]
         ],
-        'fields' => ['id', 'created', 'refunded'],
+        'fields' => ['id', 'created', 'refunded', 'notes', 'admin_added'],
         'limit' => 50,
         'order' => [
             'Purchases.created' => 'DESC'

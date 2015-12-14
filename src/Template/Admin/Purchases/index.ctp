@@ -33,6 +33,9 @@
             <th>
                 Refund
             </th>
+            <th>
+                Details
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -55,7 +58,7 @@
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?= $purchase->created->format('F j, Y') ?>
+                    <?= $purchase->created->format('n/j/Y') ?>
                 </td>
                 <td>
                     <?php if ($purchase->refunded): ?>
@@ -64,7 +67,7 @@
                         </a>
                     <?php else: ?>
                         <?= $this->Form->postLink(
-                            'Report Refund',
+                            'Refund',
                             [
                                 'prefix' => 'admin',
                                 'action' => 'refund',
@@ -78,10 +81,22 @@
                         ) ?>
                     <?php endif; ?>
                 </td>
+                <td>
+                    <a href="#" class="details btn btn-default btn-block">
+                        Details
+                    </a>
+                </td>
             </tr>
             <tr class="details">
-                <td colspan="4">
+                <td colspan="5">
                     <ul>
+                        <li>
+                            <?php if ($purchase->admin_added): ?>
+                                Purchase record added by admin <?= $purchase->user['name'] ?>
+                            <?php else: ?>
+                                Purchase made online by <?= $purchase->user['name'] ?>
+                            <?php endif; ?>
+                        </li>
                         <?php if ($purchase->refunded): ?>
                             <li>
                                 Marked <strong>refunded</strong> by
@@ -92,6 +107,11 @@
                                 <?php endif; ?>
                                 on
                                 <?= $purchase->refunded->format('F j, Y') ?>
+                            </li>
+                        <?php endif; ?>
+                        <?php if ($purchase->notes): ?>
+                            <li>
+                                <?= nl2br($purchase->notes) ?>
                             </li>
                         <?php endif; ?>
                     </ul>
