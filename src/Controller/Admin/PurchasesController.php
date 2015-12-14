@@ -72,4 +72,38 @@ class PurchasesController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+    public function add()
+    {
+        $purchase = $this->Purchases->newEntity();
+        if ($this->request->is('post')) {
+            $this->request->data['admin_added'] = true;
+            $this->request->data['user_id'] = $this->Auth->user('id');
+            $this->request->data['postback'] = '';
+            $purchase = $this->Purchases->patchEntity($purchase, $this->request->data());
+            if ($this->Purchases->save($purchase)) {
+                $this->Flash->success('Purchase record added');
+                return $this->redirect([
+                    'action' => 'index'
+                ]);
+            }
+            $this->Flash->error('There was an error adding a new purchase record');
+        }
+
+        $communitiesTable = TableRegistry::get('Communities');
+        $productsTable = TableRegistry::get('Products');
+        $results = $productsTable->find('all')
+            ->select(['id', 'description', 'price'])
+            ->order(['description' => 'ASC']);
+        $products = [];
+        foreach ($results as $product) {
+            $products[$product->id] = $product->description.' ($'.number_format($product->price).')';
+        }
+        $this->set([
+            'communities' => $communitiesTable->find('list')->order(['name' => 'ASC']),
+            'products' => $products,
+            'purchase' => $purchase,
+            'titleForLayout' => 'Add a New Payment Record'
+        ]);
+    }
 }
