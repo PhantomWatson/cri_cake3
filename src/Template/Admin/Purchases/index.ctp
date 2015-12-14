@@ -22,13 +22,13 @@
     <thead>
         <tr>
             <th>
+                Date
+            </th>
+            <th>
                 Community
             </th>
             <th>
                 Product
-            </th>
-            <th>
-                Date
             </th>
             <th>
                 Refund
@@ -41,6 +41,9 @@
     <tbody>
         <?php foreach ($purchases as $purchase): ?>
             <tr>
+                <td>
+                    <?= $purchase->created->format('n/j/Y') ?>
+                </td>
                 <td>
                     <?= $purchase->community['name'] ?>
                 </td>
@@ -56,9 +59,6 @@
                     <?php if ($purchase->product['price']): ?>
                         ($<?= number_format($purchase->product['price']) ?>)
                     <?php endif; ?>
-                </td>
-                <td>
-                    <?= $purchase->created->format('n/j/Y') ?>
                 </td>
                 <td>
                     <?php if ($purchase->refunded): ?>
