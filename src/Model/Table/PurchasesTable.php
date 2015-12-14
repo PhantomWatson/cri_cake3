@@ -61,8 +61,7 @@ class PurchasesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('postback', 'create')
-            ->notEmpty('postback');
+            ->requirePresence('postback', 'create');
 
         $validator
             ->add('refunded', 'valid', ['rule' => 'datetime'])
