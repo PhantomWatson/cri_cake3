@@ -17,6 +17,32 @@
             'escape' => false
         ]
     ) ?>
+    <?= $this->Html->link(
+        '<span class="glyphicon glyphicon-plus"></span> Add a New Client',
+        [
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'addClient',
+            $communityId
+        ],
+        [
+            'class' => 'btn btn-default',
+            'escape' => false
+        ]
+    ) ?>
+    <?= $this->Html->link(
+        '<span class="glyphicon glyphicon-list"></span> Add an Existing Client',
+        [
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'selectClient',
+            $communityId
+        ],
+        [
+            'class' => 'btn btn-default',
+            'escape' => false
+        ]
+    ) ?>
 </p>
 
 <?php if (empty($clients)): ?>

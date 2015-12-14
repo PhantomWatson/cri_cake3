@@ -490,7 +490,8 @@ class CommunitiesController extends AppController
         }
         $this->set([
             'titleForLayout' => $community->name.' Clients',
-            'clients' => $community->clients
+            'clients' => $community->clients,
+            'communityId' => $communityId
         ]);
     }
 
