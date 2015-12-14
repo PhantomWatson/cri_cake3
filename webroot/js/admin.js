@@ -664,3 +664,12 @@ var adminCommunitiesIndex = {
 		});
 	}
 };
+
+var adminPurchasesIndex = {
+    init: function () {
+        $('a.refunded, a.details').click(function (event) {
+            event.preventDefault();
+            $(this).closest('tr').next('tr.details').find('ul').slideToggle();
+        });
+    }
+};
