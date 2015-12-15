@@ -450,3 +450,50 @@ var adminPurchasesIndex = {
         });
     }
 };
+
+var surveyOverview = {
+    init: function () {
+        this.setupImport();
+        
+        $('.invitations_toggler').click(function (event) {
+            event.preventDefault();
+            $(this).closest('div.panel-body').find('.invitations_list').slideToggle();
+        });
+    },
+    setupImport: function () {
+        $('.import_button').click(function (event) {
+            event.preventDefault();
+            var link = $(this);
+            
+            if (link.hasClass('disabled')) {
+                return;
+            }
+            
+            var survey_id = link.data('survey-id');
+            $.ajax({
+                url: '/surveys/import/'+survey_id,
+                beforeSend: function () {
+                    link.addClass('disabled');
+                    var loading_indicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
+                    link.append(loading_indicator);
+                },
+                success: function (data) {
+                    var alert = $('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>'+data+'</div>');
+                    alert.hide();
+                    link.before(alert);
+                    alert.slideDown();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                },
+                complete: function () {
+                    link.removeClass('disabled');
+                    link.find('.loading').remove();
+                    link.parent().children('.last_import_time').html('Responses were last imported a moment ago');
+                }
+            });
+        });
+    }
+};

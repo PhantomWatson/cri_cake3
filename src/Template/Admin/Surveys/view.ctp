@@ -47,7 +47,7 @@
 
 <?php
     echo $this->element('Surveys'.DS.'overview');
-    $this->Html->script('client', ['block' => 'scriptBottom']);
+    $this->Html->script('admin', ['block' => 'scriptBottom']);
 ?>
 <?php $this->append('buffered'); ?>
     surveyOverview.init();
