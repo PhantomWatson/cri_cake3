@@ -101,6 +101,12 @@ class UsersTable extends Table
             ]);
 
         $validator
+            ->add('unhashed_password', 'notBlank', [
+                'rule' => 'notBlank',
+                'message' => 'A non-blank password is required.'
+            ]);
+
+        $validator
             ->notEmpty('new_password', 'A password is required', 'create')
             ->allowEmpty('new_password', 'update')
             ->add('new_password', 'validNewPassword1', [
