@@ -2,8 +2,8 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
-use Cake\Network\Exception\NotFoundException;
 use Cake\Network\Exception\MethodNotAllowedException;
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
 class CommunitiesController extends AppController
@@ -599,6 +599,52 @@ class CommunitiesController extends AppController
             'randomPassword' => $usersTable->generatePassword(),
             'role' => 'client',
             'titleForLayout' => 'Add a New Client for '.$community->name,
+        ]);
+    }
+
+    public function selectClient($communityId)
+    {
+        $community = $this->Communities->get($communityId);
+        $usersTable = TableRegistry::get('Users');
+
+        if ($this->request->is('post')) {
+            $clientId = $this->request->data('client_id');
+            $client = $usersTable->get($clientId, ['contain' => ['ClientCommunities']]);
+            $alreadyLinked = false;
+
+            // Unlink client from any other community
+            if (! empty($client['client_communities'])) {
+                foreach ($client['client_communities'] as $linkedCommunity) {
+                    if ($linkedCommunity['id'] == $communityId) {
+                        $alreadyLinked = true;
+                        continue;
+                    }
+                    $communityEntity = $this->Communities->get($linkedCommunity['id']);
+                    $usersTable->ClientCommunities->unlink($client, [$communityEntity]);
+                    $this->Flash->notification($client->name.'\'s association with '.$linkedCommunity['name'].' has been removed');
+                }
+            }
+
+            // Link client with this community
+            if ($alreadyLinked) {
+                $this->Flash->notification($client->name.' is already assigned to '.$community->name);
+                return $this->redirect(['action' => 'clients', $communityId]);
+            } elseif ($this->Communities->Clients->link($community, [$client])) {
+                $this->Flash->success($client->name.' is now assigned to '.$community->name);
+                return $this->redirect(['action' => 'clients', $communityId]);
+            } else {
+                $this->Flash->error('There was an error assigning '.$client->name.' to '.$community->name);
+            }
+        } else {
+            $client = $usersTable->newEntity();
+        }
+
+        $this->set([
+            'client' => $client,
+            'clients' => $usersTable->getClientList(),
+            'communityId' => $communityId,
+            'communityName' => $community->name,
+            'titleForLayout' => 'Add a New Client for '.$community->name
         ]);
     }
 }
