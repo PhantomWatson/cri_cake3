@@ -144,20 +144,6 @@
     ) ?>
 </div>
 
-<?= $this->element('Communities'.DS.'associated_users_form', [
-    'errors' => isset($clientErrors) ? $clientErrors : null,
-    'role' => 'client',
-    'tableTemplate' => $tableTemplate,
-    'users' => $clients
-]) ?>
-
-<?= $this->element('Communities'.DS.'associated_users_form', [
-    'errors' => isset($consultantErrors) ? $consultantErrors : null,
-    'role' => 'consultant',
-    'tableTemplate' => $tableTemplate,
-    'users' => $consultants
-]) ?>
-
 <div class="panel panel-default">
     <div class="panel-heading">
         <h2 class="panel-title">

@@ -272,39 +272,11 @@ class CommunitiesController extends AppController
     }
 
     /**
-     * Passes $selectedClients and $selectedConsultants to the view to be used by Javascript
-     * @param Entity $community
-     * @param array $clients
-     * @param array $consultants
-     */
-    private function prepareAssociatedUsersForJs($community, $clients, $consultants)
-    {
-        foreach (['clients', 'consultants'] as $role) {
-            $selectedUsers = [];
-            if (isset($community->$role)) {
-                foreach ($community->$role as $user) {
-                    $userId = isset($user['id']) ? $user['id'] : $user;
-                    $selectedUsers[] = [
-                        'id' => $userId,
-                        'name' => ${$role}[$userId]
-                    ];
-                }
-            }
-            $this->set('selected'.ucwords($role), $selectedUsers);
-        }
-    }
-
-    /**
      * Passes necessary variables the view to be used by the adding/editing form
      * @param Entity $community
      */
     private function prepareForm($community)
     {
-        $usersTable = TableRegistry::get('Users');
-        $clients = $usersTable->getClientList();
-        $consultants = $usersTable->getConsultantList();
-        $this->prepareAssociatedUsersForJs($community, $clients, $consultants);
-
         if ($this->request->action == 'add' && ! $this->request->is(['post', 'put'])) {
             $community->public = false;
             $community->score = 0;
@@ -314,9 +286,7 @@ class CommunitiesController extends AppController
         $areasTable = TableRegistry::get('Areas');
         $this->set([
             'areas' => $areasTable->find('list'),
-            'clients' => $usersTable->getClientList(),
             'community' => $community,
-            'consultants' => $usersTable->getConsultantList(),
             'qnaIdFields' => $surveysTable->getQnaIdFieldNames()
         ]);
     }
@@ -373,7 +343,7 @@ class CommunitiesController extends AppController
             }
 
             $community = $this->Communities->patchEntity($community, $this->request->data(), [
-                'associated' => ['Clients', 'Consultants', 'OfficialSurvey', 'OrganizationSurvey']
+                'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
 
             $validates = $this->validateForm($community);
@@ -401,8 +371,6 @@ class CommunitiesController extends AppController
 
         $community = $this->Communities->get($communityId, [
             'contain' => [
-                'Clients',
-                'Consultants',
                 'OfficialSurvey',
                 'OrganizationSurvey'
             ]
@@ -415,16 +383,6 @@ class CommunitiesController extends AppController
                 $this->request->data['town_meeting_date'] = null;
             }
 
-            /* A workaround for deleting all of a community's clients/consultants.
-             * A missing $this->request->data['clients'] key or an empty array isn't deleting existing clients as expected.
-             * No clue why (Community->hasAndBelongsToMany->Client->unique is set to TRUE), but here's a hack. */
-            if (! isset($this->request->data['clients']) || empty($this->request->data['clients'])) {
-                $this->Communities->removeAllClientAssociations($communityId);
-            }
-            if (! isset($this->request->data['consultants']) || empty($this->request->data['consultants'])) {
-                $this->Communities->removeAllConsultantAssociations($communityId);
-            }
-
             if ($this->questionAndAnswerIdsAreSet()) {
                 $qnaSuccess = true;
             } else {
@@ -435,7 +393,7 @@ class CommunitiesController extends AppController
             }
 
             $community = $this->Communities->patchEntity($community, $this->request->data(), [
-                'associated' => ['Clients', 'Consultants', 'OfficialSurvey', 'OrganizationSurvey']
+                'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
             $validates = $this->validateForm($community);
             if ($validates && $qnaSuccess && $this->Communities->save($community)) {
