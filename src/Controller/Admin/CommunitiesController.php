@@ -5,6 +5,7 @@ use App\Controller\AppController;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 
 class CommunitiesController extends AppController
 {
@@ -349,7 +350,10 @@ class CommunitiesController extends AppController
             $validates = $this->validateForm($community);
             if ($validates && $qnaSuccess) {
                 if ($this->Communities->save($community)) {
-                    $this->Flash->success('Community added');
+                    $url = Router::url(['action' => 'addClient', $community->id]);
+                    $message = $community->name.' has been added.';
+                    $message .= '<br />Now you can <a href="'.$url.'">create a client account</a> for this community';
+                    $this->Flash->success($message);
                     return $this->redirect([
                         'prefix' => 'admin',
                         'action' => 'index'
