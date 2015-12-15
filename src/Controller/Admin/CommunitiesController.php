@@ -565,4 +565,40 @@ class CommunitiesController extends AppController
             'action' => 'index'
         ]);
     }
+
+    public function addClient($communityId)
+    {
+        $community = $this->Communities->get($communityId);
+        $usersTable = TableRegistry::get('Users');
+
+        if ($this->request->is('post')) {
+            $client = $usersTable->newEntity($this->request->data());
+            $client->role = 'client';
+            $client->client_communities = [$this->Communities->get($communityId)];
+            $client->password = $this->request->data('unhashed_password');
+            $errors = $client->errors();
+            if (empty($errors) && $usersTable->save($client)) {
+                if ($usersTable->sendNewAccountEmail($client, $this->request->data('password'))) {
+                    $this->Flash->success('Client account created for '.$client->name.' and login instructions emailed');
+                    return $this->redirect(['action' => 'clients', $communityId]);
+                } else {
+                    $retval[] = 'There was an error emailing account login info to '.$client->name.' No new account was created. Please contact an administrator for assistance.';
+                    $usersTable->delete($client);
+                }
+            } else {
+                $this->Flash->error('There was an error saving that client. Please try again or contact an administrator for assistance.');
+            }
+        } else {
+            $client = $usersTable->newEntity();
+        }
+
+        $this->set([
+            'client' => $client,
+            'communityId' => $communityId,
+            'communityName' => $community->name,
+            'randomPassword' => $usersTable->generatePassword(),
+            'role' => 'client',
+            'titleForLayout' => 'Add a New Client for '.$community->name,
+        ]);
+    }
 }
