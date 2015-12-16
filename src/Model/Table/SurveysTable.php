@@ -405,6 +405,22 @@ class SurveysTable extends Table
      */
     public function getQuestionAndAnswerIds($smId)
     {
+        if (Configure::read('debug')) {
+            return [true, "", [
+                'pwrrr_qid' => '663503753',
+                'production_aid' => '7822870969',
+                'wholesale_aid' => '7822870971',
+                'recreation_aid' => '7822870974',
+                'retail_aid' => '7822870976',
+                'residential_aid' => '7822870977',
+                '1_aid' => '7822870979',
+                '2_aid' => '7822870981',
+                '3_aid' => '7822870982',
+                '4_aid' => '7822870984',
+                '5_aid' => '7822870987'
+            ]];
+        }
+
         $SurveyMonkey = $this->getSurveyMonkeyObject();
         $result = $SurveyMonkey->getSurveyDetails((string) $smId);
         if (! isset($result['data'])) {
