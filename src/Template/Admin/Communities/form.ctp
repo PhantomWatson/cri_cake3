@@ -144,33 +144,6 @@
     ) ?>
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h2 class="panel-title">
-            Surveys
-        </h2>
-    </div>
-    <div class="panel-body">
-        <?= $this->element(
-            'Communities'.DS.'link_survey',
-            [
-                'type' => 'Official',
-                'tableTemplate' => $tableTemplate
-            ]
-        ) ?>
-
-        <hr />
-
-        <?= $this->element(
-            'Communities'.DS.'link_survey',
-            [
-                'type' => 'Organization',
-                'tableTemplate' => $tableTemplate
-            ]
-        ) ?>
-    </div>
-</div>
-
 <?php
     $label = $this->request->action == 'add'
         ? 'Add Community'

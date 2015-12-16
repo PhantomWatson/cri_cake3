@@ -70,7 +70,8 @@ class SurveysController extends AppController
             'surveyType' => $survey->type,
             'surveyUrl' => $survey->sm_url,
             'titleForLayout' => $community->name.' '.ucwords($survey->type).'s Survey',
-            'uninvitedRespondentCount' => $surveyStatus['uninvited_respondent_count']
+            'uninvitedRespondentCount' => $surveyStatus['uninvited_respondent_count'],
+            'qnaIdFields' => $this->Surveys->getQnaIdFieldNames()
         ]);
     }
 
