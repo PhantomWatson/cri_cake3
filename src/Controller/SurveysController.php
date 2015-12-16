@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-use Cake\Core\Configure;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 
@@ -172,16 +171,8 @@ class SurveysController extends AppController
 
     public function getSurveyList()
     {
-        if (Configure::read('debug')) {
-            $result = [[
-                'sm_id' => '52953452',
-                'title' => 'Leader Alignment Data Request (DEBUG MODE)',
-                'url' => 'https://www.surveymonkey.com/r/R57K8HC'
-            ]];
-        } else {
-            $params = $this->request->query;
-            $result = $this->Surveys->getSMSurveyList($params);
-        }
+        $params = $this->request->query;
+        $result = $this->Surveys->getSMSurveyList($params);
         $this->set([
             'result' => json_encode($result)
         ]);
