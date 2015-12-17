@@ -458,7 +458,7 @@ var surveyOverview = {
         if (url) {
             url_field.val(url);
             link_label.html('<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>');            
-            link_status.html('<p>Survey URL:<a href="'+url+'">'+url+'</a></p>');
+            link_status.html('<p>Survey URL: <a href="'+url+'">'+url+'</a></p>');
             return;
         }
         
