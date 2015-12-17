@@ -256,6 +256,8 @@ var surveyLink = {
         var lookup_link = container.find('a.lookup');
         var lookup_url = '/surveys/get_survey_list';
         var results_container = container.find('.lookup_results');
+        var loadingMessages = $('.loading_messages');
+        
         $.ajax({
             url: lookup_url,
             beforeSend: function () {
@@ -317,59 +319,51 @@ var surveyLink = {
     
     checkSurveyAssignment: function (container, sm_id, success_callback) {
         var url_field = container.find('input.survey_url');
-        var link_label = container.find('.link_label');
-        var link_status = container.find('.link_status');
+        var loadingMessages = $('.loading_messages');
         
         $.ajax({
             url: '/surveys/check_survey_assignment/'+sm_id,
             dataType: 'json',
             beforeSend: function () {
-                var loading_indicator = '<span class="loading"><img src="/data_center/img/loading_small.gif" /> Checking survey uniqueness...</span>';
-                link_label.html(loading_indicator);
+                loadingMessages.html('<span class="loading"><img src="/data_center/img/loading_small.gif" /> Checking survey uniqueness...</span>');
             },
             success: function (data) {
                 if (data === null || data.id == surveyLink.community_id) {
-                    link_label.html(' ');
+                    loadingMessages.html(' ');
                     success_callback();
                 } else {
-                    link_label.html('<span class="label label-danger">Error</span>');
-                    link_status.html('<span class="url_error">That survey is already assigned to another community: <a href="/admin/communities/edit/'+data.id+'">'+data.name+'</a></span>');
+                    loadingMessages.html('<span class="label label-danger">Error</span><p class="url_error">That survey is already assigned to another community: <a href="/admin/communities/edit/'+data.id+'">'+data.name+'</a></p>');
                 }
             },
             error: function (jqXHR, errorType, exception) {
-                link_label.html('<span class="label label-danger">Error</span>');
-                link_status.html('<span class="url_error">Error checking survey uniqueness</span>');
+                loadingMessages.html('<span class="label label-danger">Error</span><p class="url_error">Error checking survey uniqueness</p>');
                 var retry_link = $('<a href="#" class="retry">Retry</a>');
                 retry_link.click(function (event) {
                     event.preventDefault();
                     surveyLink.checkSurveyAssignment(container, sm_id, success_callback);
                 });
-                link_status.append(retry_link);
+                loadingMessages.append(retry_link);
             }
         });
     },
     
     setQnaIds: function (container, sm_id, success_callback) {
-        var link_label = container.find('.link_label');
+        var loadingMessages = container.find('.loading_messages');
         var displayError = function (message) {
-            var link_status = container.find('.link_status');
-            
             var retry_link = $('<a href="#" class="retry">Retry</a>');
             retry_link.click(function (event) {
                 event.preventDefault();
                 surveyLink.setQnaIds(container, sm_id, success_callback);
             });
             
-            link_label.html('<span class="label label-danger">Error</span>');
-            link_status.html('<span class="url_error">'+message+'</span>');
-            link_status.append(retry_link);
+            loadingMessages.html('<span class="label label-danger">Error</span><p class="url_error">'+message+'</p>');
+            loadingMessages.append(retry_link);
         };
         
         $.ajax({
             url: '/surveys/get_qna_ids/'+sm_id,
             beforeSend: function () {
-                var loading_indicator = '<span class="loading"><img src="/data_center/img/loading_small.gif" /> Extracting PWR<sup>3</sup> question info...</span>';
-                link_label.html(loading_indicator);
+                loadingMessages.html('<span class="loading"><img src="/data_center/img/loading_small.gif" /> Extracting PWR<sup>3</sup> question info...</span>');
             },
             success: function (data) {
                 data = jQuery.parseJSON(data);
@@ -411,35 +405,36 @@ var surveyLink = {
         
         // Assign URL if available
         var url_field = container.find('input.survey_url');
-        var link_label = container.find('.link_label');
-        var link_status = container.find('.link_status');
+        var linkStatus = container.find('.link_status');
+        var surveyUrl = container.find('span.survey_url');
+        var readyStatusMsg = '<span class="text-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Ready to be linked</span>';
         if (url) {
             url_field.val(url);
-            link_label.html('<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>');            
-            link_status.html('<p>Survey URL: <a href="'+url+'">'+url+'</a></p>');
+            linkStatus.html(readyStatusMsg);            
+            surveyUrl.html('<a href="'+url+'">'+url+'</a>');
             return;
         }
         
         // Begin lookup of URL if not
         url_field.val('');
+        var loadingMessages = $('.loading_messages');
         $.ajax({
             url: '/surveys/get_survey_url/'+sm_id,
             beforeSend: function () {
                 url_field.prop('disabled', true);
                 var loading_indicator = '<span class="loading"><img src="/data_center/img/loading_small.gif" /> Retrieving URL...</span>';
-                link_label.html(loading_indicator);
+                loadingMessages.html(loading_indicator);
             },
             success: function (data) {
                 url_field.val(data);
-                link_label.html('<span class="label label-success">Linked</span>');
-                link_status.html('<a href="'+data+'">'+data+'</a>');
+                linkStatus.html(readyStatusMsg);
+                surveyUrl.html('<a href="'+data+'">'+data+'</a>');
             },
             error: function (jqXHR, errorType, exception) {
-                link_label.html('<span class="label label-danger">Error</span>');
                 var error_msg = (jqXHR.responseText.indexOf(error_msg) != -1) ? 
-                    '<span class="url_error">No URL found for this survey. Web link collector may not be configured yet.</span>' : 
-                    '<span class="url_error">Error looking up URL</span>';
-                link_status.html(error_msg);
+                    'No URL found for this survey. Web link collector may not be configured yet.' : 
+                    'Error looking up URL';
+                loadingMessages.html('<span class="label label-danger">Error</span><p class="url_error">'+error_msg+'</p>');
                 var retry_link = $('<a href="#" class="retry">Retry</a>');
                 retry_link.click(function (event) {
                     event.preventDefault();
@@ -449,7 +444,7 @@ var surveyLink = {
                         });
                     });
                 });
-                link_status.append(retry_link);
+                loadingMessages.append(retry_link);
             },
             complete: function () {
                 url_field.prop('disabled', false);

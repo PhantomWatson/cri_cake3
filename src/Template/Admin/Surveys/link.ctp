@@ -41,25 +41,32 @@
             </h3>
         </div>
         <div class="panel-body">
-            <div class="link_status">
-                <p class="link_label">
-                    Status:
+            <p>
+                Status:
+                <span class="link_status">
                     <?php if ($survey['sm_url']): ?>
                         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Linked
                     <?php else: ?>
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Not linked
                     <?php endif; ?>
-                </p>
+                </span>
+            </p>
 
-                <?php if ($survey['sm_url']): ?>
-                    <p>
-                        Survey URL:
+            <p>
+                Survey URL:
+                <span class="survey_url">
+                    <?php if ($survey['sm_url']): ?>
                         <a href="<?= $survey['sm_url'] ?>">
                             <?= $survey['sm_url'] ?>
                         </a>
-                    </p>
-                <?php endif; ?>
-            </div>
+                    <?php else: ?>
+                        unknown
+                    <?php endif; ?>
+                </span>
+            </p>
+
+            <p class="loading_messages">
+            </p>
 
             <?= $this->Form->create($survey) ?>
 
