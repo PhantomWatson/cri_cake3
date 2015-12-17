@@ -168,28 +168,27 @@
 
                     <?php foreach (['official_survey', 'organization_survey'] as $surveyType): ?>
                         <td>
+                            <?= $this->Html->link(
+                                'Overview',
+                                [
+                                    'prefix' => 'admin',
+                                    'controller' => 'Surveys',
+                                    'action' => 'view',
+                                    $community->id,
+                                    str_replace('_survey', '', $surveyType)
+                                ]
+                            ) ?>
+                            <br />
                             <?php if (isset($community->{$surveyType}['sm_id']) && $community->{$surveyType}['sm_id']): ?>
-                                <?= $this->Html->link(
-                                    'Overview',
-                                    [
-                                        'prefix' => 'admin',
-                                        'controller' => 'Surveys',
-                                        'action' => 'view',
-                                        $community->{$surveyType}['id']
-                                    ]
-                                ) ?>
-                                <br />
                                 <?php if ($community->{$surveyType}['alignment'] === null): ?>
                                     Alignment: Not set
                                 <?php else: ?>
                                     Alignment: <?php echo $community->{$surveyType}['alignment']; ?>%
-
                                     <?php if ($community->{$surveyType}['alignment_passed'] == -1): ?>
                                         <span class="glyphicon glyphicon-remove-sign" aria-hidden="true" title="Failed to pass"></span>
                                     <?php elseif ($community->{$surveyType}['alignment_passed'] == 1): ?>
                                         <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" title="Passed"></span>
                                     <?php endif; ?>
-
                                 <?php endif; ?>
 
                                 <?php if (isset($community->{$surveyType}['respondents_last_modified_date'])): ?>
@@ -197,15 +196,7 @@
                                     <?= $community->{$surveyType}['respondents_last_modified_date']->format('n/j/Y') ?>
                                 <?php endif; ?>
                             <?php else: ?>
-                                <?= $this->Html->link(
-                                    'Not set up yet',
-                                    [
-                                        'prefix' => 'admin',
-                                        'controller' => 'Communities',
-                                        'action' => 'edit',
-                                        $community->id
-                                    ]
-                                ) ?>
+                                Not set up yet
                             <?php endif; ?>
                         </td>
                     <?php endforeach; ?>

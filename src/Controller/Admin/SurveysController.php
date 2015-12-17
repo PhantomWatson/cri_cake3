@@ -36,8 +36,9 @@ class SurveysController extends AppController
         ]);
     }
 
-    public function view($surveyId = null)
+    public function view($communityId = null, $surveyType = null)
     {
+        $surveyId = $this->Surveys->getSurveyId($communityId, $surveyType);
         $survey = $this->Surveys->get($surveyId);
 
         if ($this->request->is(['post', 'put'])) {
