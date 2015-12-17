@@ -62,17 +62,18 @@
             </h3>
         </div>
         <div class="panel-body">
-
-            <div class="link_status">
-                <?php if ($surveyUrl): ?>
-                    <p>
-                        Survey URL:
+            <p>
+                Survey URL:
+                <span class="survey_url">
+                    <?php if ($surveyUrl): ?>
                         <a href="<?= $surveyUrl ?>">
                             <?= $surveyUrl ?>
                         </a>
-                    </p>
-                <?php endif; ?>
-            </div>
+                    <?php else: ?>
+                        unknown
+                    <?php endif; ?>
+                </span>
+            </p>
 
             <?= $this->Html->link(
                 'Update link',
