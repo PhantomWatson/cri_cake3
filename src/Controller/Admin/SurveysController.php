@@ -39,6 +39,19 @@ class SurveysController extends AppController
     public function view($surveyId = null)
     {
         $survey = $this->Surveys->get($surveyId);
+
+        if ($this->request->is(['post', 'put'])) {
+            $survey = $this->Surveys->patchEntity($survey, $this->request->data());
+            $errors = $survey->errors();
+            if (empty($errors) && $this->Surveys->save($survey)) {
+                $message = $survey->isNew() ? 'Survey successfully linked to this community' : 'Survey details updated';
+                $this->Flash->success($message);
+            } else {
+                $message = $survey->isNew() ? 'linking survey' : 'updating survey details';
+                $this->Flash->error('There was an error '.$message.'. Please try again or contact an administrator for assistance.');
+            }
+        }
+
         $surveyStatus = $this->Surveys->getStatus($survey->community_id, $survey->type);
 
         $communitiesTable = TableRegistry::get('Communities');
@@ -66,6 +79,7 @@ class SurveysController extends AppController
             'percentInvitedResponded' => $surveyStatus['percent_invited_responded'],
             'responsesChecked' => $surveyStatus['responses_checked'],
             'stageForAutoImport' => $stageForAutoImport,
+            'survey' => $survey,
             'surveyId' => $surveyId,
             'surveyType' => $survey->type,
             'surveyUrl' => $survey->sm_url,

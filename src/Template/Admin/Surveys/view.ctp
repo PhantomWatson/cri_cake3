@@ -81,6 +81,8 @@
                 <?php endif; ?>
             </div>
 
+            <?= $this->Form->create($survey) ?>
+
             <ul class="actions">
                 <li>
                     <a href="#" class="lookup btn btn-default">
@@ -98,16 +100,16 @@
 
             <div class="details well">
                 <?php
-                    echo $this->Form->hidden("{$surveyType}_survey.id");
-                    echo $this->Form->hidden("{$surveyType}_survey.type");
-                    echo $this->Form->hidden("{$surveyType}_survey.community_id");
+                    echo $this->Form->hidden("id");
+                    echo $this->Form->hidden("type");
+                    echo $this->Form->hidden("community_id");
                 ?>
 
                 <table class="table">
                     <?php
                         $this->Form->templates($tableTemplate);
                         echo $this->Form->input(
-                            "{$surveyType}_survey.sm_id",
+                            'sm_id',
                             [
                                 'class' => 'form-control survey_sm_id',
                                 'label' => 'SurveyMonkey Survey ID',
@@ -115,7 +117,7 @@
                             ]
                         );
                         echo $this->Form->input(
-                            "{$surveyType}_survey.sm_url",
+                            'sm_url',
                             [
                                 'class' => 'form-control survey_url',
                                 'label' => 'SurveyMonkey Survey URL'
@@ -128,7 +130,7 @@
                             $label = str_ireplace('aid', 'Answer ID', $label);
                             $label = str_ireplace('pwrrr', 'PWR<sup>3</sup>&trade;', $label);
                             echo $this->Form->input(
-                                "{$surveyType}_survey.$qnaIdField",
+                                $qnaIdField,
                                 [
                                     'class' => 'form-control',
                                     'data-fieldname' => $qnaIdField,
@@ -145,6 +147,11 @@
                         $this->Form->templates('bootstrap_form');
                     ?>
                 </table>
+                <?= $this->Form->button(
+                    'Update Survey Details',
+                    ['class' => 'btn btn-primary']
+                ) ?>
+                <?= $this->Form->end() ?>
             </div>
         </div>
     </div>
