@@ -39,24 +39,47 @@ class SurveysController extends AppController
     public function view($communityId = null, $surveyType = null)
     {
         $surveyId = $this->Surveys->getSurveyId($communityId, $surveyType);
-        $survey = $this->Surveys->get($surveyId);
 
         if ($this->request->is(['post', 'put'])) {
-            $survey = $this->Surveys->patchEntity($survey, $this->request->data());
+            $survey = $this->Surveys->newEntity($this->request->data());
             $errors = $survey->errors();
+            $isNew = $survey->isNew();
             if (empty($errors) && $this->Surveys->save($survey)) {
-                $message = $survey->isNew() ? 'Survey successfully linked to this community' : 'Survey details updated';
+                $message = $isNew ? 'Survey successfully linked to this community' : 'Survey details updated';
                 $this->Flash->success($message);
             } else {
                 $message = $survey->isNew() ? 'linking survey' : 'updating survey details';
                 $this->Flash->error('There was an error '.$message.'. Please try again or contact an administrator for assistance.');
             }
+        } elseif ($surveyId) {
+            $survey = $this->Surveys->get($surveyId);
+        } else {
+            $survey = $this->Surveys->newEntity([
+                'community_id' => $communityId,
+                'type' => $surveyType
+            ]);
         }
 
-        $surveyStatus = $this->Surveys->getStatus($survey->community_id, $survey->type);
-
         $communitiesTable = TableRegistry::get('Communities');
-        $community = $communitiesTable->get($survey->community_id);
+        $community = $communitiesTable->get($communityId);
+
+        if ($survey->get('id')) {
+            $this->prepareSurveyStatus($survey, $community);
+        }
+
+        $this->set([
+            'community' => $community,
+            'communityId' => $communityId,
+            'isAdmin' => true,
+            'qnaIdFields' => $this->Surveys->getQnaIdFieldNames(),
+            'survey' => $survey,
+            'titleForLayout' => $community->name.' '.ucwords($surveyType).'s Survey'
+        ]);
+    }
+
+    private function prepareSurveyStatus($survey, $community)
+    {
+        $surveyStatus = $this->Surveys->getStatus($survey->community_id, $survey->type);
 
         /* Determines if this survey is currently being auto-imported
          * (because the community is in an appropriate stage of the CRI process) */
@@ -68,25 +91,19 @@ class SurveysController extends AppController
         $respondentsTable = TableRegistry::get('Respondents');
         $this->set([
             'autoImportFrequency' => $autoImportFrequency,
-            'community' => $community,
-            'communityId' => $survey->community_id,
-            'hasNewResponses' => $this->Surveys->newResponsesHaveBeenReceived($surveyId),
-            'hasUninvitedUnaddressed' => $this->Surveys->hasUnaddressedUnapprovedRespondents($surveyId),
-            'invitations' => $respondentsTable->getInvited($surveyId),
+            'hasNewResponses' => $this->Surveys->newResponsesHaveBeenReceived($survey->id),
+            'hasUninvitedUnaddressed' => $this->Surveys->hasUnaddressedUnapprovedRespondents($survey->id),
+            'invitations' => $respondentsTable->getInvited($survey->id),
             'invitedRespondentCount' => $surveyStatus['invited_respondent_count'],
-            'isAdmin' => true,
             'isAutomaticallyImported' => $isAutomaticallyImported,
             'isOpen' => $this->Surveys->isOpen($survey->community_id, $survey->type),
             'percentInvitedResponded' => $surveyStatus['percent_invited_responded'],
             'responsesChecked' => $surveyStatus['responses_checked'],
             'stageForAutoImport' => $stageForAutoImport,
-            'survey' => $survey,
-            'surveyId' => $surveyId,
+            'surveyId' => $survey->id,
             'surveyType' => $survey->type,
             'surveyUrl' => $survey->sm_url,
-            'titleForLayout' => $community->name.' '.ucwords($survey->type).'s Survey',
-            'uninvitedRespondentCount' => $surveyStatus['uninvited_respondent_count'],
-            'qnaIdFields' => $this->Surveys->getQnaIdFieldNames()
+            'uninvitedRespondentCount' => $surveyStatus['uninvited_respondent_count']
         ]);
     }
 

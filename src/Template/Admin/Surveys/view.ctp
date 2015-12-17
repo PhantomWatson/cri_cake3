@@ -60,7 +60,7 @@
             <h3 class="panel-title">
                 Link
                 <span class="link_label">
-                    <?php if ($surveyUrl): ?>
+                    <?php if ($survey['sm_url']): ?>
                         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                     <?php else: ?>
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -71,11 +71,11 @@
         <div class="panel-body">
 
             <div class="link_status">
-                <?php if ($surveyUrl): ?>
+                <?php if ($survey['sm_url']): ?>
                     <p>
                         Survey URL:
-                        <a href="<?= $surveyUrl ?>">
-                            <?= $surveyUrl ?>
+                        <a href="<?= $survey['sm_url'] ?>">
+                            <?= $survey['sm_url'] ?>
                         </a>
                     </p>
                 <?php endif; ?>
@@ -158,7 +158,9 @@
 </div>
 
 <?php
-    echo $this->element('Surveys'.DS.'overview');
+    if ($survey['id']) {
+        echo $this->element('Surveys'.DS.'overview');
+    }
     $this->Html->script('admin', ['block' => 'scriptBottom']);
 ?>
 <?php $this->append('buffered'); ?>
