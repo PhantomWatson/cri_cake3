@@ -40,23 +40,13 @@ class SurveysController extends AppController
     {
         $surveyId = $this->Surveys->getSurveyId($communityId, $surveyType);
 
-        if ($this->request->is(['post', 'put'])) {
-            $survey = $this->Surveys->newEntity($this->request->data());
-            $errors = $survey->errors();
-            $isNew = $survey->isNew();
-            if (empty($errors) && $this->Surveys->save($survey)) {
-                $message = $isNew ? 'Survey successfully linked to this community' : 'Survey details updated';
-                $this->Flash->success($message);
-            } else {
-                $message = $survey->isNew() ? 'linking survey' : 'updating survey details';
-                $this->Flash->error('There was an error '.$message.'. Please try again or contact an administrator for assistance.');
-            }
-        } elseif ($surveyId) {
+        if ($surveyId) {
             $survey = $this->Surveys->get($surveyId);
         } else {
-            $survey = $this->Surveys->newEntity([
-                'community_id' => $communityId,
-                'type' => $surveyType
+            return $this->redirect([
+                'action' => 'link',
+                $communityId,
+                $surveyType
             ]);
         }
 
@@ -71,9 +61,45 @@ class SurveysController extends AppController
             'community' => $community,
             'communityId' => $communityId,
             'isAdmin' => true,
-            'qnaIdFields' => $this->Surveys->getQnaIdFieldNames(),
             'survey' => $survey,
             'titleForLayout' => $community->name.' '.ucwords($surveyType).'s Survey'
+        ]);
+    }
+
+    public function link($communityId = null, $surveyType = null)
+    {
+        $surveyId = $this->Surveys->getSurveyId($communityId, $surveyType);
+
+        if ($surveyId) {
+            $survey = $this->Surveys->get($surveyId);
+        } else {
+            $survey = $this->Surveys->newEntity();
+            $survey->community_id = $communityId;
+            $survey->type = $surveyType;
+        }
+
+        if ($this->request->is(['post', 'put'])) {
+            $survey = $this->Surveys->patchEntity($survey, $this->request->data());
+            $errors = $survey->errors();
+            $isNew = $survey->isNew();
+            if (empty($errors) && $this->Surveys->save($survey)) {
+                $message = $isNew ? 'Survey successfully linked to this community' : 'Survey details updated';
+                $this->Flash->success($message);
+            } else {
+                $message = $survey->isNew() ? 'linking survey' : 'updating survey details';
+                $this->Flash->error('There was an error '.$message.'. Please try again or contact an administrator for assistance.');
+            }
+        }
+
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->get($communityId);
+
+        $this->set([
+            'community' => $community,
+            'communityId' => $communityId,
+            'qnaIdFields' => $this->Surveys->getQnaIdFieldNames(),
+            'survey' => $survey,
+            'titleForLayout' => $community->name.' '.ucwords($surveyType).'s Survey: Link'
         ]);
     }
 

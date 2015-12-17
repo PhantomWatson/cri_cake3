@@ -168,17 +168,6 @@
 
                     <?php foreach (['official_survey', 'organization_survey'] as $surveyType): ?>
                         <td>
-                            <?= $this->Html->link(
-                                'Overview',
-                                [
-                                    'prefix' => 'admin',
-                                    'controller' => 'Surveys',
-                                    'action' => 'view',
-                                    $community->id,
-                                    str_replace('_survey', '', $surveyType)
-                                ]
-                            ) ?>
-                            <br />
                             <?php if (isset($community->{$surveyType}['sm_id']) && $community->{$surveyType}['sm_id']): ?>
                                 <?php if ($community->{$surveyType}['alignment'] === null): ?>
                                     Alignment: Not set
@@ -196,7 +185,16 @@
                                     <?= $community->{$surveyType}['respondents_last_modified_date']->format('n/j/Y') ?>
                                 <?php endif; ?>
                             <?php else: ?>
-                                Not set up yet
+                                <?= $this->Html->link(
+                                    'Not linked',
+                                    [
+                                        'prefix' => 'admin',
+                                        'controller' => 'Surveys',
+                                        'action' => 'link',
+                                        $community->id,
+                                        str_replace('_survey', '', $surveyType)
+                                    ]
+                                ) ?>
                             <?php endif; ?>
                         </td>
                     <?php endforeach; ?>
@@ -249,7 +247,8 @@
                                                     'prefix' => 'admin',
                                                     'controller' => 'Surveys',
                                                     'action' => 'view',
-                                                    $community->{$surveyType}['id']
+                                                    $community->id,
+                                                    str_replace('_survey', '', $surveyType)
                                                 ]
                                             ) ?>
                                         </li>

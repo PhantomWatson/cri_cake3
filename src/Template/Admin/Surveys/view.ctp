@@ -59,103 +59,36 @@
         <div class="panel-heading">
             <h3 class="panel-title">
                 Link
-                <span class="link_label">
-                    <?php if ($survey['sm_url']): ?>
-                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                    <?php else: ?>
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    <?php endif; ?>
-                </span>
             </h3>
         </div>
         <div class="panel-body">
 
             <div class="link_status">
-                <?php if ($survey['sm_url']): ?>
+                <?php if ($surveyUrl): ?>
                     <p>
                         Survey URL:
-                        <a href="<?= $survey['sm_url'] ?>">
-                            <?= $survey['sm_url'] ?>
+                        <a href="<?= $surveyUrl ?>">
+                            <?= $surveyUrl ?>
                         </a>
                     </p>
                 <?php endif; ?>
             </div>
 
-            <?= $this->Form->create($survey) ?>
-
-            <ul class="actions">
-                <li>
-                    <a href="#" class="lookup btn btn-default">
-                        Select survey
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="show_details btn btn-default">
-                        Show details
-                    </a>
-                </li>
-            </ul>
-
-            <div class="lookup_results well"></div>
-
-            <div class="details well">
-                <?php
-                    echo $this->Form->hidden("id");
-                    echo $this->Form->hidden("type");
-                    echo $this->Form->hidden("community_id");
-                ?>
-
-                <table class="table">
-                    <?php
-                        $this->Form->templates($tableTemplate);
-                        echo $this->Form->input(
-                            'sm_id',
-                            [
-                                'class' => 'form-control survey_sm_id',
-                                'label' => 'SurveyMonkey Survey ID',
-                                'type' => 'number'
-                            ]
-                        );
-                        echo $this->Form->input(
-                            'sm_url',
-                            [
-                                'class' => 'form-control survey_url',
-                                'label' => 'SurveyMonkey Survey URL'
-                            ]
-                        );
-                        use Cake\Utility\Inflector;
-                        foreach ($qnaIdFields as $qnaIdField) {
-                            $label = Inflector::humanize($qnaIdField);
-                            $label = str_ireplace('qid', 'Question ID', $label);
-                            $label = str_ireplace('aid', 'Answer ID', $label);
-                            $label = str_ireplace('pwrrr', 'PWR<sup>3</sup>&trade;', $label);
-                            echo $this->Form->input(
-                                $qnaIdField,
-                                [
-                                    'class' => 'form-control',
-                                    'data-fieldname' => $qnaIdField,
-                                    'label' => [
-                                        'escape' => false,
-                                        'text' => $label
-                                    ],
-                                    'type' => 'number'
-                                ]
-                            );
-                        }
-
-                        // Return to default Bootstrap form template
-                        $this->Form->templates('bootstrap_form');
-                    ?>
-                </table>
-                <?= $this->Form->button(
-                    'Update Survey Details',
-                    ['class' => 'btn btn-primary']
-                ) ?>
-                <?= $this->Form->end() ?>
-            </div>
+            <?= $this->Html->link(
+                'Update link',
+                [
+                    'action' => 'link',
+                    $community->id,
+                    str_replace('_survey', '', $surveyType)
+                ],
+                [
+                    'class' => 'btn btn-default'
+                ]
+            ) ?>
         </div>
     </div>
 </div>
+
 
 <?php
     if ($survey['id']) {

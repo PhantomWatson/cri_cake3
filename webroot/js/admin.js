@@ -223,54 +223,12 @@ var adminPurchasesIndex = {
     }
 };
 
-var surveyOverview = {
+var surveyLink = {
     community_id: null,
-
+    
     init: function (params) {
         this.community_id = params.community_id;
-        this.setupImport();
         this.setupSurveyLinking();
-        
-        $('.invitations_toggler').click(function (event) {
-            event.preventDefault();
-            $(this).closest('div.panel-body').find('.invitations_list').slideToggle();
-        });
-    },
-    setupImport: function () {
-        $('.import_button').click(function (event) {
-            event.preventDefault();
-            var link = $(this);
-            
-            if (link.hasClass('disabled')) {
-                return;
-            }
-            
-            var survey_id = link.data('survey-id');
-            $.ajax({
-                url: '/surveys/import/'+survey_id,
-                beforeSend: function () {
-                    link.addClass('disabled');
-                    var loading_indicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
-                    link.append(loading_indicator);
-                },
-                success: function (data) {
-                    var alert = $('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>'+data+'</div>');
-                    alert.hide();
-                    link.before(alert);
-                    alert.slideDown();
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(jqXHR);
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                },
-                complete: function () {
-                    link.removeClass('disabled');
-                    link.find('.loading').remove();
-                    link.parent().children('.last_import_time').html('Responses were last imported a moment ago');
-                }
-            });
-        });
     },
     
     setupSurveyLinking: function () {
@@ -283,7 +241,7 @@ var surveyOverview = {
                 if (results_container.is(':visible')) {
                     results_container.slideUp();
                 } else {
-                    surveyOverview.lookupUrl(container);
+                    surveyLink.lookupUrl(container);
                 }
             });
             
@@ -319,9 +277,9 @@ var surveyOverview = {
                         event.preventDefault();
                         var sm_id = $(this).data('survey-id');
                         var url = $(this).data('survey-url');
-                        surveyOverview.checkSurveyAssignment(container, sm_id, function () {
-                            surveyOverview.setQnaIds(container, sm_id, function () {
-                                surveyOverview.selectSurvey(container, sm_id, url);
+                        surveyLink.checkSurveyAssignment(container, sm_id, function () {
+                            surveyLink.setQnaIds(container, sm_id, function () {
+                                surveyLink.selectSurvey(container, sm_id, url);
                             });
                         });
                     };
@@ -370,7 +328,7 @@ var surveyOverview = {
                 link_label.html(loading_indicator);
             },
             success: function (data) {
-                if (data === null || data.id == surveyOverview.community_id) {
+                if (data === null || data.id == surveyLink.community_id) {
                     link_label.html(' ');
                     success_callback();
                 } else {
@@ -384,7 +342,7 @@ var surveyOverview = {
                 var retry_link = $('<a href="#" class="retry">Retry</a>');
                 retry_link.click(function (event) {
                     event.preventDefault();
-                    surveyOverview.checkSurveyAssignment(container, sm_id, success_callback);
+                    surveyLink.checkSurveyAssignment(container, sm_id, success_callback);
                 });
                 link_status.append(retry_link);
             }
@@ -399,7 +357,7 @@ var surveyOverview = {
             var retry_link = $('<a href="#" class="retry">Retry</a>');
             retry_link.click(function (event) {
                 event.preventDefault();
-                surveyOverview.setQnaIds(container, sm_id, success_callback);
+                surveyLink.setQnaIds(container, sm_id, success_callback);
             });
             
             link_label.html('<span class="label label-danger">Error</span>');
@@ -485,9 +443,9 @@ var surveyOverview = {
                 var retry_link = $('<a href="#" class="retry">Retry</a>');
                 retry_link.click(function (event) {
                     event.preventDefault();
-                    surveyOverview.checkSurveyAssignment(container, sm_id, function () {
-                        surveyOverview.setQnaIds(container, sm_id, function () {
-                            surveyOverview.selectSurvey(container, sm_id, url);
+                    surveyLink.checkSurveyAssignment(container, sm_id, function () {
+                        surveyLink.setQnaIds(container, sm_id, function () {
+                            surveyLink.selectSurvey(container, sm_id, url);
                         });
                     });
                 });
@@ -497,6 +455,56 @@ var surveyOverview = {
                 url_field.prop('disabled', false);
                 container.find('.loading').remove();
             }
+        });
+    }
+};
+
+var surveyOverview = {
+    community_id: null,
+
+    init: function (params) {
+        this.community_id = params.community_id;
+        this.setupImport();
+        
+        $('.invitations_toggler').click(function (event) {
+            event.preventDefault();
+            $(this).closest('div.panel-body').find('.invitations_list').slideToggle();
+        });
+    },
+    setupImport: function () {
+        $('.import_button').click(function (event) {
+            event.preventDefault();
+            var link = $(this);
+            
+            if (link.hasClass('disabled')) {
+                return;
+            }
+            
+            var survey_id = link.data('survey-id');
+            $.ajax({
+                url: '/surveys/import/'+survey_id,
+                beforeSend: function () {
+                    link.addClass('disabled');
+                    var loading_indicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
+                    link.append(loading_indicator);
+                },
+                success: function (data) {
+                    var alert = $('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>'+data+'</div>');
+                    alert.hide();
+                    link.before(alert);
+                    alert.slideDown();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                },
+                complete: function () {
+                    link.removeClass('disabled');
+                    link.find('.loading').remove();
+                    link.parent().children('.last_import_time').html('Responses were last imported a moment ago');
+                }
+            });
         });
     }
 };
