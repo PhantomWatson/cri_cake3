@@ -5,18 +5,35 @@
 </div>
 
 <p>
-    <?= $this->Html->link(
-        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Communities',
-        [
-            'prefix' => 'admin',
-            'controller' => 'Communities',
-            'action' => 'index'
-        ],
-        [
-            'class' => 'btn btn-default',
-            'escape' => false
-        ]
-    ) ?>
+    <?php if ($survey['sm_url']): ?>
+        <?= $this->Html->link(
+            '<span class="glyphicon glyphicon-arrow-left"></span> Back to Survey Overview',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Surveys',
+                'action' => 'view',
+                $community->id,
+                $survey->type
+            ],
+            [
+                'class' => 'btn btn-default',
+                'escape' => false
+            ]
+        ) ?>
+    <?php else: ?>
+        <?= $this->Html->link(
+            '<span class="glyphicon glyphicon-arrow-left"></span> Back to Communities',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Communities',
+                'action' => 'index'
+            ],
+            [
+                'class' => 'btn btn-default',
+                'escape' => false
+            ]
+        ) ?>
+    <?php endif; ?>
 </p>
 
 <p>
