@@ -38,7 +38,7 @@
 </p>
 
 <p>
-    Enter the email address of one or more community <?= $respondentTypePlural ?>.
+    Enter the names and email addresses of one or more community <?= $respondentTypePlural ?> to send them survey invitations.
     <a href="#" id="sent_invitations_toggler">
         Who has already been invited?
     </a>
