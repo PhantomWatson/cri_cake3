@@ -85,6 +85,11 @@ class SurveysController extends AppController
             if (empty($errors) && $this->Surveys->save($survey)) {
                 $message = $isNew ? 'Survey successfully linked to this community' : 'Survey details updated';
                 $this->Flash->success($message);
+                $this->redirect([
+                    'action' => 'view',
+                    $communityId,
+                    $surveyType
+                ]);
             } else {
                 $message = $survey->isNew() ? 'linking survey' : 'updating survey details';
                 $this->Flash->error('There was an error '.$message.'. Please try again or contact an administrator for assistance.');
