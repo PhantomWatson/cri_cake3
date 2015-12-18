@@ -176,6 +176,7 @@ class SurveysController extends AppController
                 'surveyId',
                 'unaddressedUnapprovedRespondents'
             ));
+            $approvedRespondents = $respondentsTable->getApprovedList($surveyId);
         }
 
         // Looks dumb, but this is because it's the parameter for client_invite(), which shares a view
