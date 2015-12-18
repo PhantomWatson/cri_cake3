@@ -125,90 +125,6 @@ class CommunitiesController extends AppController
         $this->set('buttons', $buttons);
     }
 
-    private function validateSelectedSurveys()
-    {
-        $surveysTable = TableRegistry::get('Surveys');
-        $communityId = isset($this->request->data['id']) ?
-            $this->request->data['id']
-            : null;
-
-        // Prevent one community from being linked to the survey of another community
-        foreach (['official', 'organization'] as $type) {
-            $model = $type.'_survey';
-            $surveySmId = $this->request->data[$model]['sm_id'];
-            $resultCommunityId = $surveysTable->getCommunityId(['sm_id' => $surveySmId]);
-            if ($surveySmId && $resultCommunityId && $resultCommunityId != $communityId) {
-                $community = $this->Communities->get($resultCommunityId);
-                $this->Flash->error('Error: The selected '.$type.'s survey is already assigned to '.$community->name);
-                return false;
-            }
-        }
-
-        $officialSmId = $this->request->data['official_survey']['sm_id'];
-        $orgSmId = $this->request->data['organization_survey']['sm_id'];
-        if ($officialSmId && $orgSmId && $officialSmId == $orgSmId) {
-            $this->Flash->error("Error: You cannot select the same SurveyMonkey survey for both the officials survey <em>and</em> the organizations survey for this community.");
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Queries the SurveyMonkey API to populate $this->request->data with the correct
-     * values for the fields pwrrr_qid, production_aid, wholesale_aid, etc. to prepare
-     * it for a call to saveAssociated()
-     * @return array [success/error, error msg, data array]
-     */
-    private function setSurveyQuestionAndAnswerIds()
-    {
-        $surveysTable = TableRegistry::get('Surveys');
-        $first = true;
-        foreach (['official_survey', 'organization_survey'] as $type) {
-            if (! $first) {
-                // The SurveyMonkey API limits us to 2 API requests per second.
-                // For extra safety, we'll delay for one second before the second API call.
-                sleep(1);
-            }
-
-            if (! isset($this->request->data[$type]['sm_id']) || ! $this->request->data[$type]['sm_id']) {
-                continue;
-            }
-
-            $smId = $this->request->data[$type]['sm_id'];
-            $result = $surveysTable->getQuestionAndAnswerIds($smId);
-            if ($result[0]) {
-                $this->request->data[$type] = array_merge($this->request->data[$type], $result[2]);
-            } else {
-                return $result;
-            }
-
-            $first = false;
-        }
-        return $result;
-    }
-
-    /**
-     * Returns true if Q&A IDs are set for any Community's associated survey (assuming Survey.sm_id is set)
-     * @return boolean
-     */
-    private function questionAndAnswerIdsAreSet()
-    {
-        $surveysTable = TableRegistry::get('Surveys');
-        $fieldnames = $surveysTable->getQnaIdFieldNames();
-        foreach (['official_survey', 'organization_survey'] as $type) {
-            if (! $this->request->data[$type]['sm_id']) {
-                continue;
-            }
-            foreach ($fieldnames as $fieldname) {
-                if (! isset($this->request->data[$type][$fieldname]) || ! $this->request->data[$type][$fieldname]) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     /**
      * Used by admin_add and admin_edit
      * @param string $role
@@ -287,15 +203,13 @@ class CommunitiesController extends AppController
         $areasTable = TableRegistry::get('Areas');
         $this->set([
             'areas' => $areasTable->find('list'),
-            'community' => $community,
-            'qnaIdFields' => $surveysTable->getQnaIdFieldNames()
+            'community' => $community
         ]);
     }
 
     private function validateForm($community)
     {
         $communityErrors = $community->errors();
-        $validSurveySelection = $this->validateSelectedSurveys();
         $clientErrors = array_merge(
             $this->processNewAssociatedUsers('client'),
             $this->validateClients($community->id)
@@ -303,7 +217,6 @@ class CommunitiesController extends AppController
         $consultantErrors = $this->processNewAssociatedUsers('consultant');
         $this->set(compact('clientErrors', 'consultantErrors'));
         return empty($communityErrors)
-            && $validSurveySelection
             && empty($clientErrors)
             && empty($consultantErrors);
     }
@@ -334,21 +247,12 @@ class CommunitiesController extends AppController
                 $this->request->data['town_meeting_date'] = null;
             }
 
-            if ($this->questionAndAnswerIdsAreSet()) {
-                $qnaSuccess = true;
-            } else {
-                list($qnaSuccess, $qnaMsg) = $this->setSurveyQuestionAndAnswerIds();
-                if (! $qnaSuccess) {
-                    $this->Flash->error($qnaMsg);
-                }
-            }
-
             $community = $this->Communities->patchEntity($community, $this->request->data(), [
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
 
             $validates = $this->validateForm($community);
-            if ($validates && $qnaSuccess) {
+            if ($validates) {
                 if ($this->Communities->save($community)) {
                     $url = Router::url(['action' => 'addClient', $community->id]);
                     $message = $community->name.' has been added.';
@@ -387,20 +291,11 @@ class CommunitiesController extends AppController
                 $this->request->data['town_meeting_date'] = null;
             }
 
-            if ($this->questionAndAnswerIdsAreSet()) {
-                $qnaSuccess = true;
-            } else {
-                list($qnaSuccess, $qnaMsg) = $this->setSurveyQuestionAndAnswerIds();
-                if (! $qnaSuccess) {
-                    $this->Flash->error($qnaMsg);
-                }
-            }
-
             $community = $this->Communities->patchEntity($community, $this->request->data(), [
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
             $validates = $this->validateForm($community);
-            if ($validates && $qnaSuccess && $this->Communities->save($community)) {
+            if ($validates && $this->Communities->save($community)) {
                 $this->Flash->success('Community updated');
                 return $this->redirect([
                     'prefix' => 'admin',
