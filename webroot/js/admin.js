@@ -431,9 +431,7 @@ var surveyLink = {
                 surveyUrl.html('<a href="'+data+'">'+data+'</a>');
             },
             error: function (jqXHR, errorType, exception) {
-                var error_msg = (jqXHR.responseText.indexOf(error_msg) != -1) ? 
-                    'No URL found for this survey. Web link collector may not be configured yet.' : 
-                    'Error looking up URL';
+                var error_msg = 'No URL found for this survey. Web link collector may not be configured yet.';
                 loadingMessages.html('<p class="url_error"><span class="label label-danger">Error</span> '+error_msg+' </p>');
                 var retry_link = $('<a href="#" class="retry">Retry</a>');
                 retry_link.click(function (event) {
