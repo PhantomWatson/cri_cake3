@@ -165,30 +165,6 @@ class CommunitiesController extends AppController
     }
 
     /**
-     * Used by admin_add and admin_edit
-     * @param int|null $communityId
-     * @return array An array of error messages
-     */
-    private function validateClients($communityId = null)
-    {
-        if (! isset($this->request->data['clients'])) {
-            return [];
-        }
-
-        $retval = [];
-        $usersTable = TableRegistry::get('Users');
-        foreach ($this->request->data['clients'] as $client) {
-            $associatedCommunityId = $this->Communities->getClientCommunityId($client['id']);
-            if ($associatedCommunityId && $associatedCommunityId != $communityId) {
-                $community = $this->Communities->get($associatedCommunityId);
-                $user = $usersTable->get($client['id']);
-                $retval[] = $user->name.' is already the client for '.$community->name;
-            }
-        }
-        return $retval;
-    }
-
-    /**
      * Passes necessary variables the view to be used by the adding/editing form
      * @param Entity $community
      */
@@ -205,20 +181,6 @@ class CommunitiesController extends AppController
             'areas' => $areasTable->find('list'),
             'community' => $community
         ]);
-    }
-
-    private function validateForm($community)
-    {
-        $communityErrors = $community->errors();
-        $clientErrors = array_merge(
-            $this->processNewAssociatedUsers('client'),
-            $this->validateClients($community->id)
-        );
-        $consultantErrors = $this->processNewAssociatedUsers('consultant');
-        $this->set(compact('clientErrors', 'consultantErrors'));
-        return empty($communityErrors)
-            && empty($clientErrors)
-            && empty($consultantErrors);
     }
 
     public function index()
@@ -251,18 +213,16 @@ class CommunitiesController extends AppController
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
 
-            $validates = $this->validateForm($community);
-            if ($validates) {
-                if ($this->Communities->save($community)) {
-                    $url = Router::url(['action' => 'addClient', $community->id]);
-                    $message = $community->name.' has been added.';
-                    $message .= '<br />Now you can <a href="'.$url.'">create a client account</a> for this community';
-                    $this->Flash->success($message);
-                    return $this->redirect([
-                        'prefix' => 'admin',
-                        'action' => 'index'
-                    ]);
-                }
+            $errors = $community->errors();
+            if (empty($errors) && $this->Communities->save($community)) {
+                $url = Router::url(['action' => 'addClient', $community->id]);
+                $message = $community->name.' has been added.';
+                $message .= '<br />Now you can <a href="'.$url.'">create a client account</a> for this community';
+                $this->Flash->success($message);
+                return $this->redirect([
+                    'prefix' => 'admin',
+                    'action' => 'index'
+                ]);
             }
         }
 
@@ -294,8 +254,8 @@ class CommunitiesController extends AppController
             $community = $this->Communities->patchEntity($community, $this->request->data(), [
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
-            $validates = $this->validateForm($community);
-            if ($validates && $this->Communities->save($community)) {
+            $errors = $community->errors();
+            if (empty($errors) && $this->Communities->save($community)) {
                 $this->Flash->success('Community updated');
                 return $this->redirect([
                     'prefix' => 'admin',
