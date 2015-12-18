@@ -15,7 +15,8 @@
                     'prefix' => 'admin',
                     'controller' => 'Surveys',
                     'action' => 'view',
-                    $survey_id
+                    $communityId,
+                    $surveyType
                 ],
                 [
                     'class' => 'btn btn-default',

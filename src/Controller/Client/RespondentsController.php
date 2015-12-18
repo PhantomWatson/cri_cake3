@@ -93,11 +93,13 @@ class RespondentsController extends AppController
         $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
 
         $this->set([
-            'titleForLayout' => $community->name.' Uninvited '.ucwords($surveyType).' Survey Respondents',
+            'communityId' => $communityId,
             'respondents' => [
                 'unaddressed' => $this->Respondents->getUnaddressedUnapproved($surveyId),
                 'dismissed' => $this->Respondents->getDismissed($surveyId)
-            ]
+            ],
+            'surveyType' => $surveyType,
+            'titleForLayout' => $community->name.' Uninvited '.ucwords($surveyType).' Survey Respondents'
         ]);
     }
 

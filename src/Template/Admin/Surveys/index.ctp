@@ -59,9 +59,10 @@
                                 'Add',
                                 [
                                     'prefix' => 'admin',
-                                    'controller' => 'Communities',
-                                    'action' => 'edit',
-                                    $community->id
+                                    'controller' => 'Surveys',
+                                    'action' => 'link',
+                                    $community->id,
+                                    'official'
                                 ],
                                 [
                                     'class' => 'btn btn-success',
@@ -75,7 +76,8 @@
                                     'prefix' => 'admin',
                                     'controller' => 'Surveys',
                                     'action' => 'view',
-                                    $community->official_survey->id
+                                    $community->id,
+                                    'official'
                                 ],
                                 [
                                     'class' => 'btn btn-default',
@@ -90,9 +92,10 @@
                                 'Add',
                                 [
                                     'prefix' => 'admin',
-                                    'controller' => 'Communities',
-                                    'action' => 'edit',
-                                    $community->id
+                                    'controller' => 'Surveys',
+                                    'action' => 'link',
+                                    $community->id,
+                                    'organization'
                                 ],
                                 [
                                     'class' => 'btn btn-success',
@@ -106,7 +109,8 @@
                                     'prefix' => 'admin',
                                     'controller' => 'Surveys',
                                     'action' => 'view',
-                                    $community->organization_survey->id
+                                    $community->id,
+                                    'organization'
                                 ],
                                 [
                                     'class' => 'btn btn-default',

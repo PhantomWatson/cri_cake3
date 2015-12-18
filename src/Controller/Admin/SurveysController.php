@@ -184,14 +184,17 @@ class SurveysController extends AppController
 
         $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($survey->community_id);
-        $titleForLayout = $community->name.': Invite Community '.$respondentTypePlural;
-
+        $this->set([
+            'communityId' => $community->id,
+            'surveyType' => $survey->type,
+            'titleForLayout' => $community->name.': Invite Community '.$respondentTypePlural,
+        ]);
         $this->set(compact(
             'allRespondents',
             'approvedRespondents',
+            'communityId',
             'respondentTypePlural',
             'surveyId',
-            'titleForLayout',
             'unaddressedUnapprovedRespondents'
         ));
         $this->render('..'.DS.'..'.DS.'Client'.DS.'Surveys'.DS.'invite');

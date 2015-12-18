@@ -49,10 +49,15 @@ class SurveysController extends AppController
             $this->SurveyProcessing->processInvitations($params);
         }
 
-        $titleForLayout = 'Invite Community '.ucwords($respondentTypePlural);
+        $survey = $this->Surveys->get($surveyId);
+        $this->set([
+            'surveyType' => $survey->type,
+            'titleForLayout' => 'Invite Community '.ucwords($respondentTypePlural),
+        ]);
         $this->set(compact(
             'allRespondents',
             'approvedRespondents',
+            'communityId',
             'respondentTypePlural',
             'titleForLayout',
             'unaddressedUnapprovedRespondents'

@@ -97,6 +97,7 @@ class ResponsesController extends AppController
         $this->set([
             'alignmentLastSet' => $alignmentLastSet,
             'area' => $area,
+            'communityId' => $survey->community_id,
             'communityName' => $community->name,
             'responses' => $responsesReturned,
             'sectors' => $surveysTable->getSectors(),
