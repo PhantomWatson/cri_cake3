@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
 class SurveysController extends AppController
@@ -38,6 +39,15 @@ class SurveysController extends AppController
 
     public function view($communityId = null, $surveyType = null)
     {
+        if (! in_array($surveyType, ['official', 'organization'])) {
+            throw new NotFoundException("Unknown survey type: $surveyType");
+        }
+
+        $communitiesTable = TableRegistry::get('Communities');
+        if (! $communitiesTable->exists(['id' => $communityId])) {
+            throw new NotFoundException("Community with ID $communityId not found");
+        }
+
         $surveyId = $this->Surveys->getSurveyId($communityId, $surveyType);
 
         if ($surveyId) {
@@ -68,6 +78,15 @@ class SurveysController extends AppController
 
     public function link($communityId = null, $surveyType = null)
     {
+        if (! in_array($surveyType, ['official', 'organization'])) {
+            throw new NotFoundException("Unknown survey type: $surveyType");
+        }
+
+        $communitiesTable = TableRegistry::get('Communities');
+        if (! $communitiesTable->exists(['id' => $communityId])) {
+            throw new NotFoundException("Community with ID $communityId not found");
+        }
+
         $surveyId = $this->Surveys->getSurveyId($communityId, $surveyType);
 
         if ($surveyId) {
