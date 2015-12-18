@@ -336,13 +336,13 @@ var surveyLink = {
                 }
             },
             error: function (jqXHR, errorType, exception) {
-                loadingMessages.html('<span class="label label-danger">Error</span><p class="url_error">Error checking survey uniqueness</p>');
+                loadingMessages.html('<p class="url_error"><span class="label label-danger">Error</span> Error checking survey uniqueness. </p>');
                 var retry_link = $('<a href="#" class="retry">Retry</a>');
                 retry_link.click(function (event) {
                     event.preventDefault();
                     surveyLink.checkSurveyAssignment(container, sm_id, success_callback);
                 });
-                loadingMessages.append(retry_link);
+                loadingMessages.find('p').append(retry_link);
             }
         });
     },
@@ -356,8 +356,8 @@ var surveyLink = {
                 surveyLink.setQnaIds(container, sm_id, success_callback);
             });
             
-            loadingMessages.html('<span class="label label-danger">Error</span><p class="url_error">'+message+'</p>');
-            loadingMessages.append(retry_link);
+            loadingMessages.html('<p class="url_error"><span class="label label-danger">Error</span> '+message+' </p>');
+            loadingMessages.find('p').append(retry_link);
         };
         
         $.ajax({
@@ -434,7 +434,7 @@ var surveyLink = {
                 var error_msg = (jqXHR.responseText.indexOf(error_msg) != -1) ? 
                     'No URL found for this survey. Web link collector may not be configured yet.' : 
                     'Error looking up URL';
-                loadingMessages.html('<span class="label label-danger">Error</span><p class="url_error">'+error_msg+'</p>');
+                loadingMessages.html('<p class="url_error"><span class="label label-danger">Error</span> '+error_msg+' </p>');
                 var retry_link = $('<a href="#" class="retry">Retry</a>');
                 retry_link.click(function (event) {
                     event.preventDefault();
@@ -444,7 +444,7 @@ var surveyLink = {
                         });
                     });
                 });
-                loadingMessages.append(retry_link);
+                loadingMessages.find('p').append(retry_link);
             },
             complete: function () {
                 url_field.prop('disabled', false);
