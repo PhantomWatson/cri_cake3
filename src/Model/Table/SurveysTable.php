@@ -69,71 +69,72 @@ class SurveysTable extends Table
             ->notEmpty('type');
 
         $validator
-            ->allowEmpty('sm_url');
+            ->requirePresence('sm_url', 'create')
+            ->notEmpty('sm_url');
 
         $validator
             ->requirePresence('pwrrr_qid', 'create')
-            ->allowEmpty('pwrrr_qid');
+            ->notEmpty('pwrrr_qid');
 
         $validator
             ->requirePresence('production_aid', 'create')
-            ->allowEmpty('production_aid');
+            ->notEmpty('production_aid');
 
         $validator
             ->requirePresence('wholesale_aid', 'create')
-            ->allowEmpty('wholesale_aid');
+            ->notEmpty('wholesale_aid');
 
         $validator
             ->requirePresence('recreation_aid', 'create')
-            ->allowEmpty('recreation_aid');
+            ->notEmpty('recreation_aid');
 
         $validator
             ->requirePresence('retail_aid', 'create')
-            ->allowEmpty('retail_aid');
+            ->notEmpty('retail_aid');
 
         $validator
             ->requirePresence('residential_aid', 'create')
-            ->allowEmpty('residential_aid');
+            ->notEmpty('residential_aid');
 
         $validator
             ->requirePresence('1_aid', 'create')
-            ->allowEmpty('1_aid');
+            ->notEmpty('1_aid');
 
         $validator
             ->requirePresence('2_aid', 'create')
-            ->allowEmpty('2_aid');
+            ->notEmpty('2_aid');
 
         $validator
             ->requirePresence('3_aid', 'create')
-            ->allowEmpty('3_aid');
+            ->notEmpty('3_aid');
 
         $validator
             ->requirePresence('4_aid', 'create')
-            ->allowEmpty('4_aid');
+            ->notEmpty('4_aid');
 
         $validator
             ->requirePresence('5_aid', 'create')
-            ->allowEmpty('5_aid');
+            ->notEmpty('5_aid');
 
         $validator
             ->add('respondents_last_modified_date', 'valid', ['rule' => 'datetime'])
-            ->allowEmpty('respondents_last_modified_date');
+            ->notEmpty('respondents_last_modified_date');
 
         $validator
             ->add('responses_checked', 'valid', ['rule' => 'datetime'])
-            ->allowEmpty('responses_checked');
+            ->notEmpty('responses_checked');
 
         $validator
             ->add('alignment', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('alignment');
+            ->notEmpty('alignment');
 
         $validator
             ->add('alignment_passed', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('alignment');
+            ->notEmpty('alignment');
 
         $validator
             ->add('alignment_calculated', 'valid', ['rule' => 'datetime'])
-            ->allowEmpty('alignment_calculated');
+            ->notEmpty('alignment_calculated');
 
         return $validator;
     }
