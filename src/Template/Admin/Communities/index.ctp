@@ -239,20 +239,18 @@
                                 <?php endif; ?>
 
                                 <?php foreach (['official_survey', 'organization_survey'] as $surveyType): ?>
-                                    <?php if (isset($community->{$surveyType}['sm_id']) && $community->{$surveyType}['sm_id']): ?>
-                                        <li>
-                                            <?= $this->Html->link(
-                                                ucwords(str_replace('_', 's ', $surveyType)),
-                                                [
-                                                    'prefix' => 'admin',
-                                                    'controller' => 'Surveys',
-                                                    'action' => 'view',
-                                                    $community->id,
-                                                    str_replace('_survey', '', $surveyType)
-                                                ]
-                                            ) ?>
-                                        </li>
-                                    <?php endif; ?>
+                                    <li>
+                                        <?= $this->Html->link(
+                                            ucwords(str_replace('_', 's ', $surveyType)),
+                                            [
+                                                'prefix' => 'admin',
+                                                'controller' => 'Surveys',
+                                                'action' => $community->{$surveyType}['sm_id'] ? 'view' : 'link',
+                                                $community->id,
+                                                str_replace('_survey', '', $surveyType)
+                                            ]
+                                        ) ?>
+                                    </li>
                                 <?php endforeach; ?>
 
                                 <li>
