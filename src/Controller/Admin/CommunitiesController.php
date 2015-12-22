@@ -214,10 +214,21 @@ class CommunitiesController extends AppController
             ]);
 
             $errors = $community->errors();
-            if (empty($errors) && $this->Communities->save($community)) {
-                $url = Router::url(['action' => 'addClient', $community->id]);
+            if (empty($errors)) {
+                $community = $this->Communities->save($community);
+                $clientUrl = Router::url([
+                    'action' => 'addClient',
+                    $community->id
+                ]);
+                $surveyUrl = Router::url([
+                    'prefix' => 'admin',
+                    'controller' => 'Surveys',
+                    'action' => 'link',
+                    $community->id,
+                    str_replace('_survey', '', $surveyType)
+                ]);
                 $message = $community->name.' has been added.';
-                $message .= '<br />Now you can <a href="'.$url.'">create a client account</a> for this community';
+                $message .= '<br />Now you can <a href="'.$clientUrl.'">create a client account</a> for this community and <a href="'.$surveyUrl.'">set up this community\'s first survey</a>.';
                 $this->Flash->success($message);
                 return $this->redirect([
                     'prefix' => 'admin',
