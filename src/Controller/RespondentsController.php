@@ -51,7 +51,8 @@ class RespondentsController extends AppController
         $respondent = $this->Respondents->newEntity();
         if ($this->request->is('post')) {
             $respondent = $this->Respondents->patchEntity($respondent, $this->request->data);
-            if ($this->Respondents->save($respondent)) {
+            $errors = $respondent->errors();
+            if (empty($errors) && $this->Respondents->save($respondent)) {
                 $this->Flash->success(__('The respondent has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
@@ -78,7 +79,8 @@ class RespondentsController extends AppController
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $respondent = $this->Respondents->patchEntity($respondent, $this->request->data);
-            if ($this->Respondents->save($respondent)) {
+            $errors = $respondent->errors();
+            if (empty($errors) && $this->Respondents->save($respondent)) {
                 $this->Flash->success(__('The respondent has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {

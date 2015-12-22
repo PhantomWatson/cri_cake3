@@ -51,7 +51,8 @@ class StatisticsController extends AppController
         $statistic = $this->Statistics->newEntity();
         if ($this->request->is('post')) {
             $statistic = $this->Statistics->patchEntity($statistic, $this->request->data);
-            if ($this->Statistics->save($statistic)) {
+            $errors = $statistic->errors();
+            if (empty($errors) && $this->Statistics->save($statistic)) {
                 $this->Flash->success(__('The statistic has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
@@ -78,7 +79,8 @@ class StatisticsController extends AppController
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $statistic = $this->Statistics->patchEntity($statistic, $this->request->data);
-            if ($this->Statistics->save($statistic)) {
+            $errors = $statistic->errors();
+            if (empty($errors) && $this->Statistics->save($statistic)) {
                 $this->Flash->success(__('The statistic has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {

@@ -69,7 +69,8 @@ class ResponsesController extends AppController
         // Process update
         if ($this->request->is('post') || $this->request->is('put')) {
             $survey = $surveysTable->patchEntity($survey, $this->request->data);
-            if ($surveysTable->save($survey)) {
+            $errors = $survey->errors();
+            if (empty($errors) && $surveysTable->save($survey)) {
                 $this->Flash->success('Alignment set');
                 $survey->alignment_calculated = $survey->modified;
                 $surveysTable->save($survey);

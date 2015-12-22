@@ -81,7 +81,8 @@ class PurchasesController extends AppController
             $this->request->data['user_id'] = $this->Auth->user('id');
             $this->request->data['postback'] = '';
             $purchase = $this->Purchases->patchEntity($purchase, $this->request->data());
-            if ($this->Purchases->save($purchase)) {
+            $errors = $purchase->errors();
+            if (empty($errors) && $this->Purchases->save($purchase)) {
                 $this->Flash->success('Purchase record added');
                 return $this->redirect([
                     'action' => 'index'
