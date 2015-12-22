@@ -126,45 +126,6 @@ class CommunitiesController extends AppController
     }
 
     /**
-     * Used by admin_add and admin_edit
-     * @param string $role
-     * @return array An array of error messages
-     */
-    private function processNewAssociatedUsers($role)
-    {
-        $dataKey = "new_{$role}s";
-        if (! isset($this->request->data[$dataKey])) {
-            return [];
-        }
-
-        $retval = [];
-        $usersTable = TableRegistry::get('Users');
-        foreach ($this->request->data[$dataKey] as $newUser) {
-            $user = $usersTable->newEntity($newUser);
-            $user->role = $role;
-
-            if ($user->errors()) {
-                foreach ($user->errors() as $field => $error) {
-                    $retval[] = $error;
-                }
-                continue;
-            }
-
-            if ($usersTable->save($user)) {
-                if ($usersTable->sendNewAccountEmail($user, $newUser['password'])) {
-                    $this->request->data["{$role}s"][] = $user->id;
-                } else {
-                    $retval[] = 'There was an error emailing account login info to '.$newUser['name'].' No new account was created. Please contact an administrator for assistance.';
-                    $usersTable->delete($user);
-                }
-            } else {
-                $retval[] = 'There was an error creating an account for '.$newUser['name'].' Please contact an administrator for assistance.';
-            }
-        }
-        return $retval;
-    }
-
-    /**
      * Passes necessary variables the view to be used by the adding/editing form
      * @param Entity $community
      */
