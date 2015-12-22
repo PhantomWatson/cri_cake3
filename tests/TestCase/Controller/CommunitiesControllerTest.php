@@ -37,4 +37,9 @@ class CommunitiesControllerTest extends IntegrationTestCase
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
+
+    public function testAutocomplete()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
 }
