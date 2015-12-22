@@ -147,9 +147,6 @@ class SurveysController extends AppController
             'percentInvitedResponded' => $surveyStatus['percent_invited_responded'],
             'responsesChecked' => $surveyStatus['responses_checked'],
             'stageForAutoImport' => $stageForAutoImport,
-            'surveyId' => $survey->id,
-            'surveyType' => $survey->type,
-            'surveyUrl' => $survey->sm_url,
             'uninvitedRespondentCount' => $surveyStatus['uninvited_respondent_count']
         ]);
     }

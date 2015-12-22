@@ -65,9 +65,9 @@
             <p>
                 Survey URL:
                 <span class="survey_url">
-                    <?php if ($surveyUrl): ?>
-                        <a href="<?= $surveyUrl ?>">
-                            <?= $surveyUrl ?>
+                    <?php if ($survey['sm_url']): ?>
+                        <a href="<?= $survey['sm_url'] ?>">
+                            <?= $survey['sm_url'] ?>
                         </a>
                     <?php else: ?>
                         unknown
@@ -80,7 +80,7 @@
                 [
                     'action' => 'link',
                     $community->id,
-                    str_replace('_survey', '', $surveyType)
+                    str_replace('_survey', '', $survey['type'])
                 ],
                 [
                     'class' => 'btn btn-default'

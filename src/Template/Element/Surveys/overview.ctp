@@ -33,7 +33,7 @@
                         'prefix' => 'admin',
                         'controller' => 'Surveys',
                         'action' => 'invite',
-                        $surveyId
+                        $survey['id']
                     ],
                     ['class' => 'btn btn-default']
                 ) ?>
@@ -94,7 +94,7 @@
                     this community is not currently in stage <?= $stageForAutoImport ?> of CRI.
                 <?php endif; ?>
             </p>
-            <a href="#" class="btn btn-default import_button" data-survey-id="<?= $surveyId ?>">
+            <a href="#" class="btn btn-default import_button" data-survey-id="<?= $survey['id'] ?>">
                 Import Responses
             </a>
         </div>
@@ -148,7 +148,7 @@
                         'prefix' => 'admin',
                         'controller' => 'Responses',
                         'action' => 'view',
-                        $surveyId
+                        $survey['id']
                     ],
                     ['class' => 'btn btn-'.$buttonClass]
                 );
@@ -161,7 +161,7 @@
                         'prefix' => 'admin',
                         'controller' => 'Respondents',
                         'action' => 'unapproved',
-                        $surveyId
+                        $survey['id']
                     ],
                     ['class' => 'btn btn-default']
                 ) ?>
