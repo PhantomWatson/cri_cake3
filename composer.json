@@ -6,16 +6,17 @@
     "license": "MIT",
     "require": {
         "php": ">=5.4.16",
+        "ascension/php-surveymonkey": "~1.0",
+        "ballstatecber/datacenter-plugin-cakephp3": "dev-master",
         "cakephp/cakephp": "~3.0",
-        "mobiledetect/mobiledetectlib": "2.*",
+        "cakephp/cakephp-codesniffer": "*",
         "cakephp/migrations": "~1.0",
         "cakephp/plugin-installer": "*",
-        "cakephp/cakephp-codesniffer": "*",
-        "twbs/bootstrap": "~3.0",
+        "mobiledetect/mobiledetectlib": "2.*",
         "phpoffice/phpexcel": "~1.8",
-        "xety/cake3-cookieauth": "1.*",
-        "ballstatecber/datacenter-plugin-cakephp3": "dev-master",
-        "ascension/php-surveymonkey": "~1.0"
+        "phpunit/phpunit": "*",
+        "twbs/bootstrap": "~3.0",
+        "xety/cake3-cookieauth": "1.*"
     },
     "require-dev": {
         "psy/psysh": "@stable",
