@@ -79,7 +79,7 @@ class ResponsesController extends AppController
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $response = $this->Responses->patchEntity($response, $this->request->data);
-            $errors = $response->error();
+            $errors = $response->errors();
             if (empty($errors) && $this->Responses->save($response)) {
                 $this->Flash->success(__('The response has been saved.'));
                 return $this->redirect(['action' => 'index']);
