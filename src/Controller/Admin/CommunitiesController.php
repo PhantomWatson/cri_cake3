@@ -228,7 +228,7 @@ class CommunitiesController extends AppController
                     str_replace('_survey', '', $surveyType)
                 ]);
                 $message = $community->name.' has been added.';
-                $message .= '<br />Now you can <a href="'.$clientUrl.'">create a client account</a> for this community and <a href="'.$surveyUrl.'">set up this community\'s first survey</a>.';
+                $message .= '<br />Now you can <a href="'.$surveyUrl.'">set up this community\'s first survey</a> and then <a href="'.$clientUrl.'">create a client account</a> for this community.';
                 $this->Flash->success($message);
                 return $this->redirect([
                     'prefix' => 'admin',
