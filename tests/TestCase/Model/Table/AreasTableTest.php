@@ -19,7 +19,7 @@ class AreasTableTest extends TestCase
     public $fixtures = [
         'app.areas',
         'app.communities',
-        'app.statistic'
+        'app.statistics'
     ];
 
     /**

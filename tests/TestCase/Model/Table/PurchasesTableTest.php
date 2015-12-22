@@ -17,15 +17,13 @@ class PurchasesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.purchases',
-        'app.users',
-        'app.communities',
         'app.areas',
-        'app.statistic',
-        'app.surveys',
-        'app.surveys_backup',
+        'app.communities',
         'app.products',
-        'app.refunders'
+        'app.purchases',
+        'app.statistics',
+        'app.surveys',
+        'app.users'
     ];
 
     /**

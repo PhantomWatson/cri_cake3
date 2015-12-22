@@ -18,9 +18,8 @@ class RespondentsTableTest extends TestCase
      */
     public $fixtures = [
         'app.respondents',
-        'app.surveys',
-        'app.sm_respondents',
-        'app.responses'
+        'app.responses',
+        'app.surveys'
     ];
 
     /**

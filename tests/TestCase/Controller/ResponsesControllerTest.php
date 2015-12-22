@@ -20,7 +20,6 @@ class ResponsesControllerTest extends IntegrationTestCase
         'app.communities',
         'app.products',
         'app.purchases',
-        'app.refunders',
         'app.respondents',
         'app.responses',
         'app.statistics',

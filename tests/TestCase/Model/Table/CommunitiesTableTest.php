@@ -19,10 +19,9 @@ class CommunitiesTableTest extends TestCase
     public $fixtures = [
         'app.communities',
         'app.areas',
-        'app.statistic',
+        'app.statistics',
         'app.purchases',
-        'app.surveys',
-        'app.surveys_backup'
+        'app.surveys'
     ];
 
     /**
