@@ -90,7 +90,7 @@
                 ]
             ) ?>
         </strong>
-        <br />Here, additional admins, consultants, and clients can be added.
+        <br />Here, admins and client accounts can be added, edited, or deleted.
     </li>
     <li>
         <strong>
@@ -103,27 +103,30 @@
                 ]
             ) ?>
         </strong>
-        <br />Here, you can add new communities as clients sign up. (more about adding communities further down)
-        <br />This provides a list of communities and shows which have clients associated with them and which the general public can access charts and tables for.
-        <br />For client communities, the following links are found under "Actions":
+        <br />Here, communities are listed along with their current stage, fast track status, and survey statuses.
+        <br />The following links are found under 'Actions':
         <ul>
             <li>
                 <strong>Progress</strong>
                 <br />Shows what step the community is currently on (if 'score' > 0) and what criteria for advancement have been passed.
                 <br />Intended to be a guide to help administrators quickly determine whether a community is ready for advancement or not.
-                <br />A community's score can be updated through this page.
+                <br />A community's stage/score can be updated through this page.
             </li>
             <li>
                 <strong>Clients</strong>
-                <br />Lists the clients associated with this community and their email addresses
+                <br />Lists the clients associated with this community and provides links for adding a new client account
+                or associating an existing client account with this community
             </li>
             <li>
-                <strong>Performance Charts</strong>
-            </li>
+                <strong>Client Home</strong>
+                <br />Shows the homepage that this community's client sees
             <li>
                 <strong>Officials Survey / Organizations Survey</strong>
-                <br /> On these survey overview pages, you can
+                <br />On these survey overview pages, you can
                 <ul>
+                    <li>
+                        Create or update the <strong>link</strong> between the community record and each SurveyMonkey survey
+                    </li>
                     <li>
                         View and send <strong>invitations</strong>
                     </li>
@@ -134,16 +137,17 @@
                         Manage <strong>unapproved respondents</strong>
                     </li>
                     <li>
-                        View the community's calculated <strong>alignment</strong>, set its alignment, and set its pass/fail status.
+                        View the community's calculated <strong>alignment</strong>, set its alignment, and set its pass/fail status
                     </li>
                 </ul>
             </li>
             <li>
                 <strong>Performance Charts</strong>
+                <br />Shows the performance charts for the geographic area that this community
             </li>
             <li>
                 <strong>Edit</strong>
-                <br />This page is where a community's settings, clients, consultants, surveys, and score are all managed.
+                <br />This is where the information entered in the 'Add Community' form can be updated
             </li>
             <li>
                 <strong>Delete</strong>
@@ -152,41 +156,38 @@
         </ul>
     </li>
     <li>
-        <strong>Adding/editing communities</strong>
-        <br />When new user accounts are created, an email automatically goes out to the new user telling them what their password is and where they can log in.
-        <br />Once a survey is created in SurveyMonkey, it must be looked up and selected on the community add/edit page. This "links" the community's CRI account and its SurveyMonkey surveys.
-        <br />Only CRI surveys can be selected, because the CRI site looks through the selected survey for the specific question used in alignment calculation.
-    </li>
-</ul>
-
-<h2>
-    <a href="http://cri.cberdata.org/client"></a>
-    <?= $this->Html->link(
-        'Client Home',
-        [
-            'prefix' => 'client',
-            'controller' => 'Communities',
-            'action' => 'index'
-        ]
-    ) ?>
-</h2>
-<ul>
-    <li>
-        This is an elaborated version of the 'community progress' page, which shows the community's current stage,
-        lists what advancement criteria have been passed, and displays action buttons for making purchases,
-        sending invitations, importing responses, etc.
-    </li>
-    <li>
-        Administrators can select a community and view this page as if they were that client.
-    </li>
-    <li>
-        All actions available to clients are also available to administrators, e.g. sending out survey invitations.
+        <strong>
+            <?= $this->Html->link(
+                'Payment Records',
+                [
+                    'prefix' => 'admin',
+                    'controller' => 'Purchases',
+                    'action' => 'index'
+                ]
+            ) ?>
+        </strong>
+        <br />Here, records of all purchases and refunds can be reviewed.
+        <ul>
+            <li>
+                <strong>To record a refund</strong>, click on 'refund' in the corresponding row. This does not issue a refund, but
+                just records that one has been issued. When a purchase is refunded, whatever website access that the purchase
+                granted the community will be immediately revoked.
+            </li>
+            <li>
+                <strong>To manually add a purchase record</strong>, which will be necessary if a client makes a payment without going
+                through the CRI website / CASHNet payment system (e.g. by check), click on 'Add Purchase Record'.
+            </li>
+            <li>
+                <strong>To review details</strong> such as which administrator marked a payment as having been refunded, which client
+                made the purchase, or what notes were added by an administrator when a purchase record was manually added, click 'Details'.
+            </li>
+        </ul>
     </li>
 </ul>
 
 <h2>Features Not Yet Implemented</h2>
 <ul>
-    <li>A section for consultants</li>
+    <li>Consultant accounts</li>
     <li>Automatically alerting administrators of new enrollment applications</li>
     <li>Facilitating/automating reminder emails to invited survey participants who haven't submitted responses</li>
 </ul>
