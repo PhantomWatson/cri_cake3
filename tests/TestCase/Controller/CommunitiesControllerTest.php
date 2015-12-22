@@ -16,19 +16,15 @@ class CommunitiesControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.communities',
         'app.areas',
-        'app.statistic',
-        'app.purchases',
-        'app.users',
+        'app.communities',
         'app.products',
-        'app.refunders',
-        'app.surveys',
-        'app.sms',
+        'app.purchases',
         'app.respondents',
-        'app.sm_respondents',
         'app.responses',
-        'app.surveys_backup'
+        'app.statistics',
+        'app.surveys',
+        'app.users'
     ];
 
     /**

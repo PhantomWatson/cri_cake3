@@ -16,19 +16,16 @@ class ResponsesControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.responses',
-        'app.respondents',
-        'app.surveys',
-        'app.communities',
         'app.areas',
-        'app.statistic',
-        'app.purchases',
-        'app.users',
+        'app.communities',
         'app.products',
+        'app.purchases',
         'app.refunders',
-        'app.surveys_backup',
-        'app.sms',
-        'app.sm_respondents'
+        'app.respondents',
+        'app.responses',
+        'app.statistics',
+        'app.surveys',
+        'app.users'
     ];
 
     /**

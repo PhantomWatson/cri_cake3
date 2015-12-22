@@ -17,7 +17,7 @@ class StatCategoriesControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
         'app.stat_categories',
-        'app.statistic'
+        'app.statistics'
     ];
 
     /**
