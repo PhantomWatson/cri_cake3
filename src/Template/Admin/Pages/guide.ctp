@@ -4,7 +4,80 @@
     </h1>
 </div>
 
-<h2>Admin functions</h2>
+<h2>Adding a New Community</h2>
+<ol>
+    <li>
+        <strong>Create a Community Record</strong>
+        <br />
+        Click on
+        <?= $this->Html->link(
+            'Manage Communities',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Communities',
+                'action' => 'index'
+            ]
+        ) ?>
+        , then
+        <?= $this->Html->link(
+            'Add Community',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Communities',
+                'action' => 'add'
+            ]
+        ) ?>.
+        Fill out the form with that community's basic information and submit it.
+        You will probably <em>not</em> need to change the fields
+        Stage / PWR<sup>3</sup> &trade; Score, Meeting Date Set, or Public
+        from their default values.
+    </li>
+    <li>
+        <strong>Create the Community Officials Survey</strong>
+        <br />
+        Log in to <a href="http://surveymonkey.com/">SurveyMonkey</a> and create a new
+        community officials survey for this community by
+        <ol>
+            <li>
+                Clicking 'Create Survey'
+            </li>
+            <li>
+                Selecting 'Edit a Copy of an Existing Survey'
+            </li>
+            <li>
+                Selecting the template survey, called "Leader Alignment Data Request (TEMPLATE)"
+            </li>
+            <li>
+                Changing the new survey's title to "Leader Alignment Data Request - " and then appending it with the name of the community
+            </li>
+            <li>
+                Clicking "Let's Go!"
+            </li>
+        </ol>
+    </li>
+    <li>
+        <strong>Link the Survey</strong>
+        <br />
+        In the Manage Communities page, click on 'Actions' and then 'Officials Survey' in the row corresponding
+        to the new community. If this CRI community has not been linked to this SurveyMonkey survey yet, you'll
+        be sent to the 'survey linking' page.
+        <br />
+        Click 'Select Survey', then select the correct survey from the list that appears. If there are no errors,
+        the status will display "Ready to be linked". Click 'Link Survey'.
+    </li>
+    <li>
+        <strong>Create a Client Account</strong>
+        <br />
+        In the Manage Communities page, click on 'Actions' and then 'Clients'. In the next page, click 'Add a New Client'.
+        Fill out the following form using a random password and submit it. The client will be automatically sent an
+        email with their login information.
+    </li>
+    <li>
+        You can also use the above methods to create additional clients accounts and create / link the community organizations survey.
+    </li>
+</ol>
+
+<h2>Admin Functions</h2>
 <ul>
     <li>
         <strong>
