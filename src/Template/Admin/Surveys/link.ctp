@@ -166,6 +166,6 @@
 <?php $this->Html->script('admin', ['block' => 'scriptBottom']); ?>
 <?php $this->append('buffered'); ?>
     surveyLink.init({
-        community_id: <?= $communityId ?>
+        community_id: <?= $community->id ?>
     });
 <?php $this->end(); ?>

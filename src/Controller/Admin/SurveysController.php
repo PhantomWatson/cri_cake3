@@ -120,7 +120,6 @@ class SurveysController extends AppController
 
         $this->set([
             'community' => $community,
-            'communityId' => $communityId,
             'qnaIdFields' => $this->Surveys->getQnaIdFieldNames(),
             'survey' => $survey,
             'titleForLayout' => $community->name.' '.ucwords($surveyType).'s Survey: Link'
