@@ -29,7 +29,8 @@ class CommunitiesControllerTest extends IntegrationTestCase
 
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/communities');
+        $this->assertResponseOk();
     }
 
     public function testView()
