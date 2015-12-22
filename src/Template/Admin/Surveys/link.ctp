@@ -90,12 +90,12 @@
             <ul class="actions">
                 <li>
                     <a href="#" class="lookup btn btn-default">
-                        Select survey
+                        Select Survey
                     </a>
                 </li>
                 <li>
                     <a href="#" class="show_details btn btn-default">
-                        Show details
+                        Show Details
                     </a>
                 </li>
                 <li>
