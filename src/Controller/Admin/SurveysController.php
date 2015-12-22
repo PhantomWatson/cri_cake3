@@ -69,8 +69,6 @@ class SurveysController extends AppController
 
         $this->set([
             'community' => $community,
-            'communityId' => $communityId,
-            'isAdmin' => true,
             'survey' => $survey,
             'titleForLayout' => $community->name.' '.ucwords($surveyType).'s Survey'
         ]);

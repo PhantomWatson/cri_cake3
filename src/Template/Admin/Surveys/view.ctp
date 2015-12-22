@@ -23,7 +23,7 @@
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'edit',
-            $communityId
+            $community->id
         ],
         [
             'class' => 'btn btn-default',
@@ -36,7 +36,7 @@
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'progress',
-            $communityId
+            $community->id
         ],
         [
             'class' => 'btn btn-default',
@@ -99,6 +99,6 @@
 ?>
 <?php $this->append('buffered'); ?>
     surveyOverview.init({
-        community_id: <?= $communityId ?>
+        community_id: <?= $community->id ?>
     });
 <?php $this->end(); ?>
