@@ -48,7 +48,7 @@ class CommunitiesFixture extends TestFixture
             'area_id' => 1,
             'public' => 1,
             'fast_track' => 1,
-            'score' => '',
+            'score' => 0,
             'town_meeting_date' => '2015-07-15',
             'created' => '2015-07-15 19:59:13',
             'modified' => '2015-07-15 19:59:13'
