@@ -54,6 +54,21 @@
                 Clicking "Let's Go!"
             </li>
         </ol>
+        And remember to create a web collector by
+        <ol>
+            <li>
+                Clicking on the 'Collect Responses' tab
+            </li>
+            <li>
+                Selecting 'Web Link Collector'
+            </li>
+            <li>
+                Clicking 'Next'
+            </li>
+            <li>
+                That's it. This survey's web collector is now set up. Further configuration options can be ignored.
+            </li>
+        </ol>
     </li>
     <li>
         <strong>Link the Survey</strong>
