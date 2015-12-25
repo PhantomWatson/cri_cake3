@@ -107,7 +107,7 @@ class RespondentsTable extends Table
     public function getInvited($surveyId)
     {
         return $this->find('all')
-            ->select(['id', 'name', 'email'])
+            ->select(['id', 'name', 'email', 'title'])
             ->where([
                 'survey_id' => $surveyId,
                 'invited' => 1
@@ -237,7 +237,7 @@ class RespondentsTable extends Table
     public function getUnaddressedUnapproved($surveyId)
     {
         return $this->find('all')
-            ->select(['id', 'email', 'name', 'approved'])
+            ->select(['id', 'email', 'name', 'title', 'approved'])
             ->where([
                 'survey_id' => $surveyId,
                 'approved' => 0
@@ -293,7 +293,7 @@ class RespondentsTable extends Table
     public function getDismissed($surveyId)
     {
         return $this->find('all')
-            ->select(['id', 'email', 'name', 'approved'])
+            ->select(['id', 'email', 'name', 'title', 'approved'])
             ->where([
                 'survey_id' => $surveyId,
                 'approved' => -1

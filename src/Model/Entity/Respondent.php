@@ -17,6 +17,7 @@ class Respondent extends Entity
     protected $_accessible = [
         'email' => true,
         'name' => true,
+        'title' => true,
         'survey_id' => true,
         'sm_respondent_id' => true,
         'invited' => true,

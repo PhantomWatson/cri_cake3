@@ -25,6 +25,7 @@ class RespondentsController extends AppController
                 'Respondents.id',
                 'Respondents.email',
                 'Respondents.name',
+                'Respondents.title',
                 'Respondents.approved'
             ],
             'limit' => 50,

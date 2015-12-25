@@ -36,7 +36,7 @@ class ResponsesController extends AppController
             ->where(['Responses.survey_id' => $surveyId])
             ->contain([
                 'Respondents' => function ($q) {
-                    return $q->select(['id', 'email', 'name', 'approved']);
+                    return $q->select(['id', 'email', 'name', 'title', 'approved']);
                 }
             ])
             ->order(['Responses.response_date' => 'DESC']);

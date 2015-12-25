@@ -119,6 +119,21 @@
                 'type' => 'email'
             ]
         );
+        echo $this->Form->input(
+            'template.title',
+            [
+                'class' => 'form-control',
+                'disabled' => true,
+                'div' => [
+                    'class' => 'form-group'
+                ],
+                'label' => false,
+                'name' => 'invitees[0][title]',
+                'placeholder' => 'Title',
+                'required' => true,
+                'type' => 'email'
+            ]
+        );
     ?>
     <button type="button" class="remove btn btn-danger">Remove</button>
 </div>
