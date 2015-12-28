@@ -2,6 +2,10 @@
     use Cake\Validation\Validation;
 ?>
 
+<a href="#" class="btn btn-default" id="show_respondents">
+    Show respondent info
+</a>
+
 <div id="admin_responses_view">
     <table class="table">
         <thead class="actual">

@@ -165,6 +165,10 @@ var adminViewResponses = {
 			event.preventDefault();
 			$('td.selected, th.selected').toggle();
 		});
+		$('#show_respondents').click(function (event) {
+		   event.preventDefault();
+		   $('tr.respondent').toggle();
+		});
 	}
 };
 
