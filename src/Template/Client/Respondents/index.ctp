@@ -61,6 +61,12 @@
                     <td>
                         <?= $respondent->name ? $respondent->name : '(No name)' ?>
                         <br />
+                        <?php if ($respondent->title): ?>
+                            <span class="title">
+                                <?= $respondent->title ?>
+                            </span>
+                            <br />
+                        <?php endif; ?>
                         <span class="email">
                             <?php if (Validation::email($respondent->email)): ?>
                                 <a href="mailto:<?= $respondent->email ?>">
