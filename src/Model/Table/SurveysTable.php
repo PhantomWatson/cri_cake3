@@ -594,10 +594,10 @@ class SurveysTable extends Table
     public function getSectorFieldNames()
     {
         $sectors = $this->getSectors();
-        function getFieldName($sector) {
+        $getFieldName = function ($sector) {
             return $sector.'_rank';
-        }
-        return array_map('getFieldName', $sectors);
+        };
+        return array_map($getFieldName, $sectors);
     }
 
     /**
@@ -758,5 +758,16 @@ class SurveysTable extends Table
 
         $minutes = max($minutes, 1);
         return ($minutes == 1) ? 'every minute' : "every $minutes minutes";
+    }
+
+    /**
+     * Returns a value representing how aligned this survey's respondents are with each other
+     *
+     * @param int $surveyId
+     * @return float
+     */
+    public function calculateInternalAlignment($surveyId)
+    {
+        $sectors = $this->getSectors();
     }
 }
