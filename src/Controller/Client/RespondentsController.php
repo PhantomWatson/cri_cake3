@@ -7,32 +7,6 @@ use Cake\ORM\TableRegistry;
 
 class RespondentsController extends AppController
 {
-    private function setupPagination($communityId, $surveyType)
-    {
-        $surveysTable = TableRegistry::get('Surveys');
-        $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
-        $this->paginate = [
-            'conditions' => ['Respondents.survey_id' => $surveyId],
-            'contain' => [
-                'Responses' => function ($q) {
-                    return $q
-                        ->select(['respondent_id', 'response_date'])
-                        ->limit(1)
-                        ->order(['Responses.response_date' => 'DESC']);
-                }
-            ],
-            'fields' => [
-                'Respondents.id',
-                'Respondents.email',
-                'Respondents.name',
-                'Respondents.title',
-                'Respondents.approved'
-            ],
-            'limit' => 50,
-            'sortWhitelist' => ['approved', 'email', 'name']
-        ];
-    }
-
     private function checkClientAuthorization($respondentId, $clientId)
     {
         if (! $this->Respondents->exists(['id' => $respondentId])) {
@@ -59,8 +33,29 @@ class RespondentsController extends AppController
         if ($communityId) {
             $community = $communitiesTable->get($communityId);
             $titleForLayout = $community->name.' '.ucwords($surveyType).' Survey Respondents';
-            $this->setupPagination($community->id, $surveyType);
-            $respondents = $this->paginate();
+
+            //$this->setupPagination($community->id, $surveyType);
+            $surveysTable = TableRegistry::get('Surveys');
+            $surveyId = $surveysTable->getSurveyId($community->id, $surveyType);
+            $query = $this->Respondents->find('all')
+                ->select([
+                    'Respondents.id',
+                    'Respondents.email',
+                    'Respondents.name',
+                    'Respondents.title',
+                    'Respondents.approved'
+                ])
+                ->where(['Respondents.survey_id' => $surveyId])
+                ->contain([
+                    'Responses' => function ($q) {
+                        return $q
+                            ->select(['respondent_id', 'response_date'])
+                            ->limit(1)
+                            ->order(['Responses.response_date' => 'DESC']);
+                    }
+                ]);
+            $this->paginate['sortWhitelist'] = ['approved', 'email', 'name'];
+            $respondents = $this->paginate($query)->toArray();
         } else {
             $titleForLayout = 'Survey Respondents';
             $respondents = [];
