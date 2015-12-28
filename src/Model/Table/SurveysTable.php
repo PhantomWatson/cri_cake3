@@ -587,7 +587,22 @@ class SurveysTable extends Table
     }
 
     /**
+     * Return an array of the database field names for the PWRRR sectors
+     *
+     * @return array
+     */
+    public function getSectorFieldNames()
+    {
+        $sectors = $this->getSectors();
+        function getFieldName($sector) {
+            return $sector.'_rank';
+        }
+        return array_map('getFieldName', $sectors);
+    }
+
+    /**
      * Returns true if responses have been received since alignment was last set by an admin
+     *
      * @param int $surveyId
      * @return boolean
      */
@@ -628,6 +643,7 @@ class SurveysTable extends Table
 
     /**
      * Returns an Area entity corresponding to a give survey
+     *
      * @param int $surveyId
      * @return Entity
      */
@@ -685,6 +701,7 @@ class SurveysTable extends Table
     /**
      * Returns the ID of the least-recently-checked survey that is eligible for automatic
      * response imports, or NULL if there are no eligible surveys.
+     *
      * @return int|null
      */
     public function getNextAutoImportCandidate()
@@ -706,6 +723,7 @@ class SurveysTable extends Table
      *      Every 2 days                    Days are left off if < 2
      *      Every 30 hours and 15 minutes   Minutes are left off if < 10
      *      Every 30 minutes
+     *
      * @return string
      */
     public function getPerSurveyAutoImportFrequency()
