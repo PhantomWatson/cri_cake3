@@ -12,7 +12,7 @@
                 (Actual rankings)
             </td>
             <?php foreach ($sectors as $sector): ?>
-                <td>
+                <td class="actual_rank">
                     <?= $area["{$sector}_rank"] ?>
                 </td>
             <?php endforeach; ?>
