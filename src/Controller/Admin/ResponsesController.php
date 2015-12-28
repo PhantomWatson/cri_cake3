@@ -27,7 +27,6 @@ class ResponsesController extends AppController
         $area = $areasTable->get($areaId);
 
         $totalAlignment = 0;
-        $this->adminViewPagination($surveyId);
         $count = $this->Responses->find('all')
             ->where(['Responses.survey_id' => $surveyId])
             ->count();
