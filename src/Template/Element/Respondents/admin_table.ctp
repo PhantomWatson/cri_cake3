@@ -5,7 +5,7 @@
 <div id="admin_responses_view">
     <table class="table">
         <thead class="actual">
-            <td colspan="3">
+            <td colspan="2">
                 <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
                 <?= $area['name'] ?>
                 <br />
@@ -23,8 +23,6 @@
         </thead>
         <thead>
             <tr>
-                <th>
-                </th>
                 <?php
                     function getSortArrow($sortField, $params) {
                         if (isset($params['named']['sort']) && $params['named']['sort'] == $sortField) {
@@ -70,31 +68,22 @@
         </thead>
         <tbody>
             <?php foreach ($responses as $response): ?>
-                <tr>
-                    <td>
-                        <div class="respondent_popup">
-                            <?php if ($response['respondent']['name']): ?>
-                                <?= $response['respondent']['name'] ?>
-                            <?php else: ?>
-                                <span class="no_name">
-                                    No name provided
-                                </span>
-                            <?php endif; ?>
-                            <br />
-                            <?php if (Validation::email($response['respondent']['email'])): ?>
-                                <a href="mailto:<?= $response['respondent']['email'] ?>">
-                                    <?= $response['respondent']['email'] ?>
-                                </a>
-                            <?php else: ?>
-                                <?= $response['respondent']['email'] ?>
-                            <?php endif; ?>
-                        </div>
-                        <a href="#" class="respondent_popup_handle" title="Show respondent info">
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                        </a>
+                <tr class="respondent">
+                    <td colspan="10">
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                        <?php
+                            $name = $response['respondent']['name'];
+                            echo $name ? $name : '<span class="no_name">No name provided</span>';
+                            $title = $response['respondent']['title'];
+                            echo $title ? ', '.$title : '';
+                            $email = $response['respondent']['email'];
+                            echo ' - ';
+                            echo Validation::email($email) ? '<a href="mailto:'.$email.'">'.$email.'</a>' : $email;
+                        ?>
                     </td>
-
-                    <td>
+                </tr>
+                <tr class="response">
+                    <td class="date">
                         <?php
                             $timestamp = strtotime($response['response_date']);
                             echo date('n/j/y', $timestamp);
@@ -144,7 +133,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="8">
+                <td colspan="7">
                     Calculated total alignment
                     <br />
                     <a href="#" id="toggle_custom_calc">

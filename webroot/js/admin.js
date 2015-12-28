@@ -149,10 +149,6 @@ var adminSurveysIndex = {
 
 var adminViewResponses = {
 	init: function () {
-		$('#admin_responses_view .respondent_popup_handle').click(function (event) {
-			event.preventDefault();
-			$(this).siblings('.respondent_popup').toggle();
-		});
 		$('.custom_alignment_calc').change(function () {
 			var result_container = $('tfoot td.selected');
 			var sum = 0;
