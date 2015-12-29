@@ -19,9 +19,11 @@
             'escape' => false
         ]
     ) ?>
-    <a href="#" class="btn btn-default" id="show_respondents">
-        Show respondent info
-    </a>
+    <?php if (! empty($responses)): ?>
+        <a href="#" class="btn btn-default" id="show_respondents">
+            Show respondent info
+        </a>
+    <?php endif; ?>
 </p>
 
 <div id="admin_responses_view">
