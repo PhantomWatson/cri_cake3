@@ -447,4 +447,26 @@ class ResponsesTable extends Table
         }
         return $retval;
     }
+
+    /**
+     * Return an array of values representing how much each rank-choice
+     * deviates from the average of choices in responses for that sector,'
+     * in the format $retval[$sector][$rank] = $deviation.
+     *
+     * @param array $responseAverages
+     * @return array
+     */
+    public function getDeviationsFromAverage($responseAverages)
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
+        $retval = [];
+        foreach ($sectors as $sector) {
+            for ($n = 1; $n <= 5; $n++) {
+                $average = $responseAverages[$sector];
+                $retval[$sector][$n] = $n - $average + 5;
+            }
+        }
+        return $retval;
+    }
 }
