@@ -333,7 +333,7 @@ class ResponsesTable extends Table
             ->order(['response_date' => 'DESC']);
         $retval = [];
         foreach ($responses as $response) {
-            $rId = $response->respondentId;
+            $rId = $response->respondent_id;
             if (isset($retval[$rId])) {
                 if ($retval[$rId]['response_date'] < $response->response_date) {
                     $retval[$rId] = $response;
