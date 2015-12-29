@@ -462,9 +462,9 @@ class ResponsesTable extends Table
         $sectors = $surveysTable->getSectors();
         $retval = [];
         foreach ($sectors as $sector) {
-            for ($n = 1; $n <= 5; $n++) {
+            for ($rank = 1; $rank <= 5; $rank++) {
                 $average = $responseAverages[$sector];
-                $retval[$sector][$n] = $n - $average + 5;
+                $retval[$sector][$rank] = $rank - $average + 5;
             }
         }
         return $retval;
