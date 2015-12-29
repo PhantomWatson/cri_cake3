@@ -469,4 +469,35 @@ class ResponsesTable extends Table
         }
         return $retval;
     }
+
+    /**
+     * Return a numerical value representing how aligned a survey's responses are
+     * with each other.
+     *
+     * @param int $surveyId
+     * @return float
+     */
+    public function getInternalAlignment($surveyId)
+    {
+        $responses = $this->getCurrent($surveyId);
+        $choiceCounts = $this->getChoiceCounts($responses);
+        $choiceRanks = $this->getChoiceRanks($choiceCounts);
+        $choiceWeights = $this->getChoiceWeights($choiceRanks);
+        $responseAverages = $this->getResponseAverages($choiceCounts);
+        $deviations = $this->getDeviationsFromAverage($responseAverages);
+
+        $alignmentPerSector = [];
+        foreach ($choiceCounts as $sector => $counts) {
+            $alignments = [];
+            $responseCount = array_sum($counts);
+            for ($rank = 1; $rank <= 5; $rank++) {
+                $weight = $choiceWeights[$sector][$rank];
+                $frequency = $counts[$rank] ? ($counts[$rank] / $responseCount) : 0;
+                $deviation = $deviations[$sector][$rank];
+                $alignments[] = $weight * $frequency * $deviation;
+            }
+            $alignmentPerSector[$sector] = array_sum($alignments);
+        }
+        return array_sum($alignmentPerSector);
+    }
 }
