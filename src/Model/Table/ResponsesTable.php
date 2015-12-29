@@ -424,4 +424,27 @@ class ResponsesTable extends Table
         }
         return $retval;
     }
+
+    /**
+     * Return an array of $sector => $averageRank
+     *
+     * @param array $choiceCounts
+     * @return array
+     */
+    public function getResponseAverages($choiceCounts)
+    {
+        $responseCount = 0;
+        $retval = [];
+        foreach ($choiceCounts as $sector => $counts) {
+            if (! $responseCount) {
+                $responseCount = array_sum($counts);
+            }
+            $sum = 0;
+            foreach ($counts as $rank => $count) {
+                $sum += $rank * $count;
+            }
+            $retval[$sector] = $sum / $responseCount;
+        }
+        return $retval;
+    }
 }
