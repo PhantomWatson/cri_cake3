@@ -19,6 +19,9 @@
             'escape' => false
         ]
     ) ?>
+    <a href="#" class="btn btn-default" id="show_respondents">
+        Show respondent info
+    </a>
 </p>
 
 <p>
