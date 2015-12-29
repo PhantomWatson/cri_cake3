@@ -95,6 +95,7 @@ class ResponsesController extends AppController
             'area' => $area,
             'communityId' => $survey->community_id,
             'communityName' => $community->name,
+            'internalAlignment' => $this->Responses->getInternalAlignment($surveyId),
             'responses' => $responsesReturned,
             'sectors' => $surveysTable->getSectors(),
             'survey' => $survey,

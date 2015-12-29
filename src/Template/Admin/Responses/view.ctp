@@ -52,6 +52,14 @@
         <h2>
             Alignment
         </h2>
+        <?php if ($internalAlignment): ?>
+            <p class="internal_alignment">
+                Internal Alignment:
+                <strong>
+                    <?= round($internalAlignment, 2) ?>
+                </strong>
+            </p>
+        <?php endif; ?>
         <?= $this->Form->create($survey) ?>
         <?php
             if ($alignmentLastSet) {
