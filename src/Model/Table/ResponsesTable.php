@@ -480,6 +480,9 @@ class ResponsesTable extends Table
     public function getInternalAlignment($surveyId)
     {
         $responses = $this->getCurrent($surveyId);
+        if (empty($responses)) {
+            return 0;
+        }
         $choiceCounts = $this->getChoiceCounts($responses);
         $choiceRanks = $this->getChoiceRanks($choiceCounts);
         $choiceWeights = $this->getChoiceWeights($choiceRanks);
