@@ -370,4 +370,39 @@ class ResponsesTable extends Table
         }
         return $retval;
     }
+
+    /**
+     * Rank all possible sector/chosenRank combinations according to how
+     * many times they were chosen and return an array in the form
+     * $retval[$sectorName][$rankChoice] = $choiceRank.
+     *
+     * @param array $choiceCounts
+     * @return array
+     */
+    public function getChoiceRanks($choiceCounts)
+    {
+        $retval = [];
+        foreach ($choiceCounts as $sector => $counts) {
+            arsort($counts);
+            $i = 1;
+            $prevCount = null;
+            $prevChoiceRank = null;
+            foreach ($counts as $rankChoice => $count) {
+                /* If choices have the same count, they share a choiceRank,
+                 * and the next choiceRank is skipped over, causing
+                 * choiceRanks like 1,1,1,4,5 if there's a
+                 * three-way tie for the most-chosen rank. */
+                if ($count === $prevCount) {
+                    $choiceRank = $prevChoiceRank;
+                } else {
+                    $choiceRank = $i;
+                    $prevChoiceRank = $i;
+                    $prevCount = $count;
+                }
+                $retval[$sector][$rankChoice] = $choiceRank;
+                $i++;
+            }
+        }
+        return $retval;
+    }
 }
