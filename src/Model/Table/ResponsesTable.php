@@ -405,4 +405,23 @@ class ResponsesTable extends Table
         }
         return $retval;
     }
+
+    /**
+     * Returns the weights used in internal alignment calculations,
+     * based on each how each choice ranks from most-chosen to least-chosen
+     * in each sector of a particular survey.
+     *
+     * @param array $choiceRanks
+     * @return array
+     */
+    public function getChoiceWeights($choiceRanks)
+    {
+        $retval = [];
+        foreach ($choiceRanks as $sector => $ranks) {
+            foreach ($ranks as $sectorRank => $choiceRank) {
+                $retval[$sector][$sectorRank] = 0.2 * $choiceRank;
+            }
+        }
+        return $retval;
+    }
 }
