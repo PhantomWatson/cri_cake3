@@ -344,4 +344,30 @@ class ResponsesTable extends Table
         }
         return $retval;
     }
+
+    /**
+     * Returns an array with the percent of responses gave a sector a
+     * particular rank, in the form $retval[$sectorName][$rank] = $percent.
+     *
+     * @param array $responses
+     * @return array
+     */
+    public function getChoiceCounts($responses)
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
+        $retval = [];
+        foreach ($sectors as $sector) {
+            for ($rank = 1; $rank <= 5; $rank++) {
+                $choiceCount = 0;
+                foreach ($responses as $response) {
+                    if ($response["{$sector}_rank"] == $rank) {
+                        $choiceCount++;
+                    }
+                }
+                $retval[$sector][$rank] = $choiceCount;
+            }
+        }
+        return $retval;
+    }
 }
