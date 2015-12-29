@@ -2,7 +2,7 @@
     use Cake\Validation\Validation;
 ?>
 
-<div id="admin_responses_view">
+<div class="table_container">
     <table class="table">
         <thead class="actual">
             <td colspan="2">
