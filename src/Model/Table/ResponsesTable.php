@@ -317,4 +317,31 @@ class ResponsesTable extends Table
             ])
             ->order(['created' => 'DESC']);
     }
+
+    /**
+     * Returns all current (not overridden by more recent)
+     * responses for the selected survey.
+     * @param int $surveyId
+     * @return \Cake\ORM\Query
+     */
+    public function getCurrent($surveyId)
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectorFields = $surveysTable->getSectorFieldNames();
+        $responses = $this->find('all')
+            ->where(['survey_id' => $surveyId])
+            ->order(['response_date' => 'DESC']);
+        $retval = [];
+        foreach ($responses as $response) {
+            $rId = $response->respondentId;
+            if (isset($retval[$rId])) {
+                if ($retval[$rId]['response_date'] < $response->response_date) {
+                    $retval[$rId] = $response;
+                }
+            } else {
+                $retval[$rId] = $response;
+            }
+        }
+        return $retval;
+    }
 }
