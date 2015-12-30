@@ -49,7 +49,7 @@
                         </th>
                         <?php for ($n = 1; $n <= 5; $n++): ?>
                             <td>
-                                <?php if ($community->score >= $n): ?>
+                                <?php if ($n == 1 || $community->score >= $n): ?>
                                     <span class="glyphicon glyphicon-ok"></span>
                                 <?php endif; ?>
                             </td>
