@@ -58,7 +58,7 @@ class CommunitiesController extends AppController
             ->toArray();
         $this->set([
             'communities' => $communities,
-            'titleForLayout' => 'Indiana Communities'
+            'titleForLayout' => 'Community Progress'
         ]);
     }
 
