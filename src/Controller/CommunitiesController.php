@@ -58,6 +58,13 @@ class CommunitiesController extends AppController
             ->toArray();
         $this->set([
             'communities' => $communities,
+            'steps' => [
+                'Sign up',
+                'Community officials alignment assessment',
+                'Community organizations alignment assessment',
+                'Preliminary community readiness findings',
+                'Community readiness report'
+            ],
             'titleForLayout' => 'Community Progress'
         ]);
     }

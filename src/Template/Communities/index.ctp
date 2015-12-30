@@ -11,6 +11,23 @@
             Please check back later.
         </p>
     <?php else: ?>
+        <p>
+            The following are all of the communities that have signed up to
+            participate in the Community Readiness Initiative, as well as their
+            progress through <a href="#" id="explain_steps">CRI's five-step process</a>.
+        </p>
+        <div class="steps">
+            <dl>
+                <?php foreach ($steps as $i => $step): ?>
+                    <dt>
+                        Step <?= $i + 1 ?>:
+                    </dt>
+                    <dd>
+                        <?= $step ?>
+                    </dd>
+                <?php endforeach; ?>
+            </dl>
+        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -43,3 +60,10 @@
         </table>
     <?php endif; ?>
 </div>
+
+<?php $this->append('buffered'); ?>
+    $('#explain_steps').click(function (event) {
+       event.preventDefault();
+       $('div.steps').slideToggle();
+    });
+<?php $this->end(); ?>
