@@ -185,6 +185,10 @@ class UsersTable extends Table
             return true;
         }
 
+        if (! $userId) {
+            return false;
+        }
+
         $user = $this->get($userId);
         if ($user->all_communities || $user->role == 'admin') {
             return true;
