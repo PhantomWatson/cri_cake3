@@ -25,6 +25,10 @@ class SurveyProcessingComponent extends Component
         $invitees = empty($invitees) ? [] : $invitees;
 
         foreach ($invitees as $i => $invitee) {
+            foreach (['name', 'email', 'title'] as $field) {
+                $invitee[$field] = trim($invitee[$field]);
+            }
+
             if (empty($invitee['email'])) {
                 continue;
             }
