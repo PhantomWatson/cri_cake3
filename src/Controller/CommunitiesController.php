@@ -85,7 +85,9 @@ class CommunitiesController extends AppController
             throw new NotFoundException('Community ID not specified');
         }
 
-        if (! $this->isAuthorized($this->Auth->user())) {
+        $community = $this->Communities->get($communityId);
+
+        if (! ($community->public || $this->isAuthorized($this->Auth->user()))) {
             $this->Flash->error('You are not authorized to access that community.');
             return $this->redirect('/');
         }
@@ -94,7 +96,6 @@ class CommunitiesController extends AppController
             throw new NotFoundException('Community not found');
         }
 
-        $community = $this->Communities->get($communityId);
         $this->set([
             'titleForLayout' => $community->name.' Performance',
             'community' => $community,
