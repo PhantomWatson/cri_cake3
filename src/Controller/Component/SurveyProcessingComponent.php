@@ -47,9 +47,11 @@ class SurveyProcessingComponent extends Component
                 // Approve
                 $respondent->approved = 1;
 
-                // If name is provided, update name
-                if ($invitee['name']) {
-                    $respondent->name = $invitee['name'];
+                // Update details
+                foreach (['name', 'title'] as $field) {
+                    if ($invitee[$field]) {
+                        $respondent->$field = $invitee[$field];
+                    }
                 }
 
                 // Save
