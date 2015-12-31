@@ -42,7 +42,7 @@ var surveyInvitationForm = {
 	            if (field.attr('type') == 'email') {
 	                surveyInvitationForm.checkEmail(field);
 	            }
-	        })
+	        });
 	        var fieldname = field.attr('name').replace('0', this.counter);
 	        field.attr('name', fieldname);
 		});
