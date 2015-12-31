@@ -73,6 +73,15 @@ class SurveysTable extends Table
             ->notEmpty('sm_url');
 
         $validator
+            ->requirePresence('sm_id', 'create')
+            ->notEmpty('sm_id')
+            ->add('sm_id', 'unique', [
+                'rule' => 'validateUnique',
+                'provider' => 'table',
+                'message' => 'Sorry, the selected survey has already been linked to a community.'
+            ]);
+
+        $validator
             ->requirePresence('pwrrr_qid', 'create')
             ->notEmpty('pwrrr_qid');
 
