@@ -130,8 +130,7 @@
                 'label' => false,
                 'name' => 'invitees[0][title]',
                 'placeholder' => 'Title',
-                'required' => true,
-                'type' => 'email'
+                'required' => true
             ]
         );
     ?>
