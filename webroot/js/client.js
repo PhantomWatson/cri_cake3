@@ -31,25 +31,21 @@ var surveyInvitationForm = {
 		var template_container = $('#invitation_fields_template');
 		var new_container = template_container.clone();
 		new_container.attr('id', '');
-		
-		var new_email = new_container.find('input[type=email]');
-		new_email.prop('disabled', false);
-		new_email.attr('id', '');
-		new_email.change(function () {
-			var field = $(this);
-			var trimmed_input = field.val().trim();
-			field.val(trimmed_input);
-			surveyInvitationForm.checkEmail(field);
+		new_container.find('input[type=email], input[type=text]').each(function () {
+		    var field = $(this);
+		    field.prop('disabled', false);
+	        field.attr('id', '');
+	        field.change(function () {
+	            var field = $(this);
+	            var trimmed_input = field.val().trim();
+	            field.val(trimmed_input);
+	            if (field.attr('type') == 'email') {
+	                surveyInvitationForm.checkEmail(field);
+	            }
+	        })
+	        var fieldname = field.attr('name').replace('0', this.counter);
+	        field.attr('name', fieldname);
 		});
-		var fieldname = new_email.attr('name').replace('0', this.counter);
-		new_email.attr('name', fieldname);
-		
-		var new_name = new_container.find('input[type=text]');
-		new_name.prop('disabled', false);
-		new_name.attr('id', '');
-		fieldname = new_name.attr('name').replace('0', this.counter);
-		new_name.attr('name', fieldname);
-		
 		new_container.find('button.remove').click(function () {
 			$(this).parent('div').slideUp(function () {
 				$(this).remove();
