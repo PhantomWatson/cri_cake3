@@ -195,7 +195,7 @@ class SurveysController extends AppController
     public function checkSurveyAssignment($smSurveyId = null)
     {
         $survey = $this->Surveys->find('all')
-            ->select(['community_id'])
+            ->select(['community_id', 'type'])
             ->where(['sm_id' => $smSurveyId])
             ->limit(1);
         if ($survey->isEmpty()) {
@@ -205,7 +205,8 @@ class SurveysController extends AppController
             $communitiesTable = TableRegistry::get('Communities');
             $community = [
                 'id' => $survey->community_id,
-                'name' => $communitiesTable->get($survey->community_id)->name
+                'name' => $communitiesTable->get($survey->community_id)->name,
+                'type' => $survey->type
             ];
         }
         $this->viewBuilder()->layout('json');

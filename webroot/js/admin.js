@@ -225,9 +225,11 @@ var adminPurchasesIndex = {
 
 var surveyLink = {
     community_id: null,
+    survey_type: null,
     
     init: function (params) {
         this.community_id = params.community_id;
+        this.survey_type = params.type;
         this.setupSurveyLinking();
     },
     
@@ -328,11 +330,19 @@ var surveyLink = {
                 loadingMessages.html('<span class="loading"><img src="/data_center/img/loading_small.gif" /> Checking survey uniqueness...</span>');
             },
             success: function (data) {
-                if (data === null || data.id == surveyLink.community_id) {
+                var displayError = function (msg) {
+                    $('.loading_messages').html('<span class="label label-danger">Error</span><p class="url_error">'+msg+'</p>');
+                };
+                if (data === null) {
                     loadingMessages.html(' ');
                     success_callback();
+                } else if (data.id != surveyLink.community_id) {
+                    displayError('That survey is already assigned to another community: <a href="/admin/communities/edit/'+data.id+'">'+data.name+'</a>');
+                } else if (data.type != surveyLink.survey_type) {
+                    displayError('That survey is already linked as this community\'s community '+data.type+'s survey.');
                 } else {
-                    loadingMessages.html('<span class="label label-danger">Error</span><p class="url_error">That survey is already assigned to another community: <a href="/admin/communities/edit/'+data.id+'">'+data.name+'</a></p>');
+                    loadingMessages.html(' ');
+                    success_callback();
                 }
             },
             error: function (jqXHR, errorType, exception) {
