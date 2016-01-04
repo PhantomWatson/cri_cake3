@@ -45,7 +45,7 @@ class CommunitiesFixture extends TestFixture
         [
             'id' => 1,
             'name' => 'Lorem ipsum dolor sit amet',
-            'area_id' => 2,
+            'area_id' => 1,
             'public' => 1,
             'fast_track' => 1,
             'score' => 0,
