@@ -2,6 +2,8 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\CommunitiesController;
+use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -35,7 +37,14 @@ class CommunitiesControllerTest extends IntegrationTestCase
 
     public function testView()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->find('all')->first();
+        $this->get(Router::url([
+            'controller' => 'Communities',
+            'action' => 'view',
+            $community->id
+        ]));
+        $this->assertResponseOk();
     }
 
     public function testAutocomplete()
