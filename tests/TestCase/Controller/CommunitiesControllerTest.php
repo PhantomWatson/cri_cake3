@@ -24,6 +24,7 @@ class CommunitiesControllerTest extends IntegrationTestCase
         'app.purchases',
         'app.respondents',
         'app.responses',
+        'app.stat_categories',
         'app.statistics',
         'app.surveys',
         'app.users'
