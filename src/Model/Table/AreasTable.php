@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Area;
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -98,6 +99,9 @@ class AreasTable extends Table
                 }
             ])
             ->first();
+        if (empty($area) || empty($area->statistics)) {
+            throw new NotFoundException('No data is currently available for the selected community.');
+        }
 
         // Initialize chart
         $chart = $this->getGoogleChartsObject();
@@ -286,6 +290,10 @@ class AreasTable extends Table
                 }
             ])
             ->first();
+        if (empty($area) || empty($area->statistics)) {
+            throw new NotFoundException('No data is currently available for the selected community.');
+        }
+
         $table = [];
         foreach ($area['statistics'] as $stat) {
             $categoryId = $stat['stat_category_id'];
@@ -347,6 +355,9 @@ class AreasTable extends Table
                 }
             ])
             ->first();
+        if (empty($area) || empty($area->statistics)) {
+            throw new NotFoundException('No data is currently available for the selected community.');
+        }
 
         // Collect data in an easier array to loop through
         $statistics = [];
@@ -424,6 +435,9 @@ class AreasTable extends Table
                 }
             ])
             ->first();
+        if (empty($result) || empty($result->statistics)) {
+            throw new NotFoundException('No data is currently available for the selected community.');
+        }
 
         $laterYear = $result['statistics'][0]['year'];
         $earlierYear = $laterYear - 5;
@@ -442,6 +456,9 @@ class AreasTable extends Table
                 }
             ])
             ->first();
+        if (empty($area) || empty($area->statistics)) {
+            throw new NotFoundException('No data is currently available for the selected community.');
+        }
 
         $statistics = [];
         foreach ($area['statistics'] as $i => $stat) {
