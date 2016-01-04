@@ -39,17 +39,7 @@ class StatisticsFixture extends TestFixture
      *
      * @var array
      */
-    public $records = [
-        /*[
-            'id' => 1,
-            'area_id' => 1,
-            'stat_category_id' => 19,
-            'value' => 34271,
-            'year' => 2011,
-            'created' => '2013-10-07 20:19:14',
-            'modified' => '2013-10-07 20:19:14'
-        ]*/
-    ];
+    public $records = [];
 
     public function init()
     {
