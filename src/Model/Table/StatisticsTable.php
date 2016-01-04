@@ -24,7 +24,7 @@ class StatisticsTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->table('statistic');
+        $this->table('statistics');
         $this->displayField('value');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
