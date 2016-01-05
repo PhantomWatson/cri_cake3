@@ -50,8 +50,7 @@
                 [
                     'class' => 'form-control',
                     'div' => ['class' => 'form-group'],
-                    'label' => 'Name',
-                    'required' => false
+                    'label' => 'Name'
                 ]
             );
             echo $this->Form->input(
