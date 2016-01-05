@@ -379,13 +379,13 @@ class CommunitiesController extends AppController
             }
         } else {
             $client = $usersTable->newEntity();
+            $client->unhashed_password = $usersTable->generatePassword();
         }
 
         $this->set([
             'client' => $client,
             'communityId' => $communityId,
             'communityName' => $community->name,
-            'randomPassword' => $usersTable->generatePassword(),
             'role' => 'client',
             'titleForLayout' => 'Add a New Client for '.$community->name,
         ]);
