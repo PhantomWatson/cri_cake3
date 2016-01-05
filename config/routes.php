@@ -71,6 +71,7 @@ Router::scope('/', function ($routes) {
 
     $routes->connect('/community/:id',      ['controller' => 'Communities', 'action' => 'view'], ['id' => '\d+', 'pass' => ['id']]);
     $routes->connect('/client/home',        ['prefix' => 'client', 'controller' => 'Communities', 'action' => 'index']);
+    $routes->redirect('/client',            '/client/home');
 
     $routes->connect('/postback',           ['controller' => 'Purchases', 'action' => 'postback']);
 
