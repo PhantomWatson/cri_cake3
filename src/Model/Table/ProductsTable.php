@@ -162,11 +162,14 @@ class ProductsTable extends Table
         }
 
         // Is this purchase not possible because the community isn't at the correct stage?
-        if (($productId == 2 && $community->score < 2)      // Leadership Summit
-            || ($productId == 3 && $community->score < 2)   // Community Alignment Assessment
-            || ($productId == 4 && $community->score < 3)   // Facilitated Community Awareness Conversation
-        ) {
-            return [0, 'Community not yet ready to make purchase'];
+        if ($productId == 2 && $community->score < 2) {  // Leadership Summit
+            return [0, 'Community has not completed Step 1 yet.'];
+        }
+        if ($productId == 3 && $community->score < 2) {  // Community Alignment Assessment
+            return [0, 'Community has not completed Step 1 yet.'];
+        }
+        if ($productId == 4 && $community->score < 3) {  // Facilitated Community Awareness Conversation
+            return [0, 'Community has not completed Step 2 yet.'];
         }
 
         $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);
