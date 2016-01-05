@@ -17,7 +17,6 @@ class PurchasesController extends AppController
 
         $productsTable = TableRegistry::get('Products');
         $products = $productsTable->find('all')->toArray();
-        $purchases = $this->Purchases->getAllForCommunity($communityId); // just needed for debugging
 
         foreach ($products as &$product) {
             // Massage product data
@@ -29,7 +28,6 @@ class PurchasesController extends AppController
         $community = $communitiesTable->get($communityId);
         $this->set([
             'titleForLayout' => 'Products Purchased for '.$community->name,
-            'purchases' => $purchases,
             'products' => $products
         ]);
     }
