@@ -154,7 +154,7 @@
     );
     echo $this->Form->end();
 
-    $this->Html->script('admin', ['block' => 'scriptBottom']);
+    $this->element('script', ['script' => 'admin']);
 ?>
 
 <?php $this->append('buffered'); ?>

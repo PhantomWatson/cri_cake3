@@ -475,7 +475,7 @@
     </table>
 </div>
 
-<?php $this->Html->script('client', ['block' => 'scriptBottom']); ?>
+<?php $this->element('script', ['script' => 'client']); ?>
 <?php $this->append('buffered'); ?>
     clientHome.init();
 <?php $this->end();

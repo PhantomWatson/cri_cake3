@@ -95,7 +95,7 @@
     if ($survey['id']) {
         echo $this->element('Surveys'.DS.'overview');
     }
-    $this->Html->script('admin', ['block' => 'scriptBottom']);
+    $this->element('script', ['script' => 'admin']);
 ?>
 <?php $this->append('buffered'); ?>
     surveyOverview.init({

@@ -183,7 +183,7 @@
     </div>
 <?php endif; ?>
 
-<?php $this->Html->script('client', ['block' => 'scriptBottom']); ?>
+<?php $this->element('script', ['script' => 'client']); ?>
 <?php $this->append('buffered'); ?>
     unapprovedRespondents.init();
 <?php $this->end(); ?>

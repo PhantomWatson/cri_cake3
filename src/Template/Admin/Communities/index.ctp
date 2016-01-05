@@ -295,7 +295,7 @@
     <?= $this->element('pagination') ?>
 </div>
 <?php
-    $this->Html->script('admin', ['block' => 'scriptBottom']);
+    $this->element('script', ['script' => 'admin']);
     echo $this->element('DataCenter.jquery_ui');
 ?>
 

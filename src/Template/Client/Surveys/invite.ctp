@@ -155,7 +155,7 @@
     <?= $this->Form->end() ?>
 </div>
 
-<?php $this->Html->script('client', ['block' => 'scriptBottom']); ?>
+<?php $this->element('script', ['script' => 'client']); ?>
 <?php $this->append('buffered'); ?>
     surveyInvitationForm.init({
         counter: 1,
