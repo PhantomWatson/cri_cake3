@@ -60,17 +60,6 @@
         <p>
             Because most of the steps require feedback from many individuals and groups, completion of each step will vary widely, with some taking a few weeks and others taking a few months.
         </p>
-
-        <p>
-            Some communities with a recent comprehensive strategic plan may be eligible for the
-            <?= $this->Html->link(
-                'CRI Fast Track',
-                [
-                    'controller' => 'Pages',
-                    'action' => 'fasttrack'
-                ]
-            ) ?>.
-        </p>
     </section>
 
     <section>

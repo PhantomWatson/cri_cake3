@@ -93,16 +93,6 @@
         </li>
         <li class="link">
             <?= $this->Html->link(
-                'CRI Fast Track',
-                [
-                    'prefix' => false,
-                    'controller' => 'Pages',
-                    'action' => 'fasttrack'
-                ]
-            ) ?>
-        </li>
-        <li class="link">
-            <?= $this->Html->link(
                 'Credits and Sources',
                 [
                     'prefix' => false,

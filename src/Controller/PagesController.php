@@ -53,11 +53,6 @@ class PagesController extends AppController
         $this->set('titleForLayout', 'Frequently Asked Questions for CRI Consultants');
     }
 
-    public function fasttrack()
-    {
-        $this->set('titleForLayout', 'CRI Fast Track');
-    }
-
     public function credits()
     {
         $this->set('titleForLayout', 'Credits and Sources');
