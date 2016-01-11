@@ -41,12 +41,6 @@ class PagesControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
-    public function testFasttrack()
-    {
-        $this->get('/fasttrack');
-        $this->assertResponseOk();
-    }
-
     public function testCredits()
     {
         $this->get('/credits');
