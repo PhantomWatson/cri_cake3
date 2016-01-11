@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
 /**
@@ -320,7 +321,7 @@ class ResponsesTable extends Table
 
     /**
      * Returns all current (not overridden by more recent)
-     * responses for the selected survey.
+     * approved responses for the selected survey.
      * @param int $surveyId
      * @return \Cake\ORM\Query
      */
@@ -328,9 +329,26 @@ class ResponsesTable extends Table
     {
         $surveysTable = TableRegistry::get('Surveys');
         $sectorFields = $surveysTable->getSectorFieldNames();
+
+        $respondentsTable = TableRegistry::get('Respondents');
+        $respondents = $respondentsTable->find('all')
+            ->select(['id'])
+            ->where([
+                'survey_id' => $surveyId,
+                'approved' => 1
+            ])
+            ->toArray();
+        $respondentIds = Hash::extract($respondents, '{n}.id');
+
         $responses = $this->find('all')
-            ->where(['survey_id' => $surveyId])
+            ->where([
+                'survey_id' => $surveyId,
+                function ($exp, $q) use ($respondentIds) {
+                    return $exp->in('respondent_id', $respondentIds);
+                }
+            ])
             ->order(['response_date' => 'DESC']);
+
         $retval = [];
         foreach ($responses as $response) {
             $rId = $response->respondent_id;

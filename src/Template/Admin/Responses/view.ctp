@@ -56,7 +56,7 @@
         </h2>
         <?php if ($internalAlignment): ?>
             <p class="internal_alignment">
-                Internal Alignment:
+                Internal Alignment of Approved Responses:
                 <strong>
                     <?= round($internalAlignment, 2) ?>
                 </strong>
