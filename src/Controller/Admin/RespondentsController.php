@@ -24,12 +24,14 @@ class RespondentsController extends AppController
         $community = $communitiesTable->get($survey->community_id);
 
         $this->set([
-            'titleForLayout' => $community->name.' Uninvited '.ucwords($survey->type).' Survey Respondents',
+            'community' => $community,
             'respondents' => [
                 'unaddressed' => $this->Respondents->getUnaddressedUnapproved($surveyId),
                 'dismissed' => $this->Respondents->getDismissed($surveyId)
             ],
-            'survey_id' => $surveyId
+            'survey' => $survey,
+            'survey_id' => $surveyId,
+            'titleForLayout' => $community->name.' Uninvited '.ucwords($survey->type).' Survey Respondents'
         ]);
         $this->render('/Client/Respondents/unapproved');
     }
