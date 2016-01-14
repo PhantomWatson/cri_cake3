@@ -82,6 +82,44 @@
     <?php endif; ?>
 </div>
 
+<p>
+    Would you like some <a href="#" id="suggestions_toggler">suggestions of who to invite</a>?
+</p>
+
+<?php
+    $suggestions = [
+        'Mayor',
+        'City Clerk',
+        'City Treasurer',
+        'City Council',
+        'Board of Public Words',
+        'City Planning Director',
+        'Director of Community Development',
+        'Parks & Recreation Director',
+        'Street Superintendent',
+        'Police Chief',
+        'Planning Commission',
+        'Redevelopment Commission',
+        'Economic Development Commission',
+        'Utility Rate Advisory Board',
+        'Housing Authority',
+        'School Corporation Officials',
+        'Public Library Board Officials',
+        'County Commissioner',
+        'County Council',
+        'State Senators and Representatives'
+    ];
+?>
+<div id="invitation_suggestions">
+    <ul>
+        <?php foreach ($suggestions as $suggestion): ?>
+            <li>
+                <?= $suggestion ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+
 <?= $this->Form->create(
     'User',
     ['id' => 'UserClientInviteForm']

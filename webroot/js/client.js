@@ -16,6 +16,10 @@ var surveyInvitationForm = {
 			event.preventDefault();
 			$('#sent_invitations').slideToggle();
 		});
+		$('#suggestions_toggler').click(function (event) {
+		    event.preventDefault();
+		    $('#invitation_suggestions').slideToggle();
+		});
 		$('#UserClientInviteForm').submit(function (event) {
 			var form = $(this);
 			if (form.find('.already_invited').length > 0) {
