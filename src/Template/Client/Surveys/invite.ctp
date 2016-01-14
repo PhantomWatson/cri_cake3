@@ -45,7 +45,7 @@
     </a>
 </p>
 
-<div id="sent_invitations" class="alert alert-info">
+<div id="sent_invitations" class="well">
     <?php if (empty($allRespondents)): ?>
         No invitations have been sent yet.
     <?php else: ?>
@@ -110,7 +110,7 @@
         'State Senators and Representatives'
     ];
 ?>
-<div id="invitation_suggestions">
+<div id="invitation_suggestions" class="well">
     <ul>
         <?php foreach ($suggestions as $suggestion): ?>
             <li>
