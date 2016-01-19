@@ -47,7 +47,7 @@
                 'View FAQ for communities',
                 [
                     'controller' => 'Pages',
-                    'action' => 'faq_community'
+                    'action' => 'faqCommunity'
                 ]
             ) ?>
         </p>
