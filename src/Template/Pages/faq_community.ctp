@@ -49,7 +49,7 @@
             </li>
         </ol>
 
-        <img src="/img/faq_flowchart_2014-08-14.png" class="process" />
+        <img src="/img/Flowchart-20160119.png" class="process" />
     </section>
 
     <section>
