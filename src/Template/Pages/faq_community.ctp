@@ -4,6 +4,13 @@
     </h1>
 </div>
 
+<a href="/files/CRI-Brochure-2016-0119.pdf" class="with_icon">
+    <img src="/data_center/img/icons/drive-download.png" />
+    <span>
+        Download this document as a PDF
+    </span>
+</a>
+
 <div class="faq">
     <section>
         <h2>
