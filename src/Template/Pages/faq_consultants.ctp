@@ -4,7 +4,7 @@
     </h1>
 </div>
 
-<a href="/files/CRI-Oct2013.pdf" class="with_icon">
+<a href="/files/CRI-Brochure-2016-0119.pdf" class="with_icon">
     <img src="/data_center/img/icons/drive-download.png" />
     <span>
         Download this document as a PDF
@@ -81,7 +81,7 @@
             How The Process Works
         </h2>
 
-        <img src="/img/CRI_Process.png" class="process" />
+        <img src="/img/Flowchart-20160119.png" class="process" />
     </section>
 
     <section>
