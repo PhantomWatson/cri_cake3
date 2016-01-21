@@ -41,3 +41,7 @@ local.properties
 
 # Composer
 composer.phar
+
+# Concatenated / minified JS files
+/webroot/js/script.concat.js
+/webroot/js/*.min.js
