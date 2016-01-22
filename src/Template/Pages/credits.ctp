@@ -53,7 +53,7 @@
     <dd>
         765-285-5926 &#149; <a href="mailto:cber@bsu.edu">cber@bsu.edu</a> &#149; <a href="http://www.bsu.edu/cber">www.bsu.edu/cber</a>
         <br />Michael J. Hicks, Director of the Center for Business and Economic Research
-        <br />Srikant Devaraj, Senior Research Associate and Project Manager
+        <br />Srikant Devaraj, Research Economist and Research Assistant Professor
         <br />Victoria Meldrum, Manager of Publications and Web Services
         <br />Graham Watson, Web Development Manager
     </dd>
