@@ -399,17 +399,16 @@ class CommunitiesTable extends Table
         // If survey is not ready, put this at the end of step one
         // Otherwise, at the beginning of step two
         $surveyId = $surveysTable->getSurveyId($communityId, 'official');
-        $survey = $surveysTable->get($surveyId);
-        $surveyCreated = $surveysTable->hasBeenCreated($communityId, 'official');
-        if ($surveyCreated) {
+        if ($surveyId) {
+            $survey = $surveysTable->get($surveyId);
             $note = '<br />Survey URL: <a href="'.$survey->sm_url.'">'.$survey->sm_url.'</a>';
         } else {
             $note =  '';
         }
-        $step = $surveyCreated ? 2 : 1;
+        $step = $surveyId ? 2 : 1;
         $criteria[$step]['survey_created'] = [
             'Leadership alignment assessment survey has been prepared'.$note,
-            $surveyCreated
+            (boolean) $surveyId
         ];
 
 
@@ -505,7 +504,7 @@ class CommunitiesTable extends Table
         $note = $surveyUrl ? '<br />Survey URL: <a href="'.$surveyUrl.'">'.$surveyUrl.'</a>' : '';
         $criteria[3]['survey_created'] = [
             'Community organization alignment assessment survey has been prepared'.$note,
-            $surveyCreated
+            (boolean) $surveyId
         ];
 
         $count = $surveyId ? $respondentsTable->getCount($surveyId) : 0;
