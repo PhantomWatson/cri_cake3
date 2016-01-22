@@ -1,7 +1,7 @@
 {
-    "name": "cakephp/app",
-    "description": "CakePHP skeleton app",
-    "homepage": "http://cakephp.org",
+    "name": "ballstatecber/cri",
+    "description": "Community Readiness Initiative",
+    "homepage": "http://cri.cberdata.org",
     "type": "project",
     "license": "MIT",
     "require": {
