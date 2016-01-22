@@ -7,13 +7,12 @@
         ]) ?>
     </strong>
     <br />
-    <a href="mailto:cri@bsu.edu">
-        cri@bsu.edu
-    </a>
-    <br />
     <a href="http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici">
         http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici
     </a>
     <br />
-    765-285-2773
+    <a href="mailto:cri@bsu.edu">
+        cri@bsu.edu
+    </a>
+    &#149; 765-285-2773
 </p>
