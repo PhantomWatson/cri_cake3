@@ -26,16 +26,16 @@
 <p>
     <br />
     <strong>
-        Ball State Center for Business and Economic Research
+        Ball State Indiana Communities Institute
     </strong>
     <br />
-    <a href="mailto:cber@bsu.edu">
-        cber@bsu.edu
+    <a href="mailto:cri@bsu.edu">
+        cri@bsu.edu
     </a>
     <br />
-    <a href="http://www.bsu.edu/cber">
-        www.bsu.edu/cber
+    <a href="http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici">
+        http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici
     </a>
     <br />
-    765-285-5926
+    765-285-2773
 </p>

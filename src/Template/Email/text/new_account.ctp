@@ -9,7 +9,7 @@ You can now log in to the CRI website at <?= $loginUrl ?> using the following in
 Once logged in, you can change your password. If you have any questions, please email cri@bsu.edu.
 
 
-Ball State Center for Business and Economic Research
-cber@bsu.edu
-www.bsu.edu/cber
-765-285-5926
+Ball State Indiana Communities Institute
+http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici
+cri@bsu.edu
+765-285-2773

@@ -3,7 +3,16 @@
     <a href="<?= $criUrl ?>">
         Community Readiness Initiative
     </a>
-    survey for your community. Please visit the following URL to begin.
+    survey for your community.
+    This is a project in partnership with the
+    <a href="http://www.in.gov/ocra/">Indiana Office of Community and Rural Affairs (OCRA)</a>
+    and Ball State University's
+    <a href="">Indiana Communities Institute</a>. We would really appreciate your participation in the survey,
+    which should take no more than ten minutes of your time.
+</p>
+
+<p>
+    Please visit the following URL to begin:
 </p>
 
 <p style="font-weight: bold; text-align: center;">
@@ -20,16 +29,16 @@
 <p>
     <br />
     <strong>
-        Ball State Center for Business and Economic Research
+        Ball State Indiana Communities Institute
     </strong>
     <br />
-    <a href="mailto:cber@bsu.edu">
-        cber@bsu.edu
+    <a href="mailto:cri@bsu.edu">
+        cri@bsu.edu
     </a>
     <br />
-    <a href="http://www.bsu.edu/cber">
-        www.bsu.edu/cber
+    <a href="http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici">
+        http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici
     </a>
     <br />
-    765-285-5926
+    765-285-2773
 </p>
