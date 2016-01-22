@@ -1,12 +1,14 @@
 <?= $user->name ?>,
 
-Your new account on the Community Readiness Initiative website (<?= $homeUrl ?>) has been created.
+Thank you for enrolling your community in the Community Readiness Initiative. A new account has been created so that you can enter information needed for the next step in your community's CRI process.
 
-You can now log in to the CRI website at <?= $loginUrl ?> using the following information:
+Log in to the CRI website at <?= $loginUrl ?> using the following information:
 - Email: <?= $user->email."\n" ?>
 - Password: <?= $password."\n" ?>
 
-Once logged in, you can change your password. If you have any questions, please email cri@bsu.edu.
+Once logged in, you can change your password and begin the next stage of CRI.
+
+If you have any questions, please email cri@bsu.edu.
 
 
 <?= $this->element('Email'.DS.'text'.DS.'signature') ?>

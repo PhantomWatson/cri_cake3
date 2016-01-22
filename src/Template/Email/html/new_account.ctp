@@ -3,11 +3,11 @@
 </p>
 
 <p>
-    Your new account on the <a href="<?= $homeUrl ?>">Community Readiness Initiative website</a> has been created.
+    Thank you for enrolling your community in the <a href="<?= $homeUrl ?>">Community Readiness Initiative</a>. A new account has been created so that you can enter information needed for the next step in your community's CRI process.
 </p>
 
 <p>
-    You can now <a href="<?= $loginUrl ?>">log in to the CRI website</a> using the following information:
+    <a href="<?= $loginUrl ?>">Log in to the CRI website</a> using the following information:
 </p>
 
 <ul>
@@ -20,7 +20,11 @@
 </ul>
 
 <p>
-    Once logged in, you can change your password. If you have any questions, please email <a href="mailto:cri@bsu.edu">cri@bsu.edu</a>.
+    Once logged in, you can change your password and begin the next stage of CRI.
+</p>
+
+<p>
+    If you have any questions, please email <a href="mailto:cri@bsu.edu">cri@bsu.edu</a>.
 </p>
 
 <?= $this->element('Email'.DS.'html'.DS.'signature') ?>
