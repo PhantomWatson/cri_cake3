@@ -44,7 +44,7 @@
         <br />
         Jeani Shrack, Project Specialist
         <br />
-        Cassandra Patterson, Graduate Assistant
+        CRI Graduate Assistants
     </dd>
 
     <dt>
