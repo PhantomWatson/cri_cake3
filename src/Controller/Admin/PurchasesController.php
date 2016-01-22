@@ -95,7 +95,7 @@ class PurchasesController extends AppController
         $productsTable = TableRegistry::get('Products');
         $results = $productsTable->find('all')
             ->select(['id', 'description', 'price'])
-            ->order(['description' => 'ASC']);
+            ->order(['id' => 'ASC']);
         $products = [];
         foreach ($results as $product) {
             $products[$product->id] = $product->description.' ($'.number_format($product->price).')';
