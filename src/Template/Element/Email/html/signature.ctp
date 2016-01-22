@@ -1,7 +1,10 @@
 <p>
     <br />
     <strong>
-        Ball State Indiana Communities Institute
+        <?= $this->Html->image('ici-email-logo.jpg', [
+            'alt' => 'Ball State Indiana Communities Institute',
+            'fullBase' => true
+        ]) ?>
     </strong>
     <br />
     <a href="mailto:cri@bsu.edu">
