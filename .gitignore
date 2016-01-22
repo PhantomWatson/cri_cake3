@@ -41,6 +41,7 @@ local.properties
 
 # Composer
 composer.phar
+composer.lock
 
 # Compiled CSS
 /webroot/css/style.css
