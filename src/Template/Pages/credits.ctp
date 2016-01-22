@@ -21,7 +21,7 @@
     </dt>
     <dd>
         317-233-3762 &#149; <a href="http://www.in.gov/ocra">www.in.gov/ocra</a>
-        <br />Geoff Schomacker, Director of Project Development and Community Affairs
+        <br />Geoff Schomacker, Deputy Director of OCRA
     </dd>
 
     <dt>
@@ -32,14 +32,19 @@
     </dd>
 
     <dt>
-        Ball State University - Economic and Community Development
+        Ball State University - Indiana Communities Institute
     </dt>
     <dd>
-        765-285-2773 &#149; <a href="mailto:bbc@bsu.edu">bbc@bsu.edu</a> &#149; <a href="http://www.bsu.edu/bbc">www.bsu.edu/bbc</a>
-        <br />David Terrell, Director of Economic Development Policy
-        <br />Dick Heupel, Director of Community and Economic Development
-        <br />Sharon Canaday, Project Manager
-        <br />Jeani Marsee, Project Specialist
+        765-285-2773 &#149;
+        <a href="mailto:cri@bsu.edu">cri@bsu.edu</a> or
+        <a href="mailto:drterrell@bsu.edu">drterrell@bsu.edu</a> &#149;
+        <a href="http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici">http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici</a>
+        <br />
+        David Terrell, Director of Economic Development Policy and Director of the RUPRI Center for State Policy
+        <br />
+        Jeani Shrack, Project Specialist
+        <br />
+        Cassandra Patterson, Graduate Assistant
     </dd>
 
     <dt>
