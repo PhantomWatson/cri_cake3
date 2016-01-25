@@ -110,7 +110,7 @@ class UsersController extends AppController
     }
 
     /**
-     * Allows the user to enter their email address and get a link
+     * Allows the user to enter their email address and get a link to reset their password
      */
     public function forgotPassword()
     {
