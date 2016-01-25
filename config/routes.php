@@ -24,10 +24,16 @@ use Cake\Routing\Router;
 Router::defaultRouteClass('DashedRoute');
 
 Router::prefix('admin', function ($routes) {
+    $routes->connect('/guide',              ['controller' => 'Pages', 'action' => 'guide']);
+    $routes->connect('/choose_client',      ['controller' => 'Users', 'action' => 'chooseClient']);
+
     $routes->fallbacks('DashedRoute');
 });
 
 Router::prefix('client', function ($routes) {
+    $routes->connect('/home',        ['controller' => 'Communities', 'action' => 'index']);
+    $routes->redirect('/',           ['controller' => 'Communities', 'action' => 'index']);
+
     $routes->fallbacks('DashedRoute');
 });
 
@@ -41,7 +47,6 @@ Router::scope('/', function ($routes) {
     $routes->connect('/communityFAQ',       ['controller' => 'Pages', 'action' => 'faqCommunity']);
     $routes->connect('/consultantFAQ',      ['controller' => 'Pages', 'action' => 'faqConsultants']);
     $routes->connect('/clear_cache',        ['controller' => 'Pages', 'action' => 'clearCache']);
-    $routes->connect('/guide',              ['prefix' => 'admin', 'controller' => 'Pages', 'action' => 'guide']);
     $routes->redirect('/consultantfaq',     '/consultantFAQ');
     $routes->redirect('/communityfaq',      '/communityFAQ');
 
@@ -49,11 +54,8 @@ Router::scope('/', function ($routes) {
     $routes->connect('/logout',             ['controller' => 'Users', 'action' => 'logout']);
     $routes->connect('/update_contact',     ['controller' => 'Users', 'action' => 'updateContact']);
     $routes->connect('/change_password',    ['controller' => 'Users', 'action' => 'changePassword']);
-    $routes->connect('/admin/choose_client',['prefix' => 'admin', 'controller' => 'Users', 'action' => 'chooseClient']);
 
     $routes->connect('/community/:id',      ['controller' => 'Communities', 'action' => 'view'], ['id' => '\d+', 'pass' => ['id']]);
-    $routes->connect('/client/home',        ['prefix' => 'client', 'controller' => 'Communities', 'action' => 'index']);
-    $routes->redirect('/client',            '/client/home');
 
     $routes->connect('/postback',           ['controller' => 'Purchases', 'action' => 'postback']);
 
