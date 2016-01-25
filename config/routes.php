@@ -39,14 +39,14 @@ use Cake\Routing\Router;
  * `:action` markers.
  *
  */
-Router::defaultRouteClass('Route');
+Router::defaultRouteClass('DashedRoute');
 
 Router::prefix('admin', function ($routes) {
-    $routes->fallbacks('InflectedRoute');
+    $routes->fallbacks('DashedRoute');
 });
 
 Router::prefix('client', function ($routes) {
-    $routes->fallbacks('InflectedRoute');
+    $routes->fallbacks('DashedRoute');
 });
 
 Router::scope('/', function ($routes) {
@@ -97,7 +97,7 @@ Router::scope('/', function ($routes) {
      * You can remove these routes once you've connected the
      * routes you want in your application.
      */
-    $routes->fallbacks('InflectedRoute');
+    $routes->fallbacks('DashedRoute');
 });
 
 /**
