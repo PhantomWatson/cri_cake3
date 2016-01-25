@@ -41,7 +41,7 @@
                 '/'
             ) ?>
         </li>
-        <?php if (! empty($accessible_communities)): ?>
+        <?php if (! empty($accessibleCommunities)): ?>
             <li>
                 <p>
                     County Performance
@@ -51,9 +51,9 @@
                         <option value="">
                             Select a community...
                         </option>
-                        <?php foreach ($accessible_communities as $community_id => $community_name): ?>
-                            <option value="<?= $community_id ?>">
-                                <?= $community_name ?>
+                        <?php foreach ($accessibleCommunities as $communityId => $communityName): ?>
+                            <option value="<?= $communityId ?>">
+                                <?= $communityName ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
