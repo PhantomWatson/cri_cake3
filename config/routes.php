@@ -54,6 +54,7 @@ Router::scope('/', function ($routes) {
     $routes->connect('/logout',             ['controller' => 'Users', 'action' => 'logout']);
     $routes->connect('/update-contact',     ['controller' => 'Users', 'action' => 'updateContact']);
     $routes->connect('/change-password',    ['controller' => 'Users', 'action' => 'changePassword']);
+    $routes->connect('/forgot-password',    ['controller' => 'Users', 'action' => 'forgotPassword']);
 
     $routes->connect('/community/:id',      ['controller' => 'Communities', 'action' => 'view'], ['id' => '\d+', 'pass' => ['id']]);
 

@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
 
 /**
  * Users Controller
@@ -14,7 +15,7 @@ class UsersController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->Auth->allow(['login', 'logout']);
+        $this->Auth->allow(['login', 'logout', 'forgotPassword']);
     }
 
     public function login()
@@ -104,6 +105,44 @@ class UsersController extends AppController
         }
         $this->set([
             'titleForLayout' => 'Update Account Contact Info',
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * Allows the user to enter their email address and get a link
+     */
+    public function forgotPassword()
+    {
+        $user = $this->Users->newEntity();
+        if ($this->request->is('post')) {
+            $email = $this->request->data('email');
+            $email = strtolower(trim($email));
+            $adminEmail = Configure::read('admin_email');
+            if (empty($email)) {
+                $msg = 'Please enter the email address you registered with to have your password reset. ';
+                $msg .= 'Email <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> for assistance.';
+                $this->Flash->error($msg);
+            } else {
+                $userId = $this->Users->getIdWithEmail($email);
+                if ($userId) {
+                    if ($this->Users->sendPasswordResetEmail($userId)) {
+                        $this->Flash->success('Success! You should be shortly receiving an email with a link to reset your password.');
+                    } else {
+                        $msg = 'There was an error sending your password-resetting email. ';
+                        $msg .= 'Please try again, or email <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> for assistance.';
+                        $this->Flash->error($msg);
+                    }
+                } else {
+                    $msg = 'We couldn\'t find an account registered with the email address <strong>'.$email.'</strong>. ';
+                    $msg .= 'Please make sure you spelled it correctly, and email ';
+                    $msg .= '<a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> if you need assistance.';
+                    $this->Flash->error($msg);
+                }
+            }
+        }
+        $this->set([
+            'titleForLayout' => 'Forgot Password',
             'user' => $user
         ]);
     }

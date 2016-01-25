@@ -8,6 +8,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Cake\Utility\Security;
 use Cake\Validation\Validator;
 
 /**
@@ -280,5 +281,46 @@ class UsersTable extends Table
             return null;
         }
         return $user->first()->id;
+    }
+
+    /**
+     * Sends an email with a link that can be used in the next
+     * 24 hours to give the user access to /users/resetPassword
+     *
+     * @param int $userId
+     * @return boolean
+     */
+    public function sendPasswordResetEmail($userId)
+    {
+        $timestamp = time();
+        $hash = $this->getPasswordResetHash($userId, $timestamp);
+        $resetUrl = Router::url([
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'resetPassword',
+            $userId,
+            $timestamp,
+            $hash
+        ], true);
+        $email = new Email('reset_password');
+        $user = $this->get($userId);
+        $email->to($user->email);
+        $email->viewVars(compact(
+            'user',
+            'resetUrl'
+        ));
+        return $email->send();
+    }
+
+    /**
+     * Returns a hash for use in the emailed link to /reset-password
+     *
+     * @param int $userId
+     * @param int $timestamp
+     * @return string
+     */
+    public function getPasswordResetHash($userId, $timestamp)
+    {
+        return Security::hash($userId.$timestamp, 'sha1', true);
     }
 }
