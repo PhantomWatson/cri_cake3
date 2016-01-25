@@ -46,14 +46,14 @@ Router::scope('/', function ($routes) {
     $routes->connect('/faq',                ['controller' => 'Pages', 'action' => 'home']);
     $routes->connect('/communityFAQ',       ['controller' => 'Pages', 'action' => 'faqCommunity']);
     $routes->connect('/consultantFAQ',      ['controller' => 'Pages', 'action' => 'faqConsultants']);
-    $routes->connect('/clear_cache',        ['controller' => 'Pages', 'action' => 'clearCache']);
+    $routes->connect('/clear-cache',        ['controller' => 'Pages', 'action' => 'clearCache']);
     $routes->redirect('/consultantfaq',     '/consultantFAQ');
     $routes->redirect('/communityfaq',      '/communityFAQ');
 
     $routes->connect('/login',              ['controller' => 'Users', 'action' => 'login']);
     $routes->connect('/logout',             ['controller' => 'Users', 'action' => 'logout']);
-    $routes->connect('/update_contact',     ['controller' => 'Users', 'action' => 'updateContact']);
-    $routes->connect('/change_password',    ['controller' => 'Users', 'action' => 'changePassword']);
+    $routes->connect('/update-contact',     ['controller' => 'Users', 'action' => 'updateContact']);
+    $routes->connect('/change-password',    ['controller' => 'Users', 'action' => 'changePassword']);
 
     $routes->connect('/community/:id',      ['controller' => 'Communities', 'action' => 'view'], ['id' => '\d+', 'pass' => ['id']]);
 
