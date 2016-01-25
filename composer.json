@@ -16,7 +16,8 @@
         "phpoffice/phpexcel": "~1.8",
         "phpunit/phpunit": "*",
         "twbs/bootstrap": "~3.0",
-        "xety/cake3-cookieauth": "1.*"
+        "xety/cake3-cookieauth": "1.*",
+        "dereuromark/cakephp-shim": "dev-master"
     },
     "require-dev": {
         "psy/psysh": "@stable",

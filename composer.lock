@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "de57da17dd7d292e11d1143550539787",
-    "content-hash": "785b61b71e164702a43acb3b8a031e6c",
+    "hash": "f138797868aac9707ac57eb76053f2f4",
+    "content-hash": "0f2009e0c8e1ff01e25f782b1e0f0876",
     "packages": [
         {
             "name": "ascension/php-surveymonkey",
@@ -391,6 +391,52 @@
             ],
             "description": "A composer installer for CakePHP 3.0+ plugins.",
             "time": "2015-06-10 10:35:13"
+        },
+        {
+            "name": "dereuromark/cakephp-shim",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dereuromark/cakephp-shim.git",
+                "reference": "a3c07b654e1896247e42f3ae1a475ac6e71de21c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dereuromark/cakephp-shim/zipball/a3c07b654e1896247e42f3ae1a475ac6e71de21c",
+                "reference": "a3c07b654e1896247e42f3ae1a475ac6e71de21c",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "~3.0",
+                "php": ">=5.4"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "Shim\\": "src",
+                    "Shim\\Test\\Fixture\\": "tests\\Fixture"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Scherer",
+                    "homepage": "http://www.dereuromark.de",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "A CakePHP plugin to shim applications between major framework versions.",
+            "homepage": "https://github.com/dereuromark/cakephp-shim",
+            "keywords": [
+                "cakephp",
+                "helpers",
+                "plugin",
+                "shim"
+            ],
+            "time": "2016-01-25 23:05:23"
         },
         {
             "name": "doctrine/instantiator",
@@ -2504,6 +2550,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "ballstatecber/datacenter-plugin-cakephp3": 20,
+        "dereuromark/cakephp-shim": 20,
         "psy/psysh": 0
     },
     "prefer-stable": true,
