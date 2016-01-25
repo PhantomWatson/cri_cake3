@@ -166,7 +166,8 @@ class UsersTable extends Table
         }
         return $communitiesTable->find('list')
             ->where(['public' => true])
-            ->order(['name' => 'ASC']);
+            ->order(['name' => 'ASC'])
+            ->toArray();
     }
 
     /**
