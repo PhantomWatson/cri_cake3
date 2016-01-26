@@ -165,10 +165,9 @@ class UsersController extends AppController
             throw new ForbiddenException('Invalid security key');
         }
 
-        $user = $this->Users->get($userId);
-
         if ($this->request->is(['post', 'put'])) {
             $this->request->data['password'] = $this->request->data('new_password');
+            $user = $this->Users->get($userId);
             $user = $this->Users->patchEntity($user, $this->request->data());
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your password has been updated.');
@@ -179,7 +178,7 @@ class UsersController extends AppController
 
         $this->set([
             'titleForLayout' => 'Reset Password',
-            'user' => $user
+            'user' => $this->Users->newEntity()
         ]);
     }
 }
