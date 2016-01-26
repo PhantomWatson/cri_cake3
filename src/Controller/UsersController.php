@@ -130,6 +130,7 @@ class UsersController extends AppController
                 if ($userId) {
                     if ($this->Users->sendPasswordResetEmail($userId)) {
                         $this->Flash->success('Success! You should be shortly receiving an email with a link to reset your password.');
+                        $this->request->data = [];
                     } else {
                         $msg = 'There was an error sending your password-resetting email. ';
                         $msg .= 'Please try again, or email <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> for assistance.';
