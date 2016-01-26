@@ -3,6 +3,8 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Core\Configure;
+use Cake\Network\Exception\ForbiddenException;
+use Cake\Network\Exception\NotFoundException;
 
 /**
  * Users Controller
@@ -15,7 +17,7 @@ class UsersController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->Auth->allow(['login', 'logout', 'forgotPassword']);
+        $this->Auth->allow(['login', 'logout', 'forgotPassword', 'resetPassword']);
     }
 
     public function login()
@@ -143,6 +145,39 @@ class UsersController extends AppController
         }
         $this->set([
             'titleForLayout' => 'Forgot Password',
+            'user' => $user
+        ]);
+    }
+
+    public function resetPassword($userId = null, $timestamp = null, $hash = null)
+    {
+        if (! $userId || ! $timestamp && ! $hash) {
+            throw new NotFoundException('Incomplete URL for password-resetting. Did you leave out part of the URL when you copied and pasted it?');
+        }
+
+        if (time() - $timestamp > 60 * 60 * 24) {
+            throw new ForbiddenException('Sorry, that link has expired.');
+        }
+
+        $expectedHash = $this->Users->getPasswordResetHash($userId, $timestamp);
+        if ($hash != $expectedHash) {
+            throw new ForbiddenException('Invalid security key');
+        }
+
+        $user = $this->Users->get($userId);
+
+        if ($this->request->is(['post', 'put'])) {
+            $this->request->data['password'] = $this->request->data('new_password');
+            $user = $this->Users->patchEntity($user, $this->request->data());
+            if ($this->Users->save($user)) {
+                $this->Flash->success('Your password has been updated.');
+                return $this->redirect(['action' => 'login']);
+            }
+        }
+        $this->request->data = [];
+
+        $this->set([
+            'titleForLayout' => 'Reset Password',
             'user' => $user
         ]);
     }
