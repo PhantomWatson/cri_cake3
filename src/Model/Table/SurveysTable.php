@@ -273,9 +273,14 @@ class SurveysTable extends Table
         $surveysTable = TableRegistry::get('Surveys');
         $survey = $surveysTable->get($respondent->survey_id);
 
+        $communityId = $survey->community_id;
+        $communitiesTable = TableRegistry::get('Communities');
+        $clients = $communitiesTable->getClients($communityId);
+
         $email = new Email('survey_invitation');
         $email->to($respondent->email);
         $email->viewVars([
+            'clients' => $clients,
             'criUrl' => Router::url('/', true),
             'surveyType' => $survey->type,
             'surveyUrl' => $survey->sm_url

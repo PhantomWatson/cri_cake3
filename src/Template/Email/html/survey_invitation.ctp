@@ -1,9 +1,35 @@
+<?php
+    $toParticipateBlurb = "to participate in a <a href=\"$criUrl\">Community Readiness Initiative</a> survey for your community";
+?>
+
+<?php if (empty($clients)): ?>
+    <p>
+        You have been invited <?= $toParticipateBlurb ?>.
+    </p>
+<?php elseif (count($clients) == 1): ?>
+    <p>
+        You have been invited by
+        <a href="mailto:<?= $clients[0]['email'] ?>">
+            <?= $clients[0]['name'] ?>
+        </a>
+        <?= $toParticipateBlurb ?>.
+    </p>
+<?php else: ?>
+    <p>
+        You have been invited by the following community representatives <?= $toParticipateBlurb ?>:
+    </p>
+    <ul>
+        <?php foreach ($clients as $client): ?>
+            <li>
+                <a href="mailto:<?= $client['email'] ?>">
+                    <?= $client['name'] ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+
 <p>
-    You have been invited to participate in a
-    <a href="<?= $criUrl ?>">
-        Community Readiness Initiative
-    </a>
-    survey for your community.
     This is a project in partnership with the
     <a href="http://www.in.gov/ocra/">Indiana Office of Community and Rural Affairs (OCRA)</a>
     and Ball State University's
