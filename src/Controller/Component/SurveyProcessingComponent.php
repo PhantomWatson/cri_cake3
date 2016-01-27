@@ -82,7 +82,7 @@ class SurveyProcessingComponent extends Component
             $errors = $respondent->errors();
             if (empty($errors) && $respondentsTable->save($respondent)) {
                 $surveysTable = TableRegistry::get('Surveys');
-                if ($surveysTable->sendInvitationEmail($respondent->id)) {
+                if ($surveysTable->sendInvitationEmail($respondent->id, $senderEmail, $senderName)) {
                     $successEmails[] = $invitee['email'];
                     $allRespondents[] = $invitee['email'];
                     $approvedRespondents[] = $invitee['email'];

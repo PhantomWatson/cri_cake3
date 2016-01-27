@@ -265,7 +265,7 @@ class SurveysTable extends Table
         return Cache::read($smId, 'survey_urls');
     }
 
-    public function sendInvitationEmail($respondentId)
+    public function sendInvitationEmail($respondentId, $senderEmail, $senderName)
     {
         $respondentsTable = TableRegistry::get('Respondents');
         $respondent = $respondentsTable->get($respondentId);
@@ -279,6 +279,9 @@ class SurveysTable extends Table
 
         $email = new Email('survey_invitation');
         $email->to($respondent->email);
+        if ($senderEmail) {
+            $email->returnPath($senderEmail, $senderName);
+        }
         $email->viewVars([
             'clients' => $clients,
             'criUrl' => Router::url('/', true),
