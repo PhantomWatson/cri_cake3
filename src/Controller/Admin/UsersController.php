@@ -100,7 +100,11 @@ class UsersController extends AppController
 
             $errors = $user->errors();
             if (empty($errors) && $this->Users->save($user)) {
-                if ($this->Users->sendNewAccountEmail($user, $this->request->data['new_password'])) {
+                // Set as the returnPath for invitation emails
+                $senderEmail = $this->Auth->user('email');
+                $senderName = $this->Auth->user('name');
+
+                if ($this->Users->sendNewAccountEmail($user, $this->request->data['new_password'], $senderEmail, $senderName)) {
                     $this->Flash->success('User account created and login credentials emailed');
                     return $this->redirect([
                         'prefix' => 'admin',
