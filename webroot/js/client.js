@@ -7,10 +7,10 @@ var surveyInvitationForm = {
 		this.counter = params.counter;
 		this.already_invited = params.already_invited;
 		this.uninvited_respondents = params.uninvited_respondents;
-		this.addField(false);
+		this.addRow(false);
 		$('#add_another').click(function (event) {
 			event.preventDefault();
-			surveyInvitationForm.addField(true);
+			surveyInvitationForm.addRow(true);
 		});
 		$('#sent_invitations_toggler').click(function (event) {
 			event.preventDefault();
@@ -31,7 +31,7 @@ var surveyInvitationForm = {
 		});
 	},
 	
-	addField: function (animate) {
+	addRow: function (animate) {
 		var template_container = $('#invitation_fields_template');
 		var new_container = template_container.clone();
 		new_container.attr('id', '');
