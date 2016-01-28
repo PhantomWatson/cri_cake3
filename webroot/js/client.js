@@ -47,7 +47,7 @@ var surveyInvitationForm = {
 	                surveyInvitationForm.checkEmail(field);
 	            }
 	        });
-	        var fieldname = field.attr('name').replace('0', this.counter);
+	        var fieldname = field.attr('name').replace('0', surveyInvitationForm.counter);
 	        field.attr('name', fieldname);
 		});
 		new_container.find('button.remove').click(function () {
