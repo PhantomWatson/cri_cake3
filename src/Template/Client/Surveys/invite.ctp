@@ -36,12 +36,11 @@
             );
         }
     ?>
-</p>
-
-<p>
-    Enter the names and email addresses of one or more community <?= $respondentTypePlural ?> to send them survey invitations.
-    <a href="#" id="sent_invitations_toggler">
+    <a href="#" id="sent_invitations_toggler" class="btn btn-default">
         Who has already been invited?
+    </a>
+    <a href="#" id="suggestions_toggler" class="btn btn-default">
+        Suggestions of who to invite
     </a>
 </p>
 
@@ -82,10 +81,6 @@
     <?php endif; ?>
 </div>
 
-<p>
-    Would you like some <a href="#" id="suggestions_toggler">suggestions of who to invite</a>?
-</p>
-
 <?php
     $suggestions = [
         'Mayor',
@@ -119,6 +114,10 @@
         <?php endforeach; ?>
     </ul>
 </div>
+
+<p>
+    Enter information for one or more community <?= $respondentTypePlural ?> to send them survey invitations.
+</p>
 
 <?= $this->Form->create(
     'User',
@@ -172,17 +171,20 @@
             ]
         );
     ?>
-    <button type="button" class="remove btn btn-danger">Remove</button>
+    <button type="button" class="remove btn btn-danger pull-right">Remove</button>
 </div>
 
 <fieldset class="form-group">
 </fieldset>
 
-<div class="form-group">
-    <a href="#" class="btn btn-default" id="add_another">
-        Add another
+<p>
+    <a href="#" class="btn btn-default pull-right" id="add_another">
+        <span class="glyphicon glyphicon-plus"></span>
+        Add another row
     </a>
+</p>
 
+<div class="form-group">
     <?= $this->Form->button(
         'Send invitations',
         [
@@ -193,7 +195,9 @@
     <?= $this->Form->end() ?>
 </div>
 
-<?php $this->element('script', ['script' => 'client']); ?>
+<?php
+    $this->element('script', ['script' => 'client']);
+?>
 <?php $this->append('buffered'); ?>
     surveyInvitationForm.init({
         counter: 1,
