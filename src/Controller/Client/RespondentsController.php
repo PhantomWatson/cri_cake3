@@ -51,7 +51,6 @@ class RespondentsController extends AppController
                     'Responses' => function ($q) {
                         return $q
                             ->select(['respondent_id', 'response_date'])
-                            ->limit(1)
                             ->order(['Responses.response_date' => 'DESC']);
                     }
                 ]);
