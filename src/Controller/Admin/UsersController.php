@@ -75,6 +75,7 @@ class UsersController extends AppController
                 'client' => 'Client',
                 'consultant' => 'Consultant'
             ],
+            'salutations' => $this->Users->getSalutations(),
             'selectedCommunities' => $selectedCommunities,
             'user' => $user
         ]);

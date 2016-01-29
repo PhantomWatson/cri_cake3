@@ -269,7 +269,7 @@ class CommunitiesController extends AppController
             ->contain([
                 'Clients' => function ($q) {
                     return $q
-                        ->select(['name', 'email'])
+                        ->select(['salutation', 'name', 'email'])
                         ->order(['name' => 'ASC']);
                 }
             ])
@@ -390,6 +390,7 @@ class CommunitiesController extends AppController
             'client' => $client,
             'communityId' => $communityId,
             'communityName' => $community->name,
+            'salutations' => $usersTable->getSalutations(),
             'role' => 'client',
             'titleForLayout' => 'Add a New Client for '.$community->name,
         ]);

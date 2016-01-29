@@ -9,8 +9,9 @@
 <?php elseif (count($clients) == 1): ?>
     <p>
         You have been invited by
-        <a href="mailto:<?= $clients[0]['email'] ?>"><?=
-            $clients[0]['name']
+        <a href="mailto:<?= $clients[0]['email'] ?>"><?php
+            echo ($clients[0]['salutation'] == '') ? '' : $clients[0]['salutation'].' ';
+            echo $clients[0]['name'];
         ?></a>
         <?= $toParticipateBlurb ?>.
     </p>
@@ -21,8 +22,9 @@
     <ul>
         <?php foreach ($clients as $client): ?>
             <li>
-                <a href="mailto:<?= $client['email'] ?>"><?=
-                    $client['name']
+                <a href="mailto:<?= $client['email'] ?>"><?php
+                    echo ($client['salutation'] == '') ? '' : $client['salutation'].' ';
+                    echo $client['name']
                  ?></a>
             </li>
         <?php endforeach; ?>

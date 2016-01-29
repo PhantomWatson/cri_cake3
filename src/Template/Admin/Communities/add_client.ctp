@@ -46,6 +46,14 @@
     <table class="table">
         <?php
             echo $this->Form->input(
+                'salutation',
+                [
+                    'class' => 'form-control',
+                    'div' => ['class' => 'form-group'],
+                    'options' => $salutations
+                ]
+            );
+            echo $this->Form->input(
                 'name',
                 [
                     'class' => 'form-control',

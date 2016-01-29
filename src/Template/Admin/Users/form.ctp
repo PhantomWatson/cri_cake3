@@ -22,6 +22,13 @@
 <?php
     echo $this->Form->create($user);
     echo $this->Form->input(
+        'salutation',
+        [
+            'class' => 'form-control',
+            'options' => $salutations
+        ]
+    );
+    echo $this->Form->input(
         'name',
         ['class' => 'form-control']
     );

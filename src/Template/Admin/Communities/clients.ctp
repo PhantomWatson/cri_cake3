@@ -65,6 +65,7 @@
             <?php foreach ($clients as $client): ?>
                 <tr>
                     <td>
+                        <?= $client['salutation'] ?>
                         <?= $client['name'] ?>
                     </td>
                     <td>

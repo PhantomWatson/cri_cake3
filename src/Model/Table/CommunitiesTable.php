@@ -345,7 +345,7 @@ class CommunitiesTable extends Table
             ->contain([
                 'Clients' => function ($q) {
                     return $q
-                        ->select(['id', 'name', 'email'])
+                        ->select(['id', 'salutation', 'name', 'email'])
                         ->order(['Clients.name' => 'ASC']);
                 }
             ])

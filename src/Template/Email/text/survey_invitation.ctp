@@ -4,11 +4,15 @@
     if (empty($clients)) {
         echo "$toParticipateBlurb.";
     } elseif (count($clients) == 1) {
-        echo "by {$clients[0]['name']} ({$clients[0]['email']}) $toParticipateBlurb.";
+        echo 'by ';
+        echo ($clients[0]['salutation'] == '') ? '' : $clients[0]['salutation'].' ';
+        echo "{$clients[0]['name']} ({$clients[0]['email']}) $toParticipateBlurb.";
     } else {
         echo "by the following community representatives $toParticipateBlurb:\n";
         foreach ($clients as $client) {
-            echo " - {$client['name']} ({$client['email']})\n";
+            echo ' - ';
+            echo ($client['salutation'] == '') ? '' : $client['salutation'].' ';
+            echo "{$client['name']} ({$client['email']})\n";
         }
     }
 ?>

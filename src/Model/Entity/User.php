@@ -17,6 +17,7 @@ class User extends Entity
      */
     protected $_accessible = [
         'role' => true,
+        'salutation' => true,
         'name' => true,
         'email' => true,
         'phone' => true,
@@ -33,5 +34,18 @@ class User extends Entity
     protected function _setPassword($password)
     {
         return (new DefaultPasswordHasher)->hash($password);
+    }
+
+    /**
+     * Gets the user's name, combined with a salutation if provided
+     *
+     * @return string
+     */
+    protected function _getFullName()
+    {
+        if ($this->_properties['salutation'] == '') {
+            return $this->_properties['name'];
+        }
+        return $this->_properties['salutation'].' '.$this->_properties['name'];
     }
 }

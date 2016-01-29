@@ -8,6 +8,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Cake\Utility\Hash;
 use Cake\Utility\Security;
 use Cake\Validation\Validator;
 
@@ -204,18 +205,27 @@ class UsersTable extends Table
 
     public function getClientList()
     {
-        return $this->find('list')
+        $clients = $this->find('all')
+            ->select(['id', 'salutation', 'name'])
             ->where(['role' => 'client'])
-            ->order(['name' => 'ASC'])
-            ->toArray();
+            ->order(['name' => 'ASC']);
+        $retval = [];
+        foreach ($clients as $client) {
+            $retval[$client->id] = $client->full_name;
+        }
+        return $retval;
     }
 
     public function getConsultantList()
     {
-        return $this->find('list')
+        $consultants = $this->find('list')
             ->where(['role' => 'consultant'])
-            ->order(['name' => 'ASC'])
-            ->toArray();
+            ->order(['name' => 'ASC']);
+        $retval = [];
+        foreach ($consultants as $consultant) {
+            $retval[$consultant->id] = $consultant->full_name;
+        }
+        return $retval;
     }
 
     /**
@@ -325,5 +335,16 @@ class UsersTable extends Table
     public function getPasswordResetHash($userId, $timestamp)
     {
         return Security::hash($userId.$timestamp, 'sha1', true);
+    }
+
+    /**
+     * Return the possible values for the 'salutation' field
+     *
+     * @return array
+     */
+    public function getSalutations()
+    {
+        $salutations = ['', 'Mr.', 'Ms.', 'Dr.', 'Rev.', 'Prof.'];
+        return array_combine($salutations, $salutations);
     }
 }
