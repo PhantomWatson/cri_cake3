@@ -73,6 +73,7 @@ class SurveyProcessingComponent extends Component
             $respondent = $respondentsTable->newEntity([
                 'email' => $invitee['email'],
                 'name' => $invitee['name'],
+                'title' => $invitee['title'],
                 'survey_id' => $surveyId,
                 'community_id' => $communityId,
                 'type' => $respondentType,
