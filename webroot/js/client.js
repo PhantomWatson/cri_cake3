@@ -112,7 +112,7 @@ var surveyInvitationForm = {
             var name = $(rows[i]).find('input[name*="[name]"]').val();
             var email = $(rows[i]).find('input[name*="[email]"]').val();
             var title = $(rows[i]).find('input[name*="[title]"]').val();
-            if (name == '' && email == '' && title == '') {
+            if (name === '' && email === '' && title === '') {
                 continue;
             }
             var row = {
@@ -131,7 +131,7 @@ var surveyInvitationForm = {
     
     load: function () {
         var cookieData = Cookies.get(this.cookieKey);
-        if (cookieData.length == 0) {
+        if (cookieData.length === 0) {
             return;
         }
         $('#UserClientInviteForm > fieldset > .form-inline').remove();
