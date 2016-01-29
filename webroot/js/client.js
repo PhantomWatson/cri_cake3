@@ -2,6 +2,8 @@ var surveyInvitationForm = {
 	counter: 1,
 	already_invited: [],
 	uninvited_respondents: [],
+	cookieKey: 'invitationFormData',
+	cookieExpiration: 365, // in days
 	
 	init: function (params) {
 		this.counter = params.counter;
@@ -27,8 +29,19 @@ var surveyInvitationForm = {
 				event.preventDefault();
 				return false;
 			}
+			surveyInvitationForm.clearSavedData();
 			return true;
 		});
+		
+		// Set up form saving
+		Cookies.json = true;
+		$('#save').click(function (event) {
+            event.preventDefault();
+            surveyInvitationForm.save();
+        });
+		if (Cookies.get(this.cookieKey)) {
+		    this.load();
+		}
 	},
 	
 	addRow: function (animate) {
@@ -90,7 +103,51 @@ var surveyInvitationForm = {
 	
 	isUninvitedRespondent: function (email) {
 		return this.uninvited_respondents.indexOf(email) != -1;
-	}
+	},
+	
+	save: function () {
+        var rows = $('#UserClientInviteForm > fieldset > .form-inline');
+        var cookieData = [];
+        for (var i = 0; i < rows.length; i++) {
+            var name = $(rows[i]).find('input[name*="[name]"]').val();
+            var email = $(rows[i]).find('input[name*="[email]"]').val();
+            var title = $(rows[i]).find('input[name*="[title]"]').val();
+            if (name == '' && email == '' && title == '') {
+                continue;
+            }
+            var row = {
+                name: name,
+                email: email,
+                title: title
+            };
+            cookieData.push(row);
+        }
+        Cookies.set(this.cookieKey, cookieData, {expires: this.cookieExpiration});
+        $('#survey-invitation-save-status').html('<span id="invitation-form-loading" class="text-muted"><img src="/data_center/img/loading_small.gif" /> Saving...</span>');
+        setTimeout(function () {
+            $('#survey-invitation-save-status').html('<span class="text-success">Saved</span>');
+        }, 1000);
+    },
+    
+    load: function () {
+        var cookieData = Cookies.get(this.cookieKey);
+        if (cookieData.length == 0) {
+            return;
+        }
+        $('#UserClientInviteForm > fieldset > .form-inline').remove();
+        for (var i = 0; i < cookieData.length; i++) {
+            this.addRow(false);
+            var data = cookieData[i];
+            var row = $('#UserClientInviteForm > fieldset > .form-inline:last-child');
+            row.find('input[name*="[name]"]').val(data.name);
+            row.find('input[name*="[email]"]').val(data.email);
+            row.find('input[name*="[title]"]').val(data.title);
+        }
+    },
+    
+    clearSavedData: function () {
+        Cookies.remove(this.cookieKey);
+    }
 };
 
 var clientHome = {

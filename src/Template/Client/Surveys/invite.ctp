@@ -192,11 +192,21 @@
             'div' => false
         ]
     ) ?>
+    <a href="#" class="btn btn-default" id="save">
+        Save for later
+    </a>
+    <span id="survey-invitation-save-status"></span>
     <?= $this->Form->end() ?>
 </div>
 
+<p>
+    If you click <strong>Save for later</strong>, the information you have entered will be stored in your browser.
+    After saving, you can navigate to another page and then return to this one later in order to send out invitations.
+</p>
+
 <?php
     $this->element('script', ['script' => 'client']);
+    $this->element('script', ['script' => 'js.cookie.js']);
 ?>
 <?php $this->append('buffered'); ?>
     surveyInvitationForm.init({
