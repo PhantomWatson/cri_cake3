@@ -41,7 +41,10 @@
             'inputContainerError' => '<tr><td class="form-group {{type}}{{required}}">{{content}}{{error}}</td></tr>'
         ] + require(ROOT.DS.'config'.DS.'bootstrap_form.php');
         $this->Form->templates($tableTemplate);
-        echo $this->Form->create($client);
+        echo $this->Form->create(
+            $client,
+            ['id' => 'ClientForm']
+        );
     ?>
     <table class="table">
         <?php
@@ -111,3 +114,8 @@
 
     <?= $this->Form->end() ?>
 </div>
+
+<?php $this->element('script', ['script' => 'form-protector']); ?>
+<?php $this->append('buffered'); ?>
+    formProtector.protect('ClientForm');
+<?php $this->end();
