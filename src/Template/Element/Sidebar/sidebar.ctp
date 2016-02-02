@@ -63,16 +63,6 @@
         <?php endif; ?>
         <li class="link">
             <?= $this->Html->link(
-                'Community Progress',
-                [
-                    'prefix' => false,
-                    'controller' => 'Communities',
-                    'action' => 'index'
-                ]
-            ) ?>
-        </li>
-        <li class="link">
-            <?= $this->Html->link(
                 'FAQs for Communities',
                 [
                     'prefix' => false,
