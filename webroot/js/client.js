@@ -127,6 +127,7 @@ var surveyInvitationForm = {
         setTimeout(function () {
             $('#survey-invitation-save-status').html('<span class="text-success">Saved</span>');
         }, 1000);
+        formProtector.setSaved('UserClientInviteForm');
     },
     
     load: function () {
