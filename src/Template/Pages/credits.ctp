@@ -38,7 +38,7 @@
         765-285-2773 &#149;
         <a href="mailto:cri@bsu.edu">cri@bsu.edu</a> or
         <a href="mailto:drterrell@bsu.edu">drterrell@bsu.edu</a> &#149;
-        <a href="http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici">http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici</a>
+        <a href="http://www.bsu.edu/ici">http://www.bsu.edu/ici</a>
         <br />
         David Terrell, Director of Economic Development Policy and Director of the RUPRI Center for State Policy
         <br />
