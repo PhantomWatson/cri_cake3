@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f138797868aac9707ac57eb76053f2f4",
-    "content-hash": "0f2009e0c8e1ff01e25f782b1e0f0876",
+    "hash": "b5e8531fff676e9319e94530c3025f32",
+    "content-hash": "daab41ca8343ceac8e1b5be446b5a7ee",
     "packages": [
         {
             "name": "ascension/php-surveymonkey",
@@ -195,16 +195,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "3.1.8",
+            "version": "3.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "72db96b63022e5b9bcafe960c039315d128f9649"
+                "reference": "2930c3c0aeba6150cdbb67bf75bb31597efd614c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/72db96b63022e5b9bcafe960c039315d128f9649",
-                "reference": "72db96b63022e5b9bcafe960c039315d128f9649",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/2930c3c0aeba6150cdbb67bf75bb31597efd614c",
+                "reference": "2930c3c0aeba6150cdbb67bf75bb31597efd614c",
                 "shasum": ""
             },
             "require": {
@@ -261,7 +261,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-01-24 02:07:15"
+            "time": "2016-01-31 02:45:20"
         },
         {
             "name": "cakephp/cakephp-codesniffer",
@@ -304,20 +304,20 @@
         },
         {
             "name": "cakephp/migrations",
-            "version": "1.5.2",
+            "version": "1.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/migrations.git",
-                "reference": "27d65766312b51be8228365f2b75e2541017723f"
+                "reference": "ba856dce1306d633d4f8fb20385f67d07ccc3708"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/migrations/zipball/27d65766312b51be8228365f2b75e2541017723f",
-                "reference": "27d65766312b51be8228365f2b75e2541017723f",
+                "url": "https://api.github.com/repos/cakephp/migrations/zipball/ba856dce1306d633d4f8fb20385f67d07ccc3708",
+                "reference": "ba856dce1306d633d4f8fb20385f67d07ccc3708",
                 "shasum": ""
             },
             "require": {
-                "cakephp/cakephp": "~3.1",
+                "cakephp/cakephp": "~3.1 || 3.2.*",
                 "php": ">=5.4",
                 "robmorgan/phinx": "~0.5.0"
             },
@@ -350,7 +350,7 @@
                 "cakephp",
                 "migrations"
             ],
-            "time": "2015-12-25 11:58:59"
+            "time": "2016-01-19 12:14:44"
         },
         {
             "name": "cakephp/plugin-installer",
@@ -398,12 +398,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dereuromark/cakephp-shim.git",
-                "reference": "a3c07b654e1896247e42f3ae1a475ac6e71de21c"
+                "reference": "7a8df53cc8449c67f06f46420adc33adc07e9486"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dereuromark/cakephp-shim/zipball/a3c07b654e1896247e42f3ae1a475ac6e71de21c",
-                "reference": "a3c07b654e1896247e42f3ae1a475ac6e71de21c",
+                "url": "https://api.github.com/repos/dereuromark/cakephp-shim/zipball/7a8df53cc8449c67f06f46420adc33adc07e9486",
+                "reference": "7a8df53cc8449c67f06f46420adc33adc07e9486",
                 "shasum": ""
             },
             "require": {
@@ -436,7 +436,7 @@
                 "plugin",
                 "shim"
             ],
-            "time": "2016-01-25 23:05:23"
+            "time": "2016-01-25 23:42:47"
         },
         {
             "name": "doctrine/instantiator",
@@ -633,6 +633,33 @@
                 "time"
             ],
             "time": "2014-09-26 02:52:02"
+        },
+        {
+            "name": "phantomwatson/form-protector",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PhantomWatson/form-protector.git",
+                "reference": "0d0d54d2302b19815bf858943931a5ab0f222af1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PhantomWatson/form-protector/zipball/0d0d54d2302b19815bf858943931a5ab0f222af1",
+                "reference": "0d0d54d2302b19815bf858943931a5ab0f222af1",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Protects users from navigating away from forms before submitting them",
+            "homepage": "https://github.com/PhantomWatson/form-protector",
+            "keywords": [
+                "form",
+                "jquery"
+            ],
+            "time": "2016-02-02 21:04:19"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -1042,16 +1069,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.21",
+            "version": "4.8.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "ea76b17bced0500a28098626b84eda12dbcf119c"
+                "reference": "dfb11aa5236376b4fc63853cf746af39fe780e72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ea76b17bced0500a28098626b84eda12dbcf119c",
-                "reference": "ea76b17bced0500a28098626b84eda12dbcf119c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/dfb11aa5236376b4fc63853cf746af39fe780e72",
+                "reference": "dfb11aa5236376b4fc63853cf746af39fe780e72",
                 "shasum": ""
             },
             "require": {
@@ -1110,7 +1137,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-12-12 07:45:58"
+            "time": "2016-02-02 09:01:21"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2089,16 +2116,16 @@
     "packages-dev": [
         {
             "name": "cakephp/bake",
-            "version": "1.1.3",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/bake.git",
-                "reference": "c53b197cfa9587b3cbf92d3b82044828c7d02590"
+                "reference": "7940937c23fb186f7454074cf5f4b4e601e92d92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/bake/zipball/c53b197cfa9587b3cbf92d3b82044828c7d02590",
-                "reference": "c53b197cfa9587b3cbf92d3b82044828c7d02590",
+                "url": "https://api.github.com/repos/cakephp/bake/zipball/7940937c23fb186f7454074cf5f4b4e601e92d92",
+                "reference": "7940937c23fb186f7454074cf5f4b4e601e92d92",
                 "shasum": ""
             },
             "require": {
@@ -2131,7 +2158,7 @@
                 "bake",
                 "cakephp"
             ],
-            "time": "2015-12-29 19:03:50"
+            "time": "2016-02-01 02:11:48"
         },
         {
             "name": "cakephp/debug_kit",
@@ -2551,6 +2578,7 @@
     "stability-flags": {
         "ballstatecber/datacenter-plugin-cakephp3": 20,
         "dereuromark/cakephp-shim": 20,
+        "phantomwatson/form-protector": 20,
         "psy/psysh": 0
     },
     "prefer-stable": true,

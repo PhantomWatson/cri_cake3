@@ -207,6 +207,7 @@
 <?php
     $this->element('script', ['script' => 'client']);
     $this->element('script', ['script' => 'js.cookie.js']);
+    $this->element('script', ['script' => 'form-protector']);
 ?>
 <?php $this->append('buffered'); ?>
     surveyInvitationForm.init({
