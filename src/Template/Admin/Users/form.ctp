@@ -20,7 +20,10 @@
 </p>
 
 <?php
-    echo $this->Form->create($user);
+    echo $this->Form->create(
+        $user,
+        ['id' => 'UserForm']
+    );
     echo $this->Form->input(
         'salutation',
         [
@@ -149,9 +152,11 @@
     );
     echo $this->Form->end();
     $this->element('script', ['script' => 'admin']);
+    $this->element('script', ['script' => 'form-protector']);
 ?>
 <?php $this->append('buffered'); ?>
     adminUserEdit.init({
         selected_communities: <?= json_encode($selectedCommunities) ?>
     });
+    formProtector.protect('UserForm');
 <?php $this->end(); ?>
