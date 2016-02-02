@@ -155,10 +155,12 @@
     echo $this->Form->end();
 
     $this->element('script', ['script' => 'admin']);
+    $this->element('script', ['script' => 'form-protector']);
 ?>
 
 <?php $this->append('buffered'); ?>
     communityForm.init({
         community_id: <?= isset($communityId) ? $communityId : 'null' ?>
     });
+    formProtector.protect('CommunityAdminEditForm');
 <?php $this->end();
