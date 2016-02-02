@@ -53,7 +53,6 @@ class CommunitiesController extends AppController
     {
         $communities = $this->Communities->find('all')
             ->select(['id', 'name', 'score'])
-            ->where(['public' => true])
             ->order(['Communities.name' => 'ASC'])
             ->toArray();
         $this->set([
