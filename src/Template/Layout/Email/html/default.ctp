@@ -1,23 +1,41 @@
-<?php
-/**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @since         0.10.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-<head>
-</head>
-<body>
-    <?= $this->fetch('content') ?>
-</body>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <table cellspacing="0" cellpadding="0" border="0" width="100%" style="font-family: Verdana, Helvetica, Arial;">
+            <tr>
+                <td bgcolor="#FFFFFF" align="center">
+                    <table width="650px" cellspacing="0" cellpadding="3">
+                        <tr>
+                            <td>
+                                <?= $this->fetch('content') ?>
+
+                                <p>
+                                    <br />
+                                    <strong>
+                                        <?= $this->Html->image('ici-email-logo.jpg', [
+                                            'alt' => 'Ball State Indiana Communities Institute',
+                                            'fullBase' => true
+                                        ]) ?>
+                                    </strong>
+                                    <br />
+                                    <a href="http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici">
+                                        http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici
+                                    </a>
+                                    <br />
+                                    <a href="mailto:cri@bsu.edu">
+                                        cri@bsu.edu
+                                    </a>
+                                    &#149; 765-285-2773
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
 </html>

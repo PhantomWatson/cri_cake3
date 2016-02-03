@@ -26,5 +26,3 @@
 <p>
     If you have any questions, please email <a href="mailto:cri@bsu.edu">cri@bsu.edu</a>.
 </p>
-
-<?= $this->element('Email'.DS.'html'.DS.'signature') ?>

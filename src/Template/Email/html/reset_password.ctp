@@ -11,5 +11,3 @@
         <?= $resetUrl ?>
     </a>
 </p>
-
-<?= $this->element('Email'.DS.'html'.DS.'signature') ?>

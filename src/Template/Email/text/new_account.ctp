@@ -9,6 +9,3 @@ Log in to the CRI website at <?= $loginUrl ?> using the following information:
 Once logged in, you can change your password and begin the next stage of CRI.
 
 If you have any questions, please email cri@bsu.edu.
-
-
-<?= $this->element('Email'.DS.'text'.DS.'signature') ?>

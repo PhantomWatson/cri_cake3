@@ -27,6 +27,3 @@ Please visit the following URL to begin:
 
 
 If you have any questions, please email cri@bsu.edu.
-
-
-<?= $this->element('Email'.DS.'text'.DS.'signature') ?>
