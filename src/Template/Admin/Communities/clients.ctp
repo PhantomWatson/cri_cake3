@@ -59,6 +59,8 @@
                 <th>
                     Email
                 </th>
+                <th>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -72,6 +74,18 @@
                         <a href="mailto:<?= $client['email'] ?>">
                             <?= $client['email'] ?>
                         </a>
+                    </td>
+                    <td>
+                        <?= $this->Html->link(
+                            'Edit',
+                            [
+                                'prefix' => 'admin',
+                                'controller' => 'Users',
+                                'action' => 'edit',
+                                $client['id']
+                            ],
+                            ['class' => 'btn btn-default']
+                        ) ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
