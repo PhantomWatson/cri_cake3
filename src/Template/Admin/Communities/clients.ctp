@@ -86,6 +86,20 @@
                             ],
                             ['class' => 'btn btn-default']
                         ) ?>
+                        <?= $this->Html->link(
+                            'Remove',
+                            [
+                                'prefix' => 'admin',
+                                'controller' => 'Communities',
+                                'action' => 'removeClient',
+                                $client['id'],
+                                $communityId
+                            ],
+                            [
+                                'class' => 'btn btn-default',
+                                'confirm' => "Are you sure you want to remove {$client['name']} from this community?"
+                            ]
+                        ) ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

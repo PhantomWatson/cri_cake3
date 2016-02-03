@@ -396,6 +396,16 @@ class CommunitiesController extends AppController
         ]);
     }
 
+    public function removeClient($clientId, $communityId)
+    {
+        $usersTable = TableRegistry::get('Users');
+        $client = $usersTable->get($clientId);
+        $community = $this->Communities->get($communityId);
+        $this->Communities->Clients->unlink($community, [$client]);
+        $this->Flash->success('Removed '.$client->name.' from '.$community->name);
+        return $this->redirect($this->referer());
+    }
+
     public function selectClient($communityId)
     {
         $community = $this->Communities->get($communityId);
