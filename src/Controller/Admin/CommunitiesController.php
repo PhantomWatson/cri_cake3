@@ -269,7 +269,6 @@ class CommunitiesController extends AppController
             ->contain([
                 'Clients' => function ($q) {
                     return $q
-                        ->select(['id', 'salutation', 'name', 'email'])
                         ->order(['name' => 'ASC']);
                 }
             ])

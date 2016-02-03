@@ -50,14 +50,14 @@
         This community does not have any client accounts associated with it.
     </p>
 <?php else: ?>
-    <table class="table">
+    <table class="table" id="associated_clients">
         <thead>
             <tr>
                 <th>
                     Name
                 </th>
                 <th>
-                    Email
+                    Contact
                 </th>
                 <th>
                 </th>
@@ -69,11 +69,27 @@
                     <td>
                         <?= $client['salutation'] ?>
                         <?= $client['name'] ?>
+
+                        <span class="title">
+                            <?php if ($client['title']): ?>
+                                <br />
+                                <?= $client['title'] ?>
+                            <?php endif; ?>
+                            <?php if ($client['organization']): ?>
+                                <br />
+                                <?= $client['organization'] ?>
+                            <?php endif; ?>
+                        </span>
                     </td>
                     <td>
                         <a href="mailto:<?= $client['email'] ?>">
                             <?= $client['email'] ?>
                         </a>
+
+                        <?php if ($client['phone']): ?>
+                            <br />
+                            <?= $client['phone'] ?>
+                        <?php endif; ?>
                     </td>
                     <td>
                         <?= $this->Html->link(
