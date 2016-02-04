@@ -5,7 +5,7 @@
  * @requires jQuery
  */ 
 var formProtector = {
-    protect: function (formId) {
+    protect: function (formId, warningMessage) {
         // Set up noting changes to form fields
         var form = $('#'+formId);
         form.find('select, input, textarea').change(function (event) {
@@ -22,14 +22,16 @@ var formProtector = {
         createEvent(trigger, function(event) {
             var form = $('#'+formId);
             if (form.data('changed') === 1 && form.data('submitting') !== 1) {
-                formProtector.warn(event);
+                formProtector.warn(event, warningMessage);
             }
         });
     },
-    warn: function (event) {
-        var msg = 'Are you sure you want to leave this page? The information that you have entered will be lost.';
-        (event || window.event).returnValue = msg;
-        return msg;
+    warn: function (event, warningMessage) {
+        if (typeof warningMessage == 'undefined') {
+            warningMessage = 'Are you sure you want to leave this page? The information that you have entered will be lost.';
+        }
+        (event || window.event).returnValue = warningMessage;
+        return warningMessage;
     },
     setChanged: function (formId) {
         $('#'+formId).data('changed', 1);
