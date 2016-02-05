@@ -112,6 +112,7 @@ class RespondentsTable extends Table
                 'survey_id' => $surveyId,
                 'invited' => 1
             ])
+            ->order(['name' => 'ASC'])
             ->all();
     }
 
