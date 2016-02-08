@@ -4,6 +4,7 @@ var surveyInvitationForm = {
 	uninvited_respondents: [],
 	cookieKey: 'invitationFormData',
 	cookieExpiration: 365, // in days
+	rowLimit: 20,
 	
 	init: function (params) {
 		this.counter = params.counter;
@@ -67,6 +68,9 @@ var surveyInvitationForm = {
 			$(this).parent('div').slideUp(function () {
 				$(this).remove();
 			});
+			if (! $('#add_another').is(':visible')) {
+			    $('#add_another').show();
+			}
 		});
 		this.counter++;
 		$('#UserClientInviteForm fieldset').append(new_container);
@@ -74,6 +78,18 @@ var surveyInvitationForm = {
 			new_container.slideDown();
 		} else {
 			new_container.show();
+		}
+		
+		var rowCount = $('#UserClientInviteForm fieldset > div.form-inline').length;
+		if (rowCount >= this.rowLimit) {
+		    if ($('#limit-warning').length === 0) {
+		        var warning = $('<p id="limit-warning" class="alert alert-info"></p>');
+		        warning.html("Sorry, at the moment only "+this.rowLimit+" invitations can be sent out at a time.");
+		        warning.hide();
+		        $('#UserClientInviteForm fieldset').after(warning);
+		        warning.slideDown(500);
+		    }
+		    $('#add_another').hide();
 		}
 	},
 	
