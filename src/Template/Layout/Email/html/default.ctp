@@ -22,8 +22,8 @@
                                         ]) ?>
                                     </strong>
                                     <br />
-                                    <a href="http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici">
-                                        http://cms.bsu.edu/about/administrativeoffices/bbc/state/ici
+                                    <a href="http://www.bsu.edu/ici">
+                                        http://www.bsu.edu/ici
                                     </a>
                                     <br />
                                     <a href="mailto:cri@bsu.edu">
