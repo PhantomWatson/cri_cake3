@@ -45,7 +45,7 @@ var surveyInvitationForm = {
 		}
 	},
 	
-	addRow: function (animate) {
+	addRow: function () {
 		var template_container = $('#invitation_fields_template');
 		var new_container = template_container.clone();
 		new_container.attr('id', '');
