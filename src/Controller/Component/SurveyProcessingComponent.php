@@ -23,16 +23,9 @@ class SurveyProcessingComponent extends Component
         $respondentsTable = TableRegistry::get('Respondents');
 
         $this->setInvitees();
+        $this->cleanInvitees();
 
         foreach ($this->invitees as $i => $invitee) {
-            foreach (['name', 'email', 'title'] as $field) {
-                $invitee[$field] = trim($invitee[$field]);
-            }
-
-            if (empty($invitee['email'])) {
-                continue;
-            }
-
             // Ignore if already approved
             if (in_array($invitee['email'], $approvedRespondents)) {
                 $this->redundantEmails[] = $invitee['email'];
@@ -113,6 +106,24 @@ class SurveyProcessingComponent extends Component
         $invitees = $this->request->data('invitees');
         $invitees = is_array($invitees) ? $invitees : [];
         $this->invitees = $invitees;
+    }
+
+    /**
+     * Clean name, email, and title and remove any invitees with no email address
+     */
+    private function cleanInvitees()
+    {
+        foreach ($this->invitees as $i => &$invitee) {
+            foreach (['name', 'email', 'title'] as $field) {
+                $invitee[$field] = trim($invitee[$field]);
+            }
+
+            $invitee['email'] = strtolower($invitee['email']);
+
+            if (empty($invitee['email'])) {
+                unset($this->invitees[$i]);
+            }
+        }
     }
 
     public function setInvitationFlashMessages()
