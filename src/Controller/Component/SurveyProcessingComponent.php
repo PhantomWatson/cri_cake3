@@ -15,23 +15,20 @@ class SurveyProcessingComponent extends Component
     public $uninvApprovedEmails = [];
     public $errorEmails = [];
     public $recipients = [];
+    public $approvedRespondents = [];
 
     public function processInvitations($params)
     {
         extract($params);
+        $this->approvedRespondents = $approvedRespondents;
 
         $respondentsTable = TableRegistry::get('Respondents');
 
         $this->setInvitees();
         $this->cleanInvitees();
+        $this->removeApproved();
 
         foreach ($this->invitees as $i => $invitee) {
-            // Ignore if already approved
-            if (in_array($invitee['email'], $approvedRespondents)) {
-                $this->redundantEmails[] = $invitee['email'];
-                continue;
-            }
-
             // Approve an unapproved respondent
             if (in_array($invitee['email'], $unaddressedUnapprovedRespondents)) {
                 $this->uninvApprovedEmails[] = $invitee['email'];
@@ -53,7 +50,7 @@ class SurveyProcessingComponent extends Component
                 }
 
                 // Add to approved list
-                $approvedRespondents[] = $invitee['email'];
+                $this->approvedRespondents[] = $invitee['email'];
 
                 // Remove from unapproved list
                 $k = array_search($invitee['email'], $unaddressedUnapprovedRespondents);
@@ -76,7 +73,7 @@ class SurveyProcessingComponent extends Component
             $errors = $respondent->errors();
             if (empty($errors) && $respondentsTable->save($respondent)) {
                 $this->recipients[] = $respondent->email;
-                $approvedRespondents[] = $respondent->email;
+                $this->approvedRespondents[] = $respondent->email;
             } else {
                 $this->errorEmails[] = $invitee['email'];
                 if (Configure::read('debug')) {
@@ -121,6 +118,19 @@ class SurveyProcessingComponent extends Component
             $invitee['email'] = strtolower($invitee['email']);
 
             if (empty($invitee['email'])) {
+                unset($this->invitees[$i]);
+            }
+        }
+    }
+
+    /**
+     * Removes invitees if they've already been invited / approved
+     */
+    private function removeApproved()
+    {
+        foreach ($this->invitees as $i => $invitee) {
+            if (in_array($invitee['email'], $this->approvedRespondents)) {
+                $this->redundantEmails[] = $invitee['email'];
                 unset($this->invitees[$i]);
             }
         }
