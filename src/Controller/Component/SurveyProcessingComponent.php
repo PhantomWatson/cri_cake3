@@ -84,6 +84,7 @@ class SurveyProcessingComponent extends Component
             $errors = $respondent->errors();
             if (empty($errors) && $respondentsTable->save($respondent)) {
                 $recipients[] = $respondent->email;
+                $approvedRespondents[] = $respondent->email;
             } else {
                 $errorEmails[] = $invitee['email'];
                 if (Configure::read('debug')) {
@@ -100,8 +101,6 @@ class SurveyProcessingComponent extends Component
 
         if ($result) {
             $successEmails = $recipients;
-            $allRespondents = $recipients;
-            $approvedRespondents = $recipients;
         } else {
             $errorEmails = $recipients;
         }
