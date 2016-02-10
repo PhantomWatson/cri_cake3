@@ -145,7 +145,7 @@
         </tr>
     </thead>
     <tbody class="template" style="display: none;">
-        <tr class="form-inline hidden" id="invitation_fields_template">
+        <tr class="form-inline" id="invitation_fields_template">
             <?php
                 echo $this->Form->input(
                     'template.name',

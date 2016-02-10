@@ -49,8 +49,6 @@ var surveyInvitationForm = {
 		var template_container = $('#invitation_fields_template');
 		var new_container = template_container.clone();
 		new_container.attr('id', '');
-		new_container.removeClass('hidden');
-		new_container.addClass('visible');
 		new_container.find('input[type=email], input[type=text]').each(function () {
 		    var field = $(this);
 		    field.prop('disabled', false);
