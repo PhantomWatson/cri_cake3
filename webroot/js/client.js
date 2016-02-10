@@ -98,7 +98,7 @@ var surveyInvitationForm = {
 			error_msg = $('<div class="error-message already_invited">An invitation has already been sent to '+email+'</div>');
 			container.append(error_msg);
 		} else {
-			error_msg = field.parent('div').children('.error-message');
+			error_msg = field.parent('td').children('.error-message');
 			error_msg.removeClass('already_invited');
 			error_msg.slideUp(function () {
 				$(this).remove();
