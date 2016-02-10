@@ -33,8 +33,7 @@ class SurveyProcessingComponent extends Component
         $this->removeApproved();
 
         foreach ($this->invitees as $i => $invitee) {
-            // Approve an unapproved respondent
-            if (in_array($invitee['email'], $this->unaddressedUnapprovedRespondents)) {
+            if ($this->isUnapproved($invitee['email'])) {
                 $this->approveInvitee($invitee);
                 continue;
             }
@@ -143,6 +142,17 @@ class SurveyProcessingComponent extends Component
         // Remove from unapproved list
         $k = array_search($invitee['email'], $this->unaddressedUnapprovedRespondents);
         unset($this->unaddressedUnapprovedRespondents[$k]);
+    }
+
+    /**
+     * Returns true if email corresponds to an uninvited respondent pending approval / dismissal
+     *
+     * @param string $email
+     * @return boolean
+     */
+    private function isUnapproved($email)
+    {
+        return in_array($invitee['email'], $this->unaddressedUnapprovedRespondents);
     }
 
     public function setInvitationFlashMessages()
