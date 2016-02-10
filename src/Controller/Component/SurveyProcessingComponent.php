@@ -19,6 +19,7 @@ class SurveyProcessingComponent extends Component
         $redundantEmails = [];
         $uninvApprovedEmails = [];
         $errorEmails = [];
+        $recipients = [];
 
         // Ensure $invitees is an array
         $invitees = $this->request->data('invitees');
@@ -82,20 +83,27 @@ class SurveyProcessingComponent extends Component
             ]);
             $errors = $respondent->errors();
             if (empty($errors) && $respondentsTable->save($respondent)) {
-                $surveysTable = TableRegistry::get('Surveys');
-                if ($surveysTable->sendInvitationEmail($respondent->id, $senderEmail, $senderName)) {
-                    $successEmails[] = $invitee['email'];
-                    $allRespondents[] = $invitee['email'];
-                    $approvedRespondents[] = $invitee['email'];
-                } else {
-                    $errorEmails[] = $invitee['email'];
-                }
+                $recipients[] = $respondent->email;
             } else {
                 $errorEmails[] = $invitee['email'];
                 if (Configure::read('debug')) {
                     $this->Flash->dump($respondent->errors());
                 }
             }
+        }
+
+        $surveysTable = TableRegistry::get('Surveys');
+        $survey = $surveysTable->get($surveyId);
+        $communitiesTable = TableRegistry::get('Communities');
+        $clients = $communitiesTable->getClients($communityId);
+        $result = $surveysTable->sendInvitationEmails($recipients, $clients, $survey, $senderEmail, $senderName);
+
+        if ($result) {
+            $successEmails = $recipients;
+            $allRespondents = $recipients;
+            $approvedRespondents = $recipients;
+        } else {
+            $errorEmails = $recipients;
         }
 
         $this->setInvitationFlashMessages($successEmails, $redundantEmails, $errorEmails, $uninvApprovedEmails);

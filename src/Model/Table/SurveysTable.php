@@ -265,22 +265,15 @@ class SurveysTable extends Table
         return Cache::read($smId, 'survey_urls');
     }
 
-    public function sendInvitationEmail($respondentId, $senderEmail, $senderName)
+    public function sendInvitationEmails($recipients, $clients, $survey, $senderEmail, $senderName)
     {
-        $respondentsTable = TableRegistry::get('Respondents');
-        $respondent = $respondentsTable->get($respondentId);
-
-        $surveysTable = TableRegistry::get('Surveys');
-        $survey = $surveysTable->get($respondent->survey_id);
-
-        $communityId = $survey->community_id;
-        $communitiesTable = TableRegistry::get('Communities');
-        $clients = $communitiesTable->getClients($communityId);
-
         $email = new Email('survey_invitation');
-        $email->to($respondent->email);
+        $email->to(Configure::read('noreply_email'));
         if ($senderEmail) {
             $email->returnPath($senderEmail, $senderName);
+        }
+        foreach ($recipients as $recipient) {
+            $email->addBcc($recipient);
         }
         $email->viewVars([
             'clients' => $clients,

@@ -166,7 +166,7 @@ class SurveysController extends AppController
         $senderName = $this->Auth->user('name');
 
         if ($this->request->is('post')) {
-            $this->SurveyProcessing->processInvitations(compact(
+            $params = compact(
                 'allRespondents',
                 'approvedRespondents',
                 'communityId',
@@ -175,7 +175,8 @@ class SurveysController extends AppController
                 'senderName',
                 'surveyId',
                 'unaddressedUnapprovedRespondents'
-            ));
+            );
+            $this->SurveyProcessing->processInvitations($params);
             $approvedRespondents = $respondentsTable->getApprovedList($surveyId);
         }
 
