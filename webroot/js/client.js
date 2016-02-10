@@ -91,7 +91,7 @@ var surveyInvitationForm = {
         if (email === '') {
             return;
         }
-        var container = field.closest('.form-inline');
+        var container = field.closest('td');
         container.children('.error-message').remove();
         var error_msg = null;
         if (this.isInvitedRespondent(email)) {
