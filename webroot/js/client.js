@@ -49,6 +49,8 @@ var surveyInvitationForm = {
 		var template_container = $('#invitation_fields_template');
 		var new_container = template_container.clone();
 		new_container.attr('id', '');
+		new_container.removeClass('hidden');
+		new_container.addClass('visible');
 		new_container.find('input[type=email], input[type=text]').each(function () {
 		    var field = $(this);
 		    field.prop('disabled', false);
@@ -65,28 +67,21 @@ var surveyInvitationForm = {
 	        field.attr('name', fieldname);
 		});
 		new_container.find('button.remove').click(function () {
-			$(this).parent('div').slideUp(function () {
-				$(this).remove();
-			});
+			$(this).parents('tr').remove();
 			if (! $('#add_another').is(':visible')) {
 			    $('#add_another').show();
 			}
 		});
 		this.counter++;
-		$('#UserClientInviteForm fieldset').append(new_container);
-		if (animate) {
-			new_container.slideDown();
-		} else {
-			new_container.show();
-		}
+		$('#UserClientInviteForm tbody.input').append(new_container);
 		
-		var rowCount = $('#UserClientInviteForm fieldset > div.form-inline').length;
+		var rowCount = $('#UserClientInviteForm tbody.input tr').length;
 		if (rowCount >= this.rowLimit) {
 		    if ($('#limit-warning').length === 0) {
 		        var warning = $('<p id="limit-warning" class="alert alert-info"></p>');
 		        warning.html("Sorry, at the moment only "+this.rowLimit+" invitations can be sent out at a time.");
 		        warning.hide();
-		        $('#UserClientInviteForm fieldset').after(warning);
+		        $('#UserClientInviteForm table').after(warning);
 		        warning.slideDown(500);
 		    }
 		    $('#add_another').hide();
@@ -122,7 +117,7 @@ var surveyInvitationForm = {
 	},
 	
 	save: function () {
-        var rows = $('#UserClientInviteForm > fieldset > .form-inline');
+        var rows = $('#UserClientInviteForm tr');
         var cookieData = [];
         for (var i = 0; i < rows.length; i++) {
             var name = $(rows[i]).find('input[name*="[name]"]').val();
@@ -151,11 +146,11 @@ var surveyInvitationForm = {
         if (cookieData.length === 0) {
             return;
         }
-        $('#UserClientInviteForm > fieldset > .form-inline').remove();
+        $('#UserClientInviteForm tr').remove();
         for (var i = 0; i < cookieData.length; i++) {
             this.addRow(false);
             var data = cookieData[i];
-            var row = $('#UserClientInviteForm > fieldset > .form-inline:last-child');
+            var row = $('#UserClientInviteForm > fieldset .form-inline:last-child');
             row.find('input[name*="[name]"]').val(data.name);
             row.find('input[name*="[email]"]').val(data.email);
             row.find('input[name*="[title]"]').val(data.title);

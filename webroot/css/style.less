@@ -427,14 +427,17 @@ div.all_communities {
 		margin-left: 15px;
 		vertical-align: baseline;
 	}
-	fieldset {
-
-		/* Don't show a 'remove' button if there's only one row */
-		> div:only-child {
+	/* Don't show a 'remove' button if there's only one row */
+	tbody.input {
+		tr:only-child {
 			button {
 				display: none;
 			}
 		}
+	}
+	td,
+	th {
+		padding: 5px;
 	}
 }
 

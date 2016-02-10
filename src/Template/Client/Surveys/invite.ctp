@@ -119,63 +119,86 @@
     Enter information for one or more community <?= $respondentTypePlural ?> to send them survey invitations.
 </p>
 
-<?= $this->Form->create(
-    'User',
-    ['id' => 'UserClientInviteForm']
-) ?>
+<?php
+    $formTemplate = include(ROOT.DS.'config'.DS.'bootstrap_form.php');
+    $formTemplate['inputContainer'] = '<td>'.$formTemplate['inputContainer'].'</td>';
+    $formTemplate['inputContainerError'] = '<td>'.$formTemplate['inputContainerError'].'</td>';
+    echo $this->Form->create(
+        'User',
+        ['id' => 'UserClientInviteForm']
+    );
+    $this->Form->templates($formTemplate);
+?>
 
-<div class="form-inline" id="invitation_fields_template" style="display: none;">
-    <?php
-        echo $this->Form->input(
-            'template.name',
-            [
-                'class' => 'form-control',
-                'disabled' => true,
-                'div' => [
-                    'class' => 'form-group'
-                ],
-                'label' => false,
-                'name' => 'invitees[0][name]',
-                'placeholder' => 'Name',
-                'required' => true,
-                'type' => 'text'
-            ]
-        );
-        echo $this->Form->input(
-            'template.email',
-            [
-                'class' => 'form-control',
-                'disabled' => true,
-                'div' => [
-                    'class' => 'form-group'
-                ],
-                'label' => false,
-                'name' => 'invitees[0][email]',
-                'placeholder' => 'Email',
-                'required' => true,
-                'type' => 'email'
-            ]
-        );
-        echo $this->Form->input(
-            'template.title',
-            [
-                'class' => 'form-control',
-                'disabled' => true,
-                'div' => [
-                    'class' => 'form-group'
-                ],
-                'label' => false,
-                'name' => 'invitees[0][title]',
-                'placeholder' => 'Title',
-                'required' => true
-            ]
-        );
-    ?>
-    <button type="button" class="remove btn btn-danger pull-right">Remove</button>
-</div>
-
-<fieldset class="form-group">
-</fieldset>
+<table>
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Professional Title
+            </th>
+        </tr>
+    </thead>
+    <tbody class="template" style="display: none;">
+        <tr class="form-inline hidden" id="invitation_fields_template">
+            <?php
+                echo $this->Form->input(
+                    'template.name',
+                    [
+                        'class' => 'form-control',
+                        'disabled' => true,
+                        'div' => [
+                            'class' => 'form-group'
+                        ],
+                        'label' => false,
+                        'name' => 'invitees[0][name]',
+                        'placeholder' => 'Name',
+                        'required' => true,
+                        'type' => 'text'
+                    ]
+                );
+                echo $this->Form->input(
+                    'template.email',
+                    [
+                        'class' => 'form-control',
+                        'disabled' => true,
+                        'div' => [
+                            'class' => 'form-group'
+                        ],
+                        'label' => false,
+                        'name' => 'invitees[0][email]',
+                        'placeholder' => 'Email',
+                        'required' => true,
+                        'type' => 'email'
+                    ]
+                );
+                echo $this->Form->input(
+                    'template.title',
+                    [
+                        'class' => 'form-control',
+                        'disabled' => true,
+                        'div' => [
+                            'class' => 'form-group'
+                        ],
+                        'label' => false,
+                        'name' => 'invitees[0][title]',
+                        'placeholder' => 'Professional Title',
+                        'required' => true
+                    ]
+                );
+            ?>
+            <td>
+                <button type="button" class="remove btn btn-danger pull-right">Remove</button>
+            </td>
+        </tr>
+    </tbody>
+    <tbody class="input"></tbody>
+</table>
 
 <p>
     <a href="#" class="btn btn-default pull-right" id="add_another">
