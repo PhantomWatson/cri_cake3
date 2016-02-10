@@ -9,23 +9,22 @@ class SurveyProcessingComponent extends Component
 {
     public $components = ['Flash'];
 
+    public $invitees = [];
+    public $successEmails = [];
+    public $redundantEmails = [];
+    public $uninvApprovedEmails = [];
+    public $errorEmails = [];
+    public $recipients = [];
+
     public function processInvitations($params)
     {
         extract($params);
 
         $respondentsTable = TableRegistry::get('Respondents');
 
-        $successEmails = [];
-        $redundantEmails = [];
-        $uninvApprovedEmails = [];
-        $errorEmails = [];
-        $recipients = [];
+        $this->setInvitees();
 
-        // Ensure $invitees is an array
-        $invitees = $this->request->data('invitees');
-        $invitees = empty($invitees) ? [] : $invitees;
-
-        foreach ($invitees as $i => $invitee) {
+        foreach ($this->invitees as $i => $invitee) {
             foreach (['name', 'email', 'title'] as $field) {
                 $invitee[$field] = trim($invitee[$field]);
             }
@@ -36,13 +35,13 @@ class SurveyProcessingComponent extends Component
 
             // Ignore if already approved
             if (in_array($invitee['email'], $approvedRespondents)) {
-                $redundantEmails[] = $invitee['email'];
+                $this->redundantEmails[] = $invitee['email'];
                 continue;
             }
 
             // Approve an unapproved respondent
             if (in_array($invitee['email'], $unaddressedUnapprovedRespondents)) {
-                $uninvApprovedEmails[] = $invitee['email'];
+                $this->uninvApprovedEmails[] = $invitee['email'];
                 $respondent = $respondentsTable->findBySurveyIdAndEmail($surveyId, $invitee['email'])->first();
 
                 // Approve
@@ -57,7 +56,7 @@ class SurveyProcessingComponent extends Component
 
                 // Save
                 if (! $respondentsTable->save($respondent)) {
-                    $errorEmails[] = $invitee['email'];
+                    $this->errorEmails[] = $invitee['email'];
                 }
 
                 // Add to approved list
@@ -83,10 +82,10 @@ class SurveyProcessingComponent extends Component
             ]);
             $errors = $respondent->errors();
             if (empty($errors) && $respondentsTable->save($respondent)) {
-                $recipients[] = $respondent->email;
+                $this->recipients[] = $respondent->email;
                 $approvedRespondents[] = $respondent->email;
             } else {
-                $errorEmails[] = $invitee['email'];
+                $this->errorEmails[] = $invitee['email'];
                 if (Configure::read('debug')) {
                     $this->Flash->dump($respondent->errors());
                 }
@@ -97,44 +96,51 @@ class SurveyProcessingComponent extends Component
         $survey = $surveysTable->get($surveyId);
         $communitiesTable = TableRegistry::get('Communities');
         $clients = $communitiesTable->getClients($communityId);
-        $result = $surveysTable->sendInvitationEmails($recipients, $clients, $survey, $senderEmail, $senderName);
+        $result = $surveysTable->sendInvitationEmails($this->recipients, $clients, $survey, $senderEmail, $senderName);
 
         if ($result) {
-            $successEmails = $recipients;
+            $this->successEmails = $this->recipients;
         } else {
-            $errorEmails = $recipients;
+            $this->errorEmails = $this->recipients;
         }
 
-        $this->setInvitationFlashMessages($successEmails, $redundantEmails, $errorEmails, $uninvApprovedEmails);
+        $this->setInvitationFlashMessages();
         $this->request->data = [];
     }
 
-    public function setInvitationFlashMessages($successEmails, $redundantEmails, $errorEmails, $uninvApprovedEmails)
+    private function setInvitees()
     {
-        $seCount = count($successEmails);
+        $invitees = $this->request->data('invitees');
+        $invitees = is_array($invitees) ? $invitees : [];
+        $this->invitees = $invitees;
+    }
+
+    public function setInvitationFlashMessages()
+    {
+        $seCount = count($this->successEmails);
         if ($seCount) {
-            $list = $this->arrayToList($successEmails);
+            $list = $this->arrayToList($this->successEmails);
             $msg = 'Survey '.__n('invitation', 'invitations', $seCount).' sent to '.$list;
             $this->Flash->success($msg);
         }
 
-        $reCount = count($redundantEmails);
+        $reCount = count($this->redundantEmails);
         if ($reCount) {
-            $list = $this->arrayToList($redundantEmails);
+            $list = $this->arrayToList($this->redundantEmails);
             $msg = $list.__n(' has', ' have', $reCount).' already received a survey invitation';
             $this->Flash->set($msg);
         }
 
-        $eeCount = count($errorEmails);
+        $eeCount = count($this->errorEmails);
         if ($eeCount) {
-            $list = $this->arrayToList($errorEmails);
+            $list = $this->arrayToList($this->errorEmails);
             $msg = 'There was an error inviting '.$list.'. Please try again or contact an administrator if you need assistance.';
             $this->Flash->error($msg);
         }
 
-        $rieCount = count($uninvApprovedEmails);
+        $rieCount = count($this->uninvApprovedEmails);
         if ($rieCount) {
-            $list = $this->arrayToList($uninvApprovedEmails);
+            $list = $this->arrayToList($this->uninvApprovedEmails);
             $msg = 'The uninvited '.__n('response', 'responses', $rieCount).' received from '.$list.__n(' has', ' have', $rieCount).' been approved';
             $this->Flash->success($msg);
         }
