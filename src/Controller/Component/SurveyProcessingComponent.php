@@ -16,11 +16,15 @@ class SurveyProcessingComponent extends Component
     public $errorEmails = [];
     public $recipients = [];
     public $approvedRespondents = [];
+    public $surveyId = null;
+    public $unaddressedUnapprovedRespondents = [];
 
     public function processInvitations($params)
     {
         extract($params);
         $this->approvedRespondents = $approvedRespondents;
+        $this->surveyId = $surveyId;
+        $this->unaddressedUnapprovedRespondents = $unaddressedUnapprovedRespondents;
 
         $respondentsTable = TableRegistry::get('Respondents');
 
@@ -30,32 +34,8 @@ class SurveyProcessingComponent extends Component
 
         foreach ($this->invitees as $i => $invitee) {
             // Approve an unapproved respondent
-            if (in_array($invitee['email'], $unaddressedUnapprovedRespondents)) {
-                $this->uninvApprovedEmails[] = $invitee['email'];
-                $respondent = $respondentsTable->findBySurveyIdAndEmail($surveyId, $invitee['email'])->first();
-
-                // Approve
-                $respondent->approved = 1;
-
-                // Update details
-                foreach (['name', 'title'] as $field) {
-                    if ($invitee[$field]) {
-                        $respondent->$field = $invitee[$field];
-                    }
-                }
-
-                // Save
-                if (! $respondentsTable->save($respondent)) {
-                    $this->errorEmails[] = $invitee['email'];
-                }
-
-                // Add to approved list
-                $this->approvedRespondents[] = $invitee['email'];
-
-                // Remove from unapproved list
-                $k = array_search($invitee['email'], $unaddressedUnapprovedRespondents);
-                unset($unaddressedUnapprovedRespondents[$k]);
-
+            if (in_array($invitee['email'], $this->unaddressedUnapprovedRespondents)) {
+                $this->approveInvitee($invitee);
                 continue;
             }
 
@@ -134,6 +114,35 @@ class SurveyProcessingComponent extends Component
                 unset($this->invitees[$i]);
             }
         }
+    }
+
+    private function approveInvitee($invitee)
+    {
+        $this->uninvApprovedEmails[] = $invitee['email'];
+        $respondentsTable = TableRegistry::get('Respondents');
+        $respondent = $respondentsTable->findBySurveyIdAndEmail($this->surveyId, $invitee['email'])->first();
+
+        // Approve
+        $respondent->approved = 1;
+
+        // Update details
+        foreach (['name', 'title'] as $field) {
+            if ($invitee[$field]) {
+                $respondent->$field = $invitee[$field];
+            }
+        }
+
+        // Save
+        if (! $respondentsTable->save($respondent)) {
+            $this->errorEmails[] = $invitee['email'];
+        }
+
+        // Add to approved list
+        $this->approvedRespondents[] = $invitee['email'];
+
+        // Remove from unapproved list
+        $k = array_search($invitee['email'], $this->unaddressedUnapprovedRespondents);
+        unset($this->unaddressedUnapprovedRespondents[$k]);
     }
 
     public function setInvitationFlashMessages()
