@@ -120,7 +120,8 @@
 </p>
 
 <?php
-    $formTemplate = include(ROOT.DS.'config'.DS.'bootstrap_form.php');
+    $bootstrapFormTemplate = include(ROOT.DS.'config'.DS.'bootstrap_form.php');
+    $formTemplate = $bootstrapFormTemplate;
     $formTemplate['inputContainer'] = '<td>'.$formTemplate['inputContainer'].'</td>';
     $formTemplate['inputContainerError'] = '<td>'.$formTemplate['inputContainerError'].'</td>';
     echo $this->Form->create(
@@ -219,7 +220,10 @@
         Save for later
     </a>
     <span id="survey-invitation-save-status"></span>
-    <?= $this->Form->end() ?>
+    <?php
+        echo $this->Form->end();
+        $this->Form->templates($bootstrapFormTemplate);
+    ?>
 </div>
 
 <p>

@@ -144,15 +144,33 @@ var surveyInvitationForm = {
         if (cookieData.length === 0) {
             return;
         }
-        $('#UserClientInviteForm tr').remove();
         for (var i = 0; i < cookieData.length; i++) {
-            this.addRow(false);
             var data = cookieData[i];
-            var row = $('#UserClientInviteForm > fieldset .form-inline:last-child');
+            if (! data.hasOwnProperty('name') || ! data.hasOwnProperty('email') || ! data.hasOwnProperty('title')) {
+                continue;
+            }
+            if (! this.lastRowIsBlank()) {
+                this.addRow();
+            }
+            var row = $('#UserClientInviteForm tbody.input tr:last-child');
             row.find('input[name*="[name]"]').val(data.name);
             row.find('input[name*="[email]"]').val(data.email);
             row.find('input[name*="[title]"]').val(data.title);
         }
+    },
+    
+    lastRowIsBlank: function () {
+        var row = $('#UserClientInviteForm tbody.input tr:last-child');
+        if (row.find('input[name*="[name]"]').val() !== '') {
+            return false;
+        }
+        if (row.find('input[name*="[email]"]').val() !== '') {
+            return false;
+        }
+        if (row.find('input[name*="[title]"]').val() !== '') {
+            return false;
+        }
+        return true;
     },
     
     clearSavedData: function () {
