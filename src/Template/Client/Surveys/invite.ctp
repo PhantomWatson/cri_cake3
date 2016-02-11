@@ -253,5 +253,4 @@
         already_invited: <?= json_encode(array_values($approvedRespondents)); ?>,
         uninvited_respondents: <?= json_encode(array_values($unaddressedUnapprovedRespondents)) ?>,
     });
-    formProtector.protect('UserClientInviteForm');
 <?php $this->end(); ?>

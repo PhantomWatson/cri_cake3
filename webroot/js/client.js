@@ -47,6 +47,8 @@ var surveyInvitationForm = {
                 surveyInvitationForm.load();
             }
         });
+        
+        formProtector.protect('UserClientInviteForm');
     },
     
     addRow: function () {
@@ -88,6 +90,9 @@ var surveyInvitationForm = {
             }
             $('#add_another').hide();
         }
+        
+        // Make sure formProtector knows about these new fields
+        formProtector.protect('UserClientInviteForm');
     },
     
     checkEmail: function (field) {
