@@ -21,16 +21,14 @@ class SurveyProcessingComponent extends Component
     public $unaddressedUnapprovedRespondents = [];
     public $uninvApprovedEmails = [];
 
-    public function processInvitations($params)
+    public function processInvitations($communityId, $respondentType, $surveyId)
     {
-        extract($params);
-        $this->approvedRespondents = $approvedRespondents;
+        $respondentsTable = TableRegistry::get('Respondents');
+        $this->approvedRespondents = $respondentsTable->getApprovedList($surveyId);
+        $this->unaddressedUnapprovedRespondents = $respondentsTable->getUnaddressedUnapprovedList($surveyId);
         $this->communityId = $communityId;
         $this->respondentType = $respondentType;
         $this->surveyId = $surveyId;
-        $this->unaddressedUnapprovedRespondents = $unaddressedUnapprovedRespondents;
-
-        $respondentsTable = TableRegistry::get('Respondents');
 
         $this->setInvitees();
         $this->cleanInvitees();

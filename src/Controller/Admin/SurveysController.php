@@ -156,23 +156,15 @@ class SurveysController extends AppController
         $survey = $this->Surveys->get($surveyId);
         $communityId = $survey->community_id;
         $respondentType = $survey->type;
+
+        if ($this->request->is('post')) {
+            $this->SurveyProcessing->processInvitations($communityId, $respondentType, $surveyId);
+        }
+
         $respondentsTable = TableRegistry::get('Respondents');
         $approvedRespondents = $respondentsTable->getApprovedList($surveyId);
         $unaddressedUnapprovedRespondents = $respondentsTable->getUnaddressedUnapprovedList($surveyId);
         $allRespondents = array_merge($approvedRespondents, $unaddressedUnapprovedRespondents);
-
-        if ($this->request->is('post')) {
-            $params = compact(
-                'allRespondents',
-                'approvedRespondents',
-                'communityId',
-                'respondentType',
-                'surveyId',
-                'unaddressedUnapprovedRespondents'
-            );
-            $this->SurveyProcessing->processInvitations($params);
-            $approvedRespondents = $respondentsTable->getApprovedList($surveyId);
-        }
 
         // Looks dumb, but this is because it's the parameter for client_invite(), which shares a view
         $respondentTypePlural = $respondentType.'s';

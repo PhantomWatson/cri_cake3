@@ -32,22 +32,14 @@ class SurveysController extends AppController
         $respondentType = str_replace('s', '', $respondentTypePlural);
         $surveyId = $this->Surveys->getSurveyId($communityId, $respondentType);
 
+        if ($this->request->is('post')) {
+            $this->SurveyProcessing->processInvitations($communityId, $respondentType, $surveyId);
+        }
+
         $respondentsTable = TableRegistry::get('Respondents');
         $approvedRespondents = $respondentsTable->getApprovedList($surveyId);
         $unaddressedUnapprovedRespondents = $respondentsTable->getUnaddressedUnapprovedList($surveyId);
         $allRespondents = array_merge($approvedRespondents, $unaddressedUnapprovedRespondents);
-
-        if ($this->request->is('post')) {
-            $params = compact(
-                'allRespondents',
-                'approvedRespondents',
-                'communityId',
-                'respondentType',
-                'surveyId',
-                'unaddressedUnapprovedRespondents'
-            );
-            $this->SurveyProcessing->processInvitations($params);
-        }
 
         $survey = $this->Surveys->get($surveyId);
         $this->set([
