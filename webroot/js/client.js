@@ -30,7 +30,6 @@ var surveyInvitationForm = {
                 event.preventDefault();
                 return false;
             }
-            surveyInvitationForm.clearSavedData();
             return true;
         });
         
@@ -40,9 +39,10 @@ var surveyInvitationForm = {
             event.preventDefault();
             surveyInvitationForm.save();
         });
-        if (Cookies.get(this.cookieKey)) {
-            this.load();
-        }
+        $('#load').click(function (event) {
+            event.preventDefault();
+            surveyInvitationForm.load();
+        });
     },
     
     addRow: function () {
