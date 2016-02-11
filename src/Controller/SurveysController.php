@@ -227,6 +227,7 @@ class SurveysController extends AppController
         if ($surveyId) {
             echo 'Importing survey #'.$surveyId.'<br />';
             $this->import($surveyId);
+            $this->Surveys->setChecked($surveyId);
         } else {
             $this->set('message', 'No surveys are currently eligible for automatic imports');
             $this->viewBuilder()->layout('blank');
