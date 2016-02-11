@@ -196,6 +196,8 @@ class CommunitiesController extends AppController
                     'action' => 'index'
                 ]);
             }
+        } else {
+            $this->request->data['score'] = 1;
         }
 
         $this->prepareForm($community);

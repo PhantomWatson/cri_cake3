@@ -54,7 +54,7 @@
             'div' => ['class' => 'form-group']
         ]
     );
-    $scores = [0, 1, 2, 2.5, 3, 3.5, 4, 5];
+    $scores = [1, 2, 2.5, 3, 3.5, 4, 5];
     if ($this->request->prefix == 'admin' && isset($communityId)) {
         $note = '<strong>Note:</strong> You\'re encouraged to edit this community\'s score through its ';
         $note .= $this->Html->link(
