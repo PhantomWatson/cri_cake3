@@ -41,7 +41,11 @@ var surveyInvitationForm = {
         });
         $('#load').click(function (event) {
             event.preventDefault();
-            surveyInvitationForm.load();
+            var isBlank = surveyInvitationForm.allRowsAreBlank();
+            var msg = 'Replace entered information with saved information?';
+            if (isBlank || confirm(msg)) {
+                surveyInvitationForm.load();
+            }
         });
     },
     
@@ -142,8 +146,10 @@ var surveyInvitationForm = {
     load: function () {
         var cookieData = Cookies.get(this.cookieKey);
         if (cookieData.length === 0) {
+            alert('No saved data was found');
             return;
         }
+        $('#UserClientInviteForm tbody.input tr').remove();
         for (var i = 0; i < cookieData.length; i++) {
             var data = cookieData[i];
             if (! data.hasOwnProperty('name') || ! data.hasOwnProperty('email') || ! data.hasOwnProperty('title')) {
@@ -157,6 +163,7 @@ var surveyInvitationForm = {
             row.find('input[name*="[email]"]').val(data.email);
             row.find('input[name*="[title]"]').val(data.title);
         }
+        $('#survey-invitation-save-status').html('<span class="text-success">Loaded</span>');
     },
     
     lastRowIsBlank: function () {
