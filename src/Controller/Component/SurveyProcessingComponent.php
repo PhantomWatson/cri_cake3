@@ -7,7 +7,7 @@ use Cake\ORM\TableRegistry;
 
 class SurveyProcessingComponent extends Component
 {
-    public $components = ['Flash'];
+    public $components = ['Flash', 'Auth'];
 
     public $approvedRespondents = [];
     public $communityId = null;
@@ -45,18 +45,7 @@ class SurveyProcessingComponent extends Component
             $this->createRespondent($invitee);
         }
 
-        $surveysTable = TableRegistry::get('Surveys');
-        $survey = $surveysTable->get($surveyId);
-        $communitiesTable = TableRegistry::get('Communities');
-        $clients = $communitiesTable->getClients($communityId);
-        $result = $surveysTable->sendInvitationEmails($this->recipients, $clients, $survey, $senderEmail, $senderName);
-
-        if ($result) {
-            $this->successEmails = $this->recipients;
-        } else {
-            $this->errorEmails = $this->recipients;
-        }
-
+        $this->sendInvitationEmails();
         $this->setInvitationFlashMessages();
         $this->request->data = [];
     }
@@ -166,6 +155,25 @@ class SurveyProcessingComponent extends Component
             if (Configure::read('debug')) {
                 $this->Flash->dump($respondent->errors());
             }
+        }
+    }
+
+    private function sendInvitationEmails()
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $survey = $surveysTable->get($this->surveyId);
+
+        $communitiesTable = TableRegistry::get('Communities');
+        $clients = $communitiesTable->getClients($this->communityId);
+
+        $senderEmail = $this->Auth->user('email');
+        $senderName = $this->Auth->user('name');
+        $result = $surveysTable->sendInvitationEmails($this->recipients, $clients, $survey, $senderEmail, $senderName);
+
+        if ($result) {
+            $this->successEmails = $this->recipients;
+        } else {
+            $this->errorEmails = $this->recipients;
         }
     }
 
