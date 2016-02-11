@@ -13,7 +13,7 @@
 
 <?php $this->append('scriptBottom'); ?>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    <script>$.fn.modal || document.write('<script src="/bootstrap/js/bootstrap.min.js"><\/script>')</script>
+    <script>$.fn.modal || document.write('<script src="/js/bootstrap.min.js"><\/script>')</script>
 <?php $this->end(); ?>
 
 <div id="content">
