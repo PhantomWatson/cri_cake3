@@ -67,6 +67,8 @@ class Installer
         if (class_exists('\Cake\Codeception\Console\Installer')) {
             \Cake\Codeception\Console\Installer::customizeCodeceptionBinary($event);
         }
+
+        static::copyTwitterBootstrapFiles($rootDir, $io);
     }
 
     /**
@@ -188,5 +190,17 @@ class Installer
             return;
         }
         $io->write('Unable to update Security.salt value.');
+    }
+
+    public static function copyTwitterBootstrapFiles($dir, $io)
+    {
+        $bootstrapJsSource = $dir . '/vendor/twbs/bootstrap/dist/js/bootstrap.min.js';
+        $bootstrapJsDestination = $dir . '/webroot/js/bootstrap.min.js';
+
+        if (file_exists($bootstrapJsSource)) {
+            copy($bootstrapJsSource, $bootstrapJsDestination);
+            $io->write('Copied `bootstrap.min.js` file');
+        }
+
     }
 }

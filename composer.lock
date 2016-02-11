@@ -640,12 +640,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PhantomWatson/form-protector.git",
-                "reference": "0d0d54d2302b19815bf858943931a5ab0f222af1"
+                "reference": "42496e62f94178b81046f46f3f29856dc170c546"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PhantomWatson/form-protector/zipball/0d0d54d2302b19815bf858943931a5ab0f222af1",
-                "reference": "0d0d54d2302b19815bf858943931a5ab0f222af1",
+                "url": "https://api.github.com/repos/PhantomWatson/form-protector/zipball/42496e62f94178b81046f46f3f29856dc170c546",
+                "reference": "42496e62f94178b81046f46f3f29856dc170c546",
                 "shasum": ""
             },
             "type": "library",
@@ -659,7 +659,7 @@
                 "form",
                 "jquery"
             ],
-            "time": "2016-02-02 21:04:19"
+            "time": "2016-02-04 17:44:19"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
