@@ -2,6 +2,7 @@
 namespace App\Controller\Client;
 
 use App\Controller\AppController;
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
 /**
