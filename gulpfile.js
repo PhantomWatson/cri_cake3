@@ -11,7 +11,6 @@ var stylish = require('jshint-stylish');
 var phpcs = require('gulp-phpcs');
 var phpunit = require('gulp-phpunit');
 var _ = require('lodash');
-var concat = require('gulp-concat');
 var runSequence = require('run-sequence');
 
 function customNotify(message) {
@@ -74,13 +73,9 @@ var srcJsFiles = [
     'webroot/js/admin.js',
     'webroot/js/client.js'
 ];
-var vendorJsFiles = [
-    'vendor/twbs/bootstrap/dist/js/bootstrap.min.js'
-];
-var watchFiles = srcJsFiles.concat(vendorJsFiles);
 
 gulp.task('js', function(callback) {
-    return runSequence('js_lint', 'js_minify', 'js_concat', callback);
+    return runSequence('js_lint', 'js_minify', callback);
 });
 
 gulp.task('js_lint', function () {
@@ -98,23 +93,6 @@ gulp.task('js_minify', function () {
         }))
         .pipe(gulp.dest('webroot/js'))
         .pipe(customNotify('JS minified'));
-});
-
-// Concatenate vendor files and script(.min).js
-gulp.task('js_concat', function () {
-	var concatFiles = vendorJsFiles;
-	
-	concatFiles.push('webroot/js/script.js');
-	gulp.src(concatFiles)
-    	.pipe(concat('script.concat.js'))
-    	.pipe(gulp.dest('webroot/js/'));
-	
-	concatFiles.pop();
-	concatFiles.push('webroot/js/script.min.js');
-	return gulp.src(concatFiles)
-		.pipe(concat('script.concat.min.js'))
-		.pipe(gulp.dest('webroot/js/'))
-		.pipe(customNotify('JS concatenated'));
 });
 
 
