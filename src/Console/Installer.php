@@ -71,6 +71,15 @@ class Installer
         static::copyTwitterBootstrapFiles($rootDir, $io);
     }
 
+    public static function postUpdate(Event $event)
+    {
+        $io = $event->getIO();
+
+        $rootDir = dirname(dirname(__DIR__));
+
+        static::copyTwitterBootstrapFiles($rootDir, $io);
+    }
+
     /**
      * Create the config/app.php file if it does not exist.
      *
