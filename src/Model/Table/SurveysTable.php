@@ -718,7 +718,7 @@ class SurveysTable extends Table
     public function getPerSurveyAutoImportFrequency()
     {
         // Length of time in seconds between each auto-import cron job
-        $siteInterval = 30 * 60; // 30 minutes
+        $siteInterval = 3 * 60; // 3 minutes
 
         $count = $this->getAutoImportEligibleCount();
 
