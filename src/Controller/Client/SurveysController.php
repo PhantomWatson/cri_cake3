@@ -23,6 +23,9 @@ class SurveysController extends AppController
     {
         // Find and validate community
         $clientId = $this->getClientId();
+        if (! $clientId) {
+            return $this->chooseClientToImpersonate();
+        }
         $communitiesTable = TableRegistry::get('Communities');
         $communityId = $communitiesTable->getClientCommunityId($clientId);
         if (! $communityId || ! $communitiesTable->exists(['id' => $communityId])) {
