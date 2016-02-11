@@ -136,7 +136,7 @@ class SurveyProcessingComponent extends Component
      */
     private function isUnapproved($email)
     {
-        return in_array($invitee['email'], $this->unaddressedUnapprovedRespondents);
+        return in_array($email, $this->unaddressedUnapprovedRespondents);
     }
 
     /**
