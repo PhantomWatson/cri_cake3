@@ -9,20 +9,24 @@ class SurveyProcessingComponent extends Component
 {
     public $components = ['Flash'];
 
-    public $invitees = [];
-    public $successEmails = [];
-    public $redundantEmails = [];
-    public $uninvApprovedEmails = [];
-    public $errorEmails = [];
-    public $recipients = [];
     public $approvedRespondents = [];
+    public $communityId = null;
+    public $errorEmails = [];
+    public $invitees = [];
+    public $recipients = [];
+    public $redundantEmails = [];
+    public $respondentType = null;
+    public $successEmails = [];
     public $surveyId = null;
     public $unaddressedUnapprovedRespondents = [];
+    public $uninvApprovedEmails = [];
 
     public function processInvitations($params)
     {
         extract($params);
         $this->approvedRespondents = $approvedRespondents;
+        $this->communityId = $communityId;
+        $this->respondentType = $respondentType;
         $this->surveyId = $surveyId;
         $this->unaddressedUnapprovedRespondents = $unaddressedUnapprovedRespondents;
 
@@ -38,27 +42,7 @@ class SurveyProcessingComponent extends Component
                 continue;
             }
 
-            // Create a new respondent
-            $respondent = $respondentsTable->newEntity([
-                'email' => $invitee['email'],
-                'name' => $invitee['name'],
-                'title' => $invitee['title'],
-                'survey_id' => $surveyId,
-                'community_id' => $communityId,
-                'type' => $respondentType,
-                'invited' => true,
-                'approved' => 1
-            ]);
-            $errors = $respondent->errors();
-            if (empty($errors) && $respondentsTable->save($respondent)) {
-                $this->recipients[] = $respondent->email;
-                $this->approvedRespondents[] = $respondent->email;
-            } else {
-                $this->errorEmails[] = $invitee['email'];
-                if (Configure::read('debug')) {
-                    $this->Flash->dump($respondent->errors());
-                }
-            }
+            $this->createRespondent($invitee);
         }
 
         $surveysTable = TableRegistry::get('Surveys');
@@ -153,6 +137,36 @@ class SurveyProcessingComponent extends Component
     private function isUnapproved($email)
     {
         return in_array($invitee['email'], $this->unaddressedUnapprovedRespondents);
+    }
+
+    /**
+     * Adds a new respondent and adds them to the invitation email queue
+     *
+     * @param $invitee array
+     */
+    private function createRespondent($invitee)
+    {
+        $respondentsTable = TableRegistry::get('Respondents');
+        $respondent = $respondentsTable->newEntity([
+            'approved' => 1,
+            'community_id' => $this->communityId,
+            'email' => $invitee['email'],
+            'invited' => true,
+            'name' => $invitee['name'],
+            'survey_id' => $this->surveyId,
+            'title' => $invitee['title'],
+            'type' => $this->respondentType
+        ]);
+        $errors = $respondent->errors();
+        if (empty($errors) && $respondentsTable->save($respondent)) {
+            $this->recipients[] = $respondent->email;
+            $this->approvedRespondents[] = $respondent->email;
+        } else {
+            $this->errorEmails[] = $invitee['email'];
+            if (Configure::read('debug')) {
+                $this->Flash->dump($respondent->errors());
+            }
+        }
     }
 
     public function setInvitationFlashMessages()
