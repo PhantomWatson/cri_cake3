@@ -4,6 +4,12 @@
     </h1>
 </div>
 
+<p>
+    <strong>Strong passwords</strong> are at least six characters long and include lowercase and uppercase letters, as well as numbers and symbols.
+    We recommend using strong passwords to make it more difficult for anyone to gain entry to your account using an automated
+    password-guessing script.
+</p>
+
 <?php
     echo $this->Form->create($user);
     echo $this->Form->input(
