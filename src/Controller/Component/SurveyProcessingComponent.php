@@ -3,7 +3,9 @@ namespace App\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Core\Configure;
+use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 
 class SurveyProcessingComponent extends Component
 {
@@ -164,14 +166,30 @@ class SurveyProcessingComponent extends Component
         $communitiesTable = TableRegistry::get('Communities');
         $clients = $communitiesTable->getClients($this->communityId);
 
+        $email = new Email('survey_invitation');
+        $email->to(Configure::read('noreply_email'));
+
         $senderEmail = $this->Auth->user('email');
         $senderName = $this->Auth->user('name');
-        $result = $surveysTable->sendInvitationEmails($this->recipients, $clients, $survey, $senderEmail, $senderName);
+        if ($senderEmail) {
+            $email->returnPath($senderEmail, $senderName);
+        }
 
-        if ($result) {
-            $this->successEmails = $this->recipients;
+        foreach ($this->recipients as $recipient) {
+            $email->addBcc($recipient);
+        }
+
+        $email->viewVars([
+            'clients' => $clients,
+            'criUrl' => Router::url('/', true),
+            'surveyType' => $survey->type,
+            'surveyUrl' => $survey->sm_url
+        ]);
+
+        if ($email->send()) {
+            $this->successEmails = array_merge($this->successEmails, $this->recipients);
         } else {
-            $this->errorEmails = $this->recipients;
+            $this->errorEmails = array_merge($this->errorEmails, $this->recipients);
         }
     }
 

@@ -4,7 +4,6 @@ namespace App\Model\Table;
 use App\Model\Entity\Survey;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
-use Cake\Mailer\Email;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
@@ -13,7 +12,6 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
-use Cake\Routing\Router;
 use Cake\Validation\Validator;
 
 /**
@@ -263,25 +261,6 @@ class SurveysTable extends Table
     public function getCachedSMSurveyUrl($smId)
     {
         return Cache::read($smId, 'survey_urls');
-    }
-
-    public function sendInvitationEmails($recipients, $clients, $survey, $senderEmail, $senderName)
-    {
-        $email = new Email('survey_invitation');
-        $email->to(Configure::read('noreply_email'));
-        if ($senderEmail) {
-            $email->returnPath($senderEmail, $senderName);
-        }
-        foreach ($recipients as $recipient) {
-            $email->addBcc($recipient);
-        }
-        $email->viewVars([
-            'clients' => $clients,
-            'criUrl' => Router::url('/', true),
-            'surveyType' => $survey->type,
-            'surveyUrl' => $survey->sm_url
-        ]);
-        return $email->send();
     }
 
     /**
