@@ -124,7 +124,7 @@ gulp.task('watch', function() {
         .pipe(customNotify('LESS compiled'));
     
     // JavaScript
-    gulp.watch(watchFiles, ['js']);
+    gulp.watch(srcJsFiles, ['js']);
     
     // PHP
     // All tests if a .php file is changed
