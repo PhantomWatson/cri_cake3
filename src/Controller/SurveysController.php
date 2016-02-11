@@ -12,6 +12,11 @@ use Cake\ORM\TableRegistry;
  */
 class SurveysController extends AppController
 {
+    public function beforeFilter()
+    {
+        $this->Auth->allow(['cronImport']);
+    }
+
     public function import($surveyId = null)
     {
         $this->viewBuilder()->layout('blank');
