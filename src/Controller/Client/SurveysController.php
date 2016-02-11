@@ -37,18 +37,12 @@ class SurveysController extends AppController
         $unaddressedUnapprovedRespondents = $respondentsTable->getUnaddressedUnapprovedList($surveyId);
         $allRespondents = array_merge($approvedRespondents, $unaddressedUnapprovedRespondents);
 
-        // Set as the returnPath for invitation emails
-        $senderEmail = $this->Auth->user('email');
-        $senderName = $this->Auth->user('name');
-
         if ($this->request->is('post')) {
             $params = compact(
                 'allRespondents',
                 'approvedRespondents',
                 'communityId',
                 'respondentType',
-                'senderEmail',
-                'senderName',
                 'surveyId',
                 'unaddressedUnapprovedRespondents'
             );
