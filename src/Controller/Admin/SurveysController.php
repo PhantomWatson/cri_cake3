@@ -174,7 +174,7 @@ class SurveysController extends AppController
         $this->set([
             'communityId' => $community->id,
             'surveyType' => $survey->type,
-            'titleForLayout' => $community->name.': Invite Community '.$respondentTypePlural,
+            'titleForLayout' => $community->name.': Invite Community '.ucwords($respondentTypePlural),
         ]);
         $this->set(compact(
             'allRespondents',
