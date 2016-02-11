@@ -131,6 +131,7 @@
     $this->Form->templates($formTemplate);
 ?>
 
+<div class="well">
 <table>
     <thead>
         <tr>
@@ -199,14 +200,32 @@
         </tr>
     </tbody>
     <tbody class="input"></tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4">
+                <a href="#" class="btn btn-default" id="add_another">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Add another row
+                </a>
+            </td>
+        </tr>
+    </tfoot>
 </table>
+</div>
 
-<p>
-    <a href="#" class="btn btn-default pull-right" id="add_another">
-        <span class="glyphicon glyphicon-plus"></span>
-        Add another row
+<div class="well">
+    <p>
+        If you click <strong>Save for later</strong>, the information you have entered will be stored in your browser.
+        After saving, you can navigate to another page and then return to this one later in order to send out your saved invitations.
+    </p>
+    <a href="#" class="btn btn-default" id="save">
+        Save for later
     </a>
-</p>
+    <a href="#" class="btn btn-default" id="load">
+        Load saved data
+    </a>
+    <span id="survey-invitation-save-status"></span>
+</div>
 
 <div class="form-group">
     <?= $this->Form->button(
@@ -216,26 +235,18 @@
             'div' => false
         ]
     ) ?>
-    <a href="#" class="btn btn-default" id="save">
-        Save for later
-    </a>
-    <span id="survey-invitation-save-status"></span>
     <?php
         echo $this->Form->end();
         $this->Form->templates($bootstrapFormTemplate);
     ?>
 </div>
 
-<p>
-    If you click <strong>Save for later</strong>, the information you have entered will be stored in your browser.
-    After saving, you can navigate to another page and then return to this one later in order to send out invitations.
-</p>
-
 <?php
     $this->element('script', ['script' => 'client']);
     $this->element('script', ['script' => 'js.cookie.js']);
     $this->element('script', ['script' => 'form-protector']);
 ?>
+
 <?php $this->append('buffered'); ?>
     surveyInvitationForm.init({
         counter: 1,
@@ -243,4 +254,4 @@
         uninvited_respondents: <?= json_encode(array_values($unaddressedUnapprovedRespondents)) ?>,
     });
     formProtector.protect('UserClientInviteForm');
-<?php $this->end();
+<?php $this->end(); ?>
