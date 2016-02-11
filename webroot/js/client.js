@@ -173,6 +173,23 @@ var surveyInvitationForm = {
         return true;
     },
     
+    allRowsAreBlank: function () {
+        var rows = $('#UserClientInviteForm tbody.input tr');
+        for (var i = 0; i < rows.length; i++) {
+            var row = $(rows[i]);
+            if (row.find('input[name*="[name]"]').val() !== '') {
+                return false;
+            }
+            if (row.find('input[name*="[email]"]').val() !== '') {
+                return false;
+            }
+            if (row.find('input[name*="[title]"]').val() !== '') {
+                return false;
+            }
+        }
+        return true;
+    },
+    
     clearSavedData: function () {
         Cookies.remove(this.cookieKey);
     }
