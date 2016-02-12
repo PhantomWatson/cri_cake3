@@ -25,25 +25,8 @@ class ResponsesController extends AppController
         $communitiesTable = TableRegistry::get('Communities');
         $parentAreaId = $communitiesTable->getParentAreaId($survey->community_id);
         $parentArea = $areasTable->get($parentAreaId);
-
         $totalAlignment = 0;
-        $count = $this->Responses->find('all')
-            ->where(['Responses.survey_id' => $surveyId])
-            ->count();
-        $query = $this->Responses
-            ->find('all')
-            ->where(['Responses.survey_id' => $surveyId])
-            ->contain([
-                'Respondents' => function ($q) {
-                    return $q->select(['id', 'email', 'name', 'title', 'approved']);
-                }
-            ])
-            ->order(['Responses.response_date' => 'DESC']);
-        if ($count) {
-            $query->limit($count);
-        }
-        $responses = $this->paginate($query);
-        $this->cookieSort('AdminResponsesView');
+        $responses = $this->getResponsesPage($surveyId);
 
         // Only return the most recent response for each respondent
         $responsesReturned = [];
@@ -104,5 +87,27 @@ class ResponsesController extends AppController
             'titleForLayout' => 'View and Update Alignment',
             'totalAlignment' => $approvedCount ? round($alignmentSum / $approvedCount) : 0
         ]);
+    }
+
+    private function getResponsesPage($surveyId)
+    {
+        $query = $this->Responses
+            ->find('all')
+            ->where(['Responses.survey_id' => $surveyId])
+            ->contain([
+                'Respondents' => function ($q) {
+                    return $q->select(['id', 'email', 'name', 'title', 'approved']);
+                }
+            ])
+            ->order(['Responses.response_date' => 'DESC']);
+
+        $count = $query->count();
+        if ($count) {
+            $query->limit($count);
+        }
+
+        $this->cookieSort('AdminResponsesView');
+
+        return $this->paginate($query);
     }
 }
