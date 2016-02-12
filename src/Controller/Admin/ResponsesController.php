@@ -7,6 +7,12 @@ use Cake\ORM\TableRegistry;
 class ResponsesController extends AppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('SurveyProcessing');
+    }
+
     public function view($surveyId = null)
     {
         $surveysTable = TableRegistry::get('Surveys');
@@ -26,9 +32,9 @@ class ResponsesController extends AppController
         $parentAreaId = $communitiesTable->getParentAreaId($survey->community_id);
         $parentArea = $areasTable->get($parentAreaId);
         $totalAlignment = 0;
-        $responses = $this->getResponsesPage($surveyId);
-        $alignmentSum = $this->getAlignmentSum($responses);
-        $approvedCount = $this->getApprovedCount($responses);
+        $responses = $this->SurveyProcessing->getResponsesPage($surveyId);
+        $alignmentSum = $this->SurveyProcessing->getAlignmentSum($responses);
+        $approvedCount = $this->SurveyProcessing->getApprovedCount($responses);
 
         // Process update
         if ($this->request->is('post') || $this->request->is('put')) {
@@ -68,65 +74,5 @@ class ResponsesController extends AppController
             'titleForLayout' => 'View and Update Alignment',
             'totalAlignment' => $totalAlignment
         ]);
-    }
-
-    private function getResponsesPage($surveyId)
-    {
-        $query = $this->Responses
-            ->find('all')
-            ->where(['Responses.survey_id' => $surveyId])
-            ->contain([
-                'Respondents' => function ($q) {
-                    return $q->select(['id', 'email', 'name', 'title', 'approved']);
-                }
-            ])
-            ->order(['Responses.response_date' => 'DESC']);
-
-        $count = $query->count();
-        if ($count) {
-            $query->limit($count);
-        }
-
-        $this->cookieSort('AdminResponsesView');
-
-        $responses = $this->paginate($query);
-
-        // Only return the most recent response for each respondent
-        $retval = [];
-        foreach ($responses as $i => $response) {
-            $respondentId = $response['respondent']['id'];
-
-            if (isset($retval[$respondentId]['revision_count'])) {
-                $retval[$respondentId]['revision_count']++;
-                continue;
-            }
-
-            $retval[$respondentId] = $response;
-            $retval[$respondentId]['revision_count'] = 0;
-        }
-
-        return $retval;
-    }
-
-    private function getAlignmentSum($responses)
-    {
-        $alignmentSum = 0;
-        foreach ($responses as $i => $response) {
-            if ($response['respondent']['approved'] == 1) {
-                $alignmentSum += $response->alignment;
-            }
-        }
-        return $alignmentSum;
-    }
-
-    private function getApprovedCount($responses)
-    {
-        $approvedCount = 0;
-        foreach ($responses as $i => $response) {
-            if ($response['respondent']['approved'] == 1) {
-                $approvedCount++;
-            }
-        }
-        return $approvedCount;
     }
 }

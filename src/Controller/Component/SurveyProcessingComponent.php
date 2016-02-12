@@ -249,4 +249,64 @@ class SurveyProcessingComponent extends Component
             }
         }
     }
+
+    public function getResponsesPage($surveyId)
+    {
+        $responsesTable = TableRegistry::get('Responses');
+        $query = $responsesTable->find('all')
+            ->where(['Responses.survey_id' => $surveyId])
+            ->contain([
+                'Respondents' => function ($q) {
+                    return $q->select(['id', 'email', 'name', 'title', 'approved']);
+                }
+            ])
+            ->order(['Responses.response_date' => 'DESC']);
+
+        $count = $query->count();
+        if ($count) {
+            $query->limit($count);
+        }
+
+        $controller = $this->_registry->getController();
+        $controller->cookieSort('AdminResponsesView');
+        $responses = $controller->paginate($query);
+
+        // Only return the most recent response for each respondent
+        $retval = [];
+        foreach ($responses as $i => $response) {
+            $respondentId = $response['respondent']['id'];
+
+            if (isset($retval[$respondentId]['revision_count'])) {
+                $retval[$respondentId]['revision_count']++;
+                continue;
+            }
+
+            $retval[$respondentId] = $response;
+            $retval[$respondentId]['revision_count'] = 0;
+        }
+
+        return $retval;
+    }
+
+    public function getAlignmentSum($responses)
+    {
+        $alignmentSum = 0;
+        foreach ($responses as $i => $response) {
+            if ($response['respondent']['approved'] == 1) {
+                $alignmentSum += $response->alignment;
+            }
+        }
+        return $alignmentSum;
+    }
+
+    public function getApprovedCount($responses)
+    {
+        $approvedCount = 0;
+        foreach ($responses as $i => $response) {
+            if ($response['respondent']['approved'] == 1) {
+                $approvedCount++;
+            }
+        }
+        return $approvedCount;
+    }
 }
