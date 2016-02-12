@@ -143,7 +143,7 @@ class RespondentsTable extends Table
         $SurveyMonkey = $this->getSurveyMonkeyObject();
         $page = 1;
         $pageSize = 1000;
-        $lastDateChecked = $survey->respondents_last_modified_date ? $survey->respondents_last_modified_date->format('Y-m-d H:i:s') : null;
+        $lastResponseDate = $survey->respondents_last_modified_date ? $survey->respondents_last_modified_date->format('Y-m-d H:i:s') : null;
         $retval = [];
         $lastModifiedDates = [];
         $surveyMonkeySurveyId = (string) $survey->sm_id;
@@ -160,8 +160,8 @@ class RespondentsTable extends Table
                 'page_size' => $pageSize,
                 'survey_id' => $surveyMonkeySurveyId
             ];
-            if ($lastDateChecked) {
-                $params['start_modified_date'] = $lastDateChecked;
+            if ($lastResponseDate) {
+                $params['start_modified_date'] = $lastResponseDate;
             }
 
             $result = $SurveyMonkey->getRespondentList($surveyMonkeySurveyId, $params);
@@ -180,8 +180,8 @@ class RespondentsTable extends Table
                     $retval[$respondentSmId] = $respondent['date_modified'];
                 }
 
-                if (! $lastDateChecked || $lastDateChecked < $respondent['date_modified']) {
-                    $lastDateChecked = $respondent['date_modified'];
+                if (! $lastResponseDate || $lastResponseDate < $respondent['date_modified']) {
+                    $lastResponseDate = $respondent['date_modified'];
                 }
             }
 
