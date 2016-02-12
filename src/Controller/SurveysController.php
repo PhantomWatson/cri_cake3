@@ -57,109 +57,116 @@ class SurveysController extends AppController
 
         $survey = $this->Surveys->get($surveyId);
         $usersTable = TableRegistry::get('Users');
-        foreach ($responses as $smRespondentId => $response) {
-            $respondent = $responsesTable->extractRespondentInfo($response);
-            $respondentRecord = $respondentsTable->find('all')
-                ->select(['id', 'sm_respondent_id', 'name'])
-                ->where([
-                    // Same survey and either the same smRespondentId OR (actual) email address
-                    'survey_id' => $surveyId,
-                    'OR' => [
-                        function ($exp, $q) use ($respondent) {
-                            // @ and . required, weeds out "email not listed" values
-                            return $exp
-                                ->like('email', '%@%.%')
-                                ->eq('email', $respondent['email']);
-                        },
-                        ['sm_respondent_id' => $smRespondentId]
-                    ]
-                ])
-                ->first();
-            $serializedResponse = base64_encode(serialize($response));
+        if (is_array($responses)) {
+            foreach ($responses as $smRespondentId => $response) {
+                $respondent = $responsesTable->extractRespondentInfo($response);
+                $respondentRecord = $respondentsTable->find('all')
+                    ->select(['id', 'sm_respondent_id', 'name'])
+                    ->where([
+                        // Same survey and either the same smRespondentId OR (actual) email address
+                        'survey_id' => $surveyId,
+                        'OR' => [
+                            function ($exp, $q) use ($respondent) {
+                                // @ and . required, weeds out "email not listed" values
+                                return $exp
+                                    ->like('email', '%@%.%')
+                                    ->eq('email', $respondent['email']);
+                            },
+                            ['sm_respondent_id' => $smRespondentId]
+                        ]
+                    ])
+                    ->first();
+                $serializedResponse = base64_encode(serialize($response));
 
-            // Add new respondent
-            if (empty($respondentRecord)) {
-                $approved = 0;
+                // Add new respondent
+                if (empty($respondentRecord)) {
+                    $approved = 0;
 
-                // All organization survey responses are auto-approved
-                if ($survey->type == 'organization') {
-                    $approved = 1;
+                    // All organization survey responses are auto-approved
+                    if ($survey->type == 'organization') {
+                        $approved = 1;
 
-                // Same with responses from a community's client
-                } else {
-                    $userId = $usersTable->getIdWithEmail($respondent['email']);
-                    if ($userId) {
-                        $approved = $usersTable->isCommunityClient($survey->community_id, $userId) ? 1 : 0;
+                    // Same with responses from a community's client
+                    } else {
+                        $userId = $usersTable->getIdWithEmail($respondent['email']);
+                        if ($userId) {
+                            $approved = $usersTable->isCommunityClient($survey->community_id, $userId) ? 1 : 0;
+                        }
                     }
+
+                    $newRespondent = $respondentsTable->newEntity([
+                        'email' => $respondent['email'],
+                        'name' => $respondent['name'],
+                        'survey_id' => $surveyId,
+                        'sm_respondent_id' => $smRespondentId,
+                        'invited' => false,
+                        'approved' => $approved
+                    ]);
+                    $errors = $newRespondent->errors();
+                    if (empty($errors)) {
+                        $respondentsTable->save($newRespondent);
+                        $respondentId = $newRespondent->id;
+                    } else {
+                        $message = 'Error saving respondent.';
+                        $message .= ' Validation errors: '.print_r($errors, true);
+                        $this->response->statusCode(500);
+                        $this->set(compact('message'));
+                        return;
+                    }
+
+                // Update existing respondent
+                } else {
+                    if (empty($respondentRecord->smRespondentId)) {
+                        $respondentRecord = $respondentsTable->patchEntity($respondentRecord, ['sm_respondent_id' => $smRespondentId]);
+                    }
+                    if (empty($respondentRecord->name)) {
+                        $respondentRecord = $respondentsTable->patchEntity($respondentRecord, ['name' => $respondent['name']]);
+                    }
+                    if ($respondentRecord->dirty()) {
+                        $respondentsTable->save($respondentRecord);
+                    }
+                    $respondentId = $respondentRecord->id;
                 }
 
-                $newRespondent = $respondentsTable->newEntity([
-                    'email' => $respondent['email'],
-                    'name' => $respondent['name'],
+                // Skip recording response if it's already recorded
+                if ($responsesTable->isRecorded($respondentId, $survey, $serializedResponse)) {
+                    continue;
+                }
+
+                // Get individual ranks and alignment
+                $responseRanks = $responsesTable->getResponseRanks($serializedResponse, $survey);
+                $alignment = $responsesTable->calculateAlignment($actualRanks, $responseRanks);
+
+                // Save response
+                $responseFields = [
+                    'respondent_id' => $respondentId,
                     'survey_id' => $surveyId,
-                    'sm_respondent_id' => $smRespondentId,
-                    'invited' => false,
-                    'approved' => $approved
-                ]);
-                $errors = $newRespondent->errors();
+                    'response' => $serializedResponse,
+                    'alignment' => $alignment,
+                    'response_date' => new Time($respondents[$smRespondentId])
+                ];
+                foreach ($responseRanks as $sector => $rank) {
+                    $responseFields["{$sector}_rank"] = $rank;
+                }
+                $newResponse = $responsesTable->newEntity($responseFields);
+
+                $errors = $newResponse->errors();
                 if (empty($errors)) {
-                    $respondentsTable->save($newRespondent);
-                    $respondentId = $newRespondent->id;
+                    $responsesTable->save($newResponse);
+                    $importedCount++;
                 } else {
-                    $message = 'Error saving respondent.';
+                    $message = 'Error saving response.';
                     $message .= ' Validation errors: '.print_r($errors, true);
                     $this->response->statusCode(500);
                     $this->set(compact('message'));
                     return;
                 }
-
-            // Update existing respondent
-            } else {
-                if (empty($respondentRecord->smRespondentId)) {
-                    $respondentRecord = $respondentsTable->patchEntity($respondentRecord, ['sm_respondent_id' => $smRespondentId]);
-                }
-                if (empty($respondentRecord->name)) {
-                    $respondentRecord = $respondentsTable->patchEntity($respondentRecord, ['name' => $respondent['name']]);
-                }
-                if ($respondentRecord->dirty()) {
-                    $respondentsTable->save($respondentRecord);
-                }
-                $respondentId = $respondentRecord->id;
             }
 
-            // Skip recording response if it's already recorded
-            if ($responsesTable->isRecorded($respondentId, $survey, $serializedResponse)) {
-                continue;
-            }
-
-            // Get individual ranks and alignment
-            $responseRanks = $responsesTable->getResponseRanks($serializedResponse, $survey);
-            $alignment = $responsesTable->calculateAlignment($actualRanks, $responseRanks);
-
-            // Save response
-            $responseFields = [
-                'respondent_id' => $respondentId,
-                'survey_id' => $surveyId,
-                'response' => $serializedResponse,
-                'alignment' => $alignment,
-                'response_date' => new Time($respondents[$smRespondentId])
-            ];
-            foreach ($responseRanks as $sector => $rank) {
-                $responseFields["{$sector}_rank"] = $rank;
-            }
-            $newResponse = $responsesTable->newEntity($responseFields);
-
-            $errors = $newResponse->errors();
-            if (empty($errors)) {
-                $responsesTable->save($newResponse);
-                $importedCount++;
-            } else {
-                $message = 'Error saving response.';
-                $message .= ' Validation errors: '.print_r($errors, true);
-                $this->response->statusCode(500);
-                $this->set(compact('message'));
-                return;
-            }
+            // Set new last_modified_date
+            $dates = array_values($respondents);
+            $survey->respondents_last_modified_date = new Time(max($dates));
+            $this->Surveys->save($survey);
         }
 
         // Finalize
@@ -169,10 +176,7 @@ class SurveysController extends AppController
             $message = 'No new responses to import';
         }
         $this->Surveys->setChecked($surveyId);
-        $dates = array_values($respondents);
-        pr($respondents);
-        $survey->respondents_last_modified_date = new Time(max($dates));
-        $this->Surveys->save($survey);
+
         $this->set(compact('message'));
     }
 
