@@ -53,18 +53,10 @@ class ResponsesController extends AppController
             $this->Flash->set('New responses have been received since this community\'s alignment was last set.');
         }
 
-        if ($survey->alignment_calculated) {
-            $timestamp = strtotime($survey->alignment_calculated);
-            $alignmentLastSet = date('F j', $timestamp).'<sup>'.date('S', $timestamp).'</sup>'.date(', Y', $timestamp);
-        } else {
-            $alignmentLastSet = null;
-        }
-
         $community = $communitiesTable->get($survey->community_id);
         $totalAlignment = $approvedCount ? round($alignmentSum / $approvedCount) : 0;
         $internalAlignment = $this->Responses->getInternalAlignment($surveyId);
         $this->set([
-            'alignmentLastSet' => $alignmentLastSet,
             'community' => $community,
             'internalAlignment' => $internalAlignment,
             'parentArea' => $parentArea,

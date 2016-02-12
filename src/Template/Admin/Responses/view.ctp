@@ -64,8 +64,10 @@
         <?php endif; ?>
         <?= $this->Form->create($survey) ?>
         <?php
-            if ($alignmentLastSet) {
-                $alignmentLastSetMsg = '<br />Last modified: '.$alignmentLastSet;
+            if ($survey->alignment_calculated) {
+                $alignmentLastSetMsg = '<br />Last modified: ';
+                $timestamp = strtotime($survey->alignment_calculated);
+                $alignmentLastSetMsg .= date('F j', $timestamp).'<sup>'.date('S', $timestamp).'</sup>'.date(', Y', $timestamp);
             } else {
                 $alignmentLastSetMsg = '';
             }
