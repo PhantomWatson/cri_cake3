@@ -12,8 +12,9 @@ use Cake\ORM\TableRegistry;
  */
 class SurveysController extends AppController
 {
-    public function beforeFilter()
+    public function initialize()
     {
+        parent::initialize();
         $this->Auth->allow(['cronImport']);
     }
 
@@ -169,6 +170,7 @@ class SurveysController extends AppController
         }
         $this->Surveys->setChecked($surveyId);
         $dates = array_values($respondents);
+        pr($respondents);
         $survey->respondents_last_modified_date = new Time(max($dates));
         $this->Surveys->save($survey);
         $this->set(compact('message'));
