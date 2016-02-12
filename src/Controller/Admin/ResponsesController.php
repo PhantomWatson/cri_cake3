@@ -27,13 +27,10 @@ class ResponsesController extends AppController
         $parentArea = $areasTable->get($parentAreaId);
         $totalAlignment = 0;
         $responses = $this->getResponsesPage($surveyId);
-
-        // Only return the most recent response for each respondent
-        $alignmentSum = 0;
+        $alignmentSum = $this->getAlignmentSum($responses);
         $approvedCount = 0;
         foreach ($responses as $i => $response) {
             if ($response['respondent']['approved'] == 1) {
-                $alignmentSum += $response->alignment;
                 $approvedCount++;
             }
         }
@@ -115,5 +112,16 @@ class ResponsesController extends AppController
         }
 
         return $retval;
+    }
+
+    private function getAlignmentSum($responses)
+    {
+        $alignmentSum = 0;
+        foreach ($responses as $i => $response) {
+            if ($response['respondent']['approved'] == 1) {
+                $alignmentSum += $response->alignment;
+            }
+        }
+        return $alignmentSum;
     }
 }
