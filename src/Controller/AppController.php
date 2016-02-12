@@ -218,7 +218,7 @@ class AppController extends Controller
      * Uses cookie to remember current sorting and apply remembered sorting when none is currently specified
      * @param string $cookieParentKey
      */
-    protected function cookieSort($cookieParentKey)
+    public function cookieSort($cookieParentKey)
     {
         // Remember selected sort, but only remember direction if sort is specified
         $param = 'sort';
