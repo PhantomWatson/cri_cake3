@@ -29,22 +29,12 @@ class ResponsesController extends AppController
         $responses = $this->getResponsesPage($surveyId);
 
         // Only return the most recent response for each respondent
-        $responsesReturned = [];
         $alignmentSum = 0;
         $approvedCount = 0;
         foreach ($responses as $i => $response) {
-            $respondentId = $response['respondent']['id'];
-
-            if (isset($responsesReturned[$respondentId]['revision_count'])) {
-                $responsesReturned[$respondentId]['revision_count']++;
-                continue;
-            }
-
-            $responsesReturned[$respondentId] = $response;
-            $responsesReturned[$respondentId]['revision_count'] = 0;
             if ($response['respondent']['approved'] == 1) {
-                $alignmentSum += $response->alignment;
-                $approvedCount++;
+                //$alignmentSum += $response->alignment;
+                //$approvedCount++;
             }
         }
 
@@ -79,7 +69,7 @@ class ResponsesController extends AppController
             'communityId' => $survey->community_id,
             'communityName' => $community->name,
             'internalAlignment' => $this->Responses->getInternalAlignment($surveyId),
-            'responses' => $responsesReturned,
+            'responses' => $responses,
             'sectors' => $surveysTable->getSectors(),
             'survey' => $survey,
             'surveyId' => $surveyId,
@@ -108,6 +98,22 @@ class ResponsesController extends AppController
 
         $this->cookieSort('AdminResponsesView');
 
-        return $this->paginate($query);
+        $responses = $this->paginate($query);
+
+        // Only return the most recent response for each respondent
+        $retval = [];
+        foreach ($responses as $i => $response) {
+            $respondentId = $response['respondent']['id'];
+
+            if (isset($retval[$respondentId]['revision_count'])) {
+                $retval[$respondentId]['revision_count']++;
+                continue;
+            }
+
+            $retval[$respondentId] = $response;
+            $retval[$respondentId]['revision_count'] = 0;
+        }
+
+        return $retval;
     }
 }
