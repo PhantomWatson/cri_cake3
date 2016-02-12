@@ -16,12 +16,14 @@ class Community extends Entity
      */
     protected $_accessible = [
         'name' => true,
-        'area_id' => true,
+        'local_area_id' => true,
+        'parent_area_id' => true,
         'public' => true,
         'fast_track' => true,
         'score' => true,
         'town_meeting_date' => true,
-        'area' => true,
+        'local_area' => true,
+        'parent_area' => true,
         'purchases' => true,
         'surveys' => true,
         'surveys_backup' => true,

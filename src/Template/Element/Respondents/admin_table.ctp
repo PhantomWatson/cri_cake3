@@ -7,13 +7,13 @@
         <thead class="actual">
             <td colspan="2">
                 <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                <?= $area['name'] ?>
+                <?= $parentArea['name'] ?>
                 <br />
                 (Actual rankings)
             </td>
             <?php foreach ($sectors as $sector): ?>
                 <td class="actual_rank">
-                    <?= $area["{$sector}_rank"] ?>
+                    <?= $parentArea["{$sector}_rank"] ?>
                 </td>
             <?php endforeach; ?>
             <td>
@@ -97,7 +97,7 @@
                     <?php foreach ($sectors as $sector): ?>
                         <?php
                             $respondentRank = $response[$sector.'_rank'];
-                            $actualRank = $area["{$sector}_rank"];
+                            $actualRank = $parentArea["{$sector}_rank"];
                             $difference = abs($respondentRank - $actualRank);
                             if ($difference > 2) {
                                 $class = 'incorrect';

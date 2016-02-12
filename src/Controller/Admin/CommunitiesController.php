@@ -153,7 +153,7 @@ class CommunitiesController extends AppController
         }
         $this->cookieSort('AdminCommunityIndex');
         $this->paginate['finder'] = 'adminIndex';
-        $this->paginate['sortWhitelist'] = ['Communities.name', 'Area.name'];
+        $this->paginate['sortWhitelist'] = ['Communities.name', 'ParentAreas.name'];
         $this->adminIndexSetupFilterButtons();
         $this->set([
             'communities' => $this->paginate()->toArray(),
@@ -327,7 +327,7 @@ class CommunitiesController extends AppController
         }
         $this->cookieSort('AdminCommunityIndex');
         $this->paginate['finder'] = 'adminIndex';
-        $this->paginate['sortWhitelist'] = ['Communities.name', 'Area.name'];
+        $this->paginate['sortWhitelist'] = ['Communities.name', 'ParentAreas.name'];
         $this->adminIndexSetupFilterButtons();
 
         $communities = $this->paginate()->toArray();

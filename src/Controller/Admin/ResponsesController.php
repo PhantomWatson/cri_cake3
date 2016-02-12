@@ -23,8 +23,8 @@ class ResponsesController extends AppController
         }
 
         $communitiesTable = TableRegistry::get('Communities');
-        $areaId = $communitiesTable->getAreaId($survey->community_id);
-        $area = $areasTable->get($areaId);
+        $parentAreaId = $communitiesTable->getParentAreaId($survey->community_id);
+        $parentArea = $areasTable->get($parentAreaId);
 
         $totalAlignment = 0;
         $count = $this->Responses->find('all')
@@ -92,7 +92,7 @@ class ResponsesController extends AppController
         $community = $communitiesTable->get($survey->community_id);
         $this->set([
             'alignmentLastSet' => $alignmentLastSet,
-            'area' => $area,
+            'parentArea' => $parentArea,
             'communityId' => $survey->community_id,
             'communityName' => $community->name,
             'internalAlignment' => $this->Responses->getInternalAlignment($surveyId),

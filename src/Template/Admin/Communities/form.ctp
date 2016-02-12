@@ -39,12 +39,23 @@
         ]
     );
     echo $this->Form->input(
-        'area_id',
+        'local_area_id',
         [
             'class' => 'form-control',
             'div' => ['class' => 'form-group'],
             'empty' => true,
-            'label' => 'Geographic Area'
+            'label' => 'Local Area (e.g. city)',
+            'options' => $areas
+        ]
+    );
+    echo $this->Form->input(
+        'parent_area_id',
+        [
+            'class' => 'form-control',
+            'div' => ['class' => 'form-group'],
+            'empty' => true,
+            'label' => 'Wider Area (e.g. county)',
+            'options' => $areas
         ]
     );
     echo $this->Form->input(

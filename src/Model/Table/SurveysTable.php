@@ -631,16 +631,16 @@ class SurveysTable extends Table
     }
 
     /**
-     * Returns an Area entity corresponding to a give survey
+     * Returns a ParentArea entity corresponding to a given survey
      *
      * @param int $surveyId
      * @return Entity
      */
-    public function getArea($surveyId)
+    public function getParentArea($surveyId)
     {
         $survey = $this->get($surveyId);
         $communitiesTable = TableRegistry::get('Communities');
-        $areaId = $communitiesTable->getAreaId($survey->community_id);
+        $areaId = $communitiesTable->getParentAreaId($survey->community_id);
         $areasTable = TableRegistry::get('Areas');
         return $areasTable->find('all')
             ->where(['id' => $areaId])

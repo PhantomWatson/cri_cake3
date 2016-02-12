@@ -12,7 +12,8 @@ use Cake\Validation\Validator;
 /**
  * Communities Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Areas
+ * @property \Cake\ORM\Association\BelongsTo $LocalAreas
+ * @property \Cake\ORM\Association\BelongsTo $ParentAreas
  * @property \Cake\ORM\Association\HasMany $Purchases
  * @property \Cake\ORM\Association\HasMany $Surveys
  * @property \Cake\ORM\Association\HasMany $SurveysBackup
@@ -32,9 +33,13 @@ class CommunitiesTable extends Table
         $this->displayField('name');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
-        $this->belongsTo('Area', [
+        $this->belongsTo('LocalAreas', [
             'className' => 'Areas',
-            'foreignKey' => 'area_id',
+            'foreignKey' => 'local_area_id',
+        ]);
+        $this->belongsTo('ParentAreas', [
+            'className' => 'Areas',
+            'foreignKey' => 'parent_area_id',
         ]);
         $this->hasMany('Purchases', [
             'foreignKey' => 'community_id'
@@ -90,8 +95,8 @@ class CommunitiesTable extends Table
             ->notEmpty('name');
 
         $validator
-            ->requirePresence('area_id', 'create')
-            ->notEmpty('area_id');
+            ->requirePresence('parent_area_id', 'create')
+            ->notEmpty('parent_area_id');
 
         $validator
             ->add('public', 'valid', ['rule' => 'boolean'])
@@ -124,7 +129,8 @@ class CommunitiesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn('area_id', 'Area'));
+        $rules->add($rules->existsIn('local_area_id', 'LocalAreas'));
+        $rules->add($rules->existsIn('parent_area_id', 'ParentAreas'));
         return $rules;
     }
 
@@ -132,10 +138,10 @@ class CommunitiesTable extends Table
      * @param int $communityId
      * @return int
      */
-    public function getAreaId($communityId)
+    public function getParentAreaId($communityId)
     {
         $community = $this->get($communityId);
-        return $community->area_id;
+        return $community->parent_area_id;
     }
 
     /**
@@ -144,7 +150,7 @@ class CommunitiesTable extends Table
      */
     public function getPwrBarChart($communityId)
     {
-        $areaId = $this->getAreaId($communityId);
+        $areaId = $this->getParentAreaId($communityId);
         $areasTable = TableRegistry::get('Areas');
         return $areasTable->getPwrBarChart($areaId);
     }
@@ -155,7 +161,7 @@ class CommunitiesTable extends Table
      */
     public function getPwrTable($communityId)
     {
-        $areaId = $this->getAreaId($communityId);
+        $areaId = $this->getParentAreaId($communityId);
         $areasTable = TableRegistry::get('Areas');
         return $areasTable->getPwrTable($areaId);
     }
@@ -166,7 +172,7 @@ class CommunitiesTable extends Table
      */
     public function getEmploymentLineChart($communityId)
     {
-        $areaId = $this->getAreaId($communityId);
+        $areaId = $this->getParentAreaId($communityId);
         $areasTable = TableRegistry::get('Areas');
         return $areasTable->getEmploymentLineChart($areaId);
     }
@@ -177,7 +183,7 @@ class CommunitiesTable extends Table
      */
     public function getEmploymentGrowthTableData($communityId)
     {
-        $areaId = $this->getAreaId($communityId);
+        $areaId = $this->getParentAreaId($communityId);
         $areasTable = TableRegistry::get('Areas');
         return $areasTable->getEmploymentGrowthTableData($areaId);
     }
@@ -670,7 +676,7 @@ class CommunitiesTable extends Table
                         $value = $community->name;
                         break;
                     case 'Area':
-                        $value = $community->area['name'];
+                        $value = $community->parent_area['name'];
                         break;
                     case 'Stage':
                         $value = $community->score;
@@ -767,8 +773,8 @@ class CommunitiesTable extends Table
                         'OrganizationSurvey.respondents_last_modified_date'
                     ]);
                 },
-                'Area' => function ($q) {
-                    return $q->select(['Area.name']);
+                'ParentAreas' => function ($q) {
+                    return $q->select(['ParentAreas.name']);
                 }
             ])
             ->group('Communities.id')

@@ -11,7 +11,6 @@ use Cake\Validation\Validator;
 /**
  * Areas Model
  *
- * @property \Cake\ORM\Association\HasMany $Communities
  * @property \Cake\ORM\Association\HasMany $Statistic
  */
 class AreasTable extends Table
@@ -29,9 +28,6 @@ class AreasTable extends Table
         $this->displayField('name');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
-        $this->hasMany('Communities', [
-            'foreignKey' => 'area_id'
-        ]);
         $this->hasMany('Statistics', [
             'foreignKey' => 'area_id'
         ]);

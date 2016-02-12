@@ -123,8 +123,8 @@
                     ?>
                     /
                     <?php
-                        $arrow = getSortArrow('Area.name', $this->request->query);
-                        echo $this->Paginator->sort('Area.name', 'Area'.$arrow, ['escape' => false]);
+                        $arrow = getSortArrow('ParentArea.name', $this->request->query);
+                        echo $this->Paginator->sort('ParentArea.name', 'Area'.$arrow, ['escape' => false]);
                     ?>
                 </th>
                 <th>
@@ -156,7 +156,7 @@
                         <?= $community->name ?>
                         <br />
                         <span class="area_name">
-                            <?= $community->area['name'] ?>
+                            <?= $community->parent_area['name'] ?>
                         </span>
                     </td>
                     <td>

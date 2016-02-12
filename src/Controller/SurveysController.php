@@ -47,7 +47,7 @@ class SurveysController extends AppController
         }
 
         // Determine actual ranks (for alignment calculation)
-        $area = $this->Surveys->getArea($surveyId);
+        $area = $this->Surveys->getParentArea($surveyId);
         $actualRanks = [];
         $sectors = $this->Surveys->getSectors();
         foreach ($sectors as $sector) {
