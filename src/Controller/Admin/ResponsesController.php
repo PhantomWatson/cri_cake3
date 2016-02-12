@@ -28,12 +28,7 @@ class ResponsesController extends AppController
         $totalAlignment = 0;
         $responses = $this->getResponsesPage($surveyId);
         $alignmentSum = $this->getAlignmentSum($responses);
-        $approvedCount = 0;
-        foreach ($responses as $i => $response) {
-            if ($response['respondent']['approved'] == 1) {
-                $approvedCount++;
-            }
-        }
+        $approvedCount = $this->getApprovedCount($responses);
 
         // Process update
         if ($this->request->is('post') || $this->request->is('put')) {
@@ -123,5 +118,16 @@ class ResponsesController extends AppController
             }
         }
         return $alignmentSum;
+    }
+
+    private function getApprovedCount($responses)
+    {
+        $approvedCount = 0;
+        foreach ($responses as $i => $response) {
+            if ($response['respondent']['approved'] == 1) {
+                $approvedCount++;
+            }
+        }
+        return $approvedCount;
     }
 }
