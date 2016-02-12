@@ -180,7 +180,7 @@
                                     <?php endif; ?>
                                 <?php endif; ?>
 
-                                <?php if (isset($community->{$surveyType}['respondents_last_modified_date'])): ?>
+                                <?php if ($community->{$surveyType}['respondents_last_modified_date']): ?>
                                     <br /> Last response:
                                     <?= $community->{$surveyType}['respondents_last_modified_date']->format('n/j/Y') ?>
                                 <?php endif; ?>
