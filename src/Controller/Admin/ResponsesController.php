@@ -33,8 +33,8 @@ class ResponsesController extends AppController
         $approvedCount = 0;
         foreach ($responses as $i => $response) {
             if ($response['respondent']['approved'] == 1) {
-                //$alignmentSum += $response->alignment;
-                //$approvedCount++;
+                $alignmentSum += $response->alignment;
+                $approvedCount++;
             }
         }
 
