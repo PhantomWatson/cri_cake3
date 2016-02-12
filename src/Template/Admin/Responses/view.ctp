@@ -11,8 +11,8 @@
             'prefix' => 'admin',
             'controller' => 'Surveys',
             'action' => 'view',
-            $communityId,
-            $surveyType
+            $community->id,
+            $survey->type
         ],
         [
             'class' => 'btn btn-default',
@@ -30,9 +30,9 @@
     <p>
         These are the currently known responses to
         <strong>
-            <?= $communityName ?>'s
+            <?= $community->name ?>'s
             community
-            <?= $surveyType == 'official' ? 'leadership' : 'organization' ?>
+            <?= $survey->type == 'official' ? 'leadership' : 'organization' ?>
         </strong>
         survey. Incomplete responses are excluded, and recent responses may have not been imported yet.
     </p>

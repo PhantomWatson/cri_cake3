@@ -55,19 +55,18 @@ class ResponsesController extends AppController
         }
 
         $community = $communitiesTable->get($survey->community_id);
+        $totalAlignment = $approvedCount ? round($alignmentSum / $approvedCount) : 0;
+        $internalAlignment = $this->Responses->getInternalAlignment($surveyId);
         $this->set([
             'alignmentLastSet' => $alignmentLastSet,
+            'community' => $community,
+            'internalAlignment' => $internalAlignment,
             'parentArea' => $parentArea,
-            'communityId' => $survey->community_id,
-            'communityName' => $community->name,
-            'internalAlignment' => $this->Responses->getInternalAlignment($surveyId),
             'responses' => $responses,
             'sectors' => $surveysTable->getSectors(),
             'survey' => $survey,
-            'surveyId' => $surveyId,
-            'surveyType' => $survey->type,
             'titleForLayout' => 'View and Update Alignment',
-            'totalAlignment' => $approvedCount ? round($alignmentSum / $approvedCount) : 0
+            'totalAlignment' => $totalAlignment
         ]);
     }
 
