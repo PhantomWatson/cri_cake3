@@ -48,7 +48,7 @@ class SurveysController extends AppController
         $communitiesTable = TableRegistry::get('Communities');
         $areaId = $communitiesTable->getParentAreaId($survey->community_id);
         $areasTable = TableRegistry::get('Areas');
-        $actualRanks = $areasTable->getPwrrrRanks($survey->areaId);
+        $actualRanks = $areasTable->getPwrrrRanks($areaId);
 
         $usersTable = TableRegistry::get('Users');
         if (is_array($responses)) {
