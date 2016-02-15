@@ -169,6 +169,7 @@ var adminViewResponses = {
 		   event.preventDefault();
 		   $('tr.respondent').toggle();
 		});
+		$('ul.nav-tabs li[role=presentation]').first().addClass('active');
 	}
 };
 

@@ -46,7 +46,52 @@
                 No responses have been imported yet.
             </p>
         <?php else: ?>
-            <?= $this->element('Respondents'.DS.'admin_table') ?>
+            <div>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li>
+                        Compared to:
+                    </li>
+                    <?php if ($community->local_area): ?>
+                        <li role="presentation">
+                            <a href="#vsLocalArea" aria-controls="vsLocalArea" role="tab" data-toggle="tab">
+                                <?= $community->local_area['name'] ?>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                    <?php if ($community->parent_area): ?>
+                        <li role="presentation">
+                            <a href="#vsParentArea" aria-controls="vsParentArea" role="tab" data-toggle="tab">
+                                <?= $community->parent_area['name'] ?>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+                <div class="tab-content">
+                    <?php
+                        function getSortArrow($sortField, $params) {
+                            if (isset($params['named']['sort']) && $params['named']['sort'] == $sortField) {
+                                $direction = strtolower($params['named']['direction']) == 'desc' ? 'up' : 'down';
+                                return '<span class="glyphicon glyphicon-arrow-'.$direction.'" aria-hidden="true"></span>';
+                            }
+                            return '';
+                        }
+                    ?>
+                    <?php if ($community->local_area): ?>
+                        <div role="tabpanel" class="tab-pane active" id="vsLocalArea">
+                            <?= $this->element('Respondents'.DS.'admin_table', [
+                                'area' => $community->local_area
+                            ]) ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($community->parent_area): ?>
+                        <div role="tabpanel" class="tab-pane" id="vsParentArea">
+                            <?= $this->element('Respondents'.DS.'admin_table', [
+                                'area' => $community->parent_area
+                            ]) ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
         <?php endif; ?>
     </section>
 
@@ -111,3 +156,8 @@
         <?= $this->Form->end() ?>
     </section>
 </div>
+
+<?php $this->element('script', ['script' => 'admin']); ?>
+<?php $this->append('buffered'); ?>
+    adminViewResponses.init();
+<?php $this->end(); ?>

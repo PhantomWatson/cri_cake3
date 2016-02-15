@@ -28,9 +28,6 @@ class ResponsesController extends AppController
             throw new NotFoundException('Survey ID not specified.');
         }
 
-        $communitiesTable = TableRegistry::get('Communities');
-        $parentAreaId = $communitiesTable->getParentAreaId($survey->community_id);
-        $parentArea = $areasTable->get($parentAreaId);
         $totalAlignment = 0;
         $responses = $this->SurveyProcessing->getResponsesPage($surveyId);
         $alignmentSum = $this->SurveyProcessing->getAlignmentSum($responses);
@@ -53,13 +50,15 @@ class ResponsesController extends AppController
             $this->Flash->set('New responses have been received since this community\'s alignment was last set.');
         }
 
-        $community = $communitiesTable->get($survey->community_id);
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->get($survey->community_id, [
+            'contain' => ['LocalAreas', 'ParentAreas']
+        ]);
         $totalAlignment = $approvedCount ? round($alignmentSum / $approvedCount) : 0;
         $internalAlignment = $this->Responses->getInternalAlignment($surveyId);
         $this->set([
             'community' => $community,
             'internalAlignment' => $internalAlignment,
-            'parentArea' => $parentArea,
             'responses' => $responses,
             'sectors' => $surveysTable->getSectors(),
             'survey' => $survey,

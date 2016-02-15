@@ -6,14 +6,11 @@
     <table class="table">
         <thead class="actual">
             <td colspan="2">
-                <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                <?= $parentArea['name'] ?>
-                <br />
-                (Actual rankings)
+                Actual rankings
             </td>
             <?php foreach ($sectors as $sector): ?>
                 <td class="actual_rank">
-                    <?= $parentArea["{$sector}_rank"] ?>
+                    <?= $area["{$sector}_rank"] ?>
                 </td>
             <?php endforeach; ?>
             <td>
@@ -23,15 +20,6 @@
         </thead>
         <thead>
             <tr>
-                <?php
-                    function getSortArrow($sortField, $params) {
-                        if (isset($params['named']['sort']) && $params['named']['sort'] == $sortField) {
-                            $direction = strtolower($params['named']['direction']) == 'desc' ? 'up' : 'down';
-                            return '<span class="glyphicon glyphicon-arrow-'.$direction.'" aria-hidden="true"></span>';
-                        }
-                        return '';
-                    }
-                ?>
                 <th>
                     <?php
                         $arrow = getSortArrow('response_date', $this->request->params);
@@ -97,7 +85,7 @@
                     <?php foreach ($sectors as $sector): ?>
                         <?php
                             $respondentRank = $response[$sector.'_rank'];
-                            $actualRank = $parentArea["{$sector}_rank"];
+                            $actualRank = $area["{$sector}_rank"];
                             $difference = abs($respondentRank - $actualRank);
                             if ($difference > 2) {
                                 $class = 'incorrect';
@@ -152,7 +140,3 @@
         </tfoot>
     </table>
 </div>
-<?php $this->element('script', ['script' => 'admin']); ?>
-<?php $this->append('buffered'); ?>
-    adminViewResponses.init();
-<?php $this->end(); ?>

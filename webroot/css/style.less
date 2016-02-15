@@ -791,6 +791,7 @@ table.pwr {
 		}
 		td:first-child {
 			text-align: right;
+			vertical-align: middle;
 		}
 	}
 	tfoot {
@@ -846,6 +847,22 @@ table.pwr {
 	}
 	.internal_alignment {
 		font-size: 120%;
+	}
+	.nav {
+		&:after,
+		&:before, {
+			display: none;
+		}
+	}
+	.nav-tabs {
+		> li {
+			float: none;
+			display: inline-block;
+
+			&:first-child {
+				padding-right: 15px;
+			}
+		}
 	}
 }
 
