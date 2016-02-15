@@ -27,9 +27,7 @@ class SurveysController extends AppController
         $respondentsTable = TableRegistry::get('Respondents');
         list($success, $respondents) = $respondentsTable->getNewFromSurveyMonkey($surveyId);
         if (! $success) {
-            $this->response->statusCode(500);
-            $this->set('message', $respondents);
-            return;
+            return $this->renderImportError($respondents);
         }
 
         // Convert IDs from integers to strings (the SurveyMonkey API is particular about this)
@@ -42,9 +40,7 @@ class SurveysController extends AppController
         $responsesTable = TableRegistry::get('Responses');
         list($success, $responses) = $responsesTable->getFromSurveyMonkeyForRespondents($surveyId, $smRespondentIds);
         if (! $success) {
-            $this->response->statusCode(500);
-            $this->set('message', $responses);
-            return;
+            return $this->renderImportError($responses);
         }
 
         // Determine actual ranks (for alignment calculation)
@@ -79,9 +75,7 @@ class SurveysController extends AppController
                     } else {
                         $message = 'Error saving respondent.';
                         $message .= ' Validation errors: '.print_r($errors, true);
-                        $this->response->statusCode(500);
-                        $this->set(compact('message'));
-                        return;
+                        return $this->renderImportError($message);
                     }
 
                 // Update existing respondent
@@ -127,9 +121,7 @@ class SurveysController extends AppController
                 } else {
                     $message = 'Error saving response.';
                     $message .= ' Validation errors: '.print_r($errors, true);
-                    $this->response->statusCode(500);
-                    $this->set(compact('message'));
-                    return;
+                    return $this->renderImportError($message);
                 }
             }
 
@@ -148,6 +140,13 @@ class SurveysController extends AppController
         $this->Surveys->setChecked($surveyId);
 
         $this->set(compact('message'));
+    }
+
+    private function renderImportError($message)
+    {
+        $this->response->statusCode(500);
+        $this->set(compact('message'));
+        return $this->render();
     }
 
     public function getSurveyList()
