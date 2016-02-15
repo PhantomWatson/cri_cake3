@@ -44,7 +44,7 @@
         <?php if (! empty($accessibleCommunities)): ?>
             <li>
                 <p>
-                    County Performance
+                    Community Performance
                 </p>
                 <form method="get" id="community_select" action="/communities/view">
                     <select name="cid" required>
