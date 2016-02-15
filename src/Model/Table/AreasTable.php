@@ -503,4 +503,22 @@ class AreasTable extends Table
         require_once(ROOT.DS.'plugins'.DS.'GoogleCharts'.DS.'vendor'.DS.'GoogleCharts.php');
         return new \GoogleCharts();
     }
+
+    /**
+     * Get the array of PWRRR rankings associated wiht an area
+     *
+     * @param int $areaId
+     * @return array
+     */
+    public function getPwrrrRanks($areaId)
+    {
+        $area = $this->get($areaId);
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
+        $ranks = [];
+        foreach ($sectors as $sector) {
+            $ranks[$sector] = $area["{$sector}_rank"];
+        }
+        return $ranks;
+    }
 }

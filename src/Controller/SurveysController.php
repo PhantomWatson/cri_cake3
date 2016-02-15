@@ -48,14 +48,12 @@ class SurveysController extends AppController
         }
 
         // Determine actual ranks (for alignment calculation)
-        $area = $this->Surveys->getParentArea($surveyId);
-        $actualRanks = [];
-        $sectors = $this->Surveys->getSectors();
-        foreach ($sectors as $sector) {
-            $actualRanks[$sector] = $area["{$sector}_rank"];
-        }
-
         $survey = $this->Surveys->get($surveyId);
+        $communitiesTable = TableRegistry::get('Communities');
+        $areaId = $communitiesTable->getParentAreaId($survey->community_id);
+        $areasTable = TableRegistry::get('Areas');
+        $actualRanks = $areasTable->getPwrrrRanks($survey->areaId);
+
         $usersTable = TableRegistry::get('Users');
         if (is_array($responses)) {
             foreach ($responses as $smRespondentId => $response) {
