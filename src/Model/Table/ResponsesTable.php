@@ -78,8 +78,12 @@ class ResponsesTable extends Table
             ->allowEmpty('recreation_rank');
 
         $validator
-            ->add('alignment', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('alignment');
+            ->add('parent_area_pwrrr_alignment', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('parent_area_pwrrr_alignment');
+
+        $validator
+            ->add('local_area_pwrrr_alignment', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('local_area_pwrrr_alignment');
 
         $validator
             ->add('response_date', 'valid', ['rule' => 'datetime'])
