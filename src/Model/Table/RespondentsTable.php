@@ -349,4 +349,28 @@ class RespondentsTable extends Table
             ])
             ->first();
     }
+
+    /**
+     * Returns TRUE if this respondent's responses should be auto-approved
+     *
+     * @param Survey $survey
+     * @param string $email
+     * @return boolean
+     */
+    public function isAutoApproved($survey, $email)
+    {
+        // All organization survey responses are auto-approved
+        if ($survey->type == 'organization') {
+            return true;
+        }
+
+        // Responses from a community's client are auto-approved
+        $usersTable = TableRegistry::get('Users');
+        $userId = $usersTable->getIdWithEmail($email);
+        if ($userId) {
+            return $usersTable->isCommunityClient($survey->community_id, $userId);
+        }
+
+        return false;
+    }
 }
