@@ -288,18 +288,18 @@ class SurveyProcessingComponent extends Component
         return $retval;
     }
 
-    public function getAlignmentSum($responses)
+    public static function getAlignmentSum($responses, $alignmentField)
     {
         $alignmentSum = 0;
         foreach ($responses as $i => $response) {
             if ($response['respondent']['approved'] == 1) {
-                $alignmentSum += $response->alignment;
+                $alignmentSum += $response->$alignmentField;
             }
         }
         return $alignmentSum;
     }
 
-    public function getApprovedCount($responses)
+    public static function getApprovedCount($responses)
     {
         $approvedCount = 0;
         foreach ($responses as $i => $response) {

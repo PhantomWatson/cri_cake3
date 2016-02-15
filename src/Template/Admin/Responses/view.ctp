@@ -79,14 +79,16 @@
                     <?php if ($community->local_area): ?>
                         <div role="tabpanel" class="tab-pane active" id="vsLocalArea">
                             <?= $this->element('Respondents'.DS.'admin_table', [
-                                'area' => $community->local_area
+                                'area' => $community->local_area,
+                                'alignmentField' => 'local_area_pwrrr_alignment'
                             ]) ?>
                         </div>
                     <?php endif; ?>
                     <?php if ($community->parent_area): ?>
                         <div role="tabpanel" class="tab-pane" id="vsParentArea">
                             <?= $this->element('Respondents'.DS.'admin_table', [
-                                'area' => $community->parent_area
+                                'area' => $community->parent_area,
+                                'alignmentField' => 'parent_area_pwrrr_alignment'
                             ]) ?>
                         </div>
                     <?php endif; ?>

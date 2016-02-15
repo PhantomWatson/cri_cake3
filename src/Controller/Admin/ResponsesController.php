@@ -28,10 +28,7 @@ class ResponsesController extends AppController
             throw new NotFoundException('Survey ID not specified.');
         }
 
-        $totalAlignment = 0;
         $responses = $this->SurveyProcessing->getResponsesPage($surveyId);
-        $alignmentSum = $this->SurveyProcessing->getAlignmentSum($responses);
-        $approvedCount = $this->SurveyProcessing->getApprovedCount($responses);
 
         // Process update
         if ($this->request->is('post') || $this->request->is('put')) {
@@ -54,7 +51,7 @@ class ResponsesController extends AppController
         $community = $communitiesTable->get($survey->community_id, [
             'contain' => ['LocalAreas', 'ParentAreas']
         ]);
-        $totalAlignment = $approvedCount ? round($alignmentSum / $approvedCount) : 0;
+
         $internalAlignment = $this->Responses->getInternalAlignment($surveyId);
         $this->set([
             'community' => $community,
@@ -62,8 +59,7 @@ class ResponsesController extends AppController
             'responses' => $responses,
             'sectors' => $surveysTable->getSectors(),
             'survey' => $survey,
-            'titleForLayout' => 'View and Update Alignment',
-            'totalAlignment' => $totalAlignment
+            'titleForLayout' => 'View and Update Alignment'
         ]);
     }
 }

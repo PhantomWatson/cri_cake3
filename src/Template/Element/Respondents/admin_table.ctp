@@ -1,5 +1,10 @@
 <?php
     use Cake\Validation\Validation;
+    use App\Controller\Component\SurveyProcessingComponent;
+
+    $alignmentSum = SurveyProcessingComponent::getAlignmentSum($responses, $alignmentField);
+    $approvedCount = SurveyProcessingComponent::getApprovedCount($responses);
+    $totalAlignment = $approvedCount ? round($alignmentSum / $approvedCount) : 0;
 ?>
 
 <div class="table_container">
@@ -101,7 +106,7 @@
                     <?php endforeach; ?>
 
                     <td>
-                        <?= $response['alignment'] ?>%
+                        <?= $response[$alignmentField] ?>%
                     </td>
 
                     <td>
