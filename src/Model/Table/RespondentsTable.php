@@ -332,7 +332,7 @@ class RespondentsTable extends Table
      */
     public function getMatching($surveyId, $respondent, $smRespondentId)
     {
-        return $respondentsTable->find('all')
+        return $this->find('all')
             ->select(['id', 'sm_respondent_id', 'name'])
             ->where([
                 // Same survey and either the same smRespondentId OR (actual) email address
