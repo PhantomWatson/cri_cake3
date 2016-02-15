@@ -58,22 +58,7 @@ class SurveysController extends AppController
         if (is_array($responses)) {
             foreach ($responses as $smRespondentId => $response) {
                 $respondent = $responsesTable->extractRespondentInfo($response);
-                $respondentRecord = $respondentsTable->find('all')
-                    ->select(['id', 'sm_respondent_id', 'name'])
-                    ->where([
-                        // Same survey and either the same smRespondentId OR (actual) email address
-                        'survey_id' => $surveyId,
-                        'OR' => [
-                            function ($exp, $q) use ($respondent) {
-                                // @ and . required, weeds out "email not listed" values
-                                return $exp
-                                    ->like('email', '%@%.%')
-                                    ->eq('email', $respondent['email']);
-                            },
-                            ['sm_respondent_id' => $smRespondentId]
-                        ]
-                    ])
-                    ->first();
+                $respondentRecord = $respondentsTable->getMatching($surveyId, $respondent, $smRespondentId);
                 $serializedResponse = base64_encode(serialize($response));
 
                 // Add new respondent

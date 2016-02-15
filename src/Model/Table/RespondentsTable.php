@@ -320,4 +320,33 @@ class RespondentsTable extends Table
         $communityIsAssigned = $survey->community_id == $assignedCommunityId;
         return $idsFound && $communityIsAssigned;
     }
+
+    /**
+     * Returns a respondent record for the specified survey and
+     * matching either the same smRespondentId or email address.
+     *
+     * @param int $surveyId
+     * @param array $respondent
+     * @param int $smRespondentId
+     * @return Respondent
+     */
+    public function getMatching($surveyId, $respondent, $smRespondentId)
+    {
+        return $respondentsTable->find('all')
+            ->select(['id', 'sm_respondent_id', 'name'])
+            ->where([
+                // Same survey and either the same smRespondentId OR (actual) email address
+                'survey_id' => $surveyId,
+                'OR' => [
+                    function ($exp, $q) use ($respondent) {
+                        // @ and . required, weeds out "email not listed" values
+                        return $exp
+                            ->like('email', '%@%.%')
+                            ->eq('email', $respondent['email']);
+                    },
+                    ['sm_respondent_id' => $smRespondentId]
+                ]
+            ])
+            ->first();
+    }
 }
