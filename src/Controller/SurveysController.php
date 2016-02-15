@@ -80,14 +80,23 @@ class SurveysController extends AppController
 
                 // Update existing respondent
                 } else {
+                    $newData = [];
                     if (empty($respondentRecord->smRespondentId)) {
-                        $respondentRecord = $respondentsTable->patchEntity($respondentRecord, ['sm_respondent_id' => $smRespondentId]);
+                        $newData['sm_respondent_id'] = $smRespondentId;
                     }
                     if (empty($respondentRecord->name)) {
-                        $respondentRecord = $respondentsTable->patchEntity($respondentRecord, ['name' => $respondent['name']]);
+                        $newData['name'] = $respondent['name'];
                     }
-                    if ($respondentRecord->dirty()) {
-                        $respondentsTable->save($respondentRecord);
+                    if (! empty($newData)) {
+                        $respondentRecord = $respondentsTable->patchEntity($respondentRecord, $newData);
+                        $errors = $respondentRecord->errors();
+                        if (empty($errors)) {
+                            $respondentsTable->save($respondentRecord);
+                        } else {
+                            $message = 'Error updating respondent.';
+                            $message .= ' Validation errors: '.print_r($errors, true);
+                            return $this->renderImportError($message);
+                        }
                     }
                     $respondentId = $respondentRecord->id;
                 }
