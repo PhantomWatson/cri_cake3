@@ -22,6 +22,7 @@ class Area extends Entity
         'retail_rank' => true,
         'residential_rank' => true,
         'recreation_rank' => true,
+        'parent_id' => true,
         'communities' => true,
         'statistic' => true,
     ];
