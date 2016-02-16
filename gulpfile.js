@@ -128,7 +128,12 @@ gulp.task('watch', function() {
     
     // PHP
     // All tests if a .php file is changed
-    gulp.watch('src/**/*.php', {debounceDelay: 2000}, ['php']);
+    var phpWatchFiles = [
+        'config/*.php',
+        'src/**/*.php', 
+        'tests/**/*.php'
+    ];
+    gulp.watch(phpWatchFiles, {debounceDelay: 2000}, ['php']);
     // Only unit tests if a .ctp file is changed until a proper ruleset for template files is added 
     gulp.watch('src/**/*.ctp', {debounceDelay: 2000}, ['php_unit']);
 });
