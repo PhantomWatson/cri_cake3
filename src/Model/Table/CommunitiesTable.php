@@ -146,50 +146,6 @@ class CommunitiesTable extends Table
 
     /**
      * @param int $communityId
-     * @return GoogleCharts
-     */
-    public function getPwrBarChart($communityId)
-    {
-        $areaId = $this->getParentAreaId($communityId);
-        $areasTable = TableRegistry::get('Areas');
-        return $areasTable->getPwrBarChart($areaId);
-    }
-
-    /**
-     * @param int $communityId
-     * @return array
-     */
-    public function getPwrTable($communityId)
-    {
-        $areaId = $this->getParentAreaId($communityId);
-        $areasTable = TableRegistry::get('Areas');
-        return $areasTable->getPwrTable($areaId);
-    }
-
-    /**
-     * @param int $communityId
-     * @return GoogleCharts
-     */
-    public function getEmploymentLineChart($communityId)
-    {
-        $areaId = $this->getParentAreaId($communityId);
-        $areasTable = TableRegistry::get('Areas');
-        return $areasTable->getEmploymentLineChart($areaId);
-    }
-
-    /**
-     * @param int $communityId
-     * @return array
-     */
-    public function getEmploymentGrowthTableData($communityId)
-    {
-        $areaId = $this->getParentAreaId($communityId);
-        $areasTable = TableRegistry::get('Areas');
-        return $areasTable->getEmploymentGrowthTableData($areaId);
-    }
-
-    /**
-     * @param int $communityId
      * @return int
      */
     public function getConsultantCount($communityId)

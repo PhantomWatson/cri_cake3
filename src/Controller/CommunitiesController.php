@@ -100,13 +100,14 @@ class CommunitiesController extends AppController
             throw new NotFoundException('Community not found');
         }
 
+        $areasTable = TableRegistry::get('Areas');
         $this->set([
             'titleForLayout' => $community->name.' Performance',
             'community' => $community,
-            'barChart' => $this->Communities->getPwrBarChart($communityId),
-            'pwrTable' => $this->Communities->getPwrTable($communityId),
-            'lineChart' => $this->Communities->getEmploymentLineChart($communityId),
-            'growthTable' => $this->Communities->getEmploymentGrowthTableData($communityId)
+            'barChart' => $areasTable->getPwrBarChart($community->parent_area_id),
+            'pwrTable' => $areasTable->getPwrTable($community->parent_area_id),
+            'lineChart' => $areasTable->getEmploymentLineChart($community->parent_area_id),
+            'growthTable' => $areasTable->getEmploymentGrowthTableData($community->parent_area_id)
         ]);
     }
 
