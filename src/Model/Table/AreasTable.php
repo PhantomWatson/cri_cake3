@@ -78,11 +78,15 @@ class AreasTable extends Table
     }
 
     /**
-     * @param $areaId int
-     * @return GoogleCharts
+     * @param int|null $areaId
+     * @return GoogleCharts|boolean
      */
     public function getPwrBarChart($areaId)
     {
+        if (! $areaId) {
+            return false;
+        }
+
         $area = $this->find('all')
             ->select(['Areas.id'])
             ->where(['Areas.id' => $areaId])
@@ -269,11 +273,15 @@ class AreasTable extends Table
     }
 
     /**
-     * @param $areaId int
-     * @return array
+     * @param int|null $areaId
+     * @return array|boolean
      */
     public function getPwrTable($areaId)
     {
+        if (! $areaId) {
+            return false;
+        }
+
         $area = $this->find('all')
             ->select(['Areas.id'])
             ->where(['Areas.id' => $areaId])
@@ -312,11 +320,15 @@ class AreasTable extends Table
     }
 
     /**
-     * @param $areaId int
-     * @return GoogleCharts
+     * @param int|null $areaId
+     * @return GoogleCharts|boolean
      */
     public function getEmploymentLineChart($areaId)
     {
+        if (! $areaId) {
+            return false;
+        }
+
         $chart = $this->getGoogleChartsObject();
         $chart->type('LineChart');
         $chart->columns([
@@ -411,11 +423,15 @@ class AreasTable extends Table
     }
 
     /**
-     * @param $areaId int
-     * @return array
+     * @param int|null $areaId
+     * @return array|boolean
      */
     public function getEmploymentGrowthTableData($areaId)
     {
+        if (! $areaId) {
+            return false;
+        }
+
         // Get the most recent year
         $result = $this->find('all')
             ->select(['Areas.id'])
