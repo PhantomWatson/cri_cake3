@@ -229,12 +229,16 @@ class ResponsesTable extends Table
 
     /**
      * Returns calculated alignment for an individual response
-     * @param array $actualRanks ['sector_name' => rank, ...]
+     * @param array|null $actualRanks ['sector_name' => rank, ...]
      * @param array $responseRanks ['sector_name' => rank, ...]
-     * @return int
+     * @return int|null
      */
     public function calculateAlignment($actualRanks, $responseRanks)
     {
+        if (! $actualRanks) {
+            return null;
+        }
+
         // Determine sector weights
         $surveysTable = TableRegistry::get('Surveys');
         $sectors = $surveysTable->getSectors();
