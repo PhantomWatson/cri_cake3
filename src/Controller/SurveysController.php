@@ -155,7 +155,7 @@ class SurveysController extends AppController
     {
         $this->response->statusCode(500);
         $this->set(compact('message'));
-        return $this->render();
+        return $this->render('import');
     }
 
     public function getSurveyList()
