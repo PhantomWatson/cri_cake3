@@ -43,10 +43,7 @@
                     </th>
                 <?php endforeach; ?>
                 <th>
-                    <?php
-                        $arrow = getSortArrow('alignment', $this->request->params);
-                        echo $this->Paginator->sort('alignment', 'Alignment'.$arrow, ['escape' => false]);
-                    ?>
+                    Alignment
                 </th>
                 <th>
                     <?php
