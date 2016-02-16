@@ -547,4 +547,67 @@ class AreasTable extends Table
         }
         return $ranks;
     }
+
+    /**
+     * Take a comma-delimited dump of area data and insert it into the database
+     *
+     * Format for each line of $data:
+     *     fips,City Name city,County Name,countyFips,P,W,R,R,R
+     */
+    public function importAreaData()
+    {
+        $data = '...';
+        $data = trim($data);
+        $lines = explode("\n", $data);
+        foreach ($lines as $line) {
+            $line = trim($line);
+            $fields = explode(',', $line);
+            $fips = $fields[0];
+            $parentFips = $fields[3];
+            $areaNameWords = explode(' ', $fields[1]);
+            $type = array_pop($areaNameWords);
+            $areaName = implode(' ', $areaNameWords);
+            if (! in_array($type, ['city', 'town', 'CDP'])) {
+                exit('Unrecognized area type: '.$type);
+            }
+
+            $recordExists = $this->getIdFromFips($fips);
+            if ($recordExists !== null) {
+                continue;
+            }
+
+            $data = [
+                'fips' => $fips,
+                'name' => $areaName,
+                'type' => $type,
+                'production_rank' => $fields[4],
+                'wholesale_rank' => $fields[5],
+                'retail_rank' => $fields[6],
+                'residential_rank' => $fields[7],
+                'recreation_rank' => $fields[8],
+                'parent_id' => $this->getIdFromFips($parentFips)
+            ];
+            $area = $this->newEntity($data);
+            $errors = $area->errors();
+            if (empty($errors)) {
+                $this->save($area);
+                echo 'Saved '.$areaName.'<br />';
+            } else {
+                exit('Errors: '.print_r($errors, true));
+            }
+        }
+    }
+
+    /**
+     * @param int $fips
+     * @return int|null
+     */
+    public function getIdFromFips($fips)
+    {
+        $result = $this->find('all')
+            ->select(['Areas.id'])
+            ->where(['Areas.fips' => $fips])
+            ->first();
+        return $result ? $result->id : null;
+    }
 }
