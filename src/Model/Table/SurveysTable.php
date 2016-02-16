@@ -630,23 +630,6 @@ class SurveysTable extends Table
         }
     }
 
-    /**
-     * Returns a ParentArea entity corresponding to a given survey
-     *
-     * @param int $surveyId
-     * @return Entity
-     */
-    public function getParentArea($surveyId)
-    {
-        $survey = $this->get($surveyId);
-        $communitiesTable = TableRegistry::get('Communities');
-        $areaId = $communitiesTable->getParentAreaId($survey->community_id);
-        $areasTable = TableRegistry::get('Areas');
-        return $areasTable->find('all')
-            ->where(['id' => $areaId])
-            ->first();
-    }
-
     public function findAutoImportCandidate(Query $query, array $options)
     {
         return $query

@@ -138,16 +138,6 @@ class CommunitiesTable extends Table
      * @param int $communityId
      * @return int
      */
-    public function getParentAreaId($communityId)
-    {
-        $community = $this->get($communityId);
-        return $community->parent_area_id;
-    }
-
-    /**
-     * @param int $communityId
-     * @return int
-     */
     public function getConsultantCount($communityId)
     {
         $result = $this->find('all')
