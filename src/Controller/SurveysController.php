@@ -66,7 +66,7 @@ class SurveysController extends AppController
                         'survey_id' => $surveyId,
                         'sm_respondent_id' => $smRespondentId,
                         'invited' => false,
-                        'approved' => $approved
+                        'approved' => $approved ? 1 : 0
                     ]);
                     $errors = $newRespondent->errors();
                     if (empty($errors)) {
