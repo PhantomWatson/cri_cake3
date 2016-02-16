@@ -43,13 +43,9 @@ class SurveysController extends AppController
             return $this->renderImportError($responses);
         }
 
-        // Determine actual ranks (for alignment calculation)
+        // Loop through each response and add to / update records
         $survey = $this->Surveys->get($surveyId);
-        $communitiesTable = TableRegistry::get('Communities');
-        $areaId = $communitiesTable->getParentAreaId($survey->community_id);
         $areasTable = TableRegistry::get('Areas');
-        $actualRanks = $areasTable->getPwrrrRanks($areaId);
-
         $usersTable = TableRegistry::get('Users');
         if (is_array($responses)) {
             foreach ($responses as $smRespondentId => $response) {
@@ -106,16 +102,24 @@ class SurveysController extends AppController
                     continue;
                 }
 
+                // Determine actual ranks for alignment calculation
+                $communitiesTable = TableRegistry::get('Communities');
+                $community = $communitiesTable->get($communityId);
+                $actualRanksLocal = $areasTable->getPwrrrRanks($community->local_area_id);
+                $actualRanksParent = $areasTable->getPwrrrRanks($community->parent_area_id);
+
                 // Get individual ranks and alignment
                 $responseRanks = $responsesTable->getResponseRanks($serializedResponse, $survey);
-                $alignment = $responsesTable->calculateAlignment($actualRanks, $responseRanks);
+                $alignmentVsLocal = $responsesTable->calculateAlignment($actualRanks, $responseRanks);
+                $alignmentVsParent = $responsesTable->calculateAlignment($actualRanks, $responseRanks);
 
                 // Save response
                 $responseFields = [
                     'respondent_id' => $respondentId,
                     'survey_id' => $surveyId,
                     'response' => $serializedResponse,
-                    'alignment' => $alignment,
+                    'local_area_pwrrr_alignment' => $alignmentVsLocal,
+                    'parent_area_pwrrr_alignment' => $alignmentVsParent,
                     'response_date' => new Time($respondents[$smRespondentId])
                 ];
                 foreach ($responseRanks as $sector => $rank) {
