@@ -506,14 +506,23 @@ class AreasTable extends Table
     }
 
     /**
-     * Get the array of PWRRR rankings associated wiht an area
+     * Get the array of PWRRR rankings associated with an area, or FALSE if no valid area was provided
      *
-     * @param int $areaId
-     * @return array
+     * @param int|null $areaId
+     * @return array|boolean
      */
     public function getPwrrrRanks($areaId)
     {
-        $area = $this->get($areaId);
+        if (! $areaId) {
+            return false;
+        }
+
+        try {
+            $area = $this->get($areaId);
+        } catch (RecordNotFoundException $e) {
+            return false;
+        }
+
         $surveysTable = TableRegistry::get('Surveys');
         $sectors = $surveysTable->getSectors();
         $ranks = [];
