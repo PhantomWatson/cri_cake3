@@ -101,7 +101,7 @@ class AreasTable extends Table
             ])
             ->first();
         if (empty($area) || empty($area->statistics)) {
-            throw new NotFoundException('No data is currently available for the selected community.');
+            return false;
         }
 
         // Initialize chart
@@ -296,7 +296,7 @@ class AreasTable extends Table
             ])
             ->first();
         if (empty($area) || empty($area->statistics)) {
-            throw new NotFoundException('No data is currently available for the selected community.');
+            return false;
         }
 
         $table = [];
@@ -365,7 +365,7 @@ class AreasTable extends Table
             ])
             ->first();
         if (empty($area) || empty($area->statistics)) {
-            throw new NotFoundException('No data is currently available for the selected community.');
+            return false;
         }
 
         // Collect data in an easier array to loop through
@@ -449,7 +449,7 @@ class AreasTable extends Table
             ])
             ->first();
         if (empty($result) || empty($result->statistics)) {
-            throw new NotFoundException('No data is currently available for the selected community.');
+            return false;
         }
 
         $laterYear = $result['statistics'][0]['year'];
