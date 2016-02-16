@@ -16,6 +16,7 @@ class Area extends Entity
      */
     protected $_accessible = [
         'name' => true,
+        'type' => true,
         'fips' => true,
         'production_rank' => true,
         'wholesale_rank' => true,
