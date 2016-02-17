@@ -43,11 +43,32 @@ class StatCategoriesTable extends Table
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
-            
+
         $validator
             ->requirePresence('name', 'create')
             ->notEmpty('name');
 
         return $validator;
+    }
+
+    public function import()
+    {
+        $newCategories = [];
+        foreach ($newCategories as $name) {
+            $recordExists = $this->find('all')
+                ->where(['name' => $name])
+                ->count();
+            if ($recordExists !== 0) {
+                continue;
+            }
+            $category = $this->newEntity(['name' => $name]);
+            $errors = $category->errors();
+            if (empty($errors)) {
+                $this->save($category);
+                echo 'Saved '.$name.'<br />';
+            } else {
+                exit('Errors: '.print_r($errors, true));
+            }
+        }
     }
 }
