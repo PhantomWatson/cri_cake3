@@ -71,4 +71,17 @@ class StatCategoriesTable extends Table
             }
         }
     }
+
+    /**
+     * @param string $name
+     * @return int|null
+     */
+    public function getIdFromName($name)
+    {
+        $statCategory = $this->find('all')
+            ->select(['id'])
+            ->where(['name' => $name])
+            ->limit(1);
+        return $statCategory ? $statCategory->id : null;
+    }
 }
