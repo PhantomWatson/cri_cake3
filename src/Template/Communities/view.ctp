@@ -20,69 +20,35 @@
         determine how to leverage those strengths for effective community growth.
     </p>
 
-    <?php $barChart->div('bar_chart_container'); ?>
-    <div id="bar_chart_container"></div>
-    <?php $this->GoogleCharts->createJsChart($barChart); ?>
+    <ul class="nav nav-tabs" role="tablist">
+        <?php foreach($barChart as $areaScope => $chart): ?>
+            <?php if (! $chart) continue; ?>
+            <li role="presentation">
+                <a href="#tabpanel-<?= $areaScope ?>-barchart" aria-controls="tabpanel-<?= $areaScope ?>-barchart" role="tab" data-toggle="tab">
+                    <?= $areas[$areaScope] ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
 
-    <p class="footnote">
-        Data Source: Author calculations and Bureau of Economic Analysis
-    </p>
+    <div class="tab-content">
+        <?php foreach($barChart as $areaScope => $chart): ?>
+            <?php if (! $chart) continue; ?>
+            <div role="tabpanel" class="tab-pane active" id="tabpanel-<?= $areaScope ?>-barchart">
+                <?php $chart->div($areaScope.'_bar_chart_container'); ?>
+                <div id="<?= $areaScope ?>_bar_chart_container"></div>
+                <?php $this->GoogleCharts->createJsChart($chart); ?>
+                <p class="footnote">
+                    Data Source: Author calculations and Bureau of Economic Analysis
+                </p>
 
-    <a href="#" id="pwr_table_toggler" class="btn btn-primary">
-        Show table
-    </a>
+                <a href="#" id="<?= $areaScope ?>_pwr_table_toggler" class="btn btn-primary">
+                    Show table
+                </a>
 
-    <?php $this->append('buffered'); ?>
-        $('#pwr_table_toggler').click(function (event) {
-            event.preventDefault();
-            $('#pwr_table').slideToggle();
-        });
-    <?php $this->end(); ?>
-
-    <div id="pwr_table">
-        <table class="table pwr">
-            <thead>
-                <tr>
-                    <th colspan="2">
-                        Category
-                    </th>
-                    <th>
-                        Score
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($pwrTable as $broadCategory => $specificCategories): ?>
-                    <?php $firstRowInBc = true; ?>
-                    <?php foreach ($specificCategories as $specificCategory => $score): ?>
-                        <tr>
-                            <?php if ($firstRowInBc): ?>
-                                <th rowspan="<?= count($specificCategories) ?>">
-                                    <?= $broadCategory ?>
-                                </th>
-                            <?php endif; ?>
-                            <td>
-                                <?= $specificCategory ?>
-                            </td>
-                            <td>
-                                <?php if ($score > 1): ?>
-                                    <span class="above_average">
-                                        <?= $score ?>
-                                    </span>
-                                <?php elseif ($score < 1): ?>
-                                    <span class="below_average">
-                                        <?= $score ?>
-                                    </span>
-                                <?php else: ?>
-                                    <?= $score ?>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                        <?php $firstRowInBc = false; ?>
-                    <?php endforeach; ?>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                <?= $this->element('Communities'.DS.'pwrrr_table', compact('areaScope')) ?>
+            </div>
+        <?php endforeach; ?>
     </div>
 </section>
 
@@ -95,9 +61,27 @@
         Note the changes around each recessionary period.
     </p>
 
-    <?php $lineChart->div('line_chart_container'); ?>
-    <div id="line_chart_container"></div>
-    <?php $this->GoogleCharts->createJsChart($lineChart); ?>
+    <ul class="nav nav-tabs" role="tablist">
+        <?php foreach($lineChart as $areaScope => $chart): ?>
+            <?php if (! $chart) continue; ?>
+            <li role="presentation">
+                <a href="#tabpanel-<?= $areaScope ?>-linechart" aria-controls="tabpanel-<?= $areaScope ?>-linechart" role="tab" data-toggle="tab">
+                    <?= $areas[$areaScope] ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+    <div class="tab-content">
+        <?php foreach($lineChart as $areaScope => $chart): ?>
+            <?php if (! $chart) continue; ?>
+            <div role="tabpanel" class="tab-pane active" id="tabpanel-<?= $areaScope ?>-linechart">
+                <?php $lineChart[$areaScope]->div($areaScope.'_line_chart_container'); ?>
+                <div id="<?= $areaScope ?>_line_chart_container"></div>
+                <?php $this->GoogleCharts->createJsChart($lineChart[$areaScope]); ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
 
     <p>
         <strong>Note: </strong> Recessions were declared by NBER during the following periods:
@@ -124,46 +108,31 @@
         This table shows area employment before and after the 2007-2009 recession.
     </p>
 
-    <div id="employment_growth_table">
-        <table>
-            <thead>
-                <tr>
-                    <th>
-                        Sectors
-                    </th>
-                    <th>
-                        <?= $growthTable['earlier_year'] ?>
-                    </th>
-                    <th>
-                        <?= $growthTable['later_year'] ?>
-                    </th>
-                    <th>
-                        Change
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($growthTable['rows'] as $row): ?>
-                    <tr>
-                        <td>
-                            <?= $row['label'] ?>
-                        </td>
-                        <td>
-                            <?= number_format($row[$growthTable['earlier_year']]) ?>
-                        </td>
-                        <td>
-                            <?= number_format($row[$growthTable['later_year']]) ?>
-                        </td>
-                        <td>
-                            <?= $row['change'] ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+    <ul class="nav nav-tabs" role="tablist">
+        <?php foreach($growthTable as $areaScope => $table): ?>
+            <?php if (! $table) continue; ?>
+            <li role="presentation">
+                <a href="#tabpanel-<?= $areaScope ?>-growthtable" aria-controls="tabpanel-<?= $areaScope ?>-growthtable" role="tab" data-toggle="tab">
+                    <?= $areas[$areaScope] ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+    <div class="tab-content">
+        <?php foreach($growthTable as $areaScope => $table): ?>
+            <?php if (! $table) continue; ?>
+            <div role="tabpanel" class="tab-pane active" id="tabpanel-<?= $areaScope ?>-growthtable">
+                <?= $this->element('Communities'.DS.'growth_table', compact('table')) ?>
+            </div>
+        <?php endforeach; ?>
     </div>
 
     <p class="footnote">
         Data Source: Author calculations and Bureau of Economic Analysis
     </p>
 </section>
+
+<?php $this->append('buffered'); ?>
+    $('.community_data_section .nav-tabs li:first-child a').tab('show');
+<?php $this->end(); ?>

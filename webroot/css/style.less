@@ -45,6 +45,7 @@ nav {
 	border-bottom: 1px solid #666;
 	margin-bottom: 15px;
 	padding-bottom: 15px;
+
 	&:last-of-type {
 		border-bottom: none;
 	}
@@ -54,9 +55,21 @@ nav {
 		font-style: italic;
 		margin: 15px 0 0 0;
 	}
+	.nav {
+		&:after,
+		&:before, {
+			display: none;
+		}
+	}
+	.nav-tabs {
+		> li {
+			float: none;
+			display: inline-block;
+		}
+	}
 }
 
-#employment_growth_table {
+.employment_growth_table {
 	table {
 		margin: auto;
 	}
@@ -534,7 +547,7 @@ table.respondents {
 	}
 }
 
-#pwr_table {
+.toggled_pwr_table {
 	display: none;
 }
 

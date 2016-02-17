@@ -89,7 +89,9 @@ class CommunitiesController extends AppController
             throw new NotFoundException('Community ID not specified');
         }
 
-        $community = $this->Communities->get($communityId);
+        $community = $this->Communities->get($communityId, [
+            'contain' => ['LocalAreas', 'ParentAreas']
+        ]);
 
         if (! ($community->public || $this->isAuthorized($this->Auth->user()))) {
             $this->Flash->error('You are not authorized to access that community.');
@@ -101,13 +103,29 @@ class CommunitiesController extends AppController
         }
 
         $areasTable = TableRegistry::get('Areas');
+        $areas = [];
+        $barChart = [];
+        $pwrTable = [];
+        $lineChart = [];
+        $growthTable = [];
+        foreach (['local', 'parent'] as $areaScope) {
+            $areaId = $community[$areaScope.'_area_id'];
+            if ($areaId) {
+                $areas[$areaScope] = $community[$areaScope.'_area']['name'];
+            }
+            $barChart[$areaScope] = $areasTable->getPwrBarChart($areaId);
+            $pwrTable[$areaScope] = $areasTable->getPwrTable($areaId);
+            $lineChart[$areaScope] = $areasTable->getEmploymentLineChart($areaId);
+            $growthTable[$areaScope] = $areasTable->getEmploymentGrowthTableData($areaId);
+        }
         $this->set([
             'titleForLayout' => $community->name.' Performance',
             'community' => $community,
-            'barChart' => $areasTable->getPwrBarChart($community->parent_area_id),
-            'pwrTable' => $areasTable->getPwrTable($community->parent_area_id),
-            'lineChart' => $areasTable->getEmploymentLineChart($community->parent_area_id),
-            'growthTable' => $areasTable->getEmploymentGrowthTableData($community->parent_area_id)
+            'areas' => $areas,
+            'barChart' => $barChart,
+            'pwrTable' => $pwrTable,
+            'lineChart' => $lineChart,
+            'growthTable' => $growthTable
         ]);
     }
 
