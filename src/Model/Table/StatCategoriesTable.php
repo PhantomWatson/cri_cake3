@@ -81,7 +81,7 @@ class StatCategoriesTable extends Table
         $statCategory = $this->find('all')
             ->select(['id'])
             ->where(['name' => $name])
-            ->limit(1);
+            ->first();
         return $statCategory ? $statCategory->id : null;
     }
 }
