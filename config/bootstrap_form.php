@@ -5,6 +5,7 @@ return [
 	'inputContainerError' => '<div class="form-group has-error has-feedback {{type}}{{required}}">{{content}}{{error}}</div>',
 	'select' => '<select class="form-control" name="{{name}}"{{attrs}}>{{content}}</select>',
 	'selectMultiple' => '<select class="form-control" name="{{name}}[]" multiple="multiple"{{attrs}}>{{content}}</select>',
+    'input' => '<input class="form-control" type="{{type}}" name="{{name}}"{{attrs}}>',
 
 	/* defaults
 	'button' => '<button{{attrs}}>{{text}}</button>',
