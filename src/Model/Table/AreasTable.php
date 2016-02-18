@@ -176,12 +176,7 @@ class AreasTable extends Table
             $categoryId = $stat['stat_category_id'];
             $row = [];
             foreach ($columnGroups as $columnGroup) {
-                if (($columnGroup == 'score_production'    && $categoryId <= 2) ||
-                    ($columnGroup == 'score_wholesale'     && $categoryId > 2 && $categoryId <= 5) ||
-                    ($columnGroup == 'score_retail'        && $categoryId > 5 && $categoryId <= 8) ||
-                    ($columnGroup == 'score_residential'   && $categoryId > 8 && $categoryId <= 12) ||
-                    ($columnGroup == 'score_recreation'    && $categoryId > 12 && $categoryId <= 17)
-                ) {
+                if ($this->categoryIsInGroup($categoryId, $columnGroup)) {
                     $value = $stat['value'];
                     $allValues[] = $value;
                 } else {
@@ -270,6 +265,30 @@ class AreasTable extends Table
         ]);
 
         return $chart;
+    }
+
+    /**
+     * @param int $categoryId
+     * @param string $group
+     * @return boolean
+     */
+    private function categoryIsInGroup($categoryId, $group)
+    {
+        switch ($group) {
+            case 'score_production';
+                return $categoryId <= 2;
+            case 'score_wholesale':
+                return $categoryId > 2 && $categoryId <= 5;
+            case 'score_retail':
+                return $categoryId > 5 && $categoryId <= 8;
+            case 'score_residential':
+                return $categoryId > 8 && $categoryId <= 12;
+            case 'score_recreation':
+                return $categoryId > 12 && $categoryId <= 17;
+            default:
+                return false;
+        }
+
     }
 
     /**
