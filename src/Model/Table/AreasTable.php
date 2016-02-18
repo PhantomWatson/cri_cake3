@@ -7,6 +7,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
 /**
@@ -620,5 +621,28 @@ class AreasTable extends Table
             ->where(['Areas.fips' => $fips])
             ->first();
         return $result ? $result->id : null;
+    }
+
+    /**
+     * Returns an array of ['Capitalized-type' => [$areaId => $areaName], ...]
+     *
+     * @return array
+     */
+    public function getGroupedList()
+    {
+        $result = $this->find('all')
+            ->select(['id', 'name', 'type'])
+            ->order(['name' => 'ASC'])
+            ->toArray();
+        $grouped = Hash::combine($result, '{n}.id', '{n}.name', '{n}.type');
+
+        // Unfortunately, this (apparently) can't be accomplished with text-transform: capitalize
+        // because area types are displayed in <optgroup label="areatype">
+        $capitalizedGrouped = [];
+        foreach ($grouped as $type => $areas) {
+            $type = ucwords($type);
+            $capitalizedGrouped[$type] = $areas;
+        }
+        return $capitalizedGrouped;
     }
 }
