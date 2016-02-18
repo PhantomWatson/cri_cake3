@@ -276,15 +276,15 @@ class AreasTable extends Table
     {
         switch ($group) {
             case 'score_production';
-                return $categoryId <= 2;
+                return in_array($categoryId, [1, 2, 20, 21]);
             case 'score_wholesale':
-                return $categoryId > 2 && $categoryId <= 5;
+                return in_array($categoryId, [3, 4, 5, 22, 23, 24]);
             case 'score_retail':
-                return $categoryId > 5 && $categoryId <= 8;
+                return in_array($categoryId, [6, 7, 8, 25, 26]);
             case 'score_residential':
-                return $categoryId > 8 && $categoryId <= 12;
+                return in_array($categoryId, [9, 10, 11, 12, 27]);
             case 'score_recreation':
-                return $categoryId > 12 && $categoryId <= 17;
+                return in_array($categoryId, [13, 14, 15, 16, 17, 29, 30, 31]);
             default:
                 return false;
         }
