@@ -34,15 +34,12 @@
     echo $this->Form->input(
         'name',
         [
-            'class' => 'form-control',
-            'div' => ['class' => 'form-group']
+            'class' => 'form-control'
         ]
     );
     echo $this->Form->input(
         'local_area_id',
         [
-            'class' => 'form-control',
-            'div' => ['class' => 'form-group'],
             'empty' => true,
             'label' => 'Local Area (e.g. city)',
             'options' => $areas
@@ -51,8 +48,6 @@
     echo $this->Form->input(
         'parent_area_id',
         [
-            'class' => 'form-control',
-            'div' => ['class' => 'form-group'],
             'empty' => true,
             'label' => 'Wider Area (e.g. county)',
             'options' => $areas
@@ -61,8 +56,6 @@
     echo $this->Form->input(
         'fast_track',
         [
-            'class' => 'form-control',
-            'div' => ['class' => 'form-group']
         ]
     );
     $scores = [1, 2, 2.5, 3, 3.5, 4, 5];
@@ -85,8 +78,6 @@
         'score',
         [
             'after' => $note,
-            'class' => 'form-control',
-            'div' => ['class' => 'form-group'],
             'escape' => false,
             'label' => [
                 'text' => 'Stage / PWR<sup>3</sup> &trade; Score',
