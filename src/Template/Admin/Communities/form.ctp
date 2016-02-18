@@ -1,10 +1,3 @@
-<?php
-    $tableTemplate = [
-        'formGroup' => '<tr><td class="form-group {{type}}{{required}}">{{label}}</td><td>{{input}}</td></tr>',
-        'inputContainer' => '{{content}}',
-        'inputContainerError' => '{{content}}{{error}}'
-    ] + require(ROOT.DS.'config'.DS.'bootstrap_form.php');
-?>
 <div class="page-header">
     <h1>
         <?= $titleForLayout ?>
@@ -31,12 +24,7 @@
         $community,
         ['id' => 'CommunityAdminEditForm']
     );
-    echo $this->Form->input(
-        'name',
-        [
-            'class' => 'form-control'
-        ]
-    );
+    echo $this->Form->input('name');
     echo $this->Form->input(
         'local_area_id',
         [
@@ -126,7 +114,6 @@
                     'maxYear' => date('Y') + 1
                 ]
             );
-            $this->Form->templates('bootstrap_form');
         ?>
     </div>
 
