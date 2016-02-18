@@ -171,7 +171,8 @@
 
 <?php $this->append('buffered'); ?>
     communityForm.init({
-        community_id: <?= isset($communityId) ? $communityId : 'null' ?>
+        community_id: <?= isset($communityId) ? $communityId : 'null' ?>,
+        areaTypes: <?= json_encode($areaTypes) ?>
     });
     formProtector.protect('CommunityAdminEditForm');
 <?php $this->end();
