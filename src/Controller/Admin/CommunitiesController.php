@@ -139,7 +139,7 @@ class CommunitiesController extends AppController
         $surveysTable = TableRegistry::get('Surveys');
         $areasTable = TableRegistry::get('Areas');
         $this->set([
-            'areas' => $areasTable->find('list'),
+            'areas' => $areasTable->getGroupedList(),
             'community' => $community
         ]);
     }
