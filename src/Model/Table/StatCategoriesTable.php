@@ -53,29 +53,7 @@ class StatCategoriesTable extends Table
 
     public function import()
     {
-        $newCategories = [
-            'Production Demand Pull Factor (exportable demand per capita)',
-            'Production Supply Pull Factor (exportable supply per capita)',
-            'Production Workers per Capita Pull Factor',
-            'Production Median Earnings Pull Factor',
-            'Wholesale Workers per Capita Pull Factor',
-            'Wholesale Median Earnings Pull Factor',
-            'Transportation Occupations Median Earnings Pull Factor',
-            'Retail Supply Pull Factor (non-exportable supply per capita)',
-            'Retail Demand Pull Factor (non-exportable demand per capita)',
-            'Retail Trade Workers per Capita Pull Factor',
-            'Retail Trade Median Earnings Pull Factor',
-            'Housing Density (units per square mile) Pull Factor',
-            'Metro Dummy Pull Factor',
-            'Median House Value Pull Factor',
-            '2000-2013  Population Growth Pull Factor',
-            'Index of Changeable Amenities Pull Factor',
-            'Index of Relatively Static Amenities Pull Factor',
-            'Percentage of 25 Yr & Older Population that have a Bachelor Degree or Higher Pull Factor',
-            'Arts, Entertainment, and Recreation Workers per Capita Pull Factor',
-            'Arts, Entertainment, and Recreation Median Earnings Pull Factor',
-            'Percentage of Total Population under 30 years Pull Factor'
-        ];
+        $newCategories = [];
         foreach ($newCategories as $name) {
             $recordExists = $this->find('all')
                 ->where(['name' => $name])
