@@ -290,14 +290,22 @@ class AreasTable extends Table
             return false;
         }
 
+        // Determine what statistic categories (stat-cats?) will be used
+        $statCategoriesTable = TableRegistry::get('StatCategories');
+        $groups = $statCategoriesTable->getGroups();
+        $allRelevantCatIds = [];
+        foreach ($groups as $groupName => $groupCatIds) {
+            $allRelevantCatIds = array_merge($allRelevantCatIds, $groupCatIds);
+        }
+
         $area = $this->find('all')
             ->select(['Areas.id'])
             ->where(['Areas.id' => $areaId])
             ->contain([
-                'Statistics' => function ($q) {
+                'Statistics' => function ($q) use ($allRelevantCatIds) {
                     return $q
-                        ->where(function ($exp, $q) {
-                            return $exp->in('Statistics.stat_category_id', range(1, 31));
+                        ->where(function ($exp, $q) use ($allRelevantCatIds) {
+                            return $exp->in('Statistics.stat_category_id', $allRelevantCatIds);
                         })
                         ->contain(['StatCategories']);
                 }
@@ -310,16 +318,11 @@ class AreasTable extends Table
         $table = [];
         foreach ($area['statistics'] as $stat) {
             $categoryId = $stat['stat_category_id'];
-            if (in_array($categoryId, [1, 2, 20, 21])) {
-                $group = 'Production';
-            } elseif (in_array($categoryId, [3, 4, 5, 22, 23, 24])) {
-                $group = 'Wholesale';
-            } elseif (in_array($categoryId, [6, 7, 8, 25, 26])) {
-                $group = 'Retail';
-            } elseif (in_array($categoryId, [9, 10, 11, 12, 27])) {
-                $group = 'Residential';
-            } elseif (in_array($categoryId, [13, 14, 15, 16, 17, 29, 30, 31])) {
-                $group = 'Recreation';
+            foreach ($groups as $groupName => $catIds) {
+                if (in_array($categoryId, $catIds)) {
+                    $group = ucwords($groupName);
+                    break;
+                }
             }
             $category = $stat['stat_category']['name'];
             $table[$group][$category] = $stat['value'];
