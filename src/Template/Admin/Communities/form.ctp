@@ -120,8 +120,8 @@
     <?= $this->Form->input(
         'public',
         [
-            'before' => '<span class="fake_label">Who should be able to see this community\'s performance report?</span><br />',
             'escape' => false,
+            'label' => 'Who should be able to see this community\'s performance report?',
             'legend' =>  false,
             'options' =>  [
                 1 => '<strong>Public:</strong> Everyone',
