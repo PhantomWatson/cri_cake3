@@ -87,14 +87,22 @@ class AreasTable extends Table
             return false;
         }
 
+        // Determine what statistic categories (stat-cats?) will be used
+        $statCategoriesTable = TableRegistry::get('StatCategories');
+        $groups = $statCategoriesTable->getGroups();
+        $allRelevantCatIds = [];
+        foreach ($groups as $groupName => $groupCatIds) {
+            $allRelevantCatIds = array_merge($allRelevantCatIds, $groupCatIds);
+        }
+
         $area = $this->find('all')
             ->select(['Areas.id'])
             ->where(['Areas.id' => $areaId])
             ->contain([
-                'Statistics' => function ($q) {
+                'Statistics' => function ($q) use ($allRelevantCatIds) {
                     return $q
-                        ->where(function ($exp, $q) {
-                            return $exp->in('Statistics.stat_category_id', range(1, 31));
+                        ->where(function ($exp, $q) use ($allRelevantCatIds) {
+                            return $exp->in('Statistics.stat_category_id', $allRelevantCatIds);
                         })
                         ->contain(['StatCategories']);
                 }
@@ -172,14 +180,15 @@ class AreasTable extends Table
         $firstRow['annotation'] = '';
         $chart->addRow($firstRow);
 
-        $statCategoriesTable = TableRegistry::get('StatCategories');
-        $groups = $statCategoriesTable->getGroups();
         foreach ($area['statistics'] as $i => $stat) {
             $categoryId = $stat['stat_category_id'];
             $row = [];
             foreach ($columnGroups as $columnGroup) {
                 $groupName = str_replace('score_', '', $columnGroup);
-                $groupCatIds = isset($groups[$groupName]) ? $groups[$groupName] : [];
+                if (! isset($groups[$groupName])) {
+                    continue;
+                }
+                $groupCatIds = $groups[$groupName];
                 if (in_array($categoryId, $groupCatIds)) {
                     $value = $stat['value'];
                     $allValues[] = $value;
