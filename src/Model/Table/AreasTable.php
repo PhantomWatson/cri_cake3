@@ -94,7 +94,7 @@ class AreasTable extends Table
                 'Statistics' => function ($q) {
                     return $q
                         ->where(function ($exp, $q) {
-                            return $exp->in('Statistics.stat_category_id', range(1, 17));
+                            return $exp->in('Statistics.stat_category_id', range(1, 31));
                         })
                         ->contain(['StatCategories']);
                 }
@@ -172,11 +172,15 @@ class AreasTable extends Table
         $firstRow['annotation'] = '';
         $chart->addRow($firstRow);
 
+        $statCategoriesTable = TableRegistry::get('StatCategories');
+        $groups = $statCategoriesTable->getGroups();
         foreach ($area['statistics'] as $i => $stat) {
             $categoryId = $stat['stat_category_id'];
             $row = [];
             foreach ($columnGroups as $columnGroup) {
-                if ($this->categoryIsInGroup($categoryId, $columnGroup)) {
+                $groupName = str_replace('score_', '', $columnGroup);
+                $groupCatIds = isset($groups[$groupName]) ? $groups[$groupName] : [];
+                if (in_array($categoryId, $groupCatIds)) {
                     $value = $stat['value'];
                     $allValues[] = $value;
                 } else {
@@ -268,30 +272,6 @@ class AreasTable extends Table
     }
 
     /**
-     * @param int $categoryId
-     * @param string $group
-     * @return boolean
-     */
-    private function categoryIsInGroup($categoryId, $group)
-    {
-        switch ($group) {
-            case 'score_production';
-                return in_array($categoryId, [1, 2, 20, 21]);
-            case 'score_wholesale':
-                return in_array($categoryId, [3, 4, 5, 22, 23, 24]);
-            case 'score_retail':
-                return in_array($categoryId, [6, 7, 8, 25, 26]);
-            case 'score_residential':
-                return in_array($categoryId, [9, 10, 11, 12, 27]);
-            case 'score_recreation':
-                return in_array($categoryId, [13, 14, 15, 16, 17, 29, 30, 31]);
-            default:
-                return false;
-        }
-
-    }
-
-    /**
      * @param int|null $areaId
      * @return array|boolean
      */
@@ -308,7 +288,7 @@ class AreasTable extends Table
                 'Statistics' => function ($q) {
                     return $q
                         ->where(function ($exp, $q) {
-                            return $exp->in('Statistics.stat_category_id', range(1, 17));
+                            return $exp->in('Statistics.stat_category_id', range(1, 31));
                         })
                         ->contain(['StatCategories']);
                 }
@@ -321,15 +301,15 @@ class AreasTable extends Table
         $table = [];
         foreach ($area['statistics'] as $stat) {
             $categoryId = $stat['stat_category_id'];
-            if ($categoryId <= 2) {
+            if (in_array($categoryId, [1, 2, 20, 21])) {
                 $group = 'Production';
-            } elseif ($categoryId > 2 && $categoryId <= 5) {
+            } elseif (in_array($categoryId, [3, 4, 5, 22, 23, 24])) {
                 $group = 'Wholesale';
-            } elseif ($categoryId > 5 && $categoryId <= 8) {
+            } elseif (in_array($categoryId, [6, 7, 8, 25, 26])) {
                 $group = 'Retail';
-            } elseif ($categoryId > 8 && $categoryId <= 12) {
+            } elseif (in_array($categoryId, [9, 10, 11, 12, 27])) {
                 $group = 'Residential';
-            } elseif ($categoryId > 12 && $categoryId <= 17) {
+            } elseif (in_array($categoryId, [13, 14, 15, 16, 17, 29, 30, 31])) {
                 $group = 'Recreation';
             }
             $category = $stat['stat_category']['name'];

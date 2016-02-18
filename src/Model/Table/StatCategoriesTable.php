@@ -84,4 +84,18 @@ class StatCategoriesTable extends Table
             ->first();
         return $statCategory ? $statCategory->id : null;
     }
+
+    /**
+     * @return array
+     */
+    public function getGroups()
+    {
+        return [
+            'production' => [1, 2, 20, 21],
+            'wholesale' => [3, 4, 5, 22, 23, 24],
+            'retail' => [6, 7, 8, 25, 26],
+            'residential' => [9, 10, 11, 12, 27],
+            'recreation' => [13, 14, 15, 16, 17, 29, 30, 31]
+        ];
+    }
 }
