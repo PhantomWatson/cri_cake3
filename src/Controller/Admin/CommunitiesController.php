@@ -136,12 +136,10 @@ class CommunitiesController extends AppController
             $community->score = 0;
         }
 
-        $surveysTable = TableRegistry::get('Surveys');
         $areasTable = TableRegistry::get('Areas');
-        $this->set([
-            'areas' => $areasTable->getGroupedList(),
-            'community' => $community
-        ]);
+        $areas = $areasTable->getGroupedList();
+        $areaTypes = array_keys($areas);
+        $this->set(compact('areas', 'areaTypes', 'community'));
     }
 
     public function index()
