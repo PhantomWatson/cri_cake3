@@ -158,14 +158,15 @@ var communityForm = {
 	        
 	        // Set type selector to correct value (or a default value)
 	        var selected = areaSelector.find('option:selected');
+	        var selectedType = '';
 	        if (selected.length === 0 || selected.val() === '') {
 	            if (areaSelector.attr('id') == 'parent-area-id') {
-	                var selectedType = 'County';
+	                selectedType = 'County';
 	            } else {
-	                var selectedType = 'City';
+	                selectedType = 'City';
 	            }
 	        } else {
-	            var selectedType = selected.parent('optgroup').attr('label');
+	            selectedType = selected.parent('optgroup').attr('label');
 	        }
 	        typeSelector.find('option[value="'+selectedType+'"]').prop('selected', true);
 	        communityForm.changeAreaType(areaSelector, selectedType);
