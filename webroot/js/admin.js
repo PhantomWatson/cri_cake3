@@ -191,9 +191,9 @@ var adminSurveysIndex = {
 var adminViewResponses = {
 	init: function () {
 		$('.custom_alignment_calc').change(function () {
-			var result_container = $('tfoot td.selected');
+			var result_container = $(this).closest('table').find('tfoot td.selected');
 			var sum = 0;
-			var selected = $('.custom_alignment_calc:checked');
+			var selected = $(this).closest('table').find('.custom_alignment_calc:checked');
 			selected.each(function () {
 				var value = $(this).data('alignment');
 				sum = value + sum;
@@ -202,9 +202,9 @@ var adminViewResponses = {
 			var average = count ? Math.round(sum / count) : 0;
 			result_container.html(average+'%');
 		});
-		$('#toggle_custom_calc').click(function (event) {
+		$('.toggle_custom_calc').click(function (event) {
 			event.preventDefault();
-			$('td.selected, th.selected').toggle();
+			$(this).closest('table').find('td.selected, th.selected').toggle();
 		});
 		$('#show_respondents').click(function (event) {
 		   event.preventDefault();

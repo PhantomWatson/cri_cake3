@@ -116,7 +116,7 @@
 
                     <td class="selected">
                         <?php $checked = ($response['respondent']['approved'] == 1) ? 'checked' : ''; ?>
-                        <input type="checkbox" class="custom_alignment_calc" data-alignment="<?= $response['alignment'] ?>" <?= $checked ?> />
+                        <input type="checkbox" class="custom_alignment_calc" data-alignment="<?= $response[$alignmentField] ?>" <?= $checked ?> />
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -126,7 +126,7 @@
                 <td colspan="7">
                     Calculated total alignment
                     <br />
-                    <a href="#" id="toggle_custom_calc">
+                    <a href="#" class="toggle_custom_calc">
                         Edit what responses are used in this calculation
                     </a>
                 </td>
