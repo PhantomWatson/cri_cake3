@@ -27,30 +27,21 @@
             <thead>
                 <tr>
                     <th>
-                        <?php
-                            $arrow = getSortArrow('response_date', $this->request->params);
-                            echo $this->Paginator->sort('response_date', 'Date'.$arrow, ['escape' => false]);
-                        ?>
+                        Date
                     </th>
                     <th>
                         Revisions
                     </th>
                     <?php foreach ($sectors as $sector): ?>
                         <th>
-                            <?php
-                                $arrow = getSortArrow($sector.'_rank', $this->request->params);
-                                echo $this->Paginator->sort($sector.'_rank', ucwords($sector).$arrow, ['escape' => false]);
-                            ?>
+                            <?= ucwords($sector) ?>
                         </th>
                     <?php endforeach; ?>
                     <th>
                         Alignment
                     </th>
                     <th>
-                        <?php
-                            $arrow = getSortArrow('Respondent.approved', $this->request->params);
-                            echo $this->Paginator->sort('Respondent.approved', 'Approved'.$arrow, ['escape' => false]);
-                        ?>
+                        Approved
                     </th>
                     <th class="selected">
                         Selected
