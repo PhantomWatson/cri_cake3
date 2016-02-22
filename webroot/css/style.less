@@ -780,7 +780,7 @@ table.pwr {
 }
 
 #admin_responses_view {
-	.table_container {
+	.scrollable_table {
 		max-height: 400px;
 		overflow: auto;
 	}
@@ -807,13 +807,10 @@ table.pwr {
 			vertical-align: middle;
 		}
 	}
-	tfoot {
+	p.total_alignment {
 		font-weight: bold;
+		font-size: 150%;
 
-		td:first-child {
-			font-size: 150%;
-			text-align: right;
-		}
 		a {
 			font-size: 60%;
 			font-weight: normal;

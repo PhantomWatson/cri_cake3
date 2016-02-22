@@ -191,7 +191,7 @@ var adminSurveysIndex = {
 var adminViewResponses = {
 	init: function () {
 		$('.custom_alignment_calc').change(function () {
-			var result_container = $(this).closest('table').find('tfoot td.selected');
+			var result_container = $(this).closest('.responses').find('span.total_alignment');
 			var sum = 0;
 			var selected = $(this).closest('table').find('.custom_alignment_calc:checked');
 			selected.each(function () {
@@ -204,7 +204,7 @@ var adminViewResponses = {
 		});
 		$('.toggle_custom_calc').click(function (event) {
 			event.preventDefault();
-			$(this).closest('table').find('td.selected, th.selected').toggle();
+			$(this).closest('.responses').find('td.selected, th.selected').toggle();
 		});
 		$('#show_respondents').click(function (event) {
 		   event.preventDefault();
