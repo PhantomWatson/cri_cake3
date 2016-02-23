@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Setting;
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -52,5 +53,21 @@ class SettingsTable extends Table
             ->notEmpty('value');
 
         return $validator;
+    }
+
+    /**
+     * @return float
+     * @throws NotFoundException
+     */
+    public function getIntAlignmentAdjustment()
+    {
+        $result = $this->find('all')
+            ->select(['value'])
+            ->where(['name' => 'intAlignmentAdjustment'])
+            ->first();
+        if (empty($result)) {
+            throw new NotFoundException('intAlignmentAdjustment setting not found');
+        }
+        return $result->value;
     }
 }
