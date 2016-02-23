@@ -117,6 +117,24 @@ class CommunitiesTable extends Table
             ->add('town_meeting_date', 'valid', ['rule' => 'date'])
             ->allowEmpty('town_meeting_date');
 
+        $validator
+            ->add('intAlignmentAdjustment', 'decimalFormat', [
+                'rule' => ['decimal', 2]
+            ])
+            ->add('intAlignmentAdjustment', 'valueInRange', [
+                'rule' => ['range', 0, 99.99]
+            ])
+            ->requirePresence('intAlignmentAdjustment', 'create');
+
+        $validator
+            ->add('intAlignmentThreshhold', 'decimalFormat', [
+                'rule' => ['decimal', 2]
+            ])
+            ->add('intAlignmentThreshhold', 'valueInRange', [
+                'rule' => ['range', 0, 99.99]
+            ])
+            ->requirePresence('intAlignmentThreshhold', 'create');
+
         return $validator;
     }
 
