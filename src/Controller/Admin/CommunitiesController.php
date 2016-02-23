@@ -196,6 +196,9 @@ class CommunitiesController extends AppController
             }
         } else {
             $this->request->data['score'] = 1;
+            $settingsTable = TableRegistry::get('Settings');
+            $this->request->data['intAlignmentAdjustment'] = $settingsTable->getIntAlignmentAdjustment();
+            $this->request->data['intAlignmentThreshhold'] = $settingsTable->getIntAlignmentThreshhold();
         }
 
         $this->prepareForm($community);

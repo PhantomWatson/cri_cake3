@@ -114,6 +114,8 @@
                     'maxYear' => date('Y') + 1
                 ]
             );
+            $template = require(ROOT.DS.'config'.DS.'bootstrap_form.php');
+            $this->Form->templates($template);
         ?>
     </div>
 
@@ -131,6 +133,17 @@
             'type'      =>  'radio'
         ]
     ) ?>
+
+    <?= $this->Form->input('intAlignmentAdjustment', [
+        'label' => 'Internal Alignment Adjustment',
+        'max' => '99.99',
+        'min' => '0'
+    ]) ?>
+    <?= $this->Form->input('intAlignmentThreshhold', [
+        'label' => 'Internal Alignment Threshhold',
+        'max' => '99.99',
+        'min' => '0'
+    ]) ?>
 </div>
 
 <?php
