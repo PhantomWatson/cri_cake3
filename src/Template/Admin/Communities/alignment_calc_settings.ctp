@@ -33,7 +33,15 @@
                 +/- <?= $settings['intAlignmentThreshhold'] ?>
             </td>
             <td>
-
+                <?= $this->Html->link(
+                    'Edit',
+                    [
+                        'prefix' => 'admin',
+                        'controller' => 'Settings',
+                        'action' => 'editCalculationSettings'
+                    ],
+                    ['class' => 'btn btn-default']
+                ) ?>
             </td>
         </tr>
         <?php foreach ($communities as $community): ?>
