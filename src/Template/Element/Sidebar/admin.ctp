@@ -41,6 +41,16 @@
     </li>
     <li class="link">
         <?= $this->Html->link(
+            'Alignment Calculation Settings',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Communities',
+                'action' => 'alignmentCalcSettings'
+            ]
+        ) ?>
+    </li>
+    <li class="link">
+        <?= $this->Html->link(
             'Change Password',
             [
                 'prefix' => false,

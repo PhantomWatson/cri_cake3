@@ -6,6 +6,7 @@ use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Cake\Utility\Hash;
 
 class CommunitiesController extends AppController
 {
@@ -451,6 +452,26 @@ class CommunitiesController extends AppController
             'communityId' => $communityId,
             'communityName' => $community->name,
             'titleForLayout' => 'Add a New Client for '.$community->name
+        ]);
+    }
+
+    public function alignmentCalcSettings()
+    {
+        $settingsTable = TableRegistry::get('Settings');
+        $settings = $settingsTable->find('all')
+            ->select(['name', 'value'])
+            ->where(function ($exp, $q) {
+                return $exp->in('name', ['intAlignmentAdjustment', 'intAlignmentThreshhold']);
+            })
+            ->toArray();
+        $settings = Hash::combine($settings, '{n}.name', '{n}.value');
+        $communities = $this->Communities->find('all')
+            ->select(['id', 'name', 'intAlignmentAdjustment', 'intAlignmentThreshhold'])
+            ->order(['created' => 'DESC']);
+        $this->set([
+            'communities' => $communities,
+            'settings' => $settings,
+            'titleForLayout' => 'Internal Alignment Calculation Settings'
         ]);
     }
 }
