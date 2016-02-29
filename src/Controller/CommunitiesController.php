@@ -28,7 +28,7 @@ class CommunitiesController extends AppController
 
     public function isAuthorized($user)
     {
-        if ($this->action == 'view') {
+        if ($this->request->action == 'view') {
             if (isset($this->request->pass[0]) && ! empty($this->request->pass[0])) {
                 $communityId = $this->request->pass[0];
             } elseif (isset($_GET['cid']) && ! empty($_GET['cid'])) {
