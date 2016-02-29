@@ -362,7 +362,7 @@ var surveyLink = {
     },
     
     checkSurveyAssignment: function (container, sm_id, success_callback) {
-        var url_field = container.find('input.survey_url');
+        var url_field = $('#sm-url');
         var loadingMessages = $('.loading_messages');
         
         $.ajax({
@@ -442,7 +442,7 @@ var surveyLink = {
         });
     },
     
-    selectSurvey: function (container, sm_id, url) {
+    selectSurvey: function (container, sm_id, url) { console.log('sm_id is '+sm_id); console.log('url is '+url);
         var results_container = container.find('.lookup_results');
         
         // Clean up appearance
@@ -452,11 +452,11 @@ var surveyLink = {
         container.find('.url_error, .retry').remove();
         
         // Assign ID
-        var id_field = container.find('input.survey_sm_id');
+        var id_field = $('#sm-id');
         id_field.val(sm_id);
         
         // Assign URL if available
-        var url_field = container.find('input.survey_url');
+        var url_field = $('#sm-url');
         var linkStatus = container.find('.link_status');
         var surveyUrl = container.find('span.survey_url');
         var readyStatusMsg = '<span class="text-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Ready to be linked</span>';

@@ -121,7 +121,6 @@
                         echo $this->Form->input(
                             'sm_id',
                             [
-                                'class' => 'form-control survey_sm_id',
                                 'label' => 'SurveyMonkey Survey ID',
                                 'type' => 'number'
                             ]
@@ -129,7 +128,6 @@
                         echo $this->Form->input(
                             'sm_url',
                             [
-                                'class' => 'form-control survey_url',
                                 'label' => 'SurveyMonkey Survey URL'
                             ]
                         );
@@ -142,7 +140,6 @@
                             echo $this->Form->input(
                                 $qnaIdField,
                                 [
-                                    'class' => 'form-control',
                                     'data-fieldname' => $qnaIdField,
                                     'label' => [
                                         'escape' => false,
