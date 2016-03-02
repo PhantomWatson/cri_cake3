@@ -45,6 +45,24 @@
     ) ?>
 </p>
 
+<?php if (empty($community['surveys'])): ?>
+    <p class="alert alert-danger">
+        This community does not have its
+        <?= $this->Html->link(
+            'community-officials survey linked',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Surveys',
+                'action' => 'link',
+                $community->id,
+                'official'
+            ]
+        ) ?>
+        yet. It is recommended that clients
+        <strong>not be added</strong> until this is done.
+    </p>
+<?php endif; ?>
+
 <?php if (empty($clients)): ?>
     <p class="alert alert-info">
         This community does not have any client accounts associated with it.

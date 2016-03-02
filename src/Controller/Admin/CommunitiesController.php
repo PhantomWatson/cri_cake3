@@ -272,8 +272,10 @@ class CommunitiesController extends AppController
             ->where(['id' => $communityId])
             ->contain([
                 'Clients' => function ($q) {
-                    return $q
-                        ->order(['name' => 'ASC']);
+                    return $q->order(['name' => 'ASC']);
+                },
+                'Surveys' => function ($q) {
+                    return $q->where(['type' => 'official']);
                 }
             ])
             ->first();
@@ -281,9 +283,10 @@ class CommunitiesController extends AppController
             throw new NotFoundException('Sorry, we couldn\'t find a community with ID# '.$communityId);
         }
         $this->set([
-            'titleForLayout' => $community->name.' Clients',
             'clients' => $community->clients,
-            'communityId' => $communityId
+            'community' => $community,
+            'communityId' => $communityId,
+            'titleForLayout' => $community->name.' Clients'
         ]);
     }
 
