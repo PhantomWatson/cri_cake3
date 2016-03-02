@@ -23,7 +23,7 @@
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'addClient',
-            $communityId
+            $community['id']
         ],
         [
             'class' => 'btn btn-default',
@@ -36,7 +36,7 @@
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'selectClient',
-            $communityId
+            $community['id']
         ],
         [
             'class' => 'btn btn-default',
@@ -63,7 +63,7 @@
     </p>
 <?php endif; ?>
 
-<?php if (empty($clients)): ?>
+<?php if (empty($community['clients'])): ?>
     <p class="alert alert-info">
         This community does not have any client accounts associated with it.
     </p>
@@ -82,7 +82,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($clients as $client): ?>
+            <?php foreach ($community['clients'] as $client): ?>
                 <tr>
                     <td>
                         <?= $client['salutation'] ?>
@@ -127,7 +127,7 @@
                                 'controller' => 'Communities',
                                 'action' => 'removeClient',
                                 $client['id'],
-                                $communityId
+                                $community['id']
                             ],
                             [
                                 'class' => 'btn btn-default',

@@ -283,9 +283,7 @@ class CommunitiesController extends AppController
             throw new NotFoundException('Sorry, we couldn\'t find a community with ID# '.$communityId);
         }
         $this->set([
-            'clients' => $community->clients,
             'community' => $community,
-            'communityId' => $communityId,
             'titleForLayout' => $community->name.' Clients'
         ]);
     }
