@@ -197,10 +197,8 @@ class UsersTable extends Table
             return true;
         }
 
-        return $this->CommunitiesUser->exists([
-            'user_id' => $userId,
-            'community_id' => $communityId
-        ]);
+        $accessibleCommunities = $this->getAccessibleCommunities($userId);
+        return isset($accessibleCommunities[$communityId]);
     }
 
     public function getClientList()
