@@ -104,7 +104,7 @@ class SurveysController extends AppController
 
                 // Determine actual ranks for alignment calculation
                 $communitiesTable = TableRegistry::get('Communities');
-                $community = $communitiesTable->get($communityId);
+                $community = $communitiesTable->get($survey->community_id);
                 $actualRanksLocal = $areasTable->getPwrrrRanks($community->local_area_id);
                 $actualRanksParent = $areasTable->getPwrrrRanks($community->parent_area_id);
 
