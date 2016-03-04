@@ -119,7 +119,7 @@ class CommunitiesTable extends Table
 
         $validator
             ->add('intAlignmentAdjustment', 'decimalFormat', [
-                'rule' => ['decimal', 2]
+                'rule' => ['decimal', null]
             ])
             ->add('intAlignmentAdjustment', 'valueInRange', [
                 'rule' => ['range', 0, 99.99]
@@ -128,7 +128,7 @@ class CommunitiesTable extends Table
 
         $validator
             ->add('intAlignmentThreshhold', 'decimalFormat', [
-                'rule' => ['decimal', 2]
+                'rule' => ['decimal', null]
             ])
             ->add('intAlignmentThreshhold', 'valueInRange', [
                 'rule' => ['range', 0, 99.99]
