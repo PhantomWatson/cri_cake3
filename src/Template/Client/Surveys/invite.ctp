@@ -254,3 +254,19 @@
         uninvited_respondents: <?= json_encode(array_values($unaddressedUnapprovedRespondents)) ?>,
     });
 <?php $this->end(); ?>
+
+<?php if (isset($_GET['debugcookie'])): ?>
+    <h2>
+        Saved form data:
+    </h2>
+    <pre id="results"></pre>
+
+    <?php $this->append('buffered'); ?>
+        var cookieData = Cookies.get('invitationFormData');
+        if (typeof cookieData == 'undefined' || cookieData.length === 0) {
+            $('#results').html('No saved data was found');
+        } else {
+            $('#results').html(JSON.stringify(cookieData));
+        }
+    <?php $this->end(); ?>
+<?php endif; ?>
