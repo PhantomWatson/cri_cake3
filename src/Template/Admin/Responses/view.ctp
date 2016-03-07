@@ -101,12 +101,45 @@
         <h2>
             Internal Alignment
         </h2>
+
         <?php if ($internalAlignment): ?>
-            <p class="internal_alignment">
-                Internal Alignment of Approved Responses:
-                <strong>
-                    <?= round($internalAlignment, 2) ?>
-                </strong>
+            <table class="table" id="internal-alignment-breakdown">
+                <thead>
+                    <tr>
+                        <th>
+                            Sector
+                        </th>
+                        <th>
+                            Internal Alignment of Approved Responses
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($sectors as $sector): ?>
+                        <tr>
+                            <th>
+                                <?= ucwords($sector) ?>
+                            </th>
+                            <td>
+                                <?= round($internalAlignment[$sector], 3) ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>
+                            Sum
+                        </td>
+                        <td>
+                            <?= round(array_sum($internalAlignment), 3) ?>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        <?php else: ?>
+            <p class="alert alert-info">
+                Not enough responses have been collected / approved to be able to determine this survey's internal alignment.
             </p>
         <?php endif; ?>
     </section>

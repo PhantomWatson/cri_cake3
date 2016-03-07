@@ -52,7 +52,7 @@ class ResponsesController extends AppController
             'contain' => ['LocalAreas', 'ParentAreas']
         ]);
 
-        $internalAlignment = $this->Responses->getInternalAlignment($surveyId);
+        $internalAlignment = $this->Responses->getInternalAlignmentPerSector($surveyId);
         $this->set([
             'community' => $community,
             'internalAlignment' => $internalAlignment,
