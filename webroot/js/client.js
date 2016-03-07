@@ -150,7 +150,7 @@ var surveyInvitationForm = {
     
     load: function () {
         var cookieData = Cookies.get(this.cookieKey);
-        if (cookieData.length === 0) {
+        if (typeof cookieData == 'undefined' || cookieData.length === 0) {
             alert('No saved data was found');
             return;
         }
