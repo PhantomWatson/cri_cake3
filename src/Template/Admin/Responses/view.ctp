@@ -39,7 +39,7 @@
 
     <section>
         <h2>
-            Responses
+            PWR<sup>3</sup> Alignment
         </h2>
         <?php if (empty($responses)): ?>
             <p class="alert alert-info">
@@ -99,7 +99,7 @@
 
     <section>
         <h2>
-            Alignment
+            Internal Alignment
         </h2>
         <?php if ($internalAlignment): ?>
             <p class="internal_alignment">
@@ -109,6 +109,12 @@
                 </strong>
             </p>
         <?php endif; ?>
+    </section>
+
+    <section>
+        <h2>
+            Set PWR<sup>3</sup> Alignment &amp; Pass/Fail Status
+        </h2>
         <?= $this->Form->create($survey) ?>
         <?php
             if ($survey->alignment_calculated) {
@@ -126,7 +132,7 @@
                         'class' => 'form-group'
                     ],
                     'label' => [
-                        'text' => 'Administrator-determined alignment (percent)'.$alignmentLastSetMsg,
+                        'text' => 'Administrator-determined PWR<sup>3</sup> alignment (percent)'.$alignmentLastSetMsg,
                         'escape' => false
                     ],
                     'max' => 100,
