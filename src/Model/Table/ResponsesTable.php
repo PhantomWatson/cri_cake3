@@ -506,7 +506,7 @@ class ResponsesTable extends Table
     public function getInternalAlignment($surveyId)
     {
         $alignmentPerSector = $this->getInternalAlignmentPerSector($surveyId);
-        return array_sum($alignmentPerSector);
+        return empty($alignmentPerSector) ? 0 : array_sum($alignmentPerSector);
     }
 
     /**
@@ -514,13 +514,13 @@ class ResponsesTable extends Table
      * how aligned a survey's responses are with each other in that sector.
      *
      * @param int $surveyId
-     * @return array
+     * @return array|null
      */
     public function getInternalAlignmentPerSector($surveyId)
     {
         $responses = $this->getCurrent($surveyId);
         if (empty($responses)) {
-            return 0;
+            return null;
         }
         $choiceCounts = $this->getChoiceCounts($responses);
         $choiceRanks = $this->getChoiceRanks($choiceCounts);
