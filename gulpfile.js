@@ -38,7 +38,7 @@ gulp.task('php_cs', function() {
     return gulp.src(['src/**/*.php'])
         // Validate files using PHP Code Sniffer
         .pipe(phpcs({
-            bin: 'C:/xampp/htdocs/data_center_cakephp3/cri/vendor/bin/phpcs',
+            bin: '.\\vendor\\bin\\phpcs.bat',
             standard: 'PSR2',
             warningSeverity: 0
         }))
