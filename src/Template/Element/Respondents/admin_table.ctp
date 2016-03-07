@@ -9,7 +9,7 @@
 
 <div class="responses">
     <div class="scrollable_table">
-        <table class="table">
+        <table class="table" id="pwrrr-alignment-breakdown">
             <thead class="actual">
                 <td colspan="2">
                     Actual rankings
