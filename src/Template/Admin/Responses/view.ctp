@@ -164,10 +164,6 @@
             echo $this->Form->input(
                 'alignment',
                 [
-                    'class' => 'form-control',
-                    'div' => [
-                        'class' => 'form-group'
-                    ],
                     'label' => [
                         'text' => 'Administrator-determined PWR<sup>3</sup> alignment (percent)'.$alignmentLastSetMsg,
                         'escape' => false
@@ -181,10 +177,6 @@
         <?= $this->Form->input(
             'alignment_passed',
             [
-                'class' => 'form-control',
-                'div' => [
-                    'class' => 'form-group'
-                ],
                 'label' => 'Has this community passed its leadership alignment assessment?',
                 'options' => [
                     0 => 'Not determined',
