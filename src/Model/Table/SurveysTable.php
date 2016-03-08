@@ -426,14 +426,20 @@ class SurveysTable extends Table
             return [false, 'Could not get survey details from SurveyMonkey. This might be a temporary network error.'];
         }
 
-        // Find the appropriate question
+        /* Find the appropriate question using one of the key phrases that have been
+         * used in various versions of the surveys */
         $pwrrrQuestion = null;
-        $keyPhrase = 'PWR3 is a tool for thinking about the economic future of your community.';
+        $keyPhrases = [
+            'PWR3 is a tool for thinking about the economic future of your community.',
+            'Each Indiana community uses a combination of 5 activities'
+        ];
         foreach ($result['data']['pages'] as $page) {
             foreach ($page['questions'] as $question) {
-                if (strpos($question['heading'], $keyPhrase) !== false) {
-                    $pwrrrQuestion = $question;
-                    break 2;
+                foreach ($keyPhrases as $keyPhrase) {
+                    if (strpos($question['heading'], $keyPhrase) !== false) {
+                        $pwrrrQuestion = $question;
+                        break 3;
+                    }
                 }
             }
         }
