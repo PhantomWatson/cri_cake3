@@ -132,7 +132,11 @@
                             Sum
                         </td>
                         <td>
-                            <?= round(array_sum($internalAlignment), 3) ?>
+                            <?= round($internalAlignmentSum, 3) ?>
+                            <span class="alignment-note <?= $internalAlignmentClass ?>">
+                                <span class="glyphicon"></span>
+                                <?= str_replace('-', ' ', $internalAlignmentClass) ?>
+                            </span>
                         </td>
                     </tr>
                 </tfoot>

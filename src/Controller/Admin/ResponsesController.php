@@ -53,13 +53,43 @@ class ResponsesController extends AppController
         ]);
 
         $internalAlignment = $this->Responses->getInternalAlignmentPerSector($surveyId);
+        $internalAlignmentSum = empty($internalAlignment) ? 0 : array_sum($internalAlignment);
+
         $this->set([
             'community' => $community,
             'internalAlignment' => $internalAlignment,
+            'internalAlignmentClass' => $this->getInternalAlignmentClass($internalAlignmentSum, $community),
+            'internalAlignmentSum' => $internalAlignmentSum,
             'responses' => $responses,
             'sectors' => $surveysTable->getSectors(),
             'survey' => $survey,
             'titleForLayout' => 'View and Update Alignment'
         ]);
+    }
+
+    /**
+     * Returns a string to use as a CSS class for styling the
+     * total internal alignment for a survey
+     *
+     * @param float $sum
+     * @param Community $community
+     * @return string
+     */
+    private function getInternalAlignmentClass($sum, $community)
+    {
+        $adjustedScore = $sum - $community->intAlignmentAdjustment;
+
+        // Green if adjusted alignment is more aligned (smaller number) than the acceptable threshhold
+        if ($adjustedScore < (-1 * $community->intAlignmentThreshhold)) {
+            return 'aligned-well';
+        }
+
+        // Yellow if its alignment falls within the acceptable threshhold
+        if (abs($adjustedScore) <= $community->intAlignmentThreshhold) {
+            return 'aligned-acceptably';
+        }
+
+        // Red if its alignment is worse (greater than) the acceptable threshhold
+        return 'aligned-poorly';
     }
 }
