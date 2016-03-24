@@ -92,4 +92,71 @@ class ResponsesController extends AppController
         // Red if its alignment is worse (greater than) the acceptable threshhold
         return 'aligned-poorly';
     }
+
+    /**
+     * Looks for responses with missing local_area_pwrrr_alignment and
+     * parent_area_pwrrr_alignment values and populates them.
+     */
+    public function calculateMissingAlignments()
+    {
+        $this->Flash->set('Searching for missing alignments');
+        $responses = $this->Responses->find('all')
+            ->where([
+                'OR' => [
+                    function ($exp, $q) {
+                        return $exp->isNull('local_area_pwrrr_alignment');
+                    },
+                    function ($exp, $q) {
+                        return $exp->isNull('parent_area_pwrrr_alignment');
+                    }
+                ]
+            ])
+            ->all();
+        if ($responses->isEmpty()) {
+            $this->Flash->set('No missing alignments');
+            return;
+        }
+
+        $this->Flash->set(count($responses).' response(s) with missing alignments found');
+
+        $missingAreaReports = [];
+        foreach ($responses as $response) {
+            $surveysTable = TableRegistry::get('Surveys');
+            $survey = $surveysTable->get($response->survey_id);
+
+            // Determine actual ranks for alignment calculation
+            $communitiesTable = TableRegistry::get('Communities');
+            $community = $communitiesTable->get($survey->community_id);
+            $areasTable = TableRegistry::get('Areas');
+            foreach (['local', 'parent'] as $scope) {
+                $fieldName = "{$scope}_area_id";
+                $areaId = $community->$fieldName;
+                if (! $areaId) {
+                    if (! isset($missingAreaReports[$survey->community_id][$scope])) {
+                        $this->Flash->error('Community #'.$survey->community_id.' has no '.$scope.' area');
+                        $missingAreaReports[$survey->community_id][$scope] = true;
+                    }
+                    continue;
+                }
+                $actualRanks = $areasTable->getPwrrrRanks($areaId);
+
+                // Needs replaced
+                $responseRanks = [
+                    'production' => $response->production_rank,
+                    'wholesale' => $response->wholesale_rank,
+                    'retail' => $response->retail_rank,
+                    'residential' => $response->residential_rank,
+                    'recreation' => $response->recreation_rank
+                ];
+                $alignment = $this->Responses->calculateAlignment($actualRanks, $responseRanks);
+
+                $fieldName = "{$scope}_area_pwrrr_alignment";
+                $response->$fieldName = $alignment;
+            }
+
+            if ($this->Responses->save($response)) {
+                $this->Flash->success('Response #'.$response->id.' updated');
+            }
+        }
+    }
 }
