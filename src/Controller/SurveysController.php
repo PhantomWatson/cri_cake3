@@ -110,8 +110,8 @@ class SurveysController extends AppController
 
                 // Get individual ranks and alignment
                 $responseRanks = $responsesTable->getResponseRanks($serializedResponse, $survey);
-                $alignmentVsLocal = $responsesTable->calculateAlignment($actualRanks, $responseRanks);
-                $alignmentVsParent = $responsesTable->calculateAlignment($actualRanks, $responseRanks);
+                $alignmentVsLocal = $responsesTable->calculateAlignment($actualRanksLocal, $responseRanks);
+                $alignmentVsParent = $responsesTable->calculateAlignment($actualRanksParent, $responseRanks);
 
                 // Save response
                 $responseFields = [
