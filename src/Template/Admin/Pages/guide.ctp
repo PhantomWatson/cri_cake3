@@ -198,6 +198,22 @@
             </li>
         </ul>
     </li>
+    <li>
+        <strong>
+            <?= $this->Html->link(
+                'Fix missing PWR<sup>3</sup> alignment',
+                [
+                    'prefix' => 'admin',
+                    'controller' => 'Responses',
+                    'action' => 'calculateMissingAlignments'
+                ],
+                ['escape' => false]
+            ) ?>
+        </strong>
+        <br />
+        Are any responses missing their local_area_pwrrr_alignment or parent_area_pwrrr_alignment values?
+        Visit the page linked above and missing alignment values will be calculated and saved.
+    </li>
 </ul>
 
 <h2>Features Not Yet Implemented</h2>
