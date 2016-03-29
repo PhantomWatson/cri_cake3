@@ -28,7 +28,7 @@ class ResponsesController extends AppController
             throw new NotFoundException('Survey ID not specified.');
         }
 
-        $responses = $this->SurveyProcessing->getResponsesPage($surveyId);
+        $responses = $this->SurveyProcessing->getCurrentResponses($surveyId);
 
         // Process update
         if ($this->request->is('post') || $this->request->is('put')) {

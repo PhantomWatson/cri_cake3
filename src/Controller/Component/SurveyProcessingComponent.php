@@ -250,26 +250,18 @@ class SurveyProcessingComponent extends Component
         }
     }
 
-    public function getResponsesPage($surveyId)
+    public function getCurrentResponses($surveyId)
     {
         $responsesTable = TableRegistry::get('Responses');
-        $query = $responsesTable->find('all')
+        $responses = $responsesTable->find('all')
             ->where(['Responses.survey_id' => $surveyId])
             ->contain([
                 'Respondents' => function ($q) {
                     return $q->select(['id', 'email', 'name', 'title', 'approved']);
                 }
             ])
-            ->order(['Responses.response_date' => 'DESC']);
-
-        $count = $query->count();
-        if ($count) {
-            $query->limit($count);
-        }
-
-        $controller = $this->_registry->getController();
-        $controller->cookieSort('AdminResponsesView');
-        $responses = $controller->paginate($query);
+            ->order(['Responses.response_date' => 'DESC'])
+            ->all();
 
         // Only return the most recent response for each respondent
         $retval = [];
