@@ -195,11 +195,11 @@ var adminViewResponses = {
 		    adminViewResponses.updateAlignment(container);
 		    adminViewResponses.updateRespondentCount(container);
 		});
-		$('.toggle_custom_calc').click(function (event) {
+		$('.calc-mode').change(function (event) {
 			event.preventDefault();
 			var container = $(this).closest('.responses');
-			container.find('td.selected, th.selected').toggle();
-			adminViewResponses.updateDisplayedCalcMode(container);
+			var mode = $(this).val();
+			container.find('td.selected, th.selected').toggle(mode == 'selected');
 			adminViewResponses.updateRespondentCount(container);
 			adminViewResponses.updateAlignment(container);
 		});
@@ -244,11 +244,7 @@ var adminViewResponses = {
         }
 	},
 	getCalcMode: function (container) {
-	    return container.find('th.selected').first().is(':visible') ? 'selected' : 'approved';
-	},
-	updateDisplayedCalcMode: function (container) {
-	    var mode = adminViewResponses.getCalcMode(container);
-	    container.find('.calc_mode').html(mode);
+	    return container.find('.calc-mode').val();
 	}
 };
 

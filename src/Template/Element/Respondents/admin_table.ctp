@@ -121,20 +121,15 @@
         <span class="respondent_count">
             <?= $approvedCount ?>
         </span>
-        <span class="calc_mode">
-            approved
-        </span>
+        <select class="calc-mode">
+            <option value="approved">approved</option>
+            <option value="selected">selected</option>
+        </select>
         <span class="respondent_plurality"><?=
              __n('respondent', 'respondents', $approvedCount)
         ?></span>:
         <span class="total_alignment">
             <?= $totalAlignment ?>%
         </span>
-    </p>
-
-    <p>
-        <a href="#" class="toggle_custom_calc">
-            Edit what responses are used in this calculation
-        </a>
     </p>
 </div>
