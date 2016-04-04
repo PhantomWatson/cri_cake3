@@ -122,6 +122,11 @@
             <?= $totalAlignment ?>%
         </span>
         <br />
+        Average alignment of
+        <span class="respondent_count">
+            <?= $approvedCount.__n(' respondent', 'respondents', $approvedCount) ?>
+        </span>
+        <br />
         <a href="#" class="toggle_custom_calc">
             Edit what responses are used in this calculation
         </a>
