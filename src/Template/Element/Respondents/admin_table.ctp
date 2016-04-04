@@ -64,7 +64,7 @@
                             ?>
                         </td>
                     </tr>
-                    <tr class="response">
+                    <tr class="response" data-alignment="<?= $response[$alignmentField] ?>">
                         <td class="date">
                             <?php
                                 $timestamp = strtotime($response['response_date']);
@@ -98,7 +98,7 @@
                             <?= $response[$alignmentField] ?>%
                         </td>
 
-                        <td>
+                        <td class="approved">
                             <?php if ($response['respondent']['approved'] == 1): ?>
                                 <span class="glyphicon glyphicon-ok"></span>
                             <?php else: ?>
@@ -108,7 +108,7 @@
 
                         <td class="selected">
                             <?php $checked = ($response['respondent']['approved'] == 1) ? 'checked' : ''; ?>
-                            <input type="checkbox" class="custom_alignment_calc" data-alignment="<?= $response[$alignmentField] ?>" <?= $checked ?> />
+                            <input type="checkbox" class="custom_alignment_calc" <?= $checked ?> />
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -117,16 +117,22 @@
     </div>
 
     <p class="total_alignment">
-        Calculated total alignment:
+        Average alignment of
+        <span class="respondent_count">
+            <?= $approvedCount ?>
+        </span>
+        <span class="calc_mode">
+            approved
+        </span>
+        <span class="respondent_plurality"><?=
+             __n('respondent', 'respondents', $approvedCount)
+        ?></span>:
         <span class="total_alignment">
             <?= $totalAlignment ?>%
         </span>
-        <br />
-        Average alignment of
-        <span class="respondent_count">
-            <?= $approvedCount.__n(' respondent', 'respondents', $approvedCount) ?>
-        </span>
-        <br />
+    </p>
+
+    <p>
         <a href="#" class="toggle_custom_calc">
             Edit what responses are used in this calculation
         </a>

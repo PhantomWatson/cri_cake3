@@ -191,26 +191,64 @@ var adminSurveysIndex = {
 var adminViewResponses = {
 	init: function () {
 		$('.custom_alignment_calc').change(function () {
-			var result_container = $(this).closest('.responses').find('span.total_alignment');
-			var sum = 0;
-			var selected = $(this).closest('table').find('.custom_alignment_calc:checked');
-			selected.each(function () {
-				var value = $(this).data('alignment');
-				sum = value + sum;
-			});
-			var count = selected.length;
-			var average = count ? Math.round(sum / count) : 0;
-			result_container.html(average+'%');
+		    var container = $(this).closest('.responses');
+		    adminViewResponses.updateAlignment(container);
+		    adminViewResponses.updateRespondentCount(container);
 		});
 		$('.toggle_custom_calc').click(function (event) {
 			event.preventDefault();
-			$(this).closest('.responses').find('td.selected, th.selected').toggle();
+			var container = $(this).closest('.responses');
+			container.find('td.selected, th.selected').toggle();
+			adminViewResponses.updateDisplayedCalcMode(container);
+			adminViewResponses.updateRespondentCount(container);
+			adminViewResponses.updateAlignment(container);
 		});
 		$('#show_respondents').click(function (event) {
 		   event.preventDefault();
 		   $('tr.respondent').toggle();
 		});
 		$('ul.nav-tabs li[role=presentation]').first().addClass('active');
+	},
+	updateAlignment: function (container) {
+        var respondents = [];
+        if (this.getCalcMode(container) == 'selected') {
+            respondents = container.find('.custom_alignment_calc:checked');
+        } else {
+            respondents = container.find('td.approved .glyphicon-ok');
+        }
+        
+        var sum = 0;
+        respondents.each(function () {
+            var value = $(this).closest('tr').data('alignment');
+            sum = value + sum;
+        });
+        
+        var count = respondents.length;
+        var average = count ? Math.round(sum / count) : 0;
+        var resultContainer = container.find('span.total_alignment');
+        resultContainer.html(average+'%');
+	},
+	getRespondentCount: function (container) {
+        if (this.getCalcMode(container) == 'selected') {
+            return container.find('input.custom_alignment_calc:checked').length;
+        }
+        return container.find('td.approved .glyphicon-ok').length;
+	},
+	updateRespondentCount: function (container) {
+	    var respondentCount = adminViewResponses.getRespondentCount(container);
+	    container.find('.respondent_count').html(respondentCount);
+	    var respondentPlurality = container.find('.respondent_plurality');
+        respondentPlurality.html('respondent');
+        if (respondentCount != 1) {
+            respondentPlurality.append('s');
+        }
+	},
+	getCalcMode: function (container) {
+	    return container.find('th.selected').first().is(':visible') ? 'selected' : 'approved';
+	},
+	updateDisplayedCalcMode: function (container) {
+	    var mode = adminViewResponses.getCalcMode(container);
+	    container.find('.calc_mode').html(mode);
 	}
 };
 
