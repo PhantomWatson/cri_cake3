@@ -208,6 +208,23 @@ var adminViewResponses = {
 		   $('tr.respondent').toggle();
 		});
 		$('ul.nav-tabs li[role=presentation]').first().addClass('active');
+		$('#toggle-table-scroll')
+		    .html('Show responses fullscreen')
+		    .data('mode', 'scrolling')
+    		.click(function (event) {
+    		    event.preventDefault();
+    		    var link = $(this);
+    		    var containers = $('#admin_responses_view .tab-pane > .responses > div');
+    		    if (link.data('mode') == 'scrolling') {
+    		        containers.removeClass('scrollable_table');
+    		        link.html('Show responses in window');
+    		        link.data('mode', 'fullscreen');
+    		    } else {
+    		        containers.addClass('scrollable_table');
+    		        link.html('Show responses fullscreen');
+    		        link.data('mode', 'scrolling');
+    		    }
+    		});
 	},
 	updateAlignment: function (container) {
         var respondents = [];

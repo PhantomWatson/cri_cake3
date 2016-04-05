@@ -23,6 +23,7 @@
         <a href="#" class="btn btn-default" id="show_respondents">
             Show respondent info
         </a>
+        <a href="#" class="btn btn-default" id="toggle-table-scroll"></a>
     <?php endif; ?>
 </p>
 
