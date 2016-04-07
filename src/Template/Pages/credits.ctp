@@ -40,9 +40,10 @@
         <a href="mailto:drterrell@bsu.edu">drterrell@bsu.edu</a> &#149;
         <a href="http://www.bsu.edu/ici">www.bsu.edu/ici</a>
         <br />
-        David Terrell, Director of Economic Development Policy and Director of the RUPRI Center for State Policy
+        David Terrell, Interim Co-Director of the Indiana Communities Institute and Director of the RUPRI Center for State Policy
         <br />
-        Jeani Shrack, Project Specialist
+        Jeani Shrack, Coordinator of Education and Training Programs,
+        Secretary to Vice President of Government Relations and Community Engagement
         <br />
         CRI Graduate Assistants
     </dd>
