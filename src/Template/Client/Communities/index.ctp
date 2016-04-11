@@ -175,6 +175,16 @@
                     <?= $criteria[2]['response_threshhold_reached'][0] ?>
                 </td>
                 <td>
+                    <?= $this->Html->link(
+                        'Reminders',
+                        [
+                            'prefix' => 'client',
+                            'controller' => 'Surveys',
+                            'action' => 'remind',
+                            'official'
+                        ],
+                        ['class' => 'btn btn-default']
+                    ) ?>
                 </td>
             </tr>
 

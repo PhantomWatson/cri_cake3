@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
 /**
@@ -372,5 +373,44 @@ class RespondentsTable extends Table
         }
 
         return false;
+    }
+
+    /**
+     * Returns how many of this survey's invited participants have no corresponding
+     * responses
+     *
+     * @param int $surveyId
+     * @return int
+     */
+    public function getUnresponsiveCount($surveyId)
+    {
+        return $this->getUnresponsive($surveyId)->count();
+    }
+
+    /**
+     * Returns a query for invited participants with no corresponding responses
+     *
+     * @param int $surveyId
+     * @return Query
+     */
+    public function getUnresponsive($surveyId)
+    {
+        // Get IDs of participants who have responded
+        $responsesTable = TableRegistry::get('Responses');
+        $responses = $responsesTable->find('all')
+            ->select(['respondent_id'])
+            ->where(['survey_id' => $surveyId])
+            ->toArray();
+        $responsiveRespondentIds = Hash::extract($responses, '{n}.respondent_id');
+        $responsiveRespondentIds = array_unique($responsiveRespondentIds);
+
+        // Return invitees who haven't
+        return $this->find('all')
+            ->where([
+                'survey_id' => $surveyId,
+                function ($exp, $q) use ($responsiveRespondentIds) {
+                    return $exp->notIn('id', $responsiveRespondentIds);
+                }
+            ]);
     }
 }

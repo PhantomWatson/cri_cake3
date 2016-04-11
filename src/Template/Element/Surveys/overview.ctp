@@ -37,6 +37,18 @@
                     ],
                     ['class' => 'btn btn-default']
                 ) ?>
+                <?php if ($invitedRespondentCount > 0): ?>
+                    <?= $this->Html->link(
+                        'Reminders',
+                        [
+                            'prefix' => 'admin',
+                            'controller' => 'Surveys',
+                            'action' => 'remind',
+                            $survey['id']
+                        ],
+                        ['class' => 'btn btn-default']
+                    ) ?>
+                <?php endif; ?>
             </p>
             <?php if ($invitedRespondentCount > 0): ?>
                 <div class="invitations_list">

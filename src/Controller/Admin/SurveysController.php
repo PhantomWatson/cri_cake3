@@ -2,6 +2,8 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Mailer\Mailer;
+use Cake\Core\Configure;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
@@ -185,5 +187,51 @@ class SurveysController extends AppController
             'unaddressedUnapprovedRespondents'
         ));
         $this->render('..'.DS.'..'.DS.'Client'.DS.'Surveys'.DS.'invite');
+    }
+
+    public function remind($surveyId)
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $survey = $surveysTable->get($surveyId);
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->get($survey->community_id);
+
+        if ($this->request->is('post')) {
+            $Mailer = new Mailer();
+            $sender = $this->Auth->user();
+            if ($Mailer->sendReminders($surveyId, $sender)) {
+                $this->Flash->success('Reminder email successfully sent');
+                return $this->redirect([
+                    'prefix' => 'admin',
+                    'controller' => 'Surveys',
+                    'action' => 'view',
+                    $community->id,
+                    $survey->type
+                ]);
+            }
+
+            $msg = 'There was an error sending reminder emails.';
+            $adminEmail = Configure::read('admin_email');
+            $msg .= ' Email <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> for assistance.';
+            $this->Flash->error($msg);
+
+            // Redirect so that hitting refresh won't re-send POST request
+            return $this->redirect([
+                'prefix' => 'admin',
+                'controller' => 'Surveys',
+                'action' => 'remind',
+                $survey->id
+            ]);
+        }
+
+        $respondentsTable = TableRegistry::get('Respondents');
+        $unresponsiveCount = $respondentsTable->getUnresponsiveCount($surveyId);
+        $this->set([
+            'community' => $community,
+            'survey' => $survey,
+            'titleForLayout' => 'Send Reminders to Community '.ucwords($survey->type).'s',
+            'unresponsiveCount' => $unresponsiveCount,
+        ]);
+        $this->render('..'.DS.'..'.DS.'Client'.DS.'Surveys'.DS.'remind');
     }
 }
