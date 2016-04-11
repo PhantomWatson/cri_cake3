@@ -205,6 +205,12 @@ class SurveysTable extends Table
         return $retval;
     }
 
+    /**
+     * Returns the URL for a SurveyMonkey survey
+     *
+     * @param int $smId SurveyMonkey-defined survey ID
+     * @return string
+     */
     public function getSMSurveyUrl($smId = null)
     {
         // Validate ID
@@ -258,6 +264,12 @@ class SurveysTable extends Table
         return $results->isEmpty() ? null : $results->first()->community_id;
     }
 
+    /**
+     * Returns a SurveyMonkey survey URL from the cache
+     *
+     * @param int $smId
+     * @return string|null
+     */
     public function getCachedSMSurveyUrl($smId)
     {
         return Cache::read($smId, 'survey_urls');
@@ -340,6 +352,11 @@ class SurveysTable extends Table
         return $survey_status;
     }
 
+    /**
+     * @param int $communityId
+     * @param string $type
+     * @return int|null
+     */
     public function getSurveyId($communityId, $type)
     {
         $results = $this->find('all')
@@ -352,17 +369,25 @@ class SurveysTable extends Table
         return $results->isEmpty() ? null : $results->first()->id;
     }
 
+    /**
+     * @param int $surveyId
+     * @return boolean
+     */
     public function setChecked($surveyId)
     {
         $survey = $this->get($surveyId);
         $survey->responses_checked = date('Y-m-d H:i:s');
-        $this->save($survey);
+        return (boolean) $this->save($survey);
     }
 
+    /**
+     * @param int $surveyId
+     * @return boolean|null
+     */
     public function getChecked($surveyId)
     {
         if ($surveyId) {
-            return $this->get($surveyId)->responses_checked;
+            return (boolean) $this->get($surveyId)->responses_checked;
         }
         return null;
     }
@@ -380,6 +405,9 @@ class SurveysTable extends Table
         return $results->isEmpty() ? null : $results->first()->id;
     }
 
+    /**
+     * @return array
+     */
     public function getQnaIdFieldNames()
     {
         return [
@@ -532,6 +560,11 @@ class SurveysTable extends Table
         return round(($responses / $invitations) * 100);
     }
 
+    /**
+     * @param int $communityId
+     * @param string $surveyType
+     * @return boolean
+     */
     public function hasBeenCreated($communityId, $surveyType)
     {
         $count = $this->find('all')
@@ -546,6 +579,10 @@ class SurveysTable extends Table
         return $count > 0;
     }
 
+    /**
+     * @param int $surveyId
+     * @return boolean
+     */
     public function hasUninvitedResponses($surveyId)
     {
         $respondentsTable = TableRegistry::get('Respondents');
@@ -558,6 +595,10 @@ class SurveysTable extends Table
         return $count > 0;
     }
 
+    /**
+     * @param int $surveyId
+     * @return boolean
+     */
     public function hasUnaddressedUnapprovedRespondents($surveyId)
     {
         $respondentsTable = TableRegistry::get('Respondents');
@@ -570,6 +611,9 @@ class SurveysTable extends Table
         return $count > 0;
     }
 
+    /**
+     * @return array
+     */
     public function getSectors()
     {
         return [
@@ -618,6 +662,14 @@ class SurveysTable extends Table
         return $count > 0;
     }
 
+    /**
+     * Throws exceptions if errors are found
+     *
+     * @param string $respondentTypePlural
+     * @param int $communityId
+     * @throws ForbiddenException
+     * @throws BadRequestException
+     */
     public function validateRespondentTypePlural($respondentTypePlural, $communityId)
     {
         switch ($respondentTypePlural) {
@@ -636,6 +688,15 @@ class SurveysTable extends Table
         }
     }
 
+    /**
+     * Finds surveys can have their responses automatically imported,
+     * sorted with the surveys whose responses have been least-recently
+     * imported first.
+     *
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
     public function findAutoImportCandidate(Query $query, array $options)
     {
         return $query
@@ -688,6 +749,11 @@ class SurveysTable extends Table
         return $results->isEmpty() ? null : $results->first()->id;
     }
 
+    /**
+     * Returns how many surveys can currently be auto-imported
+     *
+     * @return int
+     */
     public function getAutoImportEligibleCount()
     {
         return $this->find('autoImportCandidate')->count();
