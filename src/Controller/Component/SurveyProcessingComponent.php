@@ -171,7 +171,9 @@ class SurveyProcessingComponent extends Component
 
         $senderEmail = $this->Auth->user('email');
         $senderName = $this->Auth->user('name');
+
         if ($senderEmail) {
+            $email->replyTo($senderEmail, $senderName);
             $email->returnPath($senderEmail, $senderName);
         }
 
