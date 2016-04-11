@@ -46,15 +46,6 @@
 </p>
 
 <div class="survey_overview">
-    <?php
-        $tableTemplate = [
-            'formGroup' => '{{label}}</td><td>{{input}}',
-            'inputContainer' => '<tr><td class="form-group {{type}}{{required}}">{{content}}</td></tr>',
-            'inputContainerError' => '<tr><td class="form-group {{type}}{{required}}">{{content}}{{error}}</td></tr>'
-        ] + require(ROOT.DS.'config'.DS.'bootstrap_form.php');
-        $this->Form->templates($tableTemplate);
-    ?>
-
     <div class="panel panel-default link_survey">
         <div class="panel-heading">
             <h3 class="panel-title">
