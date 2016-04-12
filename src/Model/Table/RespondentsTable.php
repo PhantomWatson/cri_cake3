@@ -376,22 +376,10 @@ class RespondentsTable extends Table
     }
 
     /**
-     * Returns how many of this survey's invited participants have no corresponding
-     * responses
+     * Returns invited participants with no corresponding responses
      *
      * @param int $surveyId
-     * @return int
-     */
-    public function getUnresponsiveCount($surveyId)
-    {
-        return $this->getUnresponsive($surveyId)->count();
-    }
-
-    /**
-     * Returns a query for invited participants with no corresponding responses
-     *
-     * @param int $surveyId
-     * @return Query
+     * @return array
      */
     public function getUnresponsive($surveyId)
     {
@@ -406,11 +394,13 @@ class RespondentsTable extends Table
 
         // Return invitees who haven't
         return $this->find('all')
+            ->select(['id', 'name', 'title', 'email'])
             ->where([
                 'survey_id' => $surveyId,
                 function ($exp, $q) use ($responsiveRespondentIds) {
                     return $exp->notIn('id', $responsiveRespondentIds);
                 }
-            ]);
+            ])
+            ->toArray();
     }
 }

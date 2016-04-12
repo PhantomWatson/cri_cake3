@@ -36,28 +36,49 @@
     <?php endif; ?>
 </p>
 
-<?php if (! $unresponsiveCount): ?>
+<?php if (empty($unresponsive)): ?>
     <p class="alert alert-success">
         Good news! Everyone who has been sent an invitation to participate
         in this survey has submitted a response, so no reminders
         are necessary.
     </p>
 <?php else: ?>
-    <ul>
+    <ul id="reminders">
         <li>
             Sending a reminder will re-send survey invitation emails.
         </li>
         <li>
-            <strong>
+            <a href="#" id="toggleUnresponsiveList">
                 <?= $unresponsiveCount ?> <?= __n('person', 'people', $unresponsiveCount) ?>
-            </strong>
+            </a>
             <?= __n('has', 'have', $unresponsiveCount) ?>
             been sent <?= __n('an invitation', 'invitations', $unresponsiveCount) ?>
             to complete this survey and
-            <strong>
-                <?= __n('hasn\'t', 'haven\'t', $unresponsiveCount) ?>
-                responded yet.
-            </strong>
+            <?= __n('hasn\'t', 'haven\'t', $unresponsiveCount) ?>
+            responded yet.
+            <div class="well" id="unresponsiveList">
+                <ul>
+                    <?php foreach ($unresponsive as $person): ?>
+                        <li>
+                            <?php if ($person->name): ?>
+                                <?= $person->name ?>
+                            <?php else: ?>
+                                (no name)
+                            <?php endif; ?>
+
+                            <?php if ($person->title): ?>
+                                <span class="title">
+                                    (<?= $person->title ?>)
+                                </span>
+                            <?php endif; ?>
+
+                            <a href="mailto:<?= $person->email ?>" class="email">
+                                <?= $person->email ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
         </li>
         <li>
             <?php if ($survey->reminder_sent): ?>
@@ -82,4 +103,11 @@
             ['class' => 'btn btn-primary']
         ) ?>
     </p>
+
+    <?php $this->append('buffered'); ?>
+        $('#reminders #toggleUnresponsiveList').click(function (event) {
+            event.preventDefault();
+            $('#unresponsiveList').slideToggle();
+        });
+    <?php $this->end(); ?>
 <?php endif; ?>

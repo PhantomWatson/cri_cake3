@@ -102,17 +102,16 @@ class SurveysController extends AppController
                 'action' => 'remind',
                 $survey->type
             ]);
-
         }
 
         $respondentsTable = TableRegistry::get('Respondents');
-        $unresponsiveCount = $respondentsTable->getUnresponsiveCount($surveyId);
-        $community = $communitiesTable->get($communityId);
+        $unresponsive = $respondentsTable->getUnresponsive($surveyId);
         $this->set([
-            'community' => $community,
+            'community' => $communitiesTable->get($communityId),
             'survey' => $survey,
             'titleForLayout' => 'Send Reminders to Community '.ucwords($survey->type).'s',
-            'unresponsiveCount' => $unresponsiveCount
+            'unresponsive' => $unresponsive,
+            'unresponsiveCount' => count($unresponsive),
         ]);
     }
 }

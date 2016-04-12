@@ -33,7 +33,7 @@ class Mailer
         }
 
         $respondentsTable = TableRegistry::get('Respondents');
-        $recipients = $respondentsTable->getUnresponsive($surveyId)->toArray();
+        $recipients = $respondentsTable->getUnresponsive($surveyId);
         $recipients = Hash::extract($recipients, '{n}.email');
         foreach ($recipients as $recipient) {
             $email->addBcc($recipient);
