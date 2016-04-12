@@ -382,12 +382,12 @@ class SurveysTable extends Table
 
     /**
      * @param int $surveyId
-     * @return boolean|null
+     * @return DateTime|null
      */
     public function getChecked($surveyId)
     {
         if ($surveyId) {
-            return (boolean) $this->get($surveyId)->responses_checked;
+            return $this->get($surveyId)->responses_checked;
         }
         return null;
     }
