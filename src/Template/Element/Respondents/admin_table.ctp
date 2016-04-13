@@ -5,6 +5,19 @@
     $alignmentSum = SurveyProcessingComponent::getAlignmentSum($responses, $alignmentField);
     $approvedCount = SurveyProcessingComponent::getApprovedCount($responses);
     $totalAlignment = $approvedCount ? round($alignmentSum / $approvedCount) : 0;
+
+    if (! function_exists('getRankClass')) {
+        function getRankClass($respondentRank, $actualRank) {
+            $difference = abs($respondentRank - $actualRank);
+            if ($difference > 2) {
+                return 'incorrect';
+            } elseif ($difference > 0) {
+                return 'near';
+            } else {
+                return 'correct';
+            }
+        }
+    }
 ?>
 
 <div class="responses">
@@ -77,20 +90,8 @@
                         </td>
 
                         <?php foreach ($sectors as $sector): ?>
-                            <?php
-                                $respondentRank = $response[$sector.'_rank'];
-                                $actualRank = $area["{$sector}_rank"];
-                                $difference = abs($respondentRank - $actualRank);
-                                if ($difference > 2) {
-                                    $class = 'incorrect';
-                                } elseif ($difference > 0) {
-                                    $class = 'near';
-                                } else {
-                                    $class = 'correct';
-                                }
-                            ?>
-                            <td class="<?= $class ?>">
-                                <?= $respondentRank ?>
+                            <td class="<?= getRankClass($response[$sector.'_rank'], $area["{$sector}_rank"]) ?>">
+                                <?= $response[$sector.'_rank'] ?>
                             </td>
                         <?php endforeach; ?>
 
@@ -113,6 +114,21 @@
                     </tr>
                 <?php endforeach; ?>
             </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="2">
+                        Average
+                    </th>
+                    <?php foreach ($sectors as $sector): ?>
+                        <td class="<?= getRankClass($averageRanks[$sector], $area["{$sector}_rank"]) ?>">
+                            <?= $averageRanks[$sector] ?>
+                        </td>
+                    <?php endforeach; ?>
+                    <td colspan="2">
+
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 

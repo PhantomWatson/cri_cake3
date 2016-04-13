@@ -55,13 +55,27 @@ class ResponsesController extends AppController
         $internalAlignment = $this->Responses->getInternalAlignmentPerSector($surveyId);
         $internalAlignmentSum = empty($internalAlignment) ? 0 : array_sum($internalAlignment);
 
+        $ranks = [];
+        $sectors = $surveysTable->getSectors();
+        foreach ($responses as $response) {
+            foreach ($sectors as $sector) {
+                $ranks[$sector][] = $response[$sector.'_rank'];
+            }
+        }
+        $averageRanks = [];
+        foreach ($sectors as $sector) {
+            $avg = array_sum($ranks[$sector]) / count($sectors);
+            $averageRanks[$sector] = round($avg, 1);
+        }
+
         $this->set([
+            'averageRanks' => $averageRanks,
             'community' => $community,
             'internalAlignment' => $internalAlignment,
             'internalAlignmentClass' => $this->getInternalAlignmentClass($internalAlignmentSum, $community),
             'internalAlignmentSum' => $internalAlignmentSum,
             'responses' => $responses,
-            'sectors' => $surveysTable->getSectors(),
+            'sectors' => $sectors,
             'survey' => $survey,
             'titleForLayout' => 'View and Update Alignment'
         ]);

@@ -90,19 +90,12 @@
         'Board of Public Words',
         'City Planning Director',
         'Director of Community Development',
-        'Parks & Recreation Director',
-        'Street Superintendent',
-        'Police Chief',
         'Planning Commission',
         'Redevelopment Commission',
         'Economic Development Commission',
-        'Utility Rate Advisory Board',
-        'Housing Authority',
         'School Corporation Officials',
-        'Public Library Board Officials',
         'County Commissioner',
-        'County Council',
-        'State Senators and Representatives'
+        'County Council'
     ];
 ?>
 <div id="invitation_suggestions" class="well">
