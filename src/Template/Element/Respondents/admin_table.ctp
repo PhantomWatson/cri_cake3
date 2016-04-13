@@ -128,6 +128,19 @@
 
                     </td>
                 </tr>
+                <tr>
+                    <th colspan="2">
+                        Order
+                    </th>
+                    <?php foreach ($sectors as $sector): ?>
+                        <td>
+                            <?= $rankOrder[$sector] ?>
+                        </td>
+                    <?php endforeach; ?>
+                    <td colspan="2">
+
+                    </td>
+                </tr>
             </tfoot>
         </table>
     </div>

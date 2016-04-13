@@ -55,6 +55,7 @@ class ResponsesController extends AppController
         $internalAlignment = $this->Responses->getInternalAlignmentPerSector($surveyId);
         $internalAlignmentSum = empty($internalAlignment) ? 0 : array_sum($internalAlignment);
 
+        // Get averages
         $ranks = [];
         $sectors = $surveysTable->getSectors();
         foreach ($responses as $response) {
@@ -67,6 +68,19 @@ class ResponsesController extends AppController
             $avg = array_sum($ranks[$sector]) / count($sectors);
             $averageRanks[$sector] = round($avg, 1);
         }
+        asort($averageRanks);
+
+        // Determine the order of those sorted averages
+        $rankOrder = [];
+        $order = 0;
+        $previousAvg = null;
+        foreach ($averageRanks as $sector => $avg) {
+            if ($avg != $previousAvg) {
+                $order++;
+            }
+            $rankOrder[$sector] = $order;
+            $previousAvg = $avg;
+        }
 
         $this->set([
             'averageRanks' => $averageRanks,
@@ -74,6 +88,7 @@ class ResponsesController extends AppController
             'internalAlignment' => $internalAlignment,
             'internalAlignmentClass' => $this->getInternalAlignmentClass($internalAlignmentSum, $community),
             'internalAlignmentSum' => $internalAlignmentSum,
+            'rankOrder' => $rankOrder,
             'responses' => $responses,
             'sectors' => $sectors,
             'survey' => $survey,
