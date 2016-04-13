@@ -65,7 +65,7 @@ class ResponsesController extends AppController
         }
         $averageRanks = [];
         foreach ($sectors as $sector) {
-            $avg = array_sum($ranks[$sector]) / count($sectors);
+            $avg = array_sum($ranks[$sector]) / count($responses);
             $averageRanks[$sector] = round($avg, 1);
         }
         asort($averageRanks);
