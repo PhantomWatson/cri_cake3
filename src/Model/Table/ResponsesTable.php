@@ -7,6 +7,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
 /**
@@ -191,11 +192,18 @@ class ResponsesTable extends Table
             'name' => '',
             'email' => ''
         ];
+
+        // Assume the first field contains the respondent's name
         if (isset($response[0]['answers'][0]['text'])) {
             $retval['name'] = $response[0]['answers'][0]['text'];
         }
-        if (isset($response[0]['answers'][3]['text'])) {
-            $retval['email'] = $response[0]['answers'][3]['text'];
+
+        // Search for text that looks like an email address
+        foreach ($response[0]['answers'] as $answer) {
+            if (Validation::email($answer['text'])) {
+                $retval['email'] = $answer['text'];
+                break;
+            }
         }
         return $retval;
     }
