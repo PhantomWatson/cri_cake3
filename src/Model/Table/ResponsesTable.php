@@ -175,8 +175,12 @@ class ResponsesTable extends Table
 
     public function isRecorded($respondentId, $survey, $serializedResponse)
     {
-        $conditions = ['respondent_id' => $respondentId];
         $responseRanks = $this->getResponseRanks($serializedResponse, $survey);
+        if (! $responseRanks) {
+            return false;
+        }
+
+        $conditions = ['respondent_id' => $respondentId];
         foreach ($responseRanks as $sector => $rank) {
             $conditions[$sector.'_rank'] = $rank;
         }
@@ -278,10 +282,12 @@ class ResponsesTable extends Table
     }
 
     /**
-     * Decodes the response and returns an array listing the ranks assigned to each sector by the respondent
+     * Decodes the response and returns an array listing the ranks assigned to each sector by the respondent,
+     * or NULL if any sector's rank is missing
+     *
      * @param string $serializedResponse
      * @param Entity $survey The result of a call to SurveysTable::get()
-     * @return array
+     * @return array|null
      */
     public function getResponseRanks($serializedResponse, $survey)
     {
@@ -300,7 +306,14 @@ class ResponsesTable extends Table
                 $retval[$sector] = $rank;
             }
         }
-        return $retval;
+
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
+        if (count($retval) == count($sectors)) {
+            return $retval;
+        }
+
+        return null;
     }
 
     /**

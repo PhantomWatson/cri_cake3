@@ -53,6 +53,12 @@ class SurveysController extends AppController
                 $respondentRecord = $respondentsTable->getMatching($surveyId, $respondent, $smRespondentId);
                 $serializedResponse = base64_encode(serialize($response));
 
+                // Ignore response if it doesn't include all PWRRR ranks
+                $responseRanks = $responsesTable->getResponseRanks($serializedResponse, $survey);
+                if (! $responseRanks) {
+                    continue;
+                }
+
                 // Add new respondent
                 if (empty($respondentRecord)) {
                     $approved = $respondentsTable->isAutoApproved($survey, $respondent['email']);
@@ -69,6 +75,9 @@ class SurveysController extends AppController
                         $respondentsTable->save($newRespondent);
                         $respondentId = $newRespondent->id;
                     } else {
+                        if (isset($_GET['debug'])) {
+                            pr($response);
+                        }
                         $message = 'Error saving respondent.';
                         $message .= ' Validation errors: '.print_r($errors, true);
                         return $this->renderImportError($message);
@@ -102,14 +111,11 @@ class SurveysController extends AppController
                     continue;
                 }
 
-                // Determine actual ranks for alignment calculation
+                // Calculate alignment
                 $communitiesTable = TableRegistry::get('Communities');
                 $community = $communitiesTable->get($survey->community_id);
                 $actualRanksLocal = $areasTable->getPwrrrRanks($community->local_area_id);
                 $actualRanksParent = $areasTable->getPwrrrRanks($community->parent_area_id);
-
-                // Get individual ranks and alignment
-                $responseRanks = $responsesTable->getResponseRanks($serializedResponse, $survey);
                 $alignmentVsLocal = $responsesTable->calculateAlignment($actualRanksLocal, $responseRanks);
                 $alignmentVsParent = $responsesTable->calculateAlignment($actualRanksParent, $responseRanks);
 
