@@ -156,10 +156,14 @@ class SurveysController extends AppController
                 }
             }
 
-            // Set new last_modified_date
-            $dates = array_values($respondents);
-            $survey->respondents_last_modified_date = new Time(max($dates));
-            $this->Surveys->save($survey);
+            /* Set new last_modified_date if there are no errors
+             * (if this set of responses contains errors, advancing the last_modified_date
+             * would prevent those responses from being imported after those errors are corrected) */
+            if (empty($errorMsgs)) {
+                $dates = array_values($respondents);
+                $survey->respondents_last_modified_date = new Time(max($dates));
+                $this->Surveys->save($survey);
+            }
         }
 
         // Finalize
