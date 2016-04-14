@@ -7,7 +7,6 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
 /**
@@ -190,7 +189,14 @@ class ResponsesTable extends Table
         return $count > 0;
     }
 
-    public function extractRespondentInfo($response)
+    /**
+     * Returns an array with values for 'name' and 'email'
+     *
+     * @param array $response
+     * @param int $smId
+     * @return array
+     */
+    public function extractRespondentInfo($response, $smId)
     {
         $retval = [
             'name' => '',
@@ -202,9 +208,10 @@ class ResponsesTable extends Table
             $retval['name'] = $response[0]['answers'][0]['text'];
         }
 
-        // Search for text that looks like an email address
+        $surveysTable = TableRegistry::get('Surveys');
+        $emailAnswerId = $surveysTable->getEmailQuestionId($smId);
         foreach ($response[0]['answers'] as $answer) {
-            if (Validation::email($answer['text'])) {
+            if ($answer['row'] == $emailAnswerId) {
                 $retval['email'] = $answer['text'];
                 break;
             }

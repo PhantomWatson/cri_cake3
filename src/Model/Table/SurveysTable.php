@@ -427,6 +427,7 @@ class SurveysTable extends Table
 
     /**
      * Queries SurveyMonkey to determine the IDs associated with the PWRRR-ranking question and its set of answers
+     *
      * @param int $smId SurveyMonkey survey ID
      * @return array First value is true/false for success/failure, second value is status message, third is data array for saving Survey with
      */
@@ -521,7 +522,34 @@ class SurveysTable extends Table
     }
 
     /**
+     * Gets the SurveyMonkey question ID for the respondent's email address
+     *
+     * @param int $smId
+     * @return int|null
+     */
+    public function getEmailQuestionId($smId)
+    {
+        $SurveyMonkey = $this->getSurveyMonkeyObject();
+        $result = $SurveyMonkey->getSurveyDetails((string) $smId);
+        if (! $result['data']) {
+            return null;
+        }
+
+        foreach ($result['data']['pages'] as $page) {
+            foreach ($page['questions'] as $question) {
+                foreach ($question['answers'] as $answer) {
+                    if ($answer['text'] == 'Email') {
+                        return $answer['answer_id'];
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Sets the SurveyMonkey Q&A IDs associated with the PWRRR-ranking question and its set of answers
+     *
      * @param int $smId SurveyMonkey survey ID
      * @return array [boolean success/failure indicator, result message]
      */
