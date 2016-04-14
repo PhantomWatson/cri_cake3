@@ -75,9 +75,6 @@ class SurveysController extends AppController
                         $respondentsTable->save($newRespondent);
                         $respondentId = $newRespondent->id;
                     } else {
-                        if (isset($_GET['debug'])) {
-                            pr($response);
-                        }
                         $message = 'Error saving respondent.';
                         $message .= ' Validation errors: '.print_r($errors, true);
                         return $this->renderImportError($message);
