@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
+use Cake\Validation\Validation;
 
 /**
  * Surveys Controller
@@ -47,15 +48,28 @@ class SurveysController extends AppController
         $survey = $this->Surveys->get($surveyId);
         $areasTable = TableRegistry::get('Areas');
         $usersTable = TableRegistry::get('Users');
+        $errorMsgs = [];
         if (is_array($responses)) {
             foreach ($responses as $smRespondentId => $response) {
                 $respondent = $responsesTable->extractRespondentInfo($response);
+                $name = $respondent['name'] ?: '(no name)';
                 $respondentRecord = $respondentsTable->getMatching($surveyId, $respondent, $smRespondentId);
                 $serializedResponse = base64_encode(serialize($response));
 
                 // Ignore response if it doesn't include all PWRRR ranks
                 $responseRanks = $responsesTable->getResponseRanks($serializedResponse, $survey);
                 if (! $responseRanks) {
+                    $errorMsgs[] = 'Response from '.$name.' did not contain all PWR<sup>3</sup> rankings.';
+                    continue;
+                }
+
+                // Ignore responses if email address is missing or invalid
+                if (empty($respondent['email'])) {
+                    $errorMsgs[] = 'Response from '.$name.' is missing an email address.';
+                    continue;
+                }
+                if (! Validation::email($respondent['email'])) {
+                    $errorMsgs[] = 'Response from '.$name.' has an invalid email address: '.$respondent['email'].'.';
                     continue;
                 }
 
@@ -64,7 +78,7 @@ class SurveysController extends AppController
                     $approved = $respondentsTable->isAutoApproved($survey, $respondent['email']);
                     $newRespondent = $respondentsTable->newEntity([
                         'email' => $respondent['email'],
-                        'name' => $respondent['name'],
+                        'name' => $name,
                         'survey_id' => $surveyId,
                         'sm_respondent_id' => $smRespondentId,
                         'invited' => false,
@@ -75,7 +89,9 @@ class SurveysController extends AppController
                         $respondentsTable->save($newRespondent);
                         $respondentId = $newRespondent->id;
                     } else {
-                        // Don't record anything for this response
+                        /* Don't record anything for this response
+                         * (this condition should theoretically never happen,
+                         * since any validation errors should have been caught above) */
                         continue;
                     }
 
@@ -94,9 +110,10 @@ class SurveysController extends AppController
                         if (empty($errors)) {
                             $respondentsTable->save($respondentRecord);
                         } else {
-                            $message = 'Error updating respondent.';
-                            $message .= ' Validation errors: '.print_r($errors, true);
-                            return $this->renderImportError($message);
+                            /* Don't record anything for this response
+                             * (this condition should theoretically never happen,
+                             * since any validation errors should have been caught above) */
+                            continue;
                         }
                     }
                     $respondentId = $respondentRecord->id;
@@ -134,9 +151,8 @@ class SurveysController extends AppController
                     $responsesTable->save($newResponse);
                     $importedCount++;
                 } else {
-                    $message = 'Error saving response.';
-                    $message .= ' Validation errors: '.print_r($errors, true);
-                    return $this->renderImportError($message);
+                    $errorMsgs[] = 'Response from '.$name.' is missing required data.';
+                    continue;
                 }
             }
 
@@ -147,12 +163,19 @@ class SurveysController extends AppController
         }
 
         // Finalize
-        if ($importedCount) {
-            $message = $importedCount.__n(' response', ' responses', $importedCount).' imported';
-        } else {
-            $message = 'No new responses to import';
-        }
         $this->Surveys->setChecked($surveyId);
+        if (empty($errorMsgs)) {
+            $message = $importedCount ? $importedCount.__n(' response', ' responses', $importedCount).' imported' : 'No new responses to import';
+        } else {
+            $message = $importedCount ? $importedCount.__n(' response', ' responses', $importedCount).' imported' : '';
+            $message .= 'Errors prevented the following '.__('response', 'responses', count($errorMsgs)).' from being imported:';
+            $message .= '<ul>';
+            foreach ($errorMsgs as $errorMsg) {
+                $message .= '<li>'.$errorMsg.'</li>';
+            }
+            $message .= '</ul>';
+            $this->response->statusCode(500);
+        }
 
         $this->set(compact('message'));
     }

@@ -140,10 +140,10 @@
                         <?php endif; ?>
                     </p>
                     <?php if ($officialResponsesChecked): ?>
-                        <p class="last_import alert alert-info">
+                        <div class="last_import alert alert-info">
                             New responses were last checked for
                             <?= $this->Time->timeAgoInWords($officialResponsesChecked, ['end' => '+1 year']) ?>
-                        </p>
+                        </div>
                     <?php endif; ?>
                 </td>
                 <td>

@@ -236,7 +236,7 @@ var clientHome = {
                     link.append(loading_indicator);
                 },
                 success: function (data) {
-                    var alert = $('<p class="last_import alert alert-success" role="alert">'+data+'</p>');
+                    var alert = $('<div class="last_import alert alert-success" role="alert">'+data+'</div>');
                     alert.hide();
                     row.find('.last_import').slideUp(function () {
                         $(this).remove();
@@ -246,10 +246,7 @@ var clientHome = {
                     alert.slideDown();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(jqXHR);
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                    var alert = $('<p class="last_import alert alert-danger" role="alert">There was an error checking for new responses.<br />Please try again or contact us for assistance.</p>');
+                    var alert = $('<div class="last_import alert alert-danger" role="alert">'+jqXHR.responseText+'</div>');
                     alert.hide();
                     row.find('.last_import').slideUp(function () {
                         $(this).remove();
