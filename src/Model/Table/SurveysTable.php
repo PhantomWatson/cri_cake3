@@ -430,7 +430,7 @@ class SurveysTable extends Table
      * @param int $smId SurveyMonkey survey ID
      * @return array First value is true/false for success/failure, second value is status message, third is data array for saving Survey with
      */
-    public function getQuestionAndAnswerIds($smId)
+    public function getPwrrrQuestionAndAnswerIds($smId)
     {
         if (Configure::read('debug')) {
             return [true, "", [
@@ -535,7 +535,7 @@ class SurveysTable extends Table
             return [false, 'Error: No survey has been recorded with SurveyMonkey id "'.$smId.'".'];
         }
         $survey = $results->first();
-        $data = $this->getQuestionAndAnswerIds($smId)[2];
+        $data = $this->getPwrrrQuestionAndAnswerIds($smId)[2];
         $this->patchEntity($survey, $data);
         if ($this->save($survey)) {
             return [true, 'Question and answer IDs saved.'];
