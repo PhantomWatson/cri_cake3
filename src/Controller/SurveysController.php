@@ -75,9 +75,8 @@ class SurveysController extends AppController
                         $respondentsTable->save($newRespondent);
                         $respondentId = $newRespondent->id;
                     } else {
-                        $message = 'Error saving respondent.';
-                        $message .= ' Validation errors: '.print_r($errors, true);
-                        return $this->renderImportError($message);
+                        // Don't record anything for this response
+                        continue;
                     }
 
                 // Update existing respondent
