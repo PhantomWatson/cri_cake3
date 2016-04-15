@@ -67,6 +67,20 @@ Router::scope('/', function ($routes) {
     $routes->connect('/surveys/get_qna_ids/*',             ['controller' => 'Surveys', 'action' => 'getQnaIds']);
     $routes->connect('/surveys/cron_import',               ['controller' => 'Surveys', 'action' => 'cronImport']);
 
+    // Redirect common bot requests to home page to keep requests from appearing in error log
+    $routes->redirect('/admin.php', '/');
+    $routes->redirect('/blog', '/');
+    $routes->redirect('/blog/*', '/');
+    $routes->redirect('/components/*', '/');
+    $routes->redirect('/joomla', '/');
+    $routes->redirect('/joomla/*', '/');
+    $routes->redirect('/user', '/');
+    $routes->redirect('/wordpress', '/');
+    $routes->redirect('/wp', '/');
+    $routes->redirect('/wp-login.php', '/');
+    $routes->redirect('/xmlrpc.php', '/');
+    $routes->redirect('/administrator/*', '/');
+
     $routes->fallbacks('DashedRoute');
 });
 
