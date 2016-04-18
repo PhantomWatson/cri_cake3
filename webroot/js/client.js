@@ -48,7 +48,9 @@ var surveyInvitationForm = {
             }
         });
         
-        formProtector.protect('UserClientInviteForm');
+        formProtector.protect('UserClientInviteForm', {
+            ignore: ['spreadsheet-upload-input']
+        });
     },
     
     addRow: function () {
@@ -92,7 +94,9 @@ var surveyInvitationForm = {
         }
         
         // Make sure formProtector knows about these new fields
-        formProtector.protect('UserClientInviteForm');
+        formProtector.protect('UserClientInviteForm', {
+            ignore: ['spreadsheet-upload-input']
+        });
     },
     
     checkEmail: function (field) {
