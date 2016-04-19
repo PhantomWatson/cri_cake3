@@ -209,9 +209,9 @@ class ResponsesTable extends Table
         }
 
         $surveysTable = TableRegistry::get('Surveys');
-        $emailAnswerId = $surveysTable->getEmailQuestionId($smId);
+        $emailQuestionId = $surveysTable->getEmailQuestionId($smId);
         foreach ($response[0]['answers'] as $answer) {
-            if ($answer['row'] == $emailAnswerId) {
+            if ($answer['row'] == $emailQuestionId) {
                 $retval['email'] = $answer['text'];
                 break;
             }
