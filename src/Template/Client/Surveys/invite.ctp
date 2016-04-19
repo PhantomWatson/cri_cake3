@@ -214,7 +214,7 @@
                     <p>
                         Select an invitation spreadsheet to upload:
                         <span id="spreadsheet-upload">
-                            <input type="file" id="spreadsheet-upload-input" name="files[]" />
+                            <input type="file" id="spreadsheet-upload-input" name="files[]" accept=".xlsx" />
                         </span>
                     </p>
                     <div class="progress" id="upload-progress">
