@@ -3,6 +3,7 @@ namespace App\Controller\Client;
 
 use App\Controller\AppController;
 use App\Mailer\Mailer;
+use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
@@ -18,6 +19,7 @@ class SurveysController extends AppController
     {
         parent::initialize();
         $this->loadComponent('SurveyProcessing');
+        $this->loadComponent('RequestHandler');
     }
 
     public function invite($respondentTypePlural = null)
@@ -56,6 +58,7 @@ class SurveysController extends AppController
             'approvedRespondents',
             'communityId',
             'respondentTypePlural',
+            'surveyId',
             'titleForLayout',
             'unaddressedUnapprovedRespondents'
         ));
@@ -112,6 +115,33 @@ class SurveysController extends AppController
             'titleForLayout' => 'Send Reminders to Community '.ucwords($survey->type).'s',
             'unresponsive' => $unresponsive,
             'unresponsiveCount' => count($unresponsive),
+        ]);
+    }
+
+    public function uploadInvitationSpreadsheet($surveyId)
+    {
+        if (empty($_FILES['files'])) {
+            throw new BadRequestException('No file was uploaded.');
+        }
+
+        // Validate extension
+        $filename = $_FILES['files']['name'][0];
+        $filenameParts = explode('.', $filename);
+        $extension = array_pop($filenameParts);
+        if (strtolower($extension) != 'xlsx') {
+            throw new BadRequestException('Invalid file type: '.$extension);
+        }
+
+        $message = "$filename received";
+
+        $this->viewBuilder()->layout('json');
+        $this->set([
+            '_serialize' => [
+                'code',
+                'message'
+            ],
+            'code' => 200,
+            'message' => $message
         ]);
     }
 }
