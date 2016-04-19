@@ -7,6 +7,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
 /**
@@ -208,14 +209,21 @@ class ResponsesTable extends Table
             $retval['name'] = $response[0]['answers'][0]['text'];
         }
 
+        // Search for the first response that's a valid email address
         $surveysTable = TableRegistry::get('Surveys');
-        $emailQuestionId = $surveysTable->getEmailQuestionId($smId);
-        foreach ($response[0]['answers'] as $answer) {
-            if ($answer['row'] == $emailQuestionId) {
-                $retval['email'] = $answer['text'];
-                break;
+        foreach ($response as $section) {
+            foreach ($section['answers'] as $answer) {
+                if (! isset($answer['text'])) {
+                    continue;
+                }
+                $answer = trim($answer['text']);
+                if (Validation::email($answer)) {
+                    $retval['email'] = strtolower($answer);
+                    break;
+                }
             }
         }
+
         return $retval;
     }
 
