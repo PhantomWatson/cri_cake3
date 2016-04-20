@@ -178,7 +178,7 @@ class SurveysController extends AppController
             $title = trim($row[$colNumbers['Title']]);
             $organization = trim($row[$colNumbers['Entity']]);
             $data[] = [
-                'name' => "$fName $lName",
+                'name' => trim("$fName $lName"),
                 'email' => $email,
                 'title' => "$title, $organization"
             ];
