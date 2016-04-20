@@ -132,16 +132,75 @@ class SurveysController extends AppController
             throw new BadRequestException('Invalid file type: '.$extension);
         }
 
-        $message = "$filename received";
+        require_once(ROOT.DS.'vendor'.DS.'phpoffice'.DS.'phpexcel'.DS.'Classes'.DS.'PHPExcel.php');
+        $filepath = $_FILES['files']['tmp_name'][0];
+        $excelReader = \PHPExcel_IOFactory::createReader('Excel2007');
+        $excelReader->setReadDataOnly(true);
+        $excelObj = $excelReader->load($filepath);
+        $sheetData = $excelObj->getActiveSheet()->toArray(null, false, false, false);
+
+        // Collect column information
+        $colNumbers = [];
+        $headerRow = null;
+        $expectedCols = [
+            'First Name',
+            'Last Name',
+            'Entity',
+            'Title',
+            'Email'
+        ];
+        foreach ($sheetData as $rowNum => $cols) {
+            if (! in_array('Email', $cols)) {
+                continue;
+            }
+            $headerRow = $rowNum;
+            foreach ($expectedCols as $label) {
+                $colNumber = array_search($label, $cols);
+                if ($colNumber === false) {
+                    throw new BadRequestException('Spreadsheet cannot be read: Header row improperly formatted');
+                }
+                $colNumbers[$label] = $colNumber;
+            }
+            break;
+        }
+        if (empty($colNumbers)) {
+            throw new BadRequestException('Spreadsheet cannot be read: Header row not found');
+        }
+
+        // Collect data
+        $rowNum = $headerRow + 1;
+        $data = [];
+        while (! empty($sheetData[$rowNum][$colNumbers['Email']])) {
+            $row = $sheetData[$rowNum];
+            $email = trim($row[$colNumbers['Email']]);
+            $fName = trim($row[$colNumbers['First Name']]);
+            $lName = trim($row[$colNumbers['Last Name']]);
+            $title = trim($row[$colNumbers['Title']]);
+            $organization = trim($row[$colNumbers['Entity']]);
+            $data[] = [
+                'name' => "$fName $lName",
+                'email' => $email,
+                'title' => "$title, $organization"
+            ];
+            $rowNum++;
+        }
+
+        if (empty($data)) {
+            $message = 'No invitation information found in spreadsheet';
+        } else {
+            $message = 'Invitation information imported from spreadsheet';
+        }
 
         $this->viewBuilder()->layout('json');
         $this->set([
             '_serialize' => [
                 'code',
-                'message'
+                'message',
+                'data'
             ],
             'code' => 200,
-            'message' => $message
+            'message' => $message,
+            'data' => $data
         ]);
     }
 }
