@@ -168,10 +168,14 @@ class SurveysController extends AppController
         }
 
         // Collect data
-        $rowNum = $headerRow + 1;
         $data = [];
-        while (! empty($sheetData[$rowNum][$colNumbers['Email']])) {
+        $rowCount = count($sheetData);
+        for ($rowNum = $headerRow + 1; $rowNum < $rowCount; $rowNum++) {
             $row = $sheetData[$rowNum];
+            if (empty($row[$colNumbers['Email']])) {
+                continue;
+            }
+
             $email = trim($row[$colNumbers['Email']]);
             $fName = trim($row[$colNumbers['First Name']]);
             $lName = trim($row[$colNumbers['Last Name']]);
@@ -187,7 +191,6 @@ class SurveysController extends AppController
                 'email' => $email,
                 'title' => $fullTitle
             ];
-            $rowNum++;
         }
 
         if (empty($data)) {
