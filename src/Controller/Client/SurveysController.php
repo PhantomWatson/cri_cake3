@@ -177,10 +177,15 @@ class SurveysController extends AppController
             $lName = trim($row[$colNumbers['Last Name']]);
             $title = trim($row[$colNumbers['Title']]);
             $organization = trim($row[$colNumbers['Entity']]);
+            if ($title && $organization) {
+                $fullTitle = "$title, $organization";
+            } else {
+                $fullTitle = $title.$organization;
+            }
             $data[] = [
                 'name' => trim("$fName $lName"),
                 'email' => $email,
-                'title' => "$title, $organization"
+                'title' => $fullTitle
             ];
             $rowNum++;
         }
