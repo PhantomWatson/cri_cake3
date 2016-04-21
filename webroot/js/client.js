@@ -5,12 +5,16 @@ var surveyInvitationForm = {
     cookieKey: 'invitationFormData',
     cookieExpiration: 365, // in days
     rowLimit: 20,
+    surveyId: null,
     
     init: function (params) {
         this.counter = params.counter;
         this.already_invited = params.already_invited;
         this.uninvited_respondents = params.uninvited_respondents;
+        this.surveyId = params.surveyId;
+        
         this.addRow(false);
+        
         $('#add_another').click(function (event) {
             event.preventDefault();
             surveyInvitationForm.addRow(true);
@@ -48,9 +52,96 @@ var surveyInvitationForm = {
             }
         });
         
+        // Set up form protection
         formProtector.protect('UserClientInviteForm', {
             ignore: ['spreadsheet-upload-input']
         });
+        
+        // Set up spreadsheet uploading
+        $('#toggle-upload').click(function (event) {
+            event.preventDefault();
+            $('#upload-container').slideToggle(300);
+        });
+        $('#spreadsheet-upload').fileupload({
+            dataType: 'json',
+            url: '/client/surveys/upload-invitation-spreadsheet/'+this.surveyId,
+            add: function (e, data) {
+                $('#upload-progress').slideDown(200);
+                var loadingIndicator = $('<img src="/data_center/img/loading_small.gif" alt="(loading...)" />');
+                $('#toggle-upload').prepend(loadingIndicator).addClass('disabled');
+                var resultContainer = $('#upload-result');
+                if (resultContainer.is(':visible')) {
+                    resultContainer.slideUp(300);
+                }
+                data.submit();
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#upload-progress .progress-bar')
+                    .css('width', progress + '%')
+                    .html(progress + '%');
+            },
+            done: function (e, data) {
+                surveyInvitationForm.uploadDone();
+                var invitees = data.result.data;
+                if (invitees.length === 0) {
+                    surveyInvitationForm.displayUploadResult('No invitation information found in spreadsheet', 'alert alert-danger');
+                } else {
+                    surveyInvitationForm.insertSpreadsheetData(data.result.data);
+                    var message = data.result.message;
+                    surveyInvitationForm.displayUploadResult(message, 'alert alert-success');
+                }
+                console.log(data.result);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                surveyInvitationForm.uploadDone();
+                var message = '';
+                try {
+                    var response = JSON.parse(jqXHR.responseText);
+                    message = response.message;
+                } catch(error) {
+                    message = 'There was an error reading that spreadsheet.';
+                }
+                surveyInvitationForm.displayUploadResult(message, 'alert alert-danger');
+            }
+        });
+    },
+    
+    insertSpreadsheetData: function (data) {
+        for (var i = 0; i < data.length; i++) {
+            var invitee = data[i];
+            if (! invitee.hasOwnProperty('name') || ! invitee.hasOwnProperty('email') || ! invitee.hasOwnProperty('title')) {
+                continue;
+            }
+            if (! this.lastRowIsBlank()) {
+                this.addRow();
+            }
+            var row = $('#UserClientInviteForm tbody.input tr:last-child');
+            row.find('input[name*="[name]"]').val(invitee.name);
+            row.find('input[name*="[email]"]').val(invitee.email);
+            row.find('input[name*="[title]"]').val(invitee.title);
+        }
+    },
+    
+    uploadDone: function () {
+        $('#upload-progress').slideUp(200);
+        var uploadToggle = $('#toggle-upload');
+        uploadToggle.removeClass('disabled');
+        uploadToggle.find('img').remove();
+    },
+    
+    displayUploadResult: function (msg, className) {
+        var container = $('#upload-result');
+        var showMsg = function () {
+            container.attr('class', className);
+            container.html(msg);
+            container.slideDown(300);
+        };
+        if (container.is(':visible')) {
+            container.slideUp(300, showMsg);
+        } else {
+            showMsg();
+        }
     },
     
     addRow: function () {

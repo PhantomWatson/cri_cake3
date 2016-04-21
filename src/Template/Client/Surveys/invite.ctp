@@ -222,6 +222,7 @@
                             0%
                         </div>
                     </div>
+                    <p id="upload-result"></p>
                 </div>
             </td>
         </tr>
@@ -270,35 +271,8 @@
         counter: 1,
         already_invited: <?= json_encode(array_values($approvedRespondents)); ?>,
         uninvited_respondents: <?= json_encode(array_values($unaddressedUnapprovedRespondents)) ?>,
+        surveyId: <?= $surveyId ?>
     });
-    $('#spreadsheet-upload').fileupload({
-        dataType: 'json',
-        url: '/client/surveys/upload-invitation-spreadsheet/<?= $surveyId ?>',
-        add: function (e, data) {
-            $('#upload-progress').slideDown(200);
-            var loadingIndicator = $('<img src="/data_center/img/loading_small.gif" alt="(loading...)" />');
-            $('#toggle-upload').prepend(loadingIndicator).addClass('disabled');
-            data.submit();
-        },
-        progressall: function (e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#upload-progress .progress-bar')
-                .css('width', progress + '%')
-                .html(progress + '%');
-        },
-        done: function (e, data) {
-            $('#upload-progress').slideUp(200);
-            var uploadToggle = $('#toggle-upload');
-            uploadToggle.removeClass('disabled');
-            uploadToggle.find('img').remove();
-            console.log(data.result);
-        }
-    });
-    $('#toggle-upload').click(function (event) {
-        event.preventDefault();
-        $('#upload-container').slideToggle(300);
-    });
-
 <?php $this->end(); ?>
 
 <?php if (isset($_GET['debugcookie'])): ?>
