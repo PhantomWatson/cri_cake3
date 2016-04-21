@@ -206,7 +206,7 @@
                     </a>
                     <a href="#" class="btn btn-default" id="toggle-upload">
                         <span class="glyphicon glyphicon-upload"></span>
-                        Upload spreadsheet
+                        Upload invitation spreadsheet
                     </a>
                 </p>
 
