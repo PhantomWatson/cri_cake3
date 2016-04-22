@@ -399,8 +399,8 @@ class CommunitiesTable extends Table
         ];
 
         $criteria[2]['response_threshhold_reached'] = [
-            'At least 50% of invited community leaders have responded to the survey',
-            $surveysTable->getInvitedResponsePercentage($surveyId) >= 50
+            'At least 25% of invited community leaders have responded to the survey',
+            $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
         ];
 
         if ($surveysTable->hasUninvitedResponses($surveyId)) {
