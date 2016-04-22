@@ -121,6 +121,11 @@ var surveyInvitationForm = {
             row.find('input[name*="[email]"]').val(invitee.email);
             row.find('input[name*="[title]"]').val(invitee.title);
         }
+        
+        // Make sure formProtector knows about these new fields
+        formProtector.protect('UserClientInviteForm', {
+            ignore: ['spreadsheet-upload-input']
+        });
     },
     
     uploadDone: function () {
