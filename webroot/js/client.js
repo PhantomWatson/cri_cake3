@@ -13,11 +13,11 @@ var surveyInvitationForm = {
         this.uninvited_respondents = params.uninvited_respondents;
         this.surveyId = params.surveyId;
         
-        this.addRow(false);
+        this.addRow();
         
         $('#add_another').click(function (event) {
             event.preventDefault();
-            surveyInvitationForm.addRow(true);
+            surveyInvitationForm.addRow();
         });
         $('#sent_invitations_toggler').click(function (event) {
             event.preventDefault();
