@@ -36,12 +36,12 @@
             );
         }
     ?>
-    <a href="#" id="sent_invitations_toggler" class="btn btn-default">
+    <button id="sent_invitations_toggler" class="btn btn-default">
         Who has already been invited?
-    </a>
-    <a href="#" id="suggestions_toggler" class="btn btn-default">
+    </button>
+    <button id="suggestions_toggler" class="btn btn-default">
         Suggestions of who to invite
-    </a>
+    </button>
 </p>
 
 <div id="sent_invitations" class="well">
@@ -200,14 +200,14 @@
             <tr>
                 <td colspan="4">
                     <p>
-                        <a href="#" class="btn btn-default" id="add_another">
+                        <button class="btn btn-default" id="add_another">
                             <span class="glyphicon glyphicon-plus"></span>
                             Add another row
-                        </a>
-                        <a href="#" class="btn btn-default" id="toggle-upload">
+                        </button>
+                        <button class="btn btn-default" id="toggle-upload">
                             <span class="glyphicon glyphicon-upload"></span>
                             Upload invitation spreadsheet
-                        </a>
+                        </button>
                         <button id="show-spreadsheet-modal" class="btn btn-link" data-toggle="modal" data-target="#spreadsheet-modal">
                             <span class="glyphicon glyphicon-question-sign" title="Learn more about using an invitation spreadsheet" aria-hidden="true"></span>
                             <span class="sr-only">
@@ -273,12 +273,12 @@
         If you click <strong>Save for later</strong>, the information you have entered will be stored in your browser.
         After saving, you can navigate to another page and then return to this one later in order to send out your saved invitations.
     </p>
-    <a href="#" class="btn btn-default" id="save">
+    <button class="btn btn-default" id="save">
         Save for later
-    </a>
-    <a href="#" class="btn btn-default" id="load">
+    </button>
+    <button class="btn btn-default" id="load">
         Load saved data
-    </a>
+    </button>
     <span id="survey-invitation-save-status"></span>
 </div>
 
