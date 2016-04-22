@@ -208,6 +208,12 @@
                         <span class="glyphicon glyphicon-upload"></span>
                         Upload invitation spreadsheet
                     </a>
+                    <button id="show-spreadsheet-modal" class="btn btn-link" data-toggle="modal" data-target="#spreadsheet-modal">
+                        <span class="glyphicon glyphicon-question-sign" title="Learn more about using an invitation spreadsheet" aria-hidden="true"></span>
+                        <span class="sr-only">
+                            Learn more about using an invitation spreadsheet
+                        </span>
+                    </button>
                 </p>
 
                 <div id="upload-container">
@@ -229,6 +235,38 @@
     </tfoot>
 </table>
 </div>
+
+<?php $this->append('top-html'); ?>
+    <div class="modal fade" id="spreadsheet-modal" tabindex="-1" role="dialog" aria-labelledby="spreadsheet-modalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="spreadsheet-modalLabel">
+                        Using an Invitation Spreadsheet
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    If you prefer, you could
+                    <a href="/files/Community Leadership Alignment Assessment invitations.xlsx" class="download">
+                        download a spreadsheet (.xlsx)
+                    </a>
+                    and fill in the names and email addresses of the community officials
+                    that you would like to send survey invitations to. If you then upload the
+                    completed spreadsheet, this form will automatically be filled out and
+                    ready for you to submit.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php $this->end(); ?>
 
 <div class="well">
     <p>
