@@ -171,7 +171,7 @@ class SurveysController extends AppController
         if (empty($errorMsgs)) {
             $message = $importedCount ? $importedCount.__n(' response', ' responses', $importedCount).' imported' : 'No new responses to import';
         } else {
-            $message = $importedCount ? $importedCount.__n(' response', ' responses', $importedCount).' imported' : '';
+            $message = $importedCount ? $importedCount.__n(' response', ' responses', $importedCount).' imported<br />' : '';
             $message .= 'Errors prevented the following '.__n('response', 'responses', count($errorMsgs)).' from being imported:';
             $message .= '<ul>';
             foreach ($errorMsgs as $errorMsg) {
