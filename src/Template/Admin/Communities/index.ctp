@@ -168,34 +168,112 @@
 
                     <?php foreach (['official_survey', 'organization_survey'] as $surveyType): ?>
                         <td>
-                            <?php if (isset($community->{$surveyType}['sm_id']) && $community->{$surveyType}['sm_id']): ?>
-                                <?php if ($community->{$surveyType}['alignment'] === null): ?>
-                                    Alignment: Not set
-                                <?php else: ?>
-                                    Alignment: <?php echo $community->{$surveyType}['alignment']; ?>%
-                                    <?php if ($community->{$surveyType}['alignment_passed'] == -1): ?>
-                                        <span class="glyphicon glyphicon-remove-sign" aria-hidden="true" title="Failed to pass"></span>
-                                    <?php elseif ($community->{$surveyType}['alignment_passed'] == 1): ?>
-                                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" title="Passed"></span>
-                                    <?php endif; ?>
-                                <?php endif; ?>
+                            <div class="dropdown">
+                                <?php if (isset($community->{$surveyType}['sm_id']) && $community->{$surveyType}['sm_id']): ?>
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        Running <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li class="dropdown-header">
+                                            <?php if ($community->{$surveyType}['alignment'] === null): ?>
+                                                Alignment: Not set
+                                            <?php else: ?>
+                                                Alignment: <?php echo $community->{$surveyType}['alignment']; ?>%
+                                                <?php if ($community->{$surveyType}['alignment_passed'] == -1): ?>
+                                                    <span class="glyphicon glyphicon-remove-sign" aria-hidden="true" title="Failed to pass"></span>
+                                                <?php elseif ($community->{$surveyType}['alignment_passed'] == 1): ?>
+                                                    <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" title="Passed"></span>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        </li>
 
-                                <?php if ($community->{$surveyType}['respondents_last_modified_date']): ?>
-                                    <br /> Last response:
-                                    <?= $community->{$surveyType}['respondents_last_modified_date']->format('n/j/Y') ?>
+                                        <?php if ($community->{$surveyType}['respondents_last_modified_date']): ?>
+                                            <li class="dropdown-header">
+                                                Last response:
+                                                <?= $community->{$surveyType}['respondents_last_modified_date']->format('n/j/Y') ?>
+                                            </li>
+                                        <?php endif; ?>
+
+                                        <li role="separator" class="divider"></li>
+
+                                        <li>
+                                            <?= $this->Html->link(
+                                                'Overview',
+                                                [
+                                                    'prefix' => 'admin',
+                                                    'controller' => 'Surveys',
+                                                    'action' => $community->{$surveyType}['sm_id'] ? 'view' : 'link',
+                                                    $community->id,
+                                                    str_replace('_survey', '', $surveyType)
+                                                ]
+                                            ) ?>
+                                        </li>
+                                        <li>
+                                            <?= $this->Html->link(
+                                                'Survey link',
+                                                [
+                                                    'prefix' => 'admin',
+                                                    'controller' => 'Surveys',
+                                                    'action' => 'link',
+                                                    $community->id,
+                                                    str_replace('_survey', '', $surveyType)
+                                                ]
+                                            ) ?>
+                                        </li>
+                                        <li>
+                                            <?= $this->Html->link(
+                                                'Invitations',
+                                                [
+                                                    'prefix' => 'admin',
+                                                    'controller' => 'Surveys',
+                                                    'action' => 'invite',
+                                                    $community->{$surveyType}['id']
+                                                ]
+                                            ) ?>
+                                        </li>
+                                        <li>
+                                            <?= $this->Html->link(
+                                                'Reminders',
+                                                [
+                                                    'prefix' => 'admin',
+                                                    'controller' => 'Surveys',
+                                                    'action' => 'remind',
+                                                    $community->{$surveyType}['id']
+                                                ]
+                                            ) ?>
+                                        </li>
+                                        <li>
+                                            <?= $this->Html->link(
+                                                'Alignment',
+                                                [
+                                                    'prefix' => 'admin',
+                                                    'controller' => 'Responses',
+                                                    'action' => 'view',
+                                                    $community->{$surveyType}['id']
+                                                ]
+                                            ) ?>
+                                        </li>
+                                    </ul>
+                                <?php else: ?>
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        Not set up <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <?= $this->Html->link(
+                                                'Link to SurveyMonkey survey',
+                                                [
+                                                    'prefix' => 'admin',
+                                                    'controller' => 'Surveys',
+                                                    'action' => 'link',
+                                                    $community->id,
+                                                    str_replace('_survey', '', $surveyType)
+                                                ]
+                                            ) ?>
+                                        </li>
+                                    </ul>
                                 <?php endif; ?>
-                            <?php else: ?>
-                                <?= $this->Html->link(
-                                    'Not linked',
-                                    [
-                                        'prefix' => 'admin',
-                                        'controller' => 'Surveys',
-                                        'action' => 'link',
-                                        $community->id,
-                                        str_replace('_survey', '', $surveyType)
-                                    ]
-                                ) ?>
-                            <?php endif; ?>
+                            </div>
                         </td>
                     <?php endforeach; ?>
 
@@ -237,21 +315,6 @@
                                         ) ?>
                                     </li>
                                 <?php endif; ?>
-
-                                <?php foreach (['official_survey', 'organization_survey'] as $surveyType): ?>
-                                    <li>
-                                        <?= $this->Html->link(
-                                            ucwords(str_replace('_', 's ', $surveyType)),
-                                            [
-                                                'prefix' => 'admin',
-                                                'controller' => 'Surveys',
-                                                'action' => $community->{$surveyType}['sm_id'] ? 'view' : 'link',
-                                                $community->id,
-                                                str_replace('_survey', '', $surveyType)
-                                            ]
-                                        ) ?>
-                                    </li>
-                                <?php endforeach; ?>
 
                                 <li>
                                     <?= $this->Html->link(
