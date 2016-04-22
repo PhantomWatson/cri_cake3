@@ -128,112 +128,112 @@
 ?>
 
 <div class="well">
-<table>
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Email
-            </th>
-            <th>
-                Professional Title
-            </th>
-        </tr>
-    </thead>
-    <tbody class="template" style="display: none;">
-        <tr id="invitation_fields_template">
-            <?php
-                echo $this->Form->input(
-                    'template.name',
-                    [
-                        'class' => 'form-control',
-                        'disabled' => true,
-                        'div' => [
-                            'class' => 'form-group'
-                        ],
-                        'label' => false,
-                        'name' => 'invitees[0][name]',
-                        'placeholder' => 'Name',
-                        'required' => true,
-                        'type' => 'text'
-                    ]
-                );
-                echo $this->Form->input(
-                    'template.email',
-                    [
-                        'class' => 'form-control',
-                        'disabled' => true,
-                        'div' => [
-                            'class' => 'form-group'
-                        ],
-                        'label' => false,
-                        'name' => 'invitees[0][email]',
-                        'placeholder' => 'Email',
-                        'required' => true,
-                        'type' => 'email'
-                    ]
-                );
-                echo $this->Form->input(
-                    'template.title',
-                    [
-                        'class' => 'form-control',
-                        'disabled' => true,
-                        'div' => [
-                            'class' => 'form-group'
-                        ],
-                        'label' => false,
-                        'name' => 'invitees[0][title]',
-                        'placeholder' => 'Professional Title',
-                        'required' => true
-                    ]
-                );
-            ?>
-            <td>
-                <button type="button" class="remove btn btn-danger pull-right">Remove</button>
-            </td>
-        </tr>
-    </tbody>
-    <tbody class="input"></tbody>
-    <tfoot>
-        <tr>
-            <td colspan="4">
-                <p>
-                    <a href="#" class="btn btn-default" id="add_another">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        Add another row
-                    </a>
-                    <a href="#" class="btn btn-default" id="toggle-upload">
-                        <span class="glyphicon glyphicon-upload"></span>
-                        Upload invitation spreadsheet
-                    </a>
-                    <button id="show-spreadsheet-modal" class="btn btn-link" data-toggle="modal" data-target="#spreadsheet-modal">
-                        <span class="glyphicon glyphicon-question-sign" title="Learn more about using an invitation spreadsheet" aria-hidden="true"></span>
-                        <span class="sr-only">
-                            Learn more about using an invitation spreadsheet
-                        </span>
-                    </button>
-                </p>
-
-                <div id="upload-container">
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Professional Title
+                </th>
+            </tr>
+        </thead>
+        <tbody class="template" style="display: none;">
+            <tr id="invitation_fields_template">
+                <?php
+                    echo $this->Form->input(
+                        'template.name',
+                        [
+                            'class' => 'form-control',
+                            'disabled' => true,
+                            'div' => [
+                                'class' => 'form-group'
+                            ],
+                            'label' => false,
+                            'name' => 'invitees[0][name]',
+                            'placeholder' => 'Name',
+                            'required' => true,
+                            'type' => 'text'
+                        ]
+                    );
+                    echo $this->Form->input(
+                        'template.email',
+                        [
+                            'class' => 'form-control',
+                            'disabled' => true,
+                            'div' => [
+                                'class' => 'form-group'
+                            ],
+                            'label' => false,
+                            'name' => 'invitees[0][email]',
+                            'placeholder' => 'Email',
+                            'required' => true,
+                            'type' => 'email'
+                        ]
+                    );
+                    echo $this->Form->input(
+                        'template.title',
+                        [
+                            'class' => 'form-control',
+                            'disabled' => true,
+                            'div' => [
+                                'class' => 'form-group'
+                            ],
+                            'label' => false,
+                            'name' => 'invitees[0][title]',
+                            'placeholder' => 'Professional Title',
+                            'required' => true
+                        ]
+                    );
+                ?>
+                <td>
+                    <button type="button" class="remove btn btn-danger pull-right">Remove</button>
+                </td>
+            </tr>
+        </tbody>
+        <tbody class="input"></tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4">
                     <p>
-                        Select an invitation spreadsheet to upload:
-                        <span id="spreadsheet-upload">
-                            <input type="file" id="spreadsheet-upload-input" name="files[]" accept=".xlsx" />
-                        </span>
+                        <a href="#" class="btn btn-default" id="add_another">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Add another row
+                        </a>
+                        <a href="#" class="btn btn-default" id="toggle-upload">
+                            <span class="glyphicon glyphicon-upload"></span>
+                            Upload invitation spreadsheet
+                        </a>
+                        <button id="show-spreadsheet-modal" class="btn btn-link" data-toggle="modal" data-target="#spreadsheet-modal">
+                            <span class="glyphicon glyphicon-question-sign" title="Learn more about using an invitation spreadsheet" aria-hidden="true"></span>
+                            <span class="sr-only">
+                                Learn more about using an invitation spreadsheet
+                            </span>
+                        </button>
                     </p>
-                    <div class="progress" id="upload-progress">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-                            0%
+
+                    <div id="upload-container">
+                        <p>
+                            Select an invitation spreadsheet to upload:
+                            <span id="spreadsheet-upload">
+                                <input type="file" id="spreadsheet-upload-input" name="files[]" accept=".xlsx" />
+                            </span>
+                        </p>
+                        <div class="progress" id="upload-progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                                0%
+                            </div>
                         </div>
+                        <p id="upload-result"></p>
                     </div>
-                    <p id="upload-result"></p>
-                </div>
-            </td>
-        </tr>
-    </tfoot>
-</table>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 </div>
 
 <?php $this->append('top-html'); ?>
