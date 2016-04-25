@@ -62,22 +62,6 @@
                         Fast track
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> :
-                    </td>
-                    <td>
-                        Community has passed its alignment test
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span> :
-                    </td>
-                    <td>
-                        Community has failed its alignment test
-                    </td>
-                </tr>
             </tbody>
         </table>
     </div>
