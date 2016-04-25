@@ -200,59 +200,64 @@
 
                                         <li>
                                             <?= $this->Html->link(
-                                                'Overview',
+                                                '<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Overview',
                                                 [
                                                     'prefix' => 'admin',
                                                     'controller' => 'Surveys',
                                                     'action' => $community->{$surveyType}['sm_id'] ? 'view' : 'link',
                                                     $community->id,
                                                     str_replace('_survey', '', $surveyType)
-                                                ]
+                                                ],
+                                                ['escape' => false]
                                             ) ?>
                                         </li>
                                         <li>
                                             <?= $this->Html->link(
-                                                'Survey link',
+                                                '<span class="glyphicon glyphicon-link" aria-hidden="true"></span> Survey link',
                                                 [
                                                     'prefix' => 'admin',
                                                     'controller' => 'Surveys',
                                                     'action' => 'link',
                                                     $community->id,
                                                     str_replace('_survey', '', $surveyType)
-                                                ]
+                                                ],
+                                                ['escape' => false]
                                             ) ?>
                                         </li>
                                         <li>
                                             <?= $this->Html->link(
-                                                'Invitations',
+                                                '<span class="glyphicon glyphicon-send" aria-hidden="true"></span> Invitations',
                                                 [
                                                     'prefix' => 'admin',
                                                     'controller' => 'Surveys',
                                                     'action' => 'invite',
                                                     $community->{$surveyType}['id']
-                                                ]
+                                                ],
+                                                ['escape' => false]
                                             ) ?>
                                         </li>
                                         <li>
                                             <?= $this->Html->link(
-                                                'Reminders',
+                                                '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Reminders',
                                                 [
                                                     'prefix' => 'admin',
                                                     'controller' => 'Surveys',
                                                     'action' => 'remind',
                                                     $community->{$surveyType}['id']
-                                                ]
+                                                ],
+                                                ['escape' => false]
                                             ) ?>
                                         </li>
                                         <li>
                                             <?= $this->Html->link(
-                                                'Alignment',
+                                                '<span class="glyphicon glyphicon-scale" aria-hidden="true"></span> Alignment',
                                                 [
                                                     'prefix' => 'admin',
                                                     'controller' => 'Responses',
                                                     'action' => 'view',
                                                     $community->{$surveyType}['id']
-                                                ]
+                                                ],
+                                                ['escape' => false]
                                             ) ?>
                                         </li>
                                     </ul>
@@ -263,14 +268,15 @@
                                     <ul class="dropdown-menu" role="menu">
                                         <li>
                                             <?= $this->Html->link(
-                                                'Link to SurveyMonkey survey',
+                                                '<span class="glyphicon glyphicon-link" aria-hidden="true"></span> Link to SurveyMonkey survey',
                                                 [
                                                     'prefix' => 'admin',
                                                     'controller' => 'Surveys',
                                                     'action' => 'link',
                                                     $community->id,
                                                     str_replace('_survey', '', $surveyType)
-                                                ]
+                                                ],
+                                                ['escape' => false]
                                             ) ?>
                                         </li>
                                     </ul>
@@ -279,74 +285,82 @@
                         </td>
                     <?php endforeach; ?>
 
-                    <td class="actions btn-group">
-                        <div class="btn-group">
+                    <td class="actions">
+                        <div class="dropdown">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 Actions <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
                                 <li>
                                     <?= $this->Html->link(
-                                        'Progress',
+                                        '<span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> Progress',
                                         [
                                             'prefix' => 'admin',
                                             'action' => 'progress',
                                             $community->id
-                                        ]
+                                        ],
+                                        ['escape' => false]
                                     ) ?>
                                 </li>
                                 <li>
                                     <?= $this->Html->link(
-                                        'Clients ('.count($community->clients).')',
+                                        '<span class="glyphicon glyphicon-user" aria-hidden="true"></span> Clients ('.count($community->clients).')',
                                         [
                                             'prefix' => 'admin',
                                             'action' => 'clients',
                                             $community->id
-                                        ]
+                                        ],
+                                        ['escape' => false]
                                     ) ?>
                                 </li>
                                 <?php if (! empty($community->clients)): ?>
                                     <li>
                                         <?= $this->Html->link(
-                                            'Client Home',
+                                            '<span class="glyphicon glyphicon-home" aria-hidden="true"></span> Client Home',
                                             [
                                                 'prefix' => 'admin',
                                                 'action' => 'clienthome',
                                                 $community->id
-                                            ]
+                                            ],
+                                            ['escape' => false]
                                         ) ?>
                                     </li>
                                 <?php endif; ?>
 
                                 <li>
                                     <?= $this->Html->link(
-                                        'Performance Charts',
+                                        '<span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Performance Charts',
                                         [
                                             'prefix' => false,
                                             'action' => 'view',
                                             $community->id
-                                        ]
+                                        ],
+                                        ['escape' => false]
                                     ) ?>
                                 </li>
                                 <li>
                                     <?= $this->Html->link(
-                                        'Edit Community',
+                                        '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit Community',
                                         [
                                             'prefix' => 'admin',
                                             'action' => 'edit',
                                             $community->id
-                                        ]
+                                        ],
+                                        ['escape' => false]
                                     ) ?>
                                 </li>
                                 <li>
                                     <?= $this->Form->postLink(
-                                        'Delete Community',
+                                        '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete Community',
                                         [
                                             'prefix' => 'admin',
                                             'action' => 'delete',
                                             $community->id
                                         ],
-                                        ['confirm' => "Are you sure you want to delete {$community->name}? This cannot be undone."]
+                                        [
+                                            'confirm' => "Are you sure you want to delete {$community->name}? This cannot be undone.",
+                                            'escape' => false
+                                        ]
                                     ); ?>
                                 </li>
                             </ul>
