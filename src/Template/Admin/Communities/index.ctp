@@ -82,10 +82,12 @@
         </table>
     </div>
 
-    <form class="form-inline" role="form" style="display: none;" id="admin_community_search_form">
+    <div style="display: none;" class="input-group" id="admin_community_search_form">
+        <div class="input-group-addon">
+            <span class="glyphicon glyphicon-search"></span>
+        </div>
         <input type="text" name="search" class="form-control" placeholder="Enter community name" />
-        <button type="submit" class="btn btn-default">Search</button>
-    </form>
+    </div>
 
     <?php if (isset($this->request->query['search'])): ?>
         <p class="alert alert-info" id="search_term">
@@ -104,7 +106,7 @@
 
     <?= $this->element('pagination') ?>
 
-    <table class="table">
+    <table class="table communities">
         <thead>
             <tr>
                 <?php
@@ -151,7 +153,7 @@
             <?php endif; ?>
 
             <?php foreach ($communities as $community): ?>
-                <tr>
+                <tr data-community-name="<?= $community->name ?>">
                     <td>
                         <?= $community->name ?>
                         <br />

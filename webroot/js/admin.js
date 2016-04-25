@@ -275,35 +275,37 @@ var adminCommunitiesIndex = {
 			event.preventDefault();
 			var form = $('#admin_community_search_form');
 			if (form.is(':visible')) {
-				form.slideUp();
+				form.slideUp(200);
 			} else {
-				form.slideDown();
+				form.slideDown(200);
 				form.children('input').focus();
 			}
 		});
-		$('#admin_community_search_form input[type="text"]').autocomplete({
-			source: '/communities/autocomplete',
-			minLength: 2,
-			select: function (event, ui) {
-				$('#admin_community_search_form input[type="text"]').val(ui.item.label);
-				var loading_indicator = ' <img src="/data_center/img/loading_small.gif" class="loading" />';
-				$('#admin_community_search_form button').append(loading_indicator).addClass('disabled');
-				$('#admin_community_search_form').submit();
-			},
-			search: function (event, ui) {
-			    if ($('#admin_community_search_form .loading').length === 0) {
-			        var loading_indicator = '<img src="/data_center/img/loading_small.gif" class="loading" alt="loading" />';
-	                $('#admin_community_search_form button').after(loading_indicator);
-			    }
-			},
-			response: function (event, ui) {
-				$('#admin_community_search_form .loading').remove();
-			}
+		$('#admin_community_search_form input[type="text"]').bind("change paste keyup", function() {
+		    var matching = $(this).val();
+		    adminCommunitiesIndex.filter(matching);
 		});
 		$('#glossary_toggler').click(function (event) {
 			event.preventDefault();
 			$('#glossary').slideToggle();
 		});
+	},
+	
+	filter: function (matching) {
+	    if (matching === '') {
+	        $('table.communities tbody tr').show();
+	        return;
+	    }
+	    $('table.communities tbody tr').each(function () {
+	        var row = $(this);
+	        var communityName = row.data('community-name').toLowerCase();
+	        matching = matching.toLowerCase();
+	        if (communityName.search(matching) == -1) {
+	            row.hide();
+	        } else {
+	            row.show();
+	        }
+	    });
 	}
 };
 
