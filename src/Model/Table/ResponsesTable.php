@@ -110,6 +110,7 @@ class ResponsesTable extends Table
     /**
      * Returns the number of invited respondents who have any responses
      * (not the number of distinct responses including repeats)
+     *
      * @param int $surveyId
      * @return int
      */
@@ -126,6 +127,7 @@ class ResponsesTable extends Table
 
     /**
      * Retrieves SurveyMonkey responses for the specified respondents
+     *
      * @param array $surveyId
      * @param array $smRespondentIds
      * @return array [success / fail, responses / error message]
@@ -229,6 +231,7 @@ class ResponsesTable extends Table
 
     /**
      * Returns TRUE if any responses have been collected, FALSE otherwise
+     *
      * @param int $surveyId
      * @return bool
      */
@@ -242,6 +245,7 @@ class ResponsesTable extends Table
 
     /**
      * Returns a count of responses for unique respondents (not counting repeats)
+     *
      * @param int $surveyId
      * @return int
      */
@@ -256,6 +260,7 @@ class ResponsesTable extends Table
 
     /**
      * Returns calculated alignment for an individual response
+     *
      * @param array|null $actualRanks ['sector_name' => rank, ...]
      * @param array $responseRanks ['sector_name' => rank, ...]
      * @return int|null
@@ -332,7 +337,9 @@ class ResponsesTable extends Table
     }
 
     /**
-     * Returns [$sector, $rank] (both strings) of the sector that an answer is about and the rank the respondent gave to it.
+     * Returns [$sector, $rank] (both strings) of the sector that an
+     * answer is about and the rank the respondent gave to it.
+     *
      * @param array $answer
      * @param Entity $survey The result of a call to SurveysTable::get()
      * @return array [$sector, $rank]
@@ -366,6 +373,7 @@ class ResponsesTable extends Table
     /**
      * Returns all current (not overridden by more recent)
      * approved responses for the selected survey.
+     *
      * @param int $surveyId
      * @return \Cake\ORM\Query
      */
