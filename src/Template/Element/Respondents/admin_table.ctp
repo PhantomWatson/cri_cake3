@@ -39,6 +39,7 @@
             </thead>
             <thead>
                 <tr>
+                    <th></th>
                     <th>
                         Date
                     </th>
@@ -64,7 +65,7 @@
             <tbody>
                 <?php foreach ($responses as $response): ?>
                     <tr class="respondent">
-                        <td colspan="10">
+                        <td colspan="11">
                             <span class="glyphicon glyphicon-arrow-down"></span>
                             <?php
                                 $name = $response['respondent']['name'];
@@ -78,6 +79,12 @@
                         </td>
                     </tr>
                     <tr class="response" data-alignment="<?= $response[$alignmentField] ?>">
+                        <td>
+                            <button class="full-response-button btn btn-default" data-respondent-id="<?= $response['respondent_id'] ?>">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </td>
+
                         <td class="date">
                             <?php
                                 $timestamp = strtotime($response['response_date']);
@@ -116,7 +123,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="2">
+                    <th colspan="3">
                         Average
                     </th>
                     <?php foreach ($sectors as $sector): ?>
@@ -124,12 +131,10 @@
                             <?= $averageRanks[$sector] ?>
                         </td>
                     <?php endforeach; ?>
-                    <td colspan="2">
-
-                    </td>
+                    <td colspan="2"></td>
                 </tr>
                 <tr>
-                    <th colspan="2">
+                    <th colspan="3">
                         Order
                     </th>
                     <?php foreach ($sectors as $sector): ?>
@@ -137,9 +142,7 @@
                             <?= $rankOrder[$sector] ?>
                         </td>
                     <?php endforeach; ?>
-                    <td colspan="2">
-
-                    </td>
+                    <td colspan="2"></td>
                 </tr>
             </tfoot>
         </table>

@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Response;
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -586,5 +587,66 @@ class ResponsesTable extends Table
         }
 
         return $alignmentPerSector;
+    }
+
+    /**
+     * Returns an array containing question => answer pairs for the
+     * most recent response for the specified respondent
+     *
+     * @param string $smSurveyId
+     * @param string $smRespondentId
+     * @return array
+     * @throws NotFoundException
+     */
+    public function getFullResponseFromSurveyMonkey($smSurveyId, $smRespondentId)
+    {
+        $SurveyMonkey = $this->getSurveyMonkeyObject();
+        $result = $SurveyMonkey->getResponses((string) $smSurveyId, [$smRespondentId]);
+        if (! $result['success'] || empty($result['data'])) {
+            throw new NotFoundException('Could not find a response for respondent #'.$smRespondentId);
+        }
+        $response = $result['data'];
+
+        // The SurveyMonkey API limits us to 2 API requests per second.
+        // For extra safety, we'll delay for one second before the next API call.
+        sleep(1);
+
+        $result = $SurveyMonkey->getSurveyDetails((string) $smSurveyId);
+        if (! $result['success'] || empty($result['data'])) {
+            throw new NotFoundException('Could not find survey data for survey #'.$smSurveyId);
+        }
+        $survey = $result['data'];
+
+        $questions = [];
+        $choices = [];
+        foreach ($survey['pages'] as $page) {
+            foreach ($page['questions'] as $q) {
+                $questions[$q['question_id']] = $q['heading'];
+                foreach ($q['answers'] as $a) {
+                    $choices[$a['answer_id']] = $a['text'];
+                }
+            }
+        }
+        $retval = [];
+        foreach ($response[0]['questions'] as $q) {
+            $questionLabel = $questions[$q['question_id']];
+            $answers = [];
+            foreach ($q['answers'] as $a) {
+                $answer = '';
+                if (isset($a['row']) && $a['row']) {
+                    $answer .= $choices[$a['row']].': ';
+                }
+                if (isset($a['col']) && $a['col']) {
+                    $answer .= $choices[$a['col']];
+                }
+                if (isset($a['text']) && $a['text']) {
+                    $answer .= $a['text'];
+                }
+                $answers[] = $answer;
+            }
+            $retval[$questionLabel] = $answers;
+        }
+
+        return $retval;
     }
 }

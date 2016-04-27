@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
 class ResponsesController extends AppController
@@ -11,6 +12,7 @@ class ResponsesController extends AppController
     {
         parent::initialize();
         $this->loadComponent('SurveyProcessing');
+        $this->loadComponent('RequestHandler');
     }
 
     public function view($surveyId = null)
@@ -187,5 +189,49 @@ class ResponsesController extends AppController
                 $this->Flash->success('Response #'.$response->id.' updated');
             }
         }
+    }
+
+    /**
+     * Returns a JSON object containing 'response', containing
+     * question => answer pairs for the most recent response
+     * for the specified respondent. Also retrieves and sets
+     * $respondent->sm_respondent_id if it was not already set
+     *
+     * @param int $respondentId
+     * @return \Cake\Network\Response
+     * @throws InternalErrorException
+     */
+    public function getFullResponse($respondentId)
+    {
+        $this->viewBuilder()->layout('json');
+        $respondentsTable = TableRegistry::get('Respondents');
+        $respondent = $respondentsTable->get($respondentId);
+
+        if ($respondent->sm_respondent_id) {
+            $smRespondentId = $respondent->sm_respondent_id;
+
+        // If sm_respondent_id is not set, retrieve it
+        } else {
+            $smRespondentId = $respondentsTable->getSmRespondentId($respondentId);
+
+            // The SurveyMonkey API limits us to 2 API requests per second.
+            // For extra safety, we'll delay for one second before the next API call.
+            sleep(1);
+
+            // And save it in this respondent's DB record
+            $respondent = $respondentsTable->patchEntity($respondent, [
+                'sm_respondent_id' => $smRespondentId
+            ]);
+            if ($respondent->errors()) {
+                throw new InternalErrorException('There was an error saving the respondent\'s sm_respondent_id ('.$smRespondentId.')');
+            }
+            $respondentsTable->save($respondent);
+        }
+
+        $surveysTable = TableRegistry::get('Surveys');
+        $survey = $surveysTable->get($respondent->survey_id);
+        $fullResponse = $this->Responses->getFullResponseFromSurveyMonkey($survey->sm_id, $smRespondentId);
+        $this->set('response', $fullResponse);
+        $this->set('_serialize', ['response']);
     }
 }

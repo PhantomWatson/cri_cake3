@@ -38,6 +38,10 @@
         survey. Incomplete responses are excluded, and recent responses may have not been imported yet.
     </p>
 
+    <p>
+        Click on <span class="glyphicon glyphicon-search"></span> to view <em>all</em> of the questions and answers for a response.
+    </p>
+
     <section>
         <h2>
             PWR<sup>3</sup> Alignment
@@ -194,6 +198,29 @@
         <?= $this->Form->end() ?>
     </section>
 </div>
+
+<?php $this->append('top-html'); ?>
+    <div class="modal fade" id="full-response-modal" tabindex="-1" role="dialog" aria-labelledby="full-response-modalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="full-response-modalLabel">
+                        Full Response
+                    </h4>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php $this->end(); ?>
 
 <?php $this->element('script', ['script' => 'admin']); ?>
 <?php $this->append('buffered'); ?>

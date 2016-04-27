@@ -225,6 +225,43 @@ var adminViewResponses = {
     		        link.data('mode', 'scrolling');
     		    }
     		});
+		$('.full-response-button').click(function (event) {
+		    var button = $(this);
+		    var respondentId = button.data('respondent-id');
+		    adminViewResponses.showFullResponse(respondentId);
+		});
+	},
+	showFullResponse: function (respondentId) {
+	    $.ajax({
+	        url: '/admin/responses/get-full-response/'+respondentId,
+	        dataType: 'json',
+	        beforeSend: function (xhr) {
+	            var modal = $('#full-response-modal');
+	            modal.find('.modal-body').html('Loading... <img src="/data_center/img/loading_small.gif" />');
+	            modal.modal();
+	        },
+	        success: function (data, textStatus, jqXHR) {
+	            var modal = $('#full-response-modal');
+                var modalBody = modal.find('.modal-body');
+                modalBody.html('');
+                var response = data.response;
+                for (var heading in response) {
+                    modalBody.append('<h3>'+heading+'</h3>');
+                    var answerList = $('<ul></ul>');
+                    var answers = response[heading];
+                    for (var i = 0; i < answers.length; i++) {
+                        answerList.append('<li>'+answers[i]+'</li>');
+                    }
+                    modalBody.append(answerList);
+                }
+	        },
+	        error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
+                $('#full-response-modal').html('<span class="text-danger">There was an error loading that response</span>');
+	        }
+	    });
 	},
 	updateAlignment: function (container) {
         var respondents = [];

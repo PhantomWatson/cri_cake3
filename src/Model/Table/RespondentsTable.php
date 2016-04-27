@@ -2,6 +2,8 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Respondent;
+use Cake\Network\Exception\InternalErrorException;
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -402,5 +404,56 @@ class RespondentsTable extends Table
                 }
             ])
             ->toArray();
+    }
+
+    /**
+     * Uses the SurveyMonkey API to determine the SurveyMonkey respondent
+     * id corresponding to a CRI respondent ID
+     *
+     * @param int $respondentId
+     * @return string
+     * @throws InternalErrorException
+     */
+    public function getSmRespondentId($respondentId)
+    {
+        $respondent = $this->find('all')
+            ->select(['email', 'survey_id'])
+            ->where(['id' => $respondentId])
+            ->first();
+        $email = $respondent->email;
+        $surveyId = $respondent->survey_id;
+
+        $responsesTable = TableRegistry::get('Responses');
+        $response = $responsesTable->find('all')
+            ->select(['response_date'])
+            ->where(['respondent_id' => $respondentId])
+            ->order(['response_date' => 'DESC'])
+            ->first();
+        $responseDate = $response->response_date->i18nFormat('yyyy-MM-dd HH:mm:ss');
+
+        $surveysTable = TableRegistry::get('Surveys');
+        $survey = $surveysTable->find('all')
+            ->select(['sm_id'])
+            ->where(['id' => $surveyId])
+            ->first();
+        $smSurveyId = $survey->sm_id;
+
+        $SurveyMonkey = $this->getSurveyMonkeyObject();
+        $result = $SurveyMonkey->getRespondentList((string) $smSurveyId, [
+            'start_modified_date' => $responseDate,
+            'fields' => ['email']
+        ]);
+        if (! $result['success']) {
+            $msg = 'Error retrieving response data from SurveyMonkey.';
+            $msg .= ' Details: '.print_r($result['message'], true);
+            throw new InternalErrorException($msg);
+        }
+
+        foreach ($result['data']['respondents'] as $returnedRespondent) {
+            if ($returnedRespondent['email'] == $email) {
+                return $returnedRespondent['respondent_id'];
+            }
+        }
+        throw new NotFoundException('SurveyMonkey didn\'t return any data about this respondent');
     }
 }
