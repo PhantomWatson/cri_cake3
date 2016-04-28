@@ -256,10 +256,14 @@ var adminViewResponses = {
                 }
 	        },
 	        error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR);
-                console.log(textStatus);
-                console.log(errorThrown);
-                $('#full-response-modal').html('<span class="text-danger">There was an error loading that response</span>');
+	            var response = $.parseJSON(jqXHR.responseText);
+	            var msg = '';
+	            if (response.hasOwnProperty('message')) {
+	                msg = response.message;
+	            } else {
+	                msg = 'There was an error loading that response';
+	            }
+                $('#full-response-modal .modal-body').html('<span class="text-danger">'+msg+'</span>');
 	        }
 	    });
 	},
