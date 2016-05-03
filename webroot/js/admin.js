@@ -203,7 +203,7 @@ var adminViewResponses = {
 			adminViewResponses.updateRespondentCount(container);
 			adminViewResponses.updateAlignment(container);
 		});
-		$('#show_respondents').click(function (event) {
+		$('#show-respondents').click(function (event) {
 		   event.preventDefault();
 		   $('tr.respondent').toggle();
 		});
@@ -218,7 +218,7 @@ var adminViewResponses = {
     		.click(function (event) {
     		    event.preventDefault();
     		    var link = $(this);
-    		    var containers = $('#admin_responses_view .tab-pane > .responses > div');
+    		    var containers = $('#admin-responses-view .tab-pane > .responses > div');
     		    if (link.data('mode') == 'scrolling') {
     		        containers.removeClass('scrollable_table');
     		        link.html(label.window);
