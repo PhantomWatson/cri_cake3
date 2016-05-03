@@ -203,17 +203,32 @@ var adminViewResponses = {
 			adminViewResponses.updateRespondentCount(container);
 			adminViewResponses.updateAlignment(container);
 		});
-		$('#show-respondents').click(function (event) {
-		   event.preventDefault();
-		   $('tr.respondent').toggle();
-		});
+		var showRespondentsLabel = {
+		    show: '<span class="glyphicon glyphicon-user"></span> Show respondent info',
+		    hide: '<span class="glyphicon glyphicon-user"></span> Hide respondent info'
+		};
+		$('#show-respondents')
+		    .html(showRespondentsLabel.show)
+		    .click(function (event) {
+    		    event.preventDefault();
+    		    var button = $(this);
+    		    if (button.data('label') == 'show') {
+    		        $('tr.respondent').show();
+    		        button.data('label', 'hide');
+    		        button.html(showRespondentsLabel.hide);
+    		    } else {
+    		        $('tr.respondent').hide();
+    		        button.data('label', 'show');
+    		        button.html(showRespondentsLabel.show);
+    		    }
+    		});
 		$('ul.nav-tabs li[role=presentation]').first().addClass('active');
-		var label = {
+		var toggleFullscreenLabel = {
 	        fullscreen: '<span class="glyphicon glyphicon-fullscreen"></span> <span class="text">Show fullscreen</span>',
 	        window: '<span class="glyphicon glyphicon-list-alt"></span> <span class="text">Show in window</span>'
 		};
 		$('#toggle-table-scroll')
-		    .html(label.fullscreen)
+		    .html(toggleFullscreenLabel.fullscreen)
 		    .data('mode', 'scrolling')
     		.click(function (event) {
     		    event.preventDefault();
@@ -221,11 +236,11 @@ var adminViewResponses = {
     		    var containers = $('#admin-responses-view .tab-pane > .responses > div');
     		    if (link.data('mode') == 'scrolling') {
     		        containers.removeClass('scrollable_table');
-    		        link.html(label.window);
+    		        link.html(toggleFullscreenLabel.window);
     		        link.data('mode', 'fullscreen');
     		    } else {
     		        containers.addClass('scrollable_table');
-    		        link.html(label.fullscreen);
+    		        link.html(toggleFullscreenLabel.fullscreen);
     		        link.data('mode', 'scrolling');
     		    }
     		});

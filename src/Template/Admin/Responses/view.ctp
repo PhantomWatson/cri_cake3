@@ -40,10 +40,7 @@
         <h2>
             PWR<sup>3</sup> Alignment
             <button class="btn btn-sm btn-default" id="toggle-table-scroll"></button>
-            <button class="btn btn-sm btn-default" id="show-respondents">
-                <span class="glyphicon glyphicon-user"></span>
-                Show respondent info
-            </button>
+            <button class="btn btn-sm btn-default" id="show-respondents" data-label="show"></button>
         </h2>
         <?php if (empty($responses)): ?>
             <p class="alert alert-info">
