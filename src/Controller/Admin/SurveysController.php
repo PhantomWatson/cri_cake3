@@ -16,29 +16,6 @@ class SurveysController extends AppController
         $this->loadComponent('SurveyProcessing');
     }
 
-    public function index()
-    {
-        $communitiesTable = TableRegistry::get('Communities');
-        $clientCommunities = $communitiesTable->getClientCommunityList();
-        $clientCommunityIds = array_keys($clientCommunities);
-        $this->paginate['Community'] = [
-            'conditions' => ['id' => $clientCommunityIds],
-            'contain' => [
-                'OfficialSurvey' => [
-                    'fields' => ['id']
-                ],
-                'OrganizationSurvey' => [
-                    'fields' => ['id']
-                ]
-            ],
-            'fields' => ['id', 'name', 'score']
-        ];
-        $this->set([
-            'titleForLayout' => 'Surveys',
-            'communities' => $this->paginate('Community')
-        ]);
-    }
-
     public function view($communityId = null, $surveyType = null)
     {
         if (! in_array($surveyType, ['official', 'organization'])) {
