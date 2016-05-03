@@ -208,8 +208,12 @@ var adminViewResponses = {
 		   $('tr.respondent').toggle();
 		});
 		$('ul.nav-tabs li[role=presentation]').first().addClass('active');
+		var label = {
+	        fullscreen: '<span class="glyphicon glyphicon-fullscreen"></span> <span class="text">Show fullscreen</span>',
+	        window: '<span class="glyphicon glyphicon-list-alt"></span> <span class="text">Show in window</span>'
+		};
 		$('#toggle-table-scroll')
-		    .html('Show responses fullscreen')
+		    .html(label.fullscreen)
 		    .data('mode', 'scrolling')
     		.click(function (event) {
     		    event.preventDefault();
@@ -217,11 +221,11 @@ var adminViewResponses = {
     		    var containers = $('#admin_responses_view .tab-pane > .responses > div');
     		    if (link.data('mode') == 'scrolling') {
     		        containers.removeClass('scrollable_table');
-    		        link.html('Show responses in window');
+    		        link.html(label.window);
     		        link.data('mode', 'fullscreen');
     		    } else {
     		        containers.addClass('scrollable_table');
-    		        link.html('Show responses fullscreen');
+    		        link.html(label.fullscreen);
     		        link.data('mode', 'scrolling');
     		    }
     		});

@@ -23,7 +23,6 @@
         <a href="#" class="btn btn-default" id="show_respondents">
             Show respondent info
         </a>
-        <a href="#" class="btn btn-default" id="toggle-table-scroll"></a>
     <?php endif; ?>
 </p>
 
@@ -45,6 +44,7 @@
     <section>
         <h2>
             PWR<sup>3</sup> Alignment
+            <button class="btn btn-link" id="toggle-table-scroll"></button>
         </h2>
         <?php if (empty($responses)): ?>
             <p class="alert alert-info">
