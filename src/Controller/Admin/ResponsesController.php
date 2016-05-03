@@ -203,7 +203,6 @@ class ResponsesController extends AppController
      */
     public function getFullResponse($respondentId)
     {
-        $this->viewBuilder()->layout('json');
         $respondentsTable = TableRegistry::get('Respondents');
         $respondent = $respondentsTable->get($respondentId);
 

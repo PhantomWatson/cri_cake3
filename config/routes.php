@@ -24,6 +24,8 @@ use Cake\Routing\Router;
 Router::defaultRouteClass('DashedRoute');
 
 Router::prefix('admin', function ($routes) {
+    $routes->extensions(['json']);
+
     $routes->connect('/guide',              ['controller' => 'Pages', 'action' => 'guide']);
     $routes->connect('/choose_client',      ['controller' => 'Users', 'action' => 'chooseClient']);
 
