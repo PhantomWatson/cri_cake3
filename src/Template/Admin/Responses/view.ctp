@@ -39,8 +39,9 @@
     <section>
         <h2>
             PWR<sup>3</sup> Alignment
-            <button class="btn btn-link" id="toggle-table-scroll"></button>
-            <button class="btn btn-default" id="show_respondents">
+            <button class="btn btn-sm btn-default" id="toggle-table-scroll"></button>
+            <button class="btn btn-sm btn-default" id="show_respondents">
+                <span class="glyphicon glyphicon-user"></span>
                 Show respondent info
             </button>
         </h2>
