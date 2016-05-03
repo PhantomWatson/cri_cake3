@@ -19,11 +19,6 @@
             'escape' => false
         ]
     ) ?>
-    <?php if (! empty($responses)): ?>
-        <a href="#" class="btn btn-default" id="show_respondents">
-            Show respondent info
-        </a>
-    <?php endif; ?>
 </p>
 
 <div id="admin_responses_view">
@@ -45,6 +40,9 @@
         <h2>
             PWR<sup>3</sup> Alignment
             <button class="btn btn-link" id="toggle-table-scroll"></button>
+            <button class="btn btn-default" id="show_respondents">
+                Show respondent info
+            </button>
         </h2>
         <?php if (empty($responses)): ?>
             <p class="alert alert-info">
