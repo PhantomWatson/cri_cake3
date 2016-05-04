@@ -126,9 +126,9 @@
                 <td>
                     <p>
                         <?= $criteria[2]['responses_received'][0] ?>
-                        <a href="#" class="importing_note_toggler">
+                        <button class="btn btn-link importing_note_toggler">
                             <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                        </a>
+                        </button>
                     </p>
                     <p class="importing_note" style="display: none;">
                         <?php if ($score < 3): ?>
@@ -148,9 +148,9 @@
                 </td>
                 <td>
                     <?php if ($leadershipSurveyCreated): ?>
-                        <a href="#" class="btn btn-default import_button" data-survey-id="<?= $officialSurveyId ?>">
+                        <button class="btn btn-default btn-block import_button" data-survey-id="<?= $officialSurveyId ?>">
                             Import Responses
-                        </a>
+                        </button>
                         <br />
                         <?php if ($criteria[2]['responses_received'][1]): ?>
                             <?= $this->Html->link(
@@ -334,9 +334,9 @@
                     <td>
                         <p>
                             <?= $criteria[3]['responses_received'][0] ?>
-                            <a href="#" class="importing_note_toggler">
+                            <button class="btn btn-link importing_note_toggler">
                                 <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                            </a>
+                            </button>
                         </p>
                         <p class="importing_note" style="display: none;">
                             <?php if ($score < 4): ?>
@@ -350,9 +350,9 @@
                     </td>
                     <td>
                         <?php if ($criteria[3]['survey_created'][1]): ?>
-                            <a href="#" class="btn btn-default import_button" data-survey-id="<?= $organizationSurveyId ?>">
+                            <button class="btn btn-default import_button" data-survey-id="<?= $organizationSurveyId ?>">
                                 Import Responses
-                            </a>
+                            </button>
                             <br />
                             <?php if ($criteria[3]['responses_received'][1]): ?>
                                 <?= $this->Html->link(

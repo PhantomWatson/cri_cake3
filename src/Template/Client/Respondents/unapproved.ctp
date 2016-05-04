@@ -125,11 +125,11 @@
 <?php if (! empty($respondents['dismissed'])): ?>
     <div id="dismissed_respondents">
         <h2>
-            <a href="#" id="toggle_dismissed">
+            <button id="toggle_dismissed" class="btn btn-default">
                 <?= count($respondents['dismissed']) ?>
                 Dismissed
                 <?= __n('Response', 'Responses', count($respondents['dismissed'])) ?>
-            </a>
+            </button>
         </h2>
 
         <div>

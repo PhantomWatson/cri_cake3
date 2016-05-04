@@ -133,9 +133,9 @@
 
 <?php if ($this->request->prefix == 'admin' && $this->request->action == 'edit'): ?>
     <div id="password-fields-button" class="form-group">
-        <a href="#">
+        <button class="btn btn-default">
             Change password
-        </a>
+        </button>
     </div>
     <div id="password-fields" style="display: none;">
         <?= $passwordFields ?>

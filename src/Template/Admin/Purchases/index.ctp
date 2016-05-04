@@ -74,9 +74,9 @@
                 </td>
                 <td>
                     <?php if ($purchase->refunded): ?>
-                        <a class="refunded btn btn-default btn-block" href="#">
+                        <button class="refunded btn btn-default btn-block">
                             Refunded
-                        </a>
+                        </button>
                     <?php else: ?>
                         <?= $this->Form->postLink(
                             'Refund',
@@ -94,9 +94,9 @@
                     <?php endif; ?>
                 </td>
                 <td>
-                    <a href="#" class="details btn btn-default btn-block">
+                    <button class="details btn btn-default btn-block">
                         Details
-                    </a>
+                    </button>
                 </td>
             </tr>
             <tr class="details">

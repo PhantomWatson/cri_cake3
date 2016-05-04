@@ -41,6 +41,11 @@ nav {
 	}
 }
 
+.btn {
+	font-family: inherit;
+}
+
+
 .community_data_section {
 	border-bottom: 1px solid #666;
 	margin-bottom: 30px;
@@ -704,9 +709,11 @@ table.pwr {
 				margin-bottom: 0;
 			}
 		}
-	}
-	.btn {
-		display: block;
+		&:nth-child(3) {
+			.btn {
+				display: block;
+			}
+		}
 	}
 	.glyphicon {
 		font-size: 150%;
@@ -718,6 +725,9 @@ table.pwr {
 		color: #a00;
 	}
 	.importing_note_toggler {
+		margin: 0;
+		padding: 0;
+
 		.glyphicon {
 			font-size: 100%;
 		}
@@ -1012,10 +1022,6 @@ ul.ui-autocomplete {
 		padding-left: 20px;
 	}
 }
-#toggleUnresponsiveList {
-	cursor: help;
-	font-weight: bold;
-}
 #unresponsiveList {
 	display: none;
 }
@@ -1047,4 +1053,8 @@ ul.ui-autocomplete {
 #show-respondents {
 	float: right;
 	margin-left: 5px;
+}
+#explain_steps {
+	border: 0;
+	padding: 0;
 }

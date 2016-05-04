@@ -23,9 +23,9 @@
             </p>
             <p>
                 <?php if ($invitedRespondentCount > 0): ?>
-                    <a href="#" class="btn btn-default invitations_toggler">
+                    <button class="btn btn-default invitations_toggler">
                         View Invitations
-                    </a>
+                    </button>
                 <?php endif; ?>
                 <?= $this->Html->link(
                     'Send Invitations',
@@ -106,9 +106,9 @@
                     this community is not currently in stage <?= $stageForAutoImport ?> of CRI.
                 <?php endif; ?>
             </p>
-            <a href="#" class="btn btn-default import_button" data-survey-id="<?= $survey['id'] ?>">
+            <button class="btn btn-default import_button" data-survey-id="<?= $survey['id'] ?>">
                 Import Responses
-            </a>
+            </button>
         </div>
     </div>
 

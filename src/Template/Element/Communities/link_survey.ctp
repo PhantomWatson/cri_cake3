@@ -32,14 +32,14 @@
 
     <ul class="actions">
         <li>
-            <a href="#" class="lookup btn btn-default btn-sm">
+            <button class="lookup btn btn-default btn-sm">
                 Select survey
-            </a>
+            </button>
         </li>
         <li>
-            <a href="#" class="show_details btn btn-default btn-sm">
+            <button class="show_details btn btn-default btn-sm">
                 Show details
-            </a>
+            </button>
         </li>
         <?php if ($surveyId): ?>
             <li>

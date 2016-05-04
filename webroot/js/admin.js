@@ -35,7 +35,7 @@ var adminUserEdit = {
 		});
 		this.onRoleChange(false);
 		
-		$('#password-fields-button a').click(function (event) {
+		$('#password-fields-button button').click(function (event) {
 		    event.preventDefault();
 		    $('#password-fields-button').slideUp(300);
 		    $('#password-fields').slideDown(300);
@@ -392,7 +392,7 @@ var surveyLink = {
         $('.link_survey').each(function () {
             var container = $(this);
             
-            container.find('a.lookup').click(function (event) {
+            container.find('button.lookup').click(function (event) {
                 event.preventDefault();
                 var results_container = container.find('.lookup_results');
                 if (results_container.is(':visible')) {
@@ -402,7 +402,7 @@ var surveyLink = {
                 }
             });
             
-            container.find('a.show_details').click(function (event) {
+            container.find('button.show_details').click(function (event) {
                 event.preventDefault();
                 container.find('.details').slideToggle();
             });
@@ -410,7 +410,7 @@ var surveyLink = {
     },
     
     lookupUrl: function (container) {
-        var lookup_link = container.find('a.lookup');
+        var lookup_link = container.find('button.lookup');
         var lookup_url = '/surveys/get_survey_list';
         var results_container = container.find('.lookup_results');
         var loadingMessages = $('.loading_messages');

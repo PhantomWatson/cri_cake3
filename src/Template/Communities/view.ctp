@@ -42,9 +42,9 @@
                     Data Source: Author calculations and Bureau of Economic Analysis
                 </p>
 
-                <a href="#" id="<?= $areaScope ?>_pwr_table_toggler" class="btn btn-primary">
+                <button id="<?= $areaScope ?>_pwr_table_toggler" class="btn btn-primary">
                     Show table
-                </a>
+                </button>
 
                 <?= $this->element('Communities'.DS.'pwrrr_table', compact('areaScope')) ?>
             </div>

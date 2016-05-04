@@ -22,10 +22,10 @@
             </div>
         <?php endforeach; ?>
 
-        <a href="#" class="btn btn-default" id="search_toggler">
+        <button class="btn btn-default" id="search_toggler">
             <span class="glyphicon glyphicon-search"></span>
             Search
-        </a>
+        </button>
 
         <?= $this->Html->link(
             '<img src="/data_center/img/icons/document-excel-table.png" alt="Microsoft Excel (.xlsx)" /> Download',
@@ -37,9 +37,9 @@
             ]
         ) ?>
 
-        <a href="#" class="btn btn-link" id="glossary_toggler">
+        <button class="btn btn-link" id="glossary_toggler">
             Icon Glossary
-        </a>
+        </button>
 
         <?= $this->Html->link(
             'Add Community',

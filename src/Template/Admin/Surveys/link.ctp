@@ -89,14 +89,14 @@
 
             <ul class="actions">
                 <li>
-                    <a href="#" class="lookup btn btn-default">
+                    <button class="lookup btn btn-default">
                         Select Survey
-                    </a>
+                    </button>
                 </li>
                 <li>
-                    <a href="#" class="show_details btn btn-default">
+                    <button class="show_details btn btn-default">
                         Show Details
-                    </a>
+                    </button>
                 </li>
                 <li>
                     <?= $this->Form->button(

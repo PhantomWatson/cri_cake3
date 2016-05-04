@@ -48,9 +48,9 @@
             Sending a reminder will re-send survey invitation emails.
         </li>
         <li>
-            <a href="#" id="toggleUnresponsiveList">
+            <button id="toggleUnresponsiveList" class="btn btn-default btn-sm">
                 <?= $unresponsiveCount ?> <?= __n('person', 'people', $unresponsiveCount) ?>
-            </a>
+            </button>
             <?= __n('has', 'have', $unresponsiveCount) ?>
             been sent <?= __n('an invitation', 'invitations', $unresponsiveCount) ?>
             to complete this survey and

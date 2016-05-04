@@ -4,14 +4,14 @@
             <?= ucwords($role) ?>s
         </h2>
 
-        <a href="#" class="btn btn-default btn-xs toggle_add" data-user-type="<?= $role ?>">
+        <button class="btn btn-default btn-xs toggle_add" data-user-type="<?= $role ?>">
             Add new <?= $role ?>
-        </a>
+        </button>
 
         <?php if (! empty($users)): ?>
-            <a href="#" class="btn btn-default btn-xs toggle_select" data-user-type="<?= $role ?>">
+            <button class="btn btn-default btn-xs toggle_select" data-user-type="<?= $role ?>">
                 Add existing <?= $role ?>
-            </a>
+            </button>
         <?php endif; ?>
     </div>
 
