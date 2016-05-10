@@ -645,17 +645,22 @@ var surveyOverview = {
                     link.addClass('disabled');
                     var loading_indicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
                     link.append(loading_indicator);
+                    var resultsContainer = $('#import-results');
+                    if (resultsContainer.is(':visible')) {
+                        resultsContainer.slideUp(200);
+                    }
                 },
                 success: function (data) {
-                    var alert = $('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>'+data+'</div>');
-                    alert.hide();
-                    link.before(alert);
-                    alert.slideDown();
+                    var resultsContainer = $('#import-results');
+                    resultsContainer.attr('class', 'alert alert-success');
+                    resultsContainer.html(data);
+                    resultsContainer.slideDown();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(jqXHR);
-                    console.log(textStatus);
-                    console.log(errorThrown);
+                    var resultsContainer = $('#import-results');
+                    resultsContainer.attr('class', 'alert alert-danger');
+                    resultsContainer.html(jqXHR.responseText);
+                    resultsContainer.slideDown();
                 },
                 complete: function () {
                     link.removeClass('disabled');

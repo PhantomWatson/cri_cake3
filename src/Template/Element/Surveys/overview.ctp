@@ -109,6 +109,7 @@
             <button class="btn btn-default import_button" data-survey-id="<?= $survey['id'] ?>">
                 Import Responses
             </button>
+            <p id="import-results"></p>
         </div>
     </div>
 
