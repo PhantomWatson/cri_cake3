@@ -273,35 +273,6 @@ class UsersTable extends Table
     }
 
     /**
-     * Sends an email with a link that can be used in the next
-     * 24 hours to give the user access to /users/resetPassword
-     *
-     * @param int $userId
-     * @return boolean
-     */
-    public function sendPasswordResetEmail($userId)
-    {
-        $timestamp = time();
-        $hash = $this->getPasswordResetHash($userId, $timestamp);
-        $resetUrl = Router::url([
-            'prefix' => false,
-            'controller' => 'Users',
-            'action' => 'resetPassword',
-            $userId,
-            $timestamp,
-            $hash
-        ], true);
-        $email = new Email('reset_password');
-        $user = $this->get($userId);
-        $email->to($user->email);
-        $email->viewVars(compact(
-            'user',
-            'resetUrl'
-        ));
-        return $email->send();
-    }
-
-    /**
      * Returns a hash for use in the emailed link to /reset-password
      *
      * @param int $userId
