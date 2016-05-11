@@ -91,4 +91,26 @@ class Mailer
 
         return $email->send();
     }
+
+    public function sendNewAccountEmail($user, $password, $senderEmail, $senderName)
+    {
+        $homeUrl = Router::url('/', true);
+        $loginUrl = Router::url([
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'login'
+        ], true);
+        $email = new Email('new_account');
+        $email->to($user->email);
+        if ($senderEmail) {
+            $email->returnPath($senderEmail, $senderName);
+        }
+        $email->viewVars(compact(
+            'user',
+            'homeUrl',
+            'loginUrl',
+            'password'
+        ));
+        return $email->send();
+    }
 }

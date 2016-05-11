@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Mailer\Mailer;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\ORM\TableRegistry;
 
@@ -105,7 +106,9 @@ class UsersController extends AppController
                 $senderEmail = $this->Auth->user('email');
                 $senderName = $this->Auth->user('name');
 
-                if ($this->Users->sendNewAccountEmail($user, $this->request->data['new_password'], $senderEmail, $senderName)) {
+                $Mailer = new Mailer();
+                $result = $Mailer->sendNewAccountEmail($user, $this->request->data['new_password'], $senderEmail, $senderName);
+                if ($result) {
                     $this->Flash->success('User account created and login credentials emailed');
                     return $this->redirect([
                         'prefix' => 'admin',

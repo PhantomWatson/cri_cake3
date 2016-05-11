@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Mailer\Mailer;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
@@ -375,7 +376,9 @@ class CommunitiesController extends AppController
                 $senderEmail = $this->Auth->user('email');
                 $senderName = $this->Auth->user('name');
 
-                if ($usersTable->sendNewAccountEmail($client, $this->request->data('unhashed_password'), $senderEmail, $senderName)) {
+                $Mailer = new Mailer();
+                $result = $Mailer->sendNewAccountEmail($client, $this->request->data('unhashed_password'), $senderEmail, $senderName);
+                if ($result) {
                     $this->Flash->success('Client account created for '.$client->name.' and login instructions emailed');
                     return $this->redirect(['action' => 'clients', $communityId]);
                 } else {

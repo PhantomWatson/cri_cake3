@@ -236,28 +236,6 @@ class UsersTable extends Table
         return substr($characters, 0, 6);
     }
 
-    public function sendNewAccountEmail($user, $password, $senderEmail, $senderName)
-    {
-        $homeUrl = Router::url('/', true);
-        $loginUrl = Router::url([
-            'prefix' => false,
-            'controller' => 'Users',
-            'action' => 'login'
-        ], true);
-        $email = new Email('new_account');
-        $email->to($user->email);
-        if ($senderEmail) {
-            $email->returnPath($senderEmail, $senderName);
-        }
-        $email->viewVars(compact(
-            'user',
-            'homeUrl',
-            'loginUrl',
-            'password'
-        ));
-        return $email->send();
-    }
-
     /**
      * Returns TRUE if the user is a client for the specified community.
      *
