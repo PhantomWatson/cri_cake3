@@ -51,11 +51,8 @@
             <button id="toggleUnresponsiveList" class="btn btn-default btn-sm">
                 <?= $unresponsiveCount ?> <?= __n('person', 'people', $unresponsiveCount) ?>
             </button>
-            <?= __n('has', 'have', $unresponsiveCount) ?>
-            been sent <?= __n('an invitation', 'invitations', $unresponsiveCount) ?>
-            to complete this survey and
             <?= __n('hasn\'t', 'haven\'t', $unresponsiveCount) ?>
-            responded yet.
+            responded to this survey yet.
             <div class="well" id="unresponsiveList">
                 <ul>
                     <?php foreach ($unresponsive as $person): ?>
