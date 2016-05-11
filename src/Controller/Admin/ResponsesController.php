@@ -58,30 +58,39 @@ class ResponsesController extends AppController
         $internalAlignmentSum = empty($internalAlignment) ? 0 : array_sum($internalAlignment);
 
         // Get averages
-        $ranks = [];
-        $sectors = $surveysTable->getSectors();
-        foreach ($responses as $response) {
-            foreach ($sectors as $sector) {
-                $ranks[$sector][] = $response[$sector.'_rank'];
+        if ($responses) {
+            $ranks = [];
+            $sectors = $surveysTable->getSectors();
+            foreach ($responses as $response) {
+                foreach ($sectors as $sector) {
+                    $ranks[$sector][] = $response[$sector.'_rank'];
+                }
             }
+            $averageRanks = [];
+            foreach ($sectors as $sector) {
+                $avg = array_sum($ranks[$sector]) / count($responses);
+                $averageRanks[$sector] = round($avg, 1);
+            }
+            asort($averageRanks);
+        } else {
+            $sectors = null;
+            $averageRanks = null;
         }
-        $averageRanks = [];
-        foreach ($sectors as $sector) {
-            $avg = array_sum($ranks[$sector]) / count($responses);
-            $averageRanks[$sector] = round($avg, 1);
-        }
-        asort($averageRanks);
 
         // Determine the order of those sorted averages
-        $rankOrder = [];
-        $order = 0;
-        $previousAvg = null;
-        foreach ($averageRanks as $sector => $avg) {
-            if ($avg != $previousAvg) {
-                $order++;
+        if ($responses) {
+            $rankOrder = [];
+            $order = 0;
+            $previousAvg = null;
+            foreach ($averageRanks as $sector => $avg) {
+                if ($avg != $previousAvg) {
+                    $order++;
+                }
+                $rankOrder[$sector] = $order;
+                $previousAvg = $avg;
             }
-            $rankOrder[$sector] = $order;
-            $previousAvg = $avg;
+        } else {
+            $rankOrder = null;
         }
 
         $this->set([

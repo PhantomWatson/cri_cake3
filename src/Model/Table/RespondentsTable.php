@@ -395,15 +395,17 @@ class RespondentsTable extends Table
         $responsiveRespondentIds = array_unique($responsiveRespondentIds);
 
         // Return invitees who haven't
-        return $this->find('all')
+        $query = $this->find('all')
             ->select(['id', 'name', 'title', 'email'])
             ->where([
-                'survey_id' => $surveyId,
-                function ($exp, $q) use ($responsiveRespondentIds) {
-                    return $exp->notIn('id', $responsiveRespondentIds);
-                }
-            ])
-            ->toArray();
+                'survey_id' => $surveyId
+            ]);
+        if (! empty($responsiveRespondentIds)) {
+            $query->where([function ($exp, $q) use ($responsiveRespondentIds) {
+                return $exp->notIn('id', $responsiveRespondentIds);
+            }]);
+        }
+        return $query->toArray();
     }
 
     /**
