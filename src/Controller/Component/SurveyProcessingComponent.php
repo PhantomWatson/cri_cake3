@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\Component;
 
+use App\Mailer\Mailer;
 use Cake\Controller\Component;
 use Cake\Core\Configure;
 use Cake\Mailer\Email;
@@ -45,7 +46,20 @@ class SurveyProcessingComponent extends Component
             $this->createRespondent($invitee);
         }
 
-        $this->sendInvitationEmails();
+        $Mailer = new Mailer();
+        $success = $Mailer->sendInvitations([
+            'surveyId' => $this->surveyId,
+            'communityId' => $this->communityId,
+            'senderEmail' => $this->Auth->user('email'),
+            'senderName' => $this->Auth->user('name'),
+            'recipients' => $this->recipients
+        ]);
+        if ($success) {
+            $this->successEmails = array_merge($this->successEmails, $this->recipients);
+        } else {
+            $this->errorEmails = array_merge($this->errorEmails, $this->recipients);
+        }
+
         $this->setInvitationFlashMessages();
         $this->request->data = [];
     }
@@ -155,43 +169,6 @@ class SurveyProcessingComponent extends Component
             if (Configure::read('debug')) {
                 $this->Flash->dump($respondent->errors());
             }
-        }
-    }
-
-    private function sendInvitationEmails()
-    {
-        $surveysTable = TableRegistry::get('Surveys');
-        $survey = $surveysTable->get($this->surveyId);
-
-        $communitiesTable = TableRegistry::get('Communities');
-        $clients = $communitiesTable->getClients($this->communityId);
-
-        $email = new Email('survey_invitation');
-        $email->to(Configure::read('noreply_email'));
-
-        $senderEmail = $this->Auth->user('email');
-        $senderName = $this->Auth->user('name');
-
-        if ($senderEmail) {
-            $email->replyTo($senderEmail, $senderName);
-            $email->returnPath($senderEmail, $senderName);
-        }
-
-        foreach ($this->recipients as $recipient) {
-            $email->addBcc($recipient);
-        }
-
-        $email->viewVars([
-            'clients' => $clients,
-            'criUrl' => Router::url('/', true),
-            'surveyType' => $survey->type,
-            'surveyUrl' => $survey->sm_url
-        ]);
-
-        if ($email->send()) {
-            $this->successEmails = array_merge($this->successEmails, $this->recipients);
-        } else {
-            $this->errorEmails = array_merge($this->errorEmails, $this->recipients);
         }
     }
 

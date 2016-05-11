@@ -53,4 +53,42 @@ class Mailer
 
         return false;
     }
+
+    /**
+     * Sends survey invitations
+     *
+     * @param $params [surveyId, communityId, senderEmail, senderName, recipients]
+     * @return array
+     */
+    public function sendInvitations($params)
+    {
+        extract($params);
+
+        $surveysTable = TableRegistry::get('Surveys');
+        $survey = $surveysTable->get($surveyId);
+
+        $communitiesTable = TableRegistry::get('Communities');
+        $clients = $communitiesTable->getClients($communityId);
+
+        $email = new Email('survey_invitation');
+        $email->to(Configure::read('noreply_email'));
+
+        if ($senderEmail) {
+            $email->replyTo($senderEmail, $senderName);
+            $email->returnPath($senderEmail, $senderName);
+        }
+
+        foreach ($recipients as $recipient) {
+            $email->addBcc($recipient);
+        }
+
+        $email->viewVars([
+            'clients' => $clients,
+            'criUrl' => Router::url('/', true),
+            'surveyType' => $survey->type,
+            'surveyUrl' => $survey->sm_url
+        ]);
+
+        return $email->send();
+    }
 }
