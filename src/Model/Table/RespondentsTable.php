@@ -399,7 +399,8 @@ class RespondentsTable extends Table
             ->select(['id', 'name', 'title', 'email'])
             ->where([
                 'survey_id' => $surveyId
-            ]);
+            ])
+            ->order(['name' => 'ASC']);
         if (! empty($responsiveRespondentIds)) {
             $query->where([function ($exp, $q) use ($responsiveRespondentIds) {
                 return $exp->notIn('id', $responsiveRespondentIds);
