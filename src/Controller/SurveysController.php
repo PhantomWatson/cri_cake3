@@ -162,8 +162,9 @@ class SurveysController extends AppController
             if (empty($errorMsgs)) {
                 $dates = array_values($respondents);
                 $survey->respondents_last_modified_date = new Time(max($dates));
-                $this->Surveys->save($survey);
             }
+            $survey->import_errors = $errorMsgs ? serialize($errorMsgs) : null;
+            $this->Surveys->save($survey);
         }
 
         // Finalize
