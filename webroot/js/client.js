@@ -318,11 +318,7 @@ var clientHome = {
         });
     },
     setupImport: function () {
-        var row = link.closest('tr');
-        var resultsContainer = row.find('.import-results');
-        if (resultsContainer.is(':empty')) {
-            resultsContainer.hide();
-        }
+        $('.import-results:empty').hide();
         
         $('.import_button').click(function (event) {
             event.preventDefault();
@@ -333,6 +329,8 @@ var clientHome = {
             }
             
             var survey_id = link.data('survey-id');
+            var row = link.closest('tr');
+            var resultsContainer = row.find('.import-results');
 
             $.ajax({
                 url: '/surveys/import/'+survey_id,
