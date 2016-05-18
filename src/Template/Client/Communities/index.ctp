@@ -145,8 +145,9 @@
                             <?= $this->Time->timeAgoInWords($officialResponsesChecked, ['end' => '+1 year']) ?>
                         </div>
                     <?php endif; ?>
+
                     <?php if ($importErrors['official']): ?>
-                        <div class="alert alert-danger">
+                        <div class="import-results alert alert-danger">
                             <?= __n('An error was', 'Errors were', count($importErrors['official'])) ?> encountered the last time responses were imported:
                             <ul>
                                 <?php foreach ($importErrors['official'] as $error): ?>
@@ -156,6 +157,8 @@
                                 <?php endforeach; ?>
                             </ul>
                         </div>
+                    <?php else: ?>
+                        <div class="import-results"></div>
                     <?php endif; ?>
                 </td>
                 <td>

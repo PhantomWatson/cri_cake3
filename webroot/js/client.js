@@ -328,32 +328,30 @@ var clientHome = {
             
             var survey_id = link.data('survey-id');
             var row = link.closest('tr');
+            var resultsContainer = row.find('.import-results');
+            if (resultsContainer.is(':empty')) {
+                resultsContainer.hide();
+            }
+            
             $.ajax({
                 url: '/surveys/import/'+survey_id,
                 beforeSend: function () {
                     link.addClass('disabled');
                     var loading_indicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
                     link.append(loading_indicator);
+                    if (resultsContainer.is(':visible')) {
+                        resultsContainer.slideUp(200);
+                    }
                 },
                 success: function (data) {
-                    var alert = $('<div class="last_import alert alert-success" role="alert">'+data+'</div>');
-                    alert.hide();
-                    row.find('.last_import').slideUp(function () {
-                        $(this).remove();
-                    });
-                    var info_container = row.children('td:nth-child(2)');
-                    info_container.append(alert);
-                    alert.slideDown();
+                    resultsContainer.attr('class', 'import-results alert alert-success');
+                    resultsContainer.html(data);
+                    resultsContainer.slideDown();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    var alert = $('<div class="last_import alert alert-danger" role="alert">'+jqXHR.responseText+'</div>');
-                    alert.hide();
-                    row.find('.last_import').slideUp(function () {
-                        $(this).remove();
-                    });
-                    var info_container = row.children('td:nth-child(2)');
-                    info_container.append(alert);
-                    alert.slideDown();
+                    resultsContainer.attr('class', 'import-results alert alert-danger');
+                    resultsContainer.html(jqXHR.responseText);
+                    resultsContainer.slideDown();
                 },
                 complete: function () {
                     link.removeClass('disabled');
