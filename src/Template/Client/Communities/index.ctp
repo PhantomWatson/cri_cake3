@@ -130,6 +130,7 @@
                             <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                         </button>
                     </p>
+
                     <p class="importing_note" style="display: none;">
                         <?php if ($score < 3): ?>
                             Responses are automatically imported from
@@ -139,6 +140,7 @@
                             New responses to this survey are no longer being automatically imported from SurveyMonkey.
                         <?php endif; ?>
                     </p>
+
                     <?php if ($officialResponsesChecked): ?>
                         <div class="last_import alert alert-info">
                             New responses were last checked for
@@ -353,6 +355,7 @@
                                 <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                             </button>
                         </p>
+
                         <p class="importing_note" style="display: none;">
                             <?php if ($score < 4): ?>
                                 Responses are automatically imported from
@@ -362,6 +365,28 @@
                                 New responses to this survey are no longer being automatically imported from SurveyMonkey.
                             <?php endif; ?>
                         </p>
+
+                        <?php if ($organizationResponsesChecked): ?>
+                            <div class="last_import alert alert-info">
+                                New responses were last checked for
+                                <?= $this->Time->timeAgoInWords($organization, ['end' => '+1 year']) ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($importErrors['organization']): ?>
+                            <div class="import-results alert alert-danger">
+                                <?= __n('An error was', 'Errors were', count($importErrors['organization'])) ?> encountered the last time responses were imported:
+                                <ul>
+                                    <?php foreach ($importErrors['organization'] as $error): ?>
+                                        <li>
+                                            <?= $error ?>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        <?php else: ?>
+                            <div class="import-results"></div>
+                        <?php endif; ?>
                     </td>
                     <td>
                         <?php if ($criteria[3]['survey_created'][1]): ?>
