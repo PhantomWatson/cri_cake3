@@ -66,6 +66,10 @@ class CommunitiesController extends AppController
         $surveysTable = TableRegistry::get('Surveys');
         $officialSurveyId = $surveysTable->getSurveyId($communityId, 'official');
         $organizationSurveyId = $surveysTable->getSurveyId($communityId, 'organization');
+        $importErrors = [
+            'official' => $surveysTable->getImportErrors($officialSurveyId),
+            'organization' => $surveysTable->getImportErrors($organizationSurveyId)
+        ];
         $respondentsTable = TableRegistry::get('Respondents');
         $this->set([
             'titleForLayout' => $community->name.'\'s Progress in the CRI Program',
@@ -80,6 +84,7 @@ class CommunitiesController extends AppController
         ]);
         $this->set(compact(
             'criteria',
+            'importErrors',
             'purchaseUrls',
             'officialSurveyId',
             'organizationSurveyId',

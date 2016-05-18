@@ -831,4 +831,24 @@ class SurveysTable extends Table
         $minutes = max($minutes, 1);
         return ($minutes == 1) ? 'every minute' : "every $minutes minutes";
     }
+
+    /**
+     * Returns an array of the most recent import errors
+     * for the selected survey
+     *
+     * @param $surveyId int
+     * @return array|null
+     */
+    public function getImportErrors($surveyId)
+    {
+        $results = $this->find('all')
+            ->select(['Surveys.import_errors'])
+            ->where(['id' => $surveyId])
+            ->limit(1);
+        if ($results->isEmpty()) {
+            return null;
+        }
+        $errors = $results->first()->import_errors;
+        return $errors ? unserialize($errors) : null;
+    }
 }
