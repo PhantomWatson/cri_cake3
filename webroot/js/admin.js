@@ -633,6 +633,15 @@ var surveyOverview = {
         var resultsContainer = $('#import-results');
         if (resultsContainer.is(':empty')) {
             resultsContainer.hide();
+        } else {
+            var errorList = resultsContainer.find('ul');
+            var errorToggler = $('<button class="btn btn-default btn-sm">Show errors</button>');
+            errorToggler.click(function (event) {
+                event.preventDefault();
+                errorList.slideToggle();
+            });
+            errorList.before(errorToggler);
+            errorList.hide();
         }
         
         $('.import_button').click(function (event) {
