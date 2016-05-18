@@ -630,6 +630,11 @@ var surveyOverview = {
         });
     },
     setupImport: function () {
+        var resultsContainer = $('#import-results');
+        if (resultsContainer.is(':empty')) {
+            resultsContainer.hide();
+        }
+        
         $('.import_button').click(function (event) {
             event.preventDefault();
             var link = $(this);
@@ -645,19 +650,16 @@ var surveyOverview = {
                     link.addClass('disabled');
                     var loading_indicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
                     link.append(loading_indicator);
-                    var resultsContainer = $('#import-results');
                     if (resultsContainer.is(':visible')) {
                         resultsContainer.slideUp(200);
                     }
                 },
                 success: function (data) {
-                    var resultsContainer = $('#import-results');
                     resultsContainer.attr('class', 'alert alert-success');
                     resultsContainer.html(data);
                     resultsContainer.slideDown();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    var resultsContainer = $('#import-results');
                     resultsContainer.attr('class', 'alert alert-danger');
                     resultsContainer.html(jqXHR.responseText);
                     resultsContainer.slideDown();

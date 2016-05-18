@@ -109,7 +109,21 @@
             <button class="btn btn-default import_button" data-survey-id="<?= $survey['id'] ?>">
                 Import Responses
             </button>
-            <p id="import-results"></p>
+            <?php if ($survey['import_errors']): ?>
+                <?php $errors = unserialize($survey['import_errors']); ?>
+                <div id="import-results" class="alert alert-danger">
+                    <?= __n('An error was', 'Errors were', count($errors)) ?> encountered the last time responses were imported:
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li>
+                                <?= $error ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php else: ?>
+                <div id="import-results"></div>
+            <?php endif; ?>
         </div>
     </div>
 
