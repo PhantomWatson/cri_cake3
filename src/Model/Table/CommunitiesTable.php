@@ -246,9 +246,10 @@ class CommunitiesTable extends Table
             $clients = $usersTable->getClientList();
             $clientIds = array_keys($clients);
 
-            /* Seems redundant, but helps clean this list clean in the event of lingering
-             * "admin account was temporarily a client account associated with this community"
-             * situations. */
+            /* Seems redundant, but helps keep this list clean
+             * in the event of lingering "admin account was
+             * temporarily a client account associated with this
+             * community" situations. */
             $query->where(function ($exp, $q) use ($clientIds) {
                 return $exp->in('client_id', $clientIds);
             });
@@ -259,6 +260,7 @@ class CommunitiesTable extends Table
             ->where(function ($exp, $q) use ($communityIds) {
                 return $exp->in('id', $communityIds);
             })
+            ->order(['Communities.name' => 'ASC'])
             ->toArray();
     }
 
