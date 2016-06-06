@@ -39,8 +39,8 @@ gulp.task('php_cs', function() {
         // Validate files using PHP Code Sniffer
         .pipe(phpcs({
             bin: '.\\vendor\\bin\\phpcs.bat',
-            standard: 'PSR2',
-            warningSeverity: 0
+            standard: '.\\vendor\\cakephp\\cakephp-codesniffer\\CakePHP',
+            warningSeverity: 1
         }))
         // Log all problems that was found
         .pipe(phpcs.reporter('log'));
