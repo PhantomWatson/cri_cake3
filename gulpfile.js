@@ -4,8 +4,6 @@ var watchLess = require('gulp-watch-less');
 var plumber = require('gulp-plumber');
 var notify = require("gulp-notify");
 var LessPluginCleanCSS = require('less-plugin-clean-css');
-var uglify = require('gulp-uglify');
-var rename = require("gulp-rename");
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
 var phpcs = require('gulp-phpcs');
@@ -15,7 +13,7 @@ var runSequence = require('run-sequence');
 
 function customNotify(message) {
 	return notify({
-        title: 'CRI',
+        title: 'Roundtable',
         message: function(file) {
             return message + ': ' + file.relative;
         }
@@ -69,13 +67,11 @@ gulp.task('php_unit', function() {
  * Javascript *
  **************/
 var srcJsFiles = [ 
-    'webroot/js/script.js',
-    'webroot/js/admin.js',
-    'webroot/js/client.js'
+    'webroot/js/script.js'
 ];
 
 gulp.task('js', function(callback) {
-    return runSequence('js_lint', 'js_minify', callback);
+    return runSequence('js_lint', callback);
 });
 
 gulp.task('js_lint', function () {
@@ -83,16 +79,6 @@ gulp.task('js_lint', function () {
         .pipe(jshint())
         .pipe(jshint.reporter(stylish))
         .pipe(customNotify('JS linted'));
-});
-
-gulp.task('js_minify', function () {
-    return gulp.src(srcJsFiles)
-        .pipe(uglify())
-        .pipe(rename({
-            extname: '.min.js'
-        }))
-        .pipe(gulp.dest('webroot/js'))
-        .pipe(customNotify('JS minified'));
 });
 
 
