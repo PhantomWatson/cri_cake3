@@ -51,7 +51,7 @@
                 ]
             ) ?>
         </li>
-        <?php if ($authUser['role'] == 'admin' && ! empty($accessibleCommunities)): ?>
+        <?php if ($authUser && $authUser['role'] == 'admin' && ! empty($accessibleCommunities)): ?>
             <li>
                 <p>
                     Community Performance
