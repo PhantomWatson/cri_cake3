@@ -35,7 +35,7 @@
     This is a project in partnership with the
     <a href="http://www.in.gov/ocra/">Indiana Office of Community and Rural Affairs (OCRA)</a>
     and Ball State University's
-    <a href="">Indiana Communities Institute</a>. We would really appreciate your participation in the survey,
+    <a href="http://bsu.edu/ici">Indiana Communities Institute</a>. We would really appreciate your participation in the survey,
     which should take no more than ten minutes of your time.
 </p>
 
