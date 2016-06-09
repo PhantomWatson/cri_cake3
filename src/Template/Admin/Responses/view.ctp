@@ -6,7 +6,7 @@
 
 <p>
     <?= $this->Html->link(
-        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Survey Overview',
+        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Questionnaire Overview',
         [
             'prefix' => 'admin',
             'controller' => 'Surveys',
@@ -29,7 +29,7 @@
             community
             <?= $survey->type == 'official' ? 'leadership' : 'organization' ?>
         </strong>
-        survey. Incomplete responses are excluded, and recent responses may have not been imported yet.
+        questionnaire. Incomplete responses are excluded, and recent responses may have not been imported yet.
     </p>
 
     <p>
@@ -144,7 +144,7 @@
             </table>
         <?php else: ?>
             <p class="alert alert-info">
-                Not enough responses have been collected / approved to be able to determine this survey's internal alignment.
+                Not enough responses have been collected / approved to be able to determine this questionnaire's internal alignment.
             </p>
         <?php endif; ?>
     </section>

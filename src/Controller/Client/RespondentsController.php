@@ -22,7 +22,7 @@ class RespondentsController extends AppController
     public function index($surveyType = null)
     {
         if ($surveyType != 'official' && $surveyType != 'organization') {
-            throw new BadRequestException('Survey type not specified');
+            throw new BadRequestException('Questionnaire type not specified');
         }
 
         $clientId = $this->getClientId();
@@ -33,7 +33,7 @@ class RespondentsController extends AppController
         $communityId = $communitiesTable->getClientCommunityId($clientId);
         if ($communityId) {
             $community = $communitiesTable->get($communityId);
-            $titleForLayout = $community->name.' '.ucwords($surveyType).' Survey Respondents';
+            $titleForLayout = $community->name.' '.ucwords($surveyType).' Questionnaire Respondents';
 
             //$this->setupPagination($community->id, $surveyType);
             $surveysTable = TableRegistry::get('Surveys');
@@ -57,7 +57,7 @@ class RespondentsController extends AppController
             $this->paginate['sortWhitelist'] = ['approved', 'email', 'name'];
             $respondents = $this->paginate($query)->toArray();
         } else {
-            $titleForLayout = 'Survey Respondents';
+            $titleForLayout = 'Questionnaire Respondents';
             $respondents = [];
         }
         $this->set(compact(
@@ -70,7 +70,7 @@ class RespondentsController extends AppController
     public function unapproved($surveyType = null)
     {
         if ($surveyType != 'official' && $surveyType != 'organization') {
-            throw new NotFoundException('Invalid survey type');
+            throw new NotFoundException('Invalid questionnaire type');
         }
 
         $communitiesTable = TableRegistry::get('Communities');
@@ -95,7 +95,7 @@ class RespondentsController extends AppController
                 'dismissed' => $this->Respondents->getDismissed($surveyId)
             ],
             'surveyType' => $surveyType,
-            'titleForLayout' => $community->name.' Uninvited '.ucwords($surveyType).' Survey Respondents'
+            'titleForLayout' => $community->name.' Uninvited '.ucwords($surveyType).' Questionnaire Respondents'
         ]);
     }
 

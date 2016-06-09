@@ -373,13 +373,13 @@ class CommunitiesTable extends Table
         $surveyId = $surveysTable->getSurveyId($communityId, 'official');
         if ($surveyId) {
             $survey = $surveysTable->get($surveyId);
-            $note = '<br />Survey URL: <a href="'.$survey->sm_url.'">'.$survey->sm_url.'</a>';
+            $note = '<br />Questionnaire URL: <a href="'.$survey->sm_url.'">'.$survey->sm_url.'</a>';
         } else {
             $note =  '';
         }
         $step = $surveyId ? 2 : 1;
         $criteria[$step]['survey_created'] = [
-            'Leadership alignment assessment survey has been prepared'.$note,
+            'Leadership alignment assessment questionnaire has been prepared'.$note,
             (boolean) $surveyId
         ];
 
@@ -388,7 +388,7 @@ class CommunitiesTable extends Table
         $count = $surveyId ? $respondentsTable->getInvitedCount($surveyId) : 0;
         $note = $count ? " ($count ".__n('invitation', 'invitations', $count).' sent)' : '';
         $criteria[2]['invitations_sent'] = [
-            'Community leaders have been sent survey invitations'.$note,
+            'Community leaders have been sent questionnaire invitations'.$note,
             $surveyId && $count > 0
         ];
 
@@ -396,12 +396,12 @@ class CommunitiesTable extends Table
         $count = $surveyId ? $responsesTable->getDistinctCount($surveyId) : 0;
         $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
         $criteria[2]['responses_received'] = [
-            'Responses to the survey have been collected'.$note,
+            'Responses to the questionnaire have been collected'.$note,
             $surveyId && $count > 0
         ];
 
         $criteria[2]['response_threshhold_reached'] = [
-            'At least 25% of invited community leaders have responded to the survey',
+            'At least 25% of invited community leaders have responded to the questionnaire',
             $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
         ];
 
@@ -473,16 +473,16 @@ class CommunitiesTable extends Table
         $surveyId = $surveysTable->getSurveyId($communityId, 'organization');
         $survey = $surveyId ? $surveysTable->get($surveyId) : null;
         $surveyUrl = $survey ? $survey->sm_url : null;
-        $note = $surveyUrl ? '<br />Survey URL: <a href="'.$surveyUrl.'">'.$surveyUrl.'</a>' : '';
+        $note = $surveyUrl ? '<br />Questionnaire URL: <a href="'.$surveyUrl.'">'.$surveyUrl.'</a>' : '';
         $criteria[3]['survey_created'] = [
-            'Community organization alignment assessment survey has been prepared'.$note,
+            'Community organization alignment assessment questionnaire has been prepared'.$note,
             (boolean) $surveyId
         ];
 
         $count = $surveyId ? $respondentsTable->getCount($surveyId) : 0;
         $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
         $criteria[3]['responses_received'] = [
-            'Responses to the survey have been collected'.$note,
+            'Responses to the questionnaire have been collected'.$note,
             $surveyId && $count > 0
         ];
 
@@ -614,12 +614,12 @@ class CommunitiesTable extends Table
             'Area',
             'Stage',
             'Fast Track',
-            'Officials Survey created',
-            'Officials Survey alignment',
-            'Officials Survey passed',
-            'Organizations Survey created',
-            'Organizations Survey alignment',
-            'Organizations Survey passed'
+            'Officials Questionnaire created',
+            'Officials Questionnaire alignment',
+            'Officials Questionnaire passed',
+            'Organizations Questionnaire created',
+            'Organizations Questionnaire alignment',
+            'Organizations Questionnaire passed'
         ];
         $lastCol = 'B';
         foreach ($columnTitles as $col => $colTitle) {
@@ -650,13 +650,13 @@ class CommunitiesTable extends Table
                     case 'Fast Track':
                         $value = $community->fast_track ? 'Yes' : 'No';
                         break;
-                    case 'Officials Survey created':
+                    case 'Officials Questionnaire created':
                         $value = isset($community->official_survey['sm_id']) ? 'Yes' : 'No';
                         break;
-                    case 'Officials Survey alignment':
+                    case 'Officials Questionnaire alignment':
                         $value = $community->official_survey['alignment'] ? $community->official_survey['alignment'].'%' : 'Not set';
                         break;
-                    case 'Officials Survey passed':
+                    case 'Officials Questionnaire passed':
                         $passed = $community->official_survey['alignment_passed'];
                         switch ($passed) {
                             case 1:
@@ -670,13 +670,13 @@ class CommunitiesTable extends Table
                                 break;
                         }
                         break;
-                    case 'Organizations Survey created':
+                    case 'Organizations Questionnaire created':
                         $value = isset($community->organization_survey['sm_id']) ? 'Yes' : 'No';
                         break;
-                    case 'Organizations Survey alignment':
+                    case 'Organizations Questionnaire alignment':
                         $value = $community->organization_survey['alignment'] ? $community->organization_survey['alignment'].'%' : 'Not set';
                         break;
-                    case 'Organizations Survey passed':
+                    case 'Organizations Questionnaire passed':
                         $passed = $community->organization_survey['alignment_passed'];
                         switch ($passed) {
                             case 1:

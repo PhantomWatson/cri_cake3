@@ -7,7 +7,7 @@
 ?>
 <div class="link_survey form-group">
     <strong>
-        Community <?= $displayedName ?> Survey:
+        Community <?= $displayedName ?> Questionnaire:
     </strong>
 
     <div class="link_label">
@@ -33,7 +33,7 @@
     <ul class="actions">
         <li>
             <button class="lookup btn btn-default btn-sm">
-                Select survey
+                Select questionnaire
             </button>
         </li>
         <li>
@@ -44,7 +44,7 @@
         <?php if ($surveyId): ?>
             <li>
                 <?= $this->Html->link(
-                    'Go to survey overview <span class="glyphicon glyphicon-share-alt"></span>',
+                    'Go to questionnaire overview <span class="glyphicon glyphicon-share-alt"></span>',
                     [
                         'prefix' => 'admin',
                         'controller' => 'Surveys',
@@ -55,7 +55,7 @@
                         'class' => 'btn btn-default btn-sm',
                         'escape' => false
                     ],
-                    'Go to survey overview page without updating community?'
+                    'Go to questionnaire overview page without updating community?'
                 ) ?>
             </li>
         <?php endif; ?>

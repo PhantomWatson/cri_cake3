@@ -177,14 +177,14 @@ class SurveyProcessingComponent extends Component
         $seCount = count($this->successEmails);
         if ($seCount) {
             $list = $this->arrayToList($this->successEmails);
-            $msg = 'Survey '.__n('invitation', 'invitations', $seCount).' sent to '.$list;
+            $msg = 'Questionnaire '.__n('invitation', 'invitations', $seCount).' sent to '.$list;
             $this->Flash->success($msg);
         }
 
         $reCount = count($this->redundantEmails);
         if ($reCount) {
             $list = $this->arrayToList($this->redundantEmails);
-            $msg = $list.__n(' has', ' have', $reCount).' already received a survey invitation';
+            $msg = $list.__n(' has', ' have', $reCount).' already received a questionnaire invitation';
             $this->Flash->set($msg);
         }
 

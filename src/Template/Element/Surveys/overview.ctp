@@ -5,7 +5,7 @@
 <div class="survey_overview">
     <?php if (! $isOpen): ?>
         <p class="alert alert-info">
-            Note: This survey is not yet ready to be administered.
+            Note: This questionnaire is not yet ready to be administered.
         </p>
     <?php endif; ?>
 
@@ -19,7 +19,7 @@
             <p>
                 <?= $invitedRespondentCount ?>
                 community
-                <?= __n("{$survey['type']} has been sent a survey invitation", "{$survey['type']}s have been sent survey invitations", $invitedRespondentCount) ?>
+                <?= __n("{$survey['type']} has been sent a questionnaire invitation", "{$survey['type']}s have been sent questionnaire invitations", $invitedRespondentCount) ?>
             </p>
             <p>
                 <?php if ($invitedRespondentCount > 0): ?>
@@ -53,7 +53,7 @@
             <?php if ($invitedRespondentCount > 0): ?>
                 <div class="invitations_list">
                     <p>
-                        Invitations sent out for this survey:
+                        Invitations sent out for this questionnaire:
                     </p>
                     <ul>
                         <?php foreach ($invitations as $invitation): ?>
@@ -102,7 +102,7 @@
                     while this community is in stage <?= $stageForAutoImport ?> of CRI,
                     but you can manually import them at any time.
                 <?php else: ?>
-                    New responses to this survey are <strong>not</strong> being automatically imported from SurveyMonkey because
+                    New responses to this questionnaire are <strong>not</strong> being automatically imported from SurveyMonkey because
                     this community is not currently in stage <?= $stageForAutoImport ?> of CRI.
                 <?php endif; ?>
             </p>
@@ -145,13 +145,13 @@
                     }
                     echo $percentInvitedResponded.'%</span>';
                 ?>
-                of invited respondents have completed this survey
+                of invited respondents have completed this questionnaire
             </p>
 
             <?php if ($hasUninvitedUnaddressed): ?>
                 <p>
                     <span class="text-warning">
-                        This survey has uninvited responses that need to be approved or dismissed.
+                        This questionnaire has uninvited responses that need to be approved or dismissed.
                     </span>
                     <br />
                     These responses will <strong>not</strong> be included in this community's alignment assessment unless if they are approved.

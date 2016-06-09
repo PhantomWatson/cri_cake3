@@ -133,10 +133,10 @@
                     Stage
                 </th>
                 <th>
-                    Officials Survey
+                    Officials Questionnaire
                 </th>
                 <th>
-                    Organizations Survey
+                    Organizations Questionnaire
                 </th>
                 <th class="actions">
                     Actions
@@ -213,7 +213,7 @@
                                         </li>
                                         <li>
                                             <?= $this->Html->link(
-                                                '<span class="glyphicon glyphicon-link" aria-hidden="true"></span> Survey link',
+                                                '<span class="glyphicon glyphicon-link" aria-hidden="true"></span> Questionnaire link',
                                                 [
                                                     'prefix' => 'admin',
                                                     'controller' => 'Surveys',
@@ -268,7 +268,7 @@
                                     <ul class="dropdown-menu" role="menu">
                                         <li>
                                             <?= $this->Html->link(
-                                                '<span class="glyphicon glyphicon-link" aria-hidden="true"></span> Link to SurveyMonkey survey',
+                                                '<span class="glyphicon glyphicon-link" aria-hidden="true"></span> Link to SurveyMonkey questionnaire',
                                                 [
                                                     'prefix' => 'admin',
                                                     'controller' => 'Surveys',

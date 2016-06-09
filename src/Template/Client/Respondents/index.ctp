@@ -25,7 +25,7 @@
 
 <?php if (empty($respondents)): ?>
     <p class="alert alert-info">
-        No invitations have been sent out for this survey.
+        No invitations have been sent out for this questionnaire.
     </p>
 <?php else: ?>
 
@@ -48,7 +48,7 @@
                 <?php endif; ?>
 
                 <th>
-                    Completed Survey
+                    Completed Questionnaire
                 </th>
                 <th>
                     Completion Date

@@ -61,7 +61,7 @@
                         <?= $criteria[1]['survey_created'][0] ?>
                         <?php if (! $criteria[1]['survey_created'][1] && $score < 2): ?>
                             <p class="alert alert-info">
-                                Your community's survey is currently being prepared. Please check back later for updates.
+                                Your community's questionnaire is currently being prepared. Please check back later for updates.
                             </p>
                         <?php endif; ?>
                     </td>
@@ -88,7 +88,7 @@
                         <?= $criteria[2]['survey_created'][0] ?>
                         <?php if (! $criteria[2]['survey_created'][1] && $score >= 2 && $score < 3): ?>
                             <p class="alert alert-info">
-                                Your community's survey is currently being prepared. Please check back later for updates.
+                                Your community's questionnaire is currently being prepared. Please check back later for updates.
                             </p>
                         <?php endif; ?>
                     </td>
@@ -137,7 +137,7 @@
                             SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>,
                             but you can manually import them at any time.
                         <?php else: ?>
-                            New responses to this survey are no longer being automatically imported from SurveyMonkey.
+                            New responses to this questionnaire are no longer being automatically imported from SurveyMonkey.
                         <?php endif; ?>
                     </p>
 
@@ -325,7 +325,7 @@
                         <?= $criteria[3]['survey_created'][0] ?>
                         <?php if (! $criteria[3]['survey_created'][1] && $score >= 3 && $score < 4): ?>
                             <p class="alert alert-info">
-                                Your community's survey is currently being prepared. Please check back later for updates.
+                                Your community's questionnaire is currently being prepared. Please check back later for updates.
                             </p>
                         <?php endif; ?>
                     </td>
@@ -362,7 +362,7 @@
                                 SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>,
                                 but you can manually import them at any time.
                             <?php else: ?>
-                                New responses to this survey are no longer being automatically imported from SurveyMonkey.
+                                New responses to this questionnaire are no longer being automatically imported from SurveyMonkey.
                             <?php endif; ?>
                         </p>
 

@@ -76,7 +76,7 @@ class SurveysTable extends Table
             ->add('sm_id', 'unique', [
                 'rule' => 'validateUnique',
                 'provider' => 'table',
-                'message' => 'Sorry, the selected survey has already been linked to a community.'
+                'message' => 'Sorry, the selected questionnaire has already been linked to a community.'
             ]);
 
         $validator
@@ -284,12 +284,12 @@ class SurveysTable extends Table
     public function isOpen($communityId, $surveyType)
     {
         if ($surveyType != 'official' && $surveyType != 'organization') {
-            throw new InternalErrorException('Unrecognized survey type: '.$surveyType);
+            throw new InternalErrorException('Unrecognized questionnaire type: '.$surveyType);
         }
 
         $communitiesTable = TableRegistry::get('Communities');
         if (! $communitiesTable->exists(['id' => $communityId])) {
-            throw new NotFoundException('Could not get survey status. Community (#'.$communityId.') not found.');
+            throw new NotFoundException('Could not get questionnaire status. Community (#'.$communityId.') not found.');
         }
 
         $results = $this->find('all')
@@ -313,7 +313,7 @@ class SurveysTable extends Table
         $allTypes = ['official', 'organization'];
         if ($surveyType) {
             if (! in_array($surveyType, $allTypes)) {
-                throw new InternalErrorException('Unrecognized survey type: '.$surveyType);
+                throw new InternalErrorException('Unrecognized questionnaire type: '.$surveyType);
             }
             $types = [$surveyType];
         } else {
@@ -452,7 +452,7 @@ class SurveysTable extends Table
         $SurveyMonkey = $this->getSurveyMonkeyObject();
         $result = $SurveyMonkey->getSurveyDetails((string) $smId);
         if (! isset($result['data'])) {
-            return [false, 'Could not get survey details from SurveyMonkey. This might be a temporary network error.'];
+            return [false, 'Could not get questionnaire details from SurveyMonkey. This might be a temporary network error.'];
         }
 
         /* Find the appropriate question using one of the key phrases that have been
@@ -474,7 +474,7 @@ class SurveysTable extends Table
         }
 
         if (! $pwrrrQuestion) {
-            return [false, 'Error: This survey does not contain a PWR<sup>3</sup> ranking question.'];
+            return [false, 'Error: This questionnaire does not contain a PWR<sup>3</sup> ranking question.'];
         }
 
         // Create an array to save this data with
@@ -560,7 +560,7 @@ class SurveysTable extends Table
             ->where(['sm_id' => $smId])
             ->limit(1);
         if ($results->isEmpty()) {
-            return [false, 'Error: No survey has been recorded with SurveyMonkey id "'.$smId.'".'];
+            return [false, 'Error: No questionnaire has been recorded with SurveyMonkey id "'.$smId.'".'];
         }
         $survey = $results->first();
         $data = $this->getPwrrrQuestionAndAnswerIds($smId)[2];
@@ -703,16 +703,16 @@ class SurveysTable extends Table
         switch ($respondentTypePlural) {
             case 'officials':
                 if (! $this->isOpen($communityId, 'official')) {
-                    throw new ForbiddenException('This survey is not yet ready for invitations to be sent out.');
+                    throw new ForbiddenException('This questionnaire is not yet ready for invitations to be sent out.');
                 }
                 break;
             case 'organizations':
                 if (! $this->isOpen($communityId, 'organization')) {
-                    throw new ForbiddenException('This survey is not yet ready for invitations to be sent out.');
+                    throw new ForbiddenException('This questionnaire is not yet ready for invitations to be sent out.');
                 }
                 break;
             default:
-                throw new BadRequestException('Survey type not specified');
+                throw new BadRequestException('Questionnaire type not specified');
         }
     }
 

@@ -19,7 +19,7 @@ class SurveysController extends AppController
     public function view($communityId = null, $surveyType = null)
     {
         if (! in_array($surveyType, ['official', 'organization'])) {
-            throw new NotFoundException("Unknown survey type: $surveyType");
+            throw new NotFoundException("Unknown questionnaire type: $surveyType");
         }
 
         $communitiesTable = TableRegistry::get('Communities');
@@ -49,14 +49,14 @@ class SurveysController extends AppController
         $this->set([
             'community' => $community,
             'survey' => $survey,
-            'titleForLayout' => $community->name.' '.ucwords($surveyType).'s Survey'
+            'titleForLayout' => $community->name.' '.ucwords($surveyType).'s Questionnaire'
         ]);
     }
 
     public function link($communityId = null, $surveyType = null)
     {
         if (! in_array($surveyType, ['official', 'organization'])) {
-            throw new NotFoundException("Unknown survey type: $surveyType");
+            throw new NotFoundException("Unknown questionnaire type: $surveyType");
         }
 
         $communitiesTable = TableRegistry::get('Communities');
@@ -79,7 +79,7 @@ class SurveysController extends AppController
             $errors = $survey->errors();
             $isNew = $survey->isNew();
             if (empty($errors) && $this->Surveys->save($survey)) {
-                $message = $isNew ? 'Survey successfully linked to this community' : 'Survey details updated';
+                $message = $isNew ? 'Questionnaire successfully linked to this community' : 'Questionnaire details updated';
                 $this->Flash->success($message);
                 $this->redirect([
                     'action' => 'view',
@@ -87,7 +87,7 @@ class SurveysController extends AppController
                     $surveyType
                 ]);
             } else {
-                $message = $survey->isNew() ? 'linking survey' : 'updating survey details';
+                $message = $survey->isNew() ? 'linking questionnaire' : 'updating questionnaire details';
                 $this->Flash->error('There was an error '.$message.'. Please try again or contact an administrator for assistance.');
             }
         }
@@ -99,7 +99,7 @@ class SurveysController extends AppController
             'community' => $community,
             'qnaIdFields' => $this->Surveys->getQnaIdFieldNames(),
             'survey' => $survey,
-            'titleForLayout' => $community->name.' '.ucwords($surveyType).'s Survey: Link'
+            'titleForLayout' => $community->name.' '.ucwords($surveyType).'s Questionnaire: Link'
         ]);
     }
 

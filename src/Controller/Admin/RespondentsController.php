@@ -14,10 +14,10 @@ class RespondentsController extends AppController
             try {
                 $survey = $surveysTable->get($surveyId);
             } catch (RecordNotFoundException $e) {
-                throw new NotFoundException('Sorry, we couldn\'t find a survey with that ID (#'.$surveyId.').');
+                throw new NotFoundException('Sorry, we couldn\'t find a questionnaire with that ID (#'.$surveyId.').');
             }
         } else {
-            throw new NotFoundException('Survey ID not specified.');
+            throw new NotFoundException('Questionnaire ID not specified.');
         }
 
         $communitiesTable = TableRegistry::get('Communities');
@@ -30,7 +30,7 @@ class RespondentsController extends AppController
                 'dismissed' => $this->Respondents->getDismissed($surveyId)
             ],
             'survey' => $survey,
-            'titleForLayout' => $community->name.' Uninvited '.ucwords($survey->type).' Survey Respondents'
+            'titleForLayout' => $community->name.' Uninvited '.ucwords($survey->type).' Questionnaire Respondents'
         ]);
         $this->render('/Client/Respondents/unapproved');
     }

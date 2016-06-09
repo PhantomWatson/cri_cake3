@@ -1,5 +1,5 @@
 <?php
-    $toParticipateBlurb = "to participate in a <a href=\"$criUrl\">Community Readiness Initiative</a> survey for your community";
+    $toParticipateBlurb = "to participate in a <a href=\"$criUrl\">Community Readiness Initiative</a> questionnaire for your community";
 ?>
 
 <?php if (empty($clients)): ?>
@@ -35,7 +35,7 @@
     This is a project in partnership with the
     <a href="http://www.in.gov/ocra/">Indiana Office of Community and Rural Affairs (OCRA)</a>
     and Ball State University's
-    <a href="http://bsu.edu/ici">Indiana Communities Institute</a>. We would really appreciate your participation in the survey,
+    <a href="http://bsu.edu/ici">Indiana Communities Institute</a>. We would really appreciate your participation in the questionnaire,
     which should take no more than ten minutes of your time.
 </p>
 

@@ -33,10 +33,10 @@
         from their default values.
     </li>
     <li>
-        <strong>Create the Community Officials Survey</strong>
+        <strong>Create the Community Officials Questionnaire</strong>
         <br />
         Log in to <a href="http://surveymonkey.com/">SurveyMonkey</a> and create a new
-        community officials survey for this community by
+        community officials questionnaire for this community by
         <ol>
             <li>
                 Clicking 'Create Survey'
@@ -71,14 +71,14 @@
         </ol>
     </li>
     <li>
-        <strong>Link the Survey</strong>
+        <strong>Link the Questionnaire</strong>
         <br />
-        In the Manage Communities page, click on 'Actions' and then 'Officials Survey' in the row corresponding
-        to the new community. If this CRI community has not been linked to this SurveyMonkey survey yet, you'll
-        be sent to the 'survey linking' page.
+        In the Manage Communities page, click on 'Actions' and then 'Officials Questionnaire' in the row corresponding
+        to the new community. If this CRI community has not been linked to this SurveyMonkey questionnaire yet, you'll
+        be sent to the 'questionnaire linking' page.
         <br />
-        Click 'Select Survey', then select the correct survey from the list that appears. If there are no errors,
-        the status will display "Ready to be linked". Click 'Link Survey'.
+        Click 'Select Questionnaire', then select the correct questionnaire from the list that appears. If there are no errors,
+        the status will display "Ready to be linked". Click 'Link Questionnaire'.
     </li>
     <li>
         <strong>Create a Client Account</strong>
@@ -88,7 +88,7 @@
         email with their login information.
     </li>
     <li>
-        You can also use the above methods to create additional clients accounts and create / link the community organizations survey.
+        You can also use the above methods to create additional clients accounts and create / link the community organizations questionnaire.
     </li>
 </ol>
 
@@ -118,7 +118,7 @@
                 ]
             ) ?>
         </strong>
-        <br />Here, communities are listed along with their current stage, fast track status, and survey statuses.
+        <br />Here, communities are listed along with their current stage, fast track status, and questionnaire statuses.
         <br />The following links are found under 'Actions':
         <ul>
             <li>
@@ -136,11 +136,11 @@
                 <strong>Client Home</strong>
                 <br />Shows the homepage that this community's client sees
             <li>
-                <strong>Officials Survey / Organizations Survey</strong>
-                <br />On these survey overview pages, you can
+                <strong>Officials Questionnaire / Organizations Questionnaire</strong>
+                <br />On these questionnaire overview pages, you can
                 <ul>
                     <li>
-                        Create or update the <strong>link</strong> between the community record and each SurveyMonkey survey
+                        Create or update the <strong>link</strong> between the community record and each SurveyMonkey questionnaire
                     </li>
                     <li>
                         View and send <strong>invitations</strong>
@@ -220,5 +220,5 @@
 <ul>
     <li>Consultant accounts</li>
     <li>Automatically alerting administrators of new enrollment applications</li>
-    <li>Facilitating/automating reminder emails to invited survey participants who haven't submitted responses</li>
+    <li>Facilitating/automating reminder emails to invited questionnaire participants who haven't submitted responses</li>
 </ul>

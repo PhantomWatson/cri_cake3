@@ -135,11 +135,11 @@ class RespondentsTable extends Table
         try {
             $survey = $surveysTable->get($surveyId);
         } catch (RecordNotFoundException $e) {
-            return [false, 'Survey #'.$surveyId.' not found'];
+            return [false, 'Questionnaire #'.$surveyId.' not found'];
         }
 
         if (! $survey->sm_id) {
-            return [false, 'Survey #'.$surveyId.' has not yet been linked to SurveyMonkey', null];
+            return [false, 'Questionnaire #'.$surveyId.' has not yet been linked to SurveyMonkey', null];
         }
 
         $recordedRespondents = $this->getAllForSurvey($surveyId);

@@ -1,5 +1,5 @@
 <?php
-    $toParticipateBlurb = "to participate in a Community Readiness Initiative ($criUrl) survey for your community";
+    $toParticipateBlurb = "to participate in a Community Readiness Initiative ($criUrl) questionnaire for your community";
     echo 'You have been invited ';
     if (empty($clients)) {
         echo "$toParticipateBlurb.";
@@ -18,7 +18,7 @@
 ?>
 
 This is a project in partnership with the Office of Community and Rural Affairs (OCRA) and Ball State University's Indiana
-Communities Institute. We would really appreciate your participation in the survey, which should take no more than ten minutes
+Communities Institute. We would really appreciate your participation in the questionnaire, which should take no more than ten minutes
 of your time.
 
 Please visit the following URL to begin:

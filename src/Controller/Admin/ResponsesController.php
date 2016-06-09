@@ -24,10 +24,10 @@ class ResponsesController extends AppController
             try {
                 $survey = $surveysTable->get($surveyId);
             } catch (RecordNotFoundException $e) {
-                throw new NotFoundException('Sorry, we couldn\'t find a survey in the database with that ID number.');
+                throw new NotFoundException('Sorry, we couldn\'t find a questionnaire in the database with that ID number.');
             }
         } else {
-            throw new NotFoundException('Survey ID not specified.');
+            throw new NotFoundException('Questionnaire ID not specified.');
         }
 
         $responses = $this->SurveyProcessing->getCurrentResponses($surveyId);
@@ -41,7 +41,7 @@ class ResponsesController extends AppController
                 $survey->alignment_calculated = $survey->modified;
                 $surveysTable->save($survey);
             } else {
-                $this->Flash->error('There was an error updating this survey');
+                $this->Flash->error('There was an error updating this questionnaire');
             }
         }
 
@@ -109,7 +109,7 @@ class ResponsesController extends AppController
 
     /**
      * Returns a string to use as a CSS class for styling the
-     * total internal alignment for a survey
+     * total internal alignment for a questionnaire
      *
      * @param float $sum
      * @param Community $community

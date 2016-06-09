@@ -8,7 +8,7 @@
     <?php
         if ($this->request->prefix == 'admin') {
             echo $this->Html->link(
-                '<span class="glyphicon glyphicon-arrow-left"></span> Back to Survey Overview',
+                '<span class="glyphicon glyphicon-arrow-left"></span> Back to Questionnaire Overview',
                 [
                     'prefix' => 'admin',
                     'controller' => 'Surveys',
@@ -64,9 +64,9 @@
         <?php if (! empty($unaddressedUnapprovedRespondents)): ?>
             <p>
                 <?php if (! empty($approvedRespondents)): ?>
-                    Additionally, <?= __n('an unapproved survey response has', 'unapproved survey responses have', count($unaddressedUnapprovedRespondents)) ?>
+                    Additionally, <?= __n('an unapproved questionnaire response has', 'unapproved questionnaire responses have', count($unaddressedUnapprovedRespondents)) ?>
                 <?php else: ?>
-                    <?= __n('An unapproved survey response has', 'Unapproved survey responses have', count($unaddressedUnapprovedRespondents)) ?>
+                    <?= __n('An unapproved questionnaire response has', 'Unapproved questionnaire responses have', count($unaddressedUnapprovedRespondents)) ?>
                 <?php endif; ?>
                 been received from the following, who <?= __n('was not sent an invitation', 'were not sent invitations', count($unaddressedUnapprovedRespondents)) ?>:
             </p>
@@ -107,7 +107,7 @@
 </div>
 
 <p>
-    Enter information for one or more community <?= $respondentTypePlural ?> to send them survey invitations.
+    Enter information for one or more community <?= $respondentTypePlural ?> to send them questionnaire invitations.
 </p>
 
 <?php
@@ -252,7 +252,7 @@
                         download a spreadsheet (.xlsx)
                     </a>
                     and fill in the names and email addresses of the community officials
-                    that you would like to send survey invitations to. If you then upload the
+                    that you would like to send questionnaire invitations to. If you then upload the
                     completed spreadsheet, this form will automatically be filled out and
                     ready for you to submit.
                 </div>

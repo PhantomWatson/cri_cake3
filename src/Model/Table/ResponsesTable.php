@@ -143,11 +143,11 @@ class ResponsesTable extends Table
         try {
             $survey = $surveysTable->get($surveyId);
         } catch (RecordNotFoundException $e) {
-            return [false, 'Survey #'.$surveyId.' not found'];
+            return [false, 'Questionnaire #'.$surveyId.' not found'];
         }
 
         if (! $survey->sm_id) {
-            return [false, 'Survey #'.$surveyId.' has not yet been linked to SurveyMonkey'];
+            return [false, 'Questionnaire #'.$surveyId.' has not yet been linked to SurveyMonkey'];
         }
 
         $SurveyMonkey = $this->getSurveyMonkeyObject();
@@ -613,7 +613,7 @@ class ResponsesTable extends Table
 
         $result = $SurveyMonkey->getSurveyDetails((string) $smSurveyId);
         if (! $result['success'] || empty($result['data'])) {
-            throw new NotFoundException('Could not find survey data for survey #'.$smSurveyId);
+            throw new NotFoundException('Could not find questionnaire data for questionnaire #'.$smSurveyId);
         }
         $survey = $result['data'];
 

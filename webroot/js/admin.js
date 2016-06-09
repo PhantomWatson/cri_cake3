@@ -426,10 +426,10 @@ var surveyLink = {
                 data = jQuery.parseJSON(data);
                 results_container.empty();
                 if (data.length === 0) {
-                    results_container.append('<p class="alert alert-danger">Error: No surveys found</p>');
+                    results_container.append('<p class="alert alert-danger">Error: No questionnaires found</p>');
                     return;
                 }
-                results_container.append('<p>Please select the correct SurveyMonkey survey:</p>');
+                results_container.append('<p>Please select the correct SurveyMonkey questionnaire:</p>');
                 var list = $('<ul></ul>');
                 function clickCallback(event) {
                     return function (event) {
@@ -456,7 +456,7 @@ var surveyLink = {
                 results_container.slideDown();
             },
             error: function () {
-                var msg = '<p class="alert alert-danger">Error: No surveys found</p>';
+                var msg = '<p class="alert alert-danger">Error: No questionnaires found</p>';
                 if (results_container.is(':visible')) {
                     results_container.slideUp(300, function () {
                         results_container.html(msg);
@@ -482,7 +482,7 @@ var surveyLink = {
             url: '/surveys/check_survey_assignment/'+sm_id,
             dataType: 'json',
             beforeSend: function () {
-                loadingMessages.html('<span class="loading"><img src="/data_center/img/loading_small.gif" /> Checking survey uniqueness...</span>');
+                loadingMessages.html('<span class="loading"><img src="/data_center/img/loading_small.gif" /> Checking questionnaire uniqueness...</span>');
             },
             success: function (data) {
                 var displayError = function (msg) {
@@ -492,16 +492,16 @@ var surveyLink = {
                     loadingMessages.html(' ');
                     success_callback();
                 } else if (data.id != surveyLink.community_id) {
-                    displayError('That survey is already assigned to another community: <a href="/admin/communities/edit/'+data.id+'">'+data.name+'</a>');
+                    displayError('That questionnaire is already assigned to another community: <a href="/admin/communities/edit/'+data.id+'">'+data.name+'</a>');
                 } else if (data.type != surveyLink.survey_type) {
-                    displayError('That survey is already linked as this community\'s community '+data.type+'s survey.');
+                    displayError('That questionnaire is already linked as this community\'s community '+data.type+'s questionnaire.');
                 } else {
                     loadingMessages.html(' ');
                     success_callback();
                 }
             },
             error: function (jqXHR, errorType, exception) {
-                loadingMessages.html('<p class="url_error"><span class="label label-danger">Error</span> Error checking survey uniqueness. </p>');
+                loadingMessages.html('<p class="url_error"><span class="label label-danger">Error</span> Error checking questionnaire uniqueness. </p>');
                 var retry_link = $('<a href="#" class="retry">Retry</a>');
                 retry_link.click(function (event) {
                     event.preventDefault();
@@ -596,7 +596,7 @@ var surveyLink = {
                 surveyUrl.html('<a href="'+data+'">'+data+'</a>');
             },
             error: function (jqXHR, errorType, exception) {
-                var error_msg = 'No URL found for this survey. Web link collector may not be configured yet.';
+                var error_msg = 'No URL found for this questionnaire. Web link collector may not be configured yet.';
                 loadingMessages.html('<p class="url_error"><span class="label label-danger">Error</span> '+error_msg+' </p>');
                 var retry_link = $('<a href="#" class="retry">Retry</a>');
                 retry_link.click(function (event) {

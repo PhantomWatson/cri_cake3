@@ -10,7 +10,7 @@
     <?php
         if ($this->request->prefix == 'admin') {
             echo $this->Html->link(
-                '<span class="glyphicon glyphicon-arrow-left"></span> Back to Survey Overview',
+                '<span class="glyphicon glyphicon-arrow-left"></span> Back to Questionnaire Overview',
                 [
                     'prefix' => 'admin',
                     'controller' => 'Surveys',
@@ -48,7 +48,7 @@
     <?php else: ?>
 
         <p>
-            The following email addresses correspond to survey responses that we've received that don't match up with anyone you invited, ordered from most recent to oldest.
+            The following email addresses correspond to questionnaire responses that we've received that don't match up with anyone you invited, ordered from most recent to oldest.
         </p>
 
         <p>
