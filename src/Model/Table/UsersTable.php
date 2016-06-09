@@ -160,12 +160,6 @@ class UsersTable extends Table
         if ($role == 'admin') {
             return $communitiesTable->find('list')->order(['name' => 'ASC']);
         }
-        if ($role == 'consultant') {
-            return $communitiesTable->getConsultantCommunityList($userId);
-        }
-        if ($role == 'client') {
-            return $communitiesTable->getClientCommunityList($userId);
-        }
         return $communitiesTable->find('list')
             ->where(['public' => true])
             ->order(['name' => 'ASC'])
