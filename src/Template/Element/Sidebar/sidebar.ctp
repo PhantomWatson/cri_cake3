@@ -41,6 +41,16 @@
                 '/'
             ) ?>
         </li>
+        <li class="link">
+            <?= $this->Html->link(
+                'Enroll',
+                [
+                    'prefix' => false,
+                    'controller' => 'Pages',
+                    'action' => 'enroll'
+                ]
+            ) ?>
+        </li>
         <?php if (! empty($accessibleCommunities)): ?>
             <li>
                 <p>
