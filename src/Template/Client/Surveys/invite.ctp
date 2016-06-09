@@ -87,13 +87,11 @@
         'City Clerk',
         'City Treasurer',
         'City Council',
-        'Board of Public Words',
         'City Planning Director',
         'Director of Community Development',
         'Planning Commission',
         'Redevelopment Commission',
         'Economic Development Commission',
-        'School Corporation Officials',
         'County Commissioner',
         'County Council'
     ];
