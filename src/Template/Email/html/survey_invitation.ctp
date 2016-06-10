@@ -35,12 +35,12 @@
     This is a project in partnership with the
     <a href="http://www.in.gov/ocra/">Indiana Office of Community and Rural Affairs (OCRA)</a>
     and Ball State University's
-    <a href="http://bsu.edu/ici">Indiana Communities Institute</a>. We would really appreciate your participation in the questionnaire,
-    which should take no more than ten minutes of your time.
+    <a href="http://bsu.edu/ici">Indiana Communities Institute</a>.
+    The questionnaire should take about 15 minutes to complete.
 </p>
 
 <p>
-    Please visit the following URL to begin:
+    To participate, please visit the following URL within the next five days:
 </p>
 
 <p style="font-weight: bold; text-align: center;">
@@ -49,7 +49,23 @@
     </a>
 </p>
 
-<p>
-    If you have any questions, please email
-    <a href="mailto:cri@bsu.edu">cri@bsu.edu</a>.
-</p>
+<?php if (empty($clients)): ?>
+    <p>
+        If you have any questions, please email
+        <a href="mailto:cri@bsu.edu">cri@bsu.edu</a>.
+    </p>
+<?php elseif (count($clients) == 1): ?>
+    <p>
+        If you have any questions, please contact
+        <a href="mailto:<?= $clients[0]['email'] ?>"><?php
+            echo ($clients[0]['salutation'] == '') ? '' : $clients[0]['salutation'].' ';
+            echo $clients[0]['name'];
+        ?></a>
+        or email <a href="mailto:cri@bsu.edu">cri@bsu.edu</a>.
+    </p>
+<?php else: ?>
+    <p>
+        If you have any questions, please contact your community representatives
+        or email <a href="mailto:cri@bsu.edu">cri@bsu.edu</a>.
+    </p>
+<?php endif; ?>
