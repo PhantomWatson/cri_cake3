@@ -493,7 +493,7 @@ class CommunitiesTable extends Table
 
         if ($survey && $survey->alignment_passed == 0) {
             $note = ' (alignment not yet calculated)';
-        } elseif ($isAdmin) {
+        } elseif ($survey && $isAdmin) {
             $note = " ({$survey->alignment}% aligned)";
         } else {
             $note = '';
