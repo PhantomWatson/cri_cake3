@@ -9,6 +9,23 @@
         $class = $bool ? 'ok' : 'remove';
         return '<span class="glyphicon glyphicon-'.$class.'"></span>';
     }
+
+    /**
+     * Returns a <tbody> string with the appropriate class
+     *
+     * @param $tbodyStep Step that this <tbody> contains
+     * @param $currentStep Step that this community is currently at
+     * @return string
+     */
+    function tbodyForStep($tbodyStep, $currentStep) {
+        if ($tbodyStep > floor($currentStep)) {
+            return '<tbody class="future">';
+        }
+        if ($tbodyStep < floor($currentStep)) {
+            return '<tbody class="past">';
+        }
+        return '<tbody class="current">';
+    }
 ?>
 
 <?php if ($authUser['role'] == 'admin'): ?>
@@ -29,7 +46,7 @@
 
 <div id="client_home">
     <table>
-        <tbody <?php if ($score < 2) echo 'class="current"'; ?>>
+        <?= tbodyForStep(1, $score) ?>
             <tr>
                 <th colspan="3">
                     Step One: Sign Up
@@ -71,7 +88,7 @@
             <?php endif; ?>
         </tbody>
 
-        <tbody <?php if ($score >= 2 && $score < 3) echo 'class="current"'; ?>>
+        <?= tbodyForStep(2, $score) ?>
             <tr>
                 <th colspan="3">
                     Step Two: Leadership Alignment Assessment
@@ -303,7 +320,7 @@
         </tbody>
 
         <?php if ($fastTrack): ?>
-            <tbody>
+            <?= tbodyForStep(3, $score) ?>
                 <tr>
                     <th colspan="3">
                         Step Three and Four skipped in Fast Track
@@ -311,7 +328,7 @@
                 </tr>
             </tbody>
         <?php else: ?>
-            <tbody <?php if ($score >= 3 && $score < 4) echo 'class="current"'; ?>>
+            <?= tbodyForStep(3, $score) ?>
                 <tr>
                     <th colspan="3">
                         Step Three: Community Organizations Alignment Assessment
@@ -483,7 +500,7 @@
                 <?php endif; ?>
             </tbody>
 
-            <tbody <?php if ($score >= 4 && $score < 5) echo 'class="current"'; ?>>
+            <?= tbodyForStep(4, $score) ?>
                 <tr>
                     <th colspan="3">
                         Step Four: Review of Findings
@@ -515,7 +532,7 @@
             </tbody>
         <?php endif; ?>
 
-        <tbody <?php if ($score == 5) echo 'class="current"'; ?>>
+        <?= tbodyForStep(5, $score) ?>
             <tr>
                 <th colspan="3">
                     Step Five: Conclusion
