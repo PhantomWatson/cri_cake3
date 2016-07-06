@@ -186,7 +186,7 @@ class CommunitiesController extends AppController
                     'controller' => 'Surveys',
                     'action' => 'link',
                     $community->id,
-                    str_replace('_survey', '', $surveyType)
+                    'official'
                 ]);
                 $message = $community->name.' has been added.';
                 $message .= '<br />Now you can <a href="'.$surveyUrl.'">set up this community\'s first questionnaire</a> and then <a href="'.$clientUrl.'">create a client account</a> for this community.';
