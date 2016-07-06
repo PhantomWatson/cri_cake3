@@ -692,6 +692,14 @@ table.pwr {
 				border-top: none;
 			}
 		}
+		&.current,
+		&.past {
+			td:nth-child(3) {
+				.btn {
+					display: block;
+				}
+			}
+		}
 	}
 	th {
 		border-top: 1px solid #aaa;
@@ -715,7 +723,7 @@ table.pwr {
 		}
 		&:nth-child(3) {
 			.btn {
-				display: block;
+				display: none;
 			}
 		}
 	}
