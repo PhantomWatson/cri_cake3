@@ -126,7 +126,7 @@
                     /
                     <?php
                         $arrow = getSortArrow('ParentArea.name', $this->request->query);
-                        echo $this->Paginator->sort('ParentArea.name', 'Area'.$arrow, ['escape' => false]);
+                        echo $this->Paginator->sort('ParentAreas.name', 'Area'.$arrow, ['escape' => false]);
                     ?>
                 </th>
                 <th>
