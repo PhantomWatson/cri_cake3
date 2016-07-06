@@ -393,6 +393,10 @@ class ResponsesTable extends Table
             ->toArray();
         $respondentIds = Hash::extract($respondents, '{n}.id');
 
+        if (empty($respondentIds)) {
+            return [];
+        }
+
         $responses = $this->find('all')
             ->where([
                 'survey_id' => $surveyId,
