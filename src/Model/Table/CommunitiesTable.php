@@ -375,6 +375,7 @@ class CommunitiesTable extends Table
             $survey = $surveysTable->get($surveyId);
             $note = '<br />Questionnaire URL: <a href="'.$survey->sm_url.'">'.$survey->sm_url.'</a>';
         } else {
+            $survey = null;
             $note =  '';
         }
         $step = $surveyId ? 2 : 1;
@@ -414,12 +415,12 @@ class CommunitiesTable extends Table
 
         $criteria[2]['alignment_calculated'] = [
             'Community leadership alignment calculated',
-            $survey->alignment_passed != 0
+            $survey && $survey->alignment_passed != 0
         ];
 
-        if ($survey->alignment_passed == 0) {
+        if ($survey && $survey->alignment_passed == 0) {
             $note = ' (alignment not yet calculated)';
-        } elseif ($isAdmin) {
+        } elseif ($survey && $isAdmin) {
             $alignment = $survey->alignment;
             $note = " ($alignment% aligned)";
         } else {
@@ -429,11 +430,11 @@ class CommunitiesTable extends Table
         if (! $purchasedLeadershipSummit) {
             $criteria[2]['alignment_passed'] = [
                 'Passed leadership alignment assessment'.$note,
-                 $survey->alignment_passed == 1
+                $survey && $survey->alignment_passed == 1
             ];
         }
 
-        if ($survey->alignment_passed == -1 || $purchasedLeadershipSummit) {
+        if (($survey && $survey->alignment_passed == -1) || $purchasedLeadershipSummit) {
             $criteria[2]['consultant_assigned'] = [
                 'At least one consultant has been assigned to this community',
                 $this->getConsultantCount($communityId) > 0
@@ -445,7 +446,7 @@ class CommunitiesTable extends Table
             ];
         }
 
-        if (! $purchasedLeadershipSummit && ($survey->alignment_passed == 0 || $survey->alignment_passed == 1)) {
+        if (! $purchasedLeadershipSummit && $survey && ($survey->alignment_passed == 0 || $survey->alignment_passed == 1)) {
             $criteria[2]['survey_purchased'] = [
                 'Purchased Community Organizations Alignment Assessment ($3,500)',
                 $productsTable->isPurchased($communityId, 3)
@@ -457,11 +458,11 @@ class CommunitiesTable extends Table
         if ($purchasedLeadershipSummit) {
             $criteria['2.5']['alignment_passed'] = [
                 'Passed leadership alignment assessment'.$note,
-                 $survey->alignment_passed == 1
+                $survey && $survey->alignment_passed == 1
             ];
         }
 
-        if ($survey->alignment_passed == -1 || $purchasedLeadershipSummit) {
+        if (($survey && $survey->alignment_passed == -1) || $purchasedLeadershipSummit) {
             $criteria['2.5']['survey_purchased'] = [
                 'Purchased Community Organizations Alignment Assessment ($3,500)',
                 $productsTable->isPurchased($communityId, 3)
@@ -530,7 +531,7 @@ class CommunitiesTable extends Table
         if ($purchasedCommunitySummit) {
             $criteria['3.5']['alignment_passed'] = [
                 'Passed community alignment assessment'.$note,
-                 $survey->alignment_passed == 1
+                $survey && $survey->alignment_passed == 1
             ];
 
             $criteria['3.5']['policy_dev_purchased'] = [
