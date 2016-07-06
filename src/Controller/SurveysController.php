@@ -16,7 +16,7 @@ class SurveysController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->Auth->allow(['cronImport']);
+        $this->Auth->allow(['cronImport', 'import']);
     }
 
     public function import($surveyId = null)
