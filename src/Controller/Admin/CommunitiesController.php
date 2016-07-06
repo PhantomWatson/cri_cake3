@@ -11,6 +11,11 @@ use Cake\Utility\Hash;
 
 class CommunitiesController extends AppController
 {
+
+    public $paginate = [
+        'order' => ['Communities.name' => 'ASC']
+    ];
+
     /**
      * Alters $this->paginate settings according to $_GET and Cookie data,
      * and remembers $_GET data with a cookie.
