@@ -49,7 +49,9 @@
         <?= tbodyForStep(1, $score) ?>
             <tr>
                 <th colspan="3">
-                    Step One: Sign Up
+                    <button class="step-header">
+                        Step One: Sign Up
+                    </button>
                 </th>
             </tr>
             <tr>
@@ -91,7 +93,9 @@
         <?= tbodyForStep(2, $score) ?>
             <tr>
                 <th colspan="3">
-                    Step Two: Leadership Alignment Assessment
+                    <button class="step-header">
+                        Step Two: Leadership Alignment Assessment
+                    </button>
                 </th>
             </tr>
 
@@ -323,7 +327,9 @@
             <?= tbodyForStep(3, $score) ?>
                 <tr>
                     <th colspan="3">
-                        Step Three and Four skipped in Fast Track
+                        <button class="step-header">
+                            Step Three and Four skipped in Fast Track
+                        </button>
                     </th>
                 </tr>
             </tbody>
@@ -331,7 +337,9 @@
             <?= tbodyForStep(3, $score) ?>
                 <tr>
                     <th colspan="3">
-                        Step Three: Community Organizations Alignment Assessment
+                        <button class="step-header">
+                            Step Three: Community Organizations Alignment Assessment
+                        </button>
                     </th>
                 </tr>
                 <tr>
@@ -503,7 +511,9 @@
             <?= tbodyForStep(4, $score) ?>
                 <tr>
                     <th colspan="3">
-                        Step Four: Review of Findings
+                        <button class="step-header">
+                            Step Four: Review of Findings
+                        </button>
                     </th>
                 </tr>
                 <tr>
@@ -535,7 +545,9 @@
         <?= tbodyForStep(5, $score) ?>
             <tr>
                 <th colspan="3">
-                    Step Five: Conclusion
+                    <button class="step-header">
+                        Step Five: Conclusion
+                    </button>
                 </th>
             </tr>
         </tbody>

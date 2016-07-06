@@ -310,6 +310,7 @@ var surveyInvitationForm = {
 var clientHome = {
     init: function () {
         this.setupImport();
+        this.setupToggledContainers();
         
         $('.importing_note_toggler').click(function (event) {
             event.preventDefault();
@@ -370,6 +371,30 @@ var clientHome = {
                     link.removeClass('disabled');
                     link.find('.loading').remove();
                 }
+            });
+        });
+    },
+    setupToggledContainers: function () {
+        var steps = $('#client_home > table > tbody');
+        steps.each(function () {
+            var step = $(this);
+            var button = step.find('button.step-header');
+            var details = step.find('tr').not(':first-child');
+            if (details.length > 0) {
+                button.attr('title', 'Click for details');
+                if (! step.hasClass('current')) {
+                    details.hide();
+                    button.addClass('closed');
+                }
+            }
+            button.click(function (event) {
+                event.preventDefault();
+
+                if (details.length === 0) {
+                    return;
+                }
+                details.toggle();
+                button.toggleClass('closed');
             });
         });
     }
