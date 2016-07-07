@@ -181,7 +181,7 @@
                 );
             ?>
 
-            <?php if ($uninvitedRespondentCount > 0): ?>
+            <?php if ($survey['type'] == 'official' && $uninvitedRespondentCount > 0): ?>
                 <?= $this->Html->link(
                     'Review / Approve Uninvited Responses',
                     [
