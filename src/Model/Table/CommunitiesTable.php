@@ -353,6 +353,7 @@ class CommunitiesTable extends Table
         $productsTable = TableRegistry::get('Products');
         $surveysTable = TableRegistry::get('Surveys');
         $respondentsTable = TableRegistry::get('Respondents');
+        $responsesTable = TableRegistry::get('Responses');
         $criteria = [];
 
 
@@ -393,7 +394,6 @@ class CommunitiesTable extends Table
             $surveyId && $count > 0
         ];
 
-        $responsesTable = TableRegistry::get('Responses');
         $count = $surveyId ? $responsesTable->getDistinctCount($surveyId) : 0;
         $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
         $criteria[2]['responses_received'] = [
@@ -480,7 +480,7 @@ class CommunitiesTable extends Table
             (boolean) $surveyId
         ];
 
-        $count = $surveyId ? $respondentsTable->getCount($surveyId) : 0;
+        $count = $surveyId ? $responsesTable->getDistinctCount($surveyId) : 0;
         $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
         $criteria[3]['responses_received'] = [
             'Responses to the questionnaire have been collected'.$note,
