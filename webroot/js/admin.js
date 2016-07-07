@@ -224,8 +224,8 @@ var adminViewResponses = {
     		});
 		$('ul.nav-tabs li[role=presentation]').first().addClass('active');
 		var toggleFullscreenLabel = {
-	        fullscreen: '<span class="glyphicon glyphicon-fullscreen"></span> <span class="text">Show fullscreen</span>',
-	        window: '<span class="glyphicon glyphicon-list-alt"></span> <span class="text">Show in window</span>'
+	        fullscreen: '<span class="glyphicon glyphicon-fullscreen"></span> <span class="text">Show table full size</span>',
+	        window: '<span class="glyphicon glyphicon-list-alt"></span> <span class="text">Show table in window</span>'
 		};
 		$('#toggle-table-scroll')
 		    .html(toggleFullscreenLabel.fullscreen)
