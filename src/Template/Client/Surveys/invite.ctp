@@ -39,9 +39,11 @@
     <button id="sent_invitations_toggler" class="btn btn-default">
         Who has already been invited?
     </button>
-    <button id="suggestions_toggler" class="btn btn-default">
-        Suggestions of who to invite
-    </button>
+    <?php if ($surveyType == 'official'): ?>
+        <button id="suggestions_toggler" class="btn btn-default">
+            Suggestions of who to invite
+        </button>
+    <?php endif; ?>
 </p>
 
 <div id="sent_invitations" class="well">
@@ -81,30 +83,32 @@
     <?php endif; ?>
 </div>
 
-<?php
-    $suggestions = [
-        'Mayor',
-        'City Clerk',
-        'City Treasurer',
-        'City Council',
-        'City Planning Director',
-        'Director of Community Development',
-        'Planning Commission',
-        'Redevelopment Commission',
-        'Economic Development Commission',
-        'County Commissioner',
-        'County Council'
-    ];
-?>
-<div id="invitation_suggestions" class="well">
-    <ul>
-        <?php foreach ($suggestions as $suggestion): ?>
-            <li>
-                <?= $suggestion ?>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-</div>
+<?php if ($surveyType == 'official'): ?>
+    <?php
+        $suggestions = [
+            'Mayor',
+            'City Clerk',
+            'City Treasurer',
+            'City Council',
+            'City Planning Director',
+            'Director of Community Development',
+            'Planning Commission',
+            'Redevelopment Commission',
+            'Economic Development Commission',
+            'County Commissioner',
+            'County Council'
+        ];
+    ?>
+    <div id="invitation_suggestions" class="well">
+        <ul>
+            <?php foreach ($suggestions as $suggestion): ?>
+                <li>
+                    <?= $suggestion ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
 
 <p>
     Enter information for one or more community <?= $respondentTypePlural ?> to send them questionnaire invitations.
