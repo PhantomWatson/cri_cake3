@@ -394,7 +394,7 @@
                         <?php if ($organizationResponsesChecked): ?>
                             <div class="last_import alert alert-info">
                                 New responses were last checked for
-                                <?= $this->Time->timeAgoInWords($organization, ['end' => '+1 year']) ?>
+                                <?= $this->Time->timeAgoInWords($organizationResponsesChecked, ['end' => '+1 year']) ?>
                             </div>
                         <?php endif; ?>
 
