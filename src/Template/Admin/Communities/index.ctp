@@ -172,8 +172,19 @@
                         <td>
                             <div class="dropdown">
                                 <?php if (isset($community->{$surveyType}['sm_id']) && $community->{$surveyType}['sm_id']): ?>
+                                    <?php
+                                        $currentStep = floor($community->score);
+                                        $stepForSurvey = $surveyType == 'official_survey' ? 2 : 3;
+                                        if ($currentStep == $stepForSurvey) {
+                                            $label = 'In progress';
+                                        } elseif ($currentStep < $stepForSurvey) {
+                                            $label = 'Ready';
+                                        } else {
+                                            $label = 'Complete';
+                                        }
+                                    ?>
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                        Running <span class="caret"></span>
+                                        <?= $label ?> <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
                                         <li class="dropdown-header">
