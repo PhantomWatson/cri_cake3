@@ -386,6 +386,10 @@ var surveyLink = {
         this.community_id = params.community_id;
         this.survey_type = params.type;
         this.setupSurveyLinking();
+
+		if ($('#survey-link-buttons').data('is-new') === 1) {
+			$('#survey-link-submit').prop('disabled', true);
+		}
     },
     
     setupSurveyLinking: function () {
@@ -563,7 +567,10 @@ var surveyLink = {
             results_container.slideUp();
         }
         container.find('.url_error, .retry').remove();
-        
+
+		// Enable submit button
+		$('#survey-link-submit').prop('disabled', false);
+
         // Assign ID
         var id_field = $('#sm-id');
         id_field.val(sm_id);

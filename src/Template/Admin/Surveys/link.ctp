@@ -87,7 +87,7 @@
 
             <?= $this->Form->create($survey) ?>
 
-            <ul class="actions">
+            <ul class="actions" id="survey-link-buttons" data-is-new="<?= $survey->isNew() ? 1 : 0 ?>">
                 <li>
                     <button class="lookup btn btn-default">
                         Select Questionnaire
@@ -101,7 +101,10 @@
                 <li>
                     <?= $this->Form->button(
                         $survey->isNew() ? 'Link Questionnaire' : 'Update Link',
-                        ['class' => 'btn btn-primary']
+                        [
+                            'class' => 'btn btn-primary',
+                            'id' => 'survey-link-submit'
+                        ]
                     ) ?>
                 </li>
             </ul>
