@@ -47,6 +47,19 @@ gulp.task('php_cs', function (cb) {
         .pipe(phpcs.reporter('log'));
 });
 
+gulp.task('php_cs_ctp', function (cb) {
+    return gulp.src(['src/Template/**/*.ctp'])
+    // Validate files using PHP Code Sniffer
+        .pipe(phpcs({
+            bin: '.\\vendor\\bin\\phpcs.bat',
+            standard: '.\\vendor\\cakephp\\cakephp-codesniffer\\CakePHP',
+            errorSeverity: 1,
+            warningSeverity: 1
+        }))
+        // Log all problems that was found
+        .pipe(phpcs.reporter('log'));
+});
+
 function testNotification(status, pluginName, override) {
     var options = {
         title:   ( status == 'pass' ) ? 'Tests Passed' : 'Tests Failed',
