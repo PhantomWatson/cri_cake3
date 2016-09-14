@@ -51,7 +51,7 @@ class SurveysController extends AppController
         $errorMsgs = [];
         if (is_array($responses)) {
             foreach ($responses as $smRespondentId => $response) {
-                $respondent = $responsesTable->extractRespondentInfo($response, $survey->sm_id);
+                $respondent = $responsesTable->extractRespondentInfo($response);
                 $name = $respondent['name'] ?: '(no name)';
                 $respondentRecord = $respondentsTable->getMatching($surveyId, $respondent, $smRespondentId);
                 $serializedResponse = base64_encode(serialize($response));
