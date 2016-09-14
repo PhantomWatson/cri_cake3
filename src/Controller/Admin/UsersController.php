@@ -42,6 +42,7 @@ class UsersController extends AppController
                 break;
         }
 
+        $this->paginate['order']['Users.name'] = 'ASC';
         $this->set([
             'titleForLayout' => 'Users',
             'users' => $this->paginate(),
