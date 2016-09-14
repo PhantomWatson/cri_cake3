@@ -8,7 +8,14 @@
     <a href="/files/CRI-Brochure-2016-0119.pdf" class="with_icon">
         <img src="/data_center/img/icons/drive-download.png" />
         <span>
-            Download this document as a PDF
+            Printable PDF brochure about CRI
+        </span>
+    </a>
+    <br />
+    <a href="/files/CRI-GuideForCommunties-2016-07-22.pdf" class="with_icon">
+        <img src="/data_center/img/icons/drive-download.png" />
+        <span>
+            Printable user guide for communities (July 2016 version)
         </span>
     </a>
 </p>
