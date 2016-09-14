@@ -5,6 +5,11 @@ use App\Controller\AppController;
 
 class SettingsController extends AppController
 {
+    /**
+     * editCalculationSettings method
+     *
+     * @return void
+     */
     public function editCalculationSettings()
     {
         $settingNames = ['intAlignmentAdjustment', 'intAlignmentThreshhold'];
@@ -22,7 +27,7 @@ class SettingsController extends AppController
                     $this->Settings->save($setting);
                     $this->Flash->success($setting->name.' updated');
                 } else {
-                    $this->Flash->error('There was an error updating '.$setting->name);
+                    $this->Flash->error('There was an error updating ' . $setting->name);
                 }
             }
         } else {

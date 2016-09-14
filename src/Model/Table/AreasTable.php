@@ -79,8 +79,10 @@ class AreasTable extends Table
     }
 
     /**
-     * @param int|null $areaId
-     * @return GoogleCharts|boolean
+     * Returns a GoogleCharts object for a PWRRR bar chart for an area, or false if data or area is unavailable
+     *
+     * @param int|null $areaId Area ID
+     * @return GoogleCharts|bool
      */
     public function getPwrBarChart($areaId)
     {
@@ -282,8 +284,10 @@ class AreasTable extends Table
     }
 
     /**
-     * @param int|null $areaId
-     * @return array|boolean
+     * Returns an array used to create a PWRRR table for an area, or false if data or area is unavailable
+     *
+     * @param int|null $areaId Area ID
+     * @return array|bool
      */
     public function getPwrTable($areaId)
     {
@@ -332,8 +336,10 @@ class AreasTable extends Table
     }
 
     /**
-     * @param int|null $areaId
-     * @return GoogleCharts|boolean
+     * Returns a GoogleCharts object for an employment line chart for an area, or false if data or area is unavailable
+     *
+     * @param int|null $areaId Area ID
+     * @return GoogleCharts|bool
      */
     public function getEmploymentLineChart($areaId)
     {
@@ -370,7 +376,7 @@ class AreasTable extends Table
                 'Statistics' => function ($q) {
                     return $q
                         ->where(function ($exp, $q) {
-                            return $exp->in('Statistics.stat_category_id', [18,19]);
+                            return $exp->in('Statistics.stat_category_id', [18, 19]);
                         })
                         ->order(['Statistics.year' => 'ASC']);
                 }
@@ -391,7 +397,7 @@ class AreasTable extends Table
         }
 
         // Add rows
-        $recession_years = [1977, 2006];
+        $recessionYears = [1977, 2006];
         foreach ($statistics as $year => $statSet) {
             $row = ['year' => $year];
             foreach ($statSet as $key => $value) {
@@ -435,8 +441,10 @@ class AreasTable extends Table
     }
 
     /**
-     * @param int|null $areaId
-     * @return array|boolean
+     * Returns an array used to make an employment growth table for an area, or false if data or area is unavailable
+     *
+     * @param int|null $areaId Area ID
+     * @return array|bool
      */
     public function getEmploymentGrowthTableData($areaId)
     {
@@ -453,7 +461,7 @@ class AreasTable extends Table
                     return $q
                         ->select(['area_id', 'year'])
                         ->where(function ($exp, $q) {
-                            return $exp->in('Statistics.stat_category_id', [18,19]);
+                            return $exp->in('Statistics.stat_category_id', [18, 19]);
                         })
                         ->order(['Statistics.year' => 'DESC'])
                         ->limit(1);
@@ -475,7 +483,7 @@ class AreasTable extends Table
                 'Statistics' => function ($q) use ($laterYear, $earlierYear) {
                     return $q->where(function ($exp, $q) use ($laterYear, $earlierYear) {
                         return $exp
-                            ->in('Statistics.stat_category_id', [18,19])
+                            ->in('Statistics.stat_category_id', [18, 19])
                             ->in('Statistics.year', [$laterYear, $earlierYear]);
                     });
                 }
@@ -525,19 +533,21 @@ class AreasTable extends Table
     }
 
     /**
+     * Returns a GoogleCharts object
+     *
      * @return GoogleCharts
      */
     public function getGoogleChartsObject()
     {
-        require_once(ROOT.DS.'plugins'.DS.'GoogleCharts'.DS.'vendor'.DS.'GoogleCharts.php');
+        require_once ROOT . DS . 'plugins' . DS . 'GoogleCharts' . DS . 'vendor' . DS . 'GoogleCharts.php';
         return new \GoogleCharts();
     }
 
     /**
      * Get the array of PWRRR rankings associated with an area, or FALSE if no valid area was provided
      *
-     * @param int|null $areaId
-     * @return array|boolean
+     * @param int|null $areaId Area ID
+     * @return array|bool
      */
     public function getPwrrrRanks($areaId)
     {
@@ -561,10 +571,12 @@ class AreasTable extends Table
     }
 
     /**
-     * Take a comma-delimited dump of area data and insert it into the database
+     * Takes a comma-delimited dump of area data and inserts it into the database
      *
      * Format for each line of $data:
      *     fips,City Name city,County Name,countyFips,P,W,R,R,R
+     *
+     * @return void
      */
     public function importAreaData()
     {
@@ -580,7 +592,7 @@ class AreasTable extends Table
             $type = array_pop($areaNameWords);
             $areaName = implode(' ', $areaNameWords);
             if (! in_array($type, ['city', 'town', 'CDP'])) {
-                exit('Unrecognized area type: '.$type);
+                exit('Unrecognized area type: ' . $type);
             }
 
             $recordExists = $this->getIdFromFips($fips);
@@ -603,15 +615,17 @@ class AreasTable extends Table
             $errors = $area->errors();
             if (empty($errors)) {
                 $this->save($area);
-                echo 'Saved '.$areaName.'<br />';
+                echo 'Saved ' . $areaName . '<br />';
             } else {
-                exit('Errors: '.print_r($errors, true));
+                exit('Errors: ' . print_r($errors, true));
             }
         }
     }
 
     /**
-     * @param int $fips
+     * Returns the ID of an area with the given FIPS code
+     *
+     * @param int $fips FIPS code
      * @return int|null
      */
     public function getIdFromFips($fips)

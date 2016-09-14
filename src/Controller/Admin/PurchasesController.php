@@ -28,6 +28,11 @@ class PurchasesController extends AppController
         ]
     ];
 
+    /**
+     * Index method
+     *
+     * @return void
+     */
     public function index()
     {
         $this->set([
@@ -36,6 +41,12 @@ class PurchasesController extends AppController
         ]);
     }
 
+    /**
+     * Refund method
+     *
+     * @param int $purchaseId Purchase record ID
+     * @return \Cake\Network\Response|null
+     */
     public function refund($purchaseId)
     {
         try {
@@ -73,6 +84,11 @@ class PurchasesController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
+    /**
+     * Add method
+     *
+     * @return \Cake\Network\Response|null
+     */
     public function add()
     {
         $purchase = $this->Purchases->newEntity();
@@ -98,7 +114,7 @@ class PurchasesController extends AppController
             ->order(['id' => 'ASC']);
         $products = [];
         foreach ($results as $product) {
-            $products[$product->id] = $product->description.' ($'.number_format($product->price).')';
+            $products[$product->id] = $product->description . ' ($' . number_format($product->price) . ')';
         }
         $this->set([
             'communities' => $communitiesTable->find('list')->order(['name' => 'ASC']),

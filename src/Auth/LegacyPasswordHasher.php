@@ -24,7 +24,7 @@ class LegacyPasswordHasher extends AbstractPasswordHasher
      *
      * @param string $password
      * @param string $hashedPassword
-     * @return boolean
+     * @return bool
      */
     public function check($password, $hashedPassword)
     {

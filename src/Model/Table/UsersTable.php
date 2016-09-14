@@ -141,7 +141,7 @@ class UsersTable extends Table
     /**
      * Returns the communities that this user has access to.
      *
-     * @param int|null $userId
+     * @param int|null $userId User ID
      * @return array of $communityId => $community_name pairs
      */
     public function getAccessibleCommunities($userId = null)
@@ -169,9 +169,9 @@ class UsersTable extends Table
     /**
      * Returns TRUE if the specified user is allowed to view the specified community
      *
-     * @param int $userId
-     * @param int $communityId
-     * @return boolean
+     * @param int $userId User ID
+     * @param int $communityId Community ID
+     * @return bool
      */
     public function canAccessCommunity($userId, $communityId)
     {
@@ -195,6 +195,12 @@ class UsersTable extends Table
         return isset($accessibleCommunities[$communityId]);
     }
 
+
+    /**
+     * Returns an array of client full-names, indexed by client user IDs
+     *
+     * @return array
+     */
     public function getClientList()
     {
         $clients = $this->find('all')
@@ -208,6 +214,11 @@ class UsersTable extends Table
         return $retval;
     }
 
+    /**
+     * Returns an array of consultant full-names, indexed by consultant user IDs
+     *
+     * @return array
+     */
     public function getConsultantList()
     {
         $consultants = $this->find('list')
@@ -222,6 +233,7 @@ class UsersTable extends Table
 
     /**
      * Returns a random six-character string. Ambiguous-looking alphanumeric characters are excluded.
+     *
      * @return string
      */
     public function generatePassword()
@@ -235,9 +247,9 @@ class UsersTable extends Table
      *
      * A clearer name might be "user is this community's client".
      *
-     * @param int $communityId
-     * @param int $userId
-     * @return boolean
+     * @param int $communityId Community ID
+     * @param int $userId User ID
+     * @return bool
      */
     public function isCommunityClient($communityId, $userId)
     {
@@ -251,7 +263,9 @@ class UsersTable extends Table
     }
 
     /**
-     * @param string $email
+     * Returns the user ID that matches the provided email
+     *
+     * @param string $email Email address
      * @return int|null
      */
     public function getIdWithEmail($email)
@@ -269,13 +283,13 @@ class UsersTable extends Table
     /**
      * Returns a hash for use in the emailed link to /reset-password
      *
-     * @param int $userId
-     * @param int $timestamp
+     * @param int $userId User ID
+     * @param int $timestamp Timestamp
      * @return string
      */
     public function getPasswordResetHash($userId, $timestamp)
     {
-        return Security::hash($userId.$timestamp, 'sha1', true);
+        return Security::hash($userId . $timestamp, 'sha1', true);
     }
 
     /**

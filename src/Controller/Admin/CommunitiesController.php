@@ -134,7 +134,9 @@ class CommunitiesController extends AppController
 
     /**
      * Passes necessary variables the view to be used by the adding/editing form
+     *
      * @param Entity $community
+     * @return void
      */
     private function prepareForm($community)
     {
@@ -149,6 +151,11 @@ class CommunitiesController extends AppController
         $this->set(compact('areas', 'areaTypes', 'community'));
     }
 
+    /**
+     * Index method
+     *
+     * @return void
+     */
     public function index()
     {
         if (isset($_GET['search'])) {
@@ -166,6 +173,11 @@ class CommunitiesController extends AppController
         ]);
     }
 
+    /**
+     * Add method
+     *
+     * @return \Cake\Network\Response|null
+     */
     public function add()
     {
         $community = $this->Communities->newEntity();
@@ -213,6 +225,12 @@ class CommunitiesController extends AppController
         $this->render('form');
     }
 
+    /**
+     * Edit method
+     *
+     * @param int|null $communityId Community ID
+     * @return \Cake\Network\Response|null
+     */
     public function edit($communityId = null)
     {
         if (! $communityId) {
@@ -249,11 +267,17 @@ class CommunitiesController extends AppController
         $this->prepareForm($community);
         $this->set([
             'communityId' => $communityId,
-            'titleForLayout' => 'Edit '.$community->name
+            'titleForLayout' => 'Edit ' . $community->name
         ]);
         $this->render('form');
     }
 
+    /**
+     * Delete method
+     *
+     * @param int|null $communityId Community ID
+     * @return \Cake\Network\Response|null
+     */
     public function delete($communityId = null)
     {
         if (! $this->request->is('post')) {
@@ -271,6 +295,12 @@ class CommunitiesController extends AppController
         return $this->redirect($this->request->referer());
     }
 
+    /**
+     * Clients method
+     *
+     * @param int $communityId Community ID
+     * @return void
+     */
     public function clients($communityId)
     {
         $community = $this->Communities->find('all')
@@ -286,18 +316,23 @@ class CommunitiesController extends AppController
             ])
             ->first();
         if (! $community) {
-            throw new NotFoundException('Sorry, we couldn\'t find a community with ID# '.$communityId);
+            throw new NotFoundException('Sorry, we couldn\'t find a community with ID# ' . $communityId);
         }
         $this->set([
             'community' => $community,
-            'titleForLayout' => $community->name.' Clients'
+            'titleForLayout' => $community->name . ' Clients'
         ]);
     }
 
+    /**
+     * Progress method
+     *
+     * @param int $communityId Community ID
+     */
     public function progress($communityId)
     {
         if (! $this->Communities->exists(['id' => $communityId])) {
-            throw new NotFoundException('Sorry, we couldn\'t find a community with ID# '.$communityId);
+            throw new NotFoundException('Sorry, we couldn\'t find a community with ID# ' . $communityId);
         }
 
         $community = $this->Communities->get($communityId);
@@ -310,7 +345,7 @@ class CommunitiesController extends AppController
             if ($community->dirty('score')) {
                 if ($this->Communities->save($community)) {
                     $verbed = $community->score > $previousScore ? 'increased' : 'decreased';
-                    $this->Flash->success('Community score '.$verbed);
+                    $this->Flash->success('Community score ' . $verbed);
                 } else {
                     $this->Flash->error('There was an error updating this community');
                 }
@@ -320,17 +355,22 @@ class CommunitiesController extends AppController
         }
 
         $this->set([
-            'titleForLayout' => $community->name.' Progress',
+            'titleForLayout' => $community->name . ' Progress',
             'community' => $community,
             'criteria' => $this->Communities->getProgress($communityId, true),
             'fastTrack' => $community->fast_track
         ]);
     }
 
+    /**
+     * Spreadsheet method
+     *
+     * @return void
+     */
     public function spreadsheet()
     {
         if (isset($_GET['search'])) {
-            $this->paginate['conditions']['Communities.name LIKE'] = '%'.$_GET['search'].'%';
+            $this->paginate['conditions']['Communities.name LIKE'] = '%' . $_GET['search'] . '%';
         } else {
             $this->adminIndexFilter();
         }
@@ -353,6 +393,12 @@ class CommunitiesController extends AppController
         ]);
     }
 
+    /**
+     * Client home method
+     *
+     * @param int $communityId Community ID
+     * @return \Cake\Network\Response|null
+     */
     public function clienthome($communityId)
     {
         $this->Cookie->write('communityId', $communityId);
@@ -365,6 +411,12 @@ class CommunitiesController extends AppController
         ]);
     }
 
+    /**
+     * Add client method
+     *
+     * @param int $communityId Community ID
+     * @return \Cake\Network\Response|null
+     */
     public function addClient($communityId)
     {
         $community = $this->Communities->get($communityId);
@@ -382,16 +434,26 @@ class CommunitiesController extends AppController
                 $senderName = $this->Auth->user('name');
 
                 $Mailer = new Mailer();
-                $result = $Mailer->sendNewAccountEmail($client, $this->request->data('unhashed_password'), $senderEmail, $senderName);
+                $result = $Mailer->sendNewAccountEmail(
+                    $client,
+                    $this->request->data('unhashed_password'),
+                    $senderEmail,
+                    $senderName
+                );
                 if ($result) {
-                    $this->Flash->success('Client account created for '.$client->name.' and login instructions emailed');
+                    $msg = 'Client account created for ' . $client->name . ' and login instructions emailed';
+                    $this->Flash->success($msg);
                     return $this->redirect(['action' => 'clients', $communityId]);
                 } else {
-                    $retval[] = 'There was an error emailing account login info to '.$client->name.' No new account was created. Please contact an administrator for assistance.';
+                    $msg = 'There was an error emailing account login info to ' . $client->name . '.';
+                    $msg .= ' No new account was created. Please contact an administrator for assistance.';
+                    $retval[] = $msg;
                     $usersTable->delete($client);
                 }
             } else {
-                $this->Flash->error('There was an error saving that client. Please try again or contact an administrator for assistance.');
+                $msg = 'There was an error saving that client.';
+                $msg .= ' Please try again or contact an administrator for assistance.';
+                $this->Flash->error($msg);
             }
         } else {
             $client = $usersTable->newEntity();
@@ -404,20 +466,34 @@ class CommunitiesController extends AppController
             'communityName' => $community->name,
             'salutations' => $usersTable->getSalutations(),
             'role' => 'client',
-            'titleForLayout' => 'Add a New Client for '.$community->name,
+            'titleForLayout' => 'Add a New Client for ' . $community->name,
         ]);
     }
 
+    /**
+     * Remove client method
+     *
+     * @param int $clientId Client user ID
+     * @param int $communityId Community ID
+     * @return \Cake\Network\Response|null
+     */
     public function removeClient($clientId, $communityId)
     {
         $usersTable = TableRegistry::get('Users');
         $client = $usersTable->get($clientId);
         $community = $this->Communities->get($communityId);
         $this->Communities->Clients->unlink($community, [$client]);
-        $this->Flash->success('Removed '.$client->name.' from '.$community->name);
+        $msg = 'Removed ' . $client->name . ' from ' . $community->name;
+        $this->Flash->success($msg);
         return $this->redirect($this->referer());
     }
 
+    /**
+     * Select client method
+     *
+     * @param int $communityId Community ID
+     * @return \Cake\Network\Response|null
+     */
     public function selectClient($communityId)
     {
         $community = $this->Communities->get($communityId);
@@ -437,19 +513,20 @@ class CommunitiesController extends AppController
                     }
                     $communityEntity = $this->Communities->get($linkedCommunity['id']);
                     $usersTable->ClientCommunities->unlink($client, [$communityEntity]);
-                    $this->Flash->notification($client->name.'\'s association with '.$linkedCommunity['name'].' has been removed');
+                    $msg = $client->name . '\'s association with ' . $linkedCommunity['name'] . ' has been removed';
+                    $this->Flash->notification($msg);
                 }
             }
 
             // Link client with this community
             if ($alreadyLinked) {
-                $this->Flash->notification($client->name.' is already assigned to '.$community->name);
+                $this->Flash->notification($client->name . ' is already assigned to ' . $community->name);
                 return $this->redirect(['action' => 'clients', $communityId]);
             } elseif ($this->Communities->Clients->link($community, [$client])) {
-                $this->Flash->success($client->name.' is now assigned to '.$community->name);
+                $this->Flash->success($client->name . ' is now assigned to ' . $community->name);
                 return $this->redirect(['action' => 'clients', $communityId]);
             } else {
-                $this->Flash->error('There was an error assigning '.$client->name.' to '.$community->name);
+                $this->Flash->error('There was an error assigning ' . $client->name . ' to ' . $community->name);
             }
         } else {
             $client = $usersTable->newEntity();
@@ -460,10 +537,15 @@ class CommunitiesController extends AppController
             'clients' => $usersTable->getClientList(),
             'communityId' => $communityId,
             'communityName' => $community->name,
-            'titleForLayout' => 'Add a New Client for '.$community->name
+            'titleForLayout' => 'Add a New Client for ' . $community->name
         ]);
     }
 
+    /**
+     * Alignment calculation settings method
+     *
+     * @return void
+     */
     public function alignmentCalcSettings()
     {
         $settingsTable = TableRegistry::get('Settings');

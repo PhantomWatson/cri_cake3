@@ -161,6 +161,8 @@ class SurveysTable extends Table
 
     /**
      * Returns an array of surveys (arrays with keys 'id' and 'title') currently hosted by SurveyMonkey
+     *
+     * @param array $params Parameters for SurveyMonkey API request
      * @return array
      */
     public function getSMSurveyList($params)
@@ -208,7 +210,7 @@ class SurveysTable extends Table
     /**
      * Returns the URL for a SurveyMonkey survey
      *
-     * @param int $smId SurveyMonkey-defined survey ID
+     * @param string $smId SurveyMonkey-defined survey ID
      * @return string
      */
     public function getSMSurveyUrl($smId = null)
@@ -217,7 +219,7 @@ class SurveysTable extends Table
         if (! $smId) {
             throw new NotFoundException('SurveyMonkey ID not specified');
         } elseif (! is_numeric($smId)) {
-            throw new NotFoundException('SurveyMonkey ID "'.$smId.'" is not numeric');
+            throw new NotFoundException("SurveyMonkey ID '$smId' is not numeric");
         }
 
         // Pull from cache if possible
@@ -231,7 +233,7 @@ class SurveysTable extends Table
         $params = [
             'fields' => ['type', 'url']
         ];
-        $collectors = $SurveyMonkey->getCollectorList((string) $smId, $params);
+        $collectors = $SurveyMonkey->getCollectorList((string)$smId, $params);
         $retval = false;
         if (isset($collectors['data']['collectors']) && ! empty($collectors['data']['collectors'])) {
             foreach ($collectors['data']['collectors'] as $collector) {
@@ -252,7 +254,7 @@ class SurveysTable extends Table
 
     /**
      * Returns the community_id for the first survey that matches $conditions
-     * @param $conditions array
+     * @param array $conditions Query conditions
      * @return int|null
      */
     public function getCommunityId($conditions)
@@ -267,7 +269,7 @@ class SurveysTable extends Table
     /**
      * Returns a SurveyMonkey survey URL from the cache
      *
-     * @param int $smId
+     * @param string $smId SurveyMonkey survey ID
      * @return string|null
      */
     public function getCachedSMSurveyUrl($smId)
@@ -277,19 +279,19 @@ class SurveysTable extends Table
 
     /**
      * Returns true if the survey exists and has its URL recorded
-     * @param int $communityId
-     * @param string $surveyType 'official' or 'organization'
-     * @return boolean
+     * @param int $communityId Community ID
+     * @param string $surveyType Either 'official' or 'organization'
+     * @return bool
      */
     public function isOpen($communityId, $surveyType)
     {
         if ($surveyType != 'official' && $surveyType != 'organization') {
-            throw new InternalErrorException('Unrecognized questionnaire type: '.$surveyType);
+            throw new InternalErrorException('Unrecognized questionnaire type: ' . $surveyType);
         }
 
         $communitiesTable = TableRegistry::get('Communities');
         if (! $communitiesTable->exists(['id' => $communityId])) {
-            throw new NotFoundException('Could not get questionnaire status. Community (#'.$communityId.') not found.');
+            throw new NotFoundException('Could not get questionnaire status. Community (#' . $communityId . ') not found.');
         }
 
         $results = $this->find('all')
@@ -304,8 +306,8 @@ class SurveysTable extends Table
 
     /**
      * Returns an array of invited_respondent_count, uninvited_respondent_count, and percent_invited_responded for a single survey type or an array of both
-     * @param int $communityId
-     * @param string $surveyType Optional
+     * @param int $communityId Community ID
+     * @param string $surveyType Survey type (optional)
      * @return array
      */
     public function getStatus($communityId, $surveyType = null)
@@ -313,7 +315,7 @@ class SurveysTable extends Table
         $allTypes = ['official', 'organization'];
         if ($surveyType) {
             if (! in_array($surveyType, $allTypes)) {
-                throw new InternalErrorException('Unrecognized questionnaire type: '.$surveyType);
+                throw new InternalErrorException('Unrecognized questionnaire type: ' . $surveyType);
             }
             $types = [$surveyType];
         } else {
@@ -322,7 +324,7 @@ class SurveysTable extends Table
 
         $respondentsTable = TableRegistry::get('Respondents');
         $responsesTable = TableRegistry::get('Responses');
-        $survey_status = [];
+        $surveyStatus = [];
 
         foreach ($types as $type) {
             $survey = $this->find('all')
@@ -338,7 +340,7 @@ class SurveysTable extends Table
             $percentInvitedResponded = empty($invitedRespondentCount)
                 ? 0
                 : $invitedResponseCount / $invitedRespondentCount;
-            $survey_status[$type] = [
+            $surveyStatus[$type] = [
                 'invited_respondent_count' => $invitedRespondentCount,
                 'uninvited_respondent_count' => $uninvitedRespondentCount,
                 'percent_invited_responded' => round($percentInvitedResponded * 100),
@@ -347,14 +349,14 @@ class SurveysTable extends Table
             ];
         }
         if ($surveyType) {
-            return array_pop($survey_status);
+            return array_pop($surveyStatus);
         }
-        return $survey_status;
+        return $surveyStatus;
     }
 
     /**
-     * @param int $communityId
-     * @param string $type
+     * @param int $communityId Community ID
+     * @param string $type Survey type
      * @return int|null
      */
     public function getSurveyId($communityId, $type)
@@ -370,18 +372,18 @@ class SurveysTable extends Table
     }
 
     /**
-     * @param int $surveyId
-     * @return boolean
+     * @param int $surveyId Survey ID
+     * @return bool
      */
     public function setChecked($surveyId)
     {
         $survey = $this->get($surveyId);
         $survey->responses_checked = date('Y-m-d H:i:s');
-        return (boolean) $this->save($survey);
+        return (bool)$this->save($survey);
     }
 
     /**
-     * @param int $surveyId
+     * @param int $surveyId Survey ID
      * @return DateTime|null
      */
     public function getChecked($surveyId)
@@ -428,7 +430,7 @@ class SurveysTable extends Table
     /**
      * Queries SurveyMonkey to determine the IDs associated with the PWRRR-ranking question and its set of answers
      *
-     * @param int $smId SurveyMonkey survey ID
+     * @param string $smId SurveyMonkey survey ID
      * @return array First value is true/false for success/failure, second value is status message, third is data array for saving Survey with
      */
     public function getPwrrrQuestionAndAnswerIds($smId)
@@ -450,7 +452,7 @@ class SurveysTable extends Table
         }
 
         $SurveyMonkey = $this->getSurveyMonkeyObject();
-        $result = $SurveyMonkey->getSurveyDetails((string) $smId);
+        $result = $SurveyMonkey->getSurveyDetails((string)$smId);
         if (! isset($result['data'])) {
             return [false, 'Could not get questionnaire details from SurveyMonkey. This might be a temporary network error.'];
         }
@@ -497,13 +499,13 @@ class SurveysTable extends Table
                 case '3':
                 case '4':
                 case '5':
-                    $field = $answer['text'].'_aid';
+                    $field = $answer['text'] . '_aid';
                     $data[$field] = $answer['answer_id'];
                     continue;
             }
             foreach ($sectors as $sector) {
                 if (stripos($answer['text'], $sector) !== false) {
-                    $field = $sector.'_aid';
+                    $field = $sector . '_aid';
                     $data[$field] = $answer['answer_id'];
                     break;
                 }
@@ -514,7 +516,7 @@ class SurveysTable extends Table
         foreach ($data as $field => $value) {
             if (! $value) {
                 $answer = str_replace('_aid', '', $field);
-                return [false, 'Error: Could not find the answer ID for the answer "'.$answer.'".'];
+                return [false, "Error: Could not find the answer ID for the answer '$answer'"];
             }
         }
 
@@ -524,13 +526,13 @@ class SurveysTable extends Table
     /**
      * Gets the SurveyMonkey question ID for the respondent's email address
      *
-     * @param int $smId
+     * @param string $smId SurveyMonkey survey ID
      * @return int|null
      */
     public function getEmailQuestionId($smId)
     {
         $SurveyMonkey = $this->getSurveyMonkeyObject();
-        $result = $SurveyMonkey->getSurveyDetails((string) $smId);
+        $result = $SurveyMonkey->getSurveyDetails((string)$smId);
         if (! $result['data']) {
             return null;
         }
@@ -550,7 +552,7 @@ class SurveysTable extends Table
     /**
      * Sets the SurveyMonkey Q&A IDs associated with the PWRRR-ranking question and its set of answers
      *
-     * @param int $smId SurveyMonkey survey ID
+     * @param string $smId SurveyMonkey survey ID
      * @return array [boolean success/failure indicator, result message]
      */
     public function setQuestionAndAnswerIds($smId)
@@ -560,7 +562,7 @@ class SurveysTable extends Table
             ->where(['sm_id' => $smId])
             ->limit(1);
         if ($results->isEmpty()) {
-            return [false, 'Error: No questionnaire has been recorded with SurveyMonkey id "'.$smId.'".'];
+            return [false, "Error: No questionnaire has been recorded with SurveyMonkey id '$smId'."];
         }
         $survey = $results->first();
         $data = $this->getPwrrrQuestionAndAnswerIds($smId)[2];
@@ -573,7 +575,7 @@ class SurveysTable extends Table
 
     /**
      * Returns the percent (0-100) of invited respondents who have responded
-     * @param $surveyId int
+     * @param int $surveyId Survey ID
      * @return int
      */
     public function getInvitedResponsePercentage($surveyId)
@@ -589,9 +591,9 @@ class SurveysTable extends Table
     }
 
     /**
-     * @param int $communityId
-     * @param string $surveyType
-     * @return boolean
+     * @param int $communityId Community ID
+     * @param string $surveyType Survey type
+     * @return bool
      */
     public function hasBeenCreated($communityId, $surveyType)
     {
@@ -608,8 +610,8 @@ class SurveysTable extends Table
     }
 
     /**
-     * @param int $surveyId
-     * @return boolean
+     * @param int $surveyId Survey ID
+     * @return bool
      */
     public function hasUninvitedResponses($surveyId)
     {
@@ -624,8 +626,8 @@ class SurveysTable extends Table
     }
 
     /**
-     * @param int $surveyId
-     * @return boolean
+     * @param int $surveyId Survey ID
+     * @return bool
      */
     public function hasUnaddressedUnapprovedRespondents($surveyId)
     {
@@ -662,7 +664,7 @@ class SurveysTable extends Table
     {
         $sectors = $this->getSectors();
         $getFieldName = function ($sector) {
-            return $sector.'_rank';
+            return $sector . '_rank';
         };
         return array_map($getFieldName, $sectors);
     }
@@ -670,8 +672,8 @@ class SurveysTable extends Table
     /**
      * Returns true if responses have been received since alignment was last set by an admin
      *
-     * @param int $surveyId
-     * @return boolean
+     * @param int $surveyId Survey ID
+     * @return bool
      */
     public function newResponsesHaveBeenReceived($surveyId)
     {
@@ -693,10 +695,11 @@ class SurveysTable extends Table
     /**
      * Throws exceptions if errors are found
      *
-     * @param string $respondentTypePlural
-     * @param int $communityId
+     * @param string $respondentTypePlural 'officials' or 'organizations'
+     * @param int $communityId Community ID
      * @throws ForbiddenException
      * @throws BadRequestException
+     * @return void
      */
     public function validateRespondentTypePlural($respondentTypePlural, $communityId)
     {
@@ -721,8 +724,8 @@ class SurveysTable extends Table
      * sorted with the surveys whose responses have been least-recently
      * imported first.
      *
-     * @param Query $query
-     * @param array $options
+     * @param Query $query Query
+     * @param array $options Query options
      * @return Query
      */
     public function findAutoImportCandidate(Query $query, array $options)
@@ -823,7 +826,7 @@ class SurveysTable extends Table
         if ($hours > 0) {
             $msg = ($hours == 1) ? 'every hour' : "every $hours hours";
             if ($minutes >= 10) {
-                return $msg." and $minutes minutes";
+                return "$msg and $minutes minutes";
             }
             return $msg;
         }
@@ -836,7 +839,7 @@ class SurveysTable extends Table
      * Returns an array of the most recent import errors
      * for the selected survey
      *
-     * @param $surveyId int
+     * @param int $surveyId Survey ID
      * @return array|null
      */
     public function getImportErrors($surveyId)

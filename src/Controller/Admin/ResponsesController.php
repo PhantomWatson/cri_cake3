@@ -8,6 +8,11 @@ use Cake\ORM\TableRegistry;
 class ResponsesController extends AppController
 {
 
+    /**
+     * Initialize method
+     *
+     * @return void
+     */
     public function initialize()
     {
         parent::initialize();
@@ -15,16 +20,22 @@ class ResponsesController extends AppController
         $this->loadComponent('RequestHandler');
     }
 
+    /**
+     * View method
+     *
+     * @param int|null $surveyId Survey ID
+     * @return void
+     */
     public function view($surveyId = null)
     {
         $surveysTable = TableRegistry::get('Surveys');
-        $areasTable = TableRegistry::get('Areas');
 
         if ($surveyId) {
             try {
                 $survey = $surveysTable->get($surveyId);
             } catch (RecordNotFoundException $e) {
-                throw new NotFoundException('Sorry, we couldn\'t find a questionnaire in the database with that ID number.');
+                $msg = 'Sorry, we couldn\'t find a questionnaire in the database with that ID number.';
+                throw new NotFoundException($msg);
             }
         } else {
             throw new NotFoundException('Questionnaire ID not specified.');
@@ -63,7 +74,7 @@ class ResponsesController extends AppController
             $sectors = $surveysTable->getSectors();
             foreach ($responses as $response) {
                 foreach ($sectors as $sector) {
-                    $ranks[$sector][] = $response[$sector.'_rank'];
+                    $ranks[$sector][] = $response[$sector . '_rank'];
                 }
             }
             $averageRanks = [];
@@ -136,6 +147,8 @@ class ResponsesController extends AppController
     /**
      * Looks for responses with missing local_area_pwrrr_alignment and
      * parent_area_pwrrr_alignment values and populates them.
+     *
+     * @return void
      */
     public function calculateMissingAlignments()
     {
@@ -157,7 +170,7 @@ class ResponsesController extends AppController
             return;
         }
 
-        $this->Flash->set(count($responses).' response(s) with missing alignments found');
+        $this->Flash->set(count($responses) . ' response(s) with missing alignments found');
 
         $missingAreaReports = [];
         foreach ($responses as $response) {
@@ -173,7 +186,8 @@ class ResponsesController extends AppController
                 $areaId = $community->$fieldName;
                 if (! $areaId) {
                     if (! isset($missingAreaReports[$survey->community_id][$scope])) {
-                        $this->Flash->error('Community #'.$survey->community_id.' has no '.$scope.' area');
+                        $msg = 'Community #' . $survey->community_id . ' has no ' . $scope . ' area';
+                        $this->Flash->error($msg);
                         $missingAreaReports[$survey->community_id][$scope] = true;
                     }
                     continue;
@@ -195,7 +209,7 @@ class ResponsesController extends AppController
             }
 
             if ($this->Responses->save($response)) {
-                $this->Flash->success('Response #'.$response->id.' updated');
+                $this->Flash->success('Response #' . $response->id . ' updated');
             }
         }
     }
@@ -207,7 +221,7 @@ class ResponsesController extends AppController
      * $respondent->sm_respondent_id if it was not already set
      *
      * @param int $respondentId
-     * @return \Cake\Network\Response
+     * @return void
      * @throws InternalErrorException
      */
     public function getFullResponse($respondentId)
@@ -231,7 +245,8 @@ class ResponsesController extends AppController
                 'sm_respondent_id' => $smRespondentId
             ]);
             if ($respondent->errors()) {
-                throw new InternalErrorException('There was an error saving the respondent\'s sm_respondent_id ('.$smRespondentId.')');
+                $msg = 'There was an error saving the respondent\'s sm_respondent_id (' . $smRespondentId . ')';
+                throw new InternalErrorException($msg);
             }
             $respondentsTable->save($respondent);
         }

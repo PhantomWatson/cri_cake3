@@ -8,6 +8,8 @@ class CommunitiesController extends AppController
 {
     /**
      * Client home page
+     *
+     * @return \App\Controller\Response
      */
     public function index()
     {
@@ -72,7 +74,7 @@ class CommunitiesController extends AppController
         ];
         $respondentsTable = TableRegistry::get('Respondents');
         $this->set([
-            'titleForLayout' => $community->name.'\'s Progress in the CRI Program',
+            'titleForLayout' => $community->name . '\'s Progress in the CRI Program',
             'score' => $community->score,
             'officialSurveyOpen' => $surveysTable->isOpen($communityId, 'official'),
             'organizationSurveyOpen' => $surveysTable->isOpen($communityId, 'organization'),

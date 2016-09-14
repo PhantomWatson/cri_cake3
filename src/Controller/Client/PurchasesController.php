@@ -6,6 +6,11 @@ use Cake\ORM\TableRegistry;
 
 class PurchasesController extends AppController
 {
+    /**
+     * Index method
+     *
+     * @return \App\Controller\Response
+     */
     public function index()
     {
         $communitiesTable = TableRegistry::get('Communities');
@@ -21,13 +26,13 @@ class PurchasesController extends AppController
         foreach ($products as &$product) {
             // Massage product data
             $product->description = str_ireplace('PwR3', 'PWR<sup>3</sup>', $product->description);
-            $product->price = '$'.number_format($product->price, 0);
+            $product->price = '$' . number_format($product->price, 0);
             $product->status = $productsTable->getPurchaseStatus($communityId, $product->id, $clientId);
         }
 
         $community = $communitiesTable->get($communityId);
         $this->set([
-            'titleForLayout' => 'Products Purchased for '.$community->name,
+            'titleForLayout' => 'Products Purchased for ' . $community->name,
             'products' => $products
         ]);
     }

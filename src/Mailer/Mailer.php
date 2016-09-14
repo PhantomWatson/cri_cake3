@@ -14,7 +14,7 @@ class Mailer
      *
      * @param int $surveyId
      * @param array $sender
-     * @return boolean
+     * @return bool
      */
     public function sendReminders($surveyId, $sender)
     {

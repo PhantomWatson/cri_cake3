@@ -91,6 +91,13 @@ class RespondentsTable extends Table
         return $rules;
     }
 
+    /**
+     * Returns a list of respondents for the selected survey
+     *
+     * @param int $surveyId Survey ID
+     * @param null|bool $invited The required value for Respondents.invited (optional)
+     * @return array
+     */
     public function getList($surveyId, $invited = null)
     {
         $conditions = ['survey_id' => $surveyId];
@@ -102,11 +109,23 @@ class RespondentsTable extends Table
             ->toArray();
     }
 
+    /**
+     * Returns a list of invited respondents for the specified survey
+     *
+     * @param int $surveyId Survey ID
+     * @return array
+     */
     public function getInvitedList($surveyId)
     {
         return $this->getList($surveyId, true);
     }
 
+    /**
+     * Returns a result set of all invited respondents for the specified survey
+     *
+     * @param int $surveyId Survey ID
+     * @return \Cake\Datasource\ResultSetInterface
+     */
     public function getInvited($surveyId)
     {
         return $this->find('all')
@@ -119,6 +138,12 @@ class RespondentsTable extends Table
             ->all();
     }
 
+    /**
+     * Returns a list of all uninvited respondents to the specified survey
+     *
+     * @param int $surveyId Survey ID
+     * @return array
+     */
     public function getUninvitedList($surveyId)
     {
         return $this->getList($surveyId, false);
@@ -126,7 +151,8 @@ class RespondentsTable extends Table
 
     /**
      * Collects any new SurveyMonkey respondents and returns an array
-     * @param int $surveyId Key for record in 'surveys' table, not the SurveyMonkey survey_id
+     *
+     * @param int $surveyId Survey ID
      * @return array [success, [respondent_id => date_modified] || error]
      */
     public function getNewFromSurveyMonkey($surveyId)
@@ -135,21 +161,23 @@ class RespondentsTable extends Table
         try {
             $survey = $surveysTable->get($surveyId);
         } catch (RecordNotFoundException $e) {
-            return [false, 'Questionnaire #'.$surveyId.' not found'];
+            return [false, "Questionnaire #$surveyId not found"];
         }
 
-        if (! $survey->sm_id) {
-            return [false, 'Questionnaire #'.$surveyId.' has not yet been linked to SurveyMonkey', null];
+        if (!$survey->sm_id) {
+            return [false, "Questionnaire #$surveyId has not yet been linked to SurveyMonkey", null];
         }
 
-        $recordedRespondents = $this->getAllForSurvey($surveyId);
         $SurveyMonkey = $this->getSurveyMonkeyObject();
         $page = 1;
         $pageSize = 1000;
-        $lastResponseDate = $survey->respondents_last_modified_date ? $survey->respondents_last_modified_date->format('Y-m-d H:i:s') : null;
+        if ($survey->respondents_last_modified_date) {
+            $lastResponseDate = $survey->respondents_last_modified_date->format('Y-m-d H:i:s');
+        } else {
+            $lastResponseDate = null;
+        }
         $retval = [];
-        $lastModifiedDates = [];
-        $surveyMonkeySurveyId = (string) $survey->sm_id;
+        $surveyMonkeySurveyId = (string)$survey->sm_id;
         while (true) {
             $params = [
                 'order_asc' => true,
@@ -203,6 +231,12 @@ class RespondentsTable extends Table
         return [true, $retval];
     }
 
+    /**
+     * Returns an array with all respondents to the specified survey
+     *
+     * @param int $surveyId Survey ID
+     * @return array
+     */
     public function getAllForSurvey($surveyId)
     {
         return $this->find('all')
@@ -211,6 +245,12 @@ class RespondentsTable extends Table
             ->toArray();
     }
 
+    /**
+     * Returns the number of respondents invited to complete a survey
+     *
+     * @param int $surveyId Survey ID
+     * @return int
+     */
     public function getInvitedCount($surveyId)
     {
         return $this->find('all')
@@ -221,6 +261,12 @@ class RespondentsTable extends Table
             ->count();
     }
 
+    /**
+     * Returns the number of respondents associated with a survey
+     *
+     * @param int $surveyId Survey ID
+     * @return int
+     */
     public function getCount($surveyId)
     {
         return $this->find('all')
@@ -228,6 +274,12 @@ class RespondentsTable extends Table
             ->count();
     }
 
+    /**
+     * Returns the number of respondents associated with a survey who have not been invited
+     *
+     * @param int $surveyId Survey ID
+     * @return int
+     */
     public function getUninvitedCount($surveyId)
     {
         return $this->find('all')
@@ -238,6 +290,12 @@ class RespondentsTable extends Table
             ->count();
     }
 
+    /**
+     * Returns an array of respondents for a survey who have not been approved
+     *
+     * @param int $surveyId Survey ID
+     * @return array
+     */
     public function getUnaddressedUnapproved($surveyId)
     {
         return $this->find('all')
@@ -252,7 +310,8 @@ class RespondentsTable extends Table
 
     /**
      * Returns list of unapproved and not-dismissed respondents with non-blank email addresses
-     * @param int $surveyId
+     *
+     * @param int $surveyId Survey ID
      * @return array
      */
     public function getUnaddressedUnapprovedList($surveyId)
@@ -274,7 +333,8 @@ class RespondentsTable extends Table
 
     /**
      * Returns list of approved respondents with non-blank email addresses
-     * @param int $surveyId
+     *
+     * @param int $surveyId Survey ID
      * @return array
      */
     public function getApprovedList($surveyId)
@@ -294,6 +354,12 @@ class RespondentsTable extends Table
             ->toArray();
     }
 
+    /**
+     * Returns an array of all dismissed respondents
+     *
+     * @param int $surveyId Survey ID
+     * @return array
+     */
     public function getDismissed($surveyId)
     {
         return $this->find('all')
@@ -308,9 +374,10 @@ class RespondentsTable extends Table
 
     /**
      * Returns TRUE if the client is authorized to approved a given respondent
-     * @param int $clientId
-     * @param int $respondentId
-     * @return boolean
+     *
+     * @param int $clientId Client user ID
+     * @param int $respondentId Respondent ID
+     * @return bool
      */
     public function clientCanApproveRespondent($clientId, $respondentId)
     {
@@ -319,7 +386,7 @@ class RespondentsTable extends Table
         $survey = $surveysTable->get($respondent->survey_id);
         $communitiesTable = TableRegistry::get('Communities');
         $assignedCommunityId = $communitiesTable->getClientCommunityId($clientId);
-        $idsFound = (boolean) ($respondent->survey_id && $survey->community_id);
+        $idsFound = (bool)($respondent->survey_id && $survey->community_id);
         $communityIsAssigned = $survey->community_id == $assignedCommunityId;
         return $idsFound && $communityIsAssigned;
     }
@@ -328,9 +395,9 @@ class RespondentsTable extends Table
      * Returns a respondent record for the specified survey and
      * matching either the same smRespondentId or email address.
      *
-     * @param int $surveyId
-     * @param array $respondent
-     * @param int $smRespondentId
+     * @param int $surveyId Survey ID
+     * @param array $respondent Respondent array
+     * @param int $smRespondentId SurveyMonkey respondent ID
      * @return Respondent
      */
     public function getMatching($surveyId, $respondent, $smRespondentId)
@@ -356,9 +423,9 @@ class RespondentsTable extends Table
     /**
      * Returns TRUE if this respondent's responses should be auto-approved
      *
-     * @param Survey $survey
-     * @param string $email
-     * @return boolean
+     * @param Survey $survey Survey entity
+     * @param string $email Email address
+     * @return bool
      */
     public function isAutoApproved($survey, $email)
     {
@@ -380,7 +447,7 @@ class RespondentsTable extends Table
     /**
      * Returns invited participants with no corresponding responses
      *
-     * @param int $surveyId
+     * @param int $surveyId Survey ID
      * @return array
      */
     public function getUnresponsive($surveyId)
@@ -413,7 +480,7 @@ class RespondentsTable extends Table
      * Uses the SurveyMonkey API to determine the SurveyMonkey respondent
      * id corresponding to a CRI respondent ID
      *
-     * @param int $respondentId
+     * @param int $respondentId Respondent ID
      * @return string
      * @throws InternalErrorException
      */
@@ -442,13 +509,13 @@ class RespondentsTable extends Table
         $smSurveyId = $survey->sm_id;
 
         $SurveyMonkey = $this->getSurveyMonkeyObject();
-        $result = $SurveyMonkey->getRespondentList((string) $smSurveyId, [
+        $result = $SurveyMonkey->getRespondentList((string)$smSurveyId, [
             'start_modified_date' => $responseDate,
             'fields' => ['email']
         ]);
         if (! $result['success']) {
             $msg = 'Error retrieving response data from SurveyMonkey.';
-            $msg .= ' Details: '.print_r($result['message'], true);
+            $msg .= ' Details: ' . print_r($result['message'], true);
             throw new InternalErrorException($msg);
         }
 
