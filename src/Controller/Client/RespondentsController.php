@@ -65,7 +65,8 @@ class RespondentsController extends AppController
                             ->select(['respondent_id', 'response_date'])
                             ->order(['Responses.response_date' => 'DESC']);
                     }
-                ]);
+                ])
+                ->order(['name' => 'ASC']);
             $this->paginate['sortWhitelist'] = ['approved', 'email', 'name'];
             $respondents = $this->paginate($query)->toArray();
         } else {
