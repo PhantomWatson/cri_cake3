@@ -75,33 +75,18 @@
                             </td>
                         <?php endforeach; ?>
                     </tr>
-                    <?php if ($community->local_area): ?>
-                        <tr>
-                            <th>
-                                Actual PWR<sup>3</sup> Ranking
-                                <br />
-                                <span class="note">
-                                    <?= $community->local_area->name ?>
-                                </span>
-                            </th>
-                            <?php foreach ($sectors as $sector): ?>
-                                <td>
-                                    <?= $community->local_area->{$sector . '_rank'} ?>
-                                </td>
-                            <?php endforeach; ?>
-                        </tr>
-                    <?php endif; ?>
+                    <?php $area = $community->local_area ?: $community->parent_area; ?>
                     <tr>
                         <th>
                             Actual PWR<sup>3</sup> Ranking
                             <br />
                             <span class="note">
-                                <?= $community->parent_area->name ?>
+                                <?= $area->name ?>
                             </span>
                         </th>
                         <?php foreach ($sectors as $sector): ?>
                             <td>
-                                <?= $community->parent_area->{$sector . '_rank'} ?>
+                                <?= $area->{$sector . '_rank'} ?>
                             </td>
                         <?php endforeach; ?>
                     </tr>
