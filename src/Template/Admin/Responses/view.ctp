@@ -38,6 +38,99 @@
 
     <section>
         <h2>
+            Summary
+        </h2>
+        <?php if ($responses): ?>
+            <table class="table" id="responses-summary">
+                <thead>
+                    <tr>
+                        <th>
+                            <?= $community->local_area->name ?>
+                        </th>
+                        <?php foreach ($sectors as $sector): ?>
+                            <th>
+                                <?= ucfirst($sector) ?>
+                            </th>
+                        <?php endforeach; ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>
+                            Average Survey Response Ranking
+                        </th>
+                        <?php foreach ($sectors as $sector): ?>
+                            <td>
+                                <?= $averageRanks[$sector] ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                    <tr>
+                        <th>
+                            Response Order
+                        </th>
+                        <?php foreach ($sectors as $sector): ?>
+                            <td>
+                                <?= $rankOrder[$sector] ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                    <?php if ($community->local_area): ?>
+                        <tr>
+                            <th>
+                                Actual PWR<sup>3</sup> Ranking
+                                <br />
+                                <span class="note">
+                                    <?= $community->local_area->name ?>
+                                </span>
+                            </th>
+                            <?php foreach ($sectors as $sector): ?>
+                                <td>
+                                    <?= $community->local_area->{$sector . '_rank'} ?>
+                                </td>
+                            <?php endforeach; ?>
+                        </tr>
+                    <?php endif; ?>
+                    <tr>
+                        <th>
+                            Actual PWR<sup>3</sup> Ranking
+                            <br />
+                            <span class="note">
+                                <?= $community->parent_area->name ?>
+                            </span>
+                        </th>
+                        <?php foreach ($sectors as $sector): ?>
+                            <td>
+                                <?= $community->parent_area->{$sector . '_rank'} ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                    <tr>
+                        <th>
+                            Internal Alignment Scores
+                            <br />
+                            <span class="note">
+                                Lower numbers indicate that respondents are better-aligned with each other for that
+                                category relative to others
+                            </span>
+                        </th>
+                        <?php foreach ($sectors as $sector): ?>
+                            <td>
+                                <?= round($internalAlignment[$sector], 3) ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p class="alert alert-info">
+
+            </p>
+        <?php endif; ?>
+    </section>
+
+    <section>
+        <h2>
             PWR<sup>3</sup> Alignment
             <button class="btn btn-sm btn-default" id="toggle-table-scroll"></button>
             <button class="btn btn-sm btn-default" id="show-respondents" data-label="show"></button>
