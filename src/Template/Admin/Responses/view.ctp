@@ -22,25 +22,25 @@
 </p>
 
 <div id="admin-responses-view">
-    <p>
-        These are the currently known responses to
-        <strong>
-            <?= $community->name ?>'s
-            community
-            <?= $survey->type == 'official' ? 'leadership' : 'organization' ?>
-        </strong>
-        questionnaire. Incomplete responses are excluded, and recent responses may have not been imported yet.
-    </p>
+    <?php if ($responses): ?>
+        <p>
+            These are the currently known responses to
+            <strong>
+                <?= $community->name ?>'s
+                community
+                <?= $survey->type == 'official' ? 'leadership' : 'organization' ?>
+            </strong>
+            questionnaire. Incomplete responses are excluded, and recent responses may have not been imported yet.
+        </p>
 
-    <p>
-        Click on <span class="glyphicon glyphicon-search"></span> to view <em>all</em> of the questions and answers for a response.
-    </p>
+        <p>
+            Click on <span class="glyphicon glyphicon-search"></span> to view <em>all</em> of the questions and answers for a response.
+        </p>
 
-    <section>
-        <h2>
-            Summary
-        </h2>
-        <?php if ($responses): ?>
+        <section>
+            <h2>
+                Summary
+            </h2>
             <table class="table" id="responses-summary">
                 <thead>
                     <tr>
@@ -107,24 +107,14 @@
                     </tr>
                 </tbody>
             </table>
-        <?php else: ?>
-            <p class="alert alert-info">
-                No responses have been imported yet.
-            </p>
-        <?php endif; ?>
-    </section>
+        </section>
 
-    <section>
-        <h2>
-            PWR<sup>3</sup> Alignment
-            <button class="btn btn-sm btn-default" id="toggle-table-scroll"></button>
-            <button class="btn btn-sm btn-default" id="show-respondents" data-label="show"></button>
-        </h2>
-        <?php if (empty($responses)): ?>
-            <p class="alert alert-info">
-                No responses have been imported yet.
-            </p>
-        <?php else: ?>
+        <section>
+            <h2>
+                PWR<sup>3</sup> Alignment
+                <button class="btn btn-sm btn-default" id="toggle-table-scroll"></button>
+                <button class="btn btn-sm btn-default" id="show-respondents" data-label="show"></button>
+            </h2>
             <div>
                 <ul class="nav nav-tabs" role="tablist">
                     <li>
@@ -173,15 +163,12 @@
                     <?php endif; ?>
                 </div>
             </div>
-        <?php endif; ?>
-    </section>
+        </section>
 
-    <section>
-        <h2>
-            Internal Alignment
-        </h2>
-
-        <?php if ($internalAlignment): ?>
+        <section>
+            <h2>
+                Internal Alignment
+            </h2>
             <table class="table" id="internal-alignment-breakdown">
                 <thead>
                     <tr>
@@ -220,12 +207,12 @@
                     </tr>
                 </tfoot>
             </table>
-        <?php else: ?>
-            <p class="alert alert-info">
-                Not enough responses have been collected / approved to be able to determine this questionnaire's internal alignment.
-            </p>
-        <?php endif; ?>
-    </section>
+        </section>
+    <?php else: ?>
+        <p class="alert alert-info">
+            No responses have been imported yet.
+        </p>
+    <?php endif; ?>
 
     <section>
         <h2>
