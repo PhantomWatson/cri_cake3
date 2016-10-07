@@ -109,7 +109,7 @@
             </table>
         <?php else: ?>
             <p class="alert alert-info">
-
+                No responses have been imported yet.
             </p>
         <?php endif; ?>
     </section>
