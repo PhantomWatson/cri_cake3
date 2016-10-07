@@ -64,11 +64,7 @@
                     <?php $area = $community->local_area ?: $community->parent_area; ?>
                     <tr>
                         <th>
-                            Actual PWR<sup>3</sup> Ranking
-                            <br />
-                            <span class="note">
-                                <?= $area->name ?>
-                            </span>
+                            Actual PWR<sup>3</sup> Ranking of <?= $area->name ?>
                         </th>
                         <?php foreach ($sectors as $sector): ?>
                             <td>
