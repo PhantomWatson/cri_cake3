@@ -112,7 +112,7 @@ class ResponsesTable extends Table
      * Returns the number of invited respondents who have any responses
      * (not the number of distinct responses including repeats)
      *
-     * @param int $surveyId
+     * @param int $surveyId Survey ID
      * @return int
      */
     public function getInvitedCount($surveyId)
@@ -129,8 +129,8 @@ class ResponsesTable extends Table
     /**
      * Retrieves SurveyMonkey responses for the specified respondents
      *
-     * @param array $surveyId
-     * @param array $smRespondentIds
+     * @param int $surveyId Survey ID
+     * @param array $smRespondentIds Array of respondent IDs
      * @return array [success / fail, responses / error message]
      */
     public function getFromSurveyMonkeyForRespondents($surveyId, $smRespondentIds)
@@ -143,11 +143,11 @@ class ResponsesTable extends Table
         try {
             $survey = $surveysTable->get($surveyId);
         } catch (RecordNotFoundException $e) {
-            return [false, 'Survey #'.$surveyId.' not found'];
+            return [false, "Questionnaire #$surveyId not found"];
         }
 
         if (! $survey->sm_id) {
-            return [false, 'Survey #'.$surveyId.' has not yet been linked to SurveyMonkey'];
+            return [false, "Questionnaire #$surveyId has not yet been linked to SurveyMonkey"];
         }
 
         $SurveyMonkey = $this->getSurveyMonkeyObject();
@@ -160,7 +160,7 @@ class ResponsesTable extends Table
              * each additional API call. */
             sleep(1);
 
-            $result = $SurveyMonkey->getResponses((string) $survey->sm_id, array_values($smRespondentIdsChunk));
+            $result = $SurveyMonkey->getResponses((string)$survey->sm_id, array_values($smRespondentIdsChunk));
             if (! $result['success']) {
                 return [false, $result['message']];
             }
@@ -176,6 +176,14 @@ class ResponsesTable extends Table
         return [true, $retval];
     }
 
+    /**
+     * Returns whether or not the given response has already been recorded
+     *
+     * @param int $respondentId Respondent ID
+     * @param array $survey Survey array
+     * @param string $serializedResponse Serialized response
+     * @return bool
+     */
     public function isRecorded($respondentId, $survey, $serializedResponse)
     {
         $responseRanks = $this->getResponseRanks($serializedResponse, $survey);
@@ -185,7 +193,7 @@ class ResponsesTable extends Table
 
         $conditions = ['respondent_id' => $respondentId];
         foreach ($responseRanks as $sector => $rank) {
-            $conditions[$sector.'_rank'] = $rank;
+            $conditions[$sector . '_rank'] = $rank;
         }
         $count = $this->find('all')
             ->where($conditions)
@@ -196,11 +204,10 @@ class ResponsesTable extends Table
     /**
      * Returns an array with values for 'name' and 'email'
      *
-     * @param array $response
-     * @param int $smId
+     * @param array $response Response array
      * @return array
      */
-    public function extractRespondentInfo($response, $smId)
+    public function extractRespondentInfo($response)
     {
         $retval = [
             'name' => '',
@@ -213,7 +220,6 @@ class ResponsesTable extends Table
         }
 
         // Search for the first response that's a valid email address
-        $surveysTable = TableRegistry::get('Surveys');
         foreach ($response as $section) {
             foreach ($section['answers'] as $answer) {
                 if (! isset($answer['text'])) {
@@ -233,7 +239,7 @@ class ResponsesTable extends Table
     /**
      * Returns TRUE if any responses have been collected, FALSE otherwise
      *
-     * @param int $surveyId
+     * @param int $surveyId Survey ID
      * @return bool
      */
     public function responsesHaveBeenCollected($surveyId)
@@ -247,7 +253,7 @@ class ResponsesTable extends Table
     /**
      * Returns a count of responses for unique respondents (not counting repeats)
      *
-     * @param int $surveyId
+     * @param int $surveyId Survey ID
      * @return int
      */
     public function getDistinctCount($surveyId)
@@ -281,21 +287,28 @@ class ResponsesTable extends Table
         }
 
         // Determine deviation weights
-        $deviation_weight = [];
+        $deviationWeight = [];
         foreach ($sectors as $sector) {
-            $deviation_weight[$sector] = $this->getDeviationWeight($actualRanks[$sector], $responseRanks[$sector]);
+            $deviationWeight[$sector] = $this->getDeviationWeight($actualRanks[$sector], $responseRanks[$sector]);
         }
 
         // Finally, determine alignment
         $score = 0;
         foreach ($sectors as $sector) {
-            $score += $sectorWeight[$sector] * $deviation_weight[$sector];
+            $score += $sectorWeight[$sector] * $deviationWeight[$sector];
         }
         $alignment = (($score - 1) / 2) * 100;
 
         return $alignment;
     }
 
+    /**
+     * Returns the deviation weight between an actual and user-provided PWRRR rank
+     *
+     * @param int $actualRank Actual PWRRR rank
+     * @param int $responseRank PWRRR rank from response
+     * @return float
+     */
     public function getDeviationWeight($actualRank, $responseRank)
     {
         $deviation = abs($actualRank - $responseRank);
@@ -306,7 +319,7 @@ class ResponsesTable extends Table
      * Decodes the response and returns an array listing the ranks assigned to each sector by the respondent,
      * or NULL if any sector's rank is missing
      *
-     * @param string $serializedResponse
+     * @param string $serializedResponse Serialized response
      * @param Entity $survey The result of a call to SurveysTable::get()
      * @return array|null
      */
@@ -341,7 +354,7 @@ class ResponsesTable extends Table
      * Returns [$sector, $rank] (both strings) of the sector that an
      * answer is about and the rank the respondent gave to it.
      *
-     * @param array $answer
+     * @param array $answer Answer array
      * @param Entity $survey The result of a call to SurveysTable::get()
      * @return array [$sector, $rank]
      */
@@ -358,6 +371,12 @@ class ResponsesTable extends Table
         return [$sector, $rank];
     }
 
+    /**
+     * Returns a query for all responses for the specified survey
+     *
+     * @param int $surveyId Survey ID
+     * @return \Cake\ORM\Query
+     */
     public function getAll($surveyId)
     {
         return $this->find('all')
@@ -375,7 +394,7 @@ class ResponsesTable extends Table
      * Returns all current (not overridden by more recent)
      * approved responses for the selected survey.
      *
-     * @param int $surveyId
+     * @param int $surveyId Survey ID
      * @return \Cake\ORM\Query
      */
     public function getCurrent($surveyId)
@@ -392,6 +411,10 @@ class ResponsesTable extends Table
             ])
             ->toArray();
         $respondentIds = Hash::extract($respondents, '{n}.id');
+
+        if (empty($respondentIds)) {
+            return [];
+        }
 
         $responses = $this->find('all')
             ->where([
@@ -420,7 +443,7 @@ class ResponsesTable extends Table
      * Returns an array with the percent of responses gave a sector a
      * particular rank, in the form $retval[$sectorName][$rank] = $percent.
      *
-     * @param array $responses
+     * @param array $responses Responses array
      * @return array
      */
     public function getChoiceCounts($responses)
@@ -447,7 +470,7 @@ class ResponsesTable extends Table
      * many times they were chosen and return an array in the form
      * $retval[$sectorName][$rankChoice] = $choiceRank.
      *
-     * @param array $choiceCounts
+     * @param array $choiceCounts Array of the counts of how many times each choice was chosen
      * @return array
      */
     public function getChoiceRanks($choiceCounts)
@@ -482,7 +505,7 @@ class ResponsesTable extends Table
      * based on each how each choice ranks from most-chosen to least-chosen
      * in each sector of a particular survey.
      *
-     * @param array $choiceRanks
+     * @param array $choiceRanks Array of ranks, indexed by sector
      * @return array
      */
     public function getChoiceWeights($choiceRanks)
@@ -499,7 +522,7 @@ class ResponsesTable extends Table
     /**
      * Return an array of $sector => $averageRank
      *
-     * @param array $choiceCounts
+     * @param array $choiceCounts Array of the counts for each choice, indexed by sector
      * @return array
      */
     public function getResponseAverages($choiceCounts)
@@ -524,7 +547,7 @@ class ResponsesTable extends Table
      * deviates from the average of choices in responses for that sector,'
      * in the format $retval[$sector][$rank] = $deviation.
      *
-     * @param array $responseAverages
+     * @param array $responseAverages Array of the average ranks, indexed by sector
      * @return array
      */
     public function getDeviationsFromAverage($responseAverages)
@@ -545,7 +568,7 @@ class ResponsesTable extends Table
      * Return a numerical value representing how aligned a survey's responses are
      * with each other.
      *
-     * @param int $surveyId
+     * @param int $surveyId Survey ID
      * @return float
      */
     public function getInternalAlignment($surveyId)
@@ -558,7 +581,7 @@ class ResponsesTable extends Table
      * Return an array of sector => alignment, with 'alignment' representing
      * how aligned a survey's responses are with each other in that sector.
      *
-     * @param int $surveyId
+     * @param int $surveyId Survey ID
      * @return array|null
      */
     public function getInternalAlignmentPerSector($surveyId)
@@ -593,17 +616,17 @@ class ResponsesTable extends Table
      * Returns an array containing question => answer pairs for the
      * most recent response for the specified respondent
      *
-     * @param string $smSurveyId
-     * @param string $smRespondentId
+     * @param string $smSurveyId SurveyMonkey survey ID
+     * @param string $smRespondentId SurveyMonkey respondent ID
      * @return array
      * @throws NotFoundException
      */
     public function getFullResponseFromSurveyMonkey($smSurveyId, $smRespondentId)
     {
         $SurveyMonkey = $this->getSurveyMonkeyObject();
-        $result = $SurveyMonkey->getResponses((string) $smSurveyId, [$smRespondentId]);
+        $result = $SurveyMonkey->getResponses((string)$smSurveyId, [$smRespondentId]);
         if (! $result['success'] || empty($result['data'])) {
-            throw new NotFoundException('Could not find a response for respondent #'.$smRespondentId);
+            throw new NotFoundException("Could not find a response for respondent #$smRespondentId");
         }
         $response = $result['data'];
 
@@ -611,9 +634,9 @@ class ResponsesTable extends Table
         // For extra safety, we'll delay for one second before the next API call.
         sleep(1);
 
-        $result = $SurveyMonkey->getSurveyDetails((string) $smSurveyId);
+        $result = $SurveyMonkey->getSurveyDetails((string)$smSurveyId);
         if (! $result['success'] || empty($result['data'])) {
-            throw new NotFoundException('Could not find survey data for survey #'.$smSurveyId);
+            throw new NotFoundException("Could not find questionnaire data for questionnaire #$smSurveyId");
         }
         $survey = $result['data'];
 
@@ -634,7 +657,7 @@ class ResponsesTable extends Table
             foreach ($q['answers'] as $a) {
                 $answer = '';
                 if (isset($a['row']) && $a['row']) {
-                    $answer .= $choices[$a['row']].': ';
+                    $answer .= $choices[$a['row']] . ': ';
                 }
                 if (isset($a['col']) && $a['col']) {
                     $answer .= $choices[$a['col']];

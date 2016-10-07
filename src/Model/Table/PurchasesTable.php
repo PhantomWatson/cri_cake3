@@ -87,6 +87,12 @@ class PurchasesTable extends Table
         return $rules;
     }
 
+    /**
+     * Returns an array of all purchases associated with a community
+     *
+     * @param int $communityId Community ID
+     * @return array
+     */
     public function getAllForCommunity($communityId)
     {
         return $this->find('all')

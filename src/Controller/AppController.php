@@ -113,22 +113,7 @@ class AppController extends Controller
 
     public function beforeRender(\Cake\Event\Event $event)
     {
-        // Set up variables for sidebar
-        if ($this->viewBuilder()->layout() == 'default' && $this->Auth->user('role') == 'admin') {
-            $communitiesTable = TableRegistry::get('Communities');
-            $this->set([
-                'sidebar' => [
-                    'communities' => $communitiesTable->getClientCommunityList(),
-                    'communityId' => $this->Cookie->read('communityId'),
-                    'clientId' => $this->Cookie->read('clientId')
-                ]
-            ]);
-        }
-        $this->set([
-            'authUser' => $this->Auth->user(),
-            'flashMessages' => $this->Flash->messages
-        ]);
-        $this->request->session()->delete('FlashMessage');
+        $this->setLayoutVariables();
     }
 
     public function isAuthorized($user)
@@ -253,5 +238,26 @@ class AppController extends Controller
                 }
             }
         }
+    }
+
+    public function setLayoutVariables()
+    {
+        // Set up variables for sidebar
+        if ($this->viewBuilder()->layout() == 'default' && $this->Auth->user('role') == 'admin') {
+            $communitiesTable = TableRegistry::get('Communities');
+            $this->set([
+                'sidebar' => [
+                    'communities' => $communitiesTable->getClientCommunityList(),
+                    'communityId' => $this->Cookie->read('communityId'),
+                    'clientId' => $this->Cookie->read('clientId')
+                ]
+            ]);
+        }
+
+        $this->set([
+            'authUser' => $this->Auth->user(),
+            'flashMessages' => $this->Flash->messages
+        ]);
+        $this->request->session()->delete('FlashMessage');
     }
 }

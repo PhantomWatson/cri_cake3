@@ -15,6 +15,11 @@ use Cake\ORM\TableRegistry;
 class SurveysController extends AppController
 {
 
+    /**
+     * Initialize method
+     *
+     * @return void
+     */
     public function initialize()
     {
         parent::initialize();
@@ -22,6 +27,12 @@ class SurveysController extends AppController
         $this->loadComponent('RequestHandler');
     }
 
+    /**
+     * Invite method
+     *
+     * @param string|null $respondentTypePlural Either 'officials' or 'organizations'
+     * @return \App\Controller\Response
+     */
     public function invite($respondentTypePlural = null)
     {
         // Find and validate community
@@ -32,7 +43,8 @@ class SurveysController extends AppController
         $communitiesTable = TableRegistry::get('Communities');
         $communityId = $communitiesTable->getClientCommunityId($clientId);
         if (! $communityId || ! $communitiesTable->exists(['id' => $communityId])) {
-            throw new NotFoundException('Sorry, we couldn\'t find the community corresponding with your account (#'.$clientId.')');
+            $msg = 'Sorry, we couldn\'t find the community corresponding with your account (#' . $clientId . ')';
+            throw new NotFoundException($msg);
         }
 
         $this->Surveys->validateRespondentTypePlural($respondentTypePlural, $communityId);
@@ -51,7 +63,7 @@ class SurveysController extends AppController
         $survey = $this->Surveys->get($surveyId);
         $this->set([
             'surveyType' => $survey->type,
-            'titleForLayout' => 'Invite Community '.ucwords($respondentTypePlural),
+            'titleForLayout' => 'Invite Community ' . ucwords($respondentTypePlural),
         ]);
         $this->set(compact(
             'allRespondents',
@@ -64,6 +76,12 @@ class SurveysController extends AppController
         ));
     }
 
+    /**
+     * Remind function
+     *
+     * @param string $surveyType Survey type
+     * @return \App\Controller\Response|\Cake\Network\Response|null
+     */
     public function remind($surveyType)
     {
         $clientId = $this->getClientId();
@@ -95,7 +113,7 @@ class SurveysController extends AppController
 
             $msg = 'There was an error sending reminder emails.';
             $adminEmail = Configure::read('admin_email');
-            $msg .= ' Email <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> for assistance.';
+            $msg .= ' Email <a href="mailto:' . $adminEmail . '">' . $adminEmail . '</a> for assistance.';
             $this->Flash->error($msg);
 
             // Redirect so that hitting refresh won't re-send POST request
@@ -112,12 +130,19 @@ class SurveysController extends AppController
         $this->set([
             'community' => $communitiesTable->get($communityId),
             'survey' => $survey,
-            'titleForLayout' => 'Send Reminders to Community '.ucwords($survey->type).'s',
+            'titleForLayout' => 'Send Reminders to Community ' . ucwords($survey->type) . 's',
             'unresponsive' => $unresponsive,
             'unresponsiveCount' => count($unresponsive),
         ]);
     }
 
+    /**
+     * Method for processing a spreadsheet of survey invitation recipients
+     *
+     * @param int $surveyId Survey ID
+     * @throws \PHPExcel_Reader_Exception
+     * @return void
+     */
     public function uploadInvitationSpreadsheet($surveyId)
     {
         if (empty($_FILES['files'])) {
@@ -129,10 +154,10 @@ class SurveysController extends AppController
         $filenameParts = explode('.', $filename);
         $extension = array_pop($filenameParts);
         if (strtolower($extension) != 'xlsx') {
-            throw new BadRequestException('Invalid file type: '.$extension);
+            throw new BadRequestException('Invalid file type: ' . $extension);
         }
 
-        require_once(ROOT.DS.'vendor'.DS.'phpoffice'.DS.'phpexcel'.DS.'Classes'.DS.'PHPExcel.php');
+        require_once ROOT . DS . 'vendor' . DS . 'phpoffice' . DS . 'phpexcel' . DS . 'Classes' . DS . 'PHPExcel.php';
         $filepath = $_FILES['files']['tmp_name'][0];
         $excelReader = \PHPExcel_IOFactory::createReader('Excel2007');
         $excelReader->setReadDataOnly(true);
@@ -184,7 +209,7 @@ class SurveysController extends AppController
             if ($title && $organization) {
                 $fullTitle = "$title, $organization";
             } else {
-                $fullTitle = $title.$organization;
+                $fullTitle = $title . $organization;
             }
             $data[] = [
                 'name' => trim("$fName $lName"),

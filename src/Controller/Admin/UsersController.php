@@ -3,11 +3,18 @@ namespace App\Controller\Admin;
 
 use App\Controller\AppController;
 use App\Mailer\Mailer;
+use App\Model\Entity\User;
 use Cake\Network\Exception\MethodNotAllowedException;
+use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 
 class UsersController extends AppController
 {
+    /**
+     * Index method
+     *
+     * @return void
+     */
     public function index()
     {
         $cookieParentKey = 'AdminUsersIndex';
@@ -35,6 +42,7 @@ class UsersController extends AppController
                 break;
         }
 
+        $this->paginate['order']['Users.name'] = 'ASC';
         $this->set([
             'titleForLayout' => 'Users',
             'users' => $this->paginate(),
@@ -48,6 +56,12 @@ class UsersController extends AppController
         ]);
     }
 
+    /**
+     * Sets variables in the view for the user add/edit form
+     *
+     * @param User $user User
+     * @return void
+     */
     private function prepareForm($user)
     {
         $communities = $this->Users->ConsultantCommunities
@@ -82,6 +96,11 @@ class UsersController extends AppController
         ]);
     }
 
+    /**
+     * Add method
+     *
+     * @return \App\Controller\Response
+     */
     public function add()
     {
         $user = $this->Users->newEntity();
@@ -107,7 +126,12 @@ class UsersController extends AppController
                 $senderName = $this->Auth->user('name');
 
                 $Mailer = new Mailer();
-                $result = $Mailer->sendNewAccountEmail($user, $this->request->data['new_password'], $senderEmail, $senderName);
+                $result = $Mailer->sendNewAccountEmail(
+                    $user,
+                    $this->request->data['new_password'],
+                    $senderEmail,
+                    $senderName
+                );
                 if ($result) {
                     $this->Flash->success('User account created and login credentials emailed');
                     return $this->redirect([
@@ -116,10 +140,14 @@ class UsersController extends AppController
                     ]);
                 } else {
                     $this->Users->delete($user);
-                    $this->Flash->error('There was an error emailing this user with their login info. No new account was created. Please try again or contact an administrator for assistance.');
+                    $msg = 'There was an error emailing this user with their login info. No new account was created.';
+                    $msg .= ' Please try again or contact an administrator for assistance.';
+                    $this->Flash->error($msg);
                 }
             } else {
-                $this->Flash->error('There was an error creating this user\'s account. Please try again or contact an administrator for assistance.');
+                $msg = 'There was an error creating this user\'s account.';
+                $msg .= ' Please try again or contact an administrator for assistance.';
+                $this->Flash->error($msg);
             }
         } else {
             $this->request->data['all_communities'] = false;
@@ -132,6 +160,12 @@ class UsersController extends AppController
         $this->render('/Admin/Users/form');
     }
 
+    /**
+     * Edit method
+     *
+     * @param int|null $id User ID
+     * @return \Cake\Network\Response|null
+     */
     public function edit($id = null)
     {
         $user = $this->Users->get($id, ['contain' => ['ClientCommunities', 'ConsultantCommunities']]);
@@ -157,7 +191,8 @@ class UsersController extends AppController
                 if ($this->Users->save($user)) {
                     $msg = 'User info updated';
                     if ($roleChanged) {
-                        $msg .= '. The update to this user\'s <strong>role</strong> will take effect the next time they manually log in or when their session automatically refreshes.';
+                        $msg .= '. The update to this user\'s <strong>role</strong> will take effect';
+                        $msg .= ' the next time they manually log in or when their session automatically refreshes.';
                     }
                     $this->Flash->success($msg);
                     return $this->redirect([
@@ -177,6 +212,12 @@ class UsersController extends AppController
         $this->render('/Admin/Users/form');
     }
 
+    /**
+     * Delete method
+     *
+     * @param int|null $id User ID
+     * @return \Cake\Network\Response|null
+     */
     public function delete($id = null)
     {
         if (! $this->request->is('post')) {
@@ -195,6 +236,11 @@ class UsersController extends AppController
         ]);
     }
 
+    /**
+     * ChooseClient method
+     *
+     * @return \Cake\Network\Response|null
+     */
     public function chooseClient()
     {
         $communitiesTable = TableRegistry::get('Communities');

@@ -24,7 +24,7 @@
     <div class="scrollable_table">
         <table class="table" id="pwrrr-alignment-breakdown">
             <thead class="actual">
-                <td colspan="2">
+                <td colspan="3">
                     Actual rankings
                 </td>
                 <?php foreach ($sectors as $sector): ?>

@@ -8,62 +8,68 @@
 <ol>
     <li>
         <strong>Create a Community Record</strong>
-        <br />
-        Click on
-        <?= $this->Html->link(
-            'Manage Communities',
-            [
-                'prefix' => 'admin',
-                'controller' => 'Communities',
-                'action' => 'index'
-            ]
-        ) ?>
-        , then
-        <?= $this->Html->link(
-            'Add Community',
-            [
-                'prefix' => 'admin',
-                'controller' => 'Communities',
-                'action' => 'add'
-            ]
-        ) ?>.
-        Fill out the form with that community's basic information and submit it.
-        You will probably <em>not</em> need to change the fields
-        Stage / PWR<sup>3</sup> &trade; Score, Meeting Date Set, or Public
-        from their default values.
-    </li>
-    <li>
-        <strong>Create the Community Officials Survey</strong>
-        <br />
-        Log in to <a href="http://surveymonkey.com/">SurveyMonkey</a> and create a new
-        community officials survey for this community by
         <ol>
             <li>
-                Clicking 'Create Survey'
+                Click on
+                <?= $this->Html->link(
+                    'Manage Communities',
+                    [
+                        'prefix' => 'admin',
+                        'controller' => 'Communities',
+                        'action' => 'index'
+                    ]
+                ) ?> in the sidebar
             </li>
             <li>
-                Selecting 'Edit a Copy of an Existing Survey'
+                Click on <?= $this->Html->link(
+                    'Add Community',
+                    [
+                        'prefix' => 'admin',
+                        'controller' => 'Communities',
+                        'action' => 'add'
+                    ]
+                ) ?> in the page that opens
             </li>
             <li>
-                Selecting the template survey, called "Leader Alignment Data Request (TEMPLATE)"
-            </li>
-            <li>
-                Changing the new survey's title to "Leader Alignment Data Request - " and then appending it with the name of the community
-            </li>
-            <li>
-                Clicking "Let's Go!"
+                Fill out the form with that community's basic information and submit it.
+                You will probably <em>not</em> need to change the fields
+                Stage / PWR<sup>3</sup> &trade; Score, Meeting Date Set, or Public
+                from their default values.
             </li>
         </ol>
-        And remember to create a web collector by
+    </li>
+    <li>
+        <strong>Create the Community Officials Questionnaire</strong>
+        <br />
+        Log in to <a href="http://surveymonkey.com/">SurveyMonkey</a> and create a new
+        community-officials questionnaire:
         <ol>
             <li>
-                Clicking on the 'Collect Responses' tab
+                Click 'Create Survey'
             </li>
             <li>
-                Selecting 'Web Link Collector'
+                Select 'Edit a Copy of an Existing Survey'
             </li>
             <li>
-                Clicking 'Next'
+                Select the template survey, called "TEMPLATE: Leader Alignment Questionnaire - Town (County)"
+            </li>
+            <li>
+                Change the new survey's title to "Leader Alignment Questionnaire - " and then appending it with the name of the community
+            </li>
+            <li>
+                Click "Let's Go!"
+            </li>
+        </ol>
+        Next, create a web collector:
+        <ol>
+            <li>
+                Click on the 'Collect Responses' tab
+            </li>
+            <li>
+                Select 'Web Link Collector'
+            </li>
+            <li>
+                Click 'Next'
             </li>
             <li>
                 That's it. This survey's web collector is now set up. Further configuration options can be ignored.
@@ -71,24 +77,66 @@
         </ol>
     </li>
     <li>
-        <strong>Link the Survey</strong>
+        <strong>Link the Questionnaire</strong>
         <br />
-        In the Manage Communities page, click on 'Actions' and then 'Officials Survey' in the row corresponding
-        to the new community. If this CRI community has not been linked to this SurveyMonkey survey yet, you'll
-        be sent to the 'survey linking' page.
-        <br />
-        Click 'Select Survey', then select the correct survey from the list that appears. If there are no errors,
-        the status will display "Ready to be linked". Click 'Link Survey'.
+        The CRI site needs to know how to connect to the correct SurveyMonkey questionnaire for this community.
+        <ol>
+            <li>
+                In the
+                <?= $this->Html->link(
+                    'Manage Communities',
+                    [
+                        'prefix' => 'admin',
+                        'controller' => 'Communities',
+                        'action' => 'index'
+                    ]
+                ) ?>
+                page, click on 'Not set up' under 'Officials Questionnaire' in the row corresponding
+                to the new community
+            </li>
+            <li>
+                Select 'Link to SurveyMonkey questionnaire'
+            </li>
+            <li>
+                On the page that opens, click 'Select Questionnaire'
+            </li>
+            <li>
+                Select the correct questionnaire from the list that appears
+            </li>
+            <li>
+                If there are no errors, the status will display "Ready to be linked"
+            </li>
+            <li>
+                Click 'Link Questionnaire'
+            </li>
+        </ol>
     </li>
     <li>
         <strong>Create a Client Account</strong>
-        <br />
-        In the Manage Communities page, click on 'Actions' and then 'Clients'. In the next page, click 'Add a New Client'.
-        Fill out the following form using a random password and submit it. The client will be automatically sent an
-        email with their login information.
+        <ol>
+            <li>
+                In the
+                <?= $this->Html->link(
+                    'Manage Communities',
+                    [
+                        'prefix' => 'admin',
+                        'controller' => 'Communities',
+                        'action' => 'index'
+                    ]
+                ) ?>
+                page, click on 'Actions' and then 'Clients'
+            </li>
+            <li>
+                In the next page, click 'Add a New Client'
+            </li>
+            <li>
+                Fill out the following form using a random password and submit it. The client will be automatically sent an
+                email with their login information.
+            </li>
+        </ol>
     </li>
     <li>
-        You can also use the above methods to create additional clients accounts and create / link the community organizations survey.
+        You can also use the above methods to create additional clients accounts and create / link the community-organizations questionnaire.
     </li>
 </ol>
 
@@ -118,7 +166,7 @@
                 ]
             ) ?>
         </strong>
-        <br />Here, communities are listed along with their current stage, fast track status, and survey statuses.
+        <br />Here, communities are listed along with their current stage, fast track status, and questionnaire statuses.
         <br />The following links are found under 'Actions':
         <ul>
             <li>
@@ -136,11 +184,11 @@
                 <strong>Client Home</strong>
                 <br />Shows the homepage that this community's client sees
             <li>
-                <strong>Officials Survey / Organizations Survey</strong>
-                <br />On these survey overview pages, you can
+                <strong>Officials Questionnaire / Organizations Questionnaire</strong>
+                <br />On these questionnaire overview pages, you can
                 <ul>
                     <li>
-                        Create or update the <strong>link</strong> between the community record and each SurveyMonkey survey
+                        Create or update the <strong>link</strong> between the community record and each SurveyMonkey questionnaire
                     </li>
                     <li>
                         View and send <strong>invitations</strong>
@@ -214,11 +262,4 @@
         Are any responses missing their local_area_pwrrr_alignment or parent_area_pwrrr_alignment values?
         Visit the page linked above and missing alignment values will be calculated and saved.
     </li>
-</ul>
-
-<h2>Features Not Yet Implemented</h2>
-<ul>
-    <li>Consultant accounts</li>
-    <li>Automatically alerting administrators of new enrollment applications</li>
-    <li>Facilitating/automating reminder emails to invited survey participants who haven't submitted responses</li>
 </ul>

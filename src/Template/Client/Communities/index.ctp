@@ -9,6 +9,23 @@
         $class = $bool ? 'ok' : 'remove';
         return '<span class="glyphicon glyphicon-'.$class.'"></span>';
     }
+
+    /**
+     * Returns a <tbody> string with the appropriate class
+     *
+     * @param $tbodyStep Step that this <tbody> contains
+     * @param $currentStep Step that this community is currently at
+     * @return string
+     */
+    function tbodyForStep($tbodyStep, $currentStep) {
+        if ($tbodyStep > floor($currentStep)) {
+            return '<tbody class="future">';
+        }
+        if ($tbodyStep < floor($currentStep)) {
+            return '<tbody class="past">';
+        }
+        return '<tbody class="current">';
+    }
 ?>
 
 <?php if ($authUser['role'] == 'admin'): ?>
@@ -29,10 +46,12 @@
 
 <div id="client_home">
     <table>
-        <tbody <?php if ($score < 2) echo 'class="current"'; ?>>
+        <?= tbodyForStep(1, $score) ?>
             <tr>
                 <th colspan="3">
-                    Step One: Sign Up
+                    <button class="step-header">
+                        Step One: Sign Up
+                    </button>
                 </th>
             </tr>
             <tr>
@@ -61,7 +80,7 @@
                         <?= $criteria[1]['survey_created'][0] ?>
                         <?php if (! $criteria[1]['survey_created'][1] && $score < 2): ?>
                             <p class="alert alert-info">
-                                Your community's survey is currently being prepared. Please check back later for updates.
+                                Your community's questionnaire is currently being prepared. Please check back later for updates.
                             </p>
                         <?php endif; ?>
                     </td>
@@ -71,10 +90,12 @@
             <?php endif; ?>
         </tbody>
 
-        <tbody <?php if ($score >= 2 && $score < 3) echo 'class="current"'; ?>>
+        <?= tbodyForStep(2, $score) ?>
             <tr>
                 <th colspan="3">
-                    Step Two: Leadership Alignment Assessment
+                    <button class="step-header">
+                        Step Two: Leadership Alignment Assessment
+                    </button>
                 </th>
             </tr>
 
@@ -88,7 +109,7 @@
                         <?= $criteria[2]['survey_created'][0] ?>
                         <?php if (! $criteria[2]['survey_created'][1] && $score >= 2 && $score < 3): ?>
                             <p class="alert alert-info">
-                                Your community's survey is currently being prepared. Please check back later for updates.
+                                Your community's questionnaire is currently being prepared. Please check back later for updates.
                             </p>
                         <?php endif; ?>
                     </td>
@@ -137,7 +158,7 @@
                             SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>,
                             but you can manually import them at any time.
                         <?php else: ?>
-                            New responses to this survey are no longer being automatically imported from SurveyMonkey.
+                            New responses to this questionnaire are no longer being automatically imported from SurveyMonkey.
                         <?php endif; ?>
                     </p>
 
@@ -303,18 +324,22 @@
         </tbody>
 
         <?php if ($fastTrack): ?>
-            <tbody>
+            <?= tbodyForStep(3, $score) ?>
                 <tr>
                     <th colspan="3">
-                        Step Three and Four skipped in Fast Track
+                        <button class="step-header">
+                            Step Three and Four skipped in Fast Track
+                        </button>
                     </th>
                 </tr>
             </tbody>
         <?php else: ?>
-            <tbody <?php if ($score >= 3 && $score < 4) echo 'class="current"'; ?>>
+            <?= tbodyForStep(3, $score) ?>
                 <tr>
                     <th colspan="3">
-                        Step Three: Community Organizations Alignment Assessment
+                        <button class="step-header">
+                            Step Three: Community Organizations Alignment Assessment
+                        </button>
                     </th>
                 </tr>
                 <tr>
@@ -325,7 +350,7 @@
                         <?= $criteria[3]['survey_created'][0] ?>
                         <?php if (! $criteria[3]['survey_created'][1] && $score >= 3 && $score < 4): ?>
                             <p class="alert alert-info">
-                                Your community's survey is currently being prepared. Please check back later for updates.
+                                Your community's questionnaire is currently being prepared. Please check back later for updates.
                             </p>
                         <?php endif; ?>
                     </td>
@@ -362,14 +387,14 @@
                                 SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>,
                                 but you can manually import them at any time.
                             <?php else: ?>
-                                New responses to this survey are no longer being automatically imported from SurveyMonkey.
+                                New responses to this questionnaire are no longer being automatically imported from SurveyMonkey.
                             <?php endif; ?>
                         </p>
 
                         <?php if ($organizationResponsesChecked): ?>
                             <div class="last_import alert alert-info">
                                 New responses were last checked for
-                                <?= $this->Time->timeAgoInWords($organization, ['end' => '+1 year']) ?>
+                                <?= $this->Time->timeAgoInWords($organizationResponsesChecked, ['end' => '+1 year']) ?>
                             </div>
                         <?php endif; ?>
 
@@ -483,10 +508,12 @@
                 <?php endif; ?>
             </tbody>
 
-            <tbody <?php if ($score >= 4 && $score < 5) echo 'class="current"'; ?>>
+            <?= tbodyForStep(4, $score) ?>
                 <tr>
                     <th colspan="3">
-                        Step Four: Review of Findings
+                        <button class="step-header">
+                            Step Four: Review of Findings
+                        </button>
                     </th>
                 </tr>
                 <tr>
@@ -515,10 +542,12 @@
             </tbody>
         <?php endif; ?>
 
-        <tbody <?php if ($score == 5) echo 'class="current"'; ?>>
+        <?= tbodyForStep(5, $score) ?>
             <tr>
                 <th colspan="3">
-                    Step Five: Conclusion
+                    <button class="step-header">
+                        Step Five: Conclusion
+                    </button>
                 </th>
             </tr>
         </tbody>

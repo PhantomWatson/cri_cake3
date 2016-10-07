@@ -6,7 +6,12 @@ use Cake\ORM\TableRegistry;
 
 class RespondentsController extends AppController
 {
-
+    /**
+     * Unapproved method
+     *
+     * @param int|null $surveyId Survey ID
+     * @return void
+     */
     public function unapproved($surveyId = null)
     {
         $surveysTable = TableRegistry::get('Surveys');
@@ -14,10 +19,11 @@ class RespondentsController extends AppController
             try {
                 $survey = $surveysTable->get($surveyId);
             } catch (RecordNotFoundException $e) {
-                throw new NotFoundException('Sorry, we couldn\'t find a survey with that ID (#'.$surveyId.').');
+                $msg = 'Sorry, we couldn\'t find a questionnaire with that ID (#' . $surveyId . ').';
+                throw new NotFoundException($msg);
             }
         } else {
-            throw new NotFoundException('Survey ID not specified.');
+            throw new NotFoundException('Questionnaire ID not specified.');
         }
 
         $communitiesTable = TableRegistry::get('Communities');
@@ -30,30 +36,42 @@ class RespondentsController extends AppController
                 'dismissed' => $this->Respondents->getDismissed($surveyId)
             ],
             'survey' => $survey,
-            'titleForLayout' => $community->name.' Uninvited '.ucwords($survey->type).' Survey Respondents'
+            'titleForLayout' => $community->name . ' Uninvited ' . ucwords($survey->type) . ' Questionnaire Respondents'
         ]);
         $this->render('/Client/Respondents/unapproved');
     }
 
+    /**
+     * Approve uninvited respondents method
+     *
+     * @param $respondentId
+     * @return void
+     */
     public function approveUninvited($respondentId)
     {
         $respondent = $this->Respondents->get($respondentId);
         $respondent->approved = 1;
         $this->set([
-            'success' => (boolean) $this->Respondents->save($respondent)
+            'success' => (bool)$this->Respondents->save($respondent)
         ]);
         $this->viewBuilder()->layout('blank');
-        $this->render(DS.'Client'.DS.'Respondents'.DS.'approve_uninvited');
+        $this->render(DS . 'Client' . DS . 'Respondents' . DS . 'approve_uninvited');
     }
 
+    /**
+     * Dismiss uninvited respondents method
+     *
+     * @param int $respondentId Respondent ID
+     * @return void
+     */
     public function dismissUninvited($respondentId)
     {
         $respondent = $this->Respondents->get($respondentId);
         $respondent->approved = -1;
         $this->set([
-            'success' => (boolean) $this->Respondents->save($respondent)
+            'success' => (bool)$this->Respondents->save($respondent)
         ]);
         $this->viewBuilder()->layout('blank');
-        $this->render(DS.'Client'.DS.'Respondents'.DS.'dismiss_uninvited');
+        $this->render(DS . 'Client' . DS . 'Respondents' . DS . 'dismiss_uninvited');
     }
 }

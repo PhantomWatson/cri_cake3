@@ -51,6 +51,13 @@ class StatCategoriesTable extends Table
         return $validator;
     }
 
+    /**
+     * Imports new categories (when they're specified in $newCategories)
+     *
+     * A hacky way to add a bunch of records safely while avoiding redundancy
+     *
+     * @return void
+     */
     public function import()
     {
         $newCategories = [];
@@ -65,15 +72,17 @@ class StatCategoriesTable extends Table
             $errors = $category->errors();
             if (empty($errors)) {
                 $this->save($category);
-                echo 'Saved '.$name.'<br />';
+                echo "Saved $name<br />";
             } else {
-                exit('Errors: '.print_r($errors, true));
+                exit('Errors: ' . print_r($errors, true));
             }
         }
     }
 
     /**
-     * @param string $name
+     * Returns a stat category ID for the given stat category name
+     *
+     * @param string $name Stat category name
      * @return int|null
      */
     public function getIdFromName($name)
@@ -86,6 +95,8 @@ class StatCategoriesTable extends Table
     }
 
     /**
+     * Returns an array of sets of statistic category IDs grouped by PWRRR labels
+     *
      * @return array
      */
     public function getGroups()

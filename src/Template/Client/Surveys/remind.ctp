@@ -7,7 +7,7 @@
 <p>
     <?php if ($this->request->prefix == 'admin'): ?>
         <?= $this->Html->link(
-            '<span class="glyphicon glyphicon-arrow-left"></span> Back to Survey Overview',
+            '<span class="glyphicon glyphicon-arrow-left"></span> Back to Questionnaire Overview',
             [
                 'prefix' => 'admin',
                 'controller' => 'Surveys',
@@ -39,20 +39,20 @@
 <?php if (empty($unresponsive)): ?>
     <p class="alert alert-success">
         Good news! Everyone who has been sent an invitation to participate
-        in this survey has submitted a response, so no reminders
+        in this questionnaire has submitted a response, so no reminders
         are necessary.
     </p>
 <?php else: ?>
     <ul id="reminders">
         <li>
-            Sending a reminder will re-send survey invitation emails.
+            Sending a reminder will re-send questionnaire invitation emails.
         </li>
         <li>
             <button id="toggleUnresponsiveList" class="btn btn-default btn-sm">
                 <?= $unresponsiveCount ?> <?= __n('person', 'people', $unresponsiveCount) ?>
             </button>
             <?= __n('hasn\'t', 'haven\'t', $unresponsiveCount) ?>
-            responded to this survey yet.
+            responded to this questionnaire yet.
             <div class="well" id="unresponsiveList">
                 <ul>
                     <?php foreach ($unresponsive as $person): ?>
@@ -79,12 +79,12 @@
         </li>
         <li>
             <?php if ($survey->reminder_sent): ?>
-                A reminder was last sent for this survey on
+                A reminder was last sent for this questionnaire on
                 <strong>
                     <?= $survey->reminder_sent->format('F j, Y') ?>.
                 </strong>
             <?php else: ?>
-                No reminder has been sent for this survey yet.
+                No reminder has been sent for this questionnaire yet.
             <?php endif; ?>
         </li>
     </ul>

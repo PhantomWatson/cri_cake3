@@ -33,12 +33,24 @@ class Community extends Entity
         'organization_survey' => true
     ];
 
+    /**
+     * Automatically set the 'type' field for OfficialSurvey entities
+     *
+     * @param Entity $survey Survey entity
+     * @return mixed
+     */
     protected function _setOfficialSurvey($survey)
     {
         $survey['type'] = 'official';
         return $survey;
     }
 
+    /**
+     * Automatically set the 'type' field for OrganizationSurvey entities
+     *
+     * @param Entity $survey Survey entity
+     * @return mixed
+     */
     protected function _setOrganizationSurvey($survey)
     {
         $survey['type'] = 'organization';

@@ -49,7 +49,7 @@
     <p class="alert alert-danger">
         This community does not have its
         <?= $this->Html->link(
-            'community-officials survey linked',
+            'community officials questionnaire linked',
             [
                 'prefix' => 'admin',
                 'controller' => 'Surveys',

@@ -3,6 +3,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\AppController;
 use App\Mailer\Mailer;
+use App\Model\Entity\Community;
 use Cake\Core\Configure;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
@@ -10,16 +11,28 @@ use Cake\ORM\TableRegistry;
 class SurveysController extends AppController
 {
 
+    /**
+     * Initialize method
+     *
+     * @return void
+     */
     public function initialize()
     {
         parent::initialize();
         $this->loadComponent('SurveyProcessing');
     }
 
+    /**
+     * View method
+     *
+     * @param int|null $communityId Community ID
+     * @param int|null $surveyType Survey type
+     * @return \Cake\Network\Response|null
+     */
     public function view($communityId = null, $surveyType = null)
     {
         if (! in_array($surveyType, ['official', 'organization'])) {
-            throw new NotFoundException("Unknown survey type: $surveyType");
+            throw new NotFoundException("Unknown questionnaire type: $surveyType");
         }
 
         $communitiesTable = TableRegistry::get('Communities');
@@ -49,14 +62,21 @@ class SurveysController extends AppController
         $this->set([
             'community' => $community,
             'survey' => $survey,
-            'titleForLayout' => $community->name.' '.ucwords($surveyType).'s Survey'
+            'titleForLayout' => $community->name . ' ' . ucwords($surveyType) . 's Questionnaire'
         ]);
     }
 
+    /**
+     * Link method
+     *
+     * @param int|null $communityId Community ID
+     * @param int|null $surveyType Survey type
+     * @return \Cake\Network\Response|null
+     */
     public function link($communityId = null, $surveyType = null)
     {
         if (! in_array($surveyType, ['official', 'organization'])) {
-            throw new NotFoundException("Unknown survey type: $surveyType");
+            throw new NotFoundException("Unknown questionnaire type: $surveyType");
         }
 
         $communitiesTable = TableRegistry::get('Communities');
@@ -79,7 +99,11 @@ class SurveysController extends AppController
             $errors = $survey->errors();
             $isNew = $survey->isNew();
             if (empty($errors) && $this->Surveys->save($survey)) {
-                $message = $isNew ? 'Survey successfully linked to this community' : 'Survey details updated';
+                if ($isNew) {
+                    $message = 'Questionnaire successfully linked to this community';
+                } else {
+                    $message = 'Questionnaire details updated';
+                }
                 $this->Flash->success($message);
                 $this->redirect([
                     'action' => 'view',
@@ -87,8 +111,10 @@ class SurveysController extends AppController
                     $surveyType
                 ]);
             } else {
-                $message = $survey->isNew() ? 'linking survey' : 'updating survey details';
-                $this->Flash->error('There was an error '.$message.'. Please try again or contact an administrator for assistance.');
+                $msg = 'There was an error ';
+                $msg .= $survey->isNew() ? 'linking questionnaire' : 'updating questionnaire details';
+                $msg .= '. Please try again or contact an administrator for assistance.';
+                $this->Flash->error($msg);
             }
         }
 
@@ -99,10 +125,16 @@ class SurveysController extends AppController
             'community' => $community,
             'qnaIdFields' => $this->Surveys->getQnaIdFieldNames(),
             'survey' => $survey,
-            'titleForLayout' => $community->name.' '.ucwords($surveyType).'s Survey: Link'
+            'titleForLayout' => $community->name . ' ' . ucwords($surveyType) . 's Questionnaire: Link'
         ]);
     }
 
+    /**
+     * Sets variables for the view used in survey overview page
+     *
+     * @param Survey $survey Survey
+     * @param Community $community Community
+     */
     private function prepareSurveyStatus($survey, $community)
     {
         $surveyStatus = $this->Surveys->getStatus($survey->community_id, $survey->type);
@@ -110,7 +142,7 @@ class SurveysController extends AppController
         /* Determines if this survey is currently being auto-imported
          * (because the community is in an appropriate stage of the CRI process) */
         $stageForAutoImport = $survey->type == 'official' ? 2 : 3;
-        $isAutomaticallyImported = $community->score >= $stageForAutoImport && $community->score < ($stageForAutoImport + 1);
+        $isAutomaticallyImported = floor($community->score) == $stageForAutoImport;
 
         $autoImportFrequency = $isAutomaticallyImported ? $this->Surveys->getPerSurveyAutoImportFrequency() : '';
 

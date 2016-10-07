@@ -24,6 +24,14 @@ class SurveyProcessingComponent extends Component
     public $unaddressedUnapprovedRespondents = [];
     public $uninvApprovedEmails = [];
 
+    /**
+     * Creates respondent records and sends invitation emails
+     *
+     * @param int $communityId Community ID
+     * @param string $respondentType Respondent / survey type
+     * @param int $surveyId Survey ID
+     * @return void
+     */
     public function processInvitations($communityId, $respondentType, $surveyId)
     {
         $respondentsTable = TableRegistry::get('Respondents');
@@ -64,6 +72,11 @@ class SurveyProcessingComponent extends Component
         $this->request->data = [];
     }
 
+    /**
+     * Sets $this->invitees based on request data
+     *
+     * @return void
+     */
     private function setInvitees()
     {
         $invitees = $this->request->data('invitees');
@@ -73,6 +86,8 @@ class SurveyProcessingComponent extends Component
 
     /**
      * Clean name, email, and title and remove any invitees with no email address
+     *
+     * @return void
      */
     private function cleanInvitees()
     {
@@ -91,6 +106,8 @@ class SurveyProcessingComponent extends Component
 
     /**
      * Removes invitees if they've already been invited / approved
+     *
+     * @return void
      */
     private function removeApproved()
     {
@@ -102,6 +119,12 @@ class SurveyProcessingComponent extends Component
         }
     }
 
+    /**
+     * Approves an invitee and updates their name and title if provided
+     *
+     * @param array $invitee Invitee array
+     * @return void
+     */
     private function approveInvitee($invitee)
     {
         $this->uninvApprovedEmails[] = $invitee['email'];
@@ -134,8 +157,8 @@ class SurveyProcessingComponent extends Component
     /**
      * Returns true if email corresponds to an uninvited respondent pending approval / dismissal
      *
-     * @param string $email
-     * @return boolean
+     * @param string $email Email address
+     * @return bool
      */
     private function isUnapproved($email)
     {
@@ -145,7 +168,8 @@ class SurveyProcessingComponent extends Component
     /**
      * Adds a new respondent and adds them to the invitation email queue
      *
-     * @param $invitee array
+     * @param array $invitee Invitee array
+     * @return void
      */
     private function createRespondent($invitee)
     {
@@ -172,41 +196,50 @@ class SurveyProcessingComponent extends Component
         }
     }
 
+    /**
+     * Sets flash messages based on component properties successEmails, redundantEmails, and errorEmails
+     *
+     * @return void
+     */
     public function setInvitationFlashMessages()
     {
         $seCount = count($this->successEmails);
         if ($seCount) {
             $list = $this->arrayToList($this->successEmails);
-            $msg = 'Survey '.__n('invitation', 'invitations', $seCount).' sent to '.$list;
+            $msg = 'Questionnaire ' . __n('invitation', 'invitations', $seCount) . ' sent to ' . $list;
             $this->Flash->success($msg);
         }
 
         $reCount = count($this->redundantEmails);
         if ($reCount) {
             $list = $this->arrayToList($this->redundantEmails);
-            $msg = $list.__n(' has', ' have', $reCount).' already received a survey invitation';
+            $msg = $list . __n(' has', ' have', $reCount) . ' already received a questionnaire invitation';
             $this->Flash->set($msg);
         }
 
         $eeCount = count($this->errorEmails);
         if ($eeCount) {
             $list = $this->arrayToList($this->errorEmails);
-            $msg = 'There was an error inviting '.$list.'. Please try again or contact an administrator if you need assistance.';
+            $msg = "There was an error inviting $list.";
+            $msg .= ' Please try again or contact an administrator if you need assistance.';
             $this->Flash->error($msg);
         }
 
         $rieCount = count($this->uninvApprovedEmails);
         if ($rieCount) {
             $list = $this->arrayToList($this->uninvApprovedEmails);
-            $msg = 'The uninvited '.__n('response', 'responses', $rieCount).' received from '.$list.__n(' has', ' have', $rieCount).' been approved';
+            $msg = 'The uninvited ' . __n('response', 'responses', $rieCount);
+            $msg .= ' received from ' . $list . __n(' has', ' have', $rieCount) . ' been approved';
             $this->Flash->success($msg);
         }
     }
 
     /**
-     * Accepts an array of stringy variables and returns a comma-delimited list with an optional conjunction before the last element
-     * @param array $array
-     * @param string $conjunction
+     * Accepts an array of stringy variables and returns a comma-delimited list with an optional conjunction
+     * before the last element
+     *
+     * @param array $array Arbitrary array
+     * @param string $conjunction Such as 'and' (optional)
      * @return string
      */
     public function arrayToList($array, $conjunction = 'and')
@@ -218,8 +251,8 @@ class SurveyProcessingComponent extends Component
             return $array[0];
         } elseif ($count > 1) {
             if ($conjunction) {
-                $last_element = array_pop($array);
-                array_push($array, $conjunction.' '.$last_element);
+                $lastElement = array_pop($array);
+                array_push($array, $conjunction . ' ' . $lastElement);
             }
             if ($count == 2) {
                 return implode(' ', $array);
@@ -229,6 +262,12 @@ class SurveyProcessingComponent extends Component
         }
     }
 
+    /**
+     * Returns an array of the most recent responses for each of this survey's respondents
+     *
+     * @param int $surveyId Survey ID
+     * @return array
+     */
     public function getCurrentResponses($surveyId)
     {
         $responsesTable = TableRegistry::get('Responses');
@@ -259,6 +298,13 @@ class SurveyProcessingComponent extends Component
         return $retval;
     }
 
+    /**
+     * Returns the sum of alignments between respondent PWRRR ranks and either local-area or parent-area actual ranks
+     *
+     * @param array $responses Responses array
+     * @param string $alignmentField Alignment field name (local_area_pwrrr_alignment or parent_area_pwrrr_alignment)
+     * @return int
+     */
     public static function getAlignmentSum($responses, $alignmentField)
     {
         $alignmentSum = 0;
@@ -270,6 +316,12 @@ class SurveyProcessingComponent extends Component
         return $alignmentSum;
     }
 
+    /**
+     * Returns the count of all approved respondents
+     *
+     * @param array $responses Responses array
+     * @return int
+     */
     public static function getApprovedCount($responses)
     {
         $approvedCount = 0;

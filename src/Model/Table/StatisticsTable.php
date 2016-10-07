@@ -77,6 +77,11 @@ class StatisticsTable extends Table
         return $rules;
     }
 
+    /**
+     * Processes the string $data to import statistics into the database
+     *
+     * @return void
+     */
     public function import()
     {
         // Stat category names, in the order they're arranged in the spreadsheet to be imported
@@ -91,12 +96,7 @@ class StatisticsTable extends Table
         $areaIds = [];
         $categoryIds = [];
         foreach ($lines as $lineNum => $line) {
-            // Skip lines
-            if (false) {
-                continue;
-            }
-
-            echo '[LINE #'.$lineNum.']<br />';
+            echo "[LINE #$lineNum]<br />";
             $line = trim($line);
             $fields = explode(',', $line);
             $fips = $fields[0];
@@ -107,7 +107,7 @@ class StatisticsTable extends Table
             } else {
                 $areaId = $areasTable->getIdFromFips($fips);
                 if (! $areaId) {
-                    exit('Area "'.$areaName.'" with FIPS code '.$fips.' not recognized.');
+                    exit("Area '$areaName' with FIPS code '$fips' not recognized.");
                 }
                 $areaIds[$fips] = $areaId;
             }
@@ -128,7 +128,7 @@ class StatisticsTable extends Table
                 } else {
                     $categoryId = $statCategoriesTable->getIdFromName($categoryName);
                     if (! $categoryId) {
-                        exit('Unrecognized category: '.$categoryName);
+                        exit("Unrecognized category: $categoryName");
                     }
                     $categoryIds[$categoryName] = $categoryId;
                 }
@@ -143,7 +143,10 @@ class StatisticsTable extends Table
                 if ($existingRecord) {
                     // Skip over any stats that have already been recorded (but overwrite with new data)
                     if ($existingRecord->value == $value) {
-                        echo 'Skipping already-recorded stat: '.print_r(['area_id' => $areaId, 'stat_category_id' => $categoryId], true).'<br />';
+                        $msg = 'Skipping already-recorded stat: ';
+                        $msg .= print_r(['area_id' => $areaId, 'stat_category_id' => $categoryId], true);
+                        $msg .= '<br />';
+                        echo $msg;
                         continue;
                     }
 
@@ -152,10 +155,10 @@ class StatisticsTable extends Table
                     $existingRecord = $this->patchEntity($existingRecord, ['value' => $value]);
                     $errors = $existingRecord->errors();
                     if (! empty($errors)) {
-                        exit('Errors: '.print_r($errors, true));
+                        exit('Errors: ' . print_r($errors, true));
                     }
                     $this->save($existingRecord);
-                    echo 'Updated #'.$existingRecord->id.': '.$oldValue.' -> '.$value.'<br />';
+                    echo 'Updated #' . $existingRecord->id . ": $oldValue -> $value<br />";
 
                 // Save new record
                 } else {
@@ -167,10 +170,10 @@ class StatisticsTable extends Table
                     $statistic = $this->newEntity($data);
                     $errors = $statistic->errors();
                     if (! empty($errors)) {
-                        exit('Errors: '.print_r($errors, true));
+                        exit('Errors: ' . print_r($errors, true));
                     }
                     $this->save($statistic);
-                    echo 'Saved '.print_r($data, true).'<br />';
+                    echo 'Saved ' . print_r($data, true) . '<br />';
                 }
             }
         }

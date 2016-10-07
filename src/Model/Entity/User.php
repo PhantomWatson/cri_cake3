@@ -31,6 +31,12 @@ class User extends Entity
 
     ];
 
+    /**
+     * Automatically hashes password
+     *
+     * @param string $password Password
+     * @return bool|string
+     */
     protected function _setPassword($password)
     {
         return (new DefaultPasswordHasher)->hash($password);
@@ -46,6 +52,6 @@ class User extends Entity
         if ($this->_properties['salutation'] == '') {
             return $this->_properties['name'];
         }
-        return $this->_properties['salutation'].' '.$this->_properties['name'];
+        return $this->_properties['salutation'] . ' ' . $this->_properties['name'];
     }
 }

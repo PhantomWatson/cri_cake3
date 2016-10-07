@@ -61,6 +61,13 @@ class ProductsTable extends Table
         return $validator;
     }
 
+    /**
+     * Returns whether or not this community has purchased this product
+     *
+     * @param int $communityId Community ID
+     * @param int $productId Product ID
+     * @return bool
+     */
     public function isPurchased($communityId, $productId)
     {
         $purchasesTable = TableRegistry::get('Purchases');
@@ -78,12 +85,15 @@ class ProductsTable extends Table
 
     /**
      * Returns an array containing a status code, message, and conditionally the purchase url
+     *
      * Status codes:
      *      0: Purchase not possible
      *      1: Purchase needed
      *      2: Purchased
-     * @param int $communityId
-     * @param int $productId
+     *
+     * @param int $communityId Community ID
+     * @param int $productId Product ID
+     * @param int $clientId Client ID
      * @return array
      */
     public function getPurchaseStatus($communityId, $productId, $clientId)
@@ -150,7 +160,7 @@ class ProductsTable extends Table
         }
 
         // Is this half-setp product not ready to purchase or not necessary?
-        if ($productId == 2 || $productId == 4) {     // Leadership Summit || Facilitated Community Awareness Conversation
+        if ($productId == 2 || $productId == 4) { // Leadership Summit || Facilitated Community Awareness Conversation
             $surveyType = $productId == 2 ? 'official' : 'organization';
             $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
             $survey = $surveysTable->get($surveyId);
@@ -162,13 +172,13 @@ class ProductsTable extends Table
         }
 
         // Is this purchase not possible because the community isn't at the correct stage?
-        if ($productId == 2 && $community->score < 2) {  // Leadership Summit
+        if ($productId == 2 && $community->score < 2) { // Leadership Summit
             return [0, 'Community has not completed Step 1 yet.'];
         }
-        if ($productId == 3 && $community->score < 2) {  // Community Alignment Assessment
+        if ($productId == 3 && $community->score < 2) { // Community Alignment Assessment
             return [0, 'Community has not completed Step 1 yet.'];
         }
-        if ($productId == 4 && $community->score < 3) {  // Facilitated Community Awareness Conversation
+        if ($productId == 4 && $community->score < 3) { // Facilitated Community Awareness Conversation
             return [0, 'Community has not completed Step 2 yet.'];
         }
 
@@ -176,6 +186,14 @@ class ProductsTable extends Table
         return [1, 'Can be purchased', $purchaseUrl];
     }
 
+    /**
+     * Returns the URL for the specified purchase
+     *
+     * @param int $productId Product ID
+     * @param int $clientId Client user ID
+     * @param int $communityId Community ID
+     * @return string
+     */
     public function getPurchaseUrl($productId, $clientId, $communityId)
     {
         $retval = 'https://commerce.cashnet.com/';
@@ -183,30 +201,36 @@ class ProductsTable extends Table
         $retval .= '?itemcnt=1';
 
         // Add client info
-        $retval .= '&custcode='.$clientId;
+        $retval .= '&custcode=' . $clientId;
         $usersTable = TableRegistry::get('Users');
         $user = $usersTable->get($clientId);
         $nameSplit = explode(' ', $user->name);
-        $retval .= '&lname='.array_pop($nameSplit);
-        $retval .= '&fname='.implode(' ', $nameSplit);
+        $retval .= '&lname=' . array_pop($nameSplit);
+        $retval .= '&fname=' . implode(' ', $nameSplit);
 
         // Add product info
         $product = $this->get($productId);
-        $retval .= '&itemcode1=EMC001-'.$product->item_code;
-        $retval .= '&desc1='.urlencode($product->description);
-        $retval .= '&amount1='.$product->price;
+        $retval .= '&itemcode1=EMC001-' . $product->item_code;
+        $retval .= '&desc1=' . urlencode($product->description);
+        $retval .= '&amount1=' . $product->price;
 
         // Add extra custom variables
-        $retval .= '&ref1type1=community_id&ref1val1='.$communityId;
+        $retval .= '&ref1type1=community_id&ref1val1=' . $communityId;
 
         return $retval;
     }
 
-    public function getIdFromItemCode($item_code)
+    /**
+     * Returns the product ID for the product with the specified CASHNet item_code
+     *
+     * @param string $itemCode Item code
+     * @return null
+     */
+    public function getIdFromItemCode($itemCode)
     {
         $result = $this->find('all')
             ->select(['id'])
-            ->where(['item_code' => $item_code])
+            ->where(['item_code' => $itemCode])
             ->first()
             ->toArray();
         return isset($result['id']) ? $result['id'] : null;

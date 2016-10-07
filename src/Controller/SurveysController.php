@@ -16,7 +16,7 @@ class SurveysController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->Auth->allow(['cronImport']);
+        $this->Auth->allow(['cronImport', 'import']);
     }
 
     public function import($surveyId = null)
@@ -51,7 +51,7 @@ class SurveysController extends AppController
         $errorMsgs = [];
         if (is_array($responses)) {
             foreach ($responses as $smRespondentId => $response) {
-                $respondent = $responsesTable->extractRespondentInfo($response, $survey->sm_id);
+                $respondent = $responsesTable->extractRespondentInfo($response);
                 $name = $respondent['name'] ?: '(no name)';
                 $respondentRecord = $respondentsTable->getMatching($surveyId, $respondent, $smRespondentId);
                 $serializedResponse = base64_encode(serialize($response));
@@ -252,7 +252,7 @@ class SurveysController extends AppController
             $this->import($surveyId);
             $this->Surveys->setChecked($surveyId);
         } else {
-            $this->set('message', 'No surveys are currently eligible for automatic imports');
+            $this->set('message', 'No questionnaires are currently eligible for automatic imports');
             $this->viewBuilder()->layout('blank');
         }
         $this->render('import');

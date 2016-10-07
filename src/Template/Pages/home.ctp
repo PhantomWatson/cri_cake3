@@ -72,7 +72,8 @@
                     [
                         'controller' => 'Pages',
                         'action' => 'enroll'
-                    ]
+                    ],
+                    ['class' => 'btn btn-primary btn-xs']
                 ) ?>
                 to participate in the Community Readiness Initiative or contact your <a href="http://www.in.gov/ocra/2330.htm">OCRA Community Liaison</a>
             </li>

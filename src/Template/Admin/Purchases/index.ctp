@@ -6,7 +6,7 @@
 
 <p>
     <?= $this->Html->link(
-        'Add Purchase Record',
+        'Add Payment Record',
         [
             'prefix' => 'admin',
             'controller' => 'Purchases',

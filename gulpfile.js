@@ -34,13 +34,27 @@ gulp.task('php', function(callback) {
     return runSequence('php_cs', 'php_unit', callback);
 });
 
-gulp.task('php_cs', function() {
-    return gulp.src(['src/**/*.php'])
-        // Validate files using PHP Code Sniffer
+gulp.task('php_cs', function (cb) {
+    return gulp.src(['src/**/*.php', 'config/*.php', 'tests/*.php', 'tests/**/*.php'])
+    // Validate files using PHP Code Sniffer
         .pipe(phpcs({
             bin: '.\\vendor\\bin\\phpcs.bat',
-            standard: 'PSR2',
-            warningSeverity: 0
+            standard: '.\\vendor\\cakephp\\cakephp-codesniffer\\CakePHP',
+            errorSeverity: 1,
+            warningSeverity: 1
+        }))
+        // Log all problems that was found
+        .pipe(phpcs.reporter('log'));
+});
+
+gulp.task('php_cs_ctp', function (cb) {
+    return gulp.src(['src/Template/**/*.ctp'])
+    // Validate files using PHP Code Sniffer
+        .pipe(phpcs({
+            bin: '.\\vendor\\bin\\phpcs.bat',
+            standard: '.\\vendor\\cakephp\\cakephp-codesniffer\\CakePHP',
+            errorSeverity: 1,
+            warningSeverity: 1
         }))
         // Log all problems that was found
         .pipe(phpcs.reporter('log'));

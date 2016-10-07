@@ -8,10 +8,18 @@ use Cake\ORM\TableRegistry;
 
 class RespondentsController extends AppController
 {
+    /**
+     * Throws exceptions if the specified client cannot approve the specified respondent
+     *
+     * @param int $respondentId Respondent ID
+     * @param int $clientId Client ID
+     * @throws \App\Controller\Client\NotFoundException
+     * @return void
+     */
     private function checkClientAuthorization($respondentId, $clientId)
     {
         if (! $this->Respondents->exists(['id' => $respondentId])) {
-            throw new NotFoundException('Sorry, that respondent (#'.$respondentId.') could not be found.');
+            throw new NotFoundException('Sorry, that respondent (#' . $respondentId . ') could not be found.');
         }
         $isAuthorized = $this->Respondents->clientCanApproveRespondent($clientId, $respondentId);
         if (! $isAuthorized) {
@@ -19,10 +27,16 @@ class RespondentsController extends AppController
         }
     }
 
+    /**
+     * Index method
+     *
+     * @param string|null $surveyType Survey type
+     * @return \App\Controller\Response
+     */
     public function index($surveyType = null)
     {
         if ($surveyType != 'official' && $surveyType != 'organization') {
-            throw new BadRequestException('Survey type not specified');
+            throw new BadRequestException('Questionnaire type not specified');
         }
 
         $clientId = $this->getClientId();
@@ -33,9 +47,7 @@ class RespondentsController extends AppController
         $communityId = $communitiesTable->getClientCommunityId($clientId);
         if ($communityId) {
             $community = $communitiesTable->get($communityId);
-            $titleForLayout = $community->name.' '.ucwords($surveyType).' Survey Respondents';
-
-            //$this->setupPagination($community->id, $surveyType);
+            $titleForLayout = $community->name . ' ' . ucwords($surveyType) . ' Questionnaire Respondents';
             $surveysTable = TableRegistry::get('Surveys');
             $surveyId = $surveysTable->getSurveyId($community->id, $surveyType);
             $query = $this->Respondents->find('all')
@@ -53,11 +65,12 @@ class RespondentsController extends AppController
                             ->select(['respondent_id', 'response_date'])
                             ->order(['Responses.response_date' => 'DESC']);
                     }
-                ]);
+                ])
+                ->order(['name' => 'ASC']);
             $this->paginate['sortWhitelist'] = ['approved', 'email', 'name'];
             $respondents = $this->paginate($query)->toArray();
         } else {
-            $titleForLayout = 'Survey Respondents';
+            $titleForLayout = 'Questionnaire Respondents';
             $respondents = [];
         }
         $this->set(compact(
@@ -67,10 +80,17 @@ class RespondentsController extends AppController
         ));
     }
 
+    /**
+     * Unapproved method
+     *
+     * @param string|null $surveyType Survey type
+     * @return \App\Controller\Response
+     * @throws \App\Controller\Client\NotFoundException
+     */
     public function unapproved($surveyType = null)
     {
         if ($surveyType != 'official' && $surveyType != 'organization') {
-            throw new NotFoundException('Invalid survey type');
+            throw new NotFoundException('Invalid questionnaire type');
         }
 
         $communitiesTable = TableRegistry::get('Communities');
@@ -95,10 +115,17 @@ class RespondentsController extends AppController
                 'dismissed' => $this->Respondents->getDismissed($surveyId)
             ],
             'surveyType' => $surveyType,
-            'titleForLayout' => $community->name.' Uninvited '.ucwords($surveyType).' Survey Respondents'
+            'titleForLayout' => $community->name . ' Uninvited ' . ucwords($surveyType) . ' Questionnaire Respondents'
         ]);
     }
 
+    /**
+     * ApproveUninvited method
+     *
+     * @param int $respondentId Respondent ID
+     * @return \App\Controller\Response
+     * @throws \App\Controller\Client\NotFoundException
+     */
     public function approveUninvited($respondentId)
     {
         $clientId = $this->getClientId();
@@ -109,11 +136,18 @@ class RespondentsController extends AppController
         $respondent = $this->Respondents->get($respondentId);
         $respondent->approved = 1;
         $this->set([
-            'success' => (boolean) $this->Respondents->save($respondent)
+            'success' => (bool)$this->Respondents->save($respondent)
         ]);
         $this->viewBuilder()->layout('blank');
     }
 
+    /**
+     * DismissUninvited method
+     *
+     * @param int $respondentId Respondent ID
+     * @return \App\Controller\Response
+     * @throws \App\Controller\Client\NotFoundException
+     */
     public function dismissUninvited($respondentId)
     {
         $clientId = $this->getClientId();
@@ -124,7 +158,7 @@ class RespondentsController extends AppController
         $respondent = $this->Respondents->get($respondentId);
         $respondent->approved = -1;
         $this->set([
-            'success' => (boolean) $this->Respondents->save($respondent)
+            'success' => (bool)$this->Respondents->save($respondent)
         ]);
         $this->viewBuilder()->layout('blank');
     }

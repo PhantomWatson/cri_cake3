@@ -41,7 +41,17 @@
                 '/'
             ) ?>
         </li>
-        <?php if (! empty($accessibleCommunities)): ?>
+        <li class="link">
+            <?= $this->Html->link(
+                'Enroll',
+                [
+                    'prefix' => false,
+                    'controller' => 'Pages',
+                    'action' => 'enroll'
+                ]
+            ) ?>
+        </li>
+        <?php if ($authUser && $authUser['role'] == 'admin' && ! empty($accessibleCommunities)): ?>
             <li>
                 <p>
                     Community Performance

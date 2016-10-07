@@ -54,7 +54,7 @@
         </div>
         <div class="panel-body">
             <p>
-                Survey URL:
+                Questionnaire URL:
                 <span class="survey_url">
                     <?php if ($survey['sm_url']): ?>
                         <a href="<?= $survey['sm_url'] ?>">

@@ -1,7 +1,7 @@
-A Community Readiness Initiative survey is ready to be distributed to community officials in <?= $community_name ?>.
+A Community Readiness Initiative questionnaire is ready to be distributed to community officials in <?= $community_name ?>.
 
-To access this survey, please visit <?= $survey_url ?>.
+To access this questionnaire, please visit <?= $survey_url ?>.
 
-To invite community officials to respond to this survey, please visit <?= $invitation_url ?>.
+To invite community officials to respond to this questionnaire, please visit <?= $invitation_url ?>.
 
 If you have any questions, please email cri@bsu.edu.

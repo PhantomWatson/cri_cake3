@@ -1,35 +1,35 @@
 var sidebar = {
     init: function () {
-    	var form = $('#community_select');
-    	var selector = form.find('select').first();
-    	
-    	// Reset the selector to its default state
-    	selector.val('');
-    	
-    	// Auto-submit
-    	selector.change(function () {
-    		form.submit();
-    	});
-    	
-    	// Hide submit button
-    	form.find('input[type="submit"]').hide();
-    	
-    	form.submit(function (event) {
-    		event.preventDefault();
-    		var community_id = selector.val();
-    		if (community_id) {
-    			window.location.href = '/community/'+community_id;
-    		}
-    	});
+        var form = $('#community_select');
+        var selector = form.find('select').first();
+        
+        // Reset the selector to its default state
+        selector.val('');
+        
+        // Auto-submit
+        selector.change(function () {
+            form.submit();
+        });
+        
+        // Hide submit button
+        form.find('input[type="submit"]').hide();
+        
+        form.submit(function (event) {
+            event.preventDefault();
+            var community_id = selector.val();
+            if (community_id) {
+                window.location.href = '/community/'+community_id;
+            }
+        });
     }
 };
 
 var flashMessage = {
     init: function () {
-    	var messages = $('#flash_messages_bootstrap');
-    	if (! messages.is(':visible')) {
-    		messages.slideDown(500);
-    	}
+        var messages = $('#flash_messages_bootstrap');
+        if (! messages.is(':visible')) {
+            messages.slideDown(500);
+        }
     },
     insert: function (message, classname) {
         var bootstrap_class = 'alert-info';

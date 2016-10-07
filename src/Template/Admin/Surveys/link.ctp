@@ -7,7 +7,7 @@
 <p>
     <?php if ($survey['sm_url']): ?>
         <?= $this->Html->link(
-            '<span class="glyphicon glyphicon-arrow-left"></span> Back to Survey Overview',
+            '<span class="glyphicon glyphicon-arrow-left"></span> Back to Questionnaire Overview',
             [
                 'prefix' => 'admin',
                 'controller' => 'Surveys',
@@ -37,8 +37,8 @@
 </p>
 
 <p>
-    After a CRI survey is created in <a href="http://surveymonkey.com/">SurveyMonkey</a>, you must create a link between the
-    community and the new survey in order to enable survey invitations and response analysis.
+    After a CRI questionnaire is created in <a href="http://surveymonkey.com/">SurveyMonkey</a>, you must create a link between the
+    community and the new questionnaire in order to enable questionnaire invitations and response analysis.
 </p>
 
 <div class="survey_overview">
@@ -70,7 +70,7 @@
             </p>
 
             <p>
-                Survey URL:
+                Questionnaire URL:
                 <span class="survey_url">
                     <?php if ($survey['sm_url']): ?>
                         <a href="<?= $survey['sm_url'] ?>">
@@ -87,10 +87,10 @@
 
             <?= $this->Form->create($survey) ?>
 
-            <ul class="actions">
+            <ul class="actions" id="survey-link-buttons" data-is-new="<?= $survey->isNew() ? 1 : 0 ?>">
                 <li>
                     <button class="lookup btn btn-default">
-                        Select Survey
+                        Select Questionnaire
                     </button>
                 </li>
                 <li>
@@ -100,8 +100,11 @@
                 </li>
                 <li>
                     <?= $this->Form->button(
-                        $survey->isNew() ? 'Link Survey' : 'Update Link',
-                        ['class' => 'btn btn-primary']
+                        $survey->isNew() ? 'Link Questionnaire' : 'Update Link',
+                        [
+                            'class' => 'btn btn-primary',
+                            'id' => 'survey-link-submit'
+                        ]
                     ) ?>
                 </li>
             </ul>

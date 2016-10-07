@@ -126,17 +126,17 @@
                     /
                     <?php
                         $arrow = getSortArrow('ParentArea.name', $this->request->query);
-                        echo $this->Paginator->sort('ParentArea.name', 'Area'.$arrow, ['escape' => false]);
+                        echo $this->Paginator->sort('ParentAreas.name', 'Area'.$arrow, ['escape' => false]);
                     ?>
                 </th>
                 <th>
                     Stage
                 </th>
                 <th>
-                    Officials Survey
+                    Officials Questionnaire
                 </th>
                 <th>
-                    Organizations Survey
+                    Organizations Questionnaire
                 </th>
                 <th class="actions">
                     Actions
@@ -172,8 +172,19 @@
                         <td>
                             <div class="dropdown">
                                 <?php if (isset($community->{$surveyType}['sm_id']) && $community->{$surveyType}['sm_id']): ?>
+                                    <?php
+                                        $currentStep = floor($community->score);
+                                        $stepForSurvey = $surveyType == 'official_survey' ? 2 : 3;
+                                        if ($currentStep == $stepForSurvey) {
+                                            $label = 'In progress';
+                                        } elseif ($currentStep < $stepForSurvey) {
+                                            $label = 'Ready';
+                                        } else {
+                                            $label = 'Complete';
+                                        }
+                                    ?>
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                        Running <span class="caret"></span>
+                                        <?= $label ?> <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
                                         <li class="dropdown-header">
@@ -213,7 +224,7 @@
                                         </li>
                                         <li>
                                             <?= $this->Html->link(
-                                                '<span class="glyphicon glyphicon-link" aria-hidden="true"></span> Survey link',
+                                                '<span class="glyphicon glyphicon-link" aria-hidden="true"></span> Questionnaire link',
                                                 [
                                                     'prefix' => 'admin',
                                                     'controller' => 'Surveys',
@@ -268,7 +279,7 @@
                                     <ul class="dropdown-menu" role="menu">
                                         <li>
                                             <?= $this->Html->link(
-                                                '<span class="glyphicon glyphicon-link" aria-hidden="true"></span> Link to SurveyMonkey survey',
+                                                '<span class="glyphicon glyphicon-link" aria-hidden="true"></span> Link to SurveyMonkey questionnaire',
                                                 [
                                                     'prefix' => 'admin',
                                                     'controller' => 'Surveys',

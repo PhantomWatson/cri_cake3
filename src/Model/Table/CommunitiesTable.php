@@ -153,7 +153,9 @@ class CommunitiesTable extends Table
     }
 
     /**
-     * @param int $communityId
+     * Returns the count of consultants associated with a community
+     *
+     * @param int $communityId Community ID
      * @return int
      */
     public function getConsultantCount($communityId)
@@ -175,7 +177,8 @@ class CommunitiesTable extends Table
 
     /**
      * Returns a an array of communities that a consultant is assigned to
-     * @param int $consultant_id
+     *
+     * @param int $consultantId Consultant user ID
      * @return array $communityId => $community_name
      */
     public function getConsultantCommunityList($consultantId)
@@ -207,7 +210,8 @@ class CommunitiesTable extends Table
 
     /**
      * Returns the consultants assigned to this community
-     * @param int $communityId
+     *
+     * @param int $communityId Community ID
      * @return array
      */
     public function getConsultants($communityId)
@@ -230,7 +234,8 @@ class CommunitiesTable extends Table
 
     /**
      * Returns a an array of communities that a client is assigned to
-     * @param int $clientId
+     *
+     * @param int $clientId Client user ID
      * @return array $communityId => $community_name
      */
     public function getClientCommunityList($clientId = null)
@@ -246,9 +251,10 @@ class CommunitiesTable extends Table
             $clients = $usersTable->getClientList();
             $clientIds = array_keys($clients);
 
-            /* Seems redundant, but helps clean this list clean in the event of lingering
-             * "admin account was temporarily a client account associated with this community"
-             * situations. */
+            /* Seems redundant, but helps keep this list clean
+             * in the event of lingering "admin account was
+             * temporarily a client account associated with this
+             * community" situations. */
             $query->where(function ($exp, $q) use ($clientIds) {
                 return $exp->in('client_id', $clientIds);
             });
@@ -259,12 +265,14 @@ class CommunitiesTable extends Table
             ->where(function ($exp, $q) use ($communityIds) {
                 return $exp->in('id', $communityIds);
             })
+            ->order(['Communities.name' => 'ASC'])
             ->toArray();
     }
 
     /**
-     * Returns the ID of the (first) Community associated with the specified client, or NULL if no such community is found.
-     * @param int|null $clientId
+     * Returns the ID of the (first) Community associated with the specified client, or NULL none found
+     *
+     * @param int|null $clientId Client user ID
      * @return int|null
      */
     public function getClientCommunityId($clientId)
@@ -282,7 +290,8 @@ class CommunitiesTable extends Table
 
     /**
      * Returns an arbitrary client ID associated with the selected community
-     * @param int $communityId
+     *
+     * @param int $communityId Community ID
      * @return int
      */
     public function getCommunityClientId($communityId)
@@ -304,7 +313,9 @@ class CommunitiesTable extends Table
     }
 
     /**
-     * @param int $communityId
+     * Returns an array of a community's clients
+     *
+     * @param int $communityId Community ID
      * @return array
      */
     public function getClients($communityId)
@@ -332,7 +343,9 @@ class CommunitiesTable extends Table
     }
 
     /**
-     * @param int $communityId
+     * Returns the count of a community's clients
+     *
+     * @param int $communityId Community ID
      * @return int
      */
     public function getClientCount($communityId)
@@ -342,8 +355,10 @@ class CommunitiesTable extends Table
     }
 
     /**
-     * @param int $communityId
-     * @param boolean $isAdmin
+     * Returns a terribly complex array used in the client home page that sums up progress information
+     *
+     * @param int $communityId Community ID
+     * @param bool $isAdmin Current user is an administrator
      * @return array
      */
     public function getProgress($communityId, $isAdmin = false)
@@ -351,6 +366,7 @@ class CommunitiesTable extends Table
         $productsTable = TableRegistry::get('Products');
         $surveysTable = TableRegistry::get('Surveys');
         $respondentsTable = TableRegistry::get('Respondents');
+        $responsesTable = TableRegistry::get('Responses');
         $criteria = [];
 
 
@@ -371,35 +387,35 @@ class CommunitiesTable extends Table
         $surveyId = $surveysTable->getSurveyId($communityId, 'official');
         if ($surveyId) {
             $survey = $surveysTable->get($surveyId);
-            $note = '<br />Survey URL: <a href="'.$survey->sm_url.'">'.$survey->sm_url.'</a>';
+            $note = '<br />Questionnaire URL: <a href="' . $survey->sm_url . '">' . $survey->sm_url . '</a>';
         } else {
-            $note =  '';
+            $survey = null;
+            $note = '';
         }
         $step = $surveyId ? 2 : 1;
         $criteria[$step]['survey_created'] = [
-            'Leadership alignment assessment survey has been prepared'.$note,
-            (boolean) $surveyId
+            'Leadership alignment assessment questionnaire has been prepared' . $note,
+            (bool)$surveyId
         ];
 
 
         // Step 2
         $count = $surveyId ? $respondentsTable->getInvitedCount($surveyId) : 0;
-        $note = $count ? " ($count ".__n('invitation', 'invitations', $count).' sent)' : '';
+        $note = $count ? " ($count " . __n('invitation', 'invitations', $count) . ' sent)' : '';
         $criteria[2]['invitations_sent'] = [
-            'Community leaders have been sent survey invitations'.$note,
+            'Community leaders have been sent questionnaire invitations' . $note,
             $surveyId && $count > 0
         ];
 
-        $responsesTable = TableRegistry::get('Responses');
         $count = $surveyId ? $responsesTable->getDistinctCount($surveyId) : 0;
-        $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
+        $note = $count ? " ($count " . __n('response', 'responses', $count) . ' received)' : '';
         $criteria[2]['responses_received'] = [
-            'Responses to the survey have been collected'.$note,
+            'Responses to the questionnaire have been collected' . $note,
             $surveyId && $count > 0
         ];
 
         $criteria[2]['response_threshhold_reached'] = [
-            'At least 25% of invited community leaders have responded to the survey',
+            'At least 25% of invited community leaders have responded to the questionnaire',
             $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
         ];
 
@@ -412,12 +428,12 @@ class CommunitiesTable extends Table
 
         $criteria[2]['alignment_calculated'] = [
             'Community leadership alignment calculated',
-            $survey->alignment_passed != 0
+            $survey && $survey->alignment_passed != 0
         ];
 
-        if ($survey->alignment_passed == 0) {
+        if ($survey && $survey->alignment_passed == 0) {
             $note = ' (alignment not yet calculated)';
-        } elseif ($isAdmin) {
+        } elseif ($survey && $isAdmin) {
             $alignment = $survey->alignment;
             $note = " ($alignment% aligned)";
         } else {
@@ -426,12 +442,12 @@ class CommunitiesTable extends Table
         $purchasedLeadershipSummit = $productsTable->isPurchased($communityId, 2);
         if (! $purchasedLeadershipSummit) {
             $criteria[2]['alignment_passed'] = [
-                'Passed leadership alignment assessment'.$note,
-                 $survey->alignment_passed == 1
+                'Passed leadership alignment assessment' . $note,
+                $survey && $survey->alignment_passed == 1
             ];
         }
 
-        if ($survey->alignment_passed == -1 || $purchasedLeadershipSummit) {
+        if (($survey && $survey->alignment_passed == -1) || $purchasedLeadershipSummit) {
             $criteria[2]['consultant_assigned'] = [
                 'At least one consultant has been assigned to this community',
                 $this->getConsultantCount($communityId) > 0
@@ -443,7 +459,7 @@ class CommunitiesTable extends Table
             ];
         }
 
-        if (! $purchasedLeadershipSummit && ($survey->alignment_passed == 0 || $survey->alignment_passed == 1)) {
+        if (! $purchasedLeadershipSummit && $survey && ($survey->alignment_passed == 0 || $survey->alignment_passed == 1)) {
             $criteria[2]['survey_purchased'] = [
                 'Purchased Community Organizations Alignment Assessment ($3,500)',
                 $productsTable->isPurchased($communityId, 3)
@@ -454,12 +470,12 @@ class CommunitiesTable extends Table
         // Step 2.5
         if ($purchasedLeadershipSummit) {
             $criteria['2.5']['alignment_passed'] = [
-                'Passed leadership alignment assessment'.$note,
-                 $survey->alignment_passed == 1
+                'Passed leadership alignment assessment' . $note,
+                $survey && $survey->alignment_passed == 1
             ];
         }
 
-        if ($survey->alignment_passed == -1 || $purchasedLeadershipSummit) {
+        if (($survey && $survey->alignment_passed == -1) || $purchasedLeadershipSummit) {
             $criteria['2.5']['survey_purchased'] = [
                 'Purchased Community Organizations Alignment Assessment ($3,500)',
                 $productsTable->isPurchased($communityId, 3)
@@ -471,16 +487,24 @@ class CommunitiesTable extends Table
         $surveyId = $surveysTable->getSurveyId($communityId, 'organization');
         $survey = $surveyId ? $surveysTable->get($surveyId) : null;
         $surveyUrl = $survey ? $survey->sm_url : null;
-        $note = $surveyUrl ? '<br />Survey URL: <a href="'.$surveyUrl.'">'.$surveyUrl.'</a>' : '';
+        if ($surveyUrl) {
+            $note = '<br />Questionnaire URL: <a href="' . $surveyUrl . '">' . $surveyUrl . '</a>';
+        } else {
+            $note = '';
+        }
         $criteria[3]['survey_created'] = [
-            'Community organization alignment assessment survey has been prepared'.$note,
-            (boolean) $surveyId
+            'Community organization alignment assessment questionnaire has been prepared' . $note,
+            (bool)$surveyId
         ];
 
-        $count = $surveyId ? $respondentsTable->getCount($surveyId) : 0;
-        $note = $count ? " ($count ".__n('response', 'responses', $count).' received)' : '';
+        $count = $surveyId ? $responsesTable->getDistinctCount($surveyId) : 0;
+        if ($count) {
+            $note = " ($count " . __n('response', 'responses', $count) . ' received)';
+        } else {
+            $note = '';
+        }
         $criteria[3]['responses_received'] = [
-            'Responses to the survey have been collected'.$note,
+            'Responses to the questionnaire have been collected' . $note,
             $surveyId && $count > 0
         ];
 
@@ -491,7 +515,7 @@ class CommunitiesTable extends Table
 
         if ($survey && $survey->alignment_passed == 0) {
             $note = ' (alignment not yet calculated)';
-        } elseif ($isAdmin) {
+        } elseif ($survey && $isAdmin) {
             $note = " ({$survey->alignment}% aligned)";
         } else {
             $note = '';
@@ -499,7 +523,7 @@ class CommunitiesTable extends Table
         $purchasedCommunitySummit = $productsTable->isPurchased($communityId, 4);
         if (! $purchasedCommunitySummit) {
             $criteria[3]['alignment_passed'] = [
-                'Passed community alignment assessment'.$note,
+                'Passed community alignment assessment' . $note,
                  $survey && $survey->alignment_passed == 1
             ];
         }
@@ -527,8 +551,8 @@ class CommunitiesTable extends Table
         // Step 3.5
         if ($purchasedCommunitySummit) {
             $criteria['3.5']['alignment_passed'] = [
-                'Passed community alignment assessment'.$note,
-                 $survey->alignment_passed == 1
+                'Passed community alignment assessment' . $note,
+                $survey && $survey->alignment_passed == 1
             ];
 
             $criteria['3.5']['policy_dev_purchased'] = [
@@ -540,9 +564,13 @@ class CommunitiesTable extends Table
 
         // Step 4
         $community = $this->get($communityId);
-        $note = $community->town_meeting_date ? ' ('.date('F jS, Y', strtotime($community->town_meeting_date)).')': '';
+        if ($community->town_meeting_date) {
+            $note = ' (' . date('F jS, Y', strtotime($community->town_meeting_date)) . ')';
+        } else {
+            $note = '';
+        }
         $criteria[4]['meeting_scheduled'] = [
-            'Scheduled town meeting'.$note,
+            'Scheduled town meeting' . $note,
             $community->town_meeting_date != null
         ];
         if ($community->town_meeting_date != null) {
@@ -555,6 +583,12 @@ class CommunitiesTable extends Table
         return $criteria;
     }
 
+    /**
+     * Removes all client associations from a community
+     *
+     * @param int $communityId Community ID
+     * @return mixed
+     */
     public function removeAllClientAssociations($communityId)
     {
         $community = $this->get($communityId);
@@ -566,6 +600,12 @@ class CommunitiesTable extends Table
         return $this->Clients->unlink($community, $clients);
     }
 
+    /**
+     * Removes all consultant associations from a community
+     *
+     * @param int $communityId Community ID
+     * @return mixed
+     */
     public function removeAllConsultantAssociations($communityId)
     {
         $community = $this->get($communityId);
@@ -577,16 +617,23 @@ class CommunitiesTable extends Table
         return $this->Consultants->unlink($community, $consultants);
     }
 
+    /**
+     * Returns a PHPExcel spreadsheet object
+     *
+     * @param array $communities Array of community entities
+     * @return \PHPExcel
+     * @throws \PHPExcel_Exception
+     */
     public function getSpreadsheetObject($communities)
     {
         // Start up
-        require_once(ROOT.DS.'vendor'.DS.'phpoffice'.DS.'phpexcel'.DS.'Classes'.DS.'PHPExcel.php');
+        require_once ROOT . DS . 'vendor' . DS . 'phpoffice' . DS . 'phpexcel' . DS . 'Classes' . DS . 'PHPExcel.php';
         \PHPExcel_Cell::setValueBinder(new \PHPExcel_Cell_AdvancedValueBinder());
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
 
         // Metadata
-        $title = 'CRI Project Overview - '.date('F j, Y');
+        $title = 'CRI Project Overview - ' . date('F j, Y');
         $author = 'Center for Business and Economic Research, Ball State University';
         $objPHPExcel->getProperties()
             ->setCreator($author)
@@ -612,19 +659,19 @@ class CommunitiesTable extends Table
             'Area',
             'Stage',
             'Fast Track',
-            'Officials Survey created',
-            'Officials Survey alignment',
-            'Officials Survey passed',
-            'Organizations Survey created',
-            'Organizations Survey alignment',
-            'Organizations Survey passed'
+            'Officials Questionnaire created',
+            'Officials Questionnaire alignment',
+            'Officials Questionnaire passed',
+            'Organizations Questionnaire created',
+            'Organizations Questionnaire alignment',
+            'Organizations Questionnaire passed'
         ];
         $lastCol = 'B';
         foreach ($columnTitles as $col => $colTitle) {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col + 1, 2, $colTitle);
             $lastCol++; // Huh. Turns out this works.
         }
-        $objPHPExcel->getActiveSheet()->getStyle('B2:'.$lastCol.'2')->applyFromArray([
+        $objPHPExcel->getActiveSheet()->getStyle('B2:' . $lastCol . '2')->applyFromArray([
             'font' => [
                 'bold' => true
             ]
@@ -648,13 +695,17 @@ class CommunitiesTable extends Table
                     case 'Fast Track':
                         $value = $community->fast_track ? 'Yes' : 'No';
                         break;
-                    case 'Officials Survey created':
+                    case 'Officials Questionnaire created':
                         $value = isset($community->official_survey['sm_id']) ? 'Yes' : 'No';
                         break;
-                    case 'Officials Survey alignment':
-                        $value = $community->official_survey['alignment'] ? $community->official_survey['alignment'].'%' : 'Not set';
+                    case 'Officials Questionnaire alignment':
+                        if ($community->official_survey['alignment']) {
+                            $value = $community->official_survey['alignment'] . '%';
+                        } else {
+                            $value = 'Not set';
+                        }
                         break;
-                    case 'Officials Survey passed':
+                    case 'Officials Questionnaire passed':
                         $passed = $community->official_survey['alignment_passed'];
                         switch ($passed) {
                             case 1:
@@ -668,13 +719,17 @@ class CommunitiesTable extends Table
                                 break;
                         }
                         break;
-                    case 'Organizations Survey created':
+                    case 'Organizations Questionnaire created':
                         $value = isset($community->organization_survey['sm_id']) ? 'Yes' : 'No';
                         break;
-                    case 'Organizations Survey alignment':
-                        $value = $community->organization_survey['alignment'] ? $community->organization_survey['alignment'].'%' : 'Not set';
+                    case 'Organizations Questionnaire alignment':
+                        if ($community->organization_survey['alignment']) {
+                            $value = $community->organization_survey['alignment'] . '%';
+                        } else {
+                            $value = 'Not set';
+                        }
                         break;
-                    case 'Organizations Survey passed':
+                    case 'Organizations Questionnaire passed':
                         $passed = $community->organization_survey['alignment_passed'];
                         switch ($passed) {
                             case 1:
@@ -709,6 +764,13 @@ class CommunitiesTable extends Table
         return $objPHPExcel;
     }
 
+    /**
+     * A finder for /admin/communities/index
+     *
+     * @param \Cake\ORM\Query $query Query
+     * @param array $options Options array
+     * @return \Cake\ORM\Query
+     */
     public function findAdminIndex(\Cake\ORM\Query $query, array $options)
     {
         $query

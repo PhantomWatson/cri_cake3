@@ -6,7 +6,7 @@
 
 <p>
     <?= $this->Html->link(
-        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Survey Overview',
+        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Questionnaire Overview',
         [
             'prefix' => 'admin',
             'controller' => 'Surveys',
@@ -22,31 +22,94 @@
 </p>
 
 <div id="admin-responses-view">
-    <p>
-        These are the currently known responses to
-        <strong>
-            <?= $community->name ?>'s
-            community
-            <?= $survey->type == 'official' ? 'leadership' : 'organization' ?>
-        </strong>
-        survey. Incomplete responses are excluded, and recent responses may have not been imported yet.
-    </p>
+    <?php if ($responses): ?>
+        <section>
+            <h2>
+                Summary
+            </h2>
+            <table class="table" id="responses-summary">
+                <thead>
+                    <tr>
+                        <th>
+                            <?= $community->local_area->name ?>
+                        </th>
+                        <?php foreach ($sectors as $sector): ?>
+                            <th>
+                                <?= ucfirst($sector) ?>
+                            </th>
+                        <?php endforeach; ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>
+                            Average Survey Response Ranking
+                        </th>
+                        <?php foreach ($sectors as $sector): ?>
+                            <td>
+                                <?= $averageRanks[$sector] ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                    <tr>
+                        <th>
+                            Response Order
+                        </th>
+                        <?php foreach ($sectors as $sector): ?>
+                            <td>
+                                <?= $rankOrder[$sector] ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                    <?php $area = $community->local_area ?: $community->parent_area; ?>
+                    <tr>
+                        <th>
+                            Actual PWR<sup>3</sup> Ranking of <?= $area->name ?>
+                        </th>
+                        <?php foreach ($sectors as $sector): ?>
+                            <td>
+                                <?= $area->{$sector . '_rank'} ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                    <tr>
+                        <th>
+                            Internal Alignment Scores
+                            <br />
+                            <span class="note">
+                                Lower numbers indicate that respondents are better-aligned with each other for that
+                                category relative to others
+                            </span>
+                        </th>
+                        <?php foreach ($sectors as $sector): ?>
+                            <td>
+                                <?= round($internalAlignment[$sector], 3) ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-    <p>
-        Click on <span class="glyphicon glyphicon-search"></span> to view <em>all</em> of the questions and answers for a response.
-    </p>
-
-    <section>
-        <h2>
-            PWR<sup>3</sup> Alignment
-            <button class="btn btn-sm btn-default" id="toggle-table-scroll"></button>
-            <button class="btn btn-sm btn-default" id="show-respondents" data-label="show"></button>
-        </h2>
-        <?php if (empty($responses)): ?>
-            <p class="alert alert-info">
-                No responses have been imported yet.
+        <section>
+            <h2>
+                PWR<sup>3</sup> Alignment
+                <button class="btn btn-sm btn-default" id="toggle-table-scroll"></button>
+                <button class="btn btn-sm btn-default" id="show-respondents" data-label="show"></button>
+            </h2>
+            <p>
+                These are the currently known responses to
+                <strong>
+                    <?= $community->name ?>'s
+                    community
+                    <?= $survey->type == 'official' ? 'leadership' : 'organization' ?>
+                </strong>
+                questionnaire. Incomplete responses are excluded, and recent responses may have not been imported yet.
             </p>
-        <?php else: ?>
+
+            <p>
+                Click on <span class="glyphicon glyphicon-search"></span> to view <em>all</em> of the questions and answers for a response.
+            </p>
             <div>
                 <ul class="nav nav-tabs" role="tablist">
                     <li>
@@ -95,15 +158,12 @@
                     <?php endif; ?>
                 </div>
             </div>
-        <?php endif; ?>
-    </section>
+        </section>
 
-    <section>
-        <h2>
-            Internal Alignment
-        </h2>
-
-        <?php if ($internalAlignment): ?>
+        <section>
+            <h2>
+                Internal Alignment
+            </h2>
             <table class="table" id="internal-alignment-breakdown">
                 <thead>
                     <tr>
@@ -142,12 +202,12 @@
                     </tr>
                 </tfoot>
             </table>
-        <?php else: ?>
-            <p class="alert alert-info">
-                Not enough responses have been collected / approved to be able to determine this survey's internal alignment.
-            </p>
-        <?php endif; ?>
-    </section>
+        </section>
+    <?php else: ?>
+        <p class="alert alert-info">
+            No responses have been imported yet.
+        </p>
+    <?php endif; ?>
 
     <section>
         <h2>
