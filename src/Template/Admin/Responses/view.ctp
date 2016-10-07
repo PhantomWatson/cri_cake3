@@ -23,20 +23,6 @@
 
 <div id="admin-responses-view">
     <?php if ($responses): ?>
-        <p>
-            These are the currently known responses to
-            <strong>
-                <?= $community->name ?>'s
-                community
-                <?= $survey->type == 'official' ? 'leadership' : 'organization' ?>
-            </strong>
-            questionnaire. Incomplete responses are excluded, and recent responses may have not been imported yet.
-        </p>
-
-        <p>
-            Click on <span class="glyphicon glyphicon-search"></span> to view <em>all</em> of the questions and answers for a response.
-        </p>
-
         <section>
             <h2>
                 Summary
@@ -115,6 +101,19 @@
                 <button class="btn btn-sm btn-default" id="toggle-table-scroll"></button>
                 <button class="btn btn-sm btn-default" id="show-respondents" data-label="show"></button>
             </h2>
+            <p>
+                These are the currently known responses to
+                <strong>
+                    <?= $community->name ?>'s
+                    community
+                    <?= $survey->type == 'official' ? 'leadership' : 'organization' ?>
+                </strong>
+                questionnaire. Incomplete responses are excluded, and recent responses may have not been imported yet.
+            </p>
+
+            <p>
+                Click on <span class="glyphicon glyphicon-search"></span> to view <em>all</em> of the questions and answers for a response.
+            </p>
             <div>
                 <ul class="nav nav-tabs" role="tablist">
                     <li>
