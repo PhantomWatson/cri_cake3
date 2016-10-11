@@ -27,11 +27,12 @@
             <h2>
                 Summary
             </h2>
+            <?php $area = $community->local_area ?: $community->parent_area; ?>
             <table class="table" id="responses-summary">
                 <thead>
                     <tr>
                         <th>
-                            <?= $community->local_area->name ?>
+                            <?= $area->name ?>
                         </th>
                         <?php foreach ($sectors as $sector): ?>
                             <th>
@@ -61,7 +62,6 @@
                             </td>
                         <?php endforeach; ?>
                     </tr>
-                    <?php $area = $community->local_area ?: $community->parent_area; ?>
                     <tr>
                         <th>
                             Actual PWR<sup>3</sup> Ranking of <?= $area->name ?>
