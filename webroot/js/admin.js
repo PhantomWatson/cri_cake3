@@ -222,7 +222,7 @@ var adminViewResponses = {
                     button.html(showRespondentsLabel.show);
                 }
             });
-        $('ul.nav-tabs li[role=presentation]').first().addClass('active');
+        $('ul.nav-tabs li[role=presentation]').first().find('a').tab('show');
         var toggleFullscreenLabel = {
             fullscreen: '<span class="glyphicon glyphicon-fullscreen"></span> <span class="text">Show table full size</span>',
             window: '<span class="glyphicon glyphicon-list-alt"></span> <span class="text">Show table in window</span>'
