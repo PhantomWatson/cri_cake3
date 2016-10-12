@@ -781,5 +781,9 @@ var adminHeader = {
         alert.slideUp(300, function () {
             alert.remove();
         });
+    },
+
+    selectCommunity: function (communityId) {
+        $('#admin-header-community').val(communityId);
     }
 };

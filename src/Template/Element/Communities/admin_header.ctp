@@ -61,4 +61,7 @@
 <?php $this->append('buffered'); ?>
     var surveyIds = <?= json_encode($adminHeader['surveyIds']) ?>;
     adminHeader.init(surveyIds);
+    <?php if (isset($community->id)): ?>
+        adminHeader.selectCommunity(<?= $community->id ?>);
+    <?php endif; ?>
 <?php $this->end(); ?>
