@@ -115,7 +115,7 @@ class ResponsesController extends AppController
             'responses' => $responses,
             'sectors' => $sectors,
             'survey' => $survey,
-            'titleForLayout' => 'View and Update Alignment'
+            'titleForLayout' => $community->name . ': View and Update Alignment'
         ]);
     }
 
