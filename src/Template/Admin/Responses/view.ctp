@@ -4,6 +4,12 @@
     </h1>
 </div>
 
+<?= $this->element('Communities/admin_header', [
+    'adminHeader' => $adminHeader,
+    'communityId' => $community->id,
+    'surveyId' => $survey->id
+]) ?>
+
 <p>
     <?= $this->Html->link(
         '<span class="glyphicon glyphicon-arrow-left"></span> Back to Questionnaire Overview',

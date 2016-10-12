@@ -104,6 +104,7 @@ class ResponsesController extends AppController
             $rankOrder = null;
         }
 
+        $this->prepareAdminHeader();
         $this->set([
             'averageRanks' => $averageRanks,
             'community' => $community,
