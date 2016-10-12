@@ -689,3 +689,97 @@ var surveyOverview = {
         });
     }
 };
+
+var adminHeader = {
+    surveyIds: [],
+
+    init: function (surveyIds) {
+        this.surveyIds = surveyIds;
+        $('#admin-header').submit(function (event) {
+            event.preventDefault();
+            var url = adminHeader.getUrl();
+            if (url) {
+                adminHeader.removeError();
+            }
+            window.location.href = url;
+        });
+    },
+
+    getUrl: function () {
+        var communityId =  $('#admin-header-community').val();
+        if (! communityId) {
+            this.displayError('Please select a community');
+            return false;
+        }
+
+        var selectedPageOpt = $('#admin-header-page option:selected');
+        var selectedPage = selectedPageOpt.val();
+        if (! selectedPage) {
+            this.displayError('Please select a page');
+            return false;
+        }
+
+        var url = selectedPage.replace('{community-id}', communityId);
+
+        var surveyType = selectedPageOpt.closest('optgroup').data('survey-type');
+        if (surveyType) {
+            url = url.replace('{survey-type}', surveyType);
+        }
+
+        var surveyId = this.getSurveyId(communityId, surveyType);
+        if (surveyId) {
+            url = url.replace('{survey-id}', surveyId);
+        } else if (url.search('{survey-id}') != -1) {
+            var communityName = $('#admin-header-community option:selected').text().trim();
+            this.displayError('The ' + surveyType  + ' questionnaire has not yet been set up for ' + communityName + '.');
+            return false;
+        }
+
+        return url;
+    },
+
+    getSurveyId: function (communityId, surveyType) {
+        if (! communityId || ! surveyType) {
+            return false;
+        }
+
+        if (this.surveyIds.hasOwnProperty(communityId)) {
+            var community = adminHeader.surveyIds[communityId];
+            if (community.hasOwnProperty(surveyType)) {
+                return this.surveyIds[communityId][surveyType];
+            }
+        }
+
+        return false;
+    },
+
+    displayError: function (msg) {
+        var alert = $('<p class="admin-header-error alert alert-info">' + msg + '</p>');
+        alert.hide();
+        var header = $('#admin-header');
+        var existingAlert = header.find('.admin-header-error');
+        if (existingAlert.length > 0) {
+            existingAlert.fadeOut(300, function () {
+                existingAlert.remove();
+                header.append(alert);
+                alert.fadeIn(300);
+            });
+        } else {
+            header.append(alert);
+            alert.fadeIn(300);
+        }
+        setTimeout(function () {
+            adminHeader.removeError();
+        }, 5000);
+    },
+
+    removeError: function () {
+        var alert = $('#admin-header .admin-header-error');
+        if (! alert.length) {
+            return;
+        }
+        alert.slideUp(300, function () {
+            alert.remove();
+        });
+    }
+};
