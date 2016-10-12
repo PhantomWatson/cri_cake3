@@ -559,7 +559,7 @@ var surveyLink = {
         });
     },
     
-    selectSurvey: function (container, sm_id, url) { console.log('sm_id is '+sm_id); console.log('url is '+url);
+    selectSurvey: function (container, sm_id, url) {
         var results_container = container.find('.lookup_results');
         
         // Clean up appearance
