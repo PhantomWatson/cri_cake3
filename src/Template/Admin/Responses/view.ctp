@@ -10,23 +10,6 @@
     'surveyId' => $survey->id
 ]) ?>
 
-<p>
-    <?= $this->Html->link(
-        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Questionnaire Overview',
-        [
-            'prefix' => 'admin',
-            'controller' => 'Surveys',
-            'action' => 'view',
-            $community->id,
-            $survey->type
-        ],
-        [
-            'class' => 'btn btn-default',
-            'escape' => false
-        ]
-    ) ?>
-</p>
-
 <div id="admin-responses-view">
     <?php if ($responses): ?>
         <section>
