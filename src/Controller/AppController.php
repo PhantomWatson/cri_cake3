@@ -269,18 +269,18 @@ class AppController extends Controller
             ->order(['name' => 'ASC']);
 
         $communityPages = [
-            'Edit' => Router::url(['controller' => 'Communities', 'action' => 'edit']) . '/{community-id}',
-            'Progress' => Router::url(['controller' => 'Communities', 'action' => 'progress']) . '/{community-id}',
-            'Clients' => Router::url(['controller' => 'Communities', 'action' => 'clients']) . '/{community-id}',
-            'Client Home' => Router::url(['controller' => 'Communities', 'action' => 'clienthome']) . '/{community-id}'
+            'Edit' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'edit']) . '/{community-id}',
+            'Progress' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'progress']) . '/{community-id}',
+            'Clients' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'clients']) . '/{community-id}',
+            'Client Home' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'clienthome']) . '/{community-id}'
         ];
 
         $surveyPages = [
-            'Overview' => Router::url(['controller' => 'Surveys', 'action' => 'view']) . '/{community-id}/{survey-type}',
-            'Link' => Router::url(['controller' => 'Surveys', 'action' => 'link']) . '/{community-id}/{survey-type}',
-            'Alignment' => Router::url(['controller' => 'Responses', 'action' => 'view']) . '/{survey-id}',
-            'Invitations' => Router::url(['controller' => 'Surveys', 'action' => 'invite']) . '/{survey-id}',
-            'Reminders' => Router::url(['controller' => 'Surveys', 'action' => 'remind']) . '/{survey-id}'
+            'Overview' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'view']) . '/{community-id}/{survey-type}',
+            'Link' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'link']) . '/{community-id}/{survey-type}',
+            'Alignment' => Router::url(['prefix' => 'admin', 'controller' => 'Responses', 'action' => 'view']) . '/{survey-id}',
+            'Invitations' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'invite']) . '/{survey-id}',
+            'Reminders' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'remind']) . '/{survey-id}'
         ];
 
         $this->loadModel('Surveys');
