@@ -800,7 +800,6 @@ var adminHeader = {
         $('#admin-header-page optgroup').each(function () {
             var optgroup = $(this);
             var surveyType = optgroup.data('survey-type');
-            console.log('surveyType is ' + surveyType);
             optgroup.find('option').each(function () {
                 var option = $(this);
                 var urlTemplate = option.val();
@@ -819,10 +818,6 @@ var adminHeader = {
 
                 if (currentUrl == optionUrl) {
                     option.prop('selected', true);
-                    console.log(currentUrl + ' == ' + optionUrl + ' (' + urlTemplate + ')');
-                    console.log('selecting index ' + option.index('option'));
-                } else {
-                    console.log(currentUrl + ' <> ' + optionUrl);
                 }
             });
         });
