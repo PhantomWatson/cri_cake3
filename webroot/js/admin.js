@@ -709,8 +709,8 @@ var adminHeader = {
             var url = adminHeader.getUrl();
             if (url) {
                 adminHeader.removeError();
+                window.location.href = url;
             }
-            window.location.href = url;
         });
     },
 
