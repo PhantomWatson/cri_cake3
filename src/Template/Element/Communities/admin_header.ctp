@@ -1,7 +1,3 @@
-<?php
-    use Cake\Routing\Router;
-?>
-
 <form class="form-inline" id="admin-header">
     <select class="form-control form-inline" id="admin-header-community">
         <?php if (! $adminHeader['selectedCommunity']): ?>
@@ -29,7 +25,7 @@
 
         <optgroup label="Community">
             <?php foreach ($adminHeader['communityPages'] as $label => $url): ?>
-                <option value="<?= Router::url($url) ?>">
+                <option value="<?= $url ?>">
                     <?= $label ?>
                 </option>
             <?php endforeach; ?>
@@ -44,7 +40,7 @@
         <?php foreach ($surveyTypes as $label => $surveyType): ?>
             <optgroup label="<?= $label ?>" data-survey-type="<?= $surveyType ?>">
                 <?php foreach ($adminHeader['surveyPages'] as $label => $url): ?>
-                    <option value="<?= Router::url($url) ?>">
+                    <option value="<?= str_replace('{survey-type}', $surveyType, $url) ?>">
                         <?= $label ?>
                     </option>
                 <?php endforeach; ?>
@@ -60,8 +56,10 @@
 
 <?php $this->append('buffered'); ?>
     var surveyIds = <?= json_encode($adminHeader['surveyIds']) ?>;
-    adminHeader.init(surveyIds);
-    <?php if (isset($community->id)): ?>
-        adminHeader.selectCommunity(<?= $community->id ?>);
-    <?php endif; ?>
+    adminHeader.init({
+        communityId: <?= isset($community->id) ? json_encode($community->id) : 'null' ?>,
+        currentUrl: <?= json_encode($adminHeader['currentUrl']) ?>,
+        surveyId: <?= isset($survey->id) ? json_encode($survey->id) : 'null' ?>,
+        surveyIds: surveyIds
+    });
 <?php $this->end(); ?>
