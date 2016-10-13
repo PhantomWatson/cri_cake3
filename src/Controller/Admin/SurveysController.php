@@ -63,7 +63,7 @@ class SurveysController extends AppController
         $this->set([
             'community' => $community,
             'survey' => $survey,
-            'titleForLayout' => $community->name . ' ' . ucwords($surveyType) . 's Questionnaire'
+            'titleForLayout' => $community->name . ': ' . ucwords($surveyType) . 's Questionnaire Overview'
         ]);
     }
 
@@ -127,7 +127,7 @@ class SurveysController extends AppController
             'community' => $community,
             'qnaIdFields' => $this->Surveys->getQnaIdFieldNames(),
             'survey' => $survey,
-            'titleForLayout' => $community->name . ' ' . ucwords($surveyType) . 's Questionnaire: Link'
+            'titleForLayout' => $community->name . ': ' . ucwords($surveyType) . 's Questionnaire Link'
         ]);
     }
 
