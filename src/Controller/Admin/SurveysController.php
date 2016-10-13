@@ -241,7 +241,7 @@ class SurveysController extends AppController
         $this->set([
             'community' => $community,
             'survey' => $survey,
-            'titleForLayout' => 'Send Reminders to Community '.ucwords($survey->type).'s',
+            'titleForLayout' => $community->name . ': Remind Community '.ucwords($survey->type).'s',
             'unresponsive' => $unresponsive,
             'unresponsiveCount' => count($unresponsive)
         ]);
