@@ -1,4 +1,7 @@
-<form class="form-inline" id="admin-header">
+<form class="form-inline well" id="admin-header">
+    <h3>
+        CRI Community Admin
+    </h3>
     <select class="form-control form-inline" id="admin-header-community">
         <?php if (! $adminHeader['selectedCommunity']): ?>
             <option value="">
