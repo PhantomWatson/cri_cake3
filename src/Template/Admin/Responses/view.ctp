@@ -267,7 +267,6 @@
     </div>
 <?php $this->end(); ?>
 
-<?php $this->element('script', ['script' => 'admin']); ?>
 <?php $this->append('buffered'); ?>
     adminViewResponses.init();
 <?php $this->end(); ?>

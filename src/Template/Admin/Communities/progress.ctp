@@ -4,20 +4,11 @@
     </h1>
 </div>
 
-<p>
-    <?= $this->Html->link(
-        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Communities',
-        [
-            'prefix' => 'admin',
-            'controller' => 'Communities',
-            'action' => 'index'
-        ],
-        [
-            'class' => 'btn btn-default',
-            'escape' => false
-        ]
-    ) ?>
-</p>
+<?= $this->element('Communities/admin_header', [
+    'adminHeader' => $adminHeader,
+    'communityId' => $community->id,
+    'surveyId' => null
+]) ?>
 
 <?php if ($fastTrack): ?>
     <p class="alert alert-info">

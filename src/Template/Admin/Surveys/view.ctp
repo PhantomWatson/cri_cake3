@@ -82,12 +82,10 @@
 </div>
 
 
-<?php
-    if ($survey['id']) {
-        echo $this->element('Surveys'.DS.'overview');
-    }
-    $this->element('script', ['script' => 'admin']);
-?>
+<?php if ($survey['id']): ?>
+    <?= $this->element('Surveys'.DS.'overview') ?>
+<?php endif; ?>
+
 <?php $this->append('buffered'); ?>
     surveyOverview.init({
         community_id: <?= $community->id ?>

@@ -163,7 +163,6 @@
     <?= $this->Form->end() ?>
 </div>
 
-<?php $this->element('script', ['script' => 'admin']); ?>
 <?php $this->append('buffered'); ?>
     surveyLink.init({
         community_id: <?= $community->id ?>,
