@@ -807,6 +807,14 @@ var adminHeader = {
                     return;
                 }
 
+                // Special case for admins viewing client home page
+                if (urlTemplate == '/admin/communities/clienthome/{community-id}') {
+                    if (currentUrl == '/client/home') {
+                        option.prop('selected', true);
+                        return;
+                    }
+                }
+
                 var optionUrl = urlTemplate.replace('{community-id}', adminHeader.communityId);
                 if (optionUrl.search('{survey-id}') != -1) {
                     var optionSurveyId = adminHeader.getSurveyId(adminHeader.communityId, surveyType);
