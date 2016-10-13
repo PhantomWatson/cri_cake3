@@ -4,19 +4,13 @@
     </h1>
 </div>
 
+<?= $this->element('Communities/admin_header', [
+    'adminHeader' => $adminHeader,
+    'communityId' => $community->id,
+    'surveyId' => null
+]) ?>
+
 <p>
-    <?= $this->Html->link(
-        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Communities',
-        [
-            'prefix' => 'admin',
-            'controller' => 'Communities',
-            'action' => 'index'
-        ],
-        [
-            'class' => 'btn btn-default',
-            'escape' => false
-        ]
-    ) ?>
     <?= $this->Html->link(
         '<span class="glyphicon glyphicon-plus"></span> Add a New Client',
         [

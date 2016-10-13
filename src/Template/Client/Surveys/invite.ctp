@@ -4,38 +4,30 @@
     </h1>
 </div>
 
+<?php if ($this->request->prefix == 'admin'): ?>
+    <?= $this->element('Communities/admin_header', [
+        'adminHeader' => $adminHeader,
+        'communityId' => $communityId,
+        'surveyId' => $surveyId
+    ]) ?>
+    <?php $this->element('script', ['script' => 'admin']); ?>
+<?php endif; ?>
+
 <p>
-    <?php
-        if ($this->request->prefix == 'admin') {
-            echo $this->Html->link(
-                '<span class="glyphicon glyphicon-arrow-left"></span> Back to Questionnaire Overview',
-                [
-                    'prefix' => 'admin',
-                    'controller' => 'Surveys',
-                    'action' => 'view',
-                    $communityId,
-                    $surveyType
-                ],
-                [
-                    'class' => 'btn btn-default',
-                    'escape' => false
-                ]
-            );
-        } else {
-            echo $this->Html->link(
-                '<span class="glyphicon glyphicon-arrow-left"></span> Back to Client Home',
-                [
-                    'prefix' => 'client',
-                    'controller' => 'Communities',
-                    'action' => 'index'
-                ],
-                [
-                    'class' => 'btn btn-default',
-                    'escape' => false
-                ]
-            );
-        }
-    ?>
+    <?php if ($this->request->prefix != 'admin'): ?>
+        <?= $this->Html->link(
+            '<span class="glyphicon glyphicon-arrow-left"></span> Back to Client Home',
+            [
+                'prefix' => 'client',
+                'controller' => 'Communities',
+                'action' => 'index'
+            ],
+            [
+                'class' => 'btn btn-default',
+                'escape' => false
+            ]
+        ) ?>
+    <?php endif; ?>
     <button id="sent_invitations_toggler" class="btn btn-default">
         Who has already been invited?
     </button>

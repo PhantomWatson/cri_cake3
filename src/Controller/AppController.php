@@ -19,6 +19,7 @@ use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Cake\Utility\Hash;
 
 /**
  * Application Controller
@@ -259,5 +260,43 @@ class AppController extends Controller
             'flashMessages' => $this->Flash->messages
         ]);
         $this->request->session()->delete('FlashMessage');
+    }
+
+    public function prepareAdminHeader()
+    {
+        $this->loadModel('Communities');
+        $communities = $this->Communities->find('list')
+            ->order(['name' => 'ASC']);
+
+        $communityPages = [
+            'Edit' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'edit']) . '/{community-id}',
+            'Progress' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'progress']) . '/{community-id}',
+            'Clients' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'clients']) . '/{community-id}',
+            'Client Home' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'clienthome']) . '/{community-id}'
+        ];
+
+        $surveyPages = [
+            'Overview' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'view']) . '/{community-id}/{survey-type}',
+            'Link' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'link']) . '/{community-id}/{survey-type}',
+            'Alignment' => Router::url(['prefix' => 'admin', 'controller' => 'Responses', 'action' => 'view']) . '/{survey-id}',
+            'Invitations' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'invite']) . '/{survey-id}',
+            'Reminders' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'remind']) . '/{survey-id}'
+        ];
+
+        $this->loadModel('Surveys');
+        $results = $this->Surveys->find('all')
+            ->select(['id', 'type', 'community_id'])
+            ->toArray();
+        $surveyIds = Hash::combine($results, '{n}.type', '{n}.id', '{n}.community_id');
+
+        $this->set([
+            'adminHeader' => [
+                'communities' => $communities,
+                'communityPages' => $communityPages,
+                'currentUrl' => '/' . $this->request->url,
+                'surveyIds' => $surveyIds,
+                'surveyPages' => $surveyPages
+            ]
+        ]);
     }
 }

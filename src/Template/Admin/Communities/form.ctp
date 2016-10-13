@@ -4,20 +4,11 @@
     </h1>
 </div>
 
-<p>
-    <?= $this->Html->link(
-        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Communities',
-        [
-            'prefix' => 'admin',
-            'controller' => 'Communities',
-            'action' => 'index'
-        ],
-        [
-            'class' => 'btn btn-default',
-            'escape' => false
-        ]
-    ) ?>
-</p>
+<?= $this->element('Communities/admin_header', [
+    'adminHeader' => $adminHeader,
+    'communityId' => $community->id,
+    'surveyId' => null
+]) ?>
 
 <?php
     echo $this->Form->create(
@@ -156,7 +147,6 @@
     );
     echo $this->Form->end();
 
-    $this->element('script', ['script' => 'admin']);
     $this->element('script', ['script' => 'form-protector']);
 ?>
 

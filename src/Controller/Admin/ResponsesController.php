@@ -104,6 +104,7 @@ class ResponsesController extends AppController
             $rankOrder = null;
         }
 
+        $this->prepareAdminHeader();
         $this->set([
             'averageRanks' => $averageRanks,
             'community' => $community,
@@ -114,7 +115,7 @@ class ResponsesController extends AppController
             'responses' => $responses,
             'sectors' => $sectors,
             'survey' => $survey,
-            'titleForLayout' => 'View and Update Alignment'
+            'titleForLayout' => $community->name . ': Community ' . ucwords($survey->type) . 's Alignment'
         ]);
     }
 

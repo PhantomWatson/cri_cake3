@@ -4,22 +4,11 @@
     </h1>
 </div>
 
-<p>
-    <?= $this->Html->link(
-        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Questionnaire Overview',
-        [
-            'prefix' => 'admin',
-            'controller' => 'Surveys',
-            'action' => 'view',
-            $community->id,
-            $survey->type
-        ],
-        [
-            'class' => 'btn btn-default',
-            'escape' => false
-        ]
-    ) ?>
-</p>
+<?= $this->element('Communities/admin_header', [
+    'adminHeader' => $adminHeader,
+    'communityId' => $community->id,
+    'surveyId' => $survey->id
+]) ?>
 
 <div id="admin-responses-view">
     <?php if ($responses): ?>
@@ -27,11 +16,12 @@
             <h2>
                 Summary
             </h2>
+            <?php $area = $community->local_area ?: $community->parent_area; ?>
             <table class="table" id="responses-summary">
                 <thead>
                     <tr>
                         <th>
-                            <?= $community->local_area->name ?>
+                            <?= $area->name ?>
                         </th>
                         <?php foreach ($sectors as $sector): ?>
                             <th>
@@ -61,7 +51,6 @@
                             </td>
                         <?php endforeach; ?>
                     </tr>
-                    <?php $area = $community->local_area ?: $community->parent_area; ?>
                     <tr>
                         <th>
                             Actual PWR<sup>3</sup> Ranking of <?= $area->name ?>
@@ -278,7 +267,6 @@
     </div>
 <?php $this->end(); ?>
 
-<?php $this->element('script', ['script' => 'admin']); ?>
 <?php $this->append('buffered'); ?>
     adminViewResponses.init();
 <?php $this->end(); ?>

@@ -135,7 +135,6 @@
 
 <?= $this->element('pagination') ?>
 
-<?php $this->element('script', ['script' => 'admin']); ?>
 <?php $this->append('buffered'); ?>
     adminPurchasesIndex.init();
 <?php $this->end(); ?>

@@ -4,46 +4,11 @@
     </h1>
 </div>
 
-<p>
-    <?= $this->Html->link(
-        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Communities',
-        [
-            'prefix' => 'admin',
-            'controller' => 'Communities',
-            'action' => 'index'
-        ],
-        [
-            'class' => 'btn btn-default',
-            'escape' => false
-        ]
-    ) ?>
-    <?= $this->Html->link(
-        '<span class="glyphicon glyphicon-pencil"></span> Edit Community',
-        [
-            'prefix' => 'admin',
-            'controller' => 'Communities',
-            'action' => 'edit',
-            $community->id
-        ],
-        [
-            'class' => 'btn btn-default',
-            'escape' => false
-        ]
-    ) ?>
-    <?= $this->Html->link(
-        '<span class="glyphicon glyphicon-tasks"></span> Community Progress',
-        [
-            'prefix' => 'admin',
-            'controller' => 'Communities',
-            'action' => 'progress',
-            $community->id
-        ],
-        [
-            'class' => 'btn btn-default',
-            'escape' => false
-        ]
-    ) ?>
-</p>
+<?= $this->element('Communities/admin_header', [
+    'adminHeader' => $adminHeader,
+    'communityId' => $community->id,
+    'surveyId' => $survey->id
+]) ?>
 
 <div class="survey_overview">
     <div class="panel panel-default link_survey">
@@ -82,12 +47,10 @@
 </div>
 
 
-<?php
-    if ($survey['id']) {
-        echo $this->element('Surveys'.DS.'overview');
-    }
-    $this->element('script', ['script' => 'admin']);
-?>
+<?php if ($survey['id']): ?>
+    <?= $this->element('Surveys'.DS.'overview') ?>
+<?php endif; ?>
+
 <?php $this->append('buffered'); ?>
     surveyOverview.init({
         community_id: <?= $community->id ?>

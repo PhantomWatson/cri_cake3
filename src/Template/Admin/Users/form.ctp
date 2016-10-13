@@ -151,7 +151,6 @@
         ['class' => 'btn btn-primary']
     );
     echo $this->Form->end();
-    $this->element('script', ['script' => 'admin']);
     $this->element('script', ['script' => 'form-protector']);
 ?>
 <?php $this->append('buffered'); ?>

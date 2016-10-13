@@ -16,6 +16,10 @@
     <script>$.fn.modal || document.write('<script src="/js/bootstrap.min.js"><\/script>')</script>
 <?php $this->end(); ?>
 
+<?php if ($this->request->prefix == 'admin'): ?>
+    <?php $this->element('script', ['script' => 'admin']); ?>
+<?php endif; ?>
+
 <div id="content">
     <?= $this->element('flash_messages_bootstrap') ?>
     <div id="cri_main">

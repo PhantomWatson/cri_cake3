@@ -384,10 +384,8 @@
 
     <?= $this->element('pagination') ?>
 </div>
-<?php
-    $this->element('script', ['script' => 'admin']);
-    echo $this->element('DataCenter.jquery_ui');
-?>
+
+<?= $this->element('DataCenter.jquery_ui') ?>
 
 <?php $this->append('buffered'); ?>
     adminCommunitiesIndex.init();

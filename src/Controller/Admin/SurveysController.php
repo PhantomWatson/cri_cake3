@@ -59,10 +59,11 @@ class SurveysController extends AppController
             $this->prepareSurveyStatus($survey, $community);
         }
 
+        $this->prepareAdminHeader();
         $this->set([
             'community' => $community,
             'survey' => $survey,
-            'titleForLayout' => $community->name . ' ' . ucwords($surveyType) . 's Questionnaire'
+            'titleForLayout' => $community->name . ': ' . ucwords($surveyType) . 's Questionnaire Overview'
         ]);
     }
 
@@ -121,11 +122,12 @@ class SurveysController extends AppController
         $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($communityId);
 
+        $this->prepareAdminHeader();
         $this->set([
             'community' => $community,
             'qnaIdFields' => $this->Surveys->getQnaIdFieldNames(),
             'survey' => $survey,
-            'titleForLayout' => $community->name . ' ' . ucwords($surveyType) . 's Questionnaire: Link'
+            'titleForLayout' => $community->name . ': ' . ucwords($surveyType) . 's Questionnaire Link'
         ]);
     }
 
@@ -195,6 +197,7 @@ class SurveysController extends AppController
             'surveyId',
             'unaddressedUnapprovedRespondents'
         ));
+        $this->prepareAdminHeader();
         $this->render('..'.DS.'..'.DS.'Client'.DS.'Surveys'.DS.'invite');
     }
 
@@ -238,10 +241,11 @@ class SurveysController extends AppController
         $this->set([
             'community' => $community,
             'survey' => $survey,
-            'titleForLayout' => 'Send Reminders to Community '.ucwords($survey->type).'s',
+            'titleForLayout' => $community->name . ': Remind Community '.ucwords($survey->type).'s',
             'unresponsive' => $unresponsive,
             'unresponsiveCount' => count($unresponsive)
         ]);
+        $this->prepareAdminHeader();
         $this->render('..'.DS.'..'.DS.'Client'.DS.'Surveys'.DS.'remind');
     }
 }

@@ -95,5 +95,9 @@ class CommunitiesController extends AppController
             'step3Alignment',
             'step3PolicyDevPurchased'
         ));
+        if ($this->Auth->user('role') == 'admin') {
+            $this->prepareAdminHeader();
+            $this->set(compact('community'));
+        }
     }
 }

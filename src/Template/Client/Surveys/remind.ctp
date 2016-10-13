@@ -4,23 +4,17 @@
     </h1>
 </div>
 
+<?php if ($this->request->prefix == 'admin'): ?>
+    <?= $this->element('Communities/admin_header', [
+        'adminHeader' => $adminHeader,
+        'communityId' => $community->id,
+        'surveyId' => $survey->id
+    ]) ?>
+    <?php $this->element('script', ['script' => 'admin']); ?>
+<?php endif; ?>
+
 <p>
-    <?php if ($this->request->prefix == 'admin'): ?>
-        <?= $this->Html->link(
-            '<span class="glyphicon glyphicon-arrow-left"></span> Back to Questionnaire Overview',
-            [
-                'prefix' => 'admin',
-                'controller' => 'Surveys',
-                'action' => 'view',
-                $community->id,
-                $survey->type
-            ],
-            [
-                'class' => 'btn btn-default',
-                'escape' => false
-            ]
-        ) ?>
-    <?php else: ?>
+    <?php if ($this->request->prefix != 'admin'): ?>
         <?= $this->Html->link(
             '<span class="glyphicon glyphicon-arrow-left"></span> Back to Client Home',
             [
