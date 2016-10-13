@@ -37,22 +37,6 @@
     }
 ?>
 
-<?php if ($authUser['role'] == 'admin'): ?>
-    <p>
-        <?= $this->Html->link(
-            'Change community / client',
-            [
-                'prefix' => 'admin',
-                'controller' => 'Users',
-                'action' => 'chooseClient'
-            ],
-            [
-                'class' => 'btn btn-default'
-            ]
-        ) ?>
-    </p>
-<?php endif; ?>
-
 <div id="client_home">
     <table>
         <?= tbodyForStep(1, $score) ?>
