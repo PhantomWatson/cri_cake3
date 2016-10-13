@@ -59,6 +59,7 @@ class SurveysController extends AppController
             $this->prepareSurveyStatus($survey, $community);
         }
 
+        $this->prepareAdminHeader();
         $this->set([
             'community' => $community,
             'survey' => $survey,
@@ -121,6 +122,7 @@ class SurveysController extends AppController
         $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($communityId);
 
+        $this->prepareAdminHeader();
         $this->set([
             'community' => $community,
             'qnaIdFields' => $this->Surveys->getQnaIdFieldNames(),
@@ -195,6 +197,7 @@ class SurveysController extends AppController
             'surveyId',
             'unaddressedUnapprovedRespondents'
         ));
+        $this->prepareAdminHeader();
         $this->render('..'.DS.'..'.DS.'Client'.DS.'Surveys'.DS.'invite');
     }
 
@@ -242,6 +245,7 @@ class SurveysController extends AppController
             'unresponsive' => $unresponsive,
             'unresponsiveCount' => count($unresponsive)
         ]);
+        $this->prepareAdminHeader();
         $this->render('..'.DS.'..'.DS.'Client'.DS.'Surveys'.DS.'remind');
     }
 }

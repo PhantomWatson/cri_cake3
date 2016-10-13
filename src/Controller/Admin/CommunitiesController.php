@@ -221,6 +221,7 @@ class CommunitiesController extends AppController
         }
 
         $this->prepareForm($community);
+        $this->prepareAdminHeader();
         $this->set('titleForLayout', 'Add Community');
         $this->render('form');
     }
@@ -265,6 +266,7 @@ class CommunitiesController extends AppController
         }
 
         $this->prepareForm($community);
+        $this->prepareAdminHeader();
         $this->set([
             'communityId' => $communityId,
             'titleForLayout' => 'Edit ' . $community->name
@@ -318,6 +320,7 @@ class CommunitiesController extends AppController
         if (! $community) {
             throw new NotFoundException('Sorry, we couldn\'t find a community with ID# ' . $communityId);
         }
+        $this->prepareAdminHeader();
         $this->set([
             'community' => $community,
             'titleForLayout' => $community->name . ' Clients'
@@ -354,6 +357,7 @@ class CommunitiesController extends AppController
             }
         }
 
+        $this->prepareAdminHeader();
         $this->set([
             'titleForLayout' => $community->name . ' Progress',
             'community' => $community,

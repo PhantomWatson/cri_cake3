@@ -4,37 +4,11 @@
     </h1>
 </div>
 
-<p>
-    <?php if ($survey['sm_url']): ?>
-        <?= $this->Html->link(
-            '<span class="glyphicon glyphicon-arrow-left"></span> Back to Questionnaire Overview',
-            [
-                'prefix' => 'admin',
-                'controller' => 'Surveys',
-                'action' => 'view',
-                $community->id,
-                $survey->type
-            ],
-            [
-                'class' => 'btn btn-default',
-                'escape' => false
-            ]
-        ) ?>
-    <?php else: ?>
-        <?= $this->Html->link(
-            '<span class="glyphicon glyphicon-arrow-left"></span> Back to Communities',
-            [
-                'prefix' => 'admin',
-                'controller' => 'Communities',
-                'action' => 'index'
-            ],
-            [
-                'class' => 'btn btn-default',
-                'escape' => false
-            ]
-        ) ?>
-    <?php endif; ?>
-</p>
+<?= $this->element('Communities/admin_header', [
+    'adminHeader' => $adminHeader,
+    'communityId' => $community->id,
+    'surveyId' => $survey->id
+]) ?>
 
 <p>
     After a CRI questionnaire is created in <a href="http://surveymonkey.com/">SurveyMonkey</a>, you must create a link between the

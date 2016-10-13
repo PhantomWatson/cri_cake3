@@ -4,6 +4,15 @@
     </h1>
 </div>
 
+<?php if ($authUser['role'] == 'admin'): ?>
+    <?= $this->element('Communities/admin_header', [
+        'adminHeader' => $adminHeader,
+        'communityId' => $community->id,
+        'surveyId' => null
+    ]) ?>
+    <?php $this->element('script', ['script' => 'admin']); ?>
+<?php endif; ?>
+
 <?php
     function glyphicon($bool) {
         $class = $bool ? 'ok' : 'remove';
