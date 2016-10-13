@@ -60,9 +60,9 @@
 <?php $this->append('buffered'); ?>
     var surveyIds = <?= json_encode($adminHeader['surveyIds']) ?>;
     adminHeader.init({
-        communityId: <?= isset($community->id) ? json_encode($community->id) : 'null' ?>,
+        communityId: <?= isset($communityId) ? json_encode($communityId) : 'null' ?>,
         currentUrl: <?= json_encode($adminHeader['currentUrl']) ?>,
-        surveyId: <?= isset($survey->id) ? json_encode($survey->id) : 'null' ?>,
+        surveyId: <?= isset($surveyId) ? json_encode($surveyId) : 'null' ?>,
         surveyIds: surveyIds
     });
 <?php $this->end(); ?>
