@@ -293,6 +293,7 @@ class AppController extends Controller
             'adminHeader' => [
                 'communities' => $communities,
                 'communityPages' => $communityPages,
+                'currentUrl' => '/' . $this->request->url,
                 'surveyIds' => $surveyIds,
                 'surveyPages' => $surveyPages
             ]

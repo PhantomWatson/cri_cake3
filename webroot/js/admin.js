@@ -691,10 +691,19 @@ var surveyOverview = {
 };
 
 var adminHeader = {
+    communityId: null,
+    surveyId: null,
     surveyIds: [],
 
-    init: function (surveyIds) {
-        this.surveyIds = surveyIds;
+    init: function (params) {
+        this.communityId = params.communityId;
+        this.surveyId = params.surveyId;
+        this.surveyIds = params.surveyIds;
+        this.surveyType = params.surveyType;
+
+        this.selectCommunity(this.communityId);
+        this.selectPage(params.currentUrl);
+
         $('#admin-header').submit(function (event) {
             event.preventDefault();
             var url = adminHeader.getUrl();
@@ -785,5 +794,37 @@ var adminHeader = {
 
     selectCommunity: function (communityId) {
         $('#admin-header-community').val(communityId);
+    },
+
+    selectPage: function (currentUrl) {
+        $('#admin-header-page optgroup').each(function () {
+            var optgroup = $(this);
+            var surveyType = optgroup.data('survey-type');
+            console.log('surveyType is ' + surveyType);
+            optgroup.find('option').each(function () {
+                var option = $(this);
+                var urlTemplate = option.val();
+                if (! urlTemplate) {
+                    return;
+                }
+
+                var optionUrl = urlTemplate.replace('{community-id}', adminHeader.communityId);
+                if (optionUrl.search('{survey-id}') != -1) {
+                    var optionSurveyId = adminHeader.getSurveyId(adminHeader.communityId, surveyType);
+                    if (! optionSurveyId) {
+                        return;
+                    }
+                    optionUrl = optionUrl.replace('{survey-id}', optionSurveyId);
+                }
+
+                if (currentUrl == optionUrl) {
+                    option.prop('selected', true);
+                    console.log(currentUrl + ' == ' + optionUrl + ' (' + urlTemplate + ')');
+                    console.log('selecting index ' + option.index('option'));
+                } else {
+                    console.log(currentUrl + ' <> ' + optionUrl);
+                }
+            });
+        });
     }
 };
