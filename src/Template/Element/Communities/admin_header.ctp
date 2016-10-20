@@ -3,21 +3,13 @@
         CRI Community Admin
     </h3>
     <select class="form-control form-inline" id="admin-header-community">
-        <?php if (! $adminHeader['selectedCommunity']): ?>
-            <option value="">
-                Select community...
-            </option>
-        <?php endif; ?>
+        <option value="">
+            Select community...
+        </option>
         <?php foreach ($adminHeader['communities'] as $ahCommunityId => $ahCommunityName): ?>
-            <?php if ($adminHeader['selectedCommunity'] == $ahCommunityId): ?>
-                <option value="<?= $ahCommunityId ?>" selected="selected">
-                    <?= $ahCommunityName ?>
-                </option>
-            <?php else: ?>
-                <option value="<?= $ahCommunityId ?>">
-                    <?= $ahCommunityName ?>
-                </option>
-            <?php endif; ?>
+            <option value="<?= $ahCommunityId ?>">
+                <?= $ahCommunityName ?>
+            </option>
         <?php endforeach; ?>
     </select>
 
