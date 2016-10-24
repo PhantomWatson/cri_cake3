@@ -167,6 +167,7 @@ class CommunitiesController extends AppController
         $this->paginate['finder'] = 'adminIndex';
         $this->paginate['sortWhitelist'] = ['Communities.name', 'ParentAreas.name'];
         $this->adminIndexSetupFilterButtons();
+        $this->prepareAdminHeader();
         $this->set([
             'communities' => $this->paginate()->toArray(),
             'titleForLayout' => 'Indiana Communities'
