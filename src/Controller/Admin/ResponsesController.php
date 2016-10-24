@@ -91,14 +91,23 @@ class ResponsesController extends AppController
         // Determine the order of those sorted averages
         if ($responses) {
             $rankOrder = [];
-            $order = 0;
+            $order = 1;
             $previousAvg = null;
+            $previousOrder = null;
             foreach ($averageRanks as $sector => $avg) {
-                if ($avg != $previousAvg) {
-                    $order++;
+                /* If two sectors have the same average, they share an order (e.g. 1st),
+                 * and the next order (e.g. 2nd) is skipped over, causing
+                 * orders like 1,1,1,4,5 if there's a
+                 * three-way tie for the most-chosen rank. */
+                if ($avg === $previousAvg) {
+                    $rankOrder[$sector] = $previousOrder;
+                } else {
+                    $rankOrder[$sector] = $order;
+                    $previousOrder = $order;
                 }
-                $rankOrder[$sector] = $order;
+
                 $previousAvg = $avg;
+                $order++;
             }
         } else {
             $rankOrder = null;
