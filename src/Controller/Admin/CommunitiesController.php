@@ -433,16 +433,10 @@ class CommunitiesController extends AppController
             $client->password = $this->request->data('unhashed_password');
             $errors = $client->errors();
             if (empty($errors) && $usersTable->save($client)) {
-                // Set as the returnPath for invitation emails
-                $senderEmail = $this->Auth->user('email');
-                $senderName = $this->Auth->user('name');
-
                 $Mailer = new Mailer();
                 $result = $Mailer->sendNewAccountEmail(
                     $client,
-                    $this->request->data('unhashed_password'),
-                    $senderEmail,
-                    $senderName
+                    $this->request->data('unhashed_password')
                 );
                 if ($result) {
                     $msg = 'Client account created for ' . $client->name . ' and login instructions emailed';
