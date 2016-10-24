@@ -404,7 +404,7 @@ class AreasTable extends Table
                 $row[$key] = $value;
             }
             $row['recessions'] = 0;
-            $row['annotation'] = null;
+            $row['annotation'] = in_array($year, $recessionYears) ? 'Recession Year' : null;
             $chart->addRow($row);
         }
 
