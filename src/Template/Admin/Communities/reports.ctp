@@ -1,5 +1,5 @@
 <?php
-    function surveyInfo($survey, $sectors) {
+    function surveyInfo($survey, $type, $sectors) {
         $retval = [
             $survey['invitations'],
             $survey['responses'],
@@ -11,11 +11,11 @@
             $retval[] = $survey['internalAlignment'][$sector];
         }
         $retval[] = $survey['internalAlignment']['total'];
-
-        return '<td>' . implode('</td><td>', $retval) . '</td>';
+        $openTag = '<td class="survey" data-survey-type="' . $type . '">';
+        return  $openTag . implode('</td>' . $openTag, $retval) . '</td>';
     }
     function surveyHeader($sectors, $type) {
-        $retval = [
+        $cells = [
             'Invitations',
             'Responses',
             'Completion Rate',
@@ -23,17 +23,25 @@
             'Average Alignment',
         ];
         foreach ($sectors as $sector) {
-            $retval[] = ucwords($sector);
+            $cells[] = ucwords($sector);
         }
-        $retval[] = 'Overall';
+        $cells[] = 'Overall';
         if ($type == 'officials') {
-            $retval[] = 'Presentation A Given';
-            $retval[] = 'Presentation B Given';
+            $cells[] = 'Presentation A Given';
+            $cells[] = 'Presentation B Given';
         } else {
-            $retval[] = 'Presentation C Given';
+            $cells[] = 'Presentation C Given';
         }
-        $retval[] = 'Status';
-        return '<th>' . implode('</th><th>', $retval) . '</th>';
+        $cells[] = 'Status';
+        $openTag = '<th class="survey" data-survey-type="' . $type . '">';
+        $retval = $openTag . implode('</th>' . $openTag, $cells) . '</th>';
+        $retval .=
+            '<th class="minimized-status-header" data-survey-type="' . $type . '">' .
+            '<button class="survey-toggler btn btn-link" data-survey-type="' . $type . '">' .
+            (($type == 'officials') ? 'Community Leadership Status' : 'Community Organizations Status') .
+            '</button>' .
+            '</th>';
+        return $retval;
     }
 ?>
 
@@ -56,14 +64,18 @@
     <thead>
         <tr class="survey-group-header">
             <td colspan="3"></td>
-            <th colspan="14">
-                Community Leadership
+            <th colspan="14" data-full-colspan="14" data-survey-type="officials" class="survey">
+                <button class="survey-toggler btn btn-link" data-survey-type="officials">
+                    Community Leadership
+                </button>
             </th>
-            <th colspan="13">
-                Community Organizations
+            <th colspan="13" data-full-colspan="13" data-survey-type="organizations" class="survey">
+                <button class="survey-toggler btn btn-link" data-survey-type="organizations">
+                    Community Organizations
+                </button>
             </th>
         </tr>
-        <tr>
+        <tr class="general-header">
             <th>
                 Community
             </th>
@@ -92,27 +104,35 @@
                     <?= $community['parentAreaFips'] ?>
                 </td>
 
-                <?= surveyInfo($community['official_survey'], $sectors); ?>
+                <?= surveyInfo($community['official_survey'], 'officials', $sectors); ?>
 
-                <td>
+                <td class="survey" data-survey-type="officials">
                     <?= $community['presentationsGiven']['a'] ? 'Yes' : 'No' ?>
                 </td>
-                <td>
+                <td class="survey" data-survey-type="officials">
                     <?= $community['presentationsGiven']['b'] ? 'Yes' : 'No' ?>
                 </td>
-                <td>
+                <td class="survey-status">
                     <?= $community['official_survey']['status'] ?>
                 </td>
 
-                <?= surveyInfo($community['organization_survey'], $sectors); ?>
+                <?= surveyInfo($community['organization_survey'], 'organizations', $sectors); ?>
 
-                <td>
+                <td class="survey" data-survey-type="organizations">
                     <?= $community['presentationsGiven']['c'] ? 'Yes' : 'No' ?>
                 </td>
-                <td>
+                <td class="survey-status">
                     <?= $community['organization_survey']['status'] ?>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<?php $this->append('buffered'); ?>
+    $('#report button.survey-toggler').click(function (event) {
+        event.preventDefault();
+        var type = $(this).data('survey-type');
+        $('#report').toggleClass(type + '-expanded');
+    });
+<?php $this->end(); ?>

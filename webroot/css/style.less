@@ -1150,6 +1150,49 @@ ul.ui-autocomplete {
     colgroup.survey {
         border-left: 1px solid @table-border-color;
     }
+    td.survey,
+    th.survey {
+        display: none;
+    }
+    .survey-group-header {
+        th[data-survey-type=officials] {
+            display: none;
+        }
+        th[data-survey-type=organizations] {
+            display: none;
+        }
+    }
+    td.survey-status {
+        display: table-cell;
+    }
+    &.officials-expanded {
+        .minimized-status-header[data-survey-type=officials] {
+            display: none;
+        }
+        td.survey[data-survey-type=officials],
+        th.survey[data-survey-type=officials] {
+            display: table-cell;
+        }
+        .survey-group-header {
+            th[data-survey-type=officials] {
+                display: table-cell;
+            }
+        }
+    }
+    &.organizations-expanded {
+        .minimized-status-header[data-survey-type=organizations] {
+            display: none;
+        }
+        td.survey[data-survey-type=organizations],
+        th.survey[data-survey-type=organizations] {
+            display: table-cell;
+        }
+        .survey-group-header {
+            th[data-survey-type=organizations] {
+                display: table-cell;
+            }
+        }
+    }
 }
 html.report-layout,
 body.report-layout {
