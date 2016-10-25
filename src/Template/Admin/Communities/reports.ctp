@@ -14,9 +14,39 @@
 
         return '<td>' . implode('</td><td>', $retval) . '</td>';
     }
+    function surveyHeader($sectors, $type) {
+        $retval = [
+            'Invitations',
+            'Responses',
+            'Completion Rate',
+            'Alignment Calculated',
+            'Average Alignment',
+        ];
+        foreach ($sectors as $sector) {
+            $retval[] = ucwords($sector);
+        }
+        $retval[] = 'Overall';
+        if ($type == 'officials') {
+            $retval[] = 'Presentation A Given';
+            $retval[] = 'Presentation B Given';
+        } else {
+            $retval[] = 'Presentation C Given';
+        }
+        $retval[] = 'Status';
+        return '<th>' . implode('</th><th>', $retval) . '</th>';
+    }
 ?>
 
 <table class="table" id="report">
+    <colgroup>
+        <col span="3" />
+    </colgroup>
+    <colgroup class="survey">
+        <col span="14" />
+    </colgroup>
+    <colgroup class="survey">
+        <col span="13" />
+    </colgroup>
     <thead>
         <tr class="survey-group-header">
             <td colspan="3"></td>
@@ -24,7 +54,7 @@
                 Community Leadership
             </th>
             <th colspan="13">
-                Community Leadership
+                Community Organizations
             </th>
         </tr>
         <tr>
@@ -38,68 +68,9 @@
                 Area FIPS
             </th>
 
-            <th>
-                Invitations
-            </th>
-            <th>
-                Responses
-            </th>
-            <th>
-                Completion Rate
-            </th>
-            <th>
-                Alignment Calculated
-            </th>
-            <th>
-                Average Alignment
-            </th>
-            <?php foreach ($sectors as $sector): ?>
-                <th>
-                    <?= ucwords($sector) ?>
-                </th>
-            <?php endforeach; ?>
-            <th>
-                Overall
-            </th>
-            <th>
-                Presentation A Given
-            </th>
-            <th>
-                Presentation B Given
-            </th>
-            <th>
-                Status
-            </th>
+            <?= surveyHeader($sectors, 'officials'); ?>
 
-            <th>
-                Invitations
-            </th>
-            <th>
-                Responses
-            </th>
-            <th>
-                Completion Rate
-            </th>
-            <th>
-                Alignment Calculated
-            </th>
-            <th>
-                Average Alignment
-            </th>
-            <?php foreach ($sectors as $sector): ?>
-                <th>
-                    <?= $sector ?>
-                </th>
-            <?php endforeach; ?>
-            <th>
-                Overall
-            </th>
-            <th>
-                Presentation C Given
-            </th>
-            <th>
-                Status
-            </th>
+            <?= surveyHeader($sectors, 'organizations'); ?>
         </tr>
     </thead>
     <tbody>
