@@ -37,6 +37,12 @@
     }
 ?>
 
+<div class="page-header">
+    <h1>
+        <?= $titleForLayout ?>
+    </h1>
+</div>
+
 <table class="table" id="report">
     <colgroup>
         <col span="3" />

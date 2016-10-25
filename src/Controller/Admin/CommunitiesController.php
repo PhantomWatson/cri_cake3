@@ -683,7 +683,7 @@ class CommunitiesController extends AppController
         $this->set([
             'report' => $report,
             'sectors' => $sectors,
-            'titleForLayout' => 'CRI Report'
+            'titleForLayout' => 'CRI Admin Report: All Communities'
         ]);
     }
 }
