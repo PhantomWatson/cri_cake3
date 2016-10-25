@@ -678,8 +678,6 @@ class CommunitiesController extends AppController
                     'status' => $status
                 ];
             }
-
-
         }
 
         $this->set([
