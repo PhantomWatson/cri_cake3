@@ -1138,12 +1138,6 @@ ul.ui-autocomplete {
 #report {
     background-color: #fff;
 
-    tr.survey-group-header {
-        th {
-            border: 1px solid @table-border-color;
-            text-align: center;
-        }
-    }
     th {
         text-align: center;
     }
@@ -1155,14 +1149,25 @@ ul.ui-autocomplete {
         display: none;
     }
     .survey-group-header {
-        th[data-survey-type=officials] {
-            display: none;
-        }
-        th[data-survey-type=organizations] {
-            display: none;
+        display: none;
+
+        th {
+            border: 1px solid @table-border-color;
+            text-align: center;
+
+            &[data-survey-type=officials] {
+                display: none;
+            }
+            &[data-survey-type=organizations] {
+                display: none;
+            }
         }
     }
+    .minimized-status-header {
+        border-right: 1px solid @table-border-color;
+    }
     td.survey-status {
+        border-right: 1px solid @table-border-color;
         display: table-cell;
     }
     &.officials-expanded {
@@ -1174,6 +1179,8 @@ ul.ui-autocomplete {
             display: table-cell;
         }
         .survey-group-header {
+            display: table-row;
+
             th[data-survey-type=officials] {
                 display: table-cell;
             }
@@ -1188,6 +1195,8 @@ ul.ui-autocomplete {
             display: table-cell;
         }
         .survey-group-header {
+            display: table-row;
+
             th[data-survey-type=organizations] {
                 display: table-cell;
             }

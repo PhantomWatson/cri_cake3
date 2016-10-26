@@ -133,6 +133,16 @@
     $('#report button.survey-toggler').click(function (event) {
         event.preventDefault();
         var type = $(this).data('survey-type');
-        $('#report').toggleClass(type + '-expanded');
+        var table = $('#report')
+        table.toggleClass(type + '-expanded');
+
+        var colspan = table.hasClass('officials-expanded') ? 3 : 4;
+        table.find('.survey-group-header td').attr('colspan', colspan);
+
+        colspan = table.hasClass('officials-expanded') ? 14 : 1;
+        table.find('.survey-group-header th[data-survey-type=officials]').attr('colspan', colspan);
+
+        colspan = table.hasClass('organizations-expanded') ? 14 : 1;
+        table.find('.survey-group-header th[data-survey-type=organizations]').attr('colspan', colspan);
     });
 <?php $this->end(); ?>
