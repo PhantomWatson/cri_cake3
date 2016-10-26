@@ -598,13 +598,8 @@ class CommunitiesController extends AppController
         $respondents = Hash::combine($respondents, '{n}.id', '{n}', '{n}.survey_id');
 
         $responsesTable = TableRegistry::get('Responses');
-        $sectors = [
-            'production',
-            'wholesale',
-            'retail',
-            'residential',
-            'recreation'
-        ];
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
         foreach ($communities as $community) {
             // Collect general information about this community
             $report[$community->id] = [
