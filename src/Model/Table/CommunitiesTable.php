@@ -866,7 +866,7 @@ class CommunitiesTable extends Table
             foreach ($surveyTypes as $key => $survey) {
                 $invitationCount = 0;
                 $approvedResponseCount = 0;
-                $responseRate = 'n/a';
+                $responseRate = 'N/A';
                 if ($survey && isset($respondents[$survey->id])) {
                     foreach ($respondents[$survey->id] as $respondent) {
                         if ($respondent->invited) {
