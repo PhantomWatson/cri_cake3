@@ -1075,7 +1075,15 @@ class CommunitiesTable extends Table
                 $cells[] = $survey['status'];
             }
             foreach ($cells as $col => $value) {
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+                if (strpos($value, '%') === false) {
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+                } else {
+                    $cell = $this->getColumnKey($col) . $row;
+                    $objPHPExcel->getActiveSheet()->getCell($cell)->setValueExplicit(
+                        $value,
+                        \PHPExcel_Cell_DataType::TYPE_STRING
+                    );
+                }
             }
         }
         $span = "A4:{$lastCol}{$row}";
