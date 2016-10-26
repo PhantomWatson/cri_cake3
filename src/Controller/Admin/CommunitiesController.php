@@ -598,9 +598,8 @@ class CommunitiesController extends AppController
             $this->response->download("CRI Report - OCRA - $date.xlsx");
             $this->viewBuilder()->layout('spreadsheet');
         }
-        $objPHPExcel = null;
         $this->set([
-            'objPHPExcel' => $objPHPExcel
+            'ocraReportSpreadsheet' => $this->Communities->getOcraReportSpreadsheet()
         ]);
     }
 }

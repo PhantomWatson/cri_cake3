@@ -4,7 +4,7 @@
             $survey['invitations'],
             $survey['responses'],
             $survey['responseRate'],
-            $survey['alignment'] ? 'Yes' : 'No',
+            $survey['alignmentCalculated'],
             $survey['alignment']
         ];
         foreach ($sectors as $sector) {
@@ -50,6 +50,18 @@
         <?= $titleForLayout ?>
     </h1>
 </div>
+
+<p>
+    <?= $this->Html->link(
+        '<img src="/data_center/img/icons/document-excel-table.png" alt="Microsoft Excel (.xlsx)" /> Download OCRA Report',
+        ['action' => 'reportOcra'],
+        [
+            'class' => 'btn btn-default',
+            'escape' => false,
+            'title' => 'Download an OCRA version of this report as a Microsoft Excel (.xlsx) file'
+        ]
+    ) ?>
+</p>
 
 <table class="table" id="report">
     <colgroup>
@@ -101,10 +113,10 @@
                 <?= surveyInfo($community['official_survey'], 'officials', $sectors); ?>
 
                 <td class="survey" data-survey-type="officials">
-                    <?= $community['presentationsGiven']['a'] ? 'Yes' : 'No' ?>
+                    <?= $community['presentationsGiven']['a'] ?>
                 </td>
                 <td class="survey" data-survey-type="officials">
-                    <?= $community['presentationsGiven']['b'] ? 'Yes' : 'No' ?>
+                    <?= $community['presentationsGiven']['b'] ?>
                 </td>
                 <td class="survey-status">
                     <?= $community['official_survey']['status'] ?>
@@ -113,7 +125,7 @@
                 <?= surveyInfo($community['organization_survey'], 'organizations', $sectors); ?>
 
                 <td class="survey" data-survey-type="organizations">
-                    <?= $community['presentationsGiven']['c'] ? 'Yes' : 'No' ?>
+                    <?= $community['presentationsGiven']['c'] ?>
                 </td>
                 <td class="survey-status">
                     <?= $community['organization_survey']['status'] ?>
