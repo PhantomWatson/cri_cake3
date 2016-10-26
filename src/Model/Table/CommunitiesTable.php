@@ -813,4 +813,112 @@ class CommunitiesTable extends Table
             ]);
         return $query;
     }
+
+    public function getReport()
+    {
+        $report = [];
+
+        $communities = $this->find('all')
+            ->select([
+                'id', 'name', 'score'
+            ])
+            ->contain([
+                'ParentAreas' => function($q) {
+                    return $q->select(['id', 'name', 'fips']);
+                },
+                'OfficialSurvey' => function($q) {
+                    return $q->select(['id', 'alignment']);
+                },
+                'OrganizationSurvey' => function($q) {
+                    return $q->select(['id', 'alignment']);
+                }
+            ])
+            ->order(['Communities.name' => 'ASC']);
+
+        $respondentsTable = TableRegistry::get('Respondents');
+        $respondents = $respondentsTable->find('all')
+            ->select(['id', 'approved', 'invited', 'survey_id'])
+            ->toArray();
+        $respondents = Hash::combine($respondents, '{n}.id', '{n}', '{n}.survey_id');
+
+        $responsesTable = TableRegistry::get('Responses');
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
+        foreach ($communities as $community) {
+            // Collect general information about this community
+            $report[$community->id] = [
+                'name' => $community->name,
+                'parentArea' => $community->parent_area->name,
+                'parentAreaFips' => $community->parent_area->fips,
+                'presentationsGiven' => [
+                    'a' => false,
+                    'b' => false,
+                    'c' => false
+                ]
+            ];
+
+            // Collect information about survey responses and alignment
+            $surveyTypes = [
+                'official_survey' => $community->official_survey,
+                'organization_survey' => $community->organization_survey,
+            ];
+            foreach ($surveyTypes as $key => $survey) {
+                $invitationCount = 0;
+                $approvedResponseCount = 0;
+                $responseRate = 'n/a';
+                if ($survey && isset($respondents[$survey->id])) {
+                    foreach ($respondents[$survey->id] as $response) {
+                        if ($response->invited) {
+                            $invitationCount++;
+                        }
+                        if ($response->approved) {
+                            $approvedResponseCount++;
+                        }
+                    }
+                    if ($invitationCount) {
+                        $responseRate = round(($approvedResponseCount / $invitationCount) * 100) . '%';
+                    } else {
+                        $responseRate = 'n/a';
+                    }
+                }
+
+                // Format and sum internal alignment
+                $internalAlignment = [];
+                if ($survey) {
+                    $internalAlignment = $responsesTable->getInternalAlignmentPerSector($survey->id);
+                    if ($internalAlignment) {
+                        foreach ($internalAlignment as $sector => &$value) {
+                            $value = round($value, 1);
+                        }
+                        $internalAlignment['total'] = array_sum($internalAlignment);
+                    }
+                }
+                if (! $internalAlignment) {
+                    $internalAlignment = array_combine($sectors, [null, null, null, null, null]);
+                    $internalAlignment['total'] = null;
+                }
+
+                // Determine status
+                $correspondingStep = ($key == 'official_survey') ? 2 : 3;
+                if ($community->score < $correspondingStep) {
+                    $status = 'Not started yet';
+                } elseif ($community->score < ($correspondingStep + 1)) {
+                    $status = 'In progress';
+                } else {
+                    $status = 'Complete';
+                }
+
+                $report[$community->id][$key] = [
+                    'invitations' => $invitationCount,
+                    'responses' => $approvedResponseCount,
+                    'responseRate' => $responseRate,
+                    'alignment' => $survey ? $survey->alignment : null,
+                    'internalAlignment' => $internalAlignment,
+                    'status' => $status
+                ];
+            }
+        }
+
+        return $report;
+    }
 }
