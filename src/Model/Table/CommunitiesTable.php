@@ -834,6 +834,11 @@ class CommunitiesTable extends Table
         $respondentsTable = TableRegistry::get('Respondents');
         $respondents = $respondentsTable->find('all')
             ->select(['id', 'approved', 'invited', 'survey_id'])
+            ->contain([
+                'Responses' => function ($q) {
+                    return $q->select(['id', 'respondent_id']);
+                }
+            ])
             ->toArray();
         $respondents = Hash::combine($respondents, '{n}.id', '{n}', '{n}.survey_id');
 
@@ -863,11 +868,11 @@ class CommunitiesTable extends Table
                 $approvedResponseCount = 0;
                 $responseRate = 'n/a';
                 if ($survey && isset($respondents[$survey->id])) {
-                    foreach ($respondents[$survey->id] as $response) {
-                        if ($response->invited) {
+                    foreach ($respondents[$survey->id] as $respondent) {
+                        if ($respondent->invited) {
                             $invitationCount++;
                         }
-                        if ($response->approved) {
+                        if ($respondent->approved && ! empty($respondent->responses)) {
                             $approvedResponseCount++;
                         }
                     }
