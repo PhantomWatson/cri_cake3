@@ -53,7 +53,7 @@
 
 <table class="table" id="report">
     <colgroup>
-        <col span="3" />
+        <col span="1" />
     </colgroup>
     <colgroup class="survey">
         <col span="14" />
@@ -79,15 +79,7 @@
             <th>
                 Community
             </th>
-            <th>
-                Area
-            </th>
-            <th>
-                Area FIPS
-            </th>
-
             <?= surveyHeader($sectors, 'officials'); ?>
-
             <?= surveyHeader($sectors, 'organizations'); ?>
         </tr>
     </thead>
@@ -96,12 +88,14 @@
             <tr>
                 <td>
                     <?= $community['name'] ?>
-                </td>
-                <td>
-                    <?= $community['parentArea'] ?>
-                </td>
-                <td>
-                    <?= $community['parentAreaFips'] ?>
+                    <br />
+                    <span class="area-details">
+                        <?= $community['parentArea'] ?>
+                    </span>
+                    <br />
+                    <span class="area-details">
+                        <?= $community['parentAreaFips'] ?>
+                    </span>
                 </td>
 
                 <?= surveyInfo($community['official_survey'], 'officials', $sectors); ?>

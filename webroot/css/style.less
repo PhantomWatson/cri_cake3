@@ -1138,6 +1138,38 @@ ul.ui-autocomplete {
 #report {
     background-color: #fff;
 
+    &.officials-expanded {
+        .minimized-status-header[data-survey-type=officials] {
+            display: none;
+        }
+        td.survey[data-survey-type=officials],
+        th.survey[data-survey-type=officials] {
+            display: table-cell;
+        }
+        .survey-group-header {
+            display: table-row;
+
+            th[data-survey-type=officials] {
+                display: table-cell;
+            }
+        }
+    }
+    &.organizations-expanded {
+        .minimized-status-header[data-survey-type=organizations] {
+            display: none;
+        }
+        td.survey[data-survey-type=organizations],
+        th.survey[data-survey-type=organizations] {
+            display: table-cell;
+        }
+        .survey-group-header {
+            display: table-row;
+
+            th[data-survey-type=organizations] {
+                display: table-cell;
+            }
+        }
+    }
     th {
         text-align: center;
     }
@@ -1170,37 +1202,10 @@ ul.ui-autocomplete {
         border-right: 1px solid @table-border-color;
         display: table-cell;
     }
-    &.officials-expanded {
-        .minimized-status-header[data-survey-type=officials] {
-            display: none;
-        }
-        td.survey[data-survey-type=officials],
-        th.survey[data-survey-type=officials] {
-            display: table-cell;
-        }
-        .survey-group-header {
-            display: table-row;
-
-            th[data-survey-type=officials] {
-                display: table-cell;
-            }
-        }
-    }
-    &.organizations-expanded {
-        .minimized-status-header[data-survey-type=organizations] {
-            display: none;
-        }
-        td.survey[data-survey-type=organizations],
-        th.survey[data-survey-type=organizations] {
-            display: table-cell;
-        }
-        .survey-group-header {
-            display: table-row;
-
-            th[data-survey-type=organizations] {
-                display: table-cell;
-            }
-        }
+    .area-details {
+        color: #666;
+        font-size: 80%;
+        line-height: 80%;
     }
 }
 html.report-layout,

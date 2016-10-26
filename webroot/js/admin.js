@@ -831,6 +831,7 @@ var adminHeader = {
         });
     }
 };
+
 var adminReport = {
     init: function () {
         $('#report button.survey-toggler').click(function (event) {
@@ -839,7 +840,7 @@ var adminReport = {
             var table = $('#report');
             table.toggleClass(type + '-expanded');
 
-            var colspan = table.hasClass('officials-expanded') ? 3 : 4;
+            var colspan = table.hasClass('officials-expanded') ? 1 : 2;
             table.find('.survey-group-header td').attr('colspan', colspan);
 
             colspan = table.hasClass('officials-expanded') ? 14 : 1;
