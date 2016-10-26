@@ -4,8 +4,7 @@
             $survey['invitations'],
             $survey['responses'],
             $survey['responseRate'],
-            $survey['alignmentCalculated'],
-            $survey['alignment']
+            $survey['alignment'] ? $survey['alignment'] : 'Not calculated'
         ];
         foreach ($sectors as $sector) {
             $retval[] = $survey['internalAlignment'][$sector];
@@ -19,7 +18,6 @@
             'Invitations',
             'Responses',
             'Completion Rate',
-            'Alignment Calculated',
             'Average Alignment',
         ];
         foreach ($sectors as $sector) {
@@ -68,10 +66,10 @@
         <col span="1" />
     </colgroup>
     <colgroup class="survey">
-        <col span="14" />
+        <col span="13" />
     </colgroup>
     <colgroup class="survey">
-        <col span="13" />
+        <col span="12" />
     </colgroup>
     <thead>
         <tr class="survey-group-header">

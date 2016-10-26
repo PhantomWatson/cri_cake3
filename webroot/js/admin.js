@@ -843,10 +843,10 @@ var adminReport = {
             var colspan = table.hasClass('officials-expanded') ? 1 : 2;
             table.find('.survey-group-header td').attr('colspan', colspan);
 
-            colspan = table.hasClass('officials-expanded') ? 14 : 1;
+            colspan = table.hasClass('officials-expanded') ? 13 : 1;
             table.find('.survey-group-header th[data-survey-type=officials]').attr('colspan', colspan);
 
-            colspan = table.hasClass('organizations-expanded') ? 14 : 1;
+            colspan = table.hasClass('organizations-expanded') ? 12 : 1;
             table.find('.survey-group-header th[data-survey-type=organizations]').attr('colspan', colspan);
         });
     }
