@@ -909,13 +909,21 @@ class CommunitiesTable extends Table
                     $status = 'Complete';
                 }
 
-                $alignment = $survey ? $survey->alignment . '%' : null;
+                // PWRRR alignment
+                if ($survey) {
+                    $alignment = $survey->alignment ? $survey->alignment . '%' : null;
+                    $alignmentCalculated = $survey->alignment ? 'Yes' : 'No';
+                } else {
+                    $alignment = null;
+                    $alignmentCalculated = 'No';
+                }
+
                 $report[$community->id][$key] = [
                     'invitations' => $invitationCount,
                     'responses' => $approvedResponseCount,
                     'responseRate' => $responseRate,
                     'alignment' => $alignment,
-                    'alignmentCalculated' => $alignment ? 'Yes' : 'No',
+                    'alignmentCalculated' => $alignmentCalculated,
                     'internalAlignment' => $internalAlignment,
                     'status' => $status
                 ];
