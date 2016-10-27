@@ -31,8 +31,22 @@
             $cells[] = 'Presentation C Given';
         }
         $cells[] = 'Status';
-        $openTag = '<th class="survey" data-survey-type="' . $type . '">';
-        $retval = $openTag . implode('</th>' . $openTag, $cells) . '</th>';
+        $retval = '';
+        foreach ($cells as $cell) {
+            $class = 'survey';
+            if (in_array(strtolower($cell), $sectors) || $cell == 'Overall') {
+                $class .= ' int-alignment';
+            }
+            if ($cell == 'Production') {
+                $class .= ' int-alignment-left-edge';
+            }
+            if ($cell == 'Overall') {
+                $class .= ' int-alignment-right-edge';
+            }
+            $retval .= '<th class="' . $class . '" data-survey-type="' . $type . '">';
+            $retval .= $cell;
+            $retval .= '</th>';
+        }
         $retval .=
             '<th class="minimized-status-header" data-survey-type="' . $type . '">' .
             '<button class="survey-toggler btn btn-link" data-survey-type="' . $type . '">' .
@@ -84,6 +98,19 @@
                     Community Organizations
                 </button>
             </th>
+        </tr>
+        <tr class="internal-alignment-headers">
+            <td colspan="1"></td>
+            <td colspan="4" data-survey-type="officials" class="empty"></td>
+            <th colspan="6" data-survey-type="officials">
+                Internal Alignment
+            </th>
+            <td colspan="3" data-survey-type="officials" class="empty"></td>
+            <td colspan="4" data-survey-type="organizations" class="empty"></td>
+            <th colspan="6" data-survey-type="organizations">
+                Internal Alignment
+            </th>
+            <td colspan="2" data-survey-type="organizations" class="empty"></td>
         </tr>
         <tr class="general-header">
             <th>

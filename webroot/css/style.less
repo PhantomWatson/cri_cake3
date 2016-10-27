@@ -1155,6 +1155,19 @@ ul.ui-autocomplete {
                 display: table-cell;
             }
         }
+        .internal-alignment-headers {
+            display: table-row;
+
+            td:first-child {
+                display: table-cell;
+            }
+            td,
+            th {
+                &[data-survey-type=officials] {
+                    display: table-cell;
+                }
+            }
+        }
     }
     &.organizations-expanded {
         .minimized-status-header[data-survey-type=organizations] {
@@ -1169,6 +1182,19 @@ ul.ui-autocomplete {
 
             th[data-survey-type=organizations] {
                 display: table-cell;
+            }
+        }
+        .internal-alignment-headers {
+            display: table-row;
+
+            td:first-child {
+                display: table-cell;
+            }
+            td,
+            th {
+                &[data-survey-type=organizations] {
+                    display: table-cell;
+                }
             }
         }
     }
@@ -1186,7 +1212,11 @@ ul.ui-autocomplete {
         display: none;
 
         th {
-            border: 1px solid @table-border-color;
+            border-top: 1px solid @table-border-color;
+            border-left: 1px solid @table-border-color;
+            border-right: 1px solid @table-border-color;
+            border-bottom: none;
+
             text-align: center;
 
             &[data-survey-type=officials] {
@@ -1208,6 +1238,35 @@ ul.ui-autocomplete {
         color: #666;
         font-size: 80%;
         line-height: 80%;
+    }
+    .internal-alignment-headers {
+        display: none;
+
+        td.empty {
+            border-left: 1px solid @table-border-color;
+            border-right: 1px solid @table-border-color;
+        }
+        td,
+        th {
+            border-bottom: 0;
+            border-top: 0;
+            display: none;
+        }
+        th {
+            border-top: 1px solid @table-border-color;
+            border-bottom: 0;
+        }
+    }
+    .general-header {
+        .int-alignment {
+            border-top: none;
+        }
+        .int-alignment-left-edge {
+            border-left: 1px solid @table-border-color;
+        }
+        .int-alignment-right-edge {
+            border-right: 1px solid @table-border-color;
+        }
     }
 }
 html.report-layout,
