@@ -368,37 +368,6 @@ class CommunitiesController extends AppController
     }
 
     /**
-     * Spreadsheet method
-     *
-     * @return void
-     */
-    public function spreadsheet()
-    {
-        if (isset($_GET['search'])) {
-            $this->paginate['conditions']['Communities.name LIKE'] = '%' . $_GET['search'] . '%';
-        } else {
-            $this->adminIndexFilter();
-        }
-        $this->cookieSort('AdminCommunityIndex');
-        $this->paginate['finder'] = 'adminIndex';
-        $this->paginate['sortWhitelist'] = ['Communities.name', 'ParentAreas.name'];
-        $this->adminIndexSetupFilterButtons();
-
-        $communities = $this->paginate()->toArray();
-
-        if (! isset($_GET['debug'])) {
-            $this->response->type(['excel2007' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
-            $this->response->type('excel2007');
-            $this->response->download('CRI Overview.xlsx');
-            $this->viewBuilder()->layout('spreadsheet');
-        }
-        $this->set([
-            'objPHPExcel' => $this->Communities->getSpreadsheetObject($communities),
-            'communities' => $communities
-        ]);
-    }
-
-    /**
      * Client home method
      *
      * @param int $communityId Community ID

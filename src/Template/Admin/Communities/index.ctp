@@ -33,16 +33,6 @@
             Search
         </button>
 
-        <?= $this->Html->link(
-            '<img src="/data_center/img/icons/document-excel-table.png" alt="Microsoft Excel (.xlsx)" /> Download',
-            ['action' => 'spreadsheet'],
-            [
-                'class' => 'btn btn-default',
-                'escape' => false,
-                'title' => 'Download this page as a Microsoft Excel (.xlsx) file'
-            ]
-        ) ?>
-
         <button class="btn btn-link" id="glossary_toggler">
             Icon Glossary
         </button>
