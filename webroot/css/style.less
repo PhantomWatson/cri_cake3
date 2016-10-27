@@ -1158,8 +1158,12 @@ ul.ui-autocomplete {
         .internal-alignment-headers {
             display: table-row;
 
+            .spacer {
+                display: none;
+            }
             td:first-child {
                 display: table-cell;
+                border-right: 1px solid @table-border-color;
             }
             td,
             th {
@@ -1201,9 +1205,6 @@ ul.ui-autocomplete {
     th {
         text-align: center;
     }
-    colgroup.survey {
-        border-left: 1px solid @table-border-color;
-    }
     td.survey,
     th.survey {
         display: none;
@@ -1241,12 +1242,15 @@ ul.ui-autocomplete {
     }
     .internal-alignment-headers {
         display: none;
-
+        td:first-child {
+            border-top: none;
+            border-right-color: transparent;
+        }
         td.empty {
             border-left: 1px solid @table-border-color;
             border-right: 1px solid @table-border-color;
         }
-        td,
+        td.empty,
         th {
             border-bottom: 0;
             border-top: 0;
@@ -1255,6 +1259,9 @@ ul.ui-autocomplete {
         th {
             border-top: 1px solid @table-border-color;
             border-bottom: 0;
+        }
+        .spacer {
+            border: none;
         }
     }
     .general-header {
@@ -1268,9 +1275,21 @@ ul.ui-autocomplete {
             border-right: 1px solid @table-border-color;
         }
     }
+    tbody {
+        td:first-child {
+            border-right: 1px solid @table-border-color;
+        }
+    }
     thead {
         th {
             vertical-align: middle;
+
+            &:first-child {
+                border-right: 1px solid @table-border-color;
+            }
+            &.survey-status {
+                border-right: 1px solid @table-border-color;
+            }
         }
     }
 }

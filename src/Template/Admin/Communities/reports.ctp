@@ -43,6 +43,9 @@
             if ($cell == 'Overall') {
                 $class .= ' int-alignment-right-edge';
             }
+            if ($cell == 'Status') {
+                $class .= ' survey-status';
+            }
             $retval .= '<th class="' . $class . '" data-survey-type="' . $type . '">';
             $retval .= $cell;
             $retval .= '</th>';
@@ -101,6 +104,7 @@
         </tr>
         <tr class="internal-alignment-headers">
             <td colspan="1"></td>
+            <td colspan="1" class="spacer"></td>
             <td colspan="4" data-survey-type="officials" class="empty"></td>
             <th colspan="6" data-survey-type="officials">
                 Internal Alignment
