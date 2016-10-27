@@ -205,7 +205,7 @@ class AreasTable extends Table
             $row['certainty'] = 'false';
 
             // Place an annotation above the second column
-            $row['annotation'] = ($i == 1) ? 'National Average' : '';
+            $row['annotation'] = ($i == 1) ? 'National Average' : null;
 
             $chart->addRow($row);
         }
@@ -404,7 +404,7 @@ class AreasTable extends Table
                 $row[$key] = $value;
             }
             $row['recessions'] = 0;
-            $row['annotation'] = '';
+            $row['annotation'] = in_array($year, $recessionYears) ? 'Recession Year' : null;
             $chart->addRow($row);
         }
 

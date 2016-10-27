@@ -167,6 +167,7 @@ class CommunitiesController extends AppController
         $this->paginate['finder'] = 'adminIndex';
         $this->paginate['sortWhitelist'] = ['Communities.name', 'ParentAreas.name'];
         $this->adminIndexSetupFilterButtons();
+        $this->prepareAdminHeader();
         $this->set([
             'communities' => $this->paginate()->toArray(),
             'titleForLayout' => 'Indiana Communities'
@@ -433,16 +434,10 @@ class CommunitiesController extends AppController
             $client->password = $this->request->data('unhashed_password');
             $errors = $client->errors();
             if (empty($errors) && $usersTable->save($client)) {
-                // Set as the returnPath for invitation emails
-                $senderEmail = $this->Auth->user('email');
-                $senderName = $this->Auth->user('name');
-
                 $Mailer = new Mailer();
                 $result = $Mailer->sendNewAccountEmail(
                     $client,
-                    $this->request->data('unhashed_password'),
-                    $senderEmail,
-                    $senderName
+                    $this->request->data('unhashed_password')
                 );
                 if ($result) {
                     $msg = 'Client account created for ' . $client->name . ' and login instructions emailed';
@@ -567,6 +562,44 @@ class CommunitiesController extends AppController
             'communities' => $communities,
             'settings' => $settings,
             'titleForLayout' => 'Internal Alignment Calculation Settings'
+        ]);
+    }
+
+    /**
+     * Method for /admin/communities/reports
+     *
+     * @return void
+     */
+    public function reports()
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
+        $report = $this->Communities->getReport();
+
+        $this->set([
+            'report' => $report,
+            'sectors' => $sectors,
+            'titleForLayout' => 'CRI Admin Report: All Communities'
+        ]);
+    }
+
+
+    /**
+     * Method for /admin/communities/reports
+     *
+     * @return void
+     */
+    public function reportOcra()
+    {
+        if (! isset($_GET['debug'])) {
+            $this->response->type(['excel2007' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+            $this->response->type('excel2007');
+            $date = date('M-d-Y');
+            $this->response->download("CRI Report - OCRA - $date.xlsx");
+            $this->viewBuilder()->layout('spreadsheet');
+        }
+        $this->set([
+            'ocraReportSpreadsheet' => $this->Communities->getOcraReportSpreadsheet()
         ]);
     }
 }

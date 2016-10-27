@@ -480,13 +480,7 @@ class SurveysTable extends Table
         }
 
         // Create an array to save this data with
-        $sectors = [
-            'production',
-            'wholesale',
-            'recreation',
-            'retail',
-            'residential',
-        ];
+        $sectors = $this->getSectors();
         $qnaIdFields = $this->getQnaIdFieldNames();
         $nulls = array_fill(0, count($qnaIdFields), null);
         $data = array_combine($qnaIdFields, $nulls);

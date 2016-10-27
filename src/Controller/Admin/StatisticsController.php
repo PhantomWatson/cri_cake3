@@ -14,4 +14,14 @@ class StatisticsController extends AppController
     {
         $this->Statistics->import();
     }
+
+    /**
+     * Import-grouped method
+     *
+     * @return void
+     */
+    public function importGrouped()
+    {
+        $this->Statistics->importGrouped();
+    }
 }

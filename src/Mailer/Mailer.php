@@ -29,7 +29,6 @@ class Mailer
 
         if ($sender['email']) {
             $email->replyTo($sender['email'], $sender['name']);
-            $email->returnPath($sender['email'], $sender['name']);
         }
 
         $respondentsTable = TableRegistry::get('Respondents');
@@ -75,7 +74,6 @@ class Mailer
 
         if ($senderEmail) {
             $email->replyTo($senderEmail, $senderName);
-            $email->returnPath($senderEmail, $senderName);
         }
 
         foreach ($recipients as $recipient) {
@@ -92,7 +90,7 @@ class Mailer
         return $email->send();
     }
 
-    public function sendNewAccountEmail($user, $password, $senderEmail, $senderName)
+    public function sendNewAccountEmail($user, $password)
     {
         $homeUrl = Router::url('/', true);
         $loginUrl = Router::url([
@@ -102,9 +100,6 @@ class Mailer
         ], true);
         $email = new Email('new_account');
         $email->to($user->email);
-        if ($senderEmail) {
-            $email->returnPath($senderEmail, $senderName);
-        }
         $email->viewVars(compact(
             'user',
             'homeUrl',

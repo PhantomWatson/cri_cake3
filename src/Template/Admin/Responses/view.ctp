@@ -16,6 +16,12 @@
             <h2>
                 Summary
             </h2>
+            <p>
+                <?= number_format(count($responses)) ?>
+                complete responses as of
+                <?= $survey->responses_checked->format('F j') ?><sup><?= $survey->responses_checked->format('S') ?></sup>,
+                <?= $survey->responses_checked->format('Y') ?>
+            </p>
             <?php $area = $community->local_area ?: $community->parent_area; ?>
             <table class="table" id="responses-summary">
                 <thead>
@@ -33,11 +39,11 @@
                 <tbody>
                     <tr>
                         <th>
-                            Average Survey Response Ranking
+                            Actual PWR<sup>3</sup> Ranking of <?= $area->name ?>
                         </th>
                         <?php foreach ($sectors as $sector): ?>
                             <td>
-                                <?= $averageRanks[$sector] ?>
+                                <?= $area->{$sector . '_rank'} ?>
                             </td>
                         <?php endforeach; ?>
                     </tr>
@@ -48,16 +54,6 @@
                         <?php foreach ($sectors as $sector): ?>
                             <td>
                                 <?= $rankOrder[$sector] ?>
-                            </td>
-                        <?php endforeach; ?>
-                    </tr>
-                    <tr>
-                        <th>
-                            Actual PWR<sup>3</sup> Ranking of <?= $area->name ?>
-                        </th>
-                        <?php foreach ($sectors as $sector): ?>
-                            <td>
-                                <?= $area->{$sector . '_rank'} ?>
                             </td>
                         <?php endforeach; ?>
                     </tr>
