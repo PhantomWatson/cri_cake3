@@ -268,11 +268,12 @@ class AppController extends Controller
         $communities = $this->Communities->find('list')
             ->order(['name' => 'ASC']);
 
+        $route = ['prefix' => 'admin', 'controller' => 'Communities'];
         $communityPages = [
-            'Edit' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'edit']) . '/{community-id}',
-            'Progress' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'progress']) . '/{community-id}',
-            'Clients' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'clients']) . '/{community-id}',
-            'Client Home' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'clienthome']) . '/{community-id}'
+            'Edit' => Router::url($route + ['action' => 'edit']) . '/{community-id}',
+            'Progress' => Router::url($route + ['action' => 'progress']) . '/{community-id}',
+            'Clients' => Router::url($route + ['action' => 'clients']) . '/{community-id}',
+            'Client Home' => Router::url($route + ['action' => 'clienthome']) . '/{community-id}'
         ];
 
         $surveyPages = [
