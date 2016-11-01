@@ -30,7 +30,10 @@ class Community extends Entity
         'clients' => true,
         'consultants' => true,
         'official_survey' => true,
-        'organization_survey' => true
+        'organization_survey' => true,
+        'presentation_a' => true,
+        'presentation_b' => true,
+        'presentation_c' => true
     ];
 
     /**

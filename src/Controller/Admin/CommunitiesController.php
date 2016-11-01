@@ -571,4 +571,41 @@ class CommunitiesController extends AppController
             'ocraReportSpreadsheet' => $this->Communities->getOcraReportSpreadsheet()
         ]);
     }
+
+    public function presentations($communityId = null)
+    {
+        if (! $communityId) {
+            throw new NotFoundException('Community ID not specified');
+        }
+
+        $community = $this->Communities->get($communityId);
+
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $this->request->data['id'] = $communityId;
+            foreach (['a', 'b', 'c'] as $letter) {
+                if (! $this->request->data('presentation_' . $letter . '_scheduled')) {
+                    $this->request->data['presentation_' . $letter] = null;
+                }
+            }
+
+            $community = $this->Communities->patchEntity($community, $this->request->data());
+            $errors = $community->errors();
+            if (empty($errors) && $this->Communities->save($community)) {
+                $this->Flash->success('Community presentation info updated');
+                return $this->redirect([
+                    'prefix' => 'admin',
+                    'action' => 'index'
+                ]);
+            }
+        }
+
+        foreach (['a', 'b', 'c'] as $letter) {
+            $community->{'presentation_' . $letter . '_scheduled'} = isset($community->{'presentation_' . $letter});
+        }
+        $this->prepareAdminHeader();
+        $this->set([
+            'community' => $community,
+            'titleForLayout' => 'Community Presentations'
+        ]);
+    }
 }

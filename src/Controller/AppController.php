@@ -273,7 +273,8 @@ class AppController extends Controller
             'Edit' => Router::url($route + ['action' => 'edit']) . '/{community-id}',
             'Progress' => Router::url($route + ['action' => 'progress']) . '/{community-id}',
             'Clients' => Router::url($route + ['action' => 'clients']) . '/{community-id}',
-            'Client Home' => Router::url($route + ['action' => 'clienthome']) . '/{community-id}'
+            'Client Home' => Router::url($route + ['action' => 'clienthome']) . '/{community-id}',
+            'Presentations' => Router::url($route + ['action' => 'presentations']) . '/{community-id}'
         ];
 
         $surveyPages = [

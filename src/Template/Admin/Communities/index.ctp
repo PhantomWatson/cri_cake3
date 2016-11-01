@@ -311,6 +311,17 @@
                                 </li>
                                 <li>
                                     <?= $this->Html->link(
+                                        '<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Presentations',
+                                        [
+                                            'prefix' => 'admin',
+                                            'action' => 'presentations',
+                                            $community->id
+                                        ],
+                                        ['escape' => false]
+                                    ) ?>
+                                </li>
+                                <li>
+                                    <?= $this->Html->link(
                                         '<span class="glyphicon glyphicon-user" aria-hidden="true"></span> Clients ('.count($community->clients).')',
                                         [
                                             'prefix' => 'admin',
