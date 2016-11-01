@@ -114,10 +114,6 @@ class CommunitiesTable extends Table
             ->notEmpty('score');
 
         $validator
-            ->add('town_meeting_date', 'valid', ['rule' => 'date'])
-            ->allowEmpty('town_meeting_date');
-
-        $validator
             ->add('intAlignmentAdjustment', 'decimalFormat', [
                 'rule' => ['decimal', null]
             ])
@@ -558,25 +554,6 @@ class CommunitiesTable extends Table
             $criteria['3.5']['policy_dev_purchased'] = [
                 'Purchased PwR3 Policy Development ($5,000)',
                 $productsTable->isPurchased($communityId, 5)
-            ];
-        }
-
-
-        // Step 4
-        $community = $this->get($communityId);
-        if ($community->town_meeting_date) {
-            $note = ' (' . date('F jS, Y', strtotime($community->town_meeting_date)) . ')';
-        } else {
-            $note = '';
-        }
-        $criteria[4]['meeting_scheduled'] = [
-            'Scheduled town meeting' . $note,
-            $community->town_meeting_date != null
-        ];
-        if ($community->town_meeting_date != null) {
-            $criteria[4]['meeting_held'] = [
-                'Held town meeting',
-                $community->town_meeting_date <= date('Y-m-d')
             ];
         }
 

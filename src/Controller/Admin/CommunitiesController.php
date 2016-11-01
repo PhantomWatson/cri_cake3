@@ -184,10 +184,6 @@ class CommunitiesController extends AppController
         $community = $this->Communities->newEntity();
 
         if ($this->request->is('post')) {
-            if (! $this->request->data['meeting_date_set']) {
-                $this->request->data['town_meeting_date'] = null;
-            }
-
             $community = $this->Communities->patchEntity($community, $this->request->data(), [
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
@@ -248,10 +244,6 @@ class CommunitiesController extends AppController
 
         if ($this->request->is('post') || $this->request->is('put')) {
             $this->request->data['id'] = $communityId;
-
-            if (! $this->request->data['meeting_date_set']) {
-                $this->request->data['town_meeting_date'] = null;
-            }
 
             $community = $this->Communities->patchEntity($community, $this->request->data(), [
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']

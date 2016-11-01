@@ -509,29 +509,6 @@
                         </button>
                     </th>
                 </tr>
-                <tr>
-                    <td>
-                        <?= glyphicon($criteria[4]['meeting_scheduled'][1]) ?>
-                    </td>
-                    <td>
-                        <?= $criteria[4]['meeting_scheduled'][0] ?>
-                    </td>
-                    <td>
-                    </td>
-                </tr>
-
-                <?php if (isset($criteria[4]['meeting_held'])): ?>
-                    <tr>
-                        <td>
-                            <?= glyphicon($criteria[4]['meeting_held'][1]) ?>
-                        </td>
-                        <td>
-                            <?= $criteria[4]['meeting_held'][0] ?>
-                        </td>
-                        <td>
-                        </td>
-                    </tr>
-                <?php endif; ?>
             </tbody>
         <?php endif; ?>
 

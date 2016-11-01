@@ -21,7 +21,6 @@ class Community extends Entity
         'public' => true,
         'fast_track' => true,
         'score' => true,
-        'town_meeting_date' => true,
         'local_area' => true,
         'parent_area' => true,
         'purchases' => true,
