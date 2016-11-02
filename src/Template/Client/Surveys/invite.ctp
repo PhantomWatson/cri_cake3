@@ -262,20 +262,6 @@
     </div>
 <?php $this->end(); ?>
 
-<div class="well">
-    <p>
-        If you click <strong>Save for later</strong>, the information you have entered will be stored in your browser.
-        After saving, you can navigate to another page and then return to this one later in order to send out your saved invitations.
-    </p>
-    <button class="btn btn-default" id="save">
-        Save for later
-    </button>
-    <button class="btn btn-default" id="load">
-        Load saved data
-    </button>
-    <span id="survey-invitation-save-status"></span>
-</div>
-
 <div class="form-group">
     <?= $this->Form->button(
         'Send invitations',

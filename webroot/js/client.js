@@ -37,21 +37,6 @@ var surveyInvitationForm = {
             return true;
         });
         
-        // Set up form saving
-        Cookies.json = true;
-        $('#save').click(function (event) {
-            event.preventDefault();
-            surveyInvitationForm.save();
-        });
-        $('#load').click(function (event) {
-            event.preventDefault();
-            var isBlank = surveyInvitationForm.allRowsAreBlank();
-            var msg = 'Replace entered information with saved information?';
-            if (isBlank || confirm(msg)) {
-                surveyInvitationForm.load();
-            }
-        });
-        
         // Set up form protection
         formProtector.protect('UserClientInviteForm', {
             ignore: ['spreadsheet-upload-input']
@@ -223,54 +208,6 @@ var surveyInvitationForm = {
         return this.uninvited_respondents.indexOf(email) != -1;
     },
     
-    save: function () {
-        var rows = $('#UserClientInviteForm tr');
-        var cookieData = [];
-        for (var i = 0; i < rows.length; i++) {
-            var name = $(rows[i]).find('input[name*="[name]"]').val();
-            var email = $(rows[i]).find('input[name*="[email]"]').val();
-            var title = $(rows[i]).find('input[name*="[title]"]').val();
-            if (name === '' && email === '' && title === '') {
-                continue;
-            }
-            var row = {
-                name: name,
-                email: email,
-                title: title
-            };
-            cookieData.push(row);
-        }
-        Cookies.set(this.cookieKey, cookieData, {expires: this.cookieExpiration});
-        $('#survey-invitation-save-status').html('<span id="invitation-form-loading" class="text-muted"><img src="/data_center/img/loading_small.gif" /> Saving...</span>');
-        setTimeout(function () {
-            $('#survey-invitation-save-status').html('<span class="text-success">Saved</span>');
-        }, 1000);
-        formProtector.setSaved('UserClientInviteForm');
-    },
-    
-    load: function () {
-        var cookieData = Cookies.get(this.cookieKey);
-        if (typeof cookieData == 'undefined' || cookieData.length === 0) {
-            alert('No saved data was found');
-            return;
-        }
-        $('#UserClientInviteForm tbody.input tr').remove();
-        for (var i = 0; i < cookieData.length; i++) {
-            var data = cookieData[i];
-            if (! data.hasOwnProperty('name') || ! data.hasOwnProperty('email') || ! data.hasOwnProperty('title')) {
-                continue;
-            }
-            if (! this.lastRowIsBlank()) {
-                this.addRow();
-            }
-            var row = $('#UserClientInviteForm tbody.input tr:last-child');
-            row.find('input[name*="[name]"]').val(data.name);
-            row.find('input[name*="[email]"]').val(data.email);
-            row.find('input[name*="[title]"]').val(data.title);
-        }
-        $('#survey-invitation-save-status').html('<span class="text-success">Loaded</span>');
-    },
-    
     lastRowIsBlank: function () {
         var row = $('#UserClientInviteForm tbody.input tr:last-child');
         if (row.find('input[name*="[name]"]').val() !== '') {
@@ -283,27 +220,6 @@ var surveyInvitationForm = {
             return false;
         }
         return true;
-    },
-    
-    allRowsAreBlank: function () {
-        var rows = $('#UserClientInviteForm tbody.input tr');
-        for (var i = 0; i < rows.length; i++) {
-            var row = $(rows[i]);
-            if (row.find('input[name*="[name]"]').val() !== '') {
-                return false;
-            }
-            if (row.find('input[name*="[email]"]').val() !== '') {
-                return false;
-            }
-            if (row.find('input[name*="[title]"]').val() !== '') {
-                return false;
-            }
-        }
-        return true;
-    },
-    
-    clearSavedData: function () {
-        Cookies.remove(this.cookieKey);
     }
 };
 
