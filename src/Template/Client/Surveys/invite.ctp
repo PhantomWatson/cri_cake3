@@ -267,13 +267,21 @@
         'Send invitations',
         [
             'class' => 'btn btn-primary',
-            'div' => false
+            'div' => false,
+            'id' => 'invitations-send'
         ]
     ) ?>
-    <?php
-        echo $this->Form->end();
-        $this->Form->templates($bootstrapFormTemplate);
-    ?>
+    <?= $this->Form->button(
+        'Save for later',
+        [
+            'class' => 'btn btn-default',
+            'div' => false,
+            'id' => 'invitations-save'
+        ]
+    ) ?>
+    <input type="hidden" name="submit_mode" value="" />
+    <?= $this->Form->end() ?>
+    <?php $this->Form->templates($bootstrapFormTemplate); ?>
 </div>
 
 <?php

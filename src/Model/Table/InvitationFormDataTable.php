@@ -58,9 +58,8 @@ class InvitationFormDataTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
-            ->requirePresence('id', 'create')
-            ->notEmpty('id');
+            ->add('id', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('id', 'create');
 
         $validator
             ->requirePresence('data', 'create')
