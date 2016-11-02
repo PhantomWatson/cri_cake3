@@ -35,13 +35,28 @@ class SurveyProcessingComponent extends Component
     public function saveInvitations($formData, $surveyId, $userId)
     {
         $formDataTable = TableRegistry::get('InvitationFormData');
-        $savedData = $formDataTable->newEntity([
-            'survey_id' => $surveyId,
-            'user_id' => $userId,
-            'data' => serialize($formData)
-        ]);
-        $errors = $savedData->errors();
-        if ($errors || ! $formDataTable->save($savedData)) {
+        $existingRecord = $formDataTable->find('all')
+            ->where([
+                'survey_id' => $surveyId,
+                'user_id' => $userId
+            ])
+            ->first();
+        if ($existingRecord) {
+            $existingRecord = $formDataTable->patchEntity($existingRecord, [
+                'data' => serialize($formData)
+            ]);
+            $errors = $existingRecord->errors();
+            $saveResult = $formDataTable->save($existingRecord);
+        } else {
+            $savedData = $formDataTable->newEntity([
+                'survey_id' => $surveyId,
+                'user_id' => $userId,
+                'data' => serialize($formData)
+            ]);
+            $errors = $savedData->errors();
+            $saveResult = $formDataTable->save($savedData);
+        }
+        if ($errors || ! $saveResult) {
             $msg = 'There was an error saving your form data. ';
             $msg .= 'Please try again or email cri@bsu.edu for assistance.';
             return [false, $msg];
