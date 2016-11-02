@@ -21,7 +21,6 @@ class Community extends Entity
         'public' => true,
         'fast_track' => true,
         'score' => true,
-        'town_meeting_date' => true,
         'local_area' => true,
         'parent_area' => true,
         'purchases' => true,
@@ -30,7 +29,10 @@ class Community extends Entity
         'clients' => true,
         'consultants' => true,
         'official_survey' => true,
-        'organization_survey' => true
+        'organization_survey' => true,
+        'presentation_a' => true,
+        'presentation_b' => true,
+        'presentation_c' => true
     ];
 
     /**

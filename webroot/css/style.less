@@ -7,7 +7,9 @@ a:hover {
         text-decoration: none;
     }
 }
-
+pre {
+    overflow: visible;
+}
 nav {
     margin-top: 30px;
 
@@ -1133,5 +1135,188 @@ ul.ui-autocomplete {
         font-size: 100%;
         font-weight: bold;
         margin: 0;
+    }
+}
+#report {
+    background-color: #fff;
+
+    &.officials-expanded {
+        .minimized-status-header[data-survey-type=officials] {
+            display: none;
+        }
+        td.survey[data-survey-type=officials],
+        th.survey[data-survey-type=officials] {
+            display: table-cell;
+        }
+        .survey-group-header {
+            display: table-row;
+
+            th[data-survey-type=officials] {
+                display: table-cell;
+            }
+        }
+        .internal-alignment-headers {
+            display: table-row;
+
+            .spacer {
+                display: none;
+            }
+            td:first-child {
+                display: table-cell;
+                border-right: 1px solid @table-border-color;
+            }
+            td,
+            th {
+                &[data-survey-type=officials] {
+                    display: table-cell;
+                }
+            }
+        }
+    }
+    &.organizations-expanded {
+        .minimized-status-header[data-survey-type=organizations] {
+            display: none;
+        }
+        td.survey[data-survey-type=organizations],
+        th.survey[data-survey-type=organizations] {
+            display: table-cell;
+        }
+        .survey-group-header {
+            display: table-row;
+
+            th[data-survey-type=organizations] {
+                display: table-cell;
+            }
+        }
+        .internal-alignment-headers {
+            display: table-row;
+
+            td:first-child {
+                display: table-cell;
+            }
+            td,
+            th {
+                &[data-survey-type=organizations] {
+                    display: table-cell;
+                }
+            }
+        }
+    }
+    th {
+        text-align: center;
+    }
+    td.survey,
+    th.survey {
+        display: none;
+    }
+    .survey-group-header {
+        display: none;
+
+        th {
+            border-top: 1px solid @table-border-color;
+            border-left: 1px solid @table-border-color;
+            border-right: 1px solid @table-border-color;
+            border-bottom: none;
+
+            text-align: center;
+
+            &[data-survey-type=officials] {
+                display: none;
+            }
+            &[data-survey-type=organizations] {
+                display: none;
+            }
+        }
+    }
+    .minimized-status-header {
+        border-right: 1px solid @table-border-color;
+    }
+    td.survey-status {
+        border-right: 1px solid @table-border-color;
+        display: table-cell;
+    }
+    .area-details {
+        color: #666;
+        font-size: 80%;
+        line-height: 80%;
+    }
+    .internal-alignment-headers {
+        display: none;
+        td:first-child {
+            border-top: none;
+            border-right-color: transparent;
+        }
+        td.empty {
+            border-left: 1px solid @table-border-color;
+            border-right: 1px solid @table-border-color;
+        }
+        td.empty,
+        th {
+            border-bottom: 0;
+            border-top: 0;
+            display: none;
+        }
+        th {
+            border-top: 1px solid @table-border-color;
+            border-bottom: 0;
+        }
+        .spacer {
+            border: none;
+        }
+    }
+    .general-header {
+        .int-alignment {
+            border-top: none;
+        }
+        .int-alignment-left-edge {
+            border-left: 1px solid @table-border-color;
+        }
+        .int-alignment-right-edge {
+            border-right: 1px solid @table-border-color;
+        }
+    }
+    tbody {
+        td:first-child {
+            border-right: 1px solid @table-border-color;
+        }
+    }
+    thead {
+        th {
+            vertical-align: middle;
+
+            &:first-child {
+                border-right: 1px solid @table-border-color;
+            }
+            &.survey-status {
+                border-right: 1px solid @table-border-color;
+            }
+        }
+    }
+}
+html.report-layout,
+body.report-layout {
+    background-color: #fff;
+    min-height: 100%;
+}
+body.report-layout {
+    padding: 30px;
+}
+#presentations-form {
+    h2 {
+        margin: 0;
+    }
+    label {
+        display: block;
+    }
+    input[type=radio] {
+        margin-right: 5px;
+    }
+    div.date {
+        display: none;
+    }
+    section.show-date {
+        div.date {
+            display: block;
+        }
     }
 }

@@ -184,10 +184,6 @@ class CommunitiesController extends AppController
         $community = $this->Communities->newEntity();
 
         if ($this->request->is('post')) {
-            if (! $this->request->data['meeting_date_set']) {
-                $this->request->data['town_meeting_date'] = null;
-            }
-
             $community = $this->Communities->patchEntity($community, $this->request->data(), [
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
@@ -248,10 +244,6 @@ class CommunitiesController extends AppController
 
         if ($this->request->is('post') || $this->request->is('put')) {
             $this->request->data['id'] = $communityId;
-
-            if (! $this->request->data['meeting_date_set']) {
-                $this->request->data['town_meeting_date'] = null;
-            }
 
             $community = $this->Communities->patchEntity($community, $this->request->data(), [
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
@@ -364,37 +356,6 @@ class CommunitiesController extends AppController
             'community' => $community,
             'criteria' => $this->Communities->getProgress($communityId, true),
             'fastTrack' => $community->fast_track
-        ]);
-    }
-
-    /**
-     * Spreadsheet method
-     *
-     * @return void
-     */
-    public function spreadsheet()
-    {
-        if (isset($_GET['search'])) {
-            $this->paginate['conditions']['Communities.name LIKE'] = '%' . $_GET['search'] . '%';
-        } else {
-            $this->adminIndexFilter();
-        }
-        $this->cookieSort('AdminCommunityIndex');
-        $this->paginate['finder'] = 'adminIndex';
-        $this->paginate['sortWhitelist'] = ['Communities.name', 'ParentAreas.name'];
-        $this->adminIndexSetupFilterButtons();
-
-        $communities = $this->paginate()->toArray();
-
-        if (! isset($_GET['debug'])) {
-            $this->response->type(['excel2007' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
-            $this->response->type('excel2007');
-            $this->response->download('CRI Overview.xlsx');
-            $this->viewBuilder()->layout('spreadsheet');
-        }
-        $this->set([
-            'objPHPExcel' => $this->Communities->getSpreadsheetObject($communities),
-            'communities' => $communities
         ]);
     }
 
@@ -562,6 +523,81 @@ class CommunitiesController extends AppController
             'communities' => $communities,
             'settings' => $settings,
             'titleForLayout' => 'Internal Alignment Calculation Settings'
+        ]);
+    }
+
+    /**
+     * Method for /admin/communities/reports
+     *
+     * @return void
+     */
+    public function reports()
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
+        $report = $this->Communities->getReport();
+
+        $this->set([
+            'report' => $report,
+            'sectors' => $sectors,
+            'titleForLayout' => 'CRI Admin Report: All Communities'
+        ]);
+    }
+
+
+    /**
+     * Method for /admin/communities/reports
+     *
+     * @return void
+     */
+    public function reportOcra()
+    {
+        if (! isset($_GET['debug'])) {
+            $this->response->type(['excel2007' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+            $this->response->type('excel2007');
+            $date = date('M-d-Y');
+            $this->response->download("CRI Report - OCRA - $date.xlsx");
+            $this->viewBuilder()->layout('spreadsheet');
+        }
+        $this->set([
+            'ocraReportSpreadsheet' => $this->Communities->getOcraReportSpreadsheet()
+        ]);
+    }
+
+    public function presentations($communityId = null)
+    {
+        if (! $communityId) {
+            throw new NotFoundException('Community ID not specified');
+        }
+
+        $community = $this->Communities->get($communityId);
+
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $this->request->data['id'] = $communityId;
+            foreach (['a', 'b', 'c'] as $letter) {
+                if (! $this->request->data('presentation_' . $letter . '_scheduled')) {
+                    $this->request->data['presentation_' . $letter] = null;
+                }
+            }
+
+            $community = $this->Communities->patchEntity($community, $this->request->data());
+            $errors = $community->errors();
+            if (empty($errors) && $this->Communities->save($community)) {
+                $this->Flash->success('Community presentation info updated');
+                return $this->redirect([
+                    'prefix' => 'admin',
+                    'action' => 'index'
+                ]);
+            }
+        }
+
+        foreach (['a', 'b', 'c'] as $letter) {
+            $community->{'presentation_' . $letter . '_scheduled'} = isset($community->{'presentation_' . $letter});
+        }
+        $this->prepareAdminHeader();
+        $this->set([
+            'community' => $community,
+            'titleForLayout' => 'Community Presentations'
         ]);
     }
 }

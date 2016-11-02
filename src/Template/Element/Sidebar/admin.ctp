@@ -11,6 +11,16 @@
     </li>
     <li class="link">
         <?= $this->Html->link(
+            'Reports',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Communities',
+                'action' => 'reports'
+            ]
+        ) ?>
+    </li>
+    <li class="link">
+        <?= $this->Html->link(
             'Manage Users',
             [
                 'prefix' => 'admin',

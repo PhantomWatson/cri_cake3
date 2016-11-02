@@ -114,10 +114,6 @@ class CommunitiesTable extends Table
             ->notEmpty('score');
 
         $validator
-            ->add('town_meeting_date', 'valid', ['rule' => 'date'])
-            ->allowEmpty('town_meeting_date');
-
-        $validator
             ->add('intAlignmentAdjustment', 'decimalFormat', [
                 'rule' => ['decimal', null]
             ])
@@ -561,25 +557,6 @@ class CommunitiesTable extends Table
             ];
         }
 
-
-        // Step 4
-        $community = $this->get($communityId);
-        if ($community->town_meeting_date) {
-            $note = ' (' . date('F jS, Y', strtotime($community->town_meeting_date)) . ')';
-        } else {
-            $note = '';
-        }
-        $criteria[4]['meeting_scheduled'] = [
-            'Scheduled town meeting' . $note,
-            $community->town_meeting_date != null
-        ];
-        if ($community->town_meeting_date != null) {
-            $criteria[4]['meeting_held'] = [
-                'Held town meeting',
-                $community->town_meeting_date <= date('Y-m-d')
-            ];
-        }
-
         return $criteria;
     }
 
@@ -626,11 +603,7 @@ class CommunitiesTable extends Table
      */
     public function getSpreadsheetObject($communities)
     {
-        // Start up
-        require_once ROOT . DS . 'vendor' . DS . 'phpoffice' . DS . 'phpexcel' . DS . 'Classes' . DS . 'PHPExcel.php';
-        \PHPExcel_Cell::setValueBinder(new \PHPExcel_Cell_AdvancedValueBinder());
-        $objPHPExcel = new \PHPExcel();
-        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel = $this->getPhpExcelObject();
 
         // Metadata
         $title = 'CRI Project Overview - ' . date('F j, Y');
@@ -812,5 +785,355 @@ class CommunitiesTable extends Table
                 'Communities.created'
             ]);
         return $query;
+    }
+
+    public function getReport()
+    {
+        $report = [];
+
+        $communities = $this->find('all')
+            ->select([
+                'id', 'name', 'score'
+            ])
+            ->contain([
+                'ParentAreas' => function($q) {
+                    return $q->select(['id', 'name', 'fips']);
+                },
+                'OfficialSurvey' => function($q) {
+                    return $q->select(['id', 'alignment']);
+                },
+                'OrganizationSurvey' => function($q) {
+                    return $q->select(['id', 'alignment']);
+                }
+            ])
+            ->order(['Communities.name' => 'ASC']);
+
+        $respondentsTable = TableRegistry::get('Respondents');
+        $respondents = $respondentsTable->find('all')
+            ->select(['id', 'approved', 'invited', 'survey_id'])
+            ->contain([
+                'Responses' => function ($q) {
+                    return $q->select(['id', 'respondent_id']);
+                }
+            ])
+            ->toArray();
+        $respondents = Hash::combine($respondents, '{n}.id', '{n}', '{n}.survey_id');
+
+        $responsesTable = TableRegistry::get('Responses');
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
+        foreach ($communities as $community) {
+            // Collect general information about this community
+            $report[$community->id] = [
+                'name' => $community->name,
+                'parentArea' => $community->parent_area->name,
+                'parentAreaFips' => $community->parent_area->fips,
+                'presentationsGiven' => [
+                    'a' => 'No',
+                    'b' => 'No',
+                    'c' => 'No'
+                ]
+            ];
+
+            // Collect information about survey responses and alignment
+            $surveyTypes = [
+                'official_survey' => $community->official_survey,
+                'organization_survey' => $community->organization_survey,
+            ];
+            foreach ($surveyTypes as $key => $survey) {
+                $invitationCount = 0;
+                $approvedResponseCount = 0;
+                $responseRate = 'N/A';
+                if ($survey && isset($respondents[$survey->id])) {
+                    foreach ($respondents[$survey->id] as $respondent) {
+                        if ($respondent->invited) {
+                            $invitationCount++;
+                        }
+                        if ($respondent->approved && ! empty($respondent->responses)) {
+                            $approvedResponseCount++;
+                        }
+                    }
+                    if ($invitationCount) {
+                        $responseRate = round(($approvedResponseCount / $invitationCount) * 100) . '%';
+                    } else {
+                        $responseRate = 'N/A';
+                    }
+                }
+
+                // Format and sum internal alignment
+                $internalAlignment = [];
+                if ($survey) {
+                    $internalAlignment = $responsesTable->getInternalAlignmentPerSector($survey->id);
+                    if ($internalAlignment) {
+                        foreach ($internalAlignment as $sector => &$value) {
+                            $value = round($value, 1);
+                        }
+                        $internalAlignment['total'] = array_sum($internalAlignment);
+                    }
+                }
+                if (! $internalAlignment) {
+                    $internalAlignment = array_combine($sectors, [null, null, null, null, null]);
+                    $internalAlignment['total'] = null;
+                }
+
+                // Determine status
+                $correspondingStep = ($key == 'official_survey') ? 2 : 3;
+                if ($community->score < $correspondingStep) {
+                    $status = 'Not started yet';
+                } elseif ($community->score < ($correspondingStep + 1)) {
+                    $status = 'In progress';
+                } else {
+                    $status = 'Complete';
+                }
+
+                // PWRRR alignment
+                if ($survey) {
+                    $alignment = $survey->alignment ? $survey->alignment . '%' : null;
+                    $alignmentCalculated = $survey->alignment ? 'Yes' : 'No';
+                } else {
+                    $alignment = null;
+                    $alignmentCalculated = 'No';
+                }
+
+                $report[$community->id][$key] = [
+                    'invitations' => $invitationCount,
+                    'responses' => $approvedResponseCount,
+                    'responseRate' => $responseRate,
+                    'alignment' => $alignment,
+                    'alignmentCalculated' => $alignmentCalculated,
+                    'internalAlignment' => $internalAlignment,
+                    'status' => $status
+                ];
+            }
+        }
+
+        return $report;
+    }
+
+    public function getOcraReportSpreadsheet()
+    {
+        $report = $this->getReport();
+        $objPHPExcel = $this->getPhpExcelObject();
+
+        // Metadata
+        $title = 'CRI Report for OCRA - ' . date('F j, Y');
+        $author = 'Center for Business and Economic Research, Ball State University';
+        $objPHPExcel->getProperties()
+            ->setCreator($author)
+            ->setLastModifiedBy($author)
+            ->setTitle($title)
+            ->setSubject($title)
+            ->setDescription('');
+        $objPHPExcel->getDefaultStyle()->getFont()->setName('Arial');
+        $objPHPExcel->getDefaultStyle()->getFont()->setSize(11);
+
+        // Set up column headers
+        $columnTitles = [
+            'Community',
+            'Area',
+            'Area FIPS'
+        ];
+        $surveyColumnHeaders = [];
+        foreach (['officials', 'organizations'] as $surveyType) {
+            $surveyColumnHeaders[$surveyType] = [
+                'Invitations',
+                'Responses',
+                'Completion Rate',
+                'Alignment Calculated',
+            ];
+            if ($surveyType == 'officials') {
+                $surveyColumnHeaders[$surveyType][] = 'Presentation A Given';
+                $surveyColumnHeaders[$surveyType][] = 'Presentation B Given';
+            } else {
+                $surveyColumnHeaders[$surveyType][] = 'Presentation C Given';
+            }
+            $surveyColumnHeaders[$surveyType][] = 'Status';
+        }
+        $generalColCount = count($columnTitles);
+        $officialsColCount = count($surveyColumnHeaders['officials']);
+        $orgsColCount = count($surveyColumnHeaders['organizations']);
+
+        // Title
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 1, $title);
+        $objPHPExcel->getActiveSheet()->getStyle('A1:A1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 24
+            ]
+        ]);
+        $span = 'A1:' . $this->getColumnKey($generalColCount + $officialsColCount + $orgsColCount - 1) . '1';
+        $objPHPExcel->getActiveSheet()->mergeCells($span);
+
+        // Header: Survey groups
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($generalColCount, 2, 'Community Leadership');
+        $span =
+            $this->getColumnKey($generalColCount) . '2:' .
+            $this->getColumnKey($generalColCount + $officialsColCount - 1) . '2';
+        $objPHPExcel->getActiveSheet()->mergeCells($span);
+        $objPHPExcel->getActiveSheet()->getStyle($span)->applyFromArray([
+            'font' => ['bold' => true],
+            'alignment' => ['horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER],
+            'borders' => [
+                'top' => ['style' => \PHPExcel_Style_Border::BORDER_THIN],
+                'left' => ['style' => \PHPExcel_Style_Border::BORDER_THIN],
+                'right' => ['style' => \PHPExcel_Style_Border::BORDER_THIN]
+            ]
+        ]);
+
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($generalColCount + $officialsColCount, 2, 'Community Organizations');
+        $span =
+            $this->getColumnKey($generalColCount + $officialsColCount) . '2:' .
+            $this->getColumnKey($generalColCount + $officialsColCount + $orgsColCount - 1) . '2';
+        $objPHPExcel->getActiveSheet()->mergeCells($span);
+        $objPHPExcel->getActiveSheet()->getStyle($span)->applyFromArray([
+            'font' => ['bold' => true],
+            'alignment' => ['horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER],
+            'borders' => [
+                'top' => ['style' => \PHPExcel_Style_Border::BORDER_THIN],
+                'left' => ['style' => \PHPExcel_Style_Border::BORDER_THIN],
+                'right' => ['style' => \PHPExcel_Style_Border::BORDER_THIN]
+            ]
+        ]);
+
+        // Header: Column titles
+        $columnTitles = array_merge($columnTitles, $surveyColumnHeaders['officials']);
+        $columnTitles = array_merge($columnTitles, $surveyColumnHeaders['organizations']);
+        foreach ($columnTitles as $col => $colTitle) {
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 3, $colTitle);
+        }
+        $lastCol = $this->getColumnKey($generalColCount + $officialsColCount + $orgsColCount - 1);
+        $span = "A3:{$lastCol}3";
+        $objPHPExcel->getActiveSheet()->getStyle($span)->applyFromArray([
+            'alignment' => ['horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER],
+            'borders' => [
+                'bottom' => ['style' => \PHPExcel_Style_Border::BORDER_THIN]
+            ],
+            'font' => ['bold' => true]
+        ]);
+        $span = 'A3:' . $this->getColumnKey($generalColCount - 1) . '3';
+        $objPHPExcel->getActiveSheet()->getStyle($span)->applyFromArray([
+            'borders' => [
+                'left' => ['style' => \PHPExcel_Style_Border::BORDER_THIN],
+                'top' => ['style' => \PHPExcel_Style_Border::BORDER_THIN]
+            ]
+        ]);
+        $span =
+            $this->getColumnKey($generalColCount) . '3:' .
+            $this->getColumnKey($generalColCount + $officialsColCount - 1) . '3';
+        $objPHPExcel->getActiveSheet()->getStyle($span)->applyFromArray([
+            'borders' => [
+                'left' => ['style' => \PHPExcel_Style_Border::BORDER_THIN],
+                'right' => ['style' => \PHPExcel_Style_Border::BORDER_THIN]
+            ]
+        ]);
+        $span =
+            $this->getColumnKey($generalColCount + $officialsColCount) . '3:' .
+            $this->getColumnKey($generalColCount + $officialsColCount + $orgsColCount - 1) . '3';
+        $objPHPExcel->getActiveSheet()->getStyle($span)->applyFromArray([
+            'borders' => [
+                'left' => ['style' => \PHPExcel_Style_Border::BORDER_THIN],
+                'right' => ['style' => \PHPExcel_Style_Border::BORDER_THIN]
+            ]
+        ]);
+
+        // Data
+        $row = 3;
+        foreach ($report as $community) {
+            $row++;
+            $cells = [
+                $community['name'],
+                $community['parentArea'],
+                $community['parentAreaFips']
+            ];
+            foreach (['official_survey', 'organization_survey'] as $surveyType) {
+                $survey = $community[$surveyType];
+                $cells[] = $survey['invitations'];
+                $cells[] = $survey['responses'];
+                $cells[] = $survey['responseRate'];
+                $cells[] = $survey['alignmentCalculated'];
+                if ($surveyType == 'official_survey') {
+                    $cells[] = $community['presentationsGiven']['a'];
+                    $cells[] = $community['presentationsGiven']['b'];
+                } else {
+                    $cells[] = $community['presentationsGiven']['c'];
+                }
+                $cells[] = $survey['status'];
+            }
+            foreach ($cells as $col => $value) {
+                if (strpos($value, '%') === false) {
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+                } else {
+                    $cell = $this->getColumnKey($col) . $row;
+                    $objPHPExcel->getActiveSheet()->getCell($cell)->setValueExplicit(
+                        $value,
+                        \PHPExcel_Cell_DataType::TYPE_STRING
+                    );
+                }
+            }
+        }
+        $span = "A4:{$lastCol}{$row}";
+        $objPHPExcel->getActiveSheet()->getStyle($span)->applyFromArray([
+            'alignment' => ['horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT],
+            'borders' => [
+                'outline' => ['style' => \PHPExcel_Style_Border::BORDER_THIN]
+            ]
+        ]);
+        $span =
+            $this->getColumnKey($generalColCount) . '4:'.
+            $this->getColumnKey($generalColCount) . $row;
+        $objPHPExcel->getActiveSheet()->getStyle($span)->applyFromArray([
+            'borders' => [
+                'left' => ['style' => \PHPExcel_Style_Border::BORDER_THIN]
+            ]
+        ]);
+        $span =
+            $this->getColumnKey($generalColCount + $officialsColCount) . '4:'.
+            $this->getColumnKey($generalColCount + $officialsColCount) . $row;
+        $objPHPExcel->getActiveSheet()->getStyle($span)->applyFromArray([
+            'borders' => [
+                'left' => ['style' => \PHPExcel_Style_Border::BORDER_THIN]
+            ]
+        ]);
+
+        // Adjust the width of all columns AFTER the first
+        $totalColCount = $generalColCount + $officialsColCount + $orgsColCount;
+        for ($n = 0; $n < $totalColCount; $n++) {
+            $colLetter = $this->getColumnKey($n);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($colLetter)->setAutoSize(true);
+        }
+
+        return $objPHPExcel;
+    }
+
+    /**
+     * Returns an initialized PHPExcel object
+     *
+     * @return \PHPExcel
+     */
+    public function getPhpExcelObject()
+    {
+        require_once ROOT . DS . 'vendor' . DS . 'phpoffice' . DS . 'phpexcel' . DS . 'Classes' . DS . 'PHPExcel.php';
+        \PHPExcel_Cell::setValueBinder(new \PHPExcel_Cell_AdvancedValueBinder());
+        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
+        return $objPHPExcel;
+    }
+
+    /**
+     * Returns the nth Excel-style column key (A, B, C, ... AA, AB, etc.)
+     *
+     * @param int $num
+     * @return string
+     */
+    public function getColumnKey($num)
+    {
+        $numeric = $num % 26;
+        $letter = chr(65 + $numeric);
+        $num2 = intval($num / 26);
+        if ($num2 > 0) {
+            return $this->getColumnKey($num2 - 1) . $letter;
+        } else {
+            return $letter;
+        }
     }
 }

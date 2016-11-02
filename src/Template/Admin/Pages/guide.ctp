@@ -33,7 +33,7 @@
             <li>
                 Fill out the form with that community's basic information and submit it.
                 You will probably <em>not</em> need to change the fields
-                Stage / PWR<sup>3</sup> &trade; Score, Meeting Date Set, or Public
+                Stage / PWR<sup>3</sup> &trade; Score, or Public
                 from their default values.
             </li>
         </ol>
