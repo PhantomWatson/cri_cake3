@@ -12,9 +12,13 @@ var surveyInvitationForm = {
         this.already_invited = params.already_invited;
         this.uninvited_respondents = params.uninvited_respondents;
         this.surveyId = params.surveyId;
-        
-        this.addRow();
-        
+
+        // Make sure at least one input row is displayed at start
+        if ($('#UserClientInviteForm tbody.input tr').length === 0) {
+            this.addRow();
+        }
+
+        // Set up buttons
         $('#add_another').click(function (event) {
             event.preventDefault();
             surveyInvitationForm.addRow();
@@ -35,6 +39,28 @@ var surveyInvitationForm = {
                 return false;
             }
             return true;
+        });
+        $('#UserClientInviteForm button.remove').click(function () {
+            $(this).parents('tr').remove();
+            if (! $('#add_another').is(':visible')) {
+                $('#add_another').show();
+            }
+        });
+        $('#UserClientInviteForm button[type=submit]').click(function (event) {
+            event.preventDefault();
+            var buttonId = $(this).attr('id');
+            var mode = buttonId.replace('invitations-', '');
+            $('#UserClientInviteForm input[name=submit_mode]').attr('value', mode);
+            $('#UserClientInviteForm').submit();
+        });
+
+        // Enforce alternate submit modes
+        $('#UserClientInviteForm').submit(function (event) {
+            var mode = $('#UserClientInviteForm input[name=submit_mode]').attr('value');
+            if (mode != 'save' && mode == 'send') {
+                alert('Error submitting form. Please try again or email cri@bsu.edu for assistance.');
+                event.preventDefault();
+            }
         });
         
         // Set up form protection
@@ -90,23 +116,6 @@ var surveyInvitationForm = {
                 surveyInvitationForm.displayUploadResult(message, 'alert alert-danger');
             }
         });
-
-        // Set up alternate submit modes
-        $('#UserClientInviteForm button[type=submit]').click(function (event) {
-            event.preventDefault();
-            var buttonId = $(this).attr('id');
-            var mode = buttonId.replace('invitations-', '');
-            $('#UserClientInviteForm input[name=submit_mode]').attr('value', mode);
-            $('#UserClientInviteForm').submit();
-        });
-        $('#UserClientInviteForm').submit(function (event) {
-            var mode = $('#UserClientInviteForm input[name=submit_mode]').attr('value');
-            if (mode != 'save' && mode == 'send') {
-                alert('Error submitting form. Please try again or email cri@bsu.edu for assistance.');
-                event.preventDefault();
-            }
-        });
-
     },
     
     insertSpreadsheetData: function (data) {

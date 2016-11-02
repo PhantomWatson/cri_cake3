@@ -189,7 +189,54 @@
                 </td>
             </tr>
         </tbody>
-        <tbody class="input"></tbody>
+        <tbody class="input">
+            <?php $invitees = isset($this->request->data['invitees']) ? $this->request->data['invitees'] : []; ?>
+            <?php foreach ($invitees as $key => $invitee): ?>
+                <tr>
+                    <?= $this->Form->input(
+                        'invitees.' . $key . '.name',
+                        [
+                            'class' => 'form-control',
+                            'div' => [
+                                'class' => 'form-group'
+                            ],
+                            'label' => false,
+                            'placeholder' => 'Name',
+                            'required' => true,
+                            'type' => 'text'
+                        ]
+                    ) ?>
+                    <?= $this->Form->input(
+                        'invitees.' . $key . '.email',
+                        [
+                            'class' => 'form-control',
+                            'div' => [
+                                'class' => 'form-group'
+                            ],
+                            'label' => false,
+                            'placeholder' => 'Email',
+                            'required' => true,
+                            'type' => 'email'
+                        ]
+                    ) ?>
+                    <?= $this->Form->input(
+                        'invitees.' . $key . '.title',
+                        [
+                            'class' => 'form-control',
+                            'div' => [
+                                'class' => 'form-group'
+                            ],
+                            'label' => false,
+                            'placeholder' => 'Professional Title',
+                            'required' => true
+                        ]
+                    ) ?>
+                    <td>
+                        <button type="button" class="remove btn btn-danger pull-right">Remove</button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
         <tfoot>
             <tr>
                 <td colspan="4">
@@ -263,20 +310,26 @@
 <?php $this->end(); ?>
 
 <div class="form-group">
-    <?= $this->Form->button(
+    <?= $this->Form->input(
         'Send invitations',
         [
             'class' => 'btn btn-primary',
             'div' => false,
-            'id' => 'invitations-send'
+            'id' => 'invitations-send',
+            'name' => 'submit_mode_via_button',
+            'type' => 'submit',
+            'value' => 'send'
         ]
     ) ?>
-    <?= $this->Form->button(
+    <?= $this->Form->input(
         'Save for later',
         [
             'class' => 'btn btn-default',
             'div' => false,
-            'id' => 'invitations-save'
+            'id' => 'invitations-save',
+            'name' => 'submit_mode_via_button',
+            'type' => 'submit',
+            'value' => 'save'
         ]
     ) ?>
     <input type="hidden" name="submit_mode" value="" />

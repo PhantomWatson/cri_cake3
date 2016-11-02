@@ -50,10 +50,10 @@ class SurveysController extends AppController
         $this->Surveys->validateRespondentTypePlural($respondentTypePlural, $communityId);
         $respondentType = str_replace('s', '', $respondentTypePlural);
         $surveyId = $this->Surveys->getSurveyId($communityId, $respondentType);
+        $userId = $this->Auth->user('id');
 
         if ($this->request->is('post')) {
             $submitMode = $this->request->data('submit_mode');
-            $userId = $this->Auth->user('id');
             if ($submitMode == 'send') {
                 $this->SurveyProcessing->sendInvitations($communityId, $respondentType, $surveyId);
                 $this->SurveyProcessing->clearSavedInvitations($surveyId, $userId);
@@ -78,6 +78,8 @@ class SurveysController extends AppController
                 $msg .= 'Please try again or email cri@bsu.edu for assistance.';
                 $this->Flash->error($msg);
             }
+        } else {
+            $this->request->data = $this->SurveyProcessing->getSavedInvitations($surveyId, $userId);
         }
 
         $respondentsTable = TableRegistry::get('Respondents');

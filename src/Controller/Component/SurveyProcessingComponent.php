@@ -88,6 +88,26 @@ class SurveyProcessingComponent extends Component
     }
 
     /**
+     * Returns an array representation of the specified saved invitation form data
+     *
+     * @param int $surveyId
+     * @param int $userId
+     * @return array
+     */
+    public function getSavedInvitations($surveyId, $userId)
+    {
+        $formDataTable = TableRegistry::get('InvitationFormData');
+        $savedData = $formDataTable->find('all')
+            ->select(['data'])
+            ->where([
+                'survey_id' => $surveyId,
+                'user_id' => $userId
+            ])
+            ->first();
+        return $savedData ? unserialize($savedData->data) : [];
+    }
+
+    /**
      * Creates respondent records and sends invitation emails
      *
      * @param int $communityId Community ID

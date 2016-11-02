@@ -169,10 +169,10 @@ class SurveysController extends AppController
         $survey = $this->Surveys->get($surveyId);
         $communityId = $survey->community_id;
         $respondentType = $survey->type;
+        $userId = $this->Auth->user('id');
 
         if ($this->request->is('post')) {
             $submitMode = $this->request->data('submit_mode');
-            $userId = $this->Auth->user('id');
             if ($submitMode == 'send') {
                 $this->SurveyProcessing->sendInvitations($communityId, $respondentType, $surveyId);
                 $this->SurveyProcessing->clearSavedInvitations($surveyId, $userId);
@@ -184,11 +184,11 @@ class SurveysController extends AppController
                 );
                 if ($saveResult) {
                     $this->Flash->success($msg);
-                    return $this->redirect([
+                    /*return $this->redirect([
                         'prefix' => 'admin',
                         'controller' => 'Communities',
                         'action' => 'index'
-                    ]);
+                    ]);*/
                 } else {
                     $this->Flash->error($msg);
                 }
@@ -197,6 +197,8 @@ class SurveysController extends AppController
                 $msg .= 'Please try again or email cri@bsu.edu for assistance.';
                 $this->Flash->error($msg);
             }
+        } else {
+            $this->request->data = $this->SurveyProcessing->getSavedInvitations($surveyId, $userId);
         }
 
         $respondentsTable = TableRegistry::get('Respondents');
