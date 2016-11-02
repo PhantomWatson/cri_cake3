@@ -53,6 +53,26 @@ class SurveyProcessingComponent extends Component
     }
 
     /**
+     * Removes the specified InvitationFormData record
+     *
+     * @param int $surveyId
+     * @param int $userId
+     * @return bool|mixed
+     */
+    public function clearSavedInvitations($surveyId, $userId)
+    {
+        $formDataTable = TableRegistry::get('InvitationFormData');
+        $savedData = $formDataTable->find('all')
+            ->select(['id'])
+            ->where([
+                'survey_id' => $surveyId,
+                'user_id' => $userId
+            ])
+            ->first();
+        return $formDataTable->delete($savedData);
+    }
+
+    /**
      * Creates respondent records and sends invitation emails
      *
      * @param int $communityId Community ID
