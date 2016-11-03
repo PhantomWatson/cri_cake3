@@ -41,10 +41,7 @@ var surveyInvitationForm = {
             return true;
         });
         $('#UserClientInviteForm button.remove').click(function () {
-            $(this).parents('tr').remove();
-            if (! $('#add_another').is(':visible')) {
-                $('#add_another').show();
-            }
+            surveyInvitationForm.removeRow($(this).parents('tr'));
         });
         
         // Set up form protection
@@ -164,10 +161,7 @@ var surveyInvitationForm = {
             field.attr('name', fieldname);
         });
         new_container.find('button.remove').click(function () {
-            $(this).parents('tr').remove();
-            if (! $('#add_another').is(':visible')) {
-                $('#add_another').show();
-            }
+            surveyInvitationForm.removeRow($(this).parents('tr'));
         });
         this.counter++;
         $('#UserClientInviteForm tbody.input').append(new_container);
@@ -188,6 +182,21 @@ var surveyInvitationForm = {
         formProtector.protect('UserClientInviteForm', {
             ignore: ['spreadsheet-upload-input']
         });
+    },
+
+    removeRow: function (row) {
+        row.remove();
+
+        if (! $('#add_another').is(':visible')) {
+            $('#add_another').show();
+        }
+
+        var rowCount = $('#UserClientInviteForm tbody.input tr').length;
+        if (rowCount < this.rowLimit) {
+            $('#limit-warning').slideUp(function () {
+                $(this).remove();
+            });
+        }
     },
     
     checkEmail: function (field) {
