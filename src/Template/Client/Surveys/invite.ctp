@@ -316,9 +316,8 @@
             'class' => 'btn btn-primary',
             'div' => false,
             'id' => 'invitations-send',
-            'name' => 'submit_mode_via_button',
-            'type' => 'submit',
-            'value' => 'send'
+            'name' => 'submit_mode',
+            'type' => 'submit'
         ]
     ) ?>
     <?= $this->Form->input(
@@ -327,12 +326,10 @@
             'class' => 'btn btn-default',
             'div' => false,
             'id' => 'invitations-save',
-            'name' => 'submit_mode_via_button',
-            'type' => 'submit',
-            'value' => 'save'
+            'name' => 'submit_mode',
+            'type' => 'submit'
         ]
     ) ?>
-    <input type="hidden" name="submit_mode" value="" />
     <?= $this->Form->end() ?>
     <?php $this->Form->templates($bootstrapFormTemplate); ?>
 </div>

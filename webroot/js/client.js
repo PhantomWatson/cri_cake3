@@ -46,22 +46,6 @@ var surveyInvitationForm = {
                 $('#add_another').show();
             }
         });
-        $('#UserClientInviteForm button[type=submit]').click(function (event) {
-            event.preventDefault();
-            var buttonId = $(this).attr('id');
-            var mode = buttonId.replace('invitations-', '');
-            $('#UserClientInviteForm input[name=submit_mode]').attr('value', mode);
-            $('#UserClientInviteForm').submit();
-        });
-
-        // Enforce alternate submit modes
-        $('#UserClientInviteForm').submit(function (event) {
-            var mode = $('#UserClientInviteForm input[name=submit_mode]').attr('value');
-            if (mode != 'save' && mode == 'send') {
-                alert('Error submitting form. Please try again or email cri@bsu.edu for assistance.');
-                event.preventDefault();
-            }
-        });
         
         // Set up form protection
         formProtector.protect('UserClientInviteForm', {

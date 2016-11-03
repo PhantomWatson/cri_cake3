@@ -173,10 +173,10 @@ class SurveysController extends AppController
 
         if ($this->request->is('post')) {
             $submitMode = $this->request->data('submit_mode');
-            if ($submitMode == 'send') {
+            if (stripos($submitMode, 'send') !== false) {
                 $this->SurveyProcessing->sendInvitations($communityId, $respondentType, $surveyId);
                 $this->SurveyProcessing->clearSavedInvitations($surveyId, $userId);
-            } elseif ($submitMode == 'save') {
+            } elseif (stripos($submitMode, 'save') !== false) {
                 list($saveResult, $msg) = $this->SurveyProcessing->saveInvitations(
                     $this->request->data(),
                     $surveyId,
@@ -184,11 +184,11 @@ class SurveysController extends AppController
                 );
                 if ($saveResult) {
                     $this->Flash->success($msg);
-                    /*return $this->redirect([
+                    return $this->redirect([
                         'prefix' => 'admin',
                         'controller' => 'Communities',
                         'action' => 'index'
-                    ]);*/
+                    ]);
                 } else {
                     $this->Flash->error($msg);
                 }

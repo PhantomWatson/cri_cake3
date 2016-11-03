@@ -54,10 +54,10 @@ class SurveysController extends AppController
 
         if ($this->request->is('post')) {
             $submitMode = $this->request->data('submit_mode');
-            if ($submitMode == 'send') {
+            if (stripos($submitMode, 'send') !== false) {
                 $this->SurveyProcessing->sendInvitations($communityId, $respondentType, $surveyId);
                 $this->SurveyProcessing->clearSavedInvitations($surveyId, $userId);
-            } elseif ($submitMode == 'save') {
+            } elseif (stripos($submitMode, 'save') !== false) {
                 list($saveResult, $msg) = $this->SurveyProcessing->saveInvitations(
                     $this->request->data(),
                     $surveyId,
