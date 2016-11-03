@@ -43,6 +43,9 @@ var surveyInvitationForm = {
         $('#UserClientInviteForm button.remove').click(function () {
             surveyInvitationForm.removeRow($(this).parents('tr'));
         });
+        $('#show-spreadsheet-modal').click(function (event) {
+            event.preventDefault();
+        });
         
         // Set up form protection
         formProtector.protect('UserClientInviteForm', {
