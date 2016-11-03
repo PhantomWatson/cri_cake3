@@ -59,7 +59,7 @@ class SurveysController extends AppController
                 $this->SurveyProcessing->clearSavedInvitations($surveyId, $userId);
             } elseif (stripos($submitMode, 'save') !== false) {
                 list($saveResult, $msg) = $this->SurveyProcessing->saveInvitations(
-                    $this->request->data(),
+                    $this->request->data('invitees'),
                     $surveyId,
                     $userId
                 );
@@ -79,7 +79,7 @@ class SurveysController extends AppController
                 $this->Flash->error($msg);
             }
         } else {
-            $this->request->data = $this->SurveyProcessing->getSavedInvitations($surveyId, $userId);
+            $this->request->data['invitees'] = $this->SurveyProcessing->getSavedInvitations($surveyId, $userId);
         }
 
         $respondentsTable = TableRegistry::get('Respondents');
