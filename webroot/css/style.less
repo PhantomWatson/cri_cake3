@@ -509,6 +509,18 @@ div.all_communities {
     margin-left: 10px;
 }
 
+section.invitation-form {
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+
+    &:last-of-type {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+}
+
 table.respondents {
     td.boolean_icon {
         .glyphicon-ok {
@@ -1083,6 +1095,12 @@ ul.ui-autocomplete {
     display: none;
 }
 #toggle-upload {
+    border: none;
+    color: #0099BB;
+    font-size: inherit;
+    padding: 0;
+    vertical-align: inherit;
+
     &.disabled {
         .glyphicon {
             display: none;
