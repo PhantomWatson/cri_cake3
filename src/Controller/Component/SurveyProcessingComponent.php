@@ -77,14 +77,18 @@ class SurveyProcessingComponent extends Component
     public function clearSavedInvitations($surveyId, $userId)
     {
         $formDataTable = TableRegistry::get('InvitationFormData');
-        $savedData = $formDataTable->find('all')
+        $result = $formDataTable->find('all')
             ->select(['id'])
             ->where([
                 'survey_id' => $surveyId,
                 'user_id' => $userId
             ])
             ->first();
-        return $formDataTable->delete($savedData);
+        if ($result) {
+            $savedData = $formDataTable->get($result->id);
+            return $formDataTable->delete($savedData);
+        }
+        return true;
     }
 
     /**
