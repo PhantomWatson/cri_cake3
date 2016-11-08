@@ -52,11 +52,9 @@
     <button id="sent_invitations_toggler" class="btn btn-default">
         Who has already been invited?
     </button>
-    <?php if ($surveyType == 'official'): ?>
-        <button id="suggestions_toggler" class="btn btn-default">
-            Suggestions of who to invite
-        </button>
-    <?php endif; ?>
+    <button id="suggestions_toggler" class="btn btn-default">
+        Suggestions of who to invite
+    </button>
     <div id="sent_invitations" class="well">
         <?php if (empty($allRespondents)): ?>
             No invitations have been sent yet.
@@ -93,32 +91,39 @@
             <?php endif; ?>
         <?php endif; ?>
     </div>
-    <?php if ($surveyType == 'official'): ?>
-        <?php
-        $suggestions = [
-            'Mayor',
-            'City Clerk',
-            'City Treasurer',
-            'City Council',
-            'City Planning Director',
-            'Director of Community Development',
-            'Planning Commission',
-            'Redevelopment Commission',
-            'Economic Development Commission',
-            'County Commissioner',
-            'County Council'
-        ];
-        ?>
-        <div id="invitation_suggestions" class="well">
-            <ul>
-                <?php foreach ($suggestions as $suggestion): ?>
-                    <li>
-                        <?= $suggestion ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    <?php endif; ?>
+    <?php
+        if ($surveyType == 'official') {
+            $suggestions = [
+                'Mayor',
+                'City Clerk',
+                'City Treasurer',
+                'City Council',
+                'City Planning Director',
+                'Director of Community Development',
+                'Planning Commission',
+                'Redevelopment Commission',
+                'Economic Development Commission',
+                'County Commissioner',
+                'County Council'
+            ];
+        } else {
+            $suggestions = [
+                'Nonprofit Organizations',
+                'Service Organizations',
+                'Community Volunteer Groups',
+                'Civic Centers'
+            ];
+        }
+    ?>
+    <div id="invitation_suggestions" class="well">
+        <ul>
+            <?php foreach ($suggestions as $suggestion): ?>
+                <li>
+                    <?= $suggestion ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
 </section>
 
 <section class="invitation-form">
