@@ -129,7 +129,12 @@
     <p>
         Enter information for one or more community <?= $respondentTypePlural ?> to send them questionnaire invitations.
         Alternatively, you can
-        <a href="/files/Community Leadership Alignment Assessment invitations.xlsx">download a spreadsheet (.xlsx)</a>,
+        <?php
+            $filename = ($surveyType == 'official') ?
+                'Community Leadership Alignment Assessment invitations.xlsx' :
+                'Community Organizations Alignment Assessment invitations.xlsx';
+        ?>
+        <a href="/files/<?= $filename ?>">download a spreadsheet (.xlsx)</a>,
         fill it out, and then
         <button class="btn btn-link" id="toggle-upload">
             upload it
