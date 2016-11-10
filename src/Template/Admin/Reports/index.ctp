@@ -67,13 +67,23 @@
 </div>
 
 <p>
+    <?php $icon = '<img src="/data_center/img/icons/document-excel-table.png" alt="Microsoft Excel (.xlsx)" />'; ?>
     <?= $this->Html->link(
-        '<img src="/data_center/img/icons/document-excel-table.png" alt="Microsoft Excel (.xlsx)" /> Download OCRA Report',
+        $icon . ' Download OCRA Report',
         ['action' => 'ocra'],
         [
             'class' => 'btn btn-default',
             'escape' => false,
             'title' => 'Download an OCRA version of this report as a Microsoft Excel (.xlsx) file'
+        ]
+    ) ?>
+    <?= $this->Html->link(
+        $icon . ' Download Admin Report',
+        ['action' => 'admin'],
+        [
+            'class' => 'btn btn-default',
+            'escape' => false,
+            'title' => 'Download the version of this report for CRI administrators as a Microsoft Excel (.xlsx) file'
         ]
     ) ?>
 </p>

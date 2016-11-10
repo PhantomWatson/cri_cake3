@@ -34,15 +34,45 @@ class ReportsController extends AppController
     public function ocra()
     {
         if (! isset($_GET['debug'])) {
-            $this->response->type(['excel2007' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
-            $this->response->type('excel2007');
             $date = date('M-d-Y');
-            $this->response->download("CRI Report - OCRA - $date.xlsx");
-            $this->viewBuilder()->layout('spreadsheet');
+            $this->respondWithSpreadsheet("CRI Report - OCRA - $date.xlsx");
         }
         $communitiesTable = TableRegistry::get('Communities');
         $this->set([
-            'ocraReportSpreadsheet' => $communitiesTable->getOcraReportSpreadsheet()
+            'reportSpreadsheet' => $communitiesTable->getReportSpreadsheet('ocra')
         ]);
+        $this->render('view');
+    }
+
+    /**
+     * Method for /admin/reports/admin
+     *
+     * @return void
+     */
+    public function admin()
+    {
+        if (! isset($_GET['debug'])) {
+            $date = date('M-d-Y');
+            $this->respondWithSpreadsheet("CRI Report - Admin - $date.xlsx");
+        }
+        $communitiesTable = TableRegistry::get('Communities');
+        $this->set([
+            'reportSpreadsheet' => $communitiesTable->getReportSpreadsheet('admin')
+        ]);
+        $this->render('view');
+    }
+
+    /**
+     * Sets up the response to prompt a download of a spreadsheet
+     *
+     * @param string $filename
+     * @return void
+     */
+    private function respondWithSpreadsheet($filename)
+    {
+        $this->response->type(['excel2007' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+        $this->response->type('excel2007');
+        $this->response->download($filename);
+        $this->viewBuilder()->layout('spreadsheet');
     }
 }

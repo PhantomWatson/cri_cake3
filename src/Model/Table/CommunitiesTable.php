@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Community;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -911,17 +912,25 @@ class CommunitiesTable extends Table
     }
 
     /**
-     * Returns a PHPExcel object for the OCRA version of the "all communities" report
+     * Returns a PHPExcel object for either the OCRA or the admin version of the "all communities" report
      *
+     * @param string $version 'ocra' or 'admin'
      * @return \PHPExcel
      */
-    public function getOcraReportSpreadsheet()
+    public function getReportSpreadsheet($version)
     {
+        if (! in_array($version, ['ocra', 'admin'])) {
+            throw new InternalErrorException('"' . $version . '" is not a valid report type.');
+        }
         $report = $this->getReport();
         $objPHPExcel = $this->getPhpExcelObject();
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
 
         // Metadata
-        $title = 'CRI Report for OCRA - ' . date('F j, Y');
+        $title = ($version == 'ocra') ? 'CRI Report for OCRA - ' : 'CRI Admin Report - ';
+        $title .= date('F j, Y');
+
         $author = 'Center for Business and Economic Research, Ball State University';
         $objPHPExcel->getProperties()
             ->setCreator($author)
@@ -943,9 +952,14 @@ class CommunitiesTable extends Table
             $surveyColumnHeaders[$surveyType] = [
                 'Invitations',
                 'Responses',
-                'Completion Rate',
-                'Alignment Calculated',
+                'Completion Rate'
             ];
+            $surveyColumnHeaders[$surveyType][] = ($version == 'ocra') ? 'Alignment Calculated' : 'Average Alignment';
+            if ($version == 'admin') {
+                foreach ($sectors as $sector) {
+                    $surveyColumnHeaders[$surveyType][] = ucwords($sector);
+                }
+            }
             if ($surveyType == 'officials') {
                 $surveyColumnHeaders[$surveyType][] = 'Presentation A Given';
                 $surveyColumnHeaders[$surveyType][] = 'Presentation B Given';
@@ -985,7 +999,8 @@ class CommunitiesTable extends Table
             ]
         ]);
 
-        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($generalColCount + $officialsColCount, 2, 'Community Organizations');
+        $combinedCount = $generalColCount + $officialsColCount;
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($combinedCount, 2, 'Community Organizations');
         $span =
             $this->getColumnKey($generalColCount + $officialsColCount) . '2:' .
             $this->getColumnKey($generalColCount + $officialsColCount + $orgsColCount - 1) . '2';
@@ -1055,7 +1070,14 @@ class CommunitiesTable extends Table
                 $cells[] = $survey['invitations'];
                 $cells[] = $survey['responses'];
                 $cells[] = $survey['responseRate'];
-                $cells[] = $survey['alignmentCalculated'];
+                if ($version == 'ocra') {
+                    $cells[] = $survey['alignmentCalculated'];
+                } elseif ($version == 'admin') {
+                    $cells[] = $survey['alignment'];
+                    foreach ($sectors as $sector) {
+                        $cells[] = $survey['internalAlignment'][$sector];
+                    }
+                }
                 if ($surveyType == 'official_survey') {
                     $cells[] = $community['presentationsGiven']['a'];
                     $cells[] = $community['presentationsGiven']['b'];
