@@ -959,6 +959,7 @@ class CommunitiesTable extends Table
                 foreach ($sectors as $sector) {
                     $surveyColumnHeaders[$surveyType][] = ucwords($sector);
                 }
+                $surveyColumnHeaders[$surveyType][] = 'Overall';
             }
             if ($surveyType == 'officials') {
                 $surveyColumnHeaders[$surveyType][] = 'Presentation A Given';
@@ -1077,6 +1078,7 @@ class CommunitiesTable extends Table
                     foreach ($sectors as $sector) {
                         $cells[] = $survey['internalAlignment'][$sector];
                     }
+                    $cells[] = $survey['internalAlignment']['total'];
                 }
                 if ($surveyType == 'official_survey') {
                     $cells[] = $community['presentationsGiven']['a'];
