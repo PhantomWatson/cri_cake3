@@ -21,7 +21,7 @@ class ReportsController extends AppController
         $this->set([
             'report' => $report,
             'sectors' => $sectors,
-            'titleForLayout' => 'CRI Admin Report: All Communities'
+            'titleForLayout' => 'CRI Reports'
         ]);
     }
 
