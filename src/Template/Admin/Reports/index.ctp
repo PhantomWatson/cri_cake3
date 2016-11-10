@@ -69,7 +69,7 @@
 <p>
     <?= $this->Html->link(
         '<img src="/data_center/img/icons/document-excel-table.png" alt="Microsoft Excel (.xlsx)" /> Download OCRA Report',
-        ['action' => 'reportOcra'],
+        ['action' => 'ocra'],
         [
             'class' => 'btn btn-default',
             'escape' => false,

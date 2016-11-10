@@ -526,44 +526,6 @@ class CommunitiesController extends AppController
         ]);
     }
 
-    /**
-     * Method for /admin/communities/reports
-     *
-     * @return void
-     */
-    public function reports()
-    {
-        $surveysTable = TableRegistry::get('Surveys');
-        $sectors = $surveysTable->getSectors();
-        $report = $this->Communities->getReport();
-
-        $this->set([
-            'report' => $report,
-            'sectors' => $sectors,
-            'titleForLayout' => 'CRI Admin Report: All Communities'
-        ]);
-    }
-
-
-    /**
-     * Method for /admin/communities/reports
-     *
-     * @return void
-     */
-    public function reportOcra()
-    {
-        if (! isset($_GET['debug'])) {
-            $this->response->type(['excel2007' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
-            $this->response->type('excel2007');
-            $date = date('M-d-Y');
-            $this->response->download("CRI Report - OCRA - $date.xlsx");
-            $this->viewBuilder()->layout('spreadsheet');
-        }
-        $this->set([
-            'ocraReportSpreadsheet' => $this->Communities->getOcraReportSpreadsheet()
-        ]);
-    }
-
     public function presentations($communityId = null)
     {
         if (! $communityId) {
