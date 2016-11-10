@@ -910,6 +910,11 @@ class CommunitiesTable extends Table
         return $report;
     }
 
+    /**
+     * Returns a PHPExcel object for the OCRA version of the "all communities" report
+     *
+     * @return \PHPExcel
+     */
     public function getOcraReportSpreadsheet()
     {
         $report = $this->getReport();
