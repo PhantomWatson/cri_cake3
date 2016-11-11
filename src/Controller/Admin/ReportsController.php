@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Reports\Reports;
 use Cake\ORM\TableRegistry;
 
 class ReportsController extends AppController
@@ -14,13 +15,10 @@ class ReportsController extends AppController
     public function index()
     {
         $surveysTable = TableRegistry::get('Surveys');
-        $sectors = $surveysTable->getSectors();
-        $communitiesTable = TableRegistry::get('Communities');
-        $report = $communitiesTable->getReport();
-
+        $reports = new Reports();
         $this->set([
-            'report' => $report,
-            'sectors' => $sectors,
+            'report' => $reports->getReport(),
+            'sectors' => $surveysTable->getSectors(),
             'titleForLayout' => 'CRI Reports'
         ]);
     }
@@ -37,9 +35,9 @@ class ReportsController extends AppController
             $date = date('M-d-Y');
             $this->respondWithSpreadsheet("CRI Report - OCRA - $date.xlsx");
         }
-        $communitiesTable = TableRegistry::get('Communities');
+        $reports = new Reports();
         $this->set([
-            'reportSpreadsheet' => $communitiesTable->getReportSpreadsheet('ocra')
+            'reportSpreadsheet' => $reports->getReportSpreadsheet('ocra')
         ]);
         $this->render('view');
     }
@@ -55,9 +53,9 @@ class ReportsController extends AppController
             $date = date('M-d-Y');
             $this->respondWithSpreadsheet("CRI Report - Admin - $date.xlsx");
         }
-        $communitiesTable = TableRegistry::get('Communities');
+        $reports = new Reports();
         $this->set([
-            'reportSpreadsheet' => $communitiesTable->getReportSpreadsheet('admin')
+            'reportSpreadsheet' => $reports->getReportSpreadsheet('admin')
         ]);
         $this->render('view');
     }
