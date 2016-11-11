@@ -46,6 +46,20 @@
             if ($cell == 'Status') {
                 $class .= ' survey-status';
             }
+
+            // Abbreviate
+            $abbreviations = [
+                'Production' => 'P',
+                'Wholesale' => 'W',
+                'Retail' => 'Ret',
+                'Residential' => 'Res',
+                'Recreation' => 'Rec',
+                'Overall' => 'Overall'
+            ];
+            if (isset($abbreviations[$cell])) {
+                $cell = $abbreviations[$cell];
+            }
+
             $retval .= '<th class="' . $class . '" data-survey-type="' . $type . '">';
             $retval .= $cell;
             $retval .= '</th>';
