@@ -33,17 +33,16 @@
         $cells[] = 'Status';
         $retval = '';
         foreach ($cells as $cell) {
+            // Build CSS class string
             $class = 'survey';
             if (in_array(strtolower($cell), $sectors) || $cell == 'Overall') {
                 $class .= ' int-alignment';
             }
             if ($cell == 'Production') {
                 $class .= ' int-alignment-left-edge';
-            }
-            if ($cell == 'Overall') {
+            } elseif ($cell == 'Overall') {
                 $class .= ' int-alignment-right-edge';
-            }
-            if ($cell == 'Status') {
+            } elseif ($cell == 'Status') {
                 $class .= ' survey-status';
             }
 
@@ -53,8 +52,7 @@
                 'Wholesale' => 'W',
                 'Retail' => 'Ret',
                 'Residential' => 'Res',
-                'Recreation' => 'Rec',
-                'Overall' => 'Overall'
+                'Recreation' => 'Rec'
             ];
             if (isset($abbreviations[$cell])) {
                 $cell = $abbreviations[$cell];
