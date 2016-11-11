@@ -168,6 +168,7 @@ class Reports
             'Area FIPS'
         ];
         $surveyColumnHeaders = [];
+        $intAlignmentColOffset = null;
         foreach (['officials', 'organizations'] as $surveyType) {
             $surveyColumnHeaders[$surveyType] = [
                 'Invitations',
@@ -176,6 +177,12 @@ class Reports
             ];
             $alignmentColHeader = ($version == 'ocra') ? 'Alignment Calculated' : 'Average Alignment';
             $surveyColumnHeaders[$surveyType][] = $alignmentColHeader;
+
+            // Note how many columns come before internal alignment in each survey group
+            if (! $intAlignmentColOffset) {
+                $intAlignmentColOffset = count($surveyColumnHeaders[$surveyType]);
+            }
+
             if ($version == 'admin') {
                 foreach ($sectors as $sector) {
                     $surveyColumnHeaders[$surveyType][] = ucwords($sector);
@@ -246,6 +253,65 @@ class Reports
                 'alignment' => $centerAligned,
                 'borders' => ['top' => $border, 'left' => $border, 'right' => $border]
             ]);
+
+        if ($version == 'admin') {
+            // Write "internal alignment" grouping headers
+            $currentRow++;
+            $firstIntAlignmentCol = $generalColCount + $intAlignmentColOffset;
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($firstIntAlignmentCol, $currentRow, 'Internal Alignment');
+            $secondIntAlignmentCol = $firstIntAlignmentCol + $officialsColCount;
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($secondIntAlignmentCol, $currentRow, 'Internal Alignment');
+
+            // Style "internal alignment" grouping header row
+            $intAlignmentColCount = count($sectors) + 1; // Sectors + "Overall"
+            $intAlignmentGroups = [];
+            $intAlignmentGroups[] =
+                $this->getColumnKey($firstIntAlignmentCol) . $currentRow . ':' .
+                $this->getColumnKey($firstIntAlignmentCol + $intAlignmentColCount - 1) . $currentRow;
+            $intAlignmentGroups[] =
+                $this->getColumnKey($secondIntAlignmentCol) . $currentRow . ':' .
+                $this->getColumnKey($secondIntAlignmentCol + $intAlignmentColCount - 1) . $currentRow;
+            foreach ($intAlignmentGroups as $span) {
+                $objPHPExcel->getActiveSheet()
+                    ->mergeCells($span)
+                    ->getStyle($span)
+                    ->applyFromArray([
+                        'alignment' => $centerAligned,
+                        'borders' => ['top' => $border, 'left' => $border, 'right' => $border],
+                        'font' => ['bold' => true]
+                    ]);
+            }
+            $cellsForRightBorder = [
+                $lastGeneralCol.$currentRow,
+                $lastOfficialsSurveyCol.$currentRow,
+                $lastCol.$currentRow
+            ];
+            foreach ($cellsForRightBorder as $cell) {
+                $objPHPExcel->getActiveSheet()
+                    ->getStyle("$cell:$cell")
+                    ->applyFromArray([
+                        'borders' => ['right' => $border]
+                    ]);
+            }
+            $spansForBottomBorder = [];
+            $offset = $generalColCount + $intAlignmentColOffset;
+            $spansForBottomBorder[] =
+                "{$firstOfficialsSurveyCol}{$currentRow}:" .
+                $this->getColumnKey($offset - 1) . $currentRow;
+            $spansForBottomBorder[] =
+                $this->getColumnKey($offset + $intAlignmentColCount) . $currentRow . ':' .
+                $this->getColumnKey($offset + $officialsColCount - 1) . $currentRow;
+            $spansForBottomBorder[] =
+                $this->getColumnKey($offset + $officialsColCount + $intAlignmentColCount) . $currentRow . ':' .
+                $lastCol . $currentRow;
+            foreach ($spansForBottomBorder as $span) {
+                $objPHPExcel->getActiveSheet()
+                    ->getStyle($span)
+                    ->applyFromArray([
+                        'borders' => ['bottom' => $border]
+                    ]);
+            }
+        }
 
         // Write column titles
         $currentRow++;
