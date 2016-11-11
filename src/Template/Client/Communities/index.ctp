@@ -179,8 +179,12 @@
                 </td>
                 <td>
                     <?php if ($leadershipSurveyCreated): ?>
-                        <button class="btn btn-default btn-block import_button" data-survey-id="<?= $officialSurveyId ?>">
+                        <button class="btn btn-default btn-block import_button" data-survey-id="<?= $officialSurveyId ?>" disabled="disabled">
                             Import Responses
+                            <br />
+                            <span class="text text-warning">
+                                (temporarily unavailable)
+                            </span>
                         </button>
                         <br />
                         <?php if ($criteria[2]['responses_received'][1]): ?>
@@ -408,8 +412,12 @@
                     </td>
                     <td>
                         <?php if ($criteria[3]['survey_created'][1]): ?>
-                            <button class="btn btn-default import_button" data-survey-id="<?= $organizationSurveyId ?>">
+                            <button class="btn btn-default import_button" data-survey-id="<?= $organizationSurveyId ?>" disabled="disabled">
                                 Import Responses
+                                <br />
+                                <span class="text text-warning">
+                                    (temporarily unavailable)
+                                </span>
                             </button>
                             <br />
                             <?php if ($criteria[3]['responses_received'][1]): ?>

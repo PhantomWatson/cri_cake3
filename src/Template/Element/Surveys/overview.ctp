@@ -106,8 +106,12 @@
                     this community is not currently in stage <?= $stageForAutoImport ?> of CRI.
                 <?php endif; ?>
             </p>
-            <button class="btn btn-default import_button" data-survey-id="<?= $survey['id'] ?>">
+            <button class="btn btn-default import_button" data-survey-id="<?= $survey['id'] ?>" disabled="disabled">
                 Import Responses
+                <br />
+                <span class="text text-warning">
+                    (temporarily unavailable)
+                </span>
             </button>
             <?php if ($survey['import_errors']): ?>
                 <?php $errors = unserialize($survey['import_errors']); ?>
