@@ -63,12 +63,8 @@
 
             <ul class="actions" id="survey-link-buttons" data-is-new="<?= $survey->isNew() ? 1 : 0 ?>">
                 <li>
-                    <button class="lookup btn btn-default" disabled="disabled">
+                    <button class="lookup btn btn-default">
                         Select Questionnaire
-                        <br />
-                        <span class="text text-warning">
-                            (temporarily unavailable)
-                        </span>
                     </button>
                 </li>
                 <li>
