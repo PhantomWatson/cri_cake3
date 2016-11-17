@@ -17,6 +17,7 @@ class Reports
             ->select([
                 'id', 'name', 'score'
             ])
+            ->where(['dummy' => 0])
             ->contain([
                 'ParentAreas' => function($q) {
                     return $q->select(['id', 'name', 'fips']);
