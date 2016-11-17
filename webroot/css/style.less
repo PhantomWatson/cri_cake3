@@ -1295,6 +1295,22 @@ ul.ui-autocomplete {
         .int-alignment-right-edge {
             border-right: 1px solid @table-border-color;
         }
+        th[data-sort]:not([data-sort=""]) {
+            cursor: pointer;
+            white-space: nowrap;
+
+            &:after {
+                font-family: "Glyphicons Halflings";
+                padding-left: 5px;
+                vertical-align: middle;
+            }
+            &.sorting-asc:after {
+                content: "\e253";
+            }
+            &.sorting-desc:after {
+                content: "\e252";
+            }
+        }
     }
     tbody {
         td:first-child {

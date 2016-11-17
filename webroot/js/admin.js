@@ -1,19 +1,19 @@
 var adminUserEdit = {
     community_counter: 0,
-    
+
     init: function (params) {
         var community_container = $('<ul id="community_container"></ul>');
         var community_select = $('#community');
         community_select.after(community_container);
         community_select.prop('selectedIndex', 0);
-        
+
         if (params.selected_communities.length > 0) {
             for (var i = 0; i < params.selected_communities.length; i++) {
                 var community = params.selected_communities[i];
                 this.addCommunity(community.id, community.name, false);
             }
         }
-        
+
         community_select.change(function () {
             var select = $(this);
             var c_id = select.val();
@@ -24,24 +24,24 @@ var adminUserEdit = {
             }
             select.prop('selectedIndex', 0);
         });
-        
+
         $('#all-communities-0, #all-communities-1').change(function () {
             adminUserEdit.toggleAllCommunities(true);
         });
         this.toggleAllCommunities(false);
-        
+
         $('#role').change(function () {
             adminUserEdit.onRoleChange(true);
         });
         this.onRoleChange(false);
-        
+
         $('#password-fields-button button').click(function (event) {
             event.preventDefault();
             $('#password-fields-button').slideUp(300);
             $('#password-fields').slideDown(300);
         });
     },
-    
+
     addCommunity: function (id, name, animate) {
         var li = $('<li data-community-id="'+id+'"></li>');
         var link = $('<a href="#"><span class="glyphicon glyphicon-remove"></span> <span class="link_label">'+name+'</span></a>');
@@ -62,7 +62,7 @@ var adminUserEdit = {
             li.slideDown();
         }
     },
-    
+
     toggleAllCommunities: function (animate) {
         if ($('#all-communities-0').is(':checked')) {
             if (animate) {
@@ -82,7 +82,7 @@ var adminUserEdit = {
             }
         }
     },
-    
+
     onRoleChange: function (animate) {
         var role = $('#role').val();
         var duration = animate ? 300 : 0;
@@ -111,18 +111,18 @@ function getRandomPassword() {
 var communityForm = {
     community_id: null,
     areaTypes: null,
-    
+
     init: function (params) {
         this.community_id = params.community_id;
         this.areaTypes = params.areaTypes;
-        
+
         $('#meeting-date-set-0, #meeting-date-set-1').change(function () {
             communityForm.toggleDateFields(true);
         });
         this.toggleDateFields(false);
         this.setupAreaSelection();
     },
-    
+
     toggleDateFields: function (animate) {
         if ($('#meeting-date-set-0').is(':checked')) {
             if (animate) {
@@ -139,11 +139,11 @@ var communityForm = {
             }
         }
     },
-    
+
     setupAreaSelection: function () {
         $('#local-area-id, #parent-area-id').each(function () {
             var areaSelector = $(this);
-            
+
             // Insert type selector
             var typeSelector = $('<select class="form-control"></select>');
             for (var i = 0; i < communityForm.areaTypes.length; i++) {
@@ -155,7 +155,7 @@ var communityForm = {
                 var type = $(this).val();
                 communityForm.changeAreaType(areaSelector, type);
             });
-            
+
             // Set type selector to correct value (or a default value)
             var selected = areaSelector.find('option:selected');
             var selectedType = '';
@@ -172,7 +172,7 @@ var communityForm = {
             communityForm.changeAreaType(areaSelector, selectedType);
         });
     },
-    
+
     changeAreaType: function (areaSelector, type) {
         areaSelector.find('optgroup[label="'+type+'"]').show();
         areaSelector.find('optgroup').not('[label="'+type+'"]').hide();
@@ -293,13 +293,13 @@ var adminViewResponses = {
         } else {
             respondents = container.find('td.approved .glyphicon-ok');
         }
-        
+
         var sum = 0;
         respondents.each(function () {
             var value = $(this).closest('tr').data('alignment');
             sum = value + sum;
         });
-        
+
         var count = respondents.length;
         var average = count ? Math.round(sum / count) : 0;
         var resultContainer = container.find('span.total_alignment');
@@ -350,7 +350,7 @@ var adminCommunitiesIndex = {
             $('#glossary').slideToggle();
         });
     },
-    
+
     filter: function (matching) {
         if (matching === '') {
             $('table.communities tbody tr').show();
@@ -381,7 +381,7 @@ var adminPurchasesIndex = {
 var surveyLink = {
     community_id: null,
     survey_type: null,
-    
+
     init: function (params) {
         this.community_id = params.community_id;
         this.survey_type = params.type;
@@ -391,11 +391,11 @@ var surveyLink = {
             $('#survey-link-submit').prop('disabled', true);
         }
     },
-    
+
     setupSurveyLinking: function () {
         $('.link_survey').each(function () {
             var container = $(this);
-            
+
             container.find('button.lookup').click(function (event) {
                 event.preventDefault();
                 var results_container = container.find('.lookup_results');
@@ -405,20 +405,20 @@ var surveyLink = {
                     surveyLink.lookupUrl(container);
                 }
             });
-            
+
             container.find('button.show_details').click(function (event) {
                 event.preventDefault();
                 container.find('.details').slideToggle();
             });
         });
     },
-    
+
     lookupUrl: function (container) {
         var lookup_link = container.find('button.lookup');
         var lookup_url = '/surveys/get_survey_list';
         var results_container = container.find('.lookup_results');
         var loadingMessages = $('.loading_messages');
-        
+
         $.ajax({
             url: lookup_url,
             beforeSend: function () {
@@ -477,11 +477,11 @@ var surveyLink = {
             }
         });
     },
-    
+
     checkSurveyAssignment: function (container, sm_id, success_callback) {
         var url_field = $('#sm-url');
         var loadingMessages = $('.loading_messages');
-        
+
         $.ajax({
             url: '/surveys/check_survey_assignment/'+sm_id,
             dataType: 'json',
@@ -515,7 +515,7 @@ var surveyLink = {
             }
         });
     },
-    
+
     setQnaIds: function (container, sm_id, success_callback) {
         var loadingMessages = container.find('.loading_messages');
         var displayError = function (message) {
@@ -524,11 +524,11 @@ var surveyLink = {
                 event.preventDefault();
                 surveyLink.setQnaIds(container, sm_id, success_callback);
             });
-            
+
             loadingMessages.html('<p class="url_error"><span class="label label-danger">Error</span> '+message+' </p>');
             loadingMessages.find('p').append(retry_link);
         };
-        
+
         $.ajax({
             url: '/surveys/get_qna_ids/'+sm_id,
             beforeSend: function () {
@@ -558,10 +558,10 @@ var surveyLink = {
             }
         });
     },
-    
+
     selectSurvey: function (container, sm_id, url) {
         var results_container = container.find('.lookup_results');
-        
+
         // Clean up appearance
         if (results_container.is(':visible')) {
             results_container.slideUp();
@@ -574,7 +574,7 @@ var surveyLink = {
         // Assign ID
         var id_field = $('#sm-id');
         id_field.val(sm_id);
-        
+
         // Assign URL if available
         var url_field = $('#sm-url');
         var linkStatus = container.find('.link_status');
@@ -582,11 +582,11 @@ var surveyLink = {
         var readyStatusMsg = '<span class="text-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Ready to be linked</span>';
         if (url) {
             url_field.val(url);
-            linkStatus.html(readyStatusMsg);            
+            linkStatus.html(readyStatusMsg);
             surveyUrl.html('<a href="'+url+'">'+url+'</a>');
             return;
         }
-        
+
         // Begin lookup of URL if not
         url_field.val('');
         var loadingMessages = $('.loading_messages');
@@ -630,7 +630,7 @@ var surveyOverview = {
     init: function (params) {
         this.community_id = params.community_id;
         this.setupImport();
-        
+
         $('.invitations_toggler').click(function (event) {
             event.preventDefault();
             $(this).closest('div.panel-body').find('.invitations_list').slideToggle();
@@ -650,15 +650,15 @@ var surveyOverview = {
             errorList.before(errorToggler);
             errorList.hide();
         }
-        
+
         $('.import_button').click(function (event) {
             event.preventDefault();
             var link = $(this);
-            
+
             if (link.hasClass('disabled')) {
                 return;
             }
-            
+
             var survey_id = link.data('survey-id');
             $.ajax({
                 url: '/surveys/import/'+survey_id,
@@ -832,6 +832,95 @@ var adminHeader = {
     }
 };
 
+/**
+ * jQuery.fn.sortElements
+ * --------------
+ * @author James Padolsey (http://james.padolsey.com)
+ * @version 0.11
+ * @updated 18-MAR-2010
+ * --------------
+ * @param Function comparator:
+ *   Exactly the same behaviour as [1,2,3].sort(comparator)
+ *
+ * @param Function getSortable
+ *   A function that should return the element that is
+ *   to be sorted. The comparator will run on the
+ *   current collection, but you may want the actual
+ *   resulting sort to occur on a parent or another
+ *   associated element.
+ *
+ *   E.g. $('td').sortElements(comparator, function(){
+ *      return this.parentNode;
+ *   })
+ *
+ *   The <td>'s parent (<tr>) will be sorted instead
+ *   of the <td> itself.
+ */
+jQuery.fn.sortElements = (function(){
+
+    var sort = [].sort;
+
+    return function(comparator, getSortable) {
+
+        getSortable = getSortable || function(){return this;};
+
+        var placements = this.map(function(){
+
+            var sortElement = getSortable.call(this),
+                parentNode = sortElement.parentNode,
+
+                // Since the element itself will change position, we have
+                // to have some way of storing it's original position in
+                // the DOM. The easiest way is to have a 'flag' node:
+                nextSibling = parentNode.insertBefore(
+                    document.createTextNode(''),
+                    sortElement.nextSibling
+                );
+
+            return function() {
+
+                if (parentNode === this) {
+                    throw new Error(
+                        "You can't sort elements if any one is a descendant of another."
+                    );
+                }
+
+                // Insert before flag:
+                parentNode.insertBefore(this, nextSibling);
+                // Remove flag:
+                parentNode.removeChild(nextSibling);
+
+            };
+
+        });
+
+        return sort.call(this, comparator).each(function(i){
+            placements[i].call(getSortable.call(this));
+        });
+
+    };
+
+})();
+
+function compareNumbers(a, b) {
+    var aIsNumeric = $.isNumeric(a);
+    var bIsNumeric = $.isNumeric(a);
+    if (aIsNumeric && bIsNumeric) {
+        return a - b;
+    }
+
+    // Compare non-number strings alphabetically
+    if (! aIsNumeric && ! bIsNumeric) {
+        return (a > b) ? 1 : -1;
+    }
+
+    // Place numeric values before non-numeric ones
+    if (aIsNumeric && ! bIsNumeric) {
+        return 1;
+    }
+    return -1;
+}
+
 var adminReport = {
     init: function () {
         $('#report button.survey-toggler').click(function (event) {
@@ -849,6 +938,8 @@ var adminReport = {
             colspan = table.hasClass('organizations-expanded') ? 12 : 1;
             table.find('.survey-group-header th[data-survey-type=organizations]').attr('colspan', colspan);
         });
+
+        $('#report').stupidtable();
     }
 };
 
