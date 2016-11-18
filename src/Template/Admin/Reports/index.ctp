@@ -112,7 +112,8 @@
     </h2>
     <p>
         The admin report can be viewed in your browser below or downloaded as a spreadsheet. Below, click on each survey
-        type to expand and see more details.
+        type to expand and see more details, and click on the notes icon
+        (<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>) to view notes related to a community.
         <br />
         <?= $this->Html->link(
             $icon . ' Download Admin Report',
@@ -172,10 +173,15 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($report as $community): ?>
+            <?php foreach ($report as $communityId => $community): ?>
                 <tr>
                     <td>
                         <?= $community['name'] ?>
+                        <?php if ($community['notes']): ?>
+                            <button type="button" class="btn btn-link notes" data-toggle="modal" data-target="#notes-modal" title="View notes" data-community-id="<?= $communityId ?>" data-community-name="<?= $community['name'] ?>">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                            </button>
+                        <?php endif; ?>
                         <br />
                         <span class="area-details">
                             <?= $community['parentArea'] ?>
@@ -250,7 +256,22 @@
     </table>
 </section>
 
+<?php $this->append('top-html'); ?>
+    <div class="modal fade" id="notes-modal" tabindex="-1" role="dialog" aria-labelledby="notes-modal-label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="notes-modal-label">Modal title</h4>
+                </div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+<?php $this->end(); ?>
+
 <?php $this->Html->script('stupidtable.min', ['block' => 'scriptBottom']); ?>
 <?php $this->append('buffered'); ?>
+    adminReport.notes = <?= json_encode($notes) ?>;
     adminReport.init();
 <?php $this->end(); ?>

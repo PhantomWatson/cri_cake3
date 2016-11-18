@@ -16,8 +16,16 @@ class ReportsController extends AppController
     {
         $surveysTable = TableRegistry::get('Surveys');
         $reports = new Reports();
+        $report = $reports->getReport();
+        $notes = [];
+        foreach ($report as $communityId => $community) {
+            if ($community['notes']) {
+                $notes[$communityId] = nl2br($community['notes']);
+            }
+        }
         $this->set([
-            'report' => $reports->getReport(),
+            'notes' => $notes,
+            'report' => $report,
             'sectors' => $surveysTable->getSectors(),
             'titleForLayout' => 'CRI Reports'
         ]);

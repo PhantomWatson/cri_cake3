@@ -15,7 +15,7 @@ class Reports
         $communitiesTable = TableRegistry::get('Communities');
         $communities = $communitiesTable->find('all')
             ->select([
-                'id', 'name', 'score'
+                'id', 'name', 'score', 'notes'
             ])
             ->where(['dummy' => 0])
             ->contain([
@@ -55,7 +55,8 @@ class Reports
                     'a' => 'No',
                     'b' => 'No',
                     'c' => 'No'
-                ]
+                ],
+                'notes' => $community->notes
             ];
 
             // Collect information about survey responses and alignment

@@ -922,6 +922,8 @@ function compareNumbers(a, b) {
 }
 
 var adminReport = {
+    notes: [],
+
     init: function () {
         $('#report button.survey-toggler').click(function (event) {
             event.preventDefault();
@@ -940,6 +942,15 @@ var adminReport = {
         });
 
         $('#report').stupidtable();
+
+        $('#notes-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var communityId = button.data('community-id');
+            var note = adminReport.notes[communityId];
+            var communityName = button.data('community-name');
+            $(this).find('.modal-title').html(communityName + ' Notes');
+            $(this).find('.modal-body').html(note);
+        });
     }
 };
 
