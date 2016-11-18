@@ -113,5 +113,5 @@
         community_id: <?= isset($communityId) ? $communityId : 'null' ?>,
         areaTypes: <?= json_encode($areaTypes) ?>
     });
-    formProtector.protect('CommunityAdminEditForm');
+    formProtector.protect('CommunityAdminEditForm', {});
 <?php $this->end();
