@@ -358,6 +358,17 @@
                                 </li>
                                 <li>
                                     <?= $this->Html->link(
+                                        '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Notes',
+                                        [
+                                            'prefix' => 'admin',
+                                            'action' => 'notes',
+                                            $community->id
+                                        ],
+                                        ['escape' => false]
+                                    ) ?>
+                                </li>
+                                <li>
+                                    <?= $this->Html->link(
                                         '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit Community',
                                         [
                                             'prefix' => 'admin',

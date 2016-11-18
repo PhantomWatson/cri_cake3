@@ -562,4 +562,25 @@ class CommunitiesController extends AppController
             'titleForLayout' => 'Community Presentations'
         ]);
     }
+
+    public function notes($communityId)
+    {
+        $community = $this->Communities->get($communityId);
+        if ($this->request->is(['post', 'put'])) {
+            $community = $this->Communities->patchEntity($community, $this->request->data());
+            if ($community->errors()) {
+                $this->Flash->error('There was an error updating this community\'s notes');
+            } else {
+                if ($this->Communities->save($community)) {
+                    $this->Flash->success('Notes updated');
+                }
+            }
+        }
+
+        $this->prepareAdminHeader();
+        $this->set([
+            'community' => $community,
+            'titleForLayout' => $community->name . ' Notes'
+        ]);
+    }
 }
