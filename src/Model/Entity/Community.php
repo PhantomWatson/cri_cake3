@@ -32,7 +32,8 @@ class Community extends Entity
         'organization_survey' => true,
         'presentation_a' => true,
         'presentation_b' => true,
-        'presentation_c' => true
+        'presentation_c' => true,
+        'notes' => true
     ];
 
     /**
