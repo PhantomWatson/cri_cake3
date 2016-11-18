@@ -199,17 +199,24 @@ class Reports
             }
             $surveyColumnHeaders[$surveyType][] = 'Status';
         }
-        $generalColCount = count($columnTitles);
+        $afterSurveysColTitles = ['Notes'];
+        $beforeSurveysColCount = count($columnTitles);
         $officialsColCount = count($surveyColumnHeaders['officials']);
         $orgsColCount = count($surveyColumnHeaders['organizations']);
+        $afterSurveysColCount = count($afterSurveysColTitles);
+        $columnTitles = array_merge($columnTitles, $surveyColumnHeaders['officials']);
+        $columnTitles = array_merge($columnTitles, $surveyColumnHeaders['organizations']);
+        $columnTitles = array_merge($columnTitles, $afterSurveysColTitles);
 
         // Get column letters used for determining ranges to apply styles to
-        $totalColCount = $generalColCount + $officialsColCount + $orgsColCount;
+        $totalColCount = $beforeSurveysColCount + $officialsColCount + $orgsColCount + $afterSurveysColCount;
         $lastCol = $this->getColumnKey($totalColCount - 1);
-        $lastGeneralCol = $this->getColumnKey($generalColCount - 1);
-        $firstOrgSurveyCol = $this->getColumnKey($generalColCount + $officialsColCount);
-        $firstOfficialsSurveyCol = $this->getColumnKey($generalColCount);
-        $lastOfficialsSurveyCol = $this->getColumnKey($generalColCount + $officialsColCount - 1);
+        $lastGeneralCol = $this->getColumnKey($beforeSurveysColCount - 1);
+        $firstOfficialsSurveyCol = $this->getColumnKey($beforeSurveysColCount);
+        $lastOfficialsSurveyCol = $this->getColumnKey($beforeSurveysColCount + $officialsColCount - 1);
+        $firstOrgSurveyCol = $this->getColumnKey($beforeSurveysColCount + $officialsColCount);
+        $lastOrgSurveyCol = $this->getColumnKey($beforeSurveysColCount + $officialsColCount + $orgsColCount - 1);
+        $firstColAfterSurveys = $this->getColumnKey($beforeSurveysColCount + $officialsColCount + $orgsColCount);
 
         // Write title
         $currentRow = 1;
@@ -229,8 +236,8 @@ class Reports
         $currentRow++;
         $objPHPExcel
             ->getActiveSheet()
-            ->setCellValueByColumnAndRow($generalColCount, $currentRow, 'Community Leadership')
-            ->setCellValueByColumnAndRow($generalColCount + $officialsColCount, $currentRow, 'Community Organizations');
+            ->setCellValueByColumnAndRow($beforeSurveysColCount, $currentRow, 'Community Leadership')
+            ->setCellValueByColumnAndRow($beforeSurveysColCount + $officialsColCount, $currentRow, 'Community Organizations');
 
         // Style officials-survey grouping header
         $groupingSpan = "{$firstOfficialsSurveyCol}{$currentRow}:{$lastOfficialsSurveyCol}{$currentRow}";
@@ -246,7 +253,7 @@ class Reports
             ]);
 
         // Style organizations-survey grouping header
-        $groupingSpan = "{$firstOrgSurveyCol}{$currentRow}:{$lastCol}{$currentRow}";
+        $groupingSpan = "{$firstOrgSurveyCol}{$currentRow}:{$lastOrgSurveyCol}{$currentRow}";
         $objPHPExcel
             ->getActiveSheet()
             ->mergeCells($groupingSpan)
@@ -259,7 +266,7 @@ class Reports
         if ($version == 'admin') {
             // Write "internal alignment" grouping headers
             $currentRow++;
-            $firstIntAlignmentCol = $generalColCount + $intAlignmentColOffset;
+            $firstIntAlignmentCol = $beforeSurveysColCount + $intAlignmentColOffset;
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($firstIntAlignmentCol, $currentRow, 'Internal Alignment');
             $secondIntAlignmentCol = $firstIntAlignmentCol + $officialsColCount;
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($secondIntAlignmentCol, $currentRow, 'Internal Alignment');
@@ -286,7 +293,7 @@ class Reports
             $cellsForRightBorder = [
                 $lastGeneralCol.$currentRow,
                 $lastOfficialsSurveyCol.$currentRow,
-                $lastCol.$currentRow
+                $lastOrgSurveyCol.$currentRow
             ];
             foreach ($cellsForRightBorder as $cell) {
                 $objPHPExcel->getActiveSheet()
@@ -296,7 +303,7 @@ class Reports
                     ]);
             }
             $spansForBottomBorder = [];
-            $offset = $generalColCount + $intAlignmentColOffset;
+            $offset = $beforeSurveysColCount + $intAlignmentColOffset;
             $spansForBottomBorder[] =
                 "{$firstOfficialsSurveyCol}{$currentRow}:" .
                 $this->getColumnKey($offset - 1) . $currentRow;
@@ -317,8 +324,6 @@ class Reports
 
         // Write column titles
         $currentRow++;
-        $columnTitles = array_merge($columnTitles, $surveyColumnHeaders['officials']);
-        $columnTitles = array_merge($columnTitles, $surveyColumnHeaders['organizations']);
         foreach ($columnTitles as $col => $colTitle) {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $currentRow, $colTitle);
         }
@@ -342,9 +347,14 @@ class Reports
                 'borders' => ['left' => $border, 'right' => $border]
             ]);
         $objPHPExcel->getActiveSheet()
-            ->getStyle("{$firstOrgSurveyCol}{$currentRow}:{$lastCol}{$currentRow}")
+            ->getStyle("{$firstOrgSurveyCol}{$currentRow}:{$lastOrgSurveyCol}{$currentRow}")
             ->applyFromArray([
                 'borders' => ['left' => $border, 'right' => $border]
+            ]);
+        $objPHPExcel->getActiveSheet()
+            ->getStyle("{$firstColAfterSurveys}{$currentRow}:{$lastCol}{$currentRow}")
+            ->applyFromArray([
+                'borders' => ['right' => $border, 'top' => $border]
             ]);
 
         // Write data
@@ -378,6 +388,7 @@ class Reports
                 }
                 $cells[] = $survey['status'];
             }
+            $cells[] = $community['notes'];
 
             // Write values to PHPExcel object
             $currentRow++;
@@ -399,7 +410,13 @@ class Reports
 
         // Style data cells
         $objPHPExcel->getActiveSheet()
-            ->getStyle("A{$firstDataRow}:{$lastCol}{$currentRow}")
+            ->getStyle("A{$firstDataRow}:{$lastOrgSurveyCol}{$currentRow}")
+            ->applyFromArray([
+                'alignment' => ['horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT],
+                'borders' => ['outline' => $border]
+            ]);
+        $objPHPExcel->getActiveSheet()
+            ->getStyle("{$firstColAfterSurveys}{$firstDataRow}:{$lastCol}{$currentRow}")
             ->applyFromArray([
                 'alignment' => ['horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT],
                 'borders' => ['outline' => $border]
@@ -415,11 +432,15 @@ class Reports
                 'borders' => ['left' => $border]
             ]);
 
-        // Set the width of all columns to fit their content
-        for ($n = 0; $n < $totalColCount; $n++) {
+        // Set the width of all columns (except the last) to fit their content
+        for ($n = 0; $n < $totalColCount - 1; $n++) {
             $colLetter = $this->getColumnKey($n);
             $objPHPExcel->getActiveSheet()->getColumnDimension($colLetter)->setAutoSize(true);
         }
+
+        // Set the width of the last column (notes) to a fixed width
+        $colLetter = $this->getColumnKey($totalColCount - 1);
+        $objPHPExcel->getActiveSheet()->getColumnDimension($colLetter)->setWidth(30);
 
         return $objPHPExcel;
     }
