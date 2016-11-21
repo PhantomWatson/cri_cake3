@@ -275,4 +275,31 @@ class SurveysController extends AppController
         $this->prepareAdminHeader();
         $this->render('..'.DS.'..'.DS.'Client'.DS.'Surveys'.DS.'remind');
     }
+
+    public function activate($surveyId)
+    {
+        $communitiesTable = TableRegistry::get('Communities');
+        $survey = $this->Surveys->get($surveyId);
+        $currentlyActive = $survey->active;
+        $community = $communitiesTable->get($survey->community_id);
+        if ($this->request->is('put')) {
+            $survey = $this->Surveys->patchEntity($survey, $this->request->data());
+            if ($survey->errors()) {
+                $this->Flash->error('There was an error updating the selected questionnaire');
+            } elseif ($this->Surveys->save($survey)) {
+                $currentlyActive = $this->request->data('active');
+                $msg = 'Questionnaire ' . ($this->request->data('active') ? 'activated' : 'deactivated');
+                $this->Flash->success($msg);
+            } else {
+                $this->Flash->error('There was an error updating the selected questionnaire');
+            }
+        }
+        $this->prepareAdminHeader();
+        $this->set([
+            'community' => $community,
+            'currentlyActive' => $currentlyActive,
+            'survey' => $survey,
+            'titleForLayout' => $community->name . ': ' . ucwords($survey->type) . 's Questionnaire Activation'
+        ]);
+    }
 }

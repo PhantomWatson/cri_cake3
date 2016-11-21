@@ -232,6 +232,26 @@
                                             ) ?>
                                         </li>
                                         <li>
+                                            <?php
+                                                $active = $community->{$surveyType}['active'];
+                                                $msg =
+                                                    '<span class="glyphicon glyphicon-' .
+                                                    ($active ? 'remove-circle' : 'ok-circle') .
+                                                    '" aria-hidden="true"></span> ' .
+                                                    ($active ? 'Deactivate' : 'Activate');
+                                                echo $this->Html->link(
+                                                    $msg,
+                                                    [
+                                                        'prefix' => 'admin',
+                                                        'controller' => 'Surveys',
+                                                        'action' => 'activate',
+                                                        $community->{$surveyType}['id']
+                                                    ],
+                                                    ['escape' => false]
+                                                );
+                                            ?>
+                                        </li>
+                                        <li>
                                             <?= $this->Html->link(
                                                 '<span class="glyphicon glyphicon-send" aria-hidden="true"></span> Invitations',
                                                 [

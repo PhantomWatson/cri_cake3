@@ -618,7 +618,8 @@ class CommunitiesTable extends Table
                         'OfficialSurvey.sm_id',
                         'OfficialSurvey.alignment',
                         'OfficialSurvey.alignment_passed',
-                        'OfficialSurvey.respondents_last_modified_date'
+                        'OfficialSurvey.respondents_last_modified_date',
+                        'OfficialSurvey.active'
                     ]);
                 },
                 'OrganizationSurvey' => function ($q) {
@@ -627,7 +628,8 @@ class CommunitiesTable extends Table
                         'OrganizationSurvey.sm_id',
                         'OrganizationSurvey.alignment',
                         'OrganizationSurvey.alignment_passed',
-                        'OrganizationSurvey.respondents_last_modified_date'
+                        'OrganizationSurvey.respondents_last_modified_date',
+                        'OrganizationSurvey.active'
                     ]);
                 },
                 'ParentAreas' => function ($q) {
