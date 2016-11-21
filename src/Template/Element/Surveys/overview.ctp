@@ -12,6 +12,53 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
+                Activate
+            </h3>
+        </div>
+        <div class="panel-body">
+            <p>
+                <?php
+                    $stepForSurvey = ($survey['type'] == 'official') ? 2 : 3;
+                    $currentStep = $community['score'];
+                ?>
+                <?= $community['name'] ?>'s community <?= $survey['type'] ?>s questionnaire is currently
+                <?php if ($currentlyActive): ?>
+                    <span class="text-success">active</span>
+                    <?php if ($currentStep < $stepForSurvey): ?>
+                        even though the community has not yet advanced to Step <?= $stepForSurvey ?>.
+                    <?php elseif ($currentStep == $stepForSurvey): ?>
+                        and should remain active until this community is advanced to Step <?= $stepForSurvey + 1 ?>.
+                    <?php else: ?>
+                        and is <strong>ready to be deactivated</strong>.
+                    <?php endif; ?>
+                <?php else: ?>
+                    <span class="text-danger">inactive</span>
+                    <?php if ($currentStep < $stepForSurvey): ?>
+                        and should be activated when the community advances to Step <?= $stepForSurvey ?>.
+                    <?php elseif ($currentStep == $stepForSurvey): ?>
+                        and is <strong>ready to be activated</strong>.
+                    <?php else: ?>
+                        because it has been finalized.
+                    <?php endif; ?>
+                <?php endif; ?>
+            </p>
+
+            <?= $this->Html->link(
+                $currentlyActive ? 'Deactivate' : 'Activate',
+                [
+                    'prefix' => 'admin',
+                    'controller' => 'Surveys',
+                    'action' => 'activate',
+                    $survey['id']
+                ],
+                ['class' => 'btn btn-default']
+            ) ?>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
                 Invite
             </h3>
         </div>

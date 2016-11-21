@@ -62,6 +62,7 @@ class SurveysController extends AppController
         $this->prepareAdminHeader();
         $this->set([
             'community' => $community,
+            'currentlyActive' => $survey->active,
             'survey' => $survey,
             'titleForLayout' => $community->name . ': ' . ucwords($surveyType) . 's Questionnaire Overview'
         ]);
