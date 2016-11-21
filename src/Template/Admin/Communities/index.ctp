@@ -171,12 +171,13 @@
                                     <?php
                                         $currentStep = floor($community->score);
                                         $stepForSurvey = $surveyType == 'official_survey' ? 2 : 3;
+                                        $active = $community->{$surveyType}['active'];
                                         if ($currentStep == $stepForSurvey) {
-                                            $label = 'In progress';
+                                            $label = $active ? 'In progress' : 'Being finalized';
                                         } elseif ($currentStep < $stepForSurvey) {
-                                            $label = 'Ready';
+                                            $label = $active ? 'Activated early' : 'Ready';
                                         } else {
-                                            $label = 'Complete';
+                                            $label = $active ? 'Ready to deactivate' : 'Complete';
                                         }
                                     ?>
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -233,14 +234,13 @@
                                         </li>
                                         <li>
                                             <?php
-                                                $active = $community->{$surveyType}['active'];
-                                                $msg =
+                                                $label =
                                                     '<span class="glyphicon glyphicon-' .
                                                     ($active ? 'remove-circle' : 'ok-circle') .
                                                     '" aria-hidden="true"></span> ' .
                                                     ($active ? 'Deactivate' : 'Activate');
                                                 echo $this->Html->link(
-                                                    $msg,
+                                                    $label,
                                                     [
                                                         'prefix' => 'admin',
                                                         'controller' => 'Surveys',
