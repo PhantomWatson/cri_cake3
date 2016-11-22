@@ -148,14 +148,20 @@
                     SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>
                     while this community is in stage <?= $stageForAutoImport ?> of CRI,
                     but you can manually import them at any time.
+                <?php elseif ($survey->active): ?>
+                    New responses to this questionnaire are <strong>not</strong> being automatically imported from
+                    SurveyMonkey because this community is not currently in stage <?= $stageForAutoImport ?> of CRI,
+                    but they can be manually imported while the questionnaire is still active.
                 <?php else: ?>
-                    New responses to this questionnaire are <strong>not</strong> being automatically imported from SurveyMonkey because
-                    this community is not currently in stage <?= $stageForAutoImport ?> of CRI.
+                    New responses to this questionnaire are <strong>not</strong> automatically imported and can not
+                    be manually imported while it is inactive.
                 <?php endif; ?>
             </p>
-            <button class="btn btn-default import_button" data-survey-id="<?= $survey['id'] ?>">
-                Import Responses
-            </button>
+            <?php if ($survey->active): ?>
+                <button class="btn btn-default import_button" data-survey-id="<?= $survey['id'] ?>">
+                    Import Responses
+                </button>
+            <?php endif; ?>f
             <?php if ($survey['import_errors']): ?>
                 <?php $errors = unserialize($survey['import_errors']); ?>
                 <div id="import-results" class="alert alert-danger">

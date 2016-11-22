@@ -145,7 +145,7 @@ class SurveysController extends AppController
         /* Determines if this survey is currently being auto-imported
          * (because the community is in an appropriate stage of the CRI process) */
         $stageForAutoImport = $survey->type == 'official' ? 2 : 3;
-        $isAutomaticallyImported = floor($community->score) == $stageForAutoImport;
+        $isAutomaticallyImported = floor($community->score) == $stageForAutoImport && $survey->active;
 
         $autoImportFrequency = $isAutomaticallyImported ? $this->Surveys->getPerSurveyAutoImportFrequency() : '';
 
