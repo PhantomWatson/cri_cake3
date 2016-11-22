@@ -5,6 +5,7 @@ use App\Controller\AppController;
 use App\Mailer\Mailer;
 use App\Model\Entity\Community;
 use Cake\Core\Configure;
+use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
@@ -168,6 +169,10 @@ class SurveysController extends AppController
     public function invite($surveyId = null)
     {
         $survey = $this->Surveys->get($surveyId);
+        if (! $survey->active) {
+            throw new ForbiddenException('New invitations cannot be sent out: Questionnaire is inactive');
+        }
+
         $communityId = $survey->community_id;
         $respondentType = $survey->type;
         $userId = $this->Auth->user('id');

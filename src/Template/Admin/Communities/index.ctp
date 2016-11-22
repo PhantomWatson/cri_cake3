@@ -251,18 +251,20 @@
                                                 );
                                             ?>
                                         </li>
-                                        <li>
-                                            <?= $this->Html->link(
-                                                '<span class="glyphicon glyphicon-send" aria-hidden="true"></span> Invitations',
-                                                [
-                                                    'prefix' => 'admin',
-                                                    'controller' => 'Surveys',
-                                                    'action' => 'invite',
-                                                    $community->{$surveyType}['id']
-                                                ],
-                                                ['escape' => false]
-                                            ) ?>
-                                        </li>
+                                        <?php if ($community->{$surveyType}['active']): ?>
+                                            <li>
+                                                <?= $this->Html->link(
+                                                    '<span class="glyphicon glyphicon-send" aria-hidden="true"></span> Invitations',
+                                                    [
+                                                        'prefix' => 'admin',
+                                                        'controller' => 'Surveys',
+                                                        'action' => 'invite',
+                                                        $community->{$surveyType}['id']
+                                                    ],
+                                                    ['escape' => false]
+                                                ) ?>
+                                            </li>
+                                        <?php endif; ?>
                                         <li>
                                             <?= $this->Html->link(
                                                 '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Reminders',

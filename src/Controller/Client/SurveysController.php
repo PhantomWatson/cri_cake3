@@ -4,6 +4,7 @@ namespace App\Controller\Client;
 use App\Controller\AppController;
 use App\Mailer\Mailer;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
@@ -50,8 +51,11 @@ class SurveysController extends AppController
         $this->Surveys->validateRespondentTypePlural($respondentTypePlural, $communityId);
         $respondentType = str_replace('s', '', $respondentTypePlural);
         $surveyId = $this->Surveys->getSurveyId($communityId, $respondentType);
-        $userId = $this->Auth->user('id');
+        if (! $this->Surveys->surveyIsActive($surveyId)) {
+            throw new ForbiddenException('New invitations cannot be sent out: Questionnaire is inactive');
+        }
 
+        $userId = $this->Auth->user('id');
         if ($this->request->is('post')) {
             $submitMode = $this->request->data('submit_mode');
             if (stripos($submitMode, 'send') !== false) {

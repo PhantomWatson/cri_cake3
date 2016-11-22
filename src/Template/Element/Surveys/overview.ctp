@@ -74,16 +74,18 @@
                         View Invitations
                     </button>
                 <?php endif; ?>
-                <?= $this->Html->link(
-                    'Send Invitations',
-                    [
-                        'prefix' => 'admin',
-                        'controller' => 'Surveys',
-                        'action' => 'invite',
-                        $survey['id']
-                    ],
-                    ['class' => 'btn btn-default']
-                ) ?>
+                <?php if ($survey->active): ?>
+                    <?= $this->Html->link(
+                        'Send Invitations',
+                        [
+                            'prefix' => 'admin',
+                            'controller' => 'Surveys',
+                            'action' => 'invite',
+                            $survey['id']
+                        ],
+                        ['class' => 'btn btn-default']
+                    ) ?>
+                <?php endif; ?>
                 <?php if ($invitedRespondentCount > 0): ?>
                     <?= $this->Html->link(
                         'Reminders',
@@ -146,11 +148,11 @@
                 <?php if ($isAutomaticallyImported): ?>
                     Responses are automatically imported from
                     SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>
-                    while this community is in stage <?= $stageForAutoImport ?> of CRI,
+                    while this community is in Stage <?= $stageForAutoImport ?> of CRI,
                     but you can manually import them at any time.
                 <?php elseif ($survey->active): ?>
                     New responses to this questionnaire are <strong>not</strong> being automatically imported from
-                    SurveyMonkey because this community is not currently in stage <?= $stageForAutoImport ?> of CRI,
+                    SurveyMonkey because this community is not currently in Stage <?= $stageForAutoImport ?> of CRI,
                     but they can be manually imported while the questionnaire is still active.
                 <?php else: ?>
                     New responses to this questionnaire are <strong>not</strong> automatically imported and can not
@@ -161,7 +163,7 @@
                 <button class="btn btn-default import_button" data-survey-id="<?= $survey['id'] ?>">
                     Import Responses
                 </button>
-            <?php endif; ?>f
+            <?php endif; ?>
             <?php if ($survey['import_errors']): ?>
                 <?php $errors = unserialize($survey['import_errors']); ?>
                 <div id="import-results" class="alert alert-danger">

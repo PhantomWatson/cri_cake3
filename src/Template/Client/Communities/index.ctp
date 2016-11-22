@@ -119,7 +119,7 @@
                     <?= $criteria[2]['invitations_sent'][0] ?>
                 </td>
                 <td>
-                    <?php if ($leadershipSurveyCreated): ?>
+                    <?php if ($leadershipSurveyCreated && $surveyIsActive['official']): ?>
                         <?= $this->Html->link(
                             'Send '.($criteria[2]['invitations_sent'][1] ? 'More ' : '').'Invitations',
                             [
@@ -350,7 +350,7 @@
                         <?php endif; ?>
                     </td>
                     <td>
-                        <?php if ($organizationSurveyOpen): ?>
+                        <?php if ($organizationSurveyOpen && $surveyIsActive['organization']): ?>
                             <?= $this->Html->link(
                                 'Send Invitations',
                                 [
