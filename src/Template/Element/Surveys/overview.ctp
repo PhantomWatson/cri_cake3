@@ -86,7 +86,7 @@
                         ['class' => 'btn btn-default']
                     ) ?>
                 <?php endif; ?>
-                <?php if ($invitedRespondentCount > 0): ?>
+                <?php if ($survey->active && $invitedRespondentCount > 0): ?>
                     <?= $this->Html->link(
                         'Reminders',
                         [

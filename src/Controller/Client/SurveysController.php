@@ -129,6 +129,9 @@ class SurveysController extends AppController
         $surveysTable = TableRegistry::get('Surveys');
         $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
         $survey = $surveysTable->get($surveyId);
+        if (! $survey->active) {
+            throw new ForbiddenException('Reminders cannot currently be sent out: Questionnaire is inactive');
+        }
 
         if ($this->request->is('post')) {
             $Mailer = new Mailer();

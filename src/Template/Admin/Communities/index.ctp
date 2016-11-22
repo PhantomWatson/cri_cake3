@@ -264,19 +264,19 @@
                                                     ['escape' => false]
                                                 ) ?>
                                             </li>
+                                            <li>
+                                                <?= $this->Html->link(
+                                                    '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Reminders',
+                                                    [
+                                                        'prefix' => 'admin',
+                                                        'controller' => 'Surveys',
+                                                        'action' => 'remind',
+                                                        $community->{$surveyType}['id']
+                                                    ],
+                                                    ['escape' => false]
+                                                ) ?>
+                                            </li>
                                         <?php endif; ?>
-                                        <li>
-                                            <?= $this->Html->link(
-                                                '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Reminders',
-                                                [
-                                                    'prefix' => 'admin',
-                                                    'controller' => 'Surveys',
-                                                    'action' => 'remind',
-                                                    $community->{$surveyType}['id']
-                                                ],
-                                                ['escape' => false]
-                                            ) ?>
-                                        </li>
                                         <li>
                                             <?= $this->Html->link(
                                                 '<span class="glyphicon glyphicon-scale" aria-hidden="true"></span> Alignment',
