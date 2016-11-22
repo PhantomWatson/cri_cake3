@@ -140,6 +140,11 @@
                     ?>
                 </table>
             </div>
+            <?php if ($warning): ?>
+                <p class="alert alert-warning">
+                    <?= $warning ?>
+                </p>
+            <?php endif; ?>
         </div>
     </div>
     <?= $this->Form->end() ?>

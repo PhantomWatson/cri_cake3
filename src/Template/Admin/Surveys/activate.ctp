@@ -10,6 +10,12 @@
     'surveyId' => null
 ]) ?>
 
+<?php if ($warning): ?>
+    <p class="alert alert-warning">
+        <?= $warning ?>
+    </p>
+<?php endif; ?>
+
 <p>
     Questionnaires should be activated when communities enter the appropriate stage and deactivated as soon as
     response collection is considered complete.

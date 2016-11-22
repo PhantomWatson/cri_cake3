@@ -8,6 +8,7 @@ use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 
 class SurveysController extends AppController
 {
@@ -124,12 +125,36 @@ class SurveysController extends AppController
         $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($communityId);
 
+        // Display warning about activating an org survey before deactivating an officials survey
+        $warning = null;
+        if ($surveyType == 'organization') {
+            $officialsSurvey = $this->Surveys->find('all')
+                ->select(['id', 'active'])
+                ->where([
+                    'community_id' => $communityId,
+                    'type' => 'official'
+                ])
+                ->first();
+            if ($officialsSurvey && $officialsSurvey->active) {
+                $url = Router::url([
+                    'prefix' => 'admin',
+                    'controller' => 'Surveys',
+                    'action' => 'activate',
+                    $officialsSurvey->id
+                ]);
+                $warning =
+                    'This community\'s officials questionnaire is still active. ' .
+                    'It is recommended that <a href="' . $url . '">that questionnaire be deactivated</a> ' .
+                    'before this one is activated.';
+            }
+        }
         $this->prepareAdminHeader();
         $this->set([
             'community' => $community,
             'qnaIdFields' => $this->Surveys->getQnaIdFieldNames(),
             'survey' => $survey,
-            'titleForLayout' => $community->name . ': ' . ucwords($surveyType) . 's Questionnaire Link'
+            'titleForLayout' => $community->name . ': ' . ucwords($surveyType) . 's Questionnaire Link',
+            'warning' => $warning
         ]);
     }
 
@@ -292,6 +317,7 @@ class SurveysController extends AppController
         $survey = $this->Surveys->get($surveyId);
         $currentlyActive = $survey->active;
         $community = $communitiesTable->get($survey->community_id);
+        $warning = null;
         if ($this->request->is('put')) {
             $survey = $this->Surveys->patchEntity($survey, $this->request->data());
             if ($survey->errors()) {
@@ -303,13 +329,37 @@ class SurveysController extends AppController
             } else {
                 $this->Flash->error('There was an error updating the selected questionnaire');
             }
+
+        // Display warning about activating an org survey before deactivating an officials survey
+        } elseif (! $currentlyActive && $survey->type == 'organization') {
+            $officialsSurvey = $this->Surveys->find('all')
+                ->select(['id', 'active'])
+                ->where([
+                    'community_id' => $community->id,
+                    'type' => 'official'
+                ])
+                ->first();
+            if ($officialsSurvey && $officialsSurvey->active) {
+                $url = Router::url([
+                    'prefix' => 'admin',
+                    'controller' => 'Surveys',
+                    'action' => 'activate',
+                    $officialsSurvey->id
+                ]);
+                $warning =
+                    'This community\'s officials questionnaire is still active. ' .
+                    'It is recommended that <a href="' . $url . '">that questionnaire be deactivated</a> ' .
+                    'before this one is activated.';
+            }
         }
+
         $this->prepareAdminHeader();
         $this->set([
             'community' => $community,
             'currentlyActive' => $currentlyActive,
             'survey' => $survey,
-            'titleForLayout' => $community->name . ': ' . ucwords($survey->type) . 's Questionnaire Activation'
+            'titleForLayout' => $community->name . ': ' . ucwords($survey->type) . 's Questionnaire Activation',
+            'warning' => $warning
         ]);
     }
 }
