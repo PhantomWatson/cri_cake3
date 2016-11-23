@@ -39,5 +39,6 @@ class Survey extends Entity
         'sm' => true,
         'respondents' => true,
         'responses' => true,
+        'active' => true
     ];
 }

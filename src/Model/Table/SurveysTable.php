@@ -730,6 +730,7 @@ class SurveysTable extends Table
                 function ($exp, $q) {
                     return $exp->isNotNull('Surveys.sm_id');
                 },
+                'active' => 1,
                 'OR' => [
                     [
                         'Surveys.type' => 'official',
@@ -847,5 +848,20 @@ class SurveysTable extends Table
         }
         $errors = $results->first()->import_errors;
         return $errors ? unserialize($errors) : null;
+    }
+
+    /**
+     * Returns true if a survey exists and is active, false otherwise
+     *
+     * @param int $surveyId Survey ID
+     * @return bool
+     */
+    public function surveyIsActive($surveyId)
+    {
+        $results = $this->find('all')
+            ->select(['active'])
+            ->where(['id' => $surveyId])
+            ->limit(1);
+        return $results->isEmpty() ? false : (bool) $results->first()->active;
     }
 }

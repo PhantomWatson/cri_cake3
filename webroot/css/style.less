@@ -472,6 +472,9 @@ div.all_communities {
             margin: 5px 0;
         }
     }
+    .submit {
+        display: inline;
+    }
 }
 
 #invitation_suggestions {
@@ -504,6 +507,18 @@ div.all_communities {
 
 #survey-invitation-save-status {
     margin-left: 10px;
+}
+
+section.invitation-form {
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+
+    &:last-of-type {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
 }
 
 table.respondents {
@@ -1080,6 +1095,12 @@ ul.ui-autocomplete {
     display: none;
 }
 #toggle-upload {
+    border: none;
+    color: #0099BB;
+    font-size: inherit;
+    padding: 0;
+    vertical-align: inherit;
+
     &.disabled {
         .glyphicon {
             display: none;
@@ -1274,6 +1295,22 @@ ul.ui-autocomplete {
         .int-alignment-right-edge {
             border-right: 1px solid @table-border-color;
         }
+        th[data-sort]:not([data-sort=""]) {
+            cursor: pointer;
+            white-space: nowrap;
+
+            &:after {
+                font-family: "Glyphicons Halflings";
+                padding-left: 5px;
+                vertical-align: middle;
+            }
+            &.sorting-asc:after {
+                content: "\e253";
+            }
+            &.sorting-desc:after {
+                content: "\e252";
+            }
+        }
     }
     tbody {
         td:first-child {
@@ -1292,6 +1329,12 @@ ul.ui-autocomplete {
             }
         }
     }
+    button.notes {
+        border: 0;
+        font-size: 100%;
+        line-height: 100%;
+        padding: 0 0 0 10px;
+    }
 }
 html.report-layout,
 body.report-layout {
@@ -1300,4 +1343,23 @@ body.report-layout {
 }
 body.report-layout {
     padding: 30px;
+}
+#presentations-form {
+    h2 {
+        margin: 0;
+    }
+    label {
+        display: block;
+    }
+    input[type=radio] {
+        margin-right: 5px;
+    }
+    div.date {
+        display: none;
+    }
+    section.show-date {
+        div.date {
+            display: block;
+        }
+    }
 }

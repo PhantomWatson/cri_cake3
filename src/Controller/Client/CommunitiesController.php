@@ -82,7 +82,11 @@ class CommunitiesController extends AppController
             'officialResponsesChecked' => $surveysTable->getChecked($officialSurveyId),
             'organizationResponsesChecked' => $surveysTable->getChecked($organizationSurveyId),
             'fastTrack' => $community->fast_track,
-            'autoImportFrequency' => $surveysTable->getPerSurveyAutoImportFrequency()
+            'autoImportFrequency' => $surveysTable->getPerSurveyAutoImportFrequency(),
+            'surveyIsActive' => [
+                'official' => $surveysTable->surveyIsActive($officialSurveyId),
+                'organization' => $surveysTable->surveyIsActive($organizationSurveyId)
+            ]
         ]);
         $this->set(compact(
             'criteria',

@@ -119,7 +119,7 @@
                     <?= $criteria[2]['invitations_sent'][0] ?>
                 </td>
                 <td>
-                    <?php if ($leadershipSurveyCreated): ?>
+                    <?php if ($leadershipSurveyCreated && $surveyIsActive['official']): ?>
                         <?= $this->Html->link(
                             'Send '.($criteria[2]['invitations_sent'][1] ? 'More ' : '').'Invitations',
                             [
@@ -140,20 +140,20 @@
                 <td>
                     <p>
                         <?= $criteria[2]['responses_received'][0] ?>
-                        <button class="btn btn-link importing_note_toggler">
-                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                        </button>
+                        <?php if ($score == 2 && $surveyIsActive['official']): ?>
+                            <button class="btn btn-link importing_note_toggler">
+                                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                            </button>
+                        <?php endif; ?>
                     </p>
 
-                    <p class="importing_note" style="display: none;">
-                        <?php if ($score < 3): ?>
+                    <?php if ($score == 2 && $surveyIsActive['official']): ?>
+                        <p class="importing_note" style="display: none;">
                             Responses are automatically imported from
                             SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>,
                             but you can manually import them at any time.
-                        <?php else: ?>
-                            New responses to this questionnaire are no longer being automatically imported from SurveyMonkey.
-                        <?php endif; ?>
-                    </p>
+                        </p>
+                    <?php endif; ?>
 
                     <?php if ($officialResponsesChecked): ?>
                         <div class="last_import alert alert-info">
@@ -178,23 +178,25 @@
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?php if ($leadershipSurveyCreated): ?>
+                    <?php if ($surveyIsActive['official']): ?>
                         <button class="btn btn-default btn-block import_button" data-survey-id="<?= $officialSurveyId ?>">
                             Import Responses
                         </button>
+                    <?php endif; ?>
+                    <?php if ($surveyIsActive['official'] && $criteria[2]['responses_received'][1]): ?>
                         <br />
-                        <?php if ($criteria[2]['responses_received'][1]): ?>
-                            <?= $this->Html->link(
-                                'Review Responses',
-                                [
-                                    'prefix' => 'client',
-                                    'controller' => 'Respondents',
-                                    'action' => 'index',
-                                    'official'
-                                ],
-                                ['class' => 'btn btn-default']
-                            ) ?>
-                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($criteria[2]['responses_received'][1]): ?>
+                        <?= $this->Html->link(
+                            'Review Responses',
+                            [
+                                'prefix' => 'client',
+                                'controller' => 'Respondents',
+                                'action' => 'index',
+                                'official'
+                            ],
+                            ['class' => 'btn btn-default']
+                        ) ?>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -206,16 +208,18 @@
                     <?= $criteria[2]['response_threshhold_reached'][0] ?>
                 </td>
                 <td>
-                    <?= $this->Html->link(
-                        'Reminders',
-                        [
-                            'prefix' => 'client',
-                            'controller' => 'Surveys',
-                            'action' => 'remind',
-                            'official'
-                        ],
-                        ['class' => 'btn btn-default']
-                    ) ?>
+                    <?php if ($surveyIsActive['official']): ?>
+                        <?= $this->Html->link(
+                            'Reminders',
+                            [
+                                'prefix' => 'client',
+                                'controller' => 'Surveys',
+                                'action' => 'remind',
+                                'official'
+                            ],
+                            ['class' => 'btn btn-default']
+                        ) ?>
+                    <?php endif; ?>
                 </td>
             </tr>
 
@@ -348,7 +352,7 @@
                         <?php endif; ?>
                     </td>
                     <td>
-                        <?php if ($organizationSurveyOpen): ?>
+                        <?php if ($organizationSurveyOpen && $surveyIsActive['organization']): ?>
                             <?= $this->Html->link(
                                 'Send Invitations',
                                 [
@@ -369,20 +373,20 @@
                     <td>
                         <p>
                             <?= $criteria[3]['responses_received'][0] ?>
-                            <button class="btn btn-link importing_note_toggler">
-                                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                            </button>
+                            <?php if ($score == 3 && $surveyIsActive['organization']): ?>
+                                <button class="btn btn-link importing_note_toggler">
+                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                </button>
+                            <?php endif; ?>
                         </p>
 
-                        <p class="importing_note" style="display: none;">
-                            <?php if ($score < 4): ?>
+                        <?php if ($score == 3 && $surveyIsActive['organization']): ?>
+                            <p class="importing_note" style="display: none;">
                                 Responses are automatically imported from
                                 SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>,
                                 but you can manually import them at any time.
-                            <?php else: ?>
-                                New responses to this questionnaire are no longer being automatically imported from SurveyMonkey.
-                            <?php endif; ?>
-                        </p>
+                            </p>
+                        <?php endif; ?>
 
                         <?php if ($organizationResponsesChecked): ?>
                             <div class="last_import alert alert-info">
@@ -407,23 +411,25 @@
                         <?php endif; ?>
                     </td>
                     <td>
-                        <?php if ($criteria[3]['survey_created'][1]): ?>
+                        <?php if ($surveyIsActive['organization']): ?>
                             <button class="btn btn-default import_button" data-survey-id="<?= $organizationSurveyId ?>">
                                 Import Responses
                             </button>
+                        <?php endif; ?>
+                        <?php if ($surveyIsActive['organization'] && $criteria[3]['responses_received'][1]): ?>
                             <br />
-                            <?php if ($criteria[3]['responses_received'][1]): ?>
-                                <?= $this->Html->link(
-                                    'Review Responses',
-                                    [
-                                        'prefix' => 'client',
-                                        'controller' => 'Respondents',
-                                        'action' => 'index',
-                                        'organization'
-                                    ],
-                                    ['class' => 'btn btn-default']
-                                ) ?>
-                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if ($criteria[3]['responses_received'][1]): ?>
+                            <?= $this->Html->link(
+                                'Review Responses',
+                                [
+                                    'prefix' => 'client',
+                                    'controller' => 'Respondents',
+                                    'action' => 'index',
+                                    'organization'
+                                ],
+                                ['class' => 'btn btn-default']
+                            ) ?>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -509,29 +515,6 @@
                         </button>
                     </th>
                 </tr>
-                <tr>
-                    <td>
-                        <?= glyphicon($criteria[4]['meeting_scheduled'][1]) ?>
-                    </td>
-                    <td>
-                        <?= $criteria[4]['meeting_scheduled'][0] ?>
-                    </td>
-                    <td>
-                    </td>
-                </tr>
-
-                <?php if (isset($criteria[4]['meeting_held'])): ?>
-                    <tr>
-                        <td>
-                            <?= glyphicon($criteria[4]['meeting_held'][1]) ?>
-                        </td>
-                        <td>
-                            <?= $criteria[4]['meeting_held'][0] ?>
-                        </td>
-                        <td>
-                        </td>
-                    </tr>
-                <?php endif; ?>
             </tbody>
         <?php endif; ?>
 

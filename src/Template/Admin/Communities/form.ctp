@@ -69,48 +69,6 @@
 ?>
 <div class="custom_radio">
     <?= $this->Form->input(
-        'meeting_date_set',
-        [
-            'default' => isset($community['town_meeting_date']),
-            'legend' => false,
-            'options' => [
-                0 => 'Has not been scheduled yet',
-                1 => 'Is scheduled for the following date'
-            ],
-            'type' =>  'radio'
-        ]
-    ) ?>
-
-    <div id="meeting_date_fields">
-        <?php
-            if (isset($community['town_meeting_date'])) {
-                $selectedDateSplit = explode('-', $community['town_meeting_date']);
-                $selectedYear = $selectedDateSplit[0];
-                $minYear = min($selectedYear, date('Y'));
-            } else {
-                $minYear = date('Y');
-            }
-            $template = [
-                'dateWidget' => '{{month}}{{day}}{{year}}',
-                'inputContainer' => '<div class="form-group form-inline {{type}}{{required}}">{{content}}</div>',
-                'inputContainerError' => '<div class="form-group {{type}}{{required}} error">{{content}}{{error}}</div>',
-                'select' => '<select name="{{name}}" class="form-control"{{attrs}}>{{content}}</select>'
-            ];
-            $this->Form->templates($template);
-            echo $this->Form->input(
-                'town_meeting_date',
-                [
-                    'label' => false,
-                    'minYear' => $minYear,
-                    'maxYear' => date('Y') + 1
-                ]
-            );
-            $template = require(ROOT.DS.'config'.DS.'bootstrap_form.php');
-            $this->Form->templates($template);
-        ?>
-    </div>
-
-    <?= $this->Form->input(
         'public',
         [
             'escape' => false,
@@ -155,5 +113,5 @@
         community_id: <?= isset($communityId) ? $communityId : 'null' ?>,
         areaTypes: <?= json_encode($areaTypes) ?>
     });
-    formProtector.protect('CommunityAdminEditForm');
+    formProtector.protect('CommunityAdminEditForm', {});
 <?php $this->end();

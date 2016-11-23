@@ -24,6 +24,14 @@ class SurveysController extends AppController
         $this->viewBuilder()->layout('blank');
         $importedCount = 0;
 
+        // Disallow import if survey is inactive
+        $survey = $this->Surveys->get($surveyId);
+        if (! $survey->active) {
+            $this->response->statusCode(403);
+            $this->set('message', 'This questionnaire is currently inactive. New responses cannot be imported.');
+            return $this->render('import');
+        }
+
         // Collect respondents
         $respondentsTable = TableRegistry::get('Respondents');
         list($success, $respondents) = $respondentsTable->getNewFromSurveyMonkey($surveyId);
@@ -45,7 +53,6 @@ class SurveysController extends AppController
         }
 
         // Loop through each response and add to / update records
-        $survey = $this->Surveys->get($surveyId);
         $areasTable = TableRegistry::get('Areas');
         $usersTable = TableRegistry::get('Users');
         $errorMsgs = [];

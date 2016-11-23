@@ -4,6 +4,7 @@ namespace App\Controller\Client;
 use App\Controller\AppController;
 use App\Mailer\Mailer;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
@@ -50,9 +51,39 @@ class SurveysController extends AppController
         $this->Surveys->validateRespondentTypePlural($respondentTypePlural, $communityId);
         $respondentType = str_replace('s', '', $respondentTypePlural);
         $surveyId = $this->Surveys->getSurveyId($communityId, $respondentType);
+        if (! $this->Surveys->surveyIsActive($surveyId)) {
+            throw new ForbiddenException('New invitations cannot be sent out: Questionnaire is inactive');
+        }
 
+        $userId = $this->Auth->user('id');
         if ($this->request->is('post')) {
-            $this->SurveyProcessing->processInvitations($communityId, $respondentType, $surveyId);
+            $submitMode = $this->request->data('submit_mode');
+            if (stripos($submitMode, 'send') !== false) {
+                $this->SurveyProcessing->sendInvitations($communityId, $respondentType, $surveyId);
+                $this->SurveyProcessing->clearSavedInvitations($surveyId, $userId);
+            } elseif (stripos($submitMode, 'save') !== false) {
+                list($saveResult, $msg) = $this->SurveyProcessing->saveInvitations(
+                    $this->request->data('invitees'),
+                    $surveyId,
+                    $userId
+                );
+                if ($saveResult) {
+                    $this->Flash->success($msg);
+                    return $this->redirect([
+                        'prefix' => 'clients',
+                        'controller' => 'Communities',
+                        'action' => 'index'
+                    ]);
+                } else {
+                    $this->Flash->error($msg);
+                }
+            } else {
+                $msg = 'There was an error submitting your form. ';
+                $msg .= 'Please try again or email cri@bsu.edu for assistance.';
+                $this->Flash->error($msg);
+            }
+        } else {
+            $this->request->data['invitees'] = $this->SurveyProcessing->getSavedInvitations($surveyId, $userId);
         }
 
         $respondentsTable = TableRegistry::get('Respondents');
@@ -98,6 +129,9 @@ class SurveysController extends AppController
         $surveysTable = TableRegistry::get('Surveys');
         $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
         $survey = $surveysTable->get($surveyId);
+        if (! $survey->active) {
+            throw new ForbiddenException('Reminders cannot currently be sent out: Questionnaire is inactive');
+        }
 
         if ($this->request->is('post')) {
             $Mailer = new Mailer();

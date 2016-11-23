@@ -33,16 +33,6 @@
             Search
         </button>
 
-        <?= $this->Html->link(
-            '<img src="/data_center/img/icons/document-excel-table.png" alt="Microsoft Excel (.xlsx)" /> Download',
-            ['action' => 'spreadsheet'],
-            [
-                'class' => 'btn btn-default',
-                'escape' => false,
-                'title' => 'Download this page as a Microsoft Excel (.xlsx) file'
-            ]
-        ) ?>
-
         <button class="btn btn-link" id="glossary_toggler">
             Icon Glossary
         </button>
@@ -181,12 +171,13 @@
                                     <?php
                                         $currentStep = floor($community->score);
                                         $stepForSurvey = $surveyType == 'official_survey' ? 2 : 3;
+                                        $active = $community->{$surveyType}['active'];
                                         if ($currentStep == $stepForSurvey) {
-                                            $label = 'In progress';
+                                            $label = $active ? 'In progress' : 'Being finalized';
                                         } elseif ($currentStep < $stepForSurvey) {
-                                            $label = 'Ready';
+                                            $label = $active ? 'Activated early' : 'Ready';
                                         } else {
-                                            $label = 'Complete';
+                                            $label = $active ? 'Ready to deactivate' : 'Complete';
                                         }
                                     ?>
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -242,29 +233,50 @@
                                             ) ?>
                                         </li>
                                         <li>
-                                            <?= $this->Html->link(
-                                                '<span class="glyphicon glyphicon-send" aria-hidden="true"></span> Invitations',
-                                                [
-                                                    'prefix' => 'admin',
-                                                    'controller' => 'Surveys',
-                                                    'action' => 'invite',
-                                                    $community->{$surveyType}['id']
-                                                ],
-                                                ['escape' => false]
-                                            ) ?>
+                                            <?php
+                                                $label =
+                                                    '<span class="glyphicon glyphicon-' .
+                                                    ($active ? 'remove-circle' : 'ok-circle') .
+                                                    '" aria-hidden="true"></span> ' .
+                                                    ($active ? 'Deactivate' : 'Activate');
+                                                echo $this->Html->link(
+                                                    $label,
+                                                    [
+                                                        'prefix' => 'admin',
+                                                        'controller' => 'Surveys',
+                                                        'action' => 'activate',
+                                                        $community->{$surveyType}['id']
+                                                    ],
+                                                    ['escape' => false]
+                                                );
+                                            ?>
                                         </li>
-                                        <li>
-                                            <?= $this->Html->link(
-                                                '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Reminders',
-                                                [
-                                                    'prefix' => 'admin',
-                                                    'controller' => 'Surveys',
-                                                    'action' => 'remind',
-                                                    $community->{$surveyType}['id']
-                                                ],
-                                                ['escape' => false]
-                                            ) ?>
-                                        </li>
+                                        <?php if ($community->{$surveyType}['active']): ?>
+                                            <li>
+                                                <?= $this->Html->link(
+                                                    '<span class="glyphicon glyphicon-send" aria-hidden="true"></span> Invitations',
+                                                    [
+                                                        'prefix' => 'admin',
+                                                        'controller' => 'Surveys',
+                                                        'action' => 'invite',
+                                                        $community->{$surveyType}['id']
+                                                    ],
+                                                    ['escape' => false]
+                                                ) ?>
+                                            </li>
+                                            <li>
+                                                <?= $this->Html->link(
+                                                    '<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Reminders',
+                                                    [
+                                                        'prefix' => 'admin',
+                                                        'controller' => 'Surveys',
+                                                        'action' => 'remind',
+                                                        $community->{$surveyType}['id']
+                                                    ],
+                                                    ['escape' => false]
+                                                ) ?>
+                                            </li>
+                                        <?php endif; ?>
                                         <li>
                                             <?= $this->Html->link(
                                                 '<span class="glyphicon glyphicon-scale" aria-hidden="true"></span> Alignment',
@@ -321,6 +333,17 @@
                                 </li>
                                 <li>
                                     <?= $this->Html->link(
+                                        '<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Presentations',
+                                        [
+                                            'prefix' => 'admin',
+                                            'action' => 'presentations',
+                                            $community->id
+                                        ],
+                                        ['escape' => false]
+                                    ) ?>
+                                </li>
+                                <li>
+                                    <?= $this->Html->link(
                                         '<span class="glyphicon glyphicon-user" aria-hidden="true"></span> Clients ('.count($community->clients).')',
                                         [
                                             'prefix' => 'admin',
@@ -350,6 +373,17 @@
                                         [
                                             'prefix' => false,
                                             'action' => 'view',
+                                            $community->id
+                                        ],
+                                        ['escape' => false]
+                                    ) ?>
+                                </li>
+                                <li>
+                                    <?= $this->Html->link(
+                                        '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Notes',
+                                        [
+                                            'prefix' => 'admin',
+                                            'action' => 'notes',
                                             $community->id
                                         ],
                                         ['escape' => false]

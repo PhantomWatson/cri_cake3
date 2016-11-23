@@ -28,82 +28,6 @@
             ]
         ) ?>
     <?php endif; ?>
-    <button id="sent_invitations_toggler" class="btn btn-default">
-        Who has already been invited?
-    </button>
-    <?php if ($surveyType == 'official'): ?>
-        <button id="suggestions_toggler" class="btn btn-default">
-            Suggestions of who to invite
-        </button>
-    <?php endif; ?>
-</p>
-
-<div id="sent_invitations" class="well">
-    <?php if (empty($allRespondents)): ?>
-        No invitations have been sent yet.
-    <?php else: ?>
-        <?php if (! empty($approvedRespondents)): ?>
-            <p>
-                Responses from the following email <?= __n('address', 'addresses', count($approvedRespondents)) ?> have been invited or approved:
-            </p>
-            <ul>
-                <?php foreach ($approvedRespondents as $respondentId => $respondentEmail): ?>
-                    <li>
-                        <?= $respondentEmail ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-
-        <?php if (! empty($unaddressedUnapprovedRespondents)): ?>
-            <p>
-                <?php if (! empty($approvedRespondents)): ?>
-                    Additionally, <?= __n('an unapproved questionnaire response has', 'unapproved questionnaire responses have', count($unaddressedUnapprovedRespondents)) ?>
-                <?php else: ?>
-                    <?= __n('An unapproved questionnaire response has', 'Unapproved questionnaire responses have', count($unaddressedUnapprovedRespondents)) ?>
-                <?php endif; ?>
-                been received from the following, who <?= __n('was not sent an invitation', 'were not sent invitations', count($unaddressedUnapprovedRespondents)) ?>:
-            </p>
-            <ul>
-                <?php foreach ($unaddressedUnapprovedRespondents as $respondentId => $respondentEmail): ?>
-                    <li>
-                        <?= $respondentEmail ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-    <?php endif; ?>
-</div>
-
-<?php if ($surveyType == 'official'): ?>
-    <?php
-        $suggestions = [
-            'Mayor',
-            'City Clerk',
-            'City Treasurer',
-            'City Council',
-            'City Planning Director',
-            'Director of Community Development',
-            'Planning Commission',
-            'Redevelopment Commission',
-            'Economic Development Commission',
-            'County Commissioner',
-            'County Council'
-        ];
-    ?>
-    <div id="invitation_suggestions" class="well">
-        <ul>
-            <?php foreach ($suggestions as $suggestion): ?>
-                <li>
-                    <?= $suggestion ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-<?php endif; ?>
-
-<p>
-    Enter information for one or more community <?= $respondentTypePlural ?> to send them questionnaire invitations.
 </p>
 
 <?php
@@ -121,178 +45,293 @@
     $this->Form->templates($formTemplate);
 ?>
 
-<div class="well">
-    <table>
-        <thead>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Email
-                </th>
-                <th>
-                    Professional Title
-                </th>
-            </tr>
-        </thead>
-        <tbody class="template" style="display: none;">
-            <tr id="invitation_fields_template">
-                <?php
-                    echo $this->Form->input(
-                        'template.name',
-                        [
-                            'class' => 'form-control',
-                            'disabled' => true,
-                            'div' => [
-                                'class' => 'form-group'
-                            ],
-                            'label' => false,
-                            'name' => 'invitees[0][name]',
-                            'placeholder' => 'Name',
-                            'required' => true,
-                            'type' => 'text'
-                        ]
-                    );
-                    echo $this->Form->input(
-                        'template.email',
-                        [
-                            'class' => 'form-control',
-                            'disabled' => true,
-                            'div' => [
-                                'class' => 'form-group'
-                            ],
-                            'label' => false,
-                            'name' => 'invitees[0][email]',
-                            'placeholder' => 'Email',
-                            'required' => true,
-                            'type' => 'email'
-                        ]
-                    );
-                    echo $this->Form->input(
-                        'template.title',
-                        [
-                            'class' => 'form-control',
-                            'disabled' => true,
-                            'div' => [
-                                'class' => 'form-group'
-                            ],
-                            'label' => false,
-                            'name' => 'invitees[0][title]',
-                            'placeholder' => 'Professional Title',
-                            'required' => true
-                        ]
-                    );
-                ?>
-                <td>
-                    <button type="button" class="remove btn btn-danger pull-right">Remove</button>
-                </td>
-            </tr>
-        </tbody>
-        <tbody class="input"></tbody>
-        <tfoot>
-            <tr>
-                <td colspan="4">
-                    <p>
-                        <button class="btn btn-default" id="add_another">
-                            <span class="glyphicon glyphicon-plus"></span>
-                            Add another row
-                        </button>
-                        <button class="btn btn-default" id="toggle-upload">
-                            <span class="glyphicon glyphicon-upload"></span>
-                            Upload invitation spreadsheet
-                        </button>
-                        <button id="show-spreadsheet-modal" class="btn btn-link" data-toggle="modal" data-target="#spreadsheet-modal">
-                            <span class="glyphicon glyphicon-question-sign" title="Learn more about using an invitation spreadsheet" aria-hidden="true"></span>
-                            <span class="sr-only">
-                                Learn more about using an invitation spreadsheet
-                            </span>
-                        </button>
-                    </p>
+<section class="invitation-form">
+    <h2>
+        Before You Invite
+    </h2>
+    <button id="sent_invitations_toggler" class="btn btn-default">
+        Who has already been invited?
+    </button>
+    <button id="suggestions_toggler" class="btn btn-default">
+        Suggestions of who to invite
+    </button>
+    <div id="sent_invitations" class="well">
+        <?php if (empty($allRespondents)): ?>
+            No invitations have been sent yet.
+        <?php else: ?>
+            <?php if (! empty($approvedRespondents)): ?>
+                <p>
+                    Responses from the following email <?= __n('address', 'addresses', count($approvedRespondents)) ?> have been invited or approved:
+                </p>
+                <ul>
+                    <?php foreach ($approvedRespondents as $respondentId => $respondentEmail): ?>
+                        <li>
+                            <?= $respondentEmail ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
 
-                    <div id="upload-container">
-                        <p>
-                            Select an invitation spreadsheet to upload:
-                            <span id="spreadsheet-upload">
-                                <input type="file" id="spreadsheet-upload-input" name="files[]" accept=".xlsx" />
-                            </span>
-                        </p>
-                        <div class="progress" id="upload-progress">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-                                0%
-                            </div>
-                        </div>
-                        <p id="upload-result"></p>
-                    </div>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
-</div>
+            <?php if (! empty($unaddressedUnapprovedRespondents)): ?>
+                <p>
+                    <?php if (! empty($approvedRespondents)): ?>
+                        Additionally, <?= __n('an unapproved questionnaire response has', 'unapproved questionnaire responses have', count($unaddressedUnapprovedRespondents)) ?>
+                    <?php else: ?>
+                        <?= __n('An unapproved questionnaire response has', 'Unapproved questionnaire responses have', count($unaddressedUnapprovedRespondents)) ?>
+                    <?php endif; ?>
+                    been received from the following, who <?= __n('was not sent an invitation', 'were not sent invitations', count($unaddressedUnapprovedRespondents)) ?>:
+                </p>
+                <ul>
+                    <?php foreach ($unaddressedUnapprovedRespondents as $respondentId => $respondentEmail): ?>
+                        <li>
+                            <?= $respondentEmail ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+    <?php
+        if ($surveyType == 'official') {
+            $suggestions = [
+                'Mayor',
+                'City Clerk',
+                'City Treasurer',
+                'City Council',
+                'City Planning Director',
+                'Director of Community Development',
+                'Planning Commission',
+                'Redevelopment Commission',
+                'Economic Development Commission',
+                'County Commissioner',
+                'County Council'
+            ];
+        } else {
+            $suggestions = [
+                'Nonprofit Organizations',
+                'Service Organizations',
+                'Community Volunteer Groups',
+                'Civic Centers'
+            ];
+        }
+    ?>
+    <div id="invitation_suggestions" class="well">
+        <ul>
+            <?php foreach ($suggestions as $suggestion): ?>
+                <li>
+                    <?= $suggestion ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</section>
 
-<?php $this->append('top-html'); ?>
-    <div class="modal fade" id="spreadsheet-modal" tabindex="-1" role="dialog" aria-labelledby="spreadsheet-modalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title" id="spreadsheet-modalLabel">
-                        Using an Invitation Spreadsheet
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    If you prefer, you could
-                    <a href="/files/Community Leadership Alignment Assessment invitations.xlsx" class="download">
-                        download a spreadsheet (.xlsx)
-                    </a>
-                    and fill in the names and email addresses of the community officials
-                    that you would like to send questionnaire invitations to. If you then upload the
-                    completed spreadsheet, this form will automatically be filled out and
-                    ready for you to submit.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        Close
-                    </button>
-                </div>
+<section class="invitation-form">
+    <h2>
+        Enter Community <?= ucwords($surveyType) ?>s to Invite
+    </h2>
+
+    <p>
+        Enter information for one or more community <?= $respondentTypePlural ?> to send them questionnaire invitations.
+        Alternatively, you can
+        <?php
+            $filename = ($surveyType == 'official') ?
+                'Community Leadership Alignment Assessment invitations.xlsx' :
+                'Community Organizations Alignment Assessment invitations.xlsx';
+        ?>
+        <a href="/files/<?= $filename ?>">download a spreadsheet (.xlsx)</a>,
+        fill it out, and then
+        <button class="btn btn-link" id="toggle-upload">
+            upload it
+        </button>
+        to automatically fill out this form.
+    </p>
+
+    <div id="upload-container">
+        <p>
+            Select an invitation spreadsheet to upload:
+            <span id="spreadsheet-upload">
+                <input type="file" id="spreadsheet-upload-input" name="files[]" accept=".xlsx" />
+            </span>
+        </p>
+        <div class="progress" id="upload-progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                0%
             </div>
         </div>
+        <p id="upload-result"></p>
     </div>
-<?php $this->end(); ?>
 
-<div class="well">
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Professional Title
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="template" style="display: none;">
+                <tr id="invitation_fields_template">
+                    <?php
+                        echo $this->Form->input(
+                            'template.name',
+                            [
+                                'class' => 'form-control',
+                                'disabled' => true,
+                                'div' => [
+                                    'class' => 'form-group'
+                                ],
+                                'label' => false,
+                                'name' => 'invitees[0][name]',
+                                'placeholder' => 'Name',
+                                'required' => true,
+                                'type' => 'text'
+                            ]
+                        );
+                        echo $this->Form->input(
+                            'template.email',
+                            [
+                                'class' => 'form-control',
+                                'disabled' => true,
+                                'div' => [
+                                    'class' => 'form-group'
+                                ],
+                                'label' => false,
+                                'name' => 'invitees[0][email]',
+                                'placeholder' => 'Email',
+                                'required' => true,
+                                'type' => 'email'
+                            ]
+                        );
+                        echo $this->Form->input(
+                            'template.title',
+                            [
+                                'class' => 'form-control',
+                                'disabled' => true,
+                                'div' => [
+                                    'class' => 'form-group'
+                                ],
+                                'label' => false,
+                                'name' => 'invitees[0][title]',
+                                'placeholder' => 'Professional Title',
+                                'required' => true
+                            ]
+                        );
+                    ?>
+                    <td>
+                        <button type="button" class="remove btn btn-danger pull-right">Remove</button>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody class="input">
+                <?php $invitees = isset($this->request->data['invitees']) ? $this->request->data['invitees'] : []; ?>
+                <?php foreach ($invitees as $key => $invitee): ?>
+                    <tr>
+                        <?= $this->Form->input(
+                            'invitees.' . $key . '.name',
+                            [
+                                'class' => 'form-control',
+                                'div' => [
+                                    'class' => 'form-group'
+                                ],
+                                'label' => false,
+                                'placeholder' => 'Name',
+                                'required' => true,
+                                'type' => 'text'
+                            ]
+                        ) ?>
+                        <?= $this->Form->input(
+                            'invitees.' . $key . '.email',
+                            [
+                                'class' => 'form-control',
+                                'div' => [
+                                    'class' => 'form-group'
+                                ],
+                                'label' => false,
+                                'placeholder' => 'Email',
+                                'required' => true,
+                                'type' => 'email'
+                            ]
+                        ) ?>
+                        <?= $this->Form->input(
+                            'invitees.' . $key . '.title',
+                            [
+                                'class' => 'form-control',
+                                'div' => [
+                                    'class' => 'form-group'
+                                ],
+                                'label' => false,
+                                'placeholder' => 'Professional Title',
+                                'required' => true
+                            ]
+                        ) ?>
+                        <td>
+                            <button type="button" class="remove btn btn-danger pull-right">Remove</button>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">
+                        <p>
+                            <button class="btn btn-default" id="add_another">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                Add another row
+                            </button>
+                        </p>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</section>
+
+<section class="invitation-form">
+    <h2>
+        Done
+    </h2>
+    <div class="form-group">
+        <?= $this->Form->input(
+            'Send invitations',
+            [
+                'class' => 'btn btn-primary',
+                'div' => false,
+                'id' => 'invitations-send',
+                'name' => 'submit_mode',
+                'type' => 'submit'
+            ]
+        ) ?>
+        <?= $this->Form->input(
+            'Save for later',
+            [
+                'class' => 'btn btn-default',
+                'div' => false,
+                'id' => 'invitations-save',
+                'name' => 'submit_mode',
+                'type' => 'submit'
+            ]
+        ) ?>
+    </div>
     <p>
-        If you click <strong>Save for later</strong>, the information you have entered will be stored in your browser.
-        After saving, you can navigate to another page and then return to this one later in order to send out your saved invitations.
+        If you <strong>save this form for later</strong>, no invitations will be sent out at this time.
+        You will be able to return to this page at a later time to review and send out invitations to participate in
+        this questionnaire.
     </p>
-    <button class="btn btn-default" id="save">
-        Save for later
-    </button>
-    <button class="btn btn-default" id="load">
-        Load saved data
-    </button>
-    <span id="survey-invitation-save-status"></span>
-</div>
+</section>
 
-<div class="form-group">
-    <?= $this->Form->button(
-        'Send invitations',
-        [
-            'class' => 'btn btn-primary',
-            'div' => false
-        ]
-    ) ?>
-    <?php
-        echo $this->Form->end();
-        $this->Form->templates($bootstrapFormTemplate);
-    ?>
-</div>
+<?= $this->Form->end() ?>
+<?php $this->Form->templates($bootstrapFormTemplate); ?>
 
 <?php
     $this->element('script', ['script' => 'client']);
-    $this->element('script', ['script' => 'js.cookie.js']);
     $this->element('script', ['script' => 'form-protector']);
     $this->element('script', ['script' => 'jquery.ui.widget']);
     $this->element('script', ['script' => 'jquery.fileupload']);
@@ -307,18 +346,3 @@
     });
 <?php $this->end(); ?>
 
-<?php if (isset($_GET['debugcookie'])): ?>
-    <h2>
-        Saved form data:
-    </h2>
-    <pre id="results"></pre>
-
-    <?php $this->append('buffered'); ?>
-        var cookieData = Cookies.get('invitationFormData');
-        if (typeof cookieData == 'undefined' || cookieData.length === 0) {
-            $('#results').html('No saved data was found');
-        } else {
-            $('#results').html(JSON.stringify(cookieData));
-        }
-    <?php $this->end(); ?>
-<?php endif; ?>

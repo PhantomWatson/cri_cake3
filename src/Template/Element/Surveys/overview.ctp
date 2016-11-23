@@ -12,6 +12,53 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
+                Activate
+            </h3>
+        </div>
+        <div class="panel-body">
+            <p>
+                <?php
+                    $stepForSurvey = ($survey['type'] == 'official') ? 2 : 3;
+                    $currentStep = $community['score'];
+                ?>
+                <?= $community['name'] ?>'s community <?= $survey['type'] ?>s questionnaire is currently
+                <?php if ($currentlyActive): ?>
+                    <span class="text-success">active</span>
+                    <?php if ($currentStep < $stepForSurvey): ?>
+                        even though the community has not yet advanced to Step <?= $stepForSurvey ?>.
+                    <?php elseif ($currentStep == $stepForSurvey): ?>
+                        and should remain active until this community is advanced to Step <?= $stepForSurvey + 1 ?>.
+                    <?php else: ?>
+                        and is <strong>ready to be deactivated</strong>.
+                    <?php endif; ?>
+                <?php else: ?>
+                    <span class="text-danger">inactive</span>
+                    <?php if ($currentStep < $stepForSurvey): ?>
+                        and should be activated when the community advances to Step <?= $stepForSurvey ?>.
+                    <?php elseif ($currentStep == $stepForSurvey): ?>
+                        and is <strong>ready to be activated</strong>.
+                    <?php else: ?>
+                        because it has been finalized.
+                    <?php endif; ?>
+                <?php endif; ?>
+            </p>
+
+            <?= $this->Html->link(
+                $currentlyActive ? 'Deactivate' : 'Activate',
+                [
+                    'prefix' => 'admin',
+                    'controller' => 'Surveys',
+                    'action' => 'activate',
+                    $survey['id']
+                ],
+                ['class' => 'btn btn-default']
+            ) ?>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
                 Invite
             </h3>
         </div>
@@ -27,17 +74,19 @@
                         View Invitations
                     </button>
                 <?php endif; ?>
-                <?= $this->Html->link(
-                    'Send Invitations',
-                    [
-                        'prefix' => 'admin',
-                        'controller' => 'Surveys',
-                        'action' => 'invite',
-                        $survey['id']
-                    ],
-                    ['class' => 'btn btn-default']
-                ) ?>
-                <?php if ($invitedRespondentCount > 0): ?>
+                <?php if ($survey->active): ?>
+                    <?= $this->Html->link(
+                        'Send Invitations',
+                        [
+                            'prefix' => 'admin',
+                            'controller' => 'Surveys',
+                            'action' => 'invite',
+                            $survey['id']
+                        ],
+                        ['class' => 'btn btn-default']
+                    ) ?>
+                <?php endif; ?>
+                <?php if ($survey->active && $invitedRespondentCount > 0): ?>
                     <?= $this->Html->link(
                         'Reminders',
                         [
@@ -99,16 +148,22 @@
                 <?php if ($isAutomaticallyImported): ?>
                     Responses are automatically imported from
                     SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>
-                    while this community is in stage <?= $stageForAutoImport ?> of CRI,
+                    while this community is in Stage <?= $stageForAutoImport ?> of CRI,
                     but you can manually import them at any time.
+                <?php elseif ($survey->active): ?>
+                    New responses to this questionnaire are <strong>not</strong> being automatically imported from
+                    SurveyMonkey because this community is not currently in Stage <?= $stageForAutoImport ?> of CRI,
+                    but they can be manually imported while the questionnaire is still active.
                 <?php else: ?>
-                    New responses to this questionnaire are <strong>not</strong> being automatically imported from SurveyMonkey because
-                    this community is not currently in stage <?= $stageForAutoImport ?> of CRI.
+                    New responses to this questionnaire are <strong>not</strong> automatically imported and can not
+                    be manually imported while it is inactive.
                 <?php endif; ?>
             </p>
-            <button class="btn btn-default import_button" data-survey-id="<?= $survey['id'] ?>">
-                Import Responses
-            </button>
+            <?php if ($survey->active): ?>
+                <button class="btn btn-default import_button" data-survey-id="<?= $survey['id'] ?>">
+                    Import Responses
+                </button>
+            <?php endif; ?>
             <?php if ($survey['import_errors']): ?>
                 <?php $errors = unserialize($survey['import_errors']); ?>
                 <div id="import-results" class="alert alert-danger">

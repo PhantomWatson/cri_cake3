@@ -81,6 +81,14 @@
                         ]
                     ) ?>
                 </li>
+                <?php if ($survey->isNew()): ?>
+                    <li class="checkbox">
+                        <label for="activateSurvey">
+                            <input type="checkbox" name="active" value="1" id="activateSurvey" />
+                            Also activate questionnaire
+                        </label>
+                    </li>
+                <?php endif; ?>
             </ul>
 
             <div class="lookup_results well"></div>
@@ -132,6 +140,11 @@
                     ?>
                 </table>
             </div>
+            <?php if ($warning): ?>
+                <p class="alert alert-warning">
+                    <?= $warning ?>
+                </p>
+            <?php endif; ?>
         </div>
     </div>
     <?= $this->Form->end() ?>

@@ -268,15 +268,19 @@ class AppController extends Controller
         $communities = $this->Communities->find('list')
             ->order(['name' => 'ASC']);
 
+        $route = ['prefix' => 'admin', 'controller' => 'Communities'];
         $communityPages = [
-            'Edit' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'edit']) . '/{community-id}',
-            'Progress' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'progress']) . '/{community-id}',
-            'Clients' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'clients']) . '/{community-id}',
-            'Client Home' => Router::url(['prefix' => 'admin', 'controller' => 'Communities', 'action' => 'clienthome']) . '/{community-id}'
+            'Edit' => Router::url($route + ['action' => 'edit']) . '/{community-id}',
+            'Progress' => Router::url($route + ['action' => 'progress']) . '/{community-id}',
+            'Clients' => Router::url($route + ['action' => 'clients']) . '/{community-id}',
+            'Client Home' => Router::url($route + ['action' => 'clienthome']) . '/{community-id}',
+            'Presentations' => Router::url($route + ['action' => 'presentations']) . '/{community-id}',
+            'Notes' => Router::url($route + ['action' => 'notes']) . '/{community-id}'
         ];
 
         $surveyPages = [
             'Overview' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'view']) . '/{community-id}/{survey-type}',
+            'Activate' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'activate']) . '/{survey-id}',
             'Link' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'link']) . '/{community-id}/{survey-type}',
             'Alignment' => Router::url(['prefix' => 'admin', 'controller' => 'Responses', 'action' => 'view']) . '/{survey-id}',
             'Invitations' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'invite']) . '/{survey-id}',

@@ -14,8 +14,8 @@
             'Reports',
             [
                 'prefix' => 'admin',
-                'controller' => 'Communities',
-                'action' => 'reports'
+                'controller' => 'Reports',
+                'action' => 'index'
             ]
         ) ?>
     </li>

@@ -25,6 +25,93 @@ class SurveyProcessingComponent extends Component
     public $uninvApprovedEmails = [];
 
     /**
+     * Saves invitation form data for editing or sending later
+     *
+     * @param array $formData
+     * @param int $surveyId
+     * @param int $userId
+     * @return array [TRUE or FALSE for success, success/error message]
+     */
+    public function saveInvitations($formData, $surveyId, $userId)
+    {
+        $formDataTable = TableRegistry::get('InvitationFormData');
+        $existingRecord = $formDataTable->find('all')
+            ->where([
+                'survey_id' => $surveyId,
+                'user_id' => $userId
+            ])
+            ->first();
+        if ($existingRecord) {
+            $existingRecord = $formDataTable->patchEntity($existingRecord, [
+                'data' => serialize($formData)
+            ]);
+            $errors = $existingRecord->errors();
+            $saveResult = $formDataTable->save($existingRecord);
+        } else {
+            $savedData = $formDataTable->newEntity([
+                'survey_id' => $surveyId,
+                'user_id' => $userId,
+                'data' => serialize($formData)
+            ]);
+            $errors = $savedData->errors();
+            $saveResult = $formDataTable->save($savedData);
+        }
+        if ($errors || ! $saveResult) {
+            $msg = 'There was an error saving your form data. ';
+            $msg .= 'Please try again or email cri@bsu.edu for assistance.';
+            return [false, $msg];
+        } else {
+            $msg = 'Invitation data saved. ';
+            $msg .= 'You can return to the questionnaire invitation page later to send the saved invitations.';
+            return [true, $msg];
+        }
+    }
+
+    /**
+     * Removes the specified InvitationFormData record
+     *
+     * @param int $surveyId
+     * @param int $userId
+     * @return bool|mixed
+     */
+    public function clearSavedInvitations($surveyId, $userId)
+    {
+        $formDataTable = TableRegistry::get('InvitationFormData');
+        $result = $formDataTable->find('all')
+            ->select(['id'])
+            ->where([
+                'survey_id' => $surveyId,
+                'user_id' => $userId
+            ])
+            ->first();
+        if ($result) {
+            $savedData = $formDataTable->get($result->id);
+            return $formDataTable->delete($savedData);
+        }
+        return true;
+    }
+
+    /**
+     * Returns an array representation of the specified saved invitation form data
+     *
+     * @param int $surveyId
+     * @param int $userId
+     * @return array
+     */
+    public function getSavedInvitations($surveyId, $userId)
+    {
+        $formDataTable = TableRegistry::get('InvitationFormData');
+        $savedData = $formDataTable->find('all')
+            ->select(['data'])
+            ->where([
+                'survey_id' => $surveyId,
+                'user_id' => $userId
+            ])
+            ->first();
+        return $savedData ? unserialize($savedData->data) : [];
+    }
+
+    /**
      * Creates respondent records and sends invitation emails
      *
      * @param int $communityId Community ID
@@ -32,7 +119,7 @@ class SurveyProcessingComponent extends Component
      * @param int $surveyId Survey ID
      * @return void
      */
-    public function processInvitations($communityId, $respondentType, $surveyId)
+    public function sendInvitations($communityId, $respondentType, $surveyId)
     {
         $respondentsTable = TableRegistry::get('Respondents');
         $this->approvedRespondents = $respondentsTable->getApprovedList($surveyId);
