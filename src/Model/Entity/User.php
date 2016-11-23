@@ -52,6 +52,7 @@ class User extends Entity
         if ($this->_properties['salutation'] == '') {
             return $this->_properties['name'];
         }
+
         return $this->_properties['salutation'] . ' ' . $this->_properties['name'];
     }
 }

@@ -71,6 +71,7 @@ class UsersTable extends Table
                     if (in_array($data, ['admin', 'client', 'consultant'])) {
                         return true;
                     }
+
                     return 'Role must be admin, client, or consultant.';
                 }
             ]);
@@ -160,6 +161,7 @@ class UsersTable extends Table
         if ($role == 'admin') {
             return $communitiesTable->find('list')->order(['name' => 'ASC']);
         }
+
         return $communitiesTable->find('list')
             ->where(['public' => true])
             ->order(['name' => 'ASC'])
@@ -192,6 +194,7 @@ class UsersTable extends Table
         }
 
         $accessibleCommunities = $this->getAccessibleCommunities($userId);
+
         return isset($accessibleCommunities[$communityId]);
     }
 
@@ -211,6 +214,7 @@ class UsersTable extends Table
         foreach ($clients as $client) {
             $retval[$client->id] = $client->full_name;
         }
+
         return $retval;
     }
 
@@ -228,6 +232,7 @@ class UsersTable extends Table
         foreach ($consultants as $consultant) {
             $retval[$consultant->id] = $consultant->full_name;
         }
+
         return $retval;
     }
 
@@ -239,6 +244,7 @@ class UsersTable extends Table
     public function generatePassword()
     {
         $characters = str_shuffle('abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789');
+
         return substr($characters, 0, 6);
     }
 
@@ -259,6 +265,7 @@ class UsersTable extends Table
                 return $q->where(['ClientCommunities.id' => $communityId]);
             })
             ->count();
+
         return $count > 0;
     }
 
@@ -277,6 +284,7 @@ class UsersTable extends Table
         if ($user->isEmpty()) {
             return null;
         }
+
         return $user->first()->id;
     }
 
@@ -300,6 +308,7 @@ class UsersTable extends Table
     public function getSalutations()
     {
         $salutations = ['', 'Mr.', 'Ms.', 'Dr.', 'Rev.', 'Prof.'];
+
         return array_combine($salutations, $salutations);
     }
 }

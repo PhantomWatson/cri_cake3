@@ -69,6 +69,7 @@ class SurveysController extends AppController
                 );
                 if ($saveResult) {
                     $this->Flash->success($msg);
+
                     return $this->redirect([
                         'prefix' => 'clients',
                         'controller' => 'Communities',
@@ -112,6 +113,8 @@ class SurveysController extends AppController
      *
      * @param string $surveyType Survey type
      * @return \App\Controller\Response|\Cake\Network\Response|null
+     * @throws NotFoundException
+     * @throws ForbiddenException
      */
     public function remind($surveyType)
     {
@@ -138,6 +141,7 @@ class SurveysController extends AppController
             $sender = $this->Auth->user();
             if ($Mailer->sendReminders($surveyId, $sender)) {
                 $this->Flash->success('Reminder email successfully sent');
+
                 return $this->redirect([
                     'prefix' => 'client',
                     'controller' => 'Communities',

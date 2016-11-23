@@ -128,6 +128,7 @@ class UsersController extends AppController
                 );
                 if ($result) {
                     $this->Flash->success('User account created and login credentials emailed');
+
                     return $this->redirect([
                         'prefix' => 'admin',
                         'action' => 'index'
@@ -189,6 +190,7 @@ class UsersController extends AppController
                         $msg .= ' the next time they manually log in or when their session automatically refreshes.';
                     }
                     $this->Flash->success($msg);
+
                     return $this->redirect([
                         'prefix' => 'admin',
                         'action' => 'index'
@@ -224,6 +226,7 @@ class UsersController extends AppController
         } else {
             $this->Flash->error('User was not deleted');
         }
+
         return $this->redirect([
             'prefix' => 'admin',
             'action' => 'index'
@@ -250,6 +253,7 @@ class UsersController extends AppController
                 $this->viewBuilder()->layout('ajax');
             } else {
                 $this->Flash->success('Client selected');
+
                 return $this->redirect([
                     'prefix' => 'client',
                     'controller' => 'Communities',

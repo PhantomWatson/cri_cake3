@@ -14,18 +14,36 @@ use Cake\ORM\TableRegistry;
 class CommunitiesController extends AppController
 {
 
+    /**
+     * initialize method
+     *
+     * @return void
+     */
     public function initialize()
     {
         parent::initialize();
         $this->Auth->allow(['autocomplete', 'index', 'view']);
     }
 
+    /**
+     * beforeRender method
+     *
+     * @param \Cake\Event\Event $event Event
+     * @return void
+     */
     public function beforeRender(\Cake\Event\Event $event)
     {
         parent::beforeRender($event);
         $this->viewBuilder()->helpers(['GoogleCharts.GoogleCharts']);
     }
 
+    /**
+     * isAuthorized method
+     *
+     * @param array $user User
+     * @return bool
+     * @throws NotFoundException
+     */
     public function isAuthorized($user)
     {
         if ($this->request->action == 'view') {
@@ -38,6 +56,7 @@ class CommunitiesController extends AppController
             }
             $userId = isset($user['id']) ? $user['id'] : null;
             $usersTable = TableRegistry::get('Users');
+
             return $usersTable->canAccessCommunity($userId, $communityId);
         }
 
@@ -76,7 +95,7 @@ class CommunitiesController extends AppController
     /**
      * View method
      *
-     * @param string|null $communityId
+     * @param string|null $communityId Community ID
      * @return void
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
@@ -95,6 +114,7 @@ class CommunitiesController extends AppController
 
         if (! ($community->public || $this->isAuthorized($this->Auth->user()))) {
             $this->Flash->error('You are not authorized to access that community.');
+
             return $this->redirect('/');
         }
 
@@ -109,9 +129,9 @@ class CommunitiesController extends AppController
         $lineChart = [];
         $growthTable = [];
         foreach (['local', 'parent'] as $areaScope) {
-            $areaId = $community[$areaScope.'_area_id'];
+            $areaId = $community[$areaScope . '_area_id'];
             if ($areaId) {
-                $areas[$areaScope] = $community[$areaScope.'_area']['name'];
+                $areas[$areaScope] = $community[$areaScope . '_area']['name'];
             }
             $barChart[$areaScope] = $areasTable->getPwrBarChart($areaId);
             $pwrTable[$areaScope] = $areasTable->getPwrTable($areaId);
@@ -119,7 +139,7 @@ class CommunitiesController extends AppController
             $growthTable[$areaScope] = $areasTable->getEmploymentGrowthTableData($areaId);
         }
         $this->set([
-            'titleForLayout' => $community->name.' Performance',
+            'titleForLayout' => $community->name . ' Performance',
             'community' => $community,
             'areas' => $areas,
             'barChart' => $barChart,
@@ -129,6 +149,11 @@ class CommunitiesController extends AppController
         ]);
     }
 
+    /**
+     * Method for /communities/autocomplete
+     *
+     * @reutrn void
+     */
     public function autocomplete()
     {
         $limit = 10;
@@ -136,10 +161,10 @@ class CommunitiesController extends AppController
         // Communities.name will be compared via LIKE to each of these until $limit communities are found.
         $patterns = [
             $_GET['term'],
-            $_GET['term'].' %',
-            $_GET['term'].'%',
-            '% '.$_GET['term'].'%',
-            '%'.$_GET['term'].'%'
+            $_GET['term'] . ' %',
+            $_GET['term'] . '%',
+            '% ' . $_GET['term'] . '%',
+            '%' . $_GET['term'] . '%'
         ];
 
         // Collect communities up to $limit
@@ -152,6 +177,7 @@ class CommunitiesController extends AppController
                         if (! empty($retval)) {
                             $exp->notIn('id', array_keys($retval));
                         }
+
                         return $exp;
                     }
                 ])

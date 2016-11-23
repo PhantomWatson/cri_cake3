@@ -71,6 +71,12 @@ class Installer
         static::copyTwitterBootstrapFiles($rootDir, $io);
     }
 
+    /**
+     * Runs after an update
+     *
+     * @param Event $event Event
+     * @return void
+     */
     public static function postUpdate(Event $event)
     {
         $io = $event->getIO();
@@ -190,17 +196,23 @@ class Installer
 
         if ($count == 0) {
             $io->write('No Security.salt placeholder to replace.');
+
             return;
         }
 
         $result = file_put_contents($config, $content);
         if ($result) {
             $io->write('Updated Security.salt value in config/app.php');
+
             return;
         }
         $io->write('Unable to update Security.salt value.');
     }
 
+    /**
+     * @param string $dir Root directory
+     * @param IOInterface $io IOInterface
+     */
     public static function copyTwitterBootstrapFiles($dir, $io)
     {
         $bootstrapJsSource = $dir . '/vendor/twbs/bootstrap/dist/js/bootstrap.min.js';
@@ -210,6 +222,5 @@ class Installer
             copy($bootstrapJsSource, $bootstrapJsDestination);
             $io->write('Copied `bootstrap.min.js` file');
         }
-
     }
 }

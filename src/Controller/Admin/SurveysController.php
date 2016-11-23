@@ -191,6 +191,13 @@ class SurveysController extends AppController
         ]);
     }
 
+    /**
+     * Method for /admin/surveys/invite
+     *
+     * @param int|null $surveyId Survey ID
+     * @return void
+     * @throws ForbiddenException
+     */
     public function invite($surveyId = null)
     {
         $survey = $this->Surveys->get($surveyId);
@@ -215,6 +222,7 @@ class SurveysController extends AppController
                 );
                 if ($saveResult) {
                     $this->Flash->success($msg);
+
                     return $this->redirect([
                         'prefix' => 'admin',
                         'controller' => 'Communities',
@@ -238,14 +246,14 @@ class SurveysController extends AppController
         $allRespondents = array_merge($approvedRespondents, $unaddressedUnapprovedRespondents);
 
         // Looks dumb, but this is because it's the parameter for client_invite(), which shares a view
-        $respondentTypePlural = $respondentType.'s';
+        $respondentTypePlural = $respondentType . 's';
 
         $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($survey->community_id);
         $this->set([
             'communityId' => $community->id,
             'surveyType' => $survey->type,
-            'titleForLayout' => $community->name.': Invite Community '.ucwords($respondentTypePlural),
+            'titleForLayout' => $community->name . ': Invite Community ' . ucwords($respondentTypePlural),
         ]);
         $this->set(compact(
             'allRespondents',
@@ -256,9 +264,15 @@ class SurveysController extends AppController
             'unaddressedUnapprovedRespondents'
         ));
         $this->prepareAdminHeader();
-        $this->render('..'.DS.'..'.DS.'Client'.DS.'Surveys'.DS.'invite');
+        $this->render('..' . DS . '..' . DS . 'Client' . DS . 'Surveys' . DS . 'invite');
     }
 
+    /**
+     * Method for /admin/surveys/remind
+     *
+     * @param int $surveyId Survey ID
+     * @return \Cake\Network\Response|null
+     */
     public function remind($surveyId)
     {
         $surveysTable = TableRegistry::get('Surveys');
@@ -275,6 +289,7 @@ class SurveysController extends AppController
             $sender = $this->Auth->user();
             if ($Mailer->sendReminders($surveyId, $sender)) {
                 $this->Flash->success('Reminder email successfully sent');
+
                 return $this->redirect([
                     'prefix' => 'admin',
                     'controller' => 'Surveys',
@@ -286,7 +301,7 @@ class SurveysController extends AppController
 
             $msg = 'There was an error sending reminder emails.';
             $adminEmail = Configure::read('admin_email');
-            $msg .= ' Email <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> for assistance.';
+            $msg .= ' Email <a href="mailto:' . $adminEmail . '">' . $adminEmail . '</a> for assistance.';
             $this->Flash->error($msg);
 
             // Redirect so that hitting refresh won't re-send POST request
@@ -303,14 +318,20 @@ class SurveysController extends AppController
         $this->set([
             'community' => $community,
             'survey' => $survey,
-            'titleForLayout' => $community->name . ': Remind Community '.ucwords($survey->type).'s',
+            'titleForLayout' => $community->name . ': Remind Community ' . ucwords($survey->type) . 's',
             'unresponsive' => $unresponsive,
             'unresponsiveCount' => count($unresponsive)
         ]);
         $this->prepareAdminHeader();
-        $this->render('..'.DS.'..'.DS.'Client'.DS.'Surveys'.DS.'remind');
+        $this->render('..' . DS . '..' . DS . 'Client' . DS . 'Surveys' . DS . 'remind');
     }
 
+    /**
+     * Method for /admin/surveys/activate
+     *
+     * @param int $surveyId Survey ID
+     * @return void
+     */
     public function activate($surveyId)
     {
         $communitiesTable = TableRegistry::get('Communities');

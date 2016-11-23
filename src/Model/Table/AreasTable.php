@@ -332,6 +332,7 @@ class AreasTable extends Table
             $category = $stat['stat_category']['name'];
             $table[$group][$category] = $stat['value'];
         }
+
         return $table;
     }
 
@@ -540,6 +541,7 @@ class AreasTable extends Table
     public function getGoogleChartsObject()
     {
         require_once ROOT . DS . 'plugins' . DS . 'GoogleCharts' . DS . 'vendor' . DS . 'GoogleCharts.php';
+
         return new \GoogleCharts();
     }
 
@@ -567,6 +569,7 @@ class AreasTable extends Table
         foreach ($sectors as $sector) {
             $ranks[$sector] = $area["{$sector}_rank"];
         }
+
         return $ranks;
     }
 
@@ -634,6 +637,7 @@ class AreasTable extends Table
             ->select(['Areas.id'])
             ->where(['Areas.fips' => $fips])
             ->first();
+
         return $result ? $result->id : null;
     }
 
@@ -657,6 +661,7 @@ class AreasTable extends Table
             $type = ucwords($type);
             $capitalizedGrouped[$type] = $areas;
         }
+
         return $capitalizedGrouped;
     }
 }

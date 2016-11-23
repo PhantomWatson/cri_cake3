@@ -71,7 +71,7 @@ class ReportsController extends AppController
     /**
      * Sets up the response to prompt a download of a spreadsheet
      *
-     * @param string $filename
+     * @param string $filename Filename
      * @return void
      */
     private function respondWithSpreadsheet($filename)

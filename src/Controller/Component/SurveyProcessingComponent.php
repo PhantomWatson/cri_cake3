@@ -27,9 +27,9 @@ class SurveyProcessingComponent extends Component
     /**
      * Saves invitation form data for editing or sending later
      *
-     * @param array $formData
-     * @param int $surveyId
-     * @param int $userId
+     * @param array $formData Form data
+     * @param int $surveyId Survey ID
+     * @param int $userId User ID
      * @return array [TRUE or FALSE for success, success/error message]
      */
     public function saveInvitations($formData, $surveyId, $userId)
@@ -59,10 +59,12 @@ class SurveyProcessingComponent extends Component
         if ($errors || ! $saveResult) {
             $msg = 'There was an error saving your form data. ';
             $msg .= 'Please try again or email cri@bsu.edu for assistance.';
+
             return [false, $msg];
         } else {
             $msg = 'Invitation data saved. ';
             $msg .= 'You can return to the questionnaire invitation page later to send the saved invitations.';
+
             return [true, $msg];
         }
     }
@@ -70,8 +72,8 @@ class SurveyProcessingComponent extends Component
     /**
      * Removes the specified InvitationFormData record
      *
-     * @param int $surveyId
-     * @param int $userId
+     * @param int $surveyId Survey ID
+     * @param int $userId User ID
      * @return bool|mixed
      */
     public function clearSavedInvitations($surveyId, $userId)
@@ -86,16 +88,18 @@ class SurveyProcessingComponent extends Component
             ->first();
         if ($result) {
             $savedData = $formDataTable->get($result->id);
+
             return $formDataTable->delete($savedData);
         }
+
         return true;
     }
 
     /**
      * Returns an array representation of the specified saved invitation form data
      *
-     * @param int $surveyId
-     * @param int $userId
+     * @param int $surveyId Survey ID
+     * @param int $userId User ID
      * @return array
      */
     public function getSavedInvitations($surveyId, $userId)
@@ -108,6 +112,7 @@ class SurveyProcessingComponent extends Component
                 'user_id' => $userId
             ])
             ->first();
+
         return $savedData ? unserialize($savedData->data) : [];
     }
 
@@ -400,6 +405,7 @@ class SurveyProcessingComponent extends Component
                 $alignmentSum += $response->$alignmentField;
             }
         }
+
         return $alignmentSum;
     }
 
@@ -417,6 +423,7 @@ class SurveyProcessingComponent extends Component
                 $approvedCount++;
             }
         }
+
         return $approvedCount;
     }
 }

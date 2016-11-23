@@ -10,10 +10,10 @@ use Cake\Utility\Hash;
 class Mailer
 {
     /**
+     * Sends reminder emails to users who have already been invited nad have not yet responded
      *
-     *
-     * @param int $surveyId
-     * @param array $sender
+     * @param int $surveyId Survey ID
+     * @param array $sender User who is sending the email
      * @return bool
      */
     public function sendReminders($surveyId, $sender)
@@ -47,6 +47,7 @@ class Mailer
 
         if ($email->send()) {
             $survey->reminder_sent = date('Y-m-d H:i:s');
+
             return $surveysTable->save($survey);
         }
 
@@ -56,7 +57,7 @@ class Mailer
     /**
      * Sends survey invitations
      *
-     * @param $params [surveyId, communityId, senderEmail, senderName, recipients]
+     * @param array $params [surveyId, communityId, senderEmail, senderName, recipients]
      * @return array
      */
     public function sendInvitations($params)
@@ -90,6 +91,13 @@ class Mailer
         return $email->send();
     }
 
+    /**
+     * Sends an email informing a user that their account has been created
+     *
+     * @param User $user User
+     * @param string $password Unhashed password
+     * @return array
+     */
     public function sendNewAccountEmail($user, $password)
     {
         $homeUrl = Router::url('/', true);
@@ -106,6 +114,7 @@ class Mailer
             'loginUrl',
             'password'
         ));
+
         return $email->send();
     }
 
@@ -113,7 +122,7 @@ class Mailer
      * Sends an email with a link that can be used in the next
      * 24 hours to give the user access to /users/resetPassword
      *
-     * @param int $userId
+     * @param int $userId User ID
      * @return array
      */
     public function sendPasswordResetEmail($userId)
@@ -136,6 +145,7 @@ class Mailer
             'user',
             'resetUrl'
         ));
+
         return $email->send();
     }
 }

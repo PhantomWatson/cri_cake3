@@ -10,20 +10,21 @@ class LegacyPasswordHasher extends AbstractPasswordHasher
     /**
      * Returns a hash of the provided password
      *
-     * @param string $password
+     * @param string $password Password
      * @return string
      */
     public function hash($password)
     {
         $salt = Configure::read('Security.legacySalt');
-        return sha1($salt.$password);
+
+        return sha1($salt . $password);
     }
 
     /**
      * Checks if the password matches the input for the provided hash
      *
-     * @param string $password
-     * @param string $hashedPassword
+     * @param string $password Password
+     * @param string $hashedPassword The hashed version of the same password
      * @return bool
      */
     public function check($password, $hashedPassword)

@@ -132,8 +132,8 @@ class ResponsesController extends AppController
      * Returns a string to use as a CSS class for styling the
      * total internal alignment for a questionnaire
      *
-     * @param float $sum
-     * @param Community $community
+     * @param float $sum Sum of internal alignments
+     * @param Community $community Community
      * @return string
      */
     private function getInternalAlignmentClass($sum, $community)
@@ -177,6 +177,7 @@ class ResponsesController extends AppController
             ->all();
         if ($responses->isEmpty()) {
             $this->Flash->set('No missing alignments');
+
             return;
         }
 
@@ -230,7 +231,7 @@ class ResponsesController extends AppController
      * for the specified respondent. Also retrieves and sets
      * $respondent->sm_respondent_id if it was not already set
      *
-     * @param int $respondentId
+     * @param int $respondentId Respondent ID
      * @return void
      * @throws InternalErrorException
      */

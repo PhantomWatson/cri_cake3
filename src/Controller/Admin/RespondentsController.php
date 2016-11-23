@@ -44,7 +44,7 @@ class RespondentsController extends AppController
     /**
      * Approve uninvited respondents method
      *
-     * @param $respondentId
+     * @param int $respondentId Respondent ID
      * @return void
      */
     public function approveUninvited($respondentId)

@@ -80,6 +80,7 @@ class ProductsTable extends Table
                 return $exp->isNull('refunded');
             })
             ->count();
+
         return $count > 0;
     }
 
@@ -137,8 +138,10 @@ class ProductsTable extends Table
             } elseif ($offSurvey->alignment_passed == -1) {
                 if ($productId == 2) {
                     $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);
+
                     return [1, 'Can purchase (community is misaligned)', $purchaseUrl];
                 }
+
                 return [0, 'Community has not completed Step 2 yet.'];
             }
             if (! $community->fast_track && $productId > 3) {
@@ -149,8 +152,10 @@ class ProductsTable extends Table
                 } elseif ($orgSurvey->alignment_passed == -1) {
                     if ($productId == 4) {
                         $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);
+
                         return [1, 'Can purchase (community is misaligned)', $purchaseUrl];
                     }
+
                     return [0, 'Community has not completed Step 3 yet.'];
                 }
                 if ($orgSurvey->alignment_passed < 1 && $productId == 5) {
@@ -183,6 +188,7 @@ class ProductsTable extends Table
         }
 
         $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);
+
         return [1, 'Can be purchased', $purchaseUrl];
     }
 
@@ -233,6 +239,7 @@ class ProductsTable extends Table
             ->where(['item_code' => $itemCode])
             ->first()
             ->toArray();
+
         return isset($result['id']) ? $result['id'] : null;
     }
 }

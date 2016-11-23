@@ -91,6 +91,7 @@ class StatCategoriesTable extends Table
             ->select(['id'])
             ->where(['name' => $name])
             ->first();
+
         return $statCategory ? $statCategory->id : null;
     }
 

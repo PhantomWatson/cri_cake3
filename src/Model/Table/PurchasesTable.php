@@ -84,6 +84,7 @@ class PurchasesTable extends Table
         $rules->add($rules->existsIn(['community_id'], 'Communities'));
         $rules->add($rules->existsIn(['product_id'], 'Products'));
         $rules->add($rules->existsIn(['refunder_id'], 'Refunders'));
+
         return $rules;
     }
 

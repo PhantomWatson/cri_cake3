@@ -12,6 +12,11 @@ use Cake\ORM\TableRegistry;
 class PurchasesController extends AppController
 {
 
+    /**
+     * beforeFilter method
+     *
+     * @param \Cake\Event\Event $event Event
+     */
     public function beforeFilter(\Cake\Event\Event $event)
     {
         parent::beforeFilter();
@@ -20,7 +25,10 @@ class PurchasesController extends AppController
 
     /**
      * This gets requested by the CashNet payment system following a successful purchase,
-     * and logs a record of the purchase into the 'purchases' table. */
+     * and logs a record of the purchase into the 'purchases' table.
+     *
+     * @return void
+     */
     public function postback()
     {
         if ($this->request->data('respmessage') == 'SUCCESS') {

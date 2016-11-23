@@ -45,6 +45,7 @@ class Community extends Entity
     protected function _setOfficialSurvey($survey)
     {
         $survey['type'] = 'official';
+
         return $survey;
     }
 
@@ -57,6 +58,7 @@ class Community extends Entity
     protected function _setOrganizationSurvey($survey)
     {
         $survey['type'] = 'organization';
+
         return $survey;
     }
 }

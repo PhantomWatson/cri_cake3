@@ -72,6 +72,11 @@ class CommunitiesController extends AppController
         }
     }
 
+    /**
+     * Sets the $buttons variable for the view
+     *
+     * @return void
+     */
     private function adminIndexSetupFilterButtons()
     {
         $allFilters = [
@@ -106,7 +111,7 @@ class CommunitiesController extends AppController
                     $filters[$selectedFilterKey]
                     : null;
                 if ($selectedFilterLabel) {
-                    $groupLabel .= ': <strong>'.$selectedFilterLabel.'</strong>';
+                    $groupLabel .= ': <strong>' . $selectedFilterLabel . '</strong>';
                 }
             }
 
@@ -135,7 +140,7 @@ class CommunitiesController extends AppController
     /**
      * Passes necessary variables the view to be used by the adding/editing form
      *
-     * @param Entity $community
+     * @param Entity $community Community
      * @return void
      */
     private function prepareForm($community)
@@ -159,7 +164,7 @@ class CommunitiesController extends AppController
     public function index()
     {
         if (isset($_GET['search'])) {
-            $this->paginate['conditions']['Communities.name LIKE'] = '%'.$_GET['search'].'%';
+            $this->paginate['conditions']['Communities.name LIKE'] = '%' . $_GET['search'] . '%';
         } else {
             $this->adminIndexFilter();
         }
@@ -202,9 +207,12 @@ class CommunitiesController extends AppController
                     $community->id,
                     'official'
                 ]);
-                $message = $community->name.' has been added.';
-                $message .= '<br />Now you can <a href="'.$surveyUrl.'">set up this community\'s first questionnaire</a> and then <a href="'.$clientUrl.'">create a client account</a> for this community.';
+                $message =
+                    $community->name . ' has been added.' .
+                    '<br />Now you can <a href="' . $surveyUrl . '">set up this community\'s first questionnaire</a> ' .
+                    'and then <a href="' . $clientUrl . '">create a client account</a> for this community.';
                 $this->Flash->success($message);
+
                 return $this->redirect([
                     'prefix' => 'admin',
                     'action' => 'index'
@@ -228,6 +236,7 @@ class CommunitiesController extends AppController
      *
      * @param int|null $communityId Community ID
      * @return \Cake\Network\Response|null
+     * @throws NotFoundException
      */
     public function edit($communityId = null)
     {
@@ -251,6 +260,7 @@ class CommunitiesController extends AppController
             $errors = $community->errors();
             if (empty($errors) && $this->Communities->save($community)) {
                 $this->Flash->success('Community updated');
+
                 return $this->redirect([
                     'prefix' => 'admin',
                     'action' => 'index'
@@ -272,6 +282,8 @@ class CommunitiesController extends AppController
      *
      * @param int|null $communityId Community ID
      * @return \Cake\Network\Response|null
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
      */
     public function delete($communityId = null)
     {
@@ -287,6 +299,7 @@ class CommunitiesController extends AppController
         } else {
             $this->Flash->error('There was an error deleting that community');
         }
+
         return $this->redirect($this->request->referer());
     }
 
@@ -324,6 +337,8 @@ class CommunitiesController extends AppController
      * Progress method
      *
      * @param int $communityId Community ID
+     * @return void
+     * @throws NotFoundException
      */
     public function progress($communityId)
     {
@@ -370,6 +385,7 @@ class CommunitiesController extends AppController
         $this->Cookie->write('communityId', $communityId);
         $clientId = $this->Communities->getCommunityClientId($communityId);
         $this->Cookie->write('clientId', $clientId);
+
         return $this->redirect([
             'prefix' => 'client',
             'controller' => 'Communities',
@@ -403,6 +419,7 @@ class CommunitiesController extends AppController
                 if ($result) {
                     $msg = 'Client account created for ' . $client->name . ' and login instructions emailed';
                     $this->Flash->success($msg);
+
                     return $this->redirect(['action' => 'clients', $communityId]);
                 } else {
                     $msg = 'There was an error emailing account login info to ' . $client->name . '.';
@@ -445,6 +462,7 @@ class CommunitiesController extends AppController
         $this->Communities->Clients->unlink($community, [$client]);
         $msg = 'Removed ' . $client->name . ' from ' . $community->name;
         $this->Flash->success($msg);
+
         return $this->redirect($this->referer());
     }
 
@@ -481,9 +499,11 @@ class CommunitiesController extends AppController
             // Link client with this community
             if ($alreadyLinked) {
                 $this->Flash->notification($client->name . ' is already assigned to ' . $community->name);
+
                 return $this->redirect(['action' => 'clients', $communityId]);
             } elseif ($this->Communities->Clients->link($community, [$client])) {
                 $this->Flash->success($client->name . ' is now assigned to ' . $community->name);
+
                 return $this->redirect(['action' => 'clients', $communityId]);
             } else {
                 $this->Flash->error('There was an error assigning ' . $client->name . ' to ' . $community->name);
@@ -526,6 +546,13 @@ class CommunitiesController extends AppController
         ]);
     }
 
+    /**
+     * Method for /admin/communities/presentations
+     *
+     * @param null|int $communityId Community ID
+     * @return \Cake\Network\Response|null
+     * @throws NotFoundException
+     */
     public function presentations($communityId = null)
     {
         if (! $communityId) {
@@ -546,6 +573,7 @@ class CommunitiesController extends AppController
             $errors = $community->errors();
             if (empty($errors) && $this->Communities->save($community)) {
                 $this->Flash->success('Community presentation info updated');
+
                 return $this->redirect([
                     'prefix' => 'admin',
                     'action' => 'index'
@@ -563,6 +591,12 @@ class CommunitiesController extends AppController
         ]);
     }
 
+    /**
+     * Method for /admin/communities/notes
+     *
+     * @param int $communityId Community ID
+     * @return void
+     */
     public function notes($communityId)
     {
         $community = $this->Communities->get($communityId);

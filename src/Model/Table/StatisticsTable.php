@@ -74,6 +74,7 @@ class StatisticsTable extends Table
     {
         $rules->add($rules->existsIn(['area_id'], 'Areas'));
         $rules->add($rules->existsIn(['stat_category_id'], 'StatCategories'));
+
         return $rules;
     }
 
@@ -234,7 +235,7 @@ class StatisticsTable extends Table
             }
 
             // Determine category ID
-            $categoryName = $fields[2].' Sector Employment';
+            $categoryName = $fields[2] . ' Sector Employment';
             $categoryId = $statCategoriesTable->getIdFromName($categoryName);
             if (! $categoryId) {
                 exit("Unrecognized category: $categoryName");

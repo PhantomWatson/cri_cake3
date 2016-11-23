@@ -88,6 +88,7 @@ class RespondentsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['survey_id'], 'Surveys'));
+
         return $rules;
     }
 
@@ -104,6 +105,7 @@ class RespondentsTable extends Table
         if (isset($invited)) {
             $conditions['invited'] = $invited;
         }
+
         return $this->find('list')
             ->where($conditions)
             ->toArray();
@@ -388,6 +390,7 @@ class RespondentsTable extends Table
         $assignedCommunityId = $communitiesTable->getClientCommunityId($clientId);
         $idsFound = (bool)($respondent->survey_id && $survey->community_id);
         $communityIsAssigned = $survey->community_id == $assignedCommunityId;
+
         return $idsFound && $communityIsAssigned;
     }
 
@@ -473,6 +476,7 @@ class RespondentsTable extends Table
                 return $exp->notIn('id', $responsiveRespondentIds);
             }]);
         }
+
         return $query->toArray();
     }
 

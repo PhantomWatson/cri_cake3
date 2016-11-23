@@ -88,6 +88,12 @@ class AppController extends Controller
         $this->Cookie->httpOnly = true;
     }
 
+    /**
+     * beforeFilter method
+     *
+     * @param \Cake\Event\Event $event Event
+     * @return void
+     */
     public function beforeFilter(\Cake\Event\Event $event)
     {
         // Set accessible communities
@@ -112,11 +118,23 @@ class AppController extends Controller
         }
     }
 
+    /**
+     * beforeRender method
+     *
+     * @param \Cake\Event\Event $event Event
+     * @return void
+     */
     public function beforeRender(\Cake\Event\Event $event)
     {
         $this->setLayoutVariables();
     }
 
+    /**
+     * isAuthorized method
+     *
+     * @param array $user User
+     * @return bool
+     */
     public function isAuthorized($user)
     {
         if (! isset($user['role'])) {
@@ -130,19 +148,22 @@ class AppController extends Controller
 
         // Clients and consultants can access the respective role-prefixed actions
         $prefix = isset($this->request->params['prefix']) ? $this->request->params['prefix'] : null;
+
         return $prefix === $user['role'];
     }
 
     /**
      * Redirects (returns a redirect Response object) to the page used by admins for choosing a client to impersonate
+     *
      * @return Response
      * @throws ForbiddenException
      */
     protected function chooseClientToImpersonate()
     {
         if ($this->Auth->user('role') != 'admin') {
-            throw new ForbiddenException('Error: Client ID not found for '.$this->Auth->user('role').' account');
+            throw new ForbiddenException('Error: Client ID not found for ' . $this->Auth->user('role') . ' account');
         }
+
         return $this->redirect([
             'prefix' => 'admin',
             'controller' => 'Users',
@@ -173,8 +194,9 @@ class AppController extends Controller
 
     /**
      * Accepts an array of stringy variables and returns a comma-delimited list with an optional conjunction before the last element
-     * @param array $array
-     * @param string $conjunction
+     *
+     * @param array $array Array to turn into a string
+     * @param string $conjunction Conjunction, defaults to 'and'
      * @return string
      */
     protected function arrayToList($array, $conjunction = 'and')
@@ -190,7 +212,7 @@ class AppController extends Controller
 
         if ($conjunction) {
             $lastElement = array_pop($array);
-            array_push($array, $conjunction.' '.$lastElement);
+            array_push($array, $conjunction . ' ' . $lastElement);
         }
 
         if ($count == 2) {
@@ -202,7 +224,9 @@ class AppController extends Controller
 
     /**
      * Uses cookie to remember current sorting and apply remembered sorting when none is currently specified
-     * @param string $cookieParentKey
+     *
+     * @param string $cookieParentKey Cookie parent key
+     * @return void
      */
     public function cookieSort($cookieParentKey)
     {
@@ -241,6 +265,11 @@ class AppController extends Controller
         }
     }
 
+    /**
+     * Sets variables used in the default layout
+     *
+     * @return void
+     */
     public function setLayoutVariables()
     {
         // Set up variables for sidebar
@@ -262,6 +291,11 @@ class AppController extends Controller
         $this->request->session()->delete('FlashMessage');
     }
 
+    /**
+     * Sets the $adminHeader variable
+     *
+     * @return void
+     */
     public function prepareAdminHeader()
     {
         $this->loadModel('Communities');

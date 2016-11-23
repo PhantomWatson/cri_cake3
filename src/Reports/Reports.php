@@ -1,13 +1,17 @@
 <?php
 namespace App\Reports;
 
-
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class Reports
 {
+    /**
+     * Returns an array used in browser-based and Excel reports
+     *
+     * @return array
+     */
     public function getReport()
     {
         $report = [];
@@ -19,13 +23,13 @@ class Reports
             ])
             ->where(['dummy' => 0])
             ->contain([
-                'ParentAreas' => function($q) {
+                'ParentAreas' => function ($q) {
                     return $q->select(['id', 'name', 'fips']);
                 },
-                'OfficialSurvey' => function($q) {
+                'OfficialSurvey' => function ($q) {
                     return $q->select(['id', 'alignment']);
                 },
-                'OrganizationSurvey' => function($q) {
+                'OrganizationSurvey' => function ($q) {
                     return $q->select(['id', 'alignment']);
                 }
             ])
@@ -291,9 +295,9 @@ class Reports
                     ]);
             }
             $cellsForRightBorder = [
-                $lastGeneralCol.$currentRow,
-                $lastOfficialsSurveyCol.$currentRow,
-                $lastOrgSurveyCol.$currentRow
+                $lastGeneralCol . $currentRow,
+                $lastOfficialsSurveyCol . $currentRow,
+                $lastOrgSurveyCol . $currentRow
             ];
             foreach ($cellsForRightBorder as $cell) {
                 $objPHPExcel->getActiveSheet()
@@ -456,13 +460,14 @@ class Reports
         \PHPExcel_Cell::setValueBinder(new \PHPExcel_Cell_AdvancedValueBinder());
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
+
         return $objPHPExcel;
     }
 
     /**
      * Returns the nth Excel-style column key (A, B, C, ... AA, AB, etc.)
      *
-     * @param int $num
+     * @param int $num Column number
      * @return string
      */
     private function getColumnKey($num)

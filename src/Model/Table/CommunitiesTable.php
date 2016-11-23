@@ -146,6 +146,7 @@ class CommunitiesTable extends Table
     {
         $rules->add($rules->existsIn('local_area_id', 'LocalAreas'));
         $rules->add($rules->existsIn('parent_area_id', 'ParentAreas'));
+
         return $rules;
     }
 
@@ -169,6 +170,7 @@ class CommunitiesTable extends Table
         if ($result) {
             return count($result['consultants']);
         }
+
         return 0;
     }
 
@@ -202,6 +204,7 @@ class CommunitiesTable extends Table
             $name = $community['name'];
             $retval[$id] = $name;
         }
+
         return $retval;
     }
 
@@ -226,6 +229,7 @@ class CommunitiesTable extends Table
                 }
             ])
             ->first();
+
         return isset($result['consultants']) ? $result['consultants'] : [];
     }
 
@@ -258,6 +262,7 @@ class CommunitiesTable extends Table
         }
         $results = $query->toArray();
         $communityIds = array_values($results);
+
         return $this->find('list')
             ->where(function ($exp, $q) use ($communityIds) {
                 return $exp->in('id', $communityIds);
@@ -282,6 +287,7 @@ class CommunitiesTable extends Table
             return null;
         }
         $communityIds = array_keys($communities);
+
         return $communityIds[0];
     }
 
@@ -306,6 +312,7 @@ class CommunitiesTable extends Table
             ])
             ->hydrate(false)
             ->first();
+
         return $result ? $result['clients'][0]['id'] : null;
     }
 
@@ -336,6 +343,7 @@ class CommunitiesTable extends Table
                 $retval[] = $client;
             }
         }
+
         return $retval;
     }
 
@@ -348,6 +356,7 @@ class CommunitiesTable extends Table
     public function getClientCount($communityId)
     {
         $clients = $this->getClients($communityId);
+
         return count($clients);
     }
 
@@ -575,6 +584,7 @@ class CommunitiesTable extends Table
             ->select(['id'])
             ->where(['community_id' => $communityId])
             ->toArray();
+
         return $this->Clients->unlink($community, $clients);
     }
 
@@ -592,6 +602,7 @@ class CommunitiesTable extends Table
             ->select(['id'])
             ->where(['community_id' => $communityId])
             ->toArray();
+
         return $this->Consultants->unlink($community, $consultants);
     }
 
@@ -644,6 +655,7 @@ class CommunitiesTable extends Table
                 'Communities.score',
                 'Communities.created'
             ]);
+
         return $query;
     }
 }

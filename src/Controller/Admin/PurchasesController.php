@@ -53,6 +53,7 @@ class PurchasesController extends AppController
             $purchase = $this->Purchases->get($purchaseId);
         } catch (RecordNotFoundException $e) {
             $this->Flash->error("Payment record #$purchaseId not found.");
+
             return $this->redirect(['action' => 'index']);
         }
 
@@ -100,6 +101,7 @@ class PurchasesController extends AppController
             $errors = $purchase->errors();
             if (empty($errors) && $this->Purchases->save($purchase)) {
                 $this->Flash->success('Purchase record added');
+
                 return $this->redirect([
                     'action' => 'index'
                 ]);

@@ -105,6 +105,7 @@ class ResponsesTable extends Table
     {
         $rules->add($rules->existsIn(['respondent_id'], 'Respondents'));
         $rules->add($rules->existsIn(['survey_id'], 'Surveys'));
+
         return $rules;
     }
 
@@ -198,6 +199,7 @@ class ResponsesTable extends Table
         $count = $this->find('all')
             ->where($conditions)
             ->count();
+
         return $count > 0;
     }
 
@@ -247,6 +249,7 @@ class ResponsesTable extends Table
         $count = $this->find('all')
             ->where(['survey_id' => $surveyId])
             ->count();
+
         return $count > 0;
     }
 
@@ -312,6 +315,7 @@ class ResponsesTable extends Table
     public function getDeviationWeight($actualRank, $responseRank)
     {
         $deviation = abs($actualRank - $responseRank);
+
         return 1 - ($deviation * 0.2);
     }
 
@@ -436,6 +440,7 @@ class ResponsesTable extends Table
                 $retval[$rId] = $response;
             }
         }
+
         return $retval;
     }
 
@@ -462,6 +467,7 @@ class ResponsesTable extends Table
                 $retval[$sector][$rank] = $choiceCount;
             }
         }
+
         return $retval;
     }
 
@@ -497,6 +503,7 @@ class ResponsesTable extends Table
                 $i++;
             }
         }
+
         return $retval;
     }
 
@@ -516,6 +523,7 @@ class ResponsesTable extends Table
                 $retval[$sector][$sectorRank] = 0.2 * $choiceRank;
             }
         }
+
         return $retval;
     }
 
@@ -539,6 +547,7 @@ class ResponsesTable extends Table
             }
             $retval[$sector] = $sum / $responseCount;
         }
+
         return $retval;
     }
 
@@ -561,6 +570,7 @@ class ResponsesTable extends Table
                 $retval[$sector][$rank] = $rank - $average + 5;
             }
         }
+
         return $retval;
     }
 
@@ -574,6 +584,7 @@ class ResponsesTable extends Table
     public function getInternalAlignment($surveyId)
     {
         $alignmentPerSector = $this->getInternalAlignmentPerSector($surveyId);
+
         return empty($alignmentPerSector) ? 0 : array_sum($alignmentPerSector);
     }
 

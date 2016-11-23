@@ -13,12 +13,23 @@ use Cake\Validation\Validation;
  */
 class SurveysController extends AppController
 {
+    /**
+     * initialize method
+     *
+     * @return void
+     */
     public function initialize()
     {
         parent::initialize();
         $this->Auth->allow(['cronImport', 'import']);
     }
 
+    /**
+     * Method for /surveys/import
+     *
+     * @param null|int $surveyId Survey ID
+     * @return \Cake\Network\Response
+     */
     public function import($surveyId = null)
     {
         $this->viewBuilder()->layout('blank');
@@ -29,6 +40,7 @@ class SurveysController extends AppController
         if (! $survey->active) {
             $this->response->statusCode(403);
             $this->set('message', 'This questionnaire is currently inactive. New responses cannot be imported.');
+
             return $this->render('import');
         }
 
@@ -42,7 +54,7 @@ class SurveysController extends AppController
         // Convert IDs from integers to strings (the SurveyMonkey API is particular about this)
         $smRespondentIds = array_keys($respondents);
         foreach ($smRespondentIds as &$smRId) {
-            $smRId = (string) $smRId;
+            $smRId = (string)$smRId;
         }
 
         // Collect responses
@@ -66,17 +78,17 @@ class SurveysController extends AppController
                 // Ignore response if it doesn't include all PWRRR ranks
                 $responseRanks = $responsesTable->getResponseRanks($serializedResponse, $survey);
                 if (! $responseRanks) {
-                    $errorMsgs[] = 'Response from '.$name.' did not contain all PWR<sup>3</sup> rankings.';
+                    $errorMsgs[] = "Response from $name did not contain all PWR<sup>3</sup> rankings.";
                     continue;
                 }
 
                 // Ignore responses if email address is missing or invalid
                 if (empty($respondent['email'])) {
-                    $errorMsgs[] = 'Response from '.$name.' is missing an email address.';
+                    $errorMsgs[] = "Response from $name is missing an email address.";
                     continue;
                 }
                 if (! Validation::email($respondent['email'])) {
-                    $errorMsgs[] = 'Response from '.$name.' has an invalid email address: '.$respondent['email'].'.';
+                    $errorMsgs[] = "Response from $name has an invalid email address: {$respondent['email']}.";
                     continue;
                 }
 
@@ -158,7 +170,7 @@ class SurveysController extends AppController
                     $responsesTable->save($newResponse);
                     $importedCount++;
                 } else {
-                    $errorMsgs[] = 'Response from '.$name.' is missing required data.';
+                    $errorMsgs[] = "Response from $name is missing required data.";
                     continue;
                 }
             }
@@ -177,13 +189,24 @@ class SurveysController extends AppController
         // Finalize
         $this->Surveys->setChecked($surveyId);
         if (empty($errorMsgs)) {
-            $message = $importedCount ? $importedCount.__n(' response', ' responses', $importedCount).' imported' : 'No new responses to import';
+            if ($importedCount) {
+                $message = $importedCount . __n(' response', ' responses', $importedCount) . ' imported';
+            } else {
+                $message = 'No new responses to import';
+            }
         } else {
-            $message = $importedCount ? $importedCount.__n(' response', ' responses', $importedCount).' imported<br />' : '';
-            $message .= 'Errors prevented the following '.__n('response', 'responses', count($errorMsgs)).' from being imported:';
-            $message .= '<ul>';
+            if ($importedCount) {
+                $message = $importedCount . __n(' response', ' responses', $importedCount) . ' imported<br />';
+            } else {
+                $message = '';
+            }
+            $message .=
+                'Errors prevented the following ' .
+                __n('response', 'responses', count($errorMsgs)) .
+                ' from being imported:' .
+                '<ul>';
             foreach ($errorMsgs as $errorMsg) {
-                $message .= '<li>'.$errorMsg.'</li>';
+                $message .= '<li>' . $errorMsg . '</li>';
             }
             $message .= '</ul>';
             $this->response->statusCode(500);
@@ -192,13 +215,25 @@ class SurveysController extends AppController
         $this->set(compact('message'));
     }
 
+    /**
+     * Sets a 500 status code and passes $message to the view
+     *
+     * @param string $message Error message
+     * @return \Cake\Network\Response
+     */
     private function renderImportError($message)
     {
         $this->response->statusCode(500);
         $this->set(compact('message'));
+
         return $this->render('import');
     }
 
+    /**
+     * Method for /surveys/get-survey-list
+     *
+     * @return void
+     */
     public function getSurveyList()
     {
         $params = $this->request->query;
@@ -210,6 +245,11 @@ class SurveysController extends AppController
         $this->render('api');
     }
 
+    /**
+     * Method for /surveys/get-survey-url
+     *
+     * @return void
+     */
     public function getSurveyUrl($smId = null)
     {
         $this->set([
@@ -221,6 +261,8 @@ class SurveysController extends AppController
 
     /**
      * Used by a JS call to find out what community, if any, a survey has already been assigned to
+     *
+     * @return void
      */
     public function checkSurveyAssignment($smSurveyId = null)
     {
@@ -243,6 +285,11 @@ class SurveysController extends AppController
         $this->set('community', $community);
     }
 
+    /**
+     * Method for /surveys/get-qna-ids
+     *
+     * @return void
+     */
     public function getQnaIds($smId)
     {
         $result = $this->Surveys->getPwrrrQuestionAndAnswerIds($smId);
@@ -251,11 +298,16 @@ class SurveysController extends AppController
         $this->render('api');
     }
 
+    /**
+     * Method for /surveys/cron-import, the target of a cron job
+     *
+     * @return void
+     */
     public function cronImport()
     {
         $surveyId = $this->Surveys->getNextAutoImportCandidate();
         if ($surveyId) {
-            echo 'Importing survey #'.$surveyId.'<br />';
+            echo 'Importing survey #' . $surveyId . '<br />';
             $this->import($surveyId);
             $this->Surveys->setChecked($surveyId);
         } else {

@@ -15,12 +15,22 @@ use Cake\Network\Exception\NotFoundException;
 class UsersController extends AppController
 {
 
+    /**
+     * initialize method
+     *
+     * @return void
+     */
     public function initialize()
     {
         parent::initialize();
         $this->Auth->allow(['login', 'logout', 'forgotPassword', 'resetPassword']);
     }
 
+    /**
+     * Method for /users/login
+     *
+     * @return \Cake\Network\Response|null
+     */
     public function login()
     {
         if ($this->request->is('post')) {
@@ -58,11 +68,22 @@ class UsersController extends AppController
         ]);
     }
 
+    /**
+     * Method for /users/logout
+     *
+     * @return \Cake\Network\Response|null
+     */
     public function logout()
     {
         return $this->redirect($this->Auth->logout());
     }
 
+    /**
+     * isAuthorized method
+     *
+     * @param array $user User
+     * @return bool
+     */
     public function isAuthorized($user)
     {
         if (parent::isAuthorized($user)) {
@@ -70,9 +91,15 @@ class UsersController extends AppController
         }
 
         $accessible = ['changePassword', 'updateContact'];
+
         return in_array($this->request->action, $accessible);
     }
 
+    /**
+     * Method for /users/change-password
+     *
+     * @return void
+     */
     public function changePassword()
     {
         $userId = $this->Auth->user('id');
@@ -91,6 +118,11 @@ class UsersController extends AppController
         ]);
     }
 
+    /**
+     * Method for /users/update-contact
+     *
+     * @return void
+     */
     public function updateContact()
     {
         $id = $this->Auth->user('id');
@@ -114,6 +146,8 @@ class UsersController extends AppController
 
     /**
      * Allows the user to enter their email address and get a link to reset their password
+     *
+     * @return void
      */
     public function forgotPassword()
     {
@@ -123,25 +157,29 @@ class UsersController extends AppController
             $email = strtolower(trim($email));
             $adminEmail = Configure::read('admin_email');
             if (empty($email)) {
-                $msg = 'Please enter the email address you registered with to have your password reset. ';
-                $msg .= 'Email <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> for assistance.';
+                $msg =
+                    'Please enter the email address you registered with to have your password reset. ' .
+                    "Email <a href=\"mailto:$adminEmail\">$adminEmail</a> for assistance.";
                 $this->Flash->error($msg);
             } else {
                 $userId = $this->Users->getIdWithEmail($email);
                 if ($userId) {
                     $Mailer = new Mailer();
                     if ($Mailer->sendPasswordResetEmail($userId)) {
-                        $this->Flash->success('Success! You should be shortly receiving an email with a link to reset your password.');
+                        $msg = 'Success! You should be shortly receiving an email with a link to reset your password.';
+                        $this->Flash->success($msg);
                         $this->request->data = [];
                     } else {
-                        $msg = 'There was an error sending your password-resetting email. ';
-                        $msg .= 'Please try again, or email <a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> for assistance.';
+                        $msg =
+                            'There was an error sending your password-resetting email. ' .
+                            "Please try again, or email <a href=\"mailto:$adminEmail\">$adminEmail</a> for assistance.";
                         $this->Flash->error($msg);
                     }
                 } else {
-                    $msg = 'We couldn\'t find an account registered with the email address <strong>'.$email.'</strong>. ';
-                    $msg .= 'Please make sure you spelled it correctly, and email ';
-                    $msg .= '<a href="mailto:'.$adminEmail.'">'.$adminEmail.'</a> if you need assistance.';
+                    $msg =
+                        "We couldn't find an account registered with the email address <strong>$email</strong>. " .
+                        'Please make sure you spelled it correctly, and email ' .
+                        "<a href=\"mailto:$adminEmail\">$adminEmail</a> if you need assistance.";
                     $this->Flash->error($msg);
                 }
             }
@@ -152,6 +190,16 @@ class UsersController extends AppController
         ]);
     }
 
+    /**
+     * Method for /users/reset-password
+     *
+     * @param null|int $userId User ID
+     * @param null|int $timestamp Timestamp of hash generation
+     * @param null|string $hash Security hash emailed to user
+     * @return \Cake\Network\Response|null
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     */
     public function resetPassword($userId = null, $timestamp = null, $hash = null)
     {
         if (! $userId || ! $timestamp && ! $hash) {
@@ -175,6 +223,7 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->data());
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your password has been updated.');
+
                 return $this->redirect(['action' => 'login']);
             }
         }

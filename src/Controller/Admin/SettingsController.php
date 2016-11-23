@@ -25,7 +25,7 @@ class SettingsController extends AppController
                 $errors = $setting->errors();
                 if (empty($errors)) {
                     $this->Settings->save($setting);
-                    $this->Flash->success($setting->name.' updated');
+                    $this->Flash->success($setting->name . ' updated');
                 } else {
                     $this->Flash->error('There was an error updating ' . $setting->name);
                 }

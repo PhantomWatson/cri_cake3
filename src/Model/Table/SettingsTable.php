@@ -68,6 +68,7 @@ class SettingsTable extends Table
         if (empty($result)) {
             throw new NotFoundException('intAlignmentAdjustment setting not found');
         }
+
         return $result->value;
     }
 
@@ -84,6 +85,7 @@ class SettingsTable extends Table
         if (empty($result)) {
             throw new NotFoundException('intAlignmentThreshhold setting not found');
         }
+
         return $result->value;
     }
 }

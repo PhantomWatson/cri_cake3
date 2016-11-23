@@ -156,6 +156,7 @@ class SurveysTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['community_id'], 'Communities'));
+
         return $rules;
     }
 
@@ -204,6 +205,7 @@ class SurveysTable extends Table
                 break;
             }
         }
+
         return $retval;
     }
 
@@ -212,6 +214,7 @@ class SurveysTable extends Table
      *
      * @param string $smId SurveyMonkey-defined survey ID
      * @return string
+     * @throws NotFoundException
      */
     public function getSMSurveyUrl($smId = null)
     {
@@ -248,6 +251,7 @@ class SurveysTable extends Table
             throw new NotFoundException("SurveyMonkey survey #$smId URL not found");
         } else {
             Cache::write($smId, $retval, 'survey_urls');
+
             return $retval;
         }
     }
@@ -263,6 +267,7 @@ class SurveysTable extends Table
             ->select(['community_id'])
             ->where($conditions)
             ->limit(1);
+
         return $results->isEmpty() ? null : $results->first()->community_id;
     }
 
@@ -282,6 +287,8 @@ class SurveysTable extends Table
      * @param int $communityId Community ID
      * @param string $surveyType Either 'official' or 'organization'
      * @return bool
+     * @throws InternalErrorException
+     * @throws NotFoundException
      */
     public function isOpen($communityId, $surveyType)
     {
@@ -301,6 +308,7 @@ class SurveysTable extends Table
                 'type' => $surveyType
             ])
             ->limit(1);
+
         return $results->isEmpty() ? false : ! empty($results->first()->sm_url);
     }
 
@@ -351,6 +359,7 @@ class SurveysTable extends Table
         if ($surveyType) {
             return array_pop($surveyStatus);
         }
+
         return $surveyStatus;
     }
 
@@ -368,6 +377,7 @@ class SurveysTable extends Table
                 'type' => $type
             ])
             ->limit(1);
+
         return $results->isEmpty() ? null : $results->first()->id;
     }
 
@@ -379,6 +389,7 @@ class SurveysTable extends Table
     {
         $survey = $this->get($surveyId);
         $survey->responses_checked = date('Y-m-d H:i:s');
+
         return (bool)$this->save($survey);
     }
 
@@ -391,6 +402,7 @@ class SurveysTable extends Table
         if ($surveyId) {
             return $this->get($surveyId)->responses_checked;
         }
+
         return null;
     }
 
@@ -404,6 +416,7 @@ class SurveysTable extends Table
             ->select(['id'])
             ->order(['responses_checked' => 'ASC'])
             ->limit(1);
+
         return $results->isEmpty() ? null : $results->first()->id;
     }
 
@@ -510,6 +523,7 @@ class SurveysTable extends Table
         foreach ($data as $field => $value) {
             if (! $value) {
                 $answer = str_replace('_aid', '', $field);
+
                 return [false, "Error: Could not find the answer ID for the answer '$answer'"];
             }
         }
@@ -540,6 +554,7 @@ class SurveysTable extends Table
                 }
             }
         }
+
         return null;
     }
 
@@ -564,6 +579,7 @@ class SurveysTable extends Table
         if ($this->save($survey)) {
             return [true, 'Question and answer IDs saved.'];
         }
+
         return [false, 'Error: Could not save question and answer IDs'];
     }
 
@@ -581,6 +597,7 @@ class SurveysTable extends Table
         if (! $invitations || ! $responses) {
             return 0;
         }
+
         return round(($responses / $invitations) * 100);
     }
 
@@ -600,6 +617,7 @@ class SurveysTable extends Table
                 return $exp->notEq('sm_url', '');
             })
             ->count();
+
         return $count > 0;
     }
 
@@ -616,6 +634,7 @@ class SurveysTable extends Table
                 'invited' => 0
             ])
             ->count();
+
         return $count > 0;
     }
 
@@ -632,6 +651,7 @@ class SurveysTable extends Table
                 'approved' => 0
             ])
             ->count();
+
         return $count > 0;
     }
 
@@ -660,6 +680,7 @@ class SurveysTable extends Table
         $getFieldName = function ($sector) {
             return $sector . '_rank';
         };
+
         return array_map($getFieldName, $sectors);
     }
 
@@ -683,6 +704,7 @@ class SurveysTable extends Table
                 'created >' => $survey->alignment_calculated
             ])
             ->count();
+
         return $count > 0;
     }
 
@@ -772,6 +794,7 @@ class SurveysTable extends Table
     public function getNextAutoImportCandidate()
     {
         $results = $this->find('autoImportCandidate');
+
         return $results->isEmpty() ? null : $results->first()->id;
     }
 
@@ -823,10 +846,12 @@ class SurveysTable extends Table
             if ($minutes >= 10) {
                 return "$msg and $minutes minutes";
             }
+
             return $msg;
         }
 
         $minutes = max($minutes, 1);
+
         return ($minutes == 1) ? 'every minute' : "every $minutes minutes";
     }
 
@@ -847,6 +872,7 @@ class SurveysTable extends Table
             return null;
         }
         $errors = $results->first()->import_errors;
+
         return $errors ? unserialize($errors) : null;
     }
 
@@ -862,6 +888,7 @@ class SurveysTable extends Table
             ->select(['active'])
             ->where(['id' => $surveyId])
             ->limit(1);
-        return $results->isEmpty() ? false : (bool) $results->first()->active;
+
+        return $results->isEmpty() ? false : (bool)$results->first()->active;
     }
 }
