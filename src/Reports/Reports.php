@@ -19,7 +19,13 @@ class Reports
         $communitiesTable = TableRegistry::get('Communities');
         $communities = $communitiesTable->find('all')
             ->select([
-                'id', 'name', 'score', 'notes'
+                'id',
+                'name',
+                'score',
+                'presentation_a',
+                'presentation_b',
+                'presentation_c',
+                'notes'
             ])
             ->where(['dummy' => 0])
             ->contain([
@@ -51,15 +57,24 @@ class Reports
         $sectors = $surveysTable->getSectors();
         foreach ($communities as $community) {
             // Collect general information about this community
+            $presentationsGiven = [];
+            foreach (['a', 'b', 'c'] as $letter) {
+                $date = $community->{'presentation_' . $letter};
+                if ($date) {
+                    if ($date->format('Y-m-d') <= date('Y-m-d')) {
+                        $presentationsGiven[$letter] = 'Completed';
+                    } else {
+                        $presentationsGiven[$letter] = 'Scheduled';
+                    }
+                } else {
+                    $presentationsGiven[$letter] = 'Not scheduled';
+                }
+            }
             $report[$community->id] = [
                 'name' => $community->name,
                 'parentArea' => $community->parent_area->name,
                 'parentAreaFips' => $community->parent_area->fips,
-                'presentationsGiven' => [
-                    'a' => 'No',
-                    'b' => 'No',
-                    'c' => 'No'
-                ],
+                'presentationsGiven' => $presentationsGiven,
                 'notes' => $community->notes
             ];
 
@@ -196,10 +211,10 @@ class Reports
                 $surveyColumnHeaders[$surveyType][] = 'Overall';
             }
             if ($surveyType == 'officials') {
-                $surveyColumnHeaders[$surveyType][] = 'Presentation A Given';
-                $surveyColumnHeaders[$surveyType][] = 'Presentation B Given';
+                $surveyColumnHeaders[$surveyType][] = 'Presentation A';
+                $surveyColumnHeaders[$surveyType][] = 'Presentation B';
             } else {
-                $surveyColumnHeaders[$surveyType][] = 'Presentation C Given';
+                $surveyColumnHeaders[$surveyType][] = 'Presentation C';
             }
             $surveyColumnHeaders[$surveyType][] = 'Status';
         }

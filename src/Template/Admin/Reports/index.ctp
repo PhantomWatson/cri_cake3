@@ -11,10 +11,10 @@
         }
         $cells[] = 'Overall';
         if ($type == 'officials') {
-            $cells[] = 'Presentation A Given';
-            $cells[] = 'Presentation B Given';
+            $cells[] = 'Presentation A';
+            $cells[] = 'Presentation B';
         } else {
-            $cells[] = 'Presentation C Given';
+            $cells[] = 'Presentation C';
         }
         $cells[] = 'Status';
         $retval = '';
