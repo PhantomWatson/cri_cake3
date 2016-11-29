@@ -13,6 +13,7 @@ class CommunitiesController extends AppController
      */
     public function index()
     {
+        $this->viewBuilder()->helpers(['ClientHome']);
         $clientId = $this->getClientId();
         if (! $clientId) {
             return $this->chooseClientToImpersonate();

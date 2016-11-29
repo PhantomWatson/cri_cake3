@@ -13,30 +13,6 @@
     <?php $this->element('script', ['script' => 'admin']); ?>
 <?php endif; ?>
 
-<?php
-    function glyphicon($bool) {
-        $class = $bool ? 'ok' : 'remove';
-        return '<span class="glyphicon glyphicon-'.$class.'"></span>';
-    }
-
-    /**
-     * Returns a <tbody> string with the appropriate class
-     *
-     * @param $tbodyStep Step that this <tbody> contains
-     * @param $currentStep Step that this community is currently at
-     * @return string
-     */
-    function tbodyForStep($tbodyStep, $currentStep) {
-        if ($tbodyStep > floor($currentStep)) {
-            return '<tbody class="future">';
-        }
-        if ($tbodyStep < floor($currentStep)) {
-            return '<tbody class="past">';
-        }
-        return '<tbody class="current">';
-    }
-?>
-
 <div id="client_home">
     <table>
         <?= $this->element('ClientHome/step1') ?>

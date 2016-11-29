@@ -1,4 +1,4 @@
-<?= tbodyForStep(1, $score) ?>
+<?= $this->ClientHome->tbodyForStep(1, $score) ?>
     <tr>
         <th colspan="3">
             <button class="step-header">
@@ -8,7 +8,7 @@
     </tr>
     <tr>
         <td>
-            <?= glyphicon($criteria[1]['survey_purchased'][1]) ?>
+            <?= $this->ClientHome->glyphicon($criteria[1]['survey_purchased'][1]) ?>
         </td>
         <td>
             <?= $criteria[1]['survey_purchased'][0] ?>
@@ -26,7 +26,7 @@
         <?php $leadershipSurveyCreated = $criteria[1]['survey_created'][1]; ?>
         <tr>
             <td>
-                <?= glyphicon($criteria[1]['survey_created'][1]) ?>
+                <?= $this->ClientHome->glyphicon($criteria[1]['survey_created'][1]) ?>
             </td>
             <td>
                 <?= $criteria[1]['survey_created'][0] ?>

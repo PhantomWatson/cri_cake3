@@ -1,4 +1,4 @@
-<?= tbodyForStep(4, $score) ?>
+<?= $this->ClientHome->tbodyForStep(4, $score) ?>
     <tr>
         <th colspan="3">
             <button class="step-header">

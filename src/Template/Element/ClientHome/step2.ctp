@@ -1,4 +1,4 @@
-<?= tbodyForStep(2, $score) ?>
+<?= $this->ClientHome->tbodyForStep(2, $score) ?>
     <tr>
         <th colspan="3">
             <button class="step-header">
@@ -11,7 +11,7 @@
         <?php $leadershipSurveyCreated = $criteria[2]['survey_created'][1] ?>
         <tr>
             <td>
-                <?= glyphicon($criteria[2]['survey_created'][1]) ?>
+                <?= $this->ClientHome->glyphicon($criteria[2]['survey_created'][1]) ?>
             </td>
             <td>
                 <?= $criteria[2]['survey_created'][0] ?>
@@ -28,7 +28,7 @@
 
     <tr>
         <td>
-            <?= glyphicon($criteria[2]['invitations_sent'][1]) ?>
+            <?= $this->ClientHome->glyphicon($criteria[2]['invitations_sent'][1]) ?>
         </td>
         <td>
             <?= $criteria[2]['invitations_sent'][0] ?>
@@ -50,7 +50,7 @@
     </tr>
     <tr>
         <td>
-            <?= glyphicon($criteria[2]['responses_received'][1]) ?>
+            <?= $this->ClientHome->glyphicon($criteria[2]['responses_received'][1]) ?>
         </td>
         <td>
             <p>
@@ -117,7 +117,7 @@
     </tr>
     <tr>
         <td>
-            <?= glyphicon($criteria[2]['response_threshhold_reached'][1]) ?>
+            <?= $this->ClientHome->glyphicon($criteria[2]['response_threshhold_reached'][1]) ?>
         </td>
         <td>
             <?= $criteria[2]['response_threshhold_reached'][0] ?>
@@ -141,7 +141,7 @@
     <?php if (isset($criteria[2]['unapproved_addressed'])): ?>
         <tr>
             <td>
-                <?= glyphicon($criteria[2]['unapproved_addressed'][1]) ?>
+                <?= $this->ClientHome->glyphicon($criteria[2]['unapproved_addressed'][1]) ?>
             </td>
             <td>
                 <?= $criteria[2]['unapproved_addressed'][0] ?>
@@ -163,7 +163,7 @@
 
     <tr>
         <td>
-            <?= glyphicon($criteria[2]['alignment_calculated'][1]) ?>
+            <?= $this->ClientHome->glyphicon($criteria[2]['alignment_calculated'][1]) ?>
         </td>
         <td>
             <?= $criteria[2]['alignment_calculated'][0] ?>
@@ -175,7 +175,7 @@
     <?php if (isset($criteria[2]['summit_purchased'])): ?>
         <tr>
             <td>
-                <?= glyphicon($criteria[2]['summit_purchased'][1]) ?>
+                <?= $this->ClientHome->glyphicon($criteria[2]['summit_purchased'][1]) ?>
             </td>
             <td>
                 <?= $criteria[2]['summit_purchased'][0] ?>
@@ -192,7 +192,7 @@
         <?php if ($step2Alignment): ?>
             <tr>
                 <td>
-                    <?= glyphicon($step2Alignment[1]) ?>
+                    <?= $this->ClientHome->glyphicon($step2Alignment[1]) ?>
                 </td>
                 <td>
                     <?= $step2Alignment[0] ?>
@@ -205,7 +205,7 @@
         <?php if ($step2Alignment): ?>
             <tr>
                 <td>
-                    <?= glyphicon($step2Alignment[1]) ?>
+                    <?= $this->ClientHome->glyphicon($step2Alignment[1]) ?>
                 </td>
                 <td>
                     <?= $step2Alignment[0] ?>
@@ -219,7 +219,7 @@
     <?php if ($step2SurveyPurchased): ?>
         <tr>
             <td>
-                <?= glyphicon($step2SurveyPurchased[1]) ?>
+                <?= $this->ClientHome->glyphicon($step2SurveyPurchased[1]) ?>
             </td>
             <td>
                 <?= $step2SurveyPurchased[0] ?>

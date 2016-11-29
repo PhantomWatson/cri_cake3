@@ -1,4 +1,4 @@
-<?= tbodyForStep(3, $score) ?>
+<?= $this->ClientHome->tbodyForStep(3, $score) ?>
     <tr>
         <th colspan="3">
             <button class="step-header">
@@ -8,7 +8,7 @@
     </tr>
     <tr>
         <td>
-            <?= glyphicon($criteria[3]['survey_created'][1]) ?>
+            <?= $this->ClientHome->glyphicon($criteria[3]['survey_created'][1]) ?>
         </td>
         <td>
             <?= $criteria[3]['survey_created'][0] ?>
@@ -35,7 +35,7 @@
     </tr>
     <tr>
         <td>
-            <?= glyphicon($criteria[3]['responses_received'][1]) ?>
+            <?= $this->ClientHome->glyphicon($criteria[3]['responses_received'][1]) ?>
         </td>
         <td>
             <p>
@@ -102,7 +102,7 @@
     </tr>
     <tr>
         <td>
-            <?= glyphicon($criteria[3]['alignment_calculated'][1]) ?>
+            <?= $this->ClientHome->glyphicon($criteria[3]['alignment_calculated'][1]) ?>
         </td>
         <td>
             <?= $criteria[3]['alignment_calculated'][0] ?>
@@ -114,7 +114,7 @@
     <?php if (isset($criteria[3]['summit_purchased'])): ?>
         <tr>
             <td>
-                <?= glyphicon($criteria[3]['summit_purchased'][1]) ?>
+                <?= $this->ClientHome->glyphicon($criteria[3]['summit_purchased'][1]) ?>
             </td>
             <td>
                 <?= $criteria[3]['summit_purchased'][0] ?>
@@ -131,7 +131,7 @@
         <?php if ($step3Alignment): ?>
             <tr>
                 <td>
-                    <?= glyphicon($step3Alignment[1]) ?>
+                    <?= $this->ClientHome->glyphicon($step3Alignment[1]) ?>
                 </td>
                 <td>
                     <?= $step3Alignment[0] ?>
@@ -144,7 +144,7 @@
         <?php if ($step3Alignment): ?>
             <tr>
                 <td>
-                    <?= glyphicon($step3Alignment[1]) ?>
+                    <?= $this->ClientHome->glyphicon($step3Alignment[1]) ?>
                 </td>
                 <td>
                     <?= $step3Alignment[0] ?>
@@ -158,7 +158,7 @@
     <?php if ($step3PolicyDevPurchased): ?>
         <tr>
             <td>
-                <?= glyphicon($step3PolicyDevPurchased[1]) ?>
+                <?= $this->ClientHome->glyphicon($step3PolicyDevPurchased[1]) ?>
             </td>
             <td>
                 <?= $step3PolicyDevPurchased[0] ?>
