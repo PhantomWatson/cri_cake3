@@ -891,4 +891,23 @@ class SurveysTable extends Table
 
         return $results->isEmpty() ? false : (bool)$results->first()->active;
     }
+
+    /**
+     * Returns whether or not any responses have been received
+     *
+     * @param int $surveyId SurveyID
+     * @return bool
+     */
+    public function hasResponses($surveyId)
+    {
+        $respondentsTable = TableRegistry::get('Respondents');
+        $count = $respondentsTable->find('all')
+            ->where([
+                'survey_id' => $surveyId
+            ])
+            ->count();
+
+        return $count > 0;
+    }
+
 }
