@@ -503,6 +503,13 @@ class CommunitiesTable extends Table
             (bool)$surveyId
         ];
 
+        $count = $surveyId ? $respondentsTable->getInvitedCount($surveyId) : 0;
+        $note = $count ? " ($count " . __n('invitation', 'invitations', $count) . ' sent)' : '';
+        $criteria[3]['invitations_sent'] = [
+            'Community organizations have been sent questionnaire invitations' . $note,
+            $surveyId && $count > 0
+        ];
+
         $count = $surveyId ? $responsesTable->getDistinctCount($surveyId) : 0;
         if ($count) {
             $note = " ($count " . __n('response', 'responses', $count) . ' received)';

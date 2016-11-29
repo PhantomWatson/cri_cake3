@@ -6,33 +6,38 @@
             </button>
         </th>
     </tr>
+
+    <?= $this->ClientHome->surveyReadyRow([
+        'surveyExists' => $surveyExists['organization'],
+        'surveyActive' => $surveyIsActive['organization'],
+        'surveyComplete' => $surveyIsComplete['organization'],
+        'description' => $criteria[3]['survey_created'][0],
+        'onCurrentStep' => ($score == 3)
+    ]) ?>
+
     <tr>
         <td>
-            <?= $this->ClientHome->glyphicon($criteria[3]['survey_created'][1]) ?>
+            <?= $this->ClientHome->glyphicon($criteria[3]['invitations_sent'][1]) ?>
         </td>
         <td>
-            <?= $criteria[3]['survey_created'][0] ?>
-            <?php if (! $criteria[3]['survey_created'][1] && $score >= 3 && $score < 4): ?>
-                <p class="alert alert-info">
-                    Your community's questionnaire is currently being prepared. Please check back later for updates.
-                </p>
-            <?php endif; ?>
+            <?= $criteria[3]['invitations_sent'][0] ?>
         </td>
         <td>
-            <?php if ($organizationSurveyOpen && $surveyIsActive['organization']): ?>
+            <?php if ($surveyIsActive['organization']): ?>
                 <?= $this->Html->link(
-                    'Send Invitations',
+                    'Send '.($criteria[3]['invitations_sent'][1] ? 'More ' : '').'Invitations',
                     [
                         'prefix' => 'client',
                         'controller' => 'Surveys',
                         'action' => 'invite',
                         'organizations'
                     ],
-                    ['class' => 'btn btn-default']
+                    ['class' => 'btn btn-'.($criteria[3]['invitations_sent'][1] ? 'default' : 'primary')]
                 ) ?>
             <?php endif; ?>
         </td>
     </tr>
+
     <tr>
         <td>
             <?= $this->ClientHome->glyphicon($criteria[3]['responses_received'][1]) ?>

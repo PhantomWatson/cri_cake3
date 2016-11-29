@@ -86,9 +86,17 @@ class CommunitiesController extends AppController
             'organizationResponsesChecked' => $surveysTable->getChecked($organizationSurveyId),
             'fastTrack' => $community->fast_track,
             'autoImportFrequency' => $surveysTable->getPerSurveyAutoImportFrequency(),
+            'surveyExists' => [
+                'official' => (bool)$officialSurveyId,
+                'organization' => (bool)$organizationSurveyId
+            ],
             'surveyIsActive' => [
                 'official' => $surveysTable->surveyIsActive($officialSurveyId),
                 'organization' => $surveysTable->surveyIsActive($organizationSurveyId)
+            ],
+            'surveyIsComplete' => [
+                'official' => $surveysTable->isComplete($officialSurveyId),
+                'organization' => $surveysTable->isComplete($organizationSurveyId)
             ]
         ]);
         $this->set(compact(

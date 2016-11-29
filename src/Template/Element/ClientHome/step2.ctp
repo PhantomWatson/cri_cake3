@@ -7,24 +7,13 @@
         </th>
     </tr>
 
-    <?php if (isset($criteria[2]['survey_created'])): ?>
-        <?php $leadershipSurveyCreated = $criteria[2]['survey_created'][1] ?>
-        <tr>
-            <td>
-                <?= $this->ClientHome->glyphicon($criteria[2]['survey_created'][1]) ?>
-            </td>
-            <td>
-                <?= $criteria[2]['survey_created'][0] ?>
-                <?php if (! $criteria[2]['survey_created'][1] && $score >= 2 && $score < 3): ?>
-                    <p class="alert alert-info">
-                        Your community's questionnaire is currently being prepared. Please check back later for updates.
-                    </p>
-                <?php endif; ?>
-            </td>
-            <td>
-            </td>
-        </tr>
-    <?php endif; ?>
+    <?= $this->ClientHome->surveyReadyRow([
+        'surveyExists' => $surveyExists['official'],
+        'surveyActive' => $surveyIsActive['official'],
+        'surveyComplete' => $surveyIsComplete['official'],
+        'description' => $criteria[2]['survey_created'][0],
+        'onCurrentStep' => ($score == 2)
+    ]) ?>
 
     <tr>
         <td>
@@ -34,7 +23,7 @@
             <?= $criteria[2]['invitations_sent'][0] ?>
         </td>
         <td>
-            <?php if ($leadershipSurveyCreated && $surveyIsActive['official']): ?>
+            <?php if ($surveyIsActive['official']): ?>
                 <?= $this->Html->link(
                     'Send '.($criteria[2]['invitations_sent'][1] ? 'More ' : '').'Invitations',
                     [

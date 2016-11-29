@@ -32,4 +32,28 @@ class ClientHomeHelper extends Helper
         }
         return '<tbody class="current">';
     }
+
+    public function row($icon, $description, $actions)
+    {
+        return "<tr><td>$icon</td><td>$description</td><td>$actions</td></tr>";
+    }
+
+    public function surveyReadyRow($params)
+    {
+        $surveyExists = $params['surveyExists'];
+        $surveyActive = $params['surveyActive'];
+        $surveyComplete = $params['surveyComplete'];
+        $description = $params['description'];
+        $onCurrentStep = $params['onCurrentStep'];
+
+        $icon = $this->glyphicon($surveyExists);
+        if ($onCurrentStep && ! $surveyActive && ! $surveyComplete) {
+            $description .=
+                '<p class="alert alert-info">' .
+                'Your community\'s questionnaire is currently being prepared. Please check back later for updates.' .
+                '</p>';
+        }
+
+        return $this->row($icon, $description, null);
+    }
 }
