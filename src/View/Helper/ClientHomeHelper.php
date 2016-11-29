@@ -5,6 +5,8 @@ use Cake\View\Helper;
 
 class ClientHomeHelper extends Helper
 {
+    public $helpers = ['Html'];
+
     /**
      * Returns a Bootstrap glyphicon indicating success or failure
      *
@@ -69,5 +71,32 @@ class ClientHomeHelper extends Helper
         }
 
         return $this->row($icon, $description, null);
+    }
+
+    public function invitationRow($params)
+    {
+        $invitationsSent = $params['invitationsSent'];
+        $description = $params['description'];
+        $surveyActive = $params['surveyActive'];
+        $icon = $this->glyphicon($invitationsSent);
+
+        if ($surveyActive) {
+            $buttonClass = 'btn btn-';
+            $buttonClass .= ($invitationsSent ? 'default' : 'primary');
+            $actions = $this->Html->link(
+                'Send ' . ($invitationsSent ? 'More ' : '') . 'Invitations',
+                [
+                    'prefix' => 'client',
+                    'controller' => 'Surveys',
+                    'action' => 'invite',
+                    'officials'
+                ],
+                ['class' => $buttonClass]
+            );
+        } else {
+            $actions = null;
+        }
+
+        return $this->row($icon, $description, $actions);
     }
 }

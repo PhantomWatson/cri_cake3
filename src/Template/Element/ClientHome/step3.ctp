@@ -15,28 +15,11 @@
         'onCurrentStep' => ($score == 3)
     ]) ?>
 
-    <tr>
-        <td>
-            <?= $this->ClientHome->glyphicon($criteria[3]['invitations_sent'][1]) ?>
-        </td>
-        <td>
-            <?= $criteria[3]['invitations_sent'][0] ?>
-        </td>
-        <td>
-            <?php if ($surveyIsActive['organization']): ?>
-                <?= $this->Html->link(
-                    'Send '.($criteria[3]['invitations_sent'][1] ? 'More ' : '').'Invitations',
-                    [
-                        'prefix' => 'client',
-                        'controller' => 'Surveys',
-                        'action' => 'invite',
-                        'organizations'
-                    ],
-                    ['class' => 'btn btn-'.($criteria[3]['invitations_sent'][1] ? 'default' : 'primary')]
-                ) ?>
-            <?php endif; ?>
-        </td>
-    </tr>
+    <?= $this->ClientHome->invitationRow([
+        'invitationsSent' => $criteria[3]['invitations_sent'][1],
+        'surveyActive' => $surveyIsActive['organization'],
+        'description' => $criteria[3]['invitations_sent'][0]
+    ]) ?>
 
     <tr>
         <td>
