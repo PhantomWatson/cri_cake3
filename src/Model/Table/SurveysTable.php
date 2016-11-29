@@ -910,4 +910,14 @@ class SurveysTable extends Table
         return $count > 0;
     }
 
+    /**
+     * Returns whether or not the survey has concluded (has received responses and been deactivated)
+     *
+     * @param int $surveyId Survey ID
+     * @return bool
+     */
+    public function isComplete($surveyId)
+    {
+        return ! $this->surveyIsActive($surveyId) && $this->hasResponses($surveyId);
+    }
 }
