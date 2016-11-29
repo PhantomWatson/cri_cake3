@@ -33,11 +33,25 @@ class ClientHomeHelper extends Helper
         return '<tbody class="current">';
     }
 
+    /**
+     * Outputs a table row
+     *
+     * @param string $icon Glyphicon indicating success or failure
+     * @param string $description Description of task
+     * @param string $actions Code for action buttons
+     * @return string
+     */
     public function row($icon, $description, $actions)
     {
         return "<tr><td>$icon</td><td>$description</td><td>$actions</td></tr>";
     }
 
+    /**
+     * "Survey is has been prepared" row
+     *
+     * @param array $params Parameters
+     * @return string
+     */
     public function surveyReadyRow($params)
     {
         $surveyExists = $params['surveyExists'];
