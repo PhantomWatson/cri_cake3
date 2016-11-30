@@ -30,7 +30,7 @@
 
         <button class="btn btn-default" id="search_toggler">
             <span class="glyphicon glyphicon-search"></span>
-            Search
+            Search on this page
         </button>
 
         <?= $this->Html->link(
