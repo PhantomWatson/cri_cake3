@@ -56,13 +56,13 @@ class ClientHomeHelper extends Helper
      */
     public function surveyReadyRow($params)
     {
-        $surveyExists = $params['surveyExists'];
-        $surveyActive = $params['surveyActive'];
-        $surveyComplete = $params['surveyComplete'];
         $description = $params['description'];
         $onCurrentStep = $params['onCurrentStep'];
-
+        $surveyActive = $params['surveyActive'];
+        $surveyComplete = $params['surveyComplete'];
+        $surveyExists = $params['surveyExists'];
         $icon = $this->glyphicon($surveyExists);
+
         if ($onCurrentStep && ! $surveyActive && ! $surveyComplete) {
             $description .=
                 '<p class="alert alert-info">' .
@@ -73,10 +73,16 @@ class ClientHomeHelper extends Helper
         return $this->row($icon, $description, null);
     }
 
+    /**
+     * "Invite respondents" row
+     *
+     * @param array $params Parameters
+     * @return string
+     */
     public function invitationRow($params)
     {
-        $invitationsSent = $params['invitationsSent'];
         $description = $params['description'];
+        $invitationsSent = $params['invitationsSent'];
         $surveyActive = $params['surveyActive'];
         $icon = $this->glyphicon($invitationsSent);
 
@@ -100,6 +106,12 @@ class ClientHomeHelper extends Helper
         return $this->row($icon, $description, $actions);
     }
 
+    /**
+     * "Responses received / Import responses" row
+     *
+     * @param array $params Parameters
+     * @return string
+     */
     public function responsesRow($params)
     {
         $autoImportFrequency = $params['autoImportFrequency'];
@@ -273,6 +285,12 @@ class ClientHomeHelper extends Helper
         return $this->row($icon, $description, null);
     }
 
+    /**
+     * "Purchased community organizations survey" row
+     *
+     * @param array $params Parameters
+     * @return string
+     */
     public function orgSurveyPurchasedRow($params)
     {
         $description = $params['description'];

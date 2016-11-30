@@ -8,17 +8,17 @@
     </tr>
 
     <?= $this->ClientHome->surveyReadyRow([
-        'surveyExists' => $surveyExists['organization'],
+        'description' => $criteria[3]['survey_created'][0],
+        'onCurrentStep' => ($score == 3),
         'surveyActive' => $surveyIsActive['organization'],
         'surveyComplete' => $surveyIsComplete['organization'],
-        'description' => $criteria[3]['survey_created'][0],
-        'onCurrentStep' => ($score == 3)
+        'surveyExists' => $surveyExists['organization']
     ]) ?>
 
     <?= $this->ClientHome->invitationRow([
+        'description' => $criteria[3]['invitations_sent'][0],
         'invitationsSent' => $criteria[3]['invitations_sent'][1],
-        'surveyActive' => $surveyIsActive['organization'],
-        'description' => $criteria[3]['invitations_sent'][0]
+        'surveyActive' => $surveyIsActive['organization']
     ]) ?>
 
     <?= $this->ClientHome->responsesRow([
@@ -29,7 +29,7 @@
         'responsesReceived' => $criteria[3]['responses_received'][1],
         'surveyActive' => $surveyIsActive['organization'],
         'surveyId' => $organizationSurveyId,
-        'timeResponsesLastChecked' => $organizationResponsesChecked,
+        'timeResponsesLastChecked' => $organizationResponsesChecked
     ]) ?>
 
     <?= $this->ClientHome->responseRateRow([
@@ -40,8 +40,8 @@
     ]) ?>
 
     <?= $this->ClientHome->alignmentCalculatedRow([
-        'description' => $criteria[3]['alignment_calculated'][0],
-        'alignmentCalculated' => $criteria[3]['alignment_calculated'][1]
+        'alignmentCalculated' => $criteria[3]['alignment_calculated'][1],
+        'description' => $criteria[3]['alignment_calculated'][0]
     ]) ?>
 
     <?= $this->ClientHome->alignmentResultRow([
