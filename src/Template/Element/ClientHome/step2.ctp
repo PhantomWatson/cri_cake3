@@ -32,28 +32,12 @@
         'timeResponsesLastChecked' => $officialResponsesChecked,
     ]) ?>
 
-    <tr>
-        <td>
-            <?= $this->ClientHome->glyphicon($criteria[2]['response_threshhold_reached'][1]) ?>
-        </td>
-        <td>
-            <?= $criteria[2]['response_threshhold_reached'][0] ?>
-        </td>
-        <td>
-            <?php if ($surveyIsActive['official']): ?>
-                <?= $this->Html->link(
-                    'Reminders',
-                    [
-                        'prefix' => 'client',
-                        'controller' => 'Surveys',
-                        'action' => 'remind',
-                        'official'
-                    ],
-                    ['class' => 'btn btn-default']
-                ) ?>
-            <?php endif; ?>
-        </td>
-    </tr>
+    <?= $this->ClientHome->responseRateRow([
+        'description' => $criteria[2]['response_threshhold_reached'][0],
+        'responsesReceived' => $criteria[2]['responses_received'][1],
+        'surveyActive' => $surveyIsActive['official'],
+        'thresholdReached' => $criteria[2]['response_threshhold_reached'][1]
+    ]) ?>
 
     <?php if (isset($criteria[2]['unapproved_addressed'])): ?>
         <tr>

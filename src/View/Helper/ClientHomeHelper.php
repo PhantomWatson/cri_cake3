@@ -175,4 +175,37 @@ class ClientHomeHelper extends Helper
 
         return $this->row($icon, $description, $actions);
     }
+
+    /**
+     * Response rate and reminders row
+     *
+     * @param array $params Parameters
+     * @return string
+     */
+    public function responseRateRow($params)
+    {
+        $description = $params['description'];
+        $responsesReceived = $params['responsesReceived'];
+        $surveyActive = $params['surveyActive'];
+        $thresholdReached = $params['thresholdReached'];
+
+        $icon = $this->glyphicon($thresholdReached);
+
+        if ($surveyActive && $responsesReceived) {
+            $actions = $this->Html->link(
+                'Reminders',
+                [
+                    'prefix' => 'client',
+                    'controller' => 'Surveys',
+                    'action' => 'remind',
+                    'official'
+                ],
+                ['class' => 'btn btn-default']
+            );
+        } else {
+            $actions = null;
+        }
+
+        return $this->row($icon, $description, $actions);
+    }
 }

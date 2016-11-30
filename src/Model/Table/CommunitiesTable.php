@@ -521,6 +521,11 @@ class CommunitiesTable extends Table
             $surveyId && $count > 0
         ];
 
+        $criteria[3]['response_threshhold_reached'] = [
+            'At least 25% of invited community organizations have responded to the questionnaire',
+            $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
+        ];
+
         $criteria[3]['alignment_calculated'] = [
             'Community organization alignment calculated',
             $survey && $survey->alignment_passed != 0
