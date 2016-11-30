@@ -166,7 +166,7 @@
                 ]
             ) ?>
         </strong>
-        <br />Here, communities are listed along with their current stage, fast track status, and questionnaire statuses.
+        <br />Here, communities are listed along with their current stage and questionnaire statuses.
         <br />The following links are found under 'Actions':
         <ul>
             <li>

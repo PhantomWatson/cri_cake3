@@ -19,7 +19,6 @@ class Community extends Entity
         'local_area_id' => true,
         'parent_area_id' => true,
         'public' => true,
-        'fast_track' => true,
         'score' => true,
         'local_area' => true,
         'parent_area' => true,

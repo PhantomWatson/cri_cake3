@@ -15,6 +15,7 @@ class CommunitiesController extends AppController
     public $paginate = [
         'order' => ['Communities.name' => 'ASC']
     ];
+    public $filters = [];
 
     /**
      * Alters $this->paginate settings according to $_GET and Cookie data,
@@ -35,7 +36,8 @@ class CommunitiesController extends AppController
         }
 
         // Use remembered filters when no filters manually specified
-        foreach (['progress', 'track'] as $group) {
+        $filterTypes = ['progress']; // More may be added later
+        foreach ($filterTypes as $group) {
             if (! isset($this->filters[$group])) {
                 $key = "$cookieParentKey.filters.$group";
                 if ($this->Cookie->check($key)) {
@@ -58,12 +60,6 @@ class CommunitiesController extends AppController
                 case 'completed':
                     $this->paginate['conditions']['Communities.score'] = '5';
                     break;
-                case 'fast_track':
-                    $this->paginate['conditions']['Communities.fast_track'] = true;
-                    break;
-                case 'normal_track':
-                    $this->paginate['conditions']['Communities.fast_track'] = false;
-                    break;
                 case 'all':
                 default:
                     // No action
@@ -84,11 +80,6 @@ class CommunitiesController extends AppController
                 'all' => 'All',
                 'completed' => 'Completed',
                 'ongoing' => 'Ongoing'
-            ],
-            'track' => [
-                'all' => 'All',
-                'fast_track' => 'Fast Track',
-                'normal_track' => 'Normal Track'
             ]
         ];
         $this->filters = $this->request->query('filters');
@@ -369,8 +360,7 @@ class CommunitiesController extends AppController
         $this->set([
             'titleForLayout' => $community->name . ' Progress',
             'community' => $community,
-            'criteria' => $this->Communities->getProgress($communityId, true),
-            'fastTrack' => $community->fast_track
+            'criteria' => $this->Communities->getProgress($communityId, true)
         ]);
     }
 

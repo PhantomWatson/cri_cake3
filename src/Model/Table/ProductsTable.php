@@ -115,19 +115,6 @@ class ProductsTable extends Table
         $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($communityId);
 
-        // Is this purchase not necessary because the community is on the fast track?
-        if ($community->fast_track) {
-            switch ($productId) {
-                case 3:
-                    // Community Alignment Assessment
-                case 4:
-                    // Facilitated Community Awareness Conversation
-                case 5:
-                    // PWR3 Policy Development
-                    return [0, 'Purchase not necessary on Fast Track'];
-            }
-        }
-
         // Is this purchase not possible because the community hasn't passed an alignment test?
         $surveysTable = TableRegistry::get('Surveys');
         if ($productId > 1) {
@@ -144,7 +131,7 @@ class ProductsTable extends Table
 
                 return [0, 'Community has not completed Step 2 yet.'];
             }
-            if (! $community->fast_track && $productId > 3) {
+            if ($productId > 3) {
                 $orgSurveyId = $surveysTable->getSurveyId($communityId, 'organization');
                 $orgSurvey = $surveysTable->get($orgSurveyId);
                 if ($orgSurvey->alignment_passed == 0) {

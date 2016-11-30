@@ -124,9 +124,6 @@
                     </td>
                     <td>
                         <?= str_replace('.0', '', $community->score) ?>
-                        <?php if ($community->fast_track): ?>
-                            <span class="glyphicon glyphicon-road fast_track" aria-hidden="true" title="Fast Track"></span>
-                        <?php endif; ?>
                     </td>
 
                     <?php foreach (['official_survey', 'organization_survey'] as $surveyType): ?>

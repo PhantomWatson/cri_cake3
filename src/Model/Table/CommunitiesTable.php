@@ -105,11 +105,6 @@ class CommunitiesTable extends Table
             ->notEmpty('public');
 
         $validator
-            ->add('fast_track', 'valid', ['rule' => 'boolean'])
-            ->requirePresence('fast_track', 'create')
-            ->notEmpty('fast_track');
-
-        $validator
             ->add('score', 'valid', ['rule' => 'decimal'])
             ->requirePresence('score', 'create')
             ->notEmpty('score');
@@ -607,7 +602,6 @@ class CommunitiesTable extends Table
             ->select([
                 'Communities.id',
                 'Communities.name',
-                'Communities.fast_track',
                 'Communities.score',
                 'Communities.created'
             ]);

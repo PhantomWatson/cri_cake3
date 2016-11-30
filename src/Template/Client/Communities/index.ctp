@@ -17,22 +17,8 @@
     <table>
         <?= $this->element('ClientHome/step1') ?>
         <?= $this->element('ClientHome/step2') ?>
-
-        <?php if ($fastTrack): ?>
-            <?= tbodyForStep(3, $score) ?>
-                <tr>
-                    <th colspan="3">
-                        <button class="step-header">
-                            Step Three and Four skipped in Fast Track
-                        </button>
-                    </th>
-                </tr>
-            </tbody>
-        <?php else: ?>
-            <?= $this->element('ClientHome/step3') ?>
-            <?= $this->element('ClientHome/step4') ?>
-        <?php endif; ?>
-
+        <?= $this->element('ClientHome/step3') ?>
+        <?= $this->element('ClientHome/step4') ?>
         <?= $this->element('ClientHome/step5') ?>
     </table>
 </div>

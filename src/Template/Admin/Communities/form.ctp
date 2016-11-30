@@ -32,11 +32,6 @@
             'options' => $areas
         ]
     );
-    echo $this->Form->input(
-        'fast_track',
-        [
-        ]
-    );
     $scores = [1, 2, 3, 4, 5];
     if ($this->request->prefix == 'admin' && isset($communityId)) {
         $note = '<strong>Note:</strong> You\'re encouraged to edit this community\'s score through its ';

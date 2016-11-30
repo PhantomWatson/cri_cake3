@@ -10,12 +10,6 @@
     'surveyId' => null
 ]) ?>
 
-<?php if ($fastTrack): ?>
-    <p class="alert alert-info">
-        This community is on Fast Track, so Step 3 and Step 4 are skipped.
-    </p>
-<?php endif; ?>
-
 <div id="CommunityAdminProgressForm">
     <?php
         echo $this->Form->create($community);
@@ -29,12 +23,8 @@
             return $retval;
         }
 
-        if ($fastTrack) {
-            $steps = [1, 2];
-        } else {
-            $steps = [1, 2, 3, 4];
-        }
 
+        $steps = [1, 2, 3, 4];
         foreach ($steps as $step) {
             echo score_radio_input($step, $community->score, $this);
             if (isset($criteria[$step])) {

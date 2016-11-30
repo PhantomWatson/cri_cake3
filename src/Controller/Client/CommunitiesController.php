@@ -62,7 +62,6 @@ class CommunitiesController extends AppController
             'officialUninvitedRespondents' => $respondentsTable->getUninvitedCount($officialSurveyId),
             'officialResponsesChecked' => $surveysTable->getChecked($officialSurveyId),
             'organizationResponsesChecked' => $surveysTable->getChecked($organizationSurveyId),
-            'fastTrack' => $community->fast_track,
             'autoImportFrequency' => $surveysTable->getPerSurveyAutoImportFrequency(),
             'surveyExists' => [
                 'official' => (bool)$officialSurveyId,
