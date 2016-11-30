@@ -458,13 +458,6 @@ class CommunitiesTable extends Table
             $survey && $survey->alignment_passed == 1
         ];
 
-        if ($survey && $survey->alignment_passed == -1) {
-            $criteria[2]['consultant_assigned'] = [
-                'At least one consultant has been assigned to this community',
-                $this->getConsultantCount($communityId) > 0
-            ];
-        }
-
         $criteria[2]['survey_purchased'] = [
             'Purchased Community Organizations Alignment Assessment ($3,500)',
             $productsTable->isPurchased($communityId, 3)
@@ -524,13 +517,6 @@ class CommunitiesTable extends Table
             'Passed community alignment assessment' . $note,
              $survey && $survey->alignment_passed == 1
         ];
-
-        if ($survey && $survey->alignment_passed == -1) {
-            $criteria[3]['consultant_assigned'] = [
-                'At least one consultant has been assigned to this community',
-                $this->getConsultantCount($communityId) > 0
-            ];
-        }
 
         $criteria[3]['policy_dev_purchased'] = $productsTable->isPurchased($communityId, 5);
 
