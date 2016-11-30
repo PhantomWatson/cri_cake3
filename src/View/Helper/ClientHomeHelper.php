@@ -272,4 +272,24 @@ class ClientHomeHelper extends Helper
 
         return $this->row($icon, $description, null);
     }
+
+    public function orgSurveyPurchasedRow($params)
+    {
+        $description = $params['description'];
+        $purchased = $params['purchased'];
+        $purchaseUrl = $params['purchaseUrl'];
+
+        $icon = $this->glyphicon($purchased);
+
+        if ($purchased) {
+            $actions = null;
+        } else {
+            $actions =
+                '<a href="' . $purchaseUrl . '" class="btn btn-primary">' .
+                    'Purchase Now' .
+                '</a>';
+        }
+
+        return $this->row($icon, $description, $actions);
+    }
 }

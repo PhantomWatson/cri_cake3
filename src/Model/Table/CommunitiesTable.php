@@ -465,12 +465,10 @@ class CommunitiesTable extends Table
             ];
         }
 
-        if ($survey && ($survey->alignment_passed == 0 || $survey->alignment_passed == 1)) {
-            $criteria[2]['survey_purchased'] = [
-                'Purchased Community Organizations Alignment Assessment ($3,500)',
-                $productsTable->isPurchased($communityId, 3)
-            ];
-        }
+        $criteria[2]['survey_purchased'] = [
+            'Purchased Community Organizations Alignment Assessment ($3,500)',
+            $productsTable->isPurchased($communityId, 3)
+        ];
 
 
         // Step 3

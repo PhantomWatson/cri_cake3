@@ -55,21 +55,9 @@
         'description' => $step2Alignment[0]
     ]) ?>
 
-    <?php if ($step2SurveyPurchased): ?>
-        <tr>
-            <td>
-                <?= $this->ClientHome->glyphicon($step2SurveyPurchased[1]) ?>
-            </td>
-            <td>
-                <?= $step2SurveyPurchased[0] ?>
-            </td>
-            <td>
-                <?php if (! $step2SurveyPurchased[1]): ?>
-                    <a href="<?= $purchaseUrls[3]; ?>" class="btn btn-primary">
-                        Purchase Now
-                    </a>
-                <?php endif; ?>
-            </td>
-        </tr>
-    <?php endif; ?>
+    <?= $this->ClientHome->orgSurveyPurchasedRow([
+        'description' => $step2SurveyPurchased[0],
+        'purchased' => $step2SurveyPurchased[1],
+        'purchaseUrl' => $purchaseUrls[3]
+    ]) ?>
 </tbody>
