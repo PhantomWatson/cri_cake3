@@ -21,73 +21,17 @@
         'description' => $criteria[2]['invitations_sent'][0]
     ]) ?>
 
-    <tr>
-        <td>
-            <?= $this->ClientHome->glyphicon($criteria[2]['responses_received'][1]) ?>
-        </td>
-        <td>
-            <p>
-                <?= $criteria[2]['responses_received'][0] ?>
-                <?php if ($score == 2 && $surveyIsActive['official']): ?>
-                    <button class="btn btn-link importing_note_toggler">
-                        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                    </button>
-                <?php endif; ?>
-            </p>
+    <?= $this->ClientHome->responsesRow([
+        'autoImportFrequency' => $autoImportFrequency,
+        'description' => $criteria[2]['responses_received'][0],
+        'importErrors' => $importErrors['official'],
+        'onCurrentStep' => ($score == 2),
+        'responsesReceived' => $criteria[2]['responses_received'][1],
+        'surveyActive' => $surveyIsActive['official'],
+        'surveyId' => $officialSurveyId,
+        'timeResponsesLastChecked' => $officialResponsesChecked,
+    ]) ?>
 
-            <?php if ($score == 2 && $surveyIsActive['official']): ?>
-                <p class="importing_note" style="display: none;">
-                    Responses are automatically imported from
-                    SurveyMonkey<?= $autoImportFrequency ? ' approximately '.$autoImportFrequency : '' ?>,
-                    but you can manually import them at any time.
-                </p>
-            <?php endif; ?>
-
-            <?php if ($officialResponsesChecked): ?>
-                <div class="last_import alert alert-info">
-                    New responses were last checked for
-                    <?= $this->Time->timeAgoInWords($officialResponsesChecked, ['end' => '+1 year']) ?>
-                </div>
-            <?php endif; ?>
-
-            <?php if ($importErrors['official']): ?>
-                <div class="import-results alert alert-danger">
-                    <?= __n('An error was', 'Errors were', count($importErrors['official'])) ?> encountered the last time responses were imported:
-                    <ul>
-                        <?php foreach ($importErrors['official'] as $error): ?>
-                            <li>
-                                <?= $error ?>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php else: ?>
-                <div class="import-results"></div>
-            <?php endif; ?>
-        </td>
-        <td>
-            <?php if ($surveyIsActive['official']): ?>
-                <button class="btn btn-default btn-block import_button" data-survey-id="<?= $officialSurveyId ?>">
-                    Import Responses
-                </button>
-            <?php endif; ?>
-            <?php if ($surveyIsActive['official'] && $criteria[2]['responses_received'][1]): ?>
-                <br />
-            <?php endif; ?>
-            <?php if ($criteria[2]['responses_received'][1]): ?>
-                <?= $this->Html->link(
-                    'Review Responses',
-                    [
-                        'prefix' => 'client',
-                        'controller' => 'Respondents',
-                        'action' => 'index',
-                        'official'
-                    ],
-                    ['class' => 'btn btn-default']
-                ) ?>
-            <?php endif; ?>
-        </td>
-    </tr>
     <tr>
         <td>
             <?= $this->ClientHome->glyphicon($criteria[2]['response_threshhold_reached'][1]) ?>

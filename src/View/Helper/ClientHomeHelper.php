@@ -5,7 +5,7 @@ use Cake\View\Helper;
 
 class ClientHomeHelper extends Helper
 {
-    public $helpers = ['Html'];
+    public $helpers = ['Html', 'Time'];
 
     /**
      * Returns a Bootstrap glyphicon indicating success or failure
@@ -95,6 +95,82 @@ class ClientHomeHelper extends Helper
             );
         } else {
             $actions = null;
+        }
+
+        return $this->row($icon, $description, $actions);
+    }
+
+    public function responsesRow($params)
+    {
+        $autoImportFrequency = $params['autoImportFrequency'];
+        $description = $params['description'];
+        $importErrors = $params['importErrors'];
+        $onCurrentStep = $params['onCurrentStep'];
+        $responsesReceived = $params['responsesReceived'];
+        $surveyActive = $params['surveyActive'];
+        $surveyId = $params['surveyId'];
+        $timeResponsesLastChecked = $params['timeResponsesLastChecked'];
+
+        $icon = $this->glyphicon($responsesReceived);
+        if ($onCurrentStep && $surveyActive) {
+            $description .=
+                '<button class="btn btn-link importing_note_toggler">' .
+                    '<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>' .
+                '</button>';
+        }
+        $description = '<p>' . $description . '</p>';
+
+        if ($onCurrentStep && $surveyActive) {
+            $description .=
+                '<p class="importing_note" style="display: none;">' .
+                    'Responses are automatically imported from SurveyMonkey' .
+                    ($autoImportFrequency ? ' approximately '.$autoImportFrequency : '') .
+                    ', but you can manually import them at any time.' .
+                '</p>';
+        }
+
+        if ($timeResponsesLastChecked) {
+            $description .=
+                '<div class="last_import alert alert-info">' .
+                    'New responses were last checked for ' .
+                    $this->Time->timeAgoInWords($timeResponsesLastChecked, ['end' => '+1 year']) .
+                '</div>';
+        }
+
+        if ($importErrors) {
+            $description .= '<div class="import-results alert alert-danger">';
+            $description .= __n('An error was', 'Errors were', count($importErrors));
+            $description .= 'encountered the last time responses were imported:';
+            $description .= '<ul>';
+            foreach ($importErrors['official'] as $error) {
+                $description .= "<li>$error</li>";
+            }
+            $description .= '</ul></div>';
+        } else {
+            $description .= '<div class="import-results"></div>';
+        }
+
+        $actions = '';
+        if ($surveyActive) {
+            $actions .=
+                '<button class="btn btn-default btn-block import_button" data-survey-id="' . $surveyId . '">' .
+                    'Import Responses' .
+                '</button>';
+            if ($responsesReceived) {
+                $actions .= '<br />';
+            }
+        }
+        if ($responsesReceived) {
+            $actions .= $this->Html->link(
+                'Review Responses',
+                [
+                    'prefix' => 'client',
+                    'controller' => 'Respondents',
+                    'action' => 'index',
+                    'official'
+                ],
+                ['class' => 'btn btn-default']
+            );
         }
 
         return $this->row($icon, $description, $actions);
