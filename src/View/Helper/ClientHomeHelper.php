@@ -321,6 +321,12 @@ class ClientHomeHelper extends Helper
         return $this->row($icon, $params['description'], $actions);
     }
 
+    /**
+     * "PWRRR policy development has been purchased" row
+     *
+     * @param array $params Parameters
+     * @return string
+     */
     public function policyDevPurchasedRow($params)
     {
         $icon = $this->glyphicon($params['purchased']);
