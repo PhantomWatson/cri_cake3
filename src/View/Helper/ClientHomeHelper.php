@@ -56,21 +56,18 @@ class ClientHomeHelper extends Helper
      */
     public function officialsSurveyPurchasedRow($params)
     {
-        $description = $params['description'];
-        $purchased = $params['purchased'];
-        $purchaseUrl = $params['purchaseUrl'];
-        $icon = $this->glyphicon($purchased);
+        $icon = $this->glyphicon($params['purchased']);
 
-        if ($purchased) {
+        if ($params['purchased']) {
             $actions = null;
         } else {
             $actions =
-                '<a href="' . $purchaseUrl . '" class="btn btn-primary">' .
+                '<a href="' . $params['purchaseUrl'] . '" class="btn btn-primary">' .
                     'Purchase Now' .
                 '</a>';
         }
 
-        return $this->row($icon, $description, $actions);
+        return $this->row($icon, $params['description'], $actions);
     }
 
     /**
@@ -105,21 +102,17 @@ class ClientHomeHelper extends Helper
      */
     public function surveyReadyRow($params)
     {
-        $description = $params['description'];
-        $onCurrentStep = $params['onCurrentStep'];
-        $surveyActive = $params['surveyActive'];
-        $surveyComplete = $params['surveyComplete'];
-        $surveyExists = $params['surveyExists'];
-        $icon = $this->glyphicon($surveyExists);
+        $icon = $this->glyphicon($params['surveyExists']);
 
-        if ($onCurrentStep && ! $surveyActive && ! $surveyComplete) {
-            $description .=
+        if ($params['onCurrentStep'] && ! $params['surveyActive'] && ! $params['surveyComplete']) {
+            $params['description'] .=
                 '<p class="alert alert-info">' .
-                'Your community\'s questionnaire is currently being prepared. Please check back later for updates.' .
+                    'Your community\'s questionnaire is currently being prepared. ' .
+                    'Please check back later for updates.' .
                 '</p>';
         }
 
-        return $this->row($icon, $description, null);
+        return $this->row($icon, $params['description'], null);
     }
 
     /**
@@ -130,16 +123,13 @@ class ClientHomeHelper extends Helper
      */
     public function invitationRow($params)
     {
-        $description = $params['description'];
-        $invitationsSent = $params['invitationsSent'];
-        $surveyActive = $params['surveyActive'];
-        $icon = $this->glyphicon($invitationsSent);
+        $icon = $this->glyphicon($params['invitationsSent']);
 
-        if ($surveyActive) {
+        if ($params['surveyActive']) {
             $buttonClass = 'btn btn-';
-            $buttonClass .= ($invitationsSent ? 'default' : 'primary');
+            $buttonClass .= ($params['invitationsSent'] ? 'default' : 'primary');
             $actions = $this->Html->link(
-                'Send ' . ($invitationsSent ? 'More ' : '') . 'Invitations',
+                'Send ' . ($params['invitationsSent'] ? 'More ' : '') . 'Invitations',
                 [
                     'prefix' => 'client',
                     'controller' => 'Surveys',
@@ -152,7 +142,7 @@ class ClientHomeHelper extends Helper
             $actions = null;
         }
 
-        return $this->row($icon, $description, $actions);
+        return $this->row($icon, $params['description'], $actions);
     }
 
     /**
@@ -163,47 +153,39 @@ class ClientHomeHelper extends Helper
      */
     public function responsesRow($params)
     {
-        $autoImportFrequency = $params['autoImportFrequency'];
-        $description = $params['description'];
-        $importErrors = $params['importErrors'];
-        $onCurrentStep = $params['onCurrentStep'];
-        $responsesReceived = $params['responsesReceived'];
-        $surveyActive = $params['surveyActive'];
-        $surveyId = $params['surveyId'];
-        $timeResponsesLastChecked = $params['timeResponsesLastChecked'];
-
-        $icon = $this->glyphicon($responsesReceived);
-        if ($onCurrentStep && $surveyActive) {
-            $description .=
+        $icon = $this->glyphicon($params['responsesReceived']);
+        if ($params['onCurrentStep'] && $params['surveyActive']) {
+            $params['description'] .=
                 '<button class="btn btn-link importing_note_toggler">' .
                     '<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>' .
                 '</button>';
         }
-        $description = '<p>' . $description . '</p>';
 
-        if ($onCurrentStep && $surveyActive) {
+        $description = '<p>' . $params['description'] . '</p>';
+
+        if ($params['onCurrentStep'] && $params['surveyActive']) {
             $description .=
                 '<p class="importing_note" style="display: none;">' .
                     'Responses are automatically imported from SurveyMonkey' .
-                    ($autoImportFrequency ? ' approximately '.$autoImportFrequency : '') .
+                    ($params['autoImportFrequency'] ? ' approximately ' . $params['autoImportFrequency'] : '') .
                     ', but you can manually import them at any time.' .
                 '</p>';
         }
 
-        if ($timeResponsesLastChecked) {
+        if ($params['timeResponsesLastChecked']) {
             $description .=
                 '<div class="last_import alert alert-info">' .
                     'New responses were last checked for ' .
-                    $this->Time->timeAgoInWords($timeResponsesLastChecked, ['end' => '+1 year']) .
+                    $this->Time->timeAgoInWords($params['timeResponsesLastChecked'], ['end' => '+1 year']) .
                 '</div>';
         }
 
-        if ($importErrors) {
+        if ($params['importErrors']) {
             $description .= '<div class="import-results alert alert-danger">';
-            $description .= __n('An error was', 'Errors were', count($importErrors));
+            $description .= __n('An error was', 'Errors were', count($params['importErrors']));
             $description .= 'encountered the last time responses were imported:';
             $description .= '<ul>';
-            foreach ($importErrors['official'] as $error) {
+            foreach ($params['importErrors'] as $error) {
                 $description .= "<li>$error</li>";
             }
             $description .= '</ul></div>';
@@ -212,16 +194,14 @@ class ClientHomeHelper extends Helper
         }
 
         $actions = '';
-        if ($surveyActive) {
-            $actions .=
-                '<button class="btn btn-default btn-block import_button" data-survey-id="' . $surveyId . '">' .
-                    'Import Responses' .
-                '</button>';
-            if ($responsesReceived) {
+        if ($params['surveyActive']) {
+            $actions .= '<button class="btn btn-default btn-block import_button" data-survey-id="';
+            $actions .= $params['surveyId'] . '">Import Responses</button>';
+            if ($params['responsesReceived']) {
                 $actions .= '<br />';
             }
         }
-        if ($responsesReceived) {
+        if ($params['responsesReceived']) {
             $actions .= $this->Html->link(
                 'Review Responses',
                 [
@@ -245,14 +225,9 @@ class ClientHomeHelper extends Helper
      */
     public function responseRateRow($params)
     {
-        $description = $params['description'];
-        $responsesReceived = $params['responsesReceived'];
-        $surveyActive = $params['surveyActive'];
-        $thresholdReached = $params['thresholdReached'];
+        $icon = $this->glyphicon($params['thresholdReached']);
 
-        $icon = $this->glyphicon($thresholdReached);
-
-        if ($surveyActive && $responsesReceived) {
+        if ($params['surveyActive'] && $params['responsesReceived']) {
             $actions = $this->Html->link(
                 'Reminders',
                 [
@@ -267,7 +242,7 @@ class ClientHomeHelper extends Helper
             $actions = null;
         }
 
-        return $this->row($icon, $description, $actions);
+        return $this->row($icon, $params['description'], $actions);
     }
 
     /**
@@ -278,13 +253,9 @@ class ClientHomeHelper extends Helper
      */
     public function unapprovedResponsesRow($params)
     {
-        $allUnapprovedAddressed = $params['allUnapprovedAddressed'];
-        $description = $params['description'];
-        $hasUninvitedResponses = $params['hasUninvitedResponses'];
+        $icon = $this->glyphicon($params['allUnapprovedAddressed']);
 
-        $icon = $this->glyphicon($allUnapprovedAddressed);
-
-        if ($hasUninvitedResponses) {
+        if ($params['hasUninvitedResponses']) {
             $actions = $this->Html->link(
                 'Approve / Dismiss',
                 [
@@ -293,13 +264,13 @@ class ClientHomeHelper extends Helper
                     'action' => 'unapproved',
                     'official'
                 ],
-                ['class' => 'btn btn-' . ($allUnapprovedAddressed ? 'default' : 'primary')]
+                ['class' => 'btn btn-' . ($params['allUnapprovedAddressed'] ? 'default' : 'primary')]
             );
         } else {
             $actions = null;
         }
 
-        return $this->row($icon, $description, $actions);
+        return $this->row($icon, $params['description'], $actions);
     }
 
     /**
@@ -310,12 +281,9 @@ class ClientHomeHelper extends Helper
      */
     public function alignmentCalculatedRow($params)
     {
-        $description = $params['description'];
-        $alignmentCalculated = $params['alignmentCalculated'];
+        $icon = $this->glyphicon($params['alignmentCalculated']);
 
-        $icon = $this->glyphicon($alignmentCalculated);
-
-        return $this->row($icon, $description, null);
+        return $this->row($icon, $params['description'], null);
     }
 
     /**
@@ -326,12 +294,9 @@ class ClientHomeHelper extends Helper
      */
     public function alignmentResultRow($params)
     {
-        $alignmentPassed = $params['alignmentPassed'];
-        $description = $params['description'];
+        $icon = $this->glyphicon($params['alignmentPassed']);
 
-        $icon = $this->glyphicon($alignmentPassed);
-
-        return $this->row($icon, $description, null);
+        return $this->row($icon, $params['description'], null);
     }
 
     /**
@@ -342,40 +307,33 @@ class ClientHomeHelper extends Helper
      */
     public function orgSurveyPurchasedRow($params)
     {
-        $description = $params['description'];
-        $purchased = $params['purchased'];
-        $purchaseUrl = $params['purchaseUrl'];
-        $icon = $this->glyphicon($purchased);
+        $icon = $this->glyphicon($params['purchased']);
 
-        if ($purchased) {
+        if ($params['purchased']) {
             $actions = null;
         } else {
             $actions =
-                '<a href="' . $purchaseUrl . '" class="btn btn-primary">' .
+                '<a href="' . $params['purchaseUrl'] . '" class="btn btn-primary">' .
                     'Purchase Now' .
                 '</a>';
         }
 
-        return $this->row($icon, $description, $actions);
+        return $this->row($icon, $params['description'], $actions);
     }
 
     public function policyDevPurchasedRow($params)
     {
-        $description = $params['description'];
-        $purchased = $params['purchased'];
-        $purchaseUrl = $params['purchaseUrl'];
+        $icon = $this->glyphicon($params['purchased']);
 
-        $icon = $this->glyphicon($purchased);
-
-        if ($purchased) {
+        if ($params['purchased']) {
             $actions = null;
         } else {
             $actions =
-                '<a href="' . $purchaseUrl . '" class="btn btn-primary">' .
+                '<a href="' . $params['purchaseUrl'] . '" class="btn btn-primary">' .
                     'Purchase Now' .
                 '</a>';
         }
 
-        return $this->row($icon, $description, $actions);
+        return $this->row($icon, $params['description'], $actions);
     }
 }
