@@ -101,9 +101,9 @@ class ProductsTable extends Table
     {
         /* Products:
          * 1: Community Leadership Alignment Assessment
-         * 2: Leadership Summit
+         * 2: Leadership Summit (discontinued)
          * 3: Community Alignment Assessment
-         * 4: Facilitated Community Awareness Conversation
+         * 4: Facilitated Community Awareness Conversation (discontinued)
          * 5: PWR3 Policy Development */
 
         // Has this been purchased?
@@ -164,27 +164,14 @@ class ProductsTable extends Table
             }
         }
 
-        // Is this half-setp product not ready to purchase or not necessary?
+        // Is this a discontinued half-setp product?
         if ($productId == 2 || $productId == 4) { // Leadership Summit || Facilitated Community Awareness Conversation
-            $surveyType = $productId == 2 ? 'official' : 'organization';
-            $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
-            $survey = $surveysTable->get($surveyId);
-            if ($survey->alignment_passed == 0) {
-                return [0, 'Your assessment results have not yet been analyzed.'];
-            } elseif ($survey->alignment_passed == 1) {
-                return [0, 'Not necessary'];
-            }
+            return [0, 'This community summit is no longer part of CRI and cannot be purchased'];
         }
 
         // Is this purchase not possible because the community isn't at the correct stage?
-        if ($productId == 2 && $community->score < 2) { // Leadership Summit
-            return [0, 'Community has not completed Step 1 yet.'];
-        }
         if ($productId == 3 && $community->score < 2) { // Community Alignment Assessment
             return [0, 'Community has not completed Step 1 yet.'];
-        }
-        if ($productId == 4 && $community->score < 3) { // Facilitated Community Awareness Conversation
-            return [0, 'Community has not completed Step 2 yet.'];
         }
 
         $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);

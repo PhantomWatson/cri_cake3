@@ -30,9 +30,9 @@
         }
 
         if ($fastTrack) {
-            $steps = [1, 2, '2.5'];
+            $steps = [1, 2];
         } else {
-            $steps = [1, 2, '2.5', 3, '3.5', 4];
+            $steps = [1, 2, 3, 4];
         }
 
         foreach ($steps as $step) {

@@ -41,32 +41,10 @@ class CommunitiesController extends AppController
         }
 
         $criteria = $this->Communities->getProgress($communityId);
-
-        // Assign criteria that might be in either whole-number steps or half-steps to variables
-        $step2Alignment = false;
-        foreach ([2, '2.5'] as $step) {
-            if (isset($criteria[$step]['alignment_passed'])) {
-                $step2Alignment = $criteria[$step]['alignment_passed'];
-            }
-        }
-        $step2SurveyPurchased = false;
-        foreach ([2, '2.5'] as $step) {
-            if (isset($criteria[$step]['survey_purchased'])) {
-                $step2SurveyPurchased = $criteria[$step]['survey_purchased'];
-            }
-        }
-        $step3Alignment = false;
-        foreach ([3, '3.5'] as $step) {
-            if (isset($criteria[$step]['alignment_passed'])) {
-                $step3Alignment = $criteria[$step]['alignment_passed'];
-            }
-        }
-        $step3PolicyDevPurchased = false;
-        foreach ([3, '3.5'] as $step) {
-            if (isset($criteria[$step]['policy_dev_purchased'])) {
-                $step3PolicyDevPurchased = $criteria[$step]['policy_dev_purchased'];
-            }
-        }
+        $step2Alignment = $criteria[2]['alignment_passed'];
+        $step2SurveyPurchased = $criteria[2]['survey_purchased'];
+        $step3Alignment = $criteria[3]['alignment_passed'];
+        $step3PolicyDevPurchased = $criteria[3]['policy_dev_purchased'];
 
         $surveysTable = TableRegistry::get('Surveys');
         $officialSurveyId = $surveysTable->getSurveyId($communityId, 'official');

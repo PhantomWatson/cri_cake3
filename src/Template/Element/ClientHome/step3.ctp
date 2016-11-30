@@ -44,48 +44,17 @@
         'alignmentCalculated' => $criteria[3]['alignment_calculated'][1]
     ]) ?>
 
-    <?php if (isset($criteria[3]['summit_purchased'])): ?>
+    <?php if ($step3Alignment): ?>
         <tr>
             <td>
-                <?= $this->ClientHome->glyphicon($criteria[3]['summit_purchased'][1]) ?>
+                <?= $this->ClientHome->glyphicon($step3Alignment[1]) ?>
             </td>
             <td>
-                <?= $criteria[3]['summit_purchased'][0] ?>
+                <?= $step3Alignment[0] ?>
             </td>
             <td>
-                <?php if (! $criteria[3]['summit_purchased'][1]): ?>
-                    <a href="<?= $purchaseUrls[4] ?>" class="btn btn-primary">
-                        Purchase Now
-                    </a>
-                <?php endif; ?>
             </td>
         </tr>
-
-        <?php if ($step3Alignment): ?>
-            <tr>
-                <td>
-                    <?= $this->ClientHome->glyphicon($step3Alignment[1]) ?>
-                </td>
-                <td>
-                    <?= $step3Alignment[0] ?>
-                </td>
-                <td>
-                </td>
-            </tr>
-        <?php endif; ?>
-    <?php else: ?>
-        <?php if ($step3Alignment): ?>
-            <tr>
-                <td>
-                    <?= $this->ClientHome->glyphicon($step3Alignment[1]) ?>
-                </td>
-                <td>
-                    <?= $step3Alignment[0] ?>
-                </td>
-                <td>
-                </td>
-            </tr>
-        <?php endif; ?>
     <?php endif; ?>
 
     <?php if ($step3PolicyDevPurchased): ?>

@@ -452,44 +452,21 @@ class CommunitiesTable extends Table
         } else {
             $note = '';
         }
-        $purchasedLeadershipSummit = $productsTable->isPurchased($communityId, 2);
-        if (! $purchasedLeadershipSummit) {
-            $criteria[2]['alignment_passed'] = [
-                'Passed leadership alignment assessment' . $note,
-                $survey && $survey->alignment_passed == 1
-            ];
-        }
 
-        if (($survey && $survey->alignment_passed == -1) || $purchasedLeadershipSummit) {
+        $criteria[2]['alignment_passed'] = [
+            'Passed leadership alignment assessment' . $note,
+            $survey && $survey->alignment_passed == 1
+        ];
+
+        if ($survey && $survey->alignment_passed == -1) {
             $criteria[2]['consultant_assigned'] = [
                 'At least one consultant has been assigned to this community',
                 $this->getConsultantCount($communityId) > 0
             ];
-
-            $criteria[2]['summit_purchased'] = [
-                'Purchased Leadership Summit ($1,500)',
-                $purchasedLeadershipSummit
-            ];
         }
 
-        if (! $purchasedLeadershipSummit && $survey && ($survey->alignment_passed == 0 || $survey->alignment_passed == 1)) {
+        if ($survey && ($survey->alignment_passed == 0 || $survey->alignment_passed == 1)) {
             $criteria[2]['survey_purchased'] = [
-                'Purchased Community Organizations Alignment Assessment ($3,500)',
-                $productsTable->isPurchased($communityId, 3)
-            ];
-        }
-
-
-        // Step 2.5
-        if ($purchasedLeadershipSummit) {
-            $criteria['2.5']['alignment_passed'] = [
-                'Passed leadership alignment assessment' . $note,
-                $survey && $survey->alignment_passed == 1
-            ];
-        }
-
-        if (($survey && $survey->alignment_passed == -1) || $purchasedLeadershipSummit) {
-            $criteria['2.5']['survey_purchased'] = [
                 'Purchased Community Organizations Alignment Assessment ($3,500)',
                 $productsTable->isPurchased($communityId, 3)
             ];
@@ -545,46 +522,19 @@ class CommunitiesTable extends Table
         } else {
             $note = '';
         }
-        $purchasedCommunitySummit = $productsTable->isPurchased($communityId, 4);
-        if (! $purchasedCommunitySummit) {
-            $criteria[3]['alignment_passed'] = [
-                'Passed community alignment assessment' . $note,
-                 $survey && $survey->alignment_passed == 1
-            ];
-        }
+        $criteria[3]['alignment_passed'] = [
+            'Passed community alignment assessment' . $note,
+             $survey && $survey->alignment_passed == 1
+        ];
 
-        if (($survey && $survey->alignment_passed == -1) || $purchasedCommunitySummit) {
+        if ($survey && $survey->alignment_passed == -1) {
             $criteria[3]['consultant_assigned'] = [
                 'At least one consultant has been assigned to this community',
                 $this->getConsultantCount($communityId) > 0
             ];
-
-            $criteria[3]['summit_purchased'] = [
-                'Purchased Facilitated Community Awareness Conversation ($1,500)',
-                $purchasedCommunitySummit
-            ];
         }
 
-        if (! $purchasedCommunitySummit) {
-            $criteria[3]['policy_dev_purchased'] = [
-                'Purchased PwR3 Policy Development ($5,000)',
-                $productsTable->isPurchased($communityId, 5)
-            ];
-        }
-
-
-        // Step 3.5
-        if ($purchasedCommunitySummit) {
-            $criteria['3.5']['alignment_passed'] = [
-                'Passed community alignment assessment' . $note,
-                $survey && $survey->alignment_passed == 1
-            ];
-
-            $criteria['3.5']['policy_dev_purchased'] = [
-                'Purchased PwR3 Policy Development ($5,000)',
-                $productsTable->isPurchased($communityId, 5)
-            ];
-        }
+        $criteria[3]['policy_dev_purchased'] = $productsTable->isPurchased($communityId, 5);
 
         return $criteria;
     }
