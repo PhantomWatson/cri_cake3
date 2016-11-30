@@ -74,6 +74,30 @@ class ClientHomeHelper extends Helper
     }
 
     /**
+     * "Step two not ready yet" row
+     *
+     * If the client has purchased step two but is still in step one,
+     * this row explains that their survey is being prepared and (hopefully)
+     * reassures them that no immediate action is needed on their part.
+     *
+     * @param array $params Parameters
+     * @return null|string
+     */
+    public function stepTwoPendingRow($params)
+    {
+        if ($params['surveyPurchased'] && $params['onStepOne']) {
+            $icon = $this->glyphicon(false);
+            $description =
+                '<p>' .
+                    'Your community\'s questionnaire is currently being prepared. ' .
+                    'Please check back later for updates.' .
+                '</p>';
+            return $this->row($icon, $description, null);
+        }
+        return null;
+    }
+
+    /**
      * "Survey is has been prepared" row
      *
      * @param array $params Parameters
