@@ -39,28 +39,11 @@
         'thresholdReached' => $criteria[2]['response_threshhold_reached'][1]
     ]) ?>
 
-    <?php if (isset($criteria[2]['unapproved_addressed'])): ?>
-        <tr>
-            <td>
-                <?= $this->ClientHome->glyphicon($criteria[2]['unapproved_addressed'][1]) ?>
-            </td>
-            <td>
-                <?= $criteria[2]['unapproved_addressed'][0] ?>
-            </td>
-            <td>
-                <?= $this->Html->link(
-                    'Approve / Dismiss',
-                    [
-                        'prefix' => 'client',
-                        'controller' => 'Respondents',
-                        'action' => 'unapproved',
-                        'official'
-                    ],
-                    ['class' => 'btn btn-'.($criteria[2]['unapproved_addressed'][1] ? 'default' : 'primary')]
-                ) ?>
-            </td>
-        </tr>
-    <?php endif; ?>
+    <?= $this->ClientHome->unapprovedResponsesRow([
+        'allUnapprovedAddressed' => $criteria[2]['unapproved_addressed'][1],
+        'description' => $criteria[2]['unapproved_addressed'][0],
+        'hasUninvitedResponses' => $criteria[2]['hasUninvitedResponses']
+    ]) ?>
 
     <tr>
         <td>

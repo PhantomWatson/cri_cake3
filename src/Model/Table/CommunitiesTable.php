@@ -425,10 +425,17 @@ class CommunitiesTable extends Table
             $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
         ];
 
-        if ($surveysTable->hasUninvitedResponses($surveyId)) {
+        $hasUninvitedResponses = $surveysTable->hasUninvitedResponses($surveyId);
+        $criteria[2]['hasUninvitedResponses'] = $hasUninvitedResponses;
+        if ($hasUninvitedResponses) {
             $criteria[2]['unapproved_addressed'] = [
                 'All unapproved responses have been approved or dismissed',
                 ! $surveysTable->hasUnaddressedUnapprovedRespondents($surveyId)
+            ];
+        } else {
+            $criteria[2]['unapproved_addressed'] = [
+                'This questionnaire has no uninvited responses',
+                true
             ];
         }
 

@@ -208,4 +208,36 @@ class ClientHomeHelper extends Helper
 
         return $this->row($icon, $description, $actions);
     }
+
+    /**
+     * "Addressing unapproved responses" row
+     *
+     * @param array $params Parameters
+     * @return string
+     */
+    public function unapprovedResponsesRow($params)
+    {
+        $allUnapprovedAddressed = $params['allUnapprovedAddressed'];
+        $description = $params['description'];
+        $hasUninvitedResponses = $params['hasUninvitedResponses'];
+
+        $icon = $this->glyphicon($allUnapprovedAddressed);
+
+        if ($hasUninvitedResponses) {
+            $actions = $this->Html->link(
+                'Approve / Dismiss',
+                [
+                    'prefix' => 'client',
+                    'controller' => 'Respondents',
+                    'action' => 'unapproved',
+                    'official'
+                ],
+                ['class' => 'btn btn-' . ($allUnapprovedAddressed ? 'default' : 'primary')]
+            );
+        } else {
+            $actions = null;
+        }
+
+        return $this->row($icon, $description, $actions);
+    }
 }
