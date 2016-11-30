@@ -256,4 +256,20 @@ class ClientHomeHelper extends Helper
 
         return $this->row($icon, $description, null);
     }
+
+    /**
+     * "Passed alignment assessment" row
+     *
+     * @param array $params Parameters
+     * @return string
+     */
+    public function alignmentResultRow($params)
+    {
+        $alignmentPassed = $params['alignmentPassed'];
+        $description = $params['description'];
+
+        $icon = $this->glyphicon($alignmentPassed);
+
+        return $this->row($icon, $description, null);
+    }
 }

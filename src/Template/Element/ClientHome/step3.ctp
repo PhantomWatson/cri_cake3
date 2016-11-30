@@ -44,18 +44,10 @@
         'alignmentCalculated' => $criteria[3]['alignment_calculated'][1]
     ]) ?>
 
-    <?php if ($step3Alignment): ?>
-        <tr>
-            <td>
-                <?= $this->ClientHome->glyphicon($step3Alignment[1]) ?>
-            </td>
-            <td>
-                <?= $step3Alignment[0] ?>
-            </td>
-            <td>
-            </td>
-        </tr>
-    <?php endif; ?>
+    <?= $this->ClientHome->alignmentResultRow([
+        'alignmentPassed' => $step3Alignment[1],
+        'description' => $step3Alignment[0]
+    ]) ?>
 
     <?php if ($step3PolicyDevPurchased): ?>
         <tr>

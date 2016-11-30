@@ -50,18 +50,10 @@
         'alignmentCalculated' => $criteria[2]['alignment_calculated'][1]
     ]) ?>
 
-    <?php if ($step2Alignment): ?>
-        <tr>
-            <td>
-                <?= $this->ClientHome->glyphicon($step2Alignment[1]) ?>
-            </td>
-            <td>
-                <?= $step2Alignment[0] ?>
-            </td>
-            <td>
-            </td>
-        </tr>
-    <?php endif; ?>
+    <?= $this->ClientHome->alignmentResultRow([
+        'alignmentPassed' => $step2Alignment[1],
+        'description' => $step2Alignment[0]
+    ]) ?>
 
     <?php if ($step2SurveyPurchased): ?>
         <tr>
