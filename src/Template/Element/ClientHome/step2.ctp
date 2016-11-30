@@ -45,59 +45,22 @@
         'hasUninvitedResponses' => $criteria[2]['hasUninvitedResponses']
     ]) ?>
 
-    <tr>
-        <td>
-            <?= $this->ClientHome->glyphicon($criteria[2]['alignment_calculated'][1]) ?>
-        </td>
-        <td>
-            <?= $criteria[2]['alignment_calculated'][0] ?>
-        </td>
-        <td>
-        </td>
-    </tr>
+    <?= $this->ClientHome->alignmentCalculatedRow([
+        'description' => $criteria[2]['alignment_calculated'][0],
+        'alignmentCalculated' => $criteria[2]['alignment_calculated'][1]
+    ]) ?>
 
-    <?php if (isset($criteria[2]['summit_purchased'])): ?>
+    <?php if ($step2Alignment): ?>
         <tr>
             <td>
-                <?= $this->ClientHome->glyphicon($criteria[2]['summit_purchased'][1]) ?>
+                <?= $this->ClientHome->glyphicon($step2Alignment[1]) ?>
             </td>
             <td>
-                <?= $criteria[2]['summit_purchased'][0] ?>
+                <?= $step2Alignment[0] ?>
             </td>
             <td>
-                <?php if (! $criteria[2]['summit_purchased'][1]): ?>
-                    <a href="<?= $purchaseUrls[2]; ?>" class="btn btn-primary">
-                        Purchase Now
-                    </a>
-                <?php endif; ?>
             </td>
         </tr>
-
-        <?php if ($step2Alignment): ?>
-            <tr>
-                <td>
-                    <?= $this->ClientHome->glyphicon($step2Alignment[1]) ?>
-                </td>
-                <td>
-                    <?= $step2Alignment[0] ?>
-                </td>
-                <td>
-                </td>
-            </tr>
-        <?php endif; ?>
-    <?php else: ?>
-        <?php if ($step2Alignment): ?>
-            <tr>
-                <td>
-                    <?= $this->ClientHome->glyphicon($step2Alignment[1]) ?>
-                </td>
-                <td>
-                    <?= $step2Alignment[0] ?>
-                </td>
-                <td>
-                </td>
-            </tr>
-        <?php endif; ?>
     <?php endif; ?>
 
     <?php if ($step2SurveyPurchased): ?>

@@ -240,4 +240,20 @@ class ClientHomeHelper extends Helper
 
         return $this->row($icon, $description, $actions);
     }
+
+    /**
+     * "Alignment has been calculated" row
+     *
+     * @param array $params Parameters
+     * @return string
+     */
+    public function alignmentCalculatedRow($params)
+    {
+        $description = $params['description'];
+        $alignmentCalculated = $params['alignmentCalculated'];
+
+        $icon = $this->glyphicon($alignmentCalculated);
+
+        return $this->row($icon, $description, null);
+    }
 }

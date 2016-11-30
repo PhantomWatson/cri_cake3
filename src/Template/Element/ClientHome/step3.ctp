@@ -39,16 +39,10 @@
         'thresholdReached' => $criteria[3]['response_threshhold_reached'][1]
     ]) ?>
 
-    <tr>
-        <td>
-            <?= $this->ClientHome->glyphicon($criteria[3]['alignment_calculated'][1]) ?>
-        </td>
-        <td>
-            <?= $criteria[3]['alignment_calculated'][0] ?>
-        </td>
-        <td>
-        </td>
-    </tr>
+    <?= $this->ClientHome->alignmentCalculatedRow([
+        'description' => $criteria[3]['alignment_calculated'][0],
+        'alignmentCalculated' => $criteria[3]['alignment_calculated'][1]
+    ]) ?>
 
     <?php if (isset($criteria[3]['summit_purchased'])): ?>
         <tr>
