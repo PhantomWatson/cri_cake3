@@ -336,6 +336,7 @@ var adminCommunitiesIndex = {
             var form = $('#admin_community_search_form');
             if (form.is(':visible')) {
                 form.slideUp(200);
+                adminCommunitiesIndex.filter('');
             } else {
                 form.slideDown(200);
                 form.children('input').focus();
