@@ -49,6 +49,31 @@ class ClientHomeHelper extends Helper
     }
 
     /**
+     * "Purchased community officials survey" row
+     *
+     * @param array $params Parameters
+     * @return string
+     */
+    public function officialsSurveyPurchasedRow($params)
+    {
+        $description = $params['description'];
+        $purchased = $params['purchased'];
+        $purchaseUrl = $params['purchaseUrl'];
+        $icon = $this->glyphicon($purchased);
+
+        if ($purchased) {
+            $actions = null;
+        } else {
+            $actions =
+                '<a href="' . $purchaseUrl . '" class="btn btn-primary">' .
+                    'Purchase Now' .
+                '</a>';
+        }
+
+        return $this->row($icon, $description, $actions);
+    }
+
+    /**
      * "Survey is has been prepared" row
      *
      * @param array $params Parameters
