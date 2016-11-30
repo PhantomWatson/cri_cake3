@@ -518,7 +518,10 @@ class CommunitiesTable extends Table
              $survey && $survey->alignment_passed == 1
         ];
 
-        $criteria[3]['policy_dev_purchased'] = $productsTable->isPurchased($communityId, 5);
+        $criteria[3]['policy_dev_purchased'] = [
+            'PWR<sup>3</sup> Policy Development Purchased',
+            $productsTable->isPurchased($communityId, 5)
+        ];
 
         return $criteria;
     }

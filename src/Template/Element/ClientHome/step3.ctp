@@ -49,21 +49,9 @@
         'description' => $step3Alignment[0]
     ]) ?>
 
-    <?php if ($step3PolicyDevPurchased): ?>
-        <tr>
-            <td>
-                <?= $this->ClientHome->glyphicon($step3PolicyDevPurchased[1]) ?>
-            </td>
-            <td>
-                <?= $step3PolicyDevPurchased[0] ?>
-            </td>
-            <td>
-                <?php if (! $step3PolicyDevPurchased[1]): ?>
-                    <a href="<?= $purchaseUrls[5] ?>" class="btn btn-primary">
-                        Purchase Now
-                    </a>
-                <?php endif; ?>
-            </td>
-        </tr>
-    <?php endif; ?>
+    <?= $this->ClientHome->policyDevPurchasedRow([
+        'description' => $step3PolicyDevPurchased[0],
+        'purchased' => $step3PolicyDevPurchased[1],
+        'purchaseUrl' => $purchaseUrls[5]
+    ]) ?>
 </tbody>
