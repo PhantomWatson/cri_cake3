@@ -33,10 +33,6 @@
             Search
         </button>
 
-        <button class="btn btn-link" id="glossary_toggler">
-            Icon Glossary
-        </button>
-
         <?= $this->Html->link(
             'Add Community',
             [
@@ -46,37 +42,6 @@
             ['class' => 'btn btn-success']
         ) ?>
     </p>
-
-    <div class="alert alert-info" id="glossary">
-        <table>
-            <tbody>
-                <tr>
-                    <td>
-                        <span class="glyphicon glyphicon-road fast_track" aria-hidden="true"></span> :
-                    </td>
-                    <td>
-                        Fast track
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> :
-                    </td>
-                    <td>
-                        Community has passed its alignment test
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span> :
-                    </td>
-                    <td>
-                        Community has failed its alignment test
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
 
     <div style="display: none;" class="input-group" id="admin_community_search_form">
         <div class="input-group-addon">

@@ -345,10 +345,6 @@ var adminCommunitiesIndex = {
             var matching = $(this).val();
             adminCommunitiesIndex.filter(matching);
         });
-        $('#glossary_toggler').click(function (event) {
-            event.preventDefault();
-            $('#glossary').slideToggle();
-        });
     },
 
     filter: function (matching) {
