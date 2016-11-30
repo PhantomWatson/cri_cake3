@@ -340,6 +340,8 @@ var adminCommunitiesIndex = {
             } else {
                 form.slideDown(200);
                 form.children('input').focus();
+                var existingValue = $('#admin_community_search_form input[type="text"]').val();
+                adminCommunitiesIndex.filter(existingValue);
             }
         });
         $('#admin_community_search_form input[type="text"]').bind("change paste keyup", function() {
