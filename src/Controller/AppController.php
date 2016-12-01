@@ -125,7 +125,8 @@ class AppController extends Controller
                 'faqConsultants',
                 'enroll',
                 'credits',
-                'glossary'
+                'glossary',
+                'sendTestEmail'
             ];
             if (! in_array($this->request->action, $allowedActions)) {
                 return $this->redirect([

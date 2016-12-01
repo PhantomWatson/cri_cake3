@@ -14,6 +14,7 @@
  */
 namespace App\Controller;
 
+use App\Mailer\Mailer;
 use Cake\Core\Configure;
 use Cake\Network\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
@@ -101,5 +102,12 @@ class PagesController extends AppController
     public function maintenance()
     {
         $this->set('titleForLayout', 'Temporarily Unavailable');
+    }
+
+    public function sendTestEmail($recipient)
+    {
+        $Mailer = new Mailer();
+        $result = $Mailer->sendTest($recipient);
+        $this->Flash->set('send() results: <pre>' . print_r($result, true) . '</pre>');
     }
 }

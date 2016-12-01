@@ -148,4 +148,13 @@ class Mailer
 
         return $email->send();
     }
+
+    public function sendTest($recipient)
+    {
+        $email = new Email();
+        $email->to($recipient);
+        $email->subject('CRI: Test email');
+        $email->template('test');
+        return $email->send();
+    }
 }
