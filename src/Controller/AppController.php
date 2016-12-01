@@ -116,6 +116,25 @@ class AppController extends Controller
                 $this->request->data = $rememberData;
             }
         }
+
+        if (Configure::read('maintenance_mode')) {
+            $allowedActions = [
+                'maintenance',
+                'home',
+                'faqCommunity',
+                'faqConsultants',
+                'enroll',
+                'credits',
+                'glossary'
+            ];
+            if (! in_array($this->request->action, $allowedActions)) {
+                return $this->redirect([
+                    'prefix' => false,
+                    'controller' => 'Pages',
+                    'action' => 'maintenance'
+                ]);
+            }
+        }
     }
 
     /**

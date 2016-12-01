@@ -97,4 +97,9 @@ class PagesController extends AppController
     {
         return $this->redirect('https://www.surveymonkey.com/s/XFT6CSZ');
     }
+
+    public function maintenance()
+    {
+        $this->set('titleForLayout', 'Temporarily Unavailable');
+    }
 }
