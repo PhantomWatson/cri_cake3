@@ -383,4 +383,47 @@ class SurveysController extends AppController
             'warning' => $warning
         ]);
     }
+
+    public function resendInvitations()
+    {
+        if ($this->request->is('post')) {
+            $surveyId = $this->request->data('surveyId');
+            $survey = $this->Surveys->get($surveyId);
+            $communitiesTable = TableRegistry::get('Communities');
+            $community = $communitiesTable->get($survey->community_id);
+            $respondentsTable = TableRegistry::get('Respondents');
+            $recipients = $respondentsTable->find('list', ['valueField' => 'email'])
+                ->where(['survey_id' => $surveyId])
+                ->toArray();
+            $usersTable = TableRegistry::get('Users');
+            $user = $usersTable->get($this->request->data('userId'));
+
+            if ($this->request->data('confirmed')) {
+                $step = 'results';
+                $Mailer = new Mailer();
+                $result = $Mailer->sendInvitations([
+                    'surveyId' => $surveyId,
+                    'communityId' => $survey->community_id,
+                    'senderEmail' => $user->email,
+                    'senderName' => $user->name,
+                    'recipients' => $recipients
+                ]);
+                $this->set('result', $result);
+            } else {
+                $step = 'confirm';
+                $this->set([
+                    'survey' => $survey,
+                    'community' => $community,
+                    'recipients' => $recipients,
+                    'sender' => $user
+                ]);
+            }
+        } else {
+            $step = 'input';
+        }
+        $this->set([
+            'step' => $step,
+            'titleForLayout' => 'Resend All Invitations for Survey' . (isset($surveyId) ? " #$surveyId" : null)
+        ]);
+    }
 }
