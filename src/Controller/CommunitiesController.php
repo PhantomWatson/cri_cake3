@@ -96,7 +96,7 @@ class CommunitiesController extends AppController
      * View method
      *
      * @param string|null $communityId Community ID
-     * @return void
+     * @return \Cake\Network\Response|null
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function view($communityId = null)
@@ -152,7 +152,7 @@ class CommunitiesController extends AppController
     /**
      * Method for /communities/autocomplete
      *
-     * @reutrn void
+     * @return void
      */
     public function autocomplete()
     {

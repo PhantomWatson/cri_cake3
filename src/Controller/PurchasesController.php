@@ -16,6 +16,7 @@ class PurchasesController extends AppController
      * beforeFilter method
      *
      * @param \Cake\Event\Event $event Event
+     * @return void
      */
     public function beforeFilter(\Cake\Event\Event $event)
     {

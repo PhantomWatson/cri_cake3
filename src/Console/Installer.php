@@ -210,8 +210,11 @@ class Installer
     }
 
     /**
+     * Copies Boostrap files from /vendor into /webroot
+     *
      * @param string $dir Root directory
      * @param IOInterface $io IOInterface
+     * @return void
      */
     public static function copyTwitterBootstrapFiles($dir, $io)
     {

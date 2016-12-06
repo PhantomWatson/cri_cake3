@@ -92,7 +92,7 @@ class AppController extends Controller
      * beforeFilter method
      *
      * @param \Cake\Event\Event $event Event
-     * @return void
+     * @return \Cake\Network\Response|null
      */
     public function beforeFilter(\Cake\Event\Event $event)
     {

@@ -92,7 +92,7 @@ class PagesController extends AppController
     /**
      * Method for /pages/enroll
      *
-     * @return void
+     * @return \Cake\Network\Response
      */
     public function enroll()
     {
@@ -112,6 +112,7 @@ class PagesController extends AppController
     /**
      * Page for sending a test email
      *
+     * @param string $recipient Email address to send test email to
      * @return void
      */
     public function sendTestEmail($recipient)

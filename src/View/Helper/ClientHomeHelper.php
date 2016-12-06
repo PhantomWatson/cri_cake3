@@ -16,14 +16,15 @@ class ClientHomeHelper extends Helper
     public function glyphicon($bool)
     {
         $class = $bool ? 'ok' : 'remove';
+
         return '<span class="glyphicon glyphicon-' . $class . '"></span>';
     }
 
     /**
      * Returns a <tbody> string with the appropriate class
      *
-     * @param $tbodyStep Step that this <tbody> contains
-     * @param $currentStep Step that this community is currently at
+     * @param int $tbodyStep Step that this <tbody> contains
+     * @param int $currentStep Step that this community is currently at
      * @return string
      */
     public function tbodyForStep($tbodyStep, $currentStep)

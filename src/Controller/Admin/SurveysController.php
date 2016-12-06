@@ -75,7 +75,7 @@ class SurveysController extends AppController
      *
      * @param int|null $communityId Community ID
      * @param int|null $surveyType Survey type
-     * @return \Cake\Network\Response|null
+     * @return void
      */
     public function link($communityId = null, $surveyType = null)
     {
@@ -163,6 +163,7 @@ class SurveysController extends AppController
      *
      * @param Survey $survey Survey
      * @param Community $community Community
+     * @return void
      */
     private function prepareSurveyStatus($survey, $community)
     {
@@ -195,7 +196,7 @@ class SurveysController extends AppController
      * Method for /admin/surveys/invite
      *
      * @param int|null $surveyId Survey ID
-     * @return void
+     * @return \Cake\Network\Response|null
      * @throws ForbiddenException
      */
     public function invite($surveyId = null)
@@ -384,6 +385,11 @@ class SurveysController extends AppController
         ]);
     }
 
+    /**
+     * Resends invitations that have already been sent (or unsuccessfully sent)
+     *
+     * @return void
+     */
     public function resendInvitations()
     {
         if ($this->request->is('post')) {

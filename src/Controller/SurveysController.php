@@ -248,6 +248,7 @@ class SurveysController extends AppController
     /**
      * Method for /surveys/get-survey-url
      *
+     * @param string|null $smId SurveyMonkey survey ID
      * @return void
      */
     public function getSurveyUrl($smId = null)
@@ -262,6 +263,7 @@ class SurveysController extends AppController
     /**
      * Used by a JS call to find out what community, if any, a survey has already been assigned to
      *
+     * @param string|null $smSurveyId SurveyMonkey survey ID
      * @return void
      */
     public function checkSurveyAssignment($smSurveyId = null)
@@ -288,6 +290,7 @@ class SurveysController extends AppController
     /**
      * Method for /surveys/get-qna-ids
      *
+     * @param string|null $smId SurveyMonkey survey ID
      * @return void
      */
     public function getQnaIds($smId)

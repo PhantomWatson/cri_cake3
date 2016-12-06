@@ -20,6 +20,8 @@ class CommunitiesController extends AppController
     /**
      * Alters $this->paginate settings according to $_GET and Cookie data,
      * and remembers $_GET data with a cookie.
+     *
+     * @return void
      */
     private function adminIndexFilter()
     {
