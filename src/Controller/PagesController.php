@@ -99,11 +99,21 @@ class PagesController extends AppController
         return $this->redirect('https://www.surveymonkey.com/s/XFT6CSZ');
     }
 
+    /**
+     * Action that users get redirected to when accessing certain pages while the site's in maintenance mode
+     *
+     * @return void
+     */
     public function maintenance()
     {
         $this->set('titleForLayout', 'Temporarily Unavailable');
     }
 
+    /**
+     * Page for sending a test email
+     *
+     * @return void
+     */
     public function sendTestEmail($recipient)
     {
         $Mailer = new Mailer();

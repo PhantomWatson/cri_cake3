@@ -149,12 +149,19 @@ class Mailer
         return $email->send();
     }
 
+    /**
+     * Sends a test email
+     *
+     * @param string $recipient Email address of recipient
+     * @return array
+     */
     public function sendTest($recipient)
     {
         $email = new Email();
         $email->to($recipient);
         $email->subject('CRI: Test email');
         $email->template('test');
+
         return $email->send();
     }
 }

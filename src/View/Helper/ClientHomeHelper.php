@@ -13,9 +13,10 @@ class ClientHomeHelper extends Helper
      * @param bool $bool Boolean for success or failure
      * @return string
      */
-    public function glyphicon($bool) {
+    public function glyphicon($bool)
+    {
         $class = $bool ? 'ok' : 'remove';
-        return '<span class="glyphicon glyphicon-'.$class.'"></span>';
+        return '<span class="glyphicon glyphicon-' . $class . '"></span>';
     }
 
     /**
@@ -25,13 +26,15 @@ class ClientHomeHelper extends Helper
      * @param $currentStep Step that this community is currently at
      * @return string
      */
-    public function tbodyForStep($tbodyStep, $currentStep) {
+    public function tbodyForStep($tbodyStep, $currentStep)
+    {
         if ($tbodyStep > floor($currentStep)) {
             return '<tbody class="future">';
         }
         if ($tbodyStep < floor($currentStep)) {
             return '<tbody class="past">';
         }
+
         return '<tbody class="current">';
     }
 
@@ -89,8 +92,10 @@ class ClientHomeHelper extends Helper
                     'Your community\'s questionnaire is currently being prepared. ' .
                     'Please check back later for updates.' .
                 '</p>';
+
             return $this->row($icon, $description, null);
         }
+
         return null;
     }
 
