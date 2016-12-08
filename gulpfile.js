@@ -63,7 +63,7 @@ gulp.task('php_cs_ctp', function (cb) {
 function testNotification(status, pluginName, override) {
     var options = {
         title:   ( status == 'pass' ) ? 'Tests Passed' : 'Tests Failed',
-        message: ( status == 'pass' ) ? '\n\nAll tests have passed!\n\n' : '\n\nOne or more tests failed...\n\n',
+        message: ( status == 'pass' ) ? 'All tests have passed!' : 'One or more tests failed',
         icon:    __dirname + '/node_modules/gulp-' + pluginName +'/assets/test-' + status + '.png'
     };
     options = _.merge(options, override);
