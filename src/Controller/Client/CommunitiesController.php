@@ -41,9 +41,7 @@ class CommunitiesController extends AppController
         }
 
         $criteria = $this->Communities->getProgress($communityId);
-        $step2Alignment = $criteria[2]['alignment_passed'];
         $step2SurveyPurchased = $criteria[2]['survey_purchased'];
-        $step3Alignment = $criteria[3]['alignment_passed'];
         $step3PolicyDevPurchased = $criteria[3]['policy_dev_purchased'];
 
         $surveysTable = TableRegistry::get('Surveys');
@@ -82,9 +80,7 @@ class CommunitiesController extends AppController
             'purchaseUrls',
             'officialSurveyId',
             'organizationSurveyId',
-            'step2Alignment',
             'step2SurveyPurchased',
-            'step3Alignment',
             'step3PolicyDevPurchased'
         ));
         if ($this->Auth->user('role') == 'admin') {

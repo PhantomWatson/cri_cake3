@@ -434,25 +434,6 @@ class CommunitiesTable extends Table
             ];
         }
 
-        $criteria[2]['alignment_calculated'] = [
-            'Community leadership alignment calculated',
-            $survey && $survey->alignment_passed != 0
-        ];
-
-        if ($survey && $survey->alignment_passed == 0) {
-            $note = ' (alignment not yet calculated)';
-        } elseif ($survey && $isAdmin) {
-            $alignment = $survey->alignment;
-            $note = " ($alignment% aligned)";
-        } else {
-            $note = '';
-        }
-
-        $criteria[2]['alignment_passed'] = [
-            'Passed leadership alignment assessment' . $note,
-            $survey && $survey->alignment_passed == 1
-        ];
-
         $criteria[2]['survey_purchased'] = [
             'Purchased Community Organizations Alignment Assessment ($3,500)',
             $productsTable->isPurchased($communityId, 3)
@@ -494,23 +475,6 @@ class CommunitiesTable extends Table
         $criteria[3]['response_threshhold_reached'] = [
             'At least 25% of invited community organizations have responded to the questionnaire',
             $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
-        ];
-
-        $criteria[3]['alignment_calculated'] = [
-            'Community organization alignment calculated',
-            $survey && $survey->alignment_passed != 0
-        ];
-
-        if ($survey && $survey->alignment_passed == 0) {
-            $note = ' (alignment not yet calculated)';
-        } elseif ($survey && $isAdmin) {
-            $note = " ({$survey->alignment}% aligned)";
-        } else {
-            $note = '';
-        }
-        $criteria[3]['alignment_passed'] = [
-            'Passed community alignment assessment' . $note,
-             $survey && $survey->alignment_passed == 1
         ];
 
         $criteria[3]['policy_dev_purchased'] = [
@@ -579,7 +543,6 @@ class CommunitiesTable extends Table
                         'OfficialSurvey.id',
                         'OfficialSurvey.sm_id',
                         'OfficialSurvey.alignment',
-                        'OfficialSurvey.alignment_passed',
                         'OfficialSurvey.respondents_last_modified_date',
                         'OfficialSurvey.active'
                     ]);
@@ -589,7 +552,6 @@ class CommunitiesTable extends Table
                         'OrganizationSurvey.id',
                         'OrganizationSurvey.sm_id',
                         'OrganizationSurvey.alignment',
-                        'OrganizationSurvey.alignment_passed',
                         'OrganizationSurvey.respondents_last_modified_date',
                         'OrganizationSurvey.active'
                     ]);

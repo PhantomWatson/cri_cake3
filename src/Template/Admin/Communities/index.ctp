@@ -151,11 +151,6 @@
                                                 Alignment: Not set
                                             <?php else: ?>
                                                 Alignment: <?php echo $community->{$surveyType}['alignment']; ?>%
-                                                <?php if ($community->{$surveyType}['alignment_passed'] == -1): ?>
-                                                    <span class="glyphicon glyphicon-remove-sign" aria-hidden="true" title="Failed to pass"></span>
-                                                <?php elseif ($community->{$surveyType}['alignment_passed'] == 1): ?>
-                                                    <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" title="Passed"></span>
-                                                <?php endif; ?>
                                             <?php endif; ?>
                                         </li>
 

@@ -39,16 +39,6 @@
         'thresholdReached' => $criteria[3]['response_threshhold_reached'][1]
     ]) ?>
 
-    <?= $this->ClientHome->alignmentCalculatedRow([
-        'alignmentCalculated' => $criteria[3]['alignment_calculated'][1],
-        'description' => $criteria[3]['alignment_calculated'][0]
-    ]) ?>
-
-    <?= $this->ClientHome->alignmentResultRow([
-        'alignmentPassed' => $step3Alignment[1],
-        'description' => $step3Alignment[0]
-    ]) ?>
-
     <?= $this->ClientHome->policyDevPurchasedRow([
         'description' => $step3PolicyDevPurchased[0],
         'purchased' => $step3PolicyDevPurchased[1],

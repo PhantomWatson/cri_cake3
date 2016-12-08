@@ -45,16 +45,6 @@
         'hasUninvitedResponses' => $criteria[2]['hasUninvitedResponses']
     ]) ?>
 
-    <?= $this->ClientHome->alignmentCalculatedRow([
-        'alignmentCalculated' => $criteria[2]['alignment_calculated'][1],
-        'description' => $criteria[2]['alignment_calculated'][0]
-    ]) ?>
-
-    <?= $this->ClientHome->alignmentResultRow([
-        'alignmentPassed' => $step2Alignment[1],
-        'description' => $step2Alignment[0]
-    ]) ?>
-
     <?= $this->ClientHome->orgSurveyPurchasedRow([
         'description' => $step2SurveyPurchased[0],
         'purchased' => $step2SurveyPurchased[1],

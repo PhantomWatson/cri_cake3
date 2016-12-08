@@ -136,10 +136,6 @@ class SurveysTable extends Table
             ->notEmpty('alignment');
 
         $validator
-            ->add('alignment_passed', 'valid', ['rule' => 'numeric'])
-            ->notEmpty('alignment_passed');
-
-        $validator
             ->add('alignment_calculated', 'valid', ['rule' => 'datetime'])
             ->notEmpty('alignment_calculated');
 

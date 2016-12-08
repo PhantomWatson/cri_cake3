@@ -115,40 +115,12 @@ class ProductsTable extends Table
         $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($communityId);
 
-        // Is this purchase not possible because the community hasn't passed an alignment test?
-        $surveysTable = TableRegistry::get('Surveys');
-        if ($productId > 1) {
-            $offSurveyId = $surveysTable->getSurveyId($communityId, 'official');
-            $offSurvey = $surveysTable->get($offSurveyId);
-            if ($offSurvey->alignment_passed == 0) {
-                return [0, 'Community has not completed Step 2 yet.'];
-            } elseif ($offSurvey->alignment_passed == -1) {
-                if ($productId == 2) {
-                    $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);
-
-                    return [1, 'Can purchase (community is misaligned)', $purchaseUrl];
-                }
-
-                return [0, 'Community has not completed Step 2 yet.'];
-            }
-            if ($productId > 3) {
-                $orgSurveyId = $surveysTable->getSurveyId($communityId, 'organization');
-                $orgSurvey = $surveysTable->get($orgSurveyId);
-                if ($orgSurvey->alignment_passed == 0) {
-                    return [0, 'Community has not completed Step 3 yet.'];
-                } elseif ($orgSurvey->alignment_passed == -1) {
-                    if ($productId == 4) {
-                        $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);
-
-                        return [1, 'Can purchase (community is misaligned)', $purchaseUrl];
-                    }
-
-                    return [0, 'Community has not completed Step 3 yet.'];
-                }
-                if ($orgSurvey->alignment_passed < 1 && $productId == 5) {
-                    return [0, 'Community has not completed Step 3 yet.'];
-                }
-            }
+        // Is this purchase not possible because the community isn't in the correct CRI step?
+        if ($productId > 1 && $community->step < 3) {
+            return [0, 'Community has not completed Step 2 yet.'];
+        }
+        if ($productId > 3 && $community->step < 4) {
+            return [0, 'Community has not completed Step 3 yet.'];
         }
 
         // Is this a discontinued half-setp product?

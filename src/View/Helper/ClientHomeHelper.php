@@ -280,32 +280,6 @@ class ClientHomeHelper extends Helper
     }
 
     /**
-     * "Alignment has been calculated" row
-     *
-     * @param array $params Parameters
-     * @return string
-     */
-    public function alignmentCalculatedRow($params)
-    {
-        $icon = $this->glyphicon($params['alignmentCalculated']);
-
-        return $this->row($icon, $params['description'], null);
-    }
-
-    /**
-     * "Passed alignment assessment" row
-     *
-     * @param array $params Parameters
-     * @return string
-     */
-    public function alignmentResultRow($params)
-    {
-        $icon = $this->glyphicon($params['alignmentPassed']);
-
-        return $this->row($icon, $params['description'], null);
-    }
-
-    /**
      * "Purchased community organizations survey" row
      *
      * @param array $params Parameters

@@ -220,18 +220,6 @@
                 ]
             );
         ?>
-        <?= $this->Form->input(
-            'alignment_passed',
-            [
-                'label' => 'Has this community passed its leadership alignment assessment?',
-                'options' => [
-                    0 => 'Not determined',
-                    -1 => 'Failed',
-                    1 => 'Passed'
-                ],
-                'type' => 'select'
-            ]
-        ) ?>
         <?= $this->Form->button(
             'Update',
             ['class' => 'btn btn-primary']
