@@ -30,6 +30,9 @@
             if (isset($criteria[$step])) {
                 echo '<ul>';
                 foreach ($criteria[$step] as $item) {
+                    if (! is_array($item)) {
+                        continue;
+                    }
                     list($criterion, $passed) = $item;
                     if ($passed) {
                         echo '<li class="pass"><span class="glyphicon glyphicon-ok"></span>';
