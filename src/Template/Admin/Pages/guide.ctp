@@ -454,6 +454,65 @@
 </section>
 
 <section class="admin-guide">
+    <h2>Adding Users</h2>
+    <div>
+        <ol>
+            <li>
+                Click on
+                <?= $this->Html->link(
+                    'Manage Users',
+                    [
+                        'prefix' => 'admin',
+                        'controller' => 'Users',
+                        'action' => 'index'
+                    ]
+                ) ?>
+                in the sidebar
+            </li>
+            <li>
+                Click on
+                <?= $this->Html->link(
+                    'Add User',
+                    [
+                        'prefix' => 'admin',
+                        'controller' => 'Users',
+                        'action' => 'add'
+                    ]
+                ) ?>
+            </li>
+            <li>
+                Enter information about the user (fields not marked with a red asterisk are optional)
+            </li>
+            <li>
+                Select the user's role
+                <ul>
+                    <li>
+                        <strong>Admins</strong> have access to the entire website, and this role is restricted to
+                        Ball State employees
+                    </li>
+                    <li>
+                        <strong>Clients</strong> have access to client-level parts of the website pertaining to the
+                        community to which they are assigned
+                    </li>
+                    <li>
+                        <strong>Consultants</strong> are not currently implemented
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Enter a randomly-generated password
+            </li>
+            <li>
+                Click 'Add User'
+            </li>
+        </ol>
+        <p>
+            The user will be automatically sent an email telling them what their password is and how to log in.
+        </p>
+    </div>
+</section>
+
+<section class="admin-guide">
     <h2>Other Admin Functions</h2>
     <ul>
         <li>
