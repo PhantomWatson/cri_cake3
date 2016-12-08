@@ -34,6 +34,12 @@
 
 <?= $this->Form->input('product_id', ['class' => 'form-control']) ?>
 
+<?= $this->Form->input('source', [
+    'class' => 'form-control',
+    'empty' => true,
+    'label' => 'Funding Source'
+]) ?>
+
 <?= $this->Form->input('notes', ['class' => 'form-control']) ?>
 
 <?= $this->Form->button(

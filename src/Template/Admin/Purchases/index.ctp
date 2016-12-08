@@ -109,6 +109,10 @@
                                 Purchase made online by <?= $purchase->user['name'] ?>
                             <?php endif; ?>
                         </li>
+                        <li>
+                            Funding source:
+                            <?= $purchase->source ? $sources[$purchase->source] : 'Unknown' ?>
+                        </li>
                         <?php if ($purchase->refunded): ?>
                             <li>
                                 Marked refunded by

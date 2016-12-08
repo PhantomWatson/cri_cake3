@@ -39,6 +39,7 @@ class PurchasesController extends AppController
                 'user_id' => $this->request->data('custcode'),
                 'community_id' => $this->request->data('ref1val1'),
                 'product_id' => $productsTable->getIdFromItemCode($itemCode[1]),
+                'source' => 'self',
                 'postback' => base64_encode(serialize($this->request->data()))
             ]);
             $this->Purchases->save($purchase);

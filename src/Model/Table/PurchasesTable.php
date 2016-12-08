@@ -61,6 +61,9 @@ class PurchasesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
+            ->notEmpty('source', 'create');
+
+        $validator
             ->requirePresence('postback', 'create')
             ->allowEmpty('postback');
 
@@ -108,5 +111,19 @@ class PurchasesTable extends Table
                 }
             ])
             ->toArray();
+    }
+
+    /**
+     * Returns an array of the accepted values for Payments.source as keys, and their displayed labels as values
+     *
+     * @return array
+     */
+    public function getSourceOptions()
+    {
+        return [
+            'ocra' => 'OCRA',
+            'bsu' => 'Ball State University',
+            'self' => 'Paid for by client community'
+        ];
     }
 }

@@ -21,7 +21,7 @@ class PurchasesController extends AppController
                 'fields' => ['id', 'name', 'email', 'phone', 'title', 'organization']
             ]
         ],
-        'fields' => ['id', 'created', 'refunded', 'notes', 'admin_added'],
+        'fields' => ['id', 'created', 'refunded', 'source', 'notes', 'admin_added'],
         'limit' => 50,
         'order' => [
             'Purchases.created' => 'DESC'
@@ -37,7 +37,8 @@ class PurchasesController extends AppController
     {
         $this->set([
             'titleForLayout' => 'Payment Records',
-            'purchases' => $this->paginate()->toArray()
+            'purchases' => $this->paginate()->toArray(),
+            'sources' => $this->Purchases->getSourceOptions()
         ]);
     }
 
@@ -122,7 +123,8 @@ class PurchasesController extends AppController
             'communities' => $communitiesTable->find('list')->order(['name' => 'ASC']),
             'products' => $products,
             'purchase' => $purchase,
-            'titleForLayout' => 'Add a New Payment Record'
+            'titleForLayout' => 'Add a New Payment Record',
+            'sources' => $this->Purchases->getSourceOptions()
         ]);
     }
 }

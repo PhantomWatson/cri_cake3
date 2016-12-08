@@ -20,6 +20,7 @@ class Purchase extends Entity
         'product_id' => true,
         'admin_added' => true,
         'postback' => true,
+        'source' => true,
         'notes' => true,
         'refunded' => true,
         'refunder_id' => true,
