@@ -193,39 +193,6 @@
             No responses have been imported yet.
         </p>
     <?php endif; ?>
-
-    <section>
-        <h2>
-            Set PWR<sup>3</sup> Alignment &amp; Pass/Fail Status
-        </h2>
-        <?= $this->Form->create($survey) ?>
-        <?php
-            if ($survey->alignment_calculated) {
-                $alignmentLastSetMsg = '<br />Last modified: ';
-                $timestamp = strtotime($survey->alignment_calculated);
-                $alignmentLastSetMsg .= date('F j', $timestamp).'<sup>'.date('S', $timestamp).'</sup>'.date(', Y', $timestamp);
-            } else {
-                $alignmentLastSetMsg = '';
-            }
-            echo $this->Form->input(
-                'alignment',
-                [
-                    'label' => [
-                        'text' => 'Administrator-determined PWR<sup>3</sup> alignment (percent)'.$alignmentLastSetMsg,
-                        'escape' => false
-                    ],
-                    'max' => 100,
-                    'min' => 0,
-                    'type' => 'number'
-                ]
-            );
-        ?>
-        <?= $this->Form->button(
-            'Update',
-            ['class' => 'btn btn-primary']
-        ) ?>
-        <?= $this->Form->end() ?>
-    </section>
 </div>
 
 <?php $this->append('top-html'); ?>

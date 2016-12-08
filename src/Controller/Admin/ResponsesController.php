@@ -43,19 +43,6 @@ class ResponsesController extends AppController
 
         $responses = $this->SurveyProcessing->getCurrentResponses($surveyId);
 
-        // Process update
-        if ($this->request->is('post') || $this->request->is('put')) {
-            $survey = $surveysTable->patchEntity($survey, $this->request->data);
-            $errors = $survey->errors();
-            if (empty($errors) && $surveysTable->save($survey)) {
-                $this->Flash->success('Alignment set');
-                $survey->alignment_calculated = $survey->modified;
-                $surveysTable->save($survey);
-            } else {
-                $this->Flash->error('There was an error updating this questionnaire');
-            }
-        }
-
         if ($surveysTable->newResponsesHaveBeenReceived($surveyId)) {
             $this->Flash->set('New responses have been received since this community\'s alignment was last set.');
         }
