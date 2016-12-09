@@ -197,13 +197,15 @@ class SurveysController extends AppController
      *
      * @param int|null $surveyId Survey ID
      * @return \Cake\Network\Response|null
-     * @throws ForbiddenException
      */
     public function invite($surveyId = null)
     {
         $survey = $this->Surveys->get($surveyId);
         if (! $survey->active) {
-            throw new ForbiddenException('New invitations cannot be sent out: Questionnaire is inactive');
+            $msg = 'Invitations cannot currently be sent out for that questionnaire because it is inactive.';
+            $this->Flash->error($msg);
+
+            return $this->redirect($this->request->referer());
         }
 
         $communityId = $survey->community_id;
@@ -279,7 +281,10 @@ class SurveysController extends AppController
         $surveysTable = TableRegistry::get('Surveys');
         $survey = $surveysTable->get($surveyId);
         if (! $survey->active) {
-            throw new ForbiddenException('Reminders cannot currently be sent out: Questionnaire is inactive');
+            $msg = 'Reminders cannot currently be sent out for that questionnaire because it is inactive';
+            $this->Flash->error($msg);
+
+            return $this->redirect($this->request->referer());
         }
 
         $communitiesTable = TableRegistry::get('Communities');
