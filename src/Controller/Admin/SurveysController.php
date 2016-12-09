@@ -184,7 +184,7 @@ class SurveysController extends AppController
             'invitations' => $respondentsTable->getInvited($survey->id),
             'invitedRespondentCount' => $surveyStatus['invited_respondent_count'],
             'isAutomaticallyImported' => $isAutomaticallyImported,
-            'isActive' => $this->Surveys->surveyIsActive($survey->id),
+            'isActive' => $this->Surveys->isActive($survey->id),
             'percentInvitedResponded' => $surveyStatus['percent_invited_responded'],
             'responsesChecked' => $surveyStatus['responses_checked'],
             'stageForAutoImport' => $stageForAutoImport,

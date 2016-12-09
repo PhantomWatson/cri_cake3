@@ -821,7 +821,7 @@ class SurveysTable extends Table
      * @param int $surveyId Survey ID
      * @return bool
      */
-    public function surveyIsActive($surveyId)
+    public function isActive($surveyId)
     {
         $results = $this->find('all')
             ->select(['active'])
@@ -857,6 +857,6 @@ class SurveysTable extends Table
      */
     public function isComplete($surveyId)
     {
-        return ! $this->surveyIsActive($surveyId) && $this->hasResponses($surveyId);
+        return ! $this->isActive($surveyId) && $this->hasResponses($surveyId);
     }
 }

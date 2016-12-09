@@ -55,7 +55,7 @@ class SurveysController extends AppController
 
         $respondentType = str_replace('s', '', $respondentTypePlural);
         $surveyId = $this->Surveys->getSurveyId($communityId, $respondentType);
-        if (! $this->Surveys->surveyIsActive($surveyId)) {
+        if (! $this->Surveys->isActive($surveyId)) {
             throw new ForbiddenException('New invitations cannot be sent out: Questionnaire is inactive');
         }
 

@@ -64,8 +64,8 @@ class CommunitiesController extends AppController
                 'organization' => (bool)$organizationSurveyId
             ],
             'surveyIsActive' => [
-                'official' => $surveysTable->surveyIsActive($officialSurveyId),
-                'organization' => $surveysTable->surveyIsActive($organizationSurveyId)
+                'official' => $surveysTable->isActive($officialSurveyId),
+                'organization' => $surveysTable->isActive($organizationSurveyId)
             ],
             'surveyIsComplete' => [
                 'official' => $surveysTable->isComplete($officialSurveyId),
