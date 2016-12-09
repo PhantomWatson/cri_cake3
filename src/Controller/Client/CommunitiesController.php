@@ -55,8 +55,6 @@ class CommunitiesController extends AppController
         $this->set([
             'titleForLayout' => $community->name . '\'s Progress in the CRI Program',
             'score' => $community->score,
-            'officialSurveyOpen' => $surveysTable->isOpen($communityId, 'official'),
-            'organizationSurveyOpen' => $surveysTable->isOpen($communityId, 'organization'),
             'officialUninvitedRespondents' => $respondentsTable->getUninvitedCount($officialSurveyId),
             'officialResponsesChecked' => $surveysTable->getChecked($officialSurveyId),
             'organizationResponsesChecked' => $surveysTable->getChecked($organizationSurveyId),

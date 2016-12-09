@@ -3,9 +3,9 @@
 ?>
 
 <div class="survey_overview">
-    <?php if (! $isOpen): ?>
+    <?php if (! $isActive): ?>
         <p class="alert alert-info">
-            Note: This questionnaire is not yet ready to be administered.
+            Note: This survey is not currently active.
         </p>
     <?php endif; ?>
 

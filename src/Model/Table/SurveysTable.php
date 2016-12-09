@@ -279,36 +279,6 @@ class SurveysTable extends Table
     }
 
     /**
-     * Returns true if the survey exists and has its URL recorded
-     * @param int $communityId Community ID
-     * @param string $surveyType Either 'official' or 'organization'
-     * @return bool
-     * @throws InternalErrorException
-     * @throws NotFoundException
-     */
-    public function isOpen($communityId, $surveyType)
-    {
-        if ($surveyType != 'official' && $surveyType != 'organization') {
-            throw new InternalErrorException('Unrecognized questionnaire type: ' . $surveyType);
-        }
-
-        $communitiesTable = TableRegistry::get('Communities');
-        if (! $communitiesTable->exists(['id' => $communityId])) {
-            throw new NotFoundException('Could not get questionnaire status. Community (#' . $communityId . ') not found.');
-        }
-
-        $results = $this->find('all')
-            ->select(['sm_url'])
-            ->where([
-                'community_id' => $communityId,
-                'type' => $surveyType
-            ])
-            ->limit(1);
-
-        return $results->isEmpty() ? false : ! empty($results->first()->sm_url);
-    }
-
-    /**
      * Returns an array of invited_respondent_count, uninvited_respondent_count, and percent_invited_responded for a single survey type or an array of both
      * @param int $communityId Community ID
      * @param string $surveyType Survey type (optional)
@@ -702,33 +672,6 @@ class SurveysTable extends Table
             ->count();
 
         return $count > 0;
-    }
-
-    /**
-     * Throws exceptions if errors are found
-     *
-     * @param string $respondentTypePlural 'officials' or 'organizations'
-     * @param int $communityId Community ID
-     * @throws ForbiddenException
-     * @throws BadRequestException
-     * @return void
-     */
-    public function validateRespondentTypePlural($respondentTypePlural, $communityId)
-    {
-        switch ($respondentTypePlural) {
-            case 'officials':
-                if (! $this->isOpen($communityId, 'official')) {
-                    throw new ForbiddenException('This questionnaire is not yet ready for invitations to be sent out.');
-                }
-                break;
-            case 'organizations':
-                if (! $this->isOpen($communityId, 'organization')) {
-                    throw new ForbiddenException('This questionnaire is not yet ready for invitations to be sent out.');
-                }
-                break;
-            default:
-                throw new BadRequestException('Questionnaire type not specified');
-        }
     }
 
     /**

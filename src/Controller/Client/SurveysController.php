@@ -33,6 +33,7 @@ class SurveysController extends AppController
      *
      * @param string|null $respondentTypePlural Either 'officials' or 'organizations'
      * @return \App\Controller\Response
+     * @throws BadRequestException
      */
     public function invite($respondentTypePlural = null)
     {
@@ -48,7 +49,10 @@ class SurveysController extends AppController
             throw new NotFoundException($msg);
         }
 
-        $this->Surveys->validateRespondentTypePlural($respondentTypePlural, $communityId);
+        if ($respondentTypePlural !== 'officials' && $respondentTypePlural != 'organizations') {
+            throw new BadRequestException('Questionnaire type not specified');
+        }
+
         $respondentType = str_replace('s', '', $respondentTypePlural);
         $surveyId = $this->Surveys->getSurveyId($communityId, $respondentType);
         if (! $this->Surveys->surveyIsActive($surveyId)) {
