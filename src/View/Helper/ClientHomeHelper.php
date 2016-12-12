@@ -328,7 +328,7 @@ class ClientHomeHelper extends Helper
      * "Presentation A/B/C has been scheduled" row
      *
      * @param string $letter An uppercase letter (A, B, or C)
-     * @param \Cake\I18n\Date|null $date
+     * @param \Cake\I18n\Date|null $date Date
      * @return string
      */
     public function presentationScheduledRow($letter, $date)
@@ -342,6 +342,7 @@ class ClientHomeHelper extends Helper
                 $date->format(', Y');
         }
         $icon = $this->glyphicon($date != null);
+
         return $this->row($icon, $description, null);
     }
 
@@ -349,7 +350,7 @@ class ClientHomeHelper extends Helper
      * "Presentation A/B/C has taken place" row
      *
      * @param string $letter An uppercase letter (A, B, or C)
-     * @param \Cake\I18n\Date|null $date
+     * @param \Cake\I18n\Date|null $date Date
      * @return string
      */
     public function presentationCompletedRow($letter, $date)
@@ -357,6 +358,7 @@ class ClientHomeHelper extends Helper
         $description = 'Completed Presentation ' . strtoupper($letter);
         $completed = $date != null && $date->format('Y-m-d') <= date('Y-m-d');
         $icon = $this->glyphicon($completed);
+
         return $this->row($icon, $description, null);
     }
 }
