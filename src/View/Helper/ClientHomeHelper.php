@@ -1,6 +1,7 @@
 <?php
 namespace App\View\Helper;
 
+use Cake\Chronos\Date;
 use Cake\View\Helper;
 
 class ClientHomeHelper extends Helper
@@ -321,5 +322,41 @@ class ClientHomeHelper extends Helper
         }
 
         return $this->row($icon, $params['description'], $actions);
+    }
+
+    /**
+     * "Presentation A/B/C has been scheduled" row
+     *
+     * @param string $letter An uppercase letter (A, B, or C)
+     * @param \Cake\I18n\Date|null $date
+     * @return string
+     */
+    public function presentationScheduledRow($letter, $date)
+    {
+        $description = 'Scheduled Presentation ' . strtoupper($letter);
+        if ($date == null) {
+            $description .= '<br /> You will be contacted by a CRI representative ' .
+                'to schedule Presentation ' . strtoupper($letter) . '.';
+        } else {
+            $description .= ' for ' . $date->format('F j') . '<sup>' . $date->format('S') . '</sup>' .
+                $date->format(', Y');
+        }
+        $icon = $this->glyphicon($date != null);
+        return $this->row($icon, $description, null);
+    }
+
+    /**
+     * "Presentation A/B/C has taken place" row
+     *
+     * @param string $letter An uppercase letter (A, B, or C)
+     * @param \Cake\I18n\Date|null $date
+     * @return string
+     */
+    public function presentationCompletedRow($letter, $date)
+    {
+        $description = 'Completed Presentation ' . strtoupper($letter);
+        $completed = $date != null && $date->format('Y-m-d') <= date('Y-m-d');
+        $icon = $this->glyphicon($completed);
+        return $this->row($icon, $description, null);
     }
 }

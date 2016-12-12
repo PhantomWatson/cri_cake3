@@ -434,6 +434,19 @@ class CommunitiesTable extends Table
             ];
         }
 
+        $community = $this->get($communityId);
+        foreach (['a', 'b'] as $letter) {
+            $date = $community->{"presentation_$letter"};
+            $criteria[2]["presentation_{$letter}_scheduled"] = [
+                'Scheduled Presentation ' . strtoupper($letter),
+                $date != null
+            ];
+            $criteria[2]["presentation_{$letter}_completed"] = [
+                'Completed Presentation ' . strtoupper($letter),
+                $date ? ($date->format('Y-m-d') <= date('Y-m-d')) : false
+            ];
+        }
+
         $criteria[2]['survey_purchased'] = [
             'Purchased Community Organizations Alignment Assessment ($3,500)',
             $productsTable->isPurchased($communityId, 3)
@@ -475,6 +488,16 @@ class CommunitiesTable extends Table
         $criteria[3]['response_threshhold_reached'] = [
             'At least 25% of invited community organizations have responded to the questionnaire',
             $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
+        ];
+
+        $date = $community->presentation_c;
+        $criteria[3]['presentation_c_scheduled'] = [
+            'Scheduled Presentation C',
+            $date != null
+        ];
+        $criteria[3]['presentation_c_completed'] = [
+            'Completed Presentation C',
+            $date ? ($date->format('Y-m-d') <= date('Y-m-d')) : false
         ];
 
         $criteria[3]['policy_dev_purchased'] = [

@@ -45,6 +45,14 @@
         'hasUninvitedResponses' => $criteria[2]['hasUninvitedResponses']
     ]) ?>
 
+    <?= $this->ClientHome->presentationScheduledRow('A', $community->presentation_a) ?>
+
+    <?= $this->ClientHome->presentationCompletedRow('A', $community->presentation_a) ?>
+
+    <?= $this->ClientHome->presentationScheduledRow('B', $community->presentation_b) ?>
+
+    <?= $this->ClientHome->presentationCompletedRow('B', $community->presentation_b) ?>
+
     <?= $this->ClientHome->orgSurveyPurchasedRow([
         'description' => $step2SurveyPurchased[0],
         'purchased' => $step2SurveyPurchased[1],

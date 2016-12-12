@@ -39,6 +39,10 @@
         'thresholdReached' => $criteria[3]['response_threshhold_reached'][1]
     ]) ?>
 
+    <?= $this->ClientHome->presentationScheduledRow('C', $community->presentation_c) ?>
+
+    <?= $this->ClientHome->presentationCompletedRow('C', $community->presentation_c) ?>
+
     <?= $this->ClientHome->policyDevPurchasedRow([
         'description' => $step3PolicyDevPurchased[0],
         'purchased' => $step3PolicyDevPurchased[1],
