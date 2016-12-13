@@ -3,11 +3,17 @@
 </p>
 
 <p>
-    Thank you for enrolling your community in the <a href="<?= $homeUrl ?>">Community Readiness Initiative</a>. A new account has been created so that you can enter information needed for the next step in your community's CRI process.
+    <?php if ($role == 'client'): ?>
+        Thank you for enrolling your community in the <a href="<?= $homeUrl ?>">Community Readiness Initiative</a>. A
+        new account has been created so that you can log in and manage your community's participation in the CRI
+        process.
+    <?php elseif ($role == 'admin'): ?>
+        Your <a href="<?= $homeUrl ?>">Community Readiness Initiative</a> administrator account has been created.
+    <?php endif; ?>
 </p>
 
 <p>
-    <a href="<?= $loginUrl ?>">Log in to the CRI website</a> using the following information:
+    You can now <a href="<?= $loginUrl ?>">log in to the CRI website</a> using the following information:
 </p>
 
 <ul>
@@ -20,7 +26,21 @@
 </ul>
 
 <p>
-    Once logged in, you can change your password and begin the next stage of CRI.
+    It is recommended that you change your password after logging in.
+    <?php if ($role == 'client'): ?>
+        Once logged in, access the
+        <?= $this->Html->link(
+            'Client Home',
+            [
+                'prefix' => 'client',
+                'controller' => 'Communities',
+                'action' => 'index'
+            ]
+        ) ?>
+        page to make payments, distribute questionnaire invitations, and check your community's progress.
+    <?php elseif ($role == 'admin'): ?>
+        Once logged in, you can access the website's various administrative functions.
+    <?php endif; ?>
 </p>
 
 <p>

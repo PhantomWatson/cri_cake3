@@ -108,11 +108,13 @@ class Mailer
         ], true);
         $email = new Email('new_account');
         $email->to($user->email);
+        $role = $user->role;
         $email->viewVars(compact(
-            'user',
             'homeUrl',
             'loginUrl',
-            'password'
+            'password',
+            'role',
+            'user'
         ));
 
         return $email->send();

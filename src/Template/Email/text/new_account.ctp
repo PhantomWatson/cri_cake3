@@ -1,11 +1,21 @@
 <?= $user->name ?>,
 
-Thank you for enrolling your community in the Community Readiness Initiative. A new account has been created so that you can enter information needed for the next step in your community's CRI process.
+<?php if ($role == 'client'): ?>
+    Thank you for enrolling your community in the Community Readiness Initiative. A new account has been created so that you can log in and manage your community's participation in the CRI process.
+<?php elseif ($role == 'admin'): ?>
+    Your Community Readiness Initiative administrator account has been created.
+<?php endif; ?>
 
 Log in to the CRI website at <?= $loginUrl ?> using the following information:
 - Email: <?= $user->email."\n" ?>
 - Password: <?= $password."\n" ?>
 
-Once logged in, you can change your password and begin the next stage of CRI.
+It is recommended that you change your password after logging in.
+
+<?php if ($role == 'client'): ?>
+    Once logged in, you can access the Client Home page to make payments, distribute questionnaire invitations, and check your community's progress.
+<?php elseif ($role == 'admin'): ?>
+    Once logged in, you can access the website's various administrative functions.
+<?php endif; ?>
 
 If you have any questions, please email cri@bsu.edu.
