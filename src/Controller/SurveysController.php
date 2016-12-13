@@ -337,6 +337,7 @@ class SurveysController extends AppController
         $this->set('result', $success);
         $this->set('_serialize', ['success']);
         $this->viewBuilder()->layout('json');
+
         return $this->render('api');
     }
 }
