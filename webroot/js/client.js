@@ -46,6 +46,37 @@ var surveyInvitationForm = {
         $('#show-spreadsheet-modal').click(function (event) {
             event.preventDefault();
         });
+        $('#clear-data').click(function (event) {
+            event.preventDefault();
+            var link = $(this);
+            var resultsContainer = $('#clear-data-results');
+            $.ajax({
+                url: '/surveys/clear-saved-invitation-data/'+surveyInvitationForm.surveyId,
+                dataType: 'json',
+                beforeSend: function () {
+                    link.addClass('disabled');
+                    var loading_indicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
+                    link.append(loading_indicator);
+                    if (resultsContainer.is(':visible')) {
+                        resultsContainer.hide();
+                    }
+                },
+                success: function (data) {
+                    resultsContainer.attr('class', 'text-success');
+                    resultsContainer.html('<span class="glyphicon glyphicon-ok"></span> Saved data cleared');
+                    resultsContainer.fadeIn(200);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    resultsContainer.attr('class', 'text-danger');
+                    resultsContainer.html('<span class="glyphicon glyphicon-warning-sign"></span> Error clearing data');
+                    resultsContainer.fadeIn(200);
+                },
+                complete: function () {
+                    link.removeClass('disabled');
+                    link.find('.loading').remove();
+                }
+            });
+        });
         
         // Set up form protection
         formProtector.protect('UserClientInviteForm', {

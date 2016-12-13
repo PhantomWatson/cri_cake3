@@ -319,4 +319,24 @@ class SurveysController extends AppController
         }
         $this->render('import');
     }
+
+    /**
+     * Method for clearing this user's save invitation data for the specified survey
+     *
+     * @param int $surveyId Survey ID
+     * @return \Cake\Network\Response
+     */
+    public function clearSavedInvitationData($surveyId)
+    {
+        $this->loadComponent('SurveyProcessing');
+        $userId = $this->Auth->user('id');
+        $success = $this->SurveyProcessing->clearSavedInvitations($surveyId, $userId);
+        if (! $success) {
+            $this->response->statusCode(500);
+        }
+        $this->set('result', $success);
+        $this->set('_serialize', ['success']);
+        $this->viewBuilder()->layout('json');
+        return $this->render('api');
+    }
 }

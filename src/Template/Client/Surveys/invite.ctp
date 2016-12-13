@@ -324,6 +324,10 @@
         If you <strong>save this form for later</strong>, no invitations will be sent out at this time.
         You will be able to return to this page at a later time to review and send out invitations to participate in
         this questionnaire.
+        <button id="clear-data" class="btn btn-link">
+            Clear saved data
+        </button>
+        <span id="clear-data-results"></span>
     </p>
 </section>
 
