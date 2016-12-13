@@ -3,6 +3,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\AppController;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
 class ResponsesController extends AppController
@@ -251,8 +252,14 @@ class ResponsesController extends AppController
 
         $surveysTable = TableRegistry::get('Surveys');
         $survey = $surveysTable->get($respondent->survey_id);
-        $fullResponse = $this->Responses->getFullResponseFromSurveyMonkey($survey->sm_id, $smRespondentId);
-        $this->set('response', $fullResponse);
-        $this->set('_serialize', ['response']);
+        try {
+            $fullResponse = $this->Responses->getFullResponseFromSurveyMonkey($survey->sm_id, $smRespondentId);
+            $this->set('response', $fullResponse);
+            $this->set('_serialize', ['response']);
+        } catch (NotFoundException $e) {
+            $this->response->statusCode(404);
+            $this->set('message', $e->getMessage());
+            $this->set('_serialize', ['message']);
+        }
     }
 }
