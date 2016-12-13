@@ -74,7 +74,7 @@ class SurveyProcessingComponent extends Component
      *
      * @param int $surveyId Survey ID
      * @param int $userId User ID
-     * @return bool|mixed
+     * @return bool
      */
     public function clearSavedInvitations($surveyId, $userId)
     {
@@ -89,7 +89,7 @@ class SurveyProcessingComponent extends Component
         if ($result) {
             $savedData = $formDataTable->get($result->id);
 
-            return $formDataTable->delete($savedData);
+            return (bool)$formDataTable->delete($savedData);
         }
 
         return true;
