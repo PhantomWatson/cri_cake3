@@ -21,6 +21,11 @@
     <?php endif; ?>
 </p>
 
+<p>
+    If at least a week has passed since sending invitations to fill out this questionnaire,
+    you can send reminder emails to any community <?= $survey->type ?>s who have not yet responded.
+</p>
+
 <?php if (empty($unresponsive)): ?>
     <p class="alert alert-success">
         Good news! Everyone who has been sent an invitation to participate
@@ -28,68 +33,78 @@
         are necessary.
     </p>
 <?php else: ?>
-    <ul id="reminders">
-        <li>
-            Sending a reminder will re-send questionnaire invitation emails.
-        </li>
-        <li>
-            <button id="toggleUnresponsiveList" class="btn btn-default btn-sm">
-                <?= $unresponsiveCount ?> <?= __n('person', 'people', $unresponsiveCount) ?>
-            </button>
-            <?= __n('hasn\'t', 'haven\'t', $unresponsiveCount) ?>
-            responded to this questionnaire yet.
-            <div class="well" id="unresponsiveList">
-                <ul>
-                    <?php foreach ($unresponsive as $person): ?>
-                        <li>
-                            <?php if ($person->name): ?>
-                                <?= $person->name ?>
-                            <?php else: ?>
-                                (no name)
-                            <?php endif; ?>
+    <p>
+        <strong>
+            <?= $unresponsiveCount ?> <?= __n('person', 'people', $unresponsiveCount) ?>
+        </strong>
+        <?= __n('hasn\'t', 'haven\'t', $unresponsiveCount) ?>
+        responded to this questionnaire yet.
+        <button id="toggle-unresponsive-list" class="btn btn-default btn-sm">
+            Who?
+        </button>
+    </p>
 
-                            <?php if ($person->title): ?>
-                                <span class="title">
-                                    (<?= $person->title ?>)
-                                </span>
-                            <?php endif; ?>
+    <div class="well" id="unresponsive-list">
+        <ul>
+            <?php foreach ($unresponsive as $person): ?>
+                <li>
+                    <?php if ($person->name): ?>
+                        <?= $person->name ?>
+                    <?php else: ?>
+                        (no name)
+                    <?php endif; ?>
 
-                            <a href="mailto:<?= $person->email ?>" class="email">
-                                <?= $person->email ?>
-                            </a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        </li>
-        <li>
-            <?php if ($survey->reminder_sent): ?>
-                A reminder was last sent for this questionnaire on
-                <strong>
-                    <?= $survey->reminder_sent->format('F j, Y') ?>.
-                </strong>
-            <?php else: ?>
-                No reminder has been sent for this questionnaire yet.
-            <?php endif; ?>
-        </li>
-    </ul>
+                    <?php if ($person->title): ?>
+                        <span class="title">
+                            (<?= $person->title ?>)
+                        </span>
+                    <?php endif; ?>
+
+                    <a href="mailto:<?= $person->email ?>" class="email">
+                        <?= $person->email ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
 
     <p>
-        <?= $this->Form->postLink(
-            $survey->reminder_sent ? 'Send another reminder' : 'Send reminder',
-            [
-                'controller' => 'Surveys',
-                'action' => 'remind',
-                $this->request->prefix == 'admin' ? $survey->id : $survey->type
-            ],
-            ['class' => 'btn btn-primary']
-        ) ?>
+        <?php if ($survey->reminder_sent): ?>
+            A reminder was last sent for this questionnaire on
+            <strong>
+                <?= $survey->reminder_sent->format('F j, Y') ?>.
+            </strong>
+        <?php else: ?>
+            <strong>
+                No reminders
+            </strong>
+            have been sent for this questionnaire yet.
+        <?php endif; ?>
+    </p>
+
+    <p>
+        <?php
+            if ($unresponsiveCount == 1) {
+                $label = $survey->reminder_sent ? 'Send another reminder' : 'Send reminder';
+            } else {
+                $label = $survey->reminder_sent ? 'Send more reminders' : 'Send reminders';
+            }
+            echo $this->Form->postLink(
+                $label,
+                [
+                    'controller' => 'Surveys',
+                    'action' => 'remind',
+                    $this->request->prefix == 'admin' ? $survey->id : $survey->type
+                ],
+                ['class' => 'btn btn-primary']
+            );
+        ?>
     </p>
 
     <?php $this->append('buffered'); ?>
-        $('#reminders #toggleUnresponsiveList').click(function (event) {
+        $('#toggle-unresponsive-list').click(function (event) {
             event.preventDefault();
-            $('#unresponsiveList').slideToggle();
+            $('#unresponsive-list').slideToggle();
         });
     <?php $this->end(); ?>
 <?php endif; ?>
