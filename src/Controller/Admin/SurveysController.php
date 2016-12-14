@@ -61,7 +61,6 @@ class SurveysController extends AppController
             $this->prepareSurveyStatus($survey, $community);
         }
 
-        $this->prepareAdminHeader();
         $this->set([
             'community' => $community,
             'currentlyActive' => $survey->active,
@@ -148,7 +147,6 @@ class SurveysController extends AppController
                     'before this one is activated.';
             }
         }
-        $this->prepareAdminHeader();
         $this->set([
             'community' => $community,
             'qnaIdFields' => $this->Surveys->getQnaIdFieldNames(),
@@ -266,7 +264,6 @@ class SurveysController extends AppController
             'surveyId',
             'unaddressedUnapprovedRespondents'
         ));
-        $this->prepareAdminHeader();
         $this->render('..' . DS . '..' . DS . 'Client' . DS . 'Surveys' . DS . 'invite');
     }
 
@@ -328,7 +325,6 @@ class SurveysController extends AppController
             'unresponsive' => $unresponsive,
             'unresponsiveCount' => count($unresponsive)
         ]);
-        $this->prepareAdminHeader();
         $this->render('..' . DS . '..' . DS . 'Client' . DS . 'Surveys' . DS . 'remind');
     }
 
@@ -380,7 +376,6 @@ class SurveysController extends AppController
             }
         }
 
-        $this->prepareAdminHeader();
         $this->set([
             'community' => $community,
             'currentlyActive' => $currentlyActive,

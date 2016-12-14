@@ -4,12 +4,6 @@
     </h1>
 </div>
 
-<?= $this->element('Communities/admin_header', [
-    'adminHeader' => $adminHeader,
-    'communityId' => $community->id,
-    'surveyId' => null
-]) ?>
-
 <?php if ($warning): ?>
     <p class="alert alert-warning">
         <?= $warning ?>

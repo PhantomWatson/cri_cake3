@@ -703,7 +703,7 @@ var adminHeader = {
         this.selectCommunity(this.communityId);
         this.selectPage(params.currentUrl);
 
-        $('#admin-header').submit(function (event) {
+        $('#admin-sidebar-community').submit(function (event) {
             event.preventDefault();
             var url = adminHeader.getUrl();
             if (url) {
@@ -714,13 +714,13 @@ var adminHeader = {
     },
 
     getUrl: function () {
-        var communityId =  $('#admin-header-community').val();
+        var communityId =  $('#admin-sidebar-community select[name=community]').val();
         if (! communityId) {
             this.displayError('Please select a community');
             return false;
         }
 
-        var selectedPageOpt = $('#admin-header-page option:selected');
+        var selectedPageOpt = $('#admin-sidebar-community select[name=page] option:selected');
         var selectedPage = selectedPageOpt.val();
         if (! selectedPage) {
             this.displayError('Please select a page');
@@ -738,7 +738,7 @@ var adminHeader = {
         if (surveyId) {
             url = url.replace('{survey-id}', surveyId);
         } else if (url.search('{survey-id}') != -1) {
-            var communityName = $('#admin-header-community option:selected').text().trim();
+            var communityName = $('#admin-sidebar-community select[name=community] option:selected').text().trim();
             this.displayError('The ' + surveyType  + ' questionnaire has not yet been set up for ' + communityName + '.');
             return false;
         }
@@ -764,7 +764,7 @@ var adminHeader = {
     displayError: function (msg) {
         var alert = $('<p class="admin-header-error alert alert-info">' + msg + '</p>');
         alert.hide();
-        var header = $('#admin-header');
+        var header = $('#admin-sidebar-community');
         var existingAlert = header.find('.admin-header-error');
         if (existingAlert.length > 0) {
             existingAlert.fadeOut(300, function () {
@@ -782,7 +782,7 @@ var adminHeader = {
     },
 
     removeError: function () {
-        var alert = $('#admin-header .admin-header-error');
+        var alert = $('#admin-sidebar-community .admin-header-error');
         if (! alert.length) {
             return;
         }
@@ -792,11 +792,11 @@ var adminHeader = {
     },
 
     selectCommunity: function (communityId) {
-        $('#admin-header-community').val(communityId);
+        $('#admin-sidebar-community select[name=community]').val(communityId);
     },
 
     selectPage: function (currentUrl) {
-        $('#admin-header-page optgroup').each(function () {
+        $('#admin-sidebar-community select[name=page] optgroup').each(function () {
             var optgroup = $(this);
             var surveyType = optgroup.data('survey-type');
             optgroup.find('option').each(function () {

@@ -5,12 +5,6 @@
         </h1>
     </div>
 
-    <?= $this->element('Communities/admin_header', [
-        'adminHeader' => $adminHeader,
-        'communityId' => null,
-        'surveyId' => null
-    ]) ?>
-
     <p>
         <?php foreach ($buttons as $groupLabel => $buttonGroup): ?>
             <div class="btn-group">

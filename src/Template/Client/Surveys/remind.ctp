@@ -5,11 +5,6 @@
 </div>
 
 <?php if ($this->request->prefix == 'admin'): ?>
-    <?= $this->element('Communities/admin_header', [
-        'adminHeader' => $adminHeader,
-        'communityId' => $community->id,
-        'surveyId' => $survey->id
-    ]) ?>
     <?php $this->element('script', ['script' => 'admin']); ?>
 <?php endif; ?>
 

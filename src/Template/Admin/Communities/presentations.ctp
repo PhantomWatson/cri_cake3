@@ -4,11 +4,6 @@
     </h1>
 </div>
 
-<?= $this->element('Communities/admin_header', [
-    'adminHeader' => $adminHeader,
-    'communityId' => $community->id,
-    'surveyId' => null
-]) ?>
 <div id="presentations-form">
     <?= $this->Form->create($community) ?>
     <?php foreach (['a', 'b', 'c'] as $letter): ?>

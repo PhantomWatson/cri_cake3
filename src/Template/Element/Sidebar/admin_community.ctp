@@ -1,8 +1,13 @@
-<form class="form-inline well" id="admin-header">
-    <h3>
-        CRI Community Admin
-    </h3>
-    <select class="form-control form-inline" id="admin-header-community">
+<?php
+    if (! isset($communityId)) {
+        $communityId = isset($community->id) ? $community->id : null;
+    }
+    if (! isset($surveyId)) {
+        $surveyId = isset($survey->id) ? $survey->id : null;
+    }
+?>
+<form id="admin-sidebar-community">
+    <select class="form-control" name="community">
         <option value="">
             Select community...
         </option>
@@ -13,7 +18,7 @@
         <?php endforeach; ?>
     </select>
 
-    <select class="form-control form-inline" id="admin-header-page">
+    <select class="form-control" name="page">
         <option value="">
             Go to...
         </option>
@@ -27,10 +32,10 @@
         </optgroup>
 
         <?php
-            $surveyTypes = [
-                'Officials Questionnaire' => 'official',
-                'Organizations Questionnaire' => 'organization',
-            ];
+        $surveyTypes = [
+            'Officials Questionnaire' => 'official',
+            'Organizations Questionnaire' => 'organization',
+        ];
         ?>
         <?php foreach ($surveyTypes as $label => $surveyType): ?>
             <optgroup label="<?= $label ?>" data-survey-type="<?= $surveyType ?>">
@@ -52,9 +57,9 @@
 <?php $this->append('buffered'); ?>
     var surveyIds = <?= json_encode($adminHeader['surveyIds']) ?>;
     adminHeader.init({
-        communityId: <?= isset($communityId) ? json_encode($communityId) : 'null' ?>,
+        communityId: <?= json_encode($communityId) ?>,
         currentUrl: <?= json_encode($adminHeader['currentUrl']) ?>,
-        surveyId: <?= isset($surveyId) ? json_encode($surveyId) : 'null' ?>,
+        surveyId: <?= json_encode($surveyId) ?>,
         surveyIds: surveyIds
     });
 <?php $this->end(); ?>

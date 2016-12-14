@@ -4,12 +4,6 @@
     </h1>
 </div>
 
-<?= $this->element('Communities/admin_header', [
-    'adminHeader' => $adminHeader,
-    'communityId' => $community->id,
-    'surveyId' => $survey->id
-]) ?>
-
 <div class="survey_overview">
     <div class="panel panel-default link_survey">
         <div class="panel-heading">

@@ -4,12 +4,6 @@
     </h1>
 </div>
 
-<?= $this->element('Communities/admin_header', [
-    'adminHeader' => $adminHeader,
-    'communityId' => $community->id,
-    'surveyId' => $survey->id
-]) ?>
-
 <p>
     After a CRI questionnaire is created in <a href="http://surveymonkey.com/">SurveyMonkey</a>, you must create a link between the
     community and the new questionnaire in order to enable questionnaire invitations and response analysis.

@@ -38,6 +38,7 @@
                 'action' => 'index'
             ]
         ) ?>
+        <?= $this->element('Sidebar/admin_community') ?>
     </li>
     <li class="link">
         <?= $this->Html->link(

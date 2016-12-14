@@ -4,12 +4,6 @@
     </h1>
 </div>
 
-<?= $this->element('Communities/admin_header', [
-    'adminHeader' => $adminHeader,
-    'communityId' => $community->id,
-    'surveyId' => $survey->id
-]) ?>
-
 <div id="admin-responses-view">
     <?php if ($responses): ?>
         <section>
