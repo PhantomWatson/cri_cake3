@@ -4,7 +4,10 @@
 
     use Cake\Core\Configure;
     $script = Configure::read('debug') ? 'script.js' : 'script.min.js';
-    echo $this->Html->script($script, ['block' => 'scriptBottom']);
+    $this->Html->script($script, ['block' => 'scriptBottom']);
+    if ($this->request->prefix == 'admin') {
+        $this->element('script', ['script' => 'admin']);
+    }
 ?>
 
 <?php $this->start('subsite_title'); ?>
@@ -15,10 +18,6 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script>$.fn.modal || document.write('<script src="/js/bootstrap.min.js"><\/script>')</script>
 <?php $this->end(); ?>
-
-<?php if ($this->request->prefix == 'admin'): ?>
-    <?php $this->element('script', ['script' => 'admin']); ?>
-<?php endif; ?>
 
 <div id="content">
     <?= $this->element('flash_messages_bootstrap') ?>

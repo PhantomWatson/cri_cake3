@@ -545,7 +545,6 @@
     </ul>
 </section>
 
-<?php $this->element('script', ['script' => 'admin']); ?>
 <?php $this->append('buffered'); ?>
     adminGuide.init();
 <?php $this->end(); ?>

@@ -4,10 +4,6 @@
     </h1>
 </div>
 
-<?php if ($this->request->prefix == 'admin'): ?>
-    <?php $this->element('script', ['script' => 'admin']); ?>
-<?php endif; ?>
-
 <p>
     <?php if ($this->request->prefix != 'admin'): ?>
         <?= $this->Html->link(
