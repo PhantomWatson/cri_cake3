@@ -1,0 +1,35 @@
+---
+engines:
+  csslint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - javascript
+      - php
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+  phpmd:
+    enabled: true
+    checks:
+      CleanCode/StaticAccess:
+        enabled: false
+      Controversial/CamelCasePropertyName:
+        enabled: false
+      CleanCode/ElseExpression:
+        enabled: false
+ratings:
+  paths:
+  - "**.css"
+  - "**.inc"
+  - "**.js"
+  - "**.jsx"
+  - "**.module"
+  - "**.php"
+exclude_paths:
+- config/
+- tests/
+- plugins/
