@@ -14,3 +14,10 @@ script:
 
 notifications:
   email: false
+
+addons:
+  code_climate:
+    repo_token: 6f9e5cdde0fa1fe6e6a6438f7e4b420e7421359473738bdb5b60c5c3f2113a25
+
+after_success:
+  - vendor/bin/test-reporter
