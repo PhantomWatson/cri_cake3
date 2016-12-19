@@ -6,7 +6,7 @@ try {
         'filepath' => __DIR__ . DS . '.env',
         'toServer' => false,
         'skipExisting' => ['toServer'],
-        'raiseExceptions' => false
+        'raiseExceptions' => true
     ]);
 } catch (InvalidArgumentException $e) {
     // If there's a problem loading the .env file - load .env.default
