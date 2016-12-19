@@ -18,7 +18,8 @@
         "twbs/bootstrap": "~3.0",
         "xety/cake3-cookieauth": "1.*",
         "dereuromark/cakephp-shim": "dev-master",
-        "phantomwatson/form-protector": "dev-master"
+        "phantomwatson/form-protector": "dev-master",
+        "josegonzalez/dotenv": "dev-master"
     },
     "require-dev": {
         "psy/psysh": "@stable",

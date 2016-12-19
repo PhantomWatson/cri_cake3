@@ -1,6 +1,5 @@
 # CakePHP
 /vendor/*
-/config/app.php
 /tmp/*
 /logs/*
 /webroot/files/*
@@ -53,3 +52,8 @@ composer.lock
 # Concatenated / minified JS files
 /webroot/js/script.concat.js
 /webroot/js/*.min.js
+
+# Environment variable definitions
+/oonfig/.env
+/oonfig/.env.production
+/oonfig/.env.dev
