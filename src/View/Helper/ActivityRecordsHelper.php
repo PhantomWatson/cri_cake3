@@ -21,6 +21,10 @@ class ActivityRecordsHelper extends Helper
                 return 'Community added';
             case 'Model.User.afterAdd':
                 return 'User account added';
+            case 'Model.Survey.afterLinked':
+                return 'Questionnaire linked to SurveyMonkey';
+            case 'Model.Survey.afterLinkUpdated':
+                return 'Questionnaire\'s link to SurveyMonkey updated';
         }
 
         return $activityRecord->event;
@@ -57,6 +61,9 @@ class ActivityRecordsHelper extends Helper
         switch ($activityRecord->event) {
             case 'Model.User.afterAdd':
                 return ucwords($meta['userRole']). " account created for {$meta['userName']} ";
+            case 'Model.Survey.afterLinked':
+            case 'Model.Survey.afterLinkUpdated':
+                return "Community {$meta['surveyType']}s questionnaire";
         }
 
         return null;

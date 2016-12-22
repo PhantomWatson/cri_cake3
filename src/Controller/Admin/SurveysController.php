@@ -5,6 +5,7 @@ use App\Controller\AppController;
 use App\Mailer\Mailer;
 use App\Model\Entity\Community;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
@@ -102,12 +103,24 @@ class SurveysController extends AppController
             $errors = $survey->errors();
             $isNew = $survey->isNew();
             if (empty($errors) && $this->Surveys->save($survey)) {
+
+                // Flash message
                 if ($isNew) {
                     $message = 'Questionnaire successfully linked to this community';
                 } else {
                     $message = 'Questionnaire details updated';
                 }
                 $this->Flash->success($message);
+
+                // Event
+                $eventName = $isNew ? 'Model.Survey.afterLinked' : 'Model.Survey.afterLinkUpdated';
+                $event = new Event($eventName, $this, ['meta' => [
+                    'communityId' => $communityId,
+                    'surveyId' => $survey->id,
+                    'surveyType' => $surveyType
+                ]]);
+                $this->eventManager()->dispatch($event);
+
                 $this->redirect([
                     'action' => 'view',
                     $communityId,
