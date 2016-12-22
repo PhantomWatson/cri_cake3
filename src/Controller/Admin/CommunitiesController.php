@@ -2,7 +2,10 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Event\ActivityRecordsListener;
 use App\Mailer\Mailer;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
@@ -188,6 +191,8 @@ class CommunitiesController extends AppController
             $errors = $community->errors();
             if (empty($errors)) {
                 $community = $this->Communities->save($community);
+
+                // Set flash message
                 $clientUrl = Router::url([
                     'action' => 'addClient',
                     $community->id
@@ -204,6 +209,12 @@ class CommunitiesController extends AppController
                     '<br />Now you can <a href="' . $surveyUrl . '">set up this community\'s first questionnaire</a> ' .
                     'and then <a href="' . $clientUrl . '">create a client account</a> for this community.';
                 $this->Flash->success($message);
+
+                // Dispatch event
+                $event = new Event('Model.Community.afterAdd', $this, ['meta' => [
+                    'communityId' => $community->id
+                ]]);
+                $this->eventManager()->dispatch($event);
 
                 return $this->redirect([
                     'prefix' => 'admin',

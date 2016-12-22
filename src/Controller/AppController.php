@@ -14,8 +14,11 @@
  */
 namespace App\Controller;
 
+use App\Event\ActivityRecordsListener;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
@@ -86,6 +89,11 @@ class AppController extends Controller
 
         // Prevents cookies from being accessible in Javascript
         $this->Cookie->httpOnly = true;
+
+        // Set up Activity Records listener for entire app
+        $listener = new ActivityRecordsListener();
+        $listener->userId($this->Auth->user('id'));
+        EventManager::instance()->on($listener);
     }
 
     /**
@@ -102,7 +110,7 @@ class AppController extends Controller
             'accessibleCommunities' => $usersTable->getAccessibleCommunities($this->Auth->user('id'))
         ]);
 
-        // Automaticaly login
+        // Automatically log in
         if (! $this->Auth->user() && $this->Cookie->read('CookieAuth')) {
             $rememberData = $this->request->data;
             $this->request->data = $this->Cookie->read('CookieAuth');

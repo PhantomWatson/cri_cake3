@@ -62,6 +62,16 @@
     </li>
     <li class="link">
         <?= $this->Html->link(
+            'Activity Log',
+            [
+                'prefix' => 'admin',
+                'controller' => 'ActivityRecords',
+                'action' => 'index'
+            ]
+        ) ?>
+    </li>
+    <li class="link">
+        <?= $this->Html->link(
             'Change Password',
             [
                 'prefix' => false,
