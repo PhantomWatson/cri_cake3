@@ -15,9 +15,11 @@
 <div id="activities-tracked">
     Tracked activities:
     <ul>
-        <li>
-            Community added
-        </li>
+        <?php foreach ($trackedEvents as $event): ?>
+            <li>
+                <?= $event ?>
+            </li>
+        <?php endforeach; ?>
     </ul>
 </div>
 

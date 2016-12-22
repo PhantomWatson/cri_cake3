@@ -24,10 +24,14 @@ class ActivityRecordsController extends AppController
             'order' => ['created' => 'DESC']
         ];
         $activityRecords = $this->paginate($this->ActivityRecords);
-
+        $trackedEvents = [
+            'Community added',
+            'User account added'
+        ];
         $this->set([
             'activityRecords' => $activityRecords,
-            'titleForLayout' => 'Activity Log'
+            'titleForLayout' => 'Activity Log',
+            'trackedEvents' => $trackedEvents
         ]);
         $this->set('_serialize', ['activityRecords']);
     }
