@@ -23,6 +23,7 @@ class ActivityRecordsListener implements EventListenerInterface
     {
         $events = [
             'Model.Community.afterAdd',
+            'Model.User.afterAdd',
         ];
         return array_fill_keys($events, 'recordActivity');
     }

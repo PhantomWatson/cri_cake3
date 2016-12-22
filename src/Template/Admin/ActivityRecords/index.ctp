@@ -61,7 +61,12 @@
             </tr>
             <tr class="details">
                 <td colspan="4">
-                    <?= $this->ActivityRecords->details($activityRecord) ?>
+                    <?php $details = $this->ActivityRecords->details($activityRecord); ?>
+                    <?php if ($details): ?>
+                        <div>
+                            <?= $details ?>
+                        </div>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>

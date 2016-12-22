@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\Controller\AppController;
 use App\Mailer\Mailer;
 use App\Model\Entity\User;
+use Cake\Event\Event;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
@@ -108,7 +109,8 @@ class UsersController extends AppController
         if ($this->request->is('post') || $this->request->is('put')) {
             $this->request->data['password'] = $this->request->data['new_password'];
 
-            if (empty($this->request->data['client_communities'][0]['id'])) {
+            $clientCommunityId = $this->request->data['client_communities'][0]['id'];
+            if (empty($clientCommunityId)) {
                 $this->request->data['client_communities'] = [];
             }
 
@@ -121,6 +123,16 @@ class UsersController extends AppController
 
             $errors = $user->errors();
             if (empty($errors) && $this->Users->save($user)) {
+
+                // Dispatch event
+                $event = new Event('Model.User.afterAdd', $this, ['meta' => [
+                    'newUserId' => $user->id,
+                    'userName' => $user->name,
+                    'userRole' => $user->role,
+                    'communityId' => $clientCommunityId ? $clientCommunityId : null
+                ]]);
+                $this->eventManager()->dispatch($event);
+
                 $Mailer = new Mailer();
                 $result = $Mailer->sendNewAccountEmail(
                     $user,

@@ -19,6 +19,8 @@ class ActivityRecordsHelper extends Helper
         switch ($activityRecord->event) {
             case 'Model.Community.afterAdd':
                 return 'Community added';
+            case 'Model.User.afterAdd':
+                return 'User account added';
         }
 
         return $activityRecord->event;
@@ -47,10 +49,16 @@ class ActivityRecordsHelper extends Helper
      * Outputs any supplementary details relevant to this record
      *
      * @param ActivityRecord $activityRecord ActivityRecord entity
-     * @return string
+     * @return string|null
      */
     public function details($activityRecord)
     {
-        return '';
+        $meta = unserialize($activityRecord->meta);
+        switch ($activityRecord->event) {
+            case 'Model.User.afterAdd':
+                return ucwords($meta['userRole']). " account created for {$meta['userName']} ";
+        }
+
+        return null;
     }
 }
