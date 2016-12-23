@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -35,14 +36,25 @@ class PurchasesController extends AppController
         if ($this->request->data('respmessage') == 'SUCCESS') {
             $itemCode = explode('-', $this->request->data('itemcode1'));
             $productsTable = TableRegistry::get('Products');
+            $productId = $productsTable->getIdFromItemCode($itemCode[1]);
             $purchase = $this->Purchases->newEntity([
                 'user_id' => $this->request->data('custcode'),
                 'community_id' => $this->request->data('ref1val1'),
-                'product_id' => $productsTable->getIdFromItemCode($itemCode[1]),
+                'product_id' => $productId,
                 'source' => 'self',
                 'postback' => base64_encode(serialize($this->request->data()))
             ]);
-            $this->Purchases->save($purchase);
+            if ($this->Purchases->save($purchase)) {
+
+                // Dispatch event
+                $product = $productsTable->get($productId);
+                $event = new Event('Model.Product.afterPurchase', $this, ['meta' => [
+                    'userId' => $this->request->data('custcode'),
+                    'communityId' => $this->request->data('ref1val1'),
+                    'productName' => $product->name
+                ]]);
+                $this->eventManager()->dispatch($event);
+            }
         }
 
         $this->viewBuilder()->layout('blank');

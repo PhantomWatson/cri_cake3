@@ -29,6 +29,8 @@ class ActivityRecordsHelper extends Helper
                 return 'Questionnaire activated';
             case 'Model.Survey.afterDeactivate':
                 return 'Questionnaire deactivated';
+            case 'Model.Product.afterPurchase':
+                return 'Product purchased';
         }
 
         return $activityRecord->event;
@@ -70,6 +72,8 @@ class ActivityRecordsHelper extends Helper
             case 'Model.Survey.afterActivate';
             case 'Model.Survey.afterDeactivate';
                 return "Community {$meta['surveyType']}s questionnaire";
+            case 'Model.Product.afterPurchase':
+                return $meta['productName'];
 
         }
 
