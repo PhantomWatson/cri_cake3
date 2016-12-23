@@ -120,16 +120,8 @@ class ActivityRecordsTable extends Table
         $recordData['meta'] = serialize($meta);
 
         $activityRecord = $this->newEntity($recordData);
-        if ($activityRecord->errors()) {
+        if ($activityRecord->errors() || ! $this->save($activityRecord)) {
             throw new InternalErrorException('There was an error adding a record to the activity log');
         }
-        debug($activityRecord);
-        if ($this->save($activityRecord)) {
-            echo 'saved!';
-        } else {
-            echo 'OH NO NOT SAVED';
-        }
-
-        debug($activityRecord->errors());
     }
 }
