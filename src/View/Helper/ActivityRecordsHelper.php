@@ -57,7 +57,7 @@ class ActivityRecordsHelper extends Helper
         if ($activityRecord->has('user')) {
             $retval = $activityRecord->user->name;
             $role = $activityRecord->user->role;
-            $retval .= ' <span class="role-' . $role . '">(' . $role . ')</span> ';
+            $retval .= ' <span class="role role-' . $role . '">' . $role . '</span> ';
 
             return $retval;
         }
