@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
 class PurchasesController extends AppController
@@ -94,6 +95,7 @@ class PurchasesController extends AppController
     public function add()
     {
         $purchase = $this->Purchases->newEntity();
+        $productsTable = TableRegistry::get('Products');
         if ($this->request->is('post')) {
             $this->request->data['admin_added'] = true;
             $this->request->data['user_id'] = $this->Auth->user('id');
@@ -103,6 +105,15 @@ class PurchasesController extends AppController
             if (empty($errors) && $this->Purchases->save($purchase)) {
                 $this->Flash->success('Purchase record added');
 
+                // Dispatch event
+                $productId = $purchase->product_id;
+                $product = $productsTable->get($productId);
+                $event = new Event('Model.Purchase.afterAdminAdd', $this, ['meta' => [
+                    'communityId' => $purchase->community_id,
+                    'productName' => $product->description
+                ]]);
+                $this->eventManager()->dispatch($event);
+
                 return $this->redirect([
                     'action' => 'index'
                 ]);
@@ -111,7 +122,6 @@ class PurchasesController extends AppController
         }
 
         $communitiesTable = TableRegistry::get('Communities');
-        $productsTable = TableRegistry::get('Products');
         $results = $productsTable->find('all')
             ->select(['id', 'description', 'price'])
             ->order(['id' => 'ASC']);

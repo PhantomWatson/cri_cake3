@@ -29,7 +29,8 @@ class ActivityRecordsController extends AppController
             'User account added',
             'Questionnaire\'s link to SurveyMonkey created or updated',
             'Questionnaire activated or deactivated',
-            'Purchase made'
+            'Purchase made',
+            'Purchase record added by admin'
         ];
         $this->set([
             'activityRecords' => $activityRecords,
