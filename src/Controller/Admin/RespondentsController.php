@@ -51,8 +51,12 @@ class RespondentsController extends AppController
     {
         $respondent = $this->Respondents->get($respondentId);
         $respondent->approved = 1;
+        $result = $this->Respondents->save($respondent);
+        if ($result) {
+            $this->dispatchUninvitedEvent(true, $respondent);
+        }
         $this->set([
-            'success' => (bool)$this->Respondents->save($respondent)
+            'success' => (bool)$result
         ]);
         $this->viewBuilder()->layout('blank');
         $this->render(DS . 'Client' . DS . 'Respondents' . DS . 'approve_uninvited');
@@ -68,10 +72,36 @@ class RespondentsController extends AppController
     {
         $respondent = $this->Respondents->get($respondentId);
         $respondent->approved = -1;
+        $result = $this->Respondents->save($respondent);
+        if ($result) {
+            $this->dispatchUninvitedEvent(false, $respondent);
+        }
         $this->set([
-            'success' => (bool)$this->Respondents->save($respondent)
+            'success' => (bool)$result
         ]);
         $this->viewBuilder()->layout('blank');
         $this->render(DS . 'Client' . DS . 'Respondents' . DS . 'dismiss_uninvited');
+    }
+
+    /**
+     * Dispatches an event for uninvited respondent approval or dismissal
+     *
+     * @param bool $approved True for approved and false for dismissed
+     * @param Respondent $respondent Respondent entity
+     * @return void
+     */
+    private function dispatchUninvitedEvent($approved, $respondent)
+    {
+        $surveyId = $respondent->survey_id;
+        $surveysTable = TableRegistry::get('Surveys');
+        $communityId = $surveysTable->getCommunityId(['id' => $surveyId]);
+        $eventName = 'Model.Respondent.afterUninvited' . ($approved ? 'Approve' : 'Dismiss');
+        $event = new Event($eventName, $this, ['meta' => [
+            'communityId' => $communityId,
+            'surveyId' => $surveyId,
+            'respondentId' => $respondent->id,
+            'respondentName' => $respondent->name
+        ]]);
+        $this->eventManager()->dispatch($event);
     }
 }
