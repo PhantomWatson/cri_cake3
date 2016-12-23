@@ -41,6 +41,10 @@ class ActivityRecordsHelper extends Helper
                 return 'Community promoted';
             case 'Model.Community.afterScoreDecrease':
                 return 'Community demoted';
+            case 'Model.Respondent.afterUninvitedApprove':
+                return 'Uninvited respondent approved';
+            case 'Model.Respondent.afterUninvitedDismiss':
+                return 'Uninvited respondent dismissed';
         }
 
         return $activityRecord->event;
@@ -93,6 +97,9 @@ class ActivityRecordsHelper extends Helper
             case 'Model.Community.afterScoreIncrease':
             case 'Model.Community.afterScoreDecrease':
                 return "From Step {$meta['previousScore']} to Step {$meta['newScore']}";
+            case 'Model.Respondent.afterUninvitedApprove':
+            case 'Model.Respondent.afterUninvitedDismiss':
+                return $meta['respondentName'];
         }
 
         return null;

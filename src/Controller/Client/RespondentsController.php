@@ -2,6 +2,7 @@
 namespace App\Controller\Client;
 
 use App\Controller\AppController;
+use App\Model\Entity\Respondent;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
@@ -135,8 +136,12 @@ class RespondentsController extends AppController
         $this->checkClientAuthorization($respondentId, $clientId);
         $respondent = $this->Respondents->get($respondentId);
         $respondent->approved = 1;
+        $result = $this->Respondents->save($respondent);
+        if ($result) {
+            $this->dispatchUninvitedEvent(true, $respondent);
+        }
         $this->set([
-            'success' => (bool)$this->Respondents->save($respondent)
+            'success' => (bool)$result
         ]);
         $this->viewBuilder()->layout('blank');
     }
@@ -157,9 +162,35 @@ class RespondentsController extends AppController
         $this->checkClientAuthorization($respondentId, $clientId);
         $respondent = $this->Respondents->get($respondentId);
         $respondent->approved = -1;
+        $result = $this->Respondents->save($respondent);
+        if ($result) {
+            $this->dispatchUninvitedEvent(false, $respondent);
+        }
         $this->set([
-            'success' => (bool)$this->Respondents->save($respondent)
+            'success' => (bool)$result
         ]);
         $this->viewBuilder()->layout('blank');
+    }
+
+    /**
+     * Dispatches an event for uninvited respondent approval or dismissal
+     *
+     * @param bool $approved True for approved and false for dismissed
+     * @param Respondent $respondent Respondent entity
+     * @return void
+     */
+    private function dispatchUninvitedEvent($approved, $respondent)
+    {
+        $surveyId = $respondent->survey_id;
+        $surveysTable = TableRegistry::get('Surveys');
+        $communityId = $surveysTable->getCommunityId(['id' => $surveyId]);
+        $eventName = 'Model.Respondent.afterUninvited' . ($approved ? 'Approve' : 'Dismiss');
+        $event = new Event($eventName, $this, ['meta' => [
+            'communityId' => $communityId,
+            'surveyId' => $surveyId,
+            'respondentId' => $respondent->id,
+            'respondentName' => $respondent->name
+        ]]);
+        $this->eventManager()->dispatch($event);
     }
 }

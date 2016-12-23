@@ -33,7 +33,8 @@ class ActivityRecordsController extends AppController
             'Purchase record added by admin',
             'Refund recorded',
             'Responses imported',
-            'Community promoted to next step or demoted to previous step'
+            'Community promoted to next step or demoted to previous step',
+            'Uninvited respondents approved or dismissed'
         ];
         $this->set([
             'activityRecords' => $activityRecords,

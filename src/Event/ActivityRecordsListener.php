@@ -33,7 +33,9 @@ class ActivityRecordsListener implements EventListenerInterface
             'Model.Purchase.afterRefund',
             'Model.Response.afterImport',
             'Model.Community.afterScoreIncrease',
-            'Model.Community.afterScoreDecrease'
+            'Model.Community.afterScoreDecrease',
+            'Model.Respondent.afterUninvitedApprove',
+            'Model.Respondent.afterUninvitedDismiss'
         ];
 
         return array_fill_keys($events, 'recordActivity');
