@@ -266,6 +266,7 @@ class CommunitiesController extends AppController
                 if ($previousScore != $community->score) {
                     $this->dispatchScoreChangeEvent($previousScore, $community->score, $communityId);
                 }
+
                 return $this->redirect([
                     'prefix' => 'admin',
                     'action' => 'index'
@@ -636,5 +637,4 @@ class CommunitiesController extends AppController
         $event = new Event($eventName, $this, ['meta' => compact('previousScore', 'newScore', 'communityId')]);
         $this->eventManager()->dispatch($event);
     }
-
 }
