@@ -99,7 +99,7 @@ class ActivityRecordsHelper extends Helper
                 return "From Step {$meta['previousScore']} to Step {$meta['newScore']}";
             case 'Model.Respondent.afterUninvitedApprove':
             case 'Model.Respondent.afterUninvitedDismiss':
-                return $meta['respondentName'];
+                return "{$meta['respondentName']}, responding to community {$meta['surveyType']}s questionnaire";
         }
 
         return null;

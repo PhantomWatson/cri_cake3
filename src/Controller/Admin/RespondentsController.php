@@ -95,13 +95,14 @@ class RespondentsController extends AppController
     {
         $surveyId = $respondent->survey_id;
         $surveysTable = TableRegistry::get('Surveys');
-        $communityId = $surveysTable->getCommunityId(['id' => $surveyId]);
+        $survey = $surveysTable->get($surveyId);
         $eventName = 'Model.Respondent.afterUninvited' . ($approved ? 'Approve' : 'Dismiss');
         $event = new Event($eventName, $this, ['meta' => [
-            'communityId' => $communityId,
+            'communityId' => $survey->community_id,
             'surveyId' => $surveyId,
             'respondentId' => $respondent->id,
-            'respondentName' => $respondent->name
+            'respondentName' => $respondent->name,
+            'surveyType' => $survey->type
         ]]);
         $this->eventManager()->dispatch($event);
     }
