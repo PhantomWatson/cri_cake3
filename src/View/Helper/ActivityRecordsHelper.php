@@ -33,6 +33,8 @@ class ActivityRecordsHelper extends Helper
                 return 'Product purchased';
             case 'Model.Purchase.afterAdminAdd':
                 return 'Payment record added';
+            case 'Model.Purchase.afterRefund':
+                return 'Refund recorded';
         }
 
         return $activityRecord->event;
@@ -76,6 +78,7 @@ class ActivityRecordsHelper extends Helper
                 return "Community {$meta['surveyType']}s questionnaire";
             case 'Model.Product.afterPurchase':
             case 'Model.Purchase.afterAdminAdd':
+            case 'Model.Purchase.afterRefund':
                 return $meta['productName'];
         }
 

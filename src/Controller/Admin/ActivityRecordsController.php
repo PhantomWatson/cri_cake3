@@ -30,7 +30,8 @@ class ActivityRecordsController extends AppController
             'Questionnaire\'s link to SurveyMonkey created or updated',
             'Questionnaire activated or deactivated',
             'Purchase made',
-            'Purchase record added by admin'
+            'Purchase record added by admin',
+            'Refund recorded'
         ];
         $this->set([
             'activityRecords' => $activityRecords,

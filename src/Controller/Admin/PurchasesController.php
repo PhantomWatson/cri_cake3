@@ -78,6 +78,16 @@ class PurchasesController extends AppController
                 $purchase->refunder_id = $this->Auth->user('id');
                 if ($this->Purchases->save($purchase)) {
                     $this->Flash->success('Refund recorded.');
+
+                    // Dispatch event
+                    $productId = $purchase->product_id;
+                    $productsTable = TableRegistry::get('Products');
+                    $product = $productsTable->get($productId);
+                    $event = new Event('Model.Purchase.afterRefund', $this, ['meta' => [
+                        'communityId' => $purchase->community_id,
+                        'productName' => $product->description
+                    ]]);
+                    $this->eventManager()->dispatch($event);
                 } else {
                     $this->Flash->error('There was an error saving that refund record.');
                 }
