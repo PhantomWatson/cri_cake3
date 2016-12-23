@@ -252,6 +252,7 @@ class CommunitiesController extends AppController
                 'OrganizationSurvey'
             ]
         ]);
+        $previousScore = $community->score;
 
         if ($this->request->is('post') || $this->request->is('put')) {
             $this->request->data['id'] = $communityId;
@@ -262,7 +263,9 @@ class CommunitiesController extends AppController
             $errors = $community->errors();
             if (empty($errors) && $this->Communities->save($community)) {
                 $this->Flash->success('Community updated');
-
+                if ($previousScore != $community->score) {
+                    $this->dispatchScoreChangeEvent($previousScore, $community->score, $communityId);
+                }
                 return $this->redirect([
                     'prefix' => 'admin',
                     'action' => 'index'
@@ -357,6 +360,7 @@ class CommunitiesController extends AppController
                 if ($this->Communities->save($community)) {
                     $verbed = $community->score > $previousScore ? 'increased' : 'decreased';
                     $this->Flash->success('Community score ' . $verbed);
+                    $this->dispatchScoreChangeEvent($previousScore, $community->score, $communityId);
                 } else {
                     $this->Flash->error('There was an error updating this community');
                 }
@@ -613,4 +617,24 @@ class CommunitiesController extends AppController
             'titleForLayout' => $community->name . ' Notes'
         ]);
     }
+
+    /**
+     * Dispatches an event for Model.Community.afterScoreIncrease (or Decrease)
+     *
+     * @param int $previousScore Score before changing
+     * @param int $newScore Score after changing
+     * @param int $communityId Community ID
+     * @return void
+     */
+    private function dispatchScoreChangeEvent($previousScore, $newScore, $communityId)
+    {
+        if ($previousScore == $newScore) {
+            return;
+        }
+        $increase = $previousScore < $newScore;
+        $eventName = 'Model.Community.afterScore' . ($increase ? 'Increase' : 'Decrease');
+        $event = new Event($eventName, $this, ['meta' => compact('previousScore', 'newScore', 'communityId')]);
+        $this->eventManager()->dispatch($event);
+    }
+
 }

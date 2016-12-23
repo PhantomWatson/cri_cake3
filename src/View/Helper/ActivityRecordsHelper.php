@@ -37,6 +37,10 @@ class ActivityRecordsHelper extends Helper
                 return 'Refund recorded';
             case 'Model.Response.afterImport':
                 return 'Responses imported';
+            case 'Model.Community.afterScoreIncrease':
+                return 'Community promoted';
+            case 'Model.Community.afterScoreDecrease':
+                return 'Community demoted';
         }
 
         return $activityRecord->event;
@@ -86,6 +90,9 @@ class ActivityRecordsHelper extends Helper
                 return $meta['responseCount'] .
                     __n(' responses', ' response', count($meta['responseCount'])) .
                     " to the community {$meta['surveyType']}s questionnaire";
+            case 'Model.Community.afterScoreIncrease':
+            case 'Model.Community.afterScoreDecrease':
+                return "From Step {$meta['previousScore']} to Step {$meta['newScore']}";
         }
 
         return null;
