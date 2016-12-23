@@ -30,6 +30,7 @@ class ActivityRecordsListener implements EventListenerInterface
             'Model.Survey.afterDeactivate',
             'Model.Product.afterPurchase'
         ];
+
         return array_fill_keys($events, 'recordActivity');
     }
 

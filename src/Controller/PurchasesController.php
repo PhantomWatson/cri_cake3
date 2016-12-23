@@ -45,7 +45,6 @@ class PurchasesController extends AppController
                 'postback' => base64_encode(serialize($this->request->data()))
             ]);
             if ($this->Purchases->save($purchase)) {
-
                 // Dispatch event
                 $product = $productsTable->get($productId);
                 $event = new Event('Model.Product.afterPurchase', $this, ['meta' => [

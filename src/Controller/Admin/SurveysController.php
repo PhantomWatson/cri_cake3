@@ -103,7 +103,6 @@ class SurveysController extends AppController
             $errors = $survey->errors();
             $isNew = $survey->isNew();
             if (empty($errors) && $this->Surveys->save($survey)) {
-
                 // Flash message
                 if ($isNew) {
                     $message = 'Questionnaire successfully linked to this community';

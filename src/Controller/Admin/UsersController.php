@@ -123,7 +123,6 @@ class UsersController extends AppController
 
             $errors = $user->errors();
             if (empty($errors) && $this->Users->save($user)) {
-
                 // Dispatch event
                 $event = new Event('Model.User.afterAdd', $this, ['meta' => [
                     'newUserId' => $user->id,

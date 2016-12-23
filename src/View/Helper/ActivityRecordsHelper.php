@@ -66,15 +66,14 @@ class ActivityRecordsHelper extends Helper
         $meta = unserialize($activityRecord->meta);
         switch ($activityRecord->event) {
             case 'Model.User.afterAdd':
-                return ucwords($meta['userRole']). " account created for {$meta['userName']} ";
+                return ucwords($meta['userRole']) . " account created for {$meta['userName']}";
             case 'Model.Survey.afterLinked':
             case 'Model.Survey.afterLinkUpdated':
-            case 'Model.Survey.afterActivate';
-            case 'Model.Survey.afterDeactivate';
+            case 'Model.Survey.afterActivate':
+            case 'Model.Survey.afterDeactivate':
                 return "Community {$meta['surveyType']}s questionnaire";
             case 'Model.Product.afterPurchase':
                 return $meta['productName'];
-
         }
 
         return null;
