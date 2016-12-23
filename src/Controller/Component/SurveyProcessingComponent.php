@@ -4,6 +4,7 @@ namespace App\Controller\Component;
 use App\Mailer\Mailer;
 use Cake\Controller\Component;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
@@ -156,6 +157,17 @@ class SurveyProcessingComponent extends Component
         ]);
         if ($success) {
             $this->successEmails = array_merge($this->successEmails, $this->recipients);
+
+            // Dispatch event
+            $surveysTable = TableRegistry::get('Surveys');
+            $survey = $surveysTable->get($this->surveyId);
+            $event = new Event('Model.Survey.afterInvitationsSent', $this, ['meta' => [
+                'communityId' => $this->communityId,
+                'surveyId' => $this->surveyId,
+                'surveyType' => $survey->type,
+                'invitedCount' => count($this->successEmails)
+            ]]);
+            $this->_registry->getController()->eventManager()->dispatch($event);
         } else {
             $this->errorEmails = array_merge($this->errorEmails, $this->recipients);
         }

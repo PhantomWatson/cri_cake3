@@ -45,6 +45,8 @@ class ActivityRecordsHelper extends Helper
                 return 'Uninvited respondent approved';
             case 'Model.Respondent.afterUninvitedDismiss':
                 return 'Uninvited respondent dismissed';
+            case 'Model.Survey.afterInvitationsSent':
+                return 'Questionnaire invitations sent';
         }
 
         return $activityRecord->event;
@@ -100,6 +102,10 @@ class ActivityRecordsHelper extends Helper
             case 'Model.Respondent.afterUninvitedApprove':
             case 'Model.Respondent.afterUninvitedDismiss':
                 return "{$meta['respondentName']}, responding to community {$meta['surveyType']}s questionnaire";
+            case 'Model.Survey.afterInvitationsSent':
+                return $meta['invitedCount'] .
+                    __n(' invitations', ' invitation', count($meta['invitedCount'])) .
+                    " to the community {$meta['surveyType']}s questionnaire sent";
         }
 
         return null;

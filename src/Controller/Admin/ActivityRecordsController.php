@@ -34,7 +34,8 @@ class ActivityRecordsController extends AppController
             'Refund recorded',
             'Responses imported',
             'Community promoted to next step or demoted to previous step',
-            'Uninvited respondents approved or dismissed'
+            'Uninvited respondents approved or dismissed',
+            'Invitations sent'
         ];
         $this->set([
             'activityRecords' => $activityRecords,
