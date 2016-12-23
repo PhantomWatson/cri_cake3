@@ -3,6 +3,7 @@ namespace App\Controller\Client;
 
 use App\Controller\AppController;
 use App\Model\Entity\Respondent;
+use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
