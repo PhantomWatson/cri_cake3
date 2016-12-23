@@ -112,7 +112,7 @@ class SurveysController extends AppController
                 }
                 $this->Flash->success($message);
 
-                // Event
+                // Events
                 $eventName = $isNew ? 'Model.Survey.afterLinked' : 'Model.Survey.afterLinkUpdated';
                 $event = new Event($eventName, $this, ['meta' => [
                     'communityId' => $communityId,
@@ -120,6 +120,14 @@ class SurveysController extends AppController
                     'surveyType' => $surveyType
                 ]]);
                 $this->eventManager()->dispatch($event);
+                if ($isNew && $survey->active) {
+                    $event = new Event('Model.Survey.afterActivate', $this, ['meta' => [
+                        'communityId' => $communityId,
+                        'surveyId' => $survey->id,
+                        'surveyType' => $survey->type
+                    ]]);
+                    $this->eventManager()->dispatch($event);
+                }
 
                 $this->redirect([
                     'action' => 'view',
@@ -360,8 +368,17 @@ class SurveysController extends AppController
                 $this->Flash->error('There was an error updating the selected questionnaire');
             } elseif ($this->Surveys->save($survey)) {
                 $currentlyActive = $this->request->data('active');
-                $msg = 'Questionnaire ' . ($this->request->data('active') ? 'activated' : 'deactivated');
+                $msg = 'Questionnaire ' . ($currentlyActive ? 'activated' : 'deactivated');
                 $this->Flash->success($msg);
+
+                // Event
+                $eventName = $currentlyActive ? 'Model.Survey.afterActivate' : 'Model.Survey.afterDeactivate';
+                $event = new Event($eventName, $this, ['meta' => [
+                    'communityId' => $survey->community_id,
+                    'surveyId' => $survey->id,
+                    'surveyType' => $survey->type
+                ]]);
+                $this->eventManager()->dispatch($event);
             } else {
                 $this->Flash->error('There was an error updating the selected questionnaire');
             }

@@ -27,7 +27,8 @@ class ActivityRecordsController extends AppController
         $trackedEvents = [
             'Community added',
             'User account added',
-            'Questionnaire\'s link to SurveyMonkey created or updated'
+            'Questionnaire\'s link to SurveyMonkey created or updated',
+            'Questionnaire activated or deactivated'
         ];
         $this->set([
             'activityRecords' => $activityRecords,

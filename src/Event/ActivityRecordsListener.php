@@ -25,7 +25,9 @@ class ActivityRecordsListener implements EventListenerInterface
             'Model.Community.afterAdd',
             'Model.User.afterAdd',
             'Model.Survey.afterLinked',
-            'Model.Survey.afterLinkUpdated'
+            'Model.Survey.afterLinkUpdated',
+            'Model.Survey.afterActivate',
+            'Model.Survey.afterDeactivate'
         ];
         return array_fill_keys($events, 'recordActivity');
     }
