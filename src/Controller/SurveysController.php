@@ -211,6 +211,14 @@ class SurveysController extends AppController
             $message .= '</ul>';
             $this->response->statusCode(500);
         }
+        if ($importedCount) {
+            $event = new Event('Model.Response.afterImport', $this, ['meta' => [
+                'communityId' => $survey->communityId,
+                'surveyId' => $survey->id,
+                'responseCount' => $importedCount
+            ]]);
+            $this->eventManager()->dispatch($event);
+        }
 
         $this->set(compact('message'));
     }

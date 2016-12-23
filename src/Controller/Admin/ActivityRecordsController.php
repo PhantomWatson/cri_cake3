@@ -31,7 +31,8 @@ class ActivityRecordsController extends AppController
             'Questionnaire activated or deactivated',
             'Purchase made',
             'Purchase record added by admin',
-            'Refund recorded'
+            'Refund recorded',
+            'Responses imported'
         ];
         $this->set([
             'activityRecords' => $activityRecords,

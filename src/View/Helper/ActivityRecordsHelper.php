@@ -35,6 +35,8 @@ class ActivityRecordsHelper extends Helper
                 return 'Payment record added';
             case 'Model.Purchase.afterRefund':
                 return 'Refund recorded';
+            case 'Model.Response.afterImport':
+                return 'Responses imported';
         }
 
         return $activityRecord->event;
@@ -80,6 +82,10 @@ class ActivityRecordsHelper extends Helper
             case 'Model.Purchase.afterAdminAdd':
             case 'Model.Purchase.afterRefund':
                 return $meta['productName'];
+            case 'Model.Response.afterImport':
+                return $meta['responseCount'] .
+                    __n(' responses', ' response', count($meta['responseCount'])) .
+                    " to the community {$meta['surveyType']}s questionnaire";
         }
 
         return null;
