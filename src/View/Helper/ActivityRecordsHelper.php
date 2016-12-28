@@ -84,38 +84,68 @@ class ActivityRecordsHelper extends Helper
     public function details($activityRecord)
     {
         $meta = unserialize($activityRecord->meta);
-        switch ($activityRecord->event) {
-            case 'Model.User.afterAdd':
-                return ucwords($meta['userRole']) . " account created for {$meta['userName']}";
-            case 'Model.Survey.afterLinked':
-            case 'Model.Survey.afterLinkUpdated':
-            case 'Model.Survey.afterActivate':
-            case 'Model.Survey.afterDeactivate':
-                return "Community {$meta['surveyType']}s questionnaire";
-            case 'Model.Product.afterPurchase':
-            case 'Model.Purchase.afterAdminAdd':
-            case 'Model.Purchase.afterRefund':
-                return $meta['productName'];
-            case 'Model.Response.afterImport':
-                return $meta['responseCount'] .
-                    __n(' responses', ' response', count($meta['responseCount'])) .
-                    " to the community {$meta['surveyType']}s questionnaire";
-            case 'Model.Community.afterScoreIncrease':
-            case 'Model.Community.afterScoreDecrease':
-                return "From Step {$meta['previousScore']} to Step {$meta['newScore']}";
-            case 'Model.Respondent.afterUninvitedApprove':
-            case 'Model.Respondent.afterUninvitedDismiss':
-                return "{$meta['respondentName']}, responding to community {$meta['surveyType']}s questionnaire";
-            case 'Model.Survey.afterInvitationsSent':
-                return $meta['invitedCount'] .
-                    __n(' invitations', ' invitation', count($meta['invitedCount'])) .
-                    " to the community {$meta['surveyType']}s questionnaire sent";
-            case 'Model.Survey.afterRemindersSent':
-                return $meta['remindedCount'] .
-                    __n(' reminders', ' reminder', count($meta['remindedCount'])) .
-                    " to complete the community {$meta['surveyType']}s questionnaire sent";
+        $detailsFormats = [
+            'Model' => [
+                'Community' => [
+                    'afterScoreDecrease' => 'From Step [previousScore] to Step [newScore]',
+                    'afterScoreIncrease' => 'From Step [previousScore] to Step [newScore]'
+                ],
+                'Product' => [
+                    'afterAdminAdd' => '[productName]',
+                    'afterPurchase' => '[productName]',
+                    'afterRefund' => '[productName]'
+                ],
+                'Survey' => [
+                    'afterActivate' => 'Community [surveyType]s questionnaire',
+                    'afterDeactivate' => 'Community [surveyType]s questionnaire',
+                    'afterInvitationsSent' => '[invitedCount] invitation(s) to the community [surveyType]s questionnaire sent',
+                    'afterLinked' => 'Community [surveyType]s questionnaire',
+                    'afterLinkUpdated' => 'Community [surveyType]s questionnaire',
+                    'afterRemindersSent' => '[remindedCount] reminder(s) to complete the community [surveyType]s questionnaire sent'
+                ],
+                'Respondent' => [
+                    'afterUninvitedApprove' => '[respondentName], responding to community [surveyType]s questionnaire',
+                    'afterUninvitedDismiss' => '[respondentName], responding to community [surveyType]s questionnaire'
+                ],
+                'Response' => [
+                    'afterImport' => '[responseCount] response(s) to the community [surveyType]s questionnaire'
+                ],
+                'User' => [
+                    'afterAdd' => '[userRole] account created for [userName]'
+                ]
+            ]
+        ];
+
+        $detailsFormat = Hash::extract($detailsFormats, $activityRecord->event);
+        if ($detailsFormat) {
+            return $this->getFormattedDetails($detailsFormat[0], $meta);
         }
 
         return null;
+    }
+
+    /**
+     * Returns a string with meta var values swapped in for [varName]s
+     *
+     * @param string $detailsFormat String with [varName]s in place of values
+     * @param array $meta This activity record's meta variables
+     * @return string
+     */
+    private function getFormattedDetails($detailsFormat, $meta)
+    {
+        // Extract meta variables in details format string
+        preg_match_all("/\[([^\]]*)\]/", $detailsFormat, $metaVarNames);
+        $metaVarNames = $metaVarNames[1];
+
+        // Swap meta var values in or return an error if a required var is not provided
+        $retval = $detailsFormat;
+        foreach ($metaVarNames as $varName) {
+            if (! isset($meta[$varName])) {
+                return 'Error getting activity details: Unknown ' . $varName;
+            }
+            $retval = str_replace("[$varName]", $meta[$varName], $retval);
+        }
+
+        return ucfirst($retval);
     }
 }
