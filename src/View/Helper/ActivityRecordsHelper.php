@@ -2,6 +2,7 @@
 namespace App\View\Helper;
 
 use App\Model\Entity\ActivityRecord;
+use Cake\Utility\Hash;
 use Cake\View\Helper;
 
 class ActivityRecordsHelper extends Helper
@@ -16,42 +17,43 @@ class ActivityRecordsHelper extends Helper
      */
     public function event($activityRecord)
     {
-        switch ($activityRecord->event) {
-            case 'Model.Community.afterAdd':
-                return 'Community added';
-            case 'Model.User.afterAdd':
-                return 'User account added';
-            case 'Model.Survey.afterLinked':
-                return 'Questionnaire linked to SurveyMonkey';
-            case 'Model.Survey.afterLinkUpdated':
-                return 'Questionnaire\'s link to SurveyMonkey updated';
-            case 'Model.Survey.afterActivate':
-                return 'Questionnaire activated';
-            case 'Model.Survey.afterDeactivate':
-                return 'Questionnaire deactivated';
-            case 'Model.Product.afterPurchase':
-                return 'Product purchased';
-            case 'Model.Purchase.afterAdminAdd':
-                return 'Payment record added';
-            case 'Model.Purchase.afterRefund':
-                return 'Refund recorded';
-            case 'Model.Response.afterImport':
-                return 'Responses imported';
-            case 'Model.Community.afterScoreIncrease':
-                return 'Community promoted';
-            case 'Model.Community.afterScoreDecrease':
-                return 'Community demoted';
-            case 'Model.Respondent.afterUninvitedApprove':
-                return 'Uninvited respondent approved';
-            case 'Model.Respondent.afterUninvitedDismiss':
-                return 'Uninvited respondent dismissed';
-            case 'Model.Survey.afterInvitationsSent':
-                return 'Questionnaire invitations sent';
-            case 'Model.Survey.afterRemindersSent':
-                return 'Questionnaire reminders sent';
-        }
+        $eventDescriptions = [
+            'Model' => [
+                'Community' => [
+                    'afterAdd' => 'Community added',
+                    'afterScoreDecrease' => 'Community demoted',
+                    'afterScoreIncrease' => 'Community promoted',
+                ],
+                'Product' => [
+                    'afterPurchase' => 'Product purchased'
+                ],
+                'Purchase' => [
+                    'afterAdminAdd' => 'Payment record added',
+                    'afterRefund' => 'Refund recorded',
+                ],
+                'Respondent' => [
+                    'afterUninvitedApprove' => 'Uninvited respondent approved',
+                    'afterUninvitedDismiss' => 'Uninvited respondent dismissed',
+                ],
+                'Response' => [
+                    'afterImport' => 'Responses imported'
+                ],
+                'Survey' => [
+                    'afterActivate' => 'Questionnaire activated',
+                    'afterDeactivate' => 'Questionnaire deactivated',
+                    'afterInvitationsSent' => 'Questionnaire invitations sent',
+                    'afterLinked' => 'Questionnaire linked to SurveyMonkey',
+                    'afterLinkUpdated' => 'Questionnaire\'s link to SurveyMonkey updated',
+                    'afterRemindersSent' => 'Questionnaire reminders sent',
+                ],
+                'User' => [
+                    'afterAdd' => 'User account added'
+                ]
+            ]
+        ];
+        $eventDescription = Hash::extract($eventDescriptions, $activityRecord->event);
 
-        return $activityRecord->event;
+        return $eventDescription ? $eventDescription[0] : $activityRecord->event;
     }
 
     /**
