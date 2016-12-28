@@ -50,7 +50,7 @@
                     <?= $this->ActivityRecords->event($activityRecord) ?>
                 </td>
                 <td>
-                    <?= $activityRecord->has('community') ? $activityRecord->community->name: ''; ?>
+                    <?= $this->ActivityRecords->community($activityRecord) ?>
                 </td>
                 <td>
                     <?= $this->ActivityRecords->user($activityRecord) ?>

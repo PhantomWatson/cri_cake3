@@ -5,6 +5,7 @@ use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
 
@@ -106,6 +107,23 @@ class ActivityRecordsTable extends Table
         $recordData = [
             'event' => $eventName
         ];
+
+        // Remember some entity names in case the entity is deleted in the future
+        if (isset($meta['communityId']) && ! isset($meta['communityName'])) {
+            $communitiesTable = TableRegistry::get('Communities');
+            $community = $communitiesTable->get($meta['communityId']);
+            $meta['communityName'] = $community->name;
+        }
+        if (isset($meta['userId'])) {
+            $usersTable = TableRegistry::get('Users');
+            $user = $usersTable->get($meta['userId']);
+            if (! isset($meta['userName'])) {
+                $meta['userName'] = $user->name;
+            }
+            if (! isset($meta['userRole'])) {
+                $meta['userRole'] = $user->role;
+            }
+        }
 
         // Move some variables from $meta to their own fields
         $extractedVars = ['userId', 'communityId', 'surveyId'];

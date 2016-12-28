@@ -65,15 +65,27 @@ class ActivityRecordsHelper extends Helper
      */
     public function user($activityRecord)
     {
+        $name = '';
+        $role = '';
         if ($activityRecord->has('user')) {
-            $retval = $activityRecord->user->name;
+            $name = $activityRecord->user->name;
             $role = $activityRecord->user->role;
-            $retval .= ' <span class="role role-' . $role . '">' . $role . '</span> ';
-
-            return $retval;
+        } else {
+            $meta = unserialize($activityRecord->meta);
+            if (isset($meta['userName'])) {
+                $name = $meta['userName'];
+            }
+            if (isset($meta['userRole'])) {
+                $role = $meta['userRole'];
+            }
         }
 
-        return '';
+        $retval = $name;
+        if ($role) {
+            $retval .= ' <span class="role role-' . $role . '">' . $role . '</span>';
+        }
+
+        return $retval;
     }
 
     /**
@@ -88,7 +100,6 @@ class ActivityRecordsHelper extends Helper
         $detailsFormats = [
             'Model' => [
                 'Community' => [
-                    'afterDelete' => '[communityName]',
                     'afterScoreDecrease' => 'From Step [previousScore] to Step [newScore]',
                     'afterScoreIncrease' => 'From Step [previousScore] to Step [newScore]'
                 ],
@@ -149,5 +160,27 @@ class ActivityRecordsHelper extends Helper
         }
 
         return ucfirst($retval);
+    }
+
+    /**
+     * Returns the name of the community associated with this activity record, or null if unspecified
+     *
+     * @param ActivityRecord $activityRecord Activity record entity
+     * @return string|null
+     */
+    public function community($activityRecord)
+    {
+        // Pull community name from the database
+        if ($activityRecord->has('community')) {
+            return $activityRecord->community->name;
+        }
+
+        // Use stored community name in case community record is no longer in the database
+        $meta = unserialize($activityRecord->meta);
+        if (isset($meta['communityName'])) {
+            return $meta['communityName'];
+        }
+
+        return null;
     }
 }
