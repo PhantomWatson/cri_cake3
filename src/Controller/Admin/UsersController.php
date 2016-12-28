@@ -234,6 +234,13 @@ class UsersController extends AppController
 
         if ($this->Users->delete($user)) {
             $this->Flash->success('User deleted');
+
+            // Dispatch event
+            $event = new Event('Model.User.afterDelete', $this, ['meta' => [
+                'userName' => $user->name,
+                'userRole' => $user->role
+            ]]);
+            $this->eventManager()->dispatch($event);
         } else {
             $this->Flash->error('User was not deleted');
         }

@@ -48,7 +48,8 @@ class ActivityRecordsHelper extends Helper
                     'afterRemindersSent' => 'Questionnaire reminders sent',
                 ],
                 'User' => [
-                    'afterAdd' => 'User account added'
+                    'afterAdd' => 'User account added',
+                    'afterDelete' => 'User account deleted'
                 ]
             ]
         ];
@@ -124,7 +125,8 @@ class ActivityRecordsHelper extends Helper
                     'afterImport' => '[responseCount] response(s) to the community [surveyType]s questionnaire'
                 ],
                 'User' => [
-                    'afterAdd' => '[userRole] account created for [userName]'
+                    'afterAdd' => '[userRole] account created for [userName]',
+                    'afterDelete' => '[userName]\'s  [userRole] account deleted'
                 ]
             ]
         ];

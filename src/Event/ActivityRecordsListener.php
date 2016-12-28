@@ -25,6 +25,7 @@ class ActivityRecordsListener implements EventListenerInterface
             'Model.Community.afterAdd',
             'Model.Community.afterDelete',
             'Model.User.afterAdd',
+            'Model.User.afterDelete',
             'Model.Survey.afterLinked',
             'Model.Survey.afterLinkUpdated',
             'Model.Survey.afterActivate',

@@ -26,7 +26,7 @@ class ActivityRecordsController extends AppController
         $activityRecords = $this->paginate($this->ActivityRecords);
         $trackedEvents = [
             'Community added or deleted',
-            'User account added',
+            'User account added or deleted',
             'Questionnaire\'s link to SurveyMonkey created or updated',
             'Questionnaire activated or deactivated',
             'Purchase made',
