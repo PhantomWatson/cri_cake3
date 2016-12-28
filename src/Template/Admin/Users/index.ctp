@@ -39,6 +39,8 @@
         </div>
     </p>
 
+    <?= $this->element('pagination') ?>
+
     <table class="table">
         <thead>
             <tr>
