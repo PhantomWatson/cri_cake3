@@ -2,6 +2,8 @@
 namespace App\Mailer;
 
 use Cake\Core\Configure;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
@@ -46,6 +48,15 @@ class Mailer
         ]);
 
         if ($email->send()) {
+            // Dispatch event
+            $event = new Event('Model.Survey.afterRemindersSent', $this, ['meta' => [
+                'communityId' => $survey->community_id,
+                'surveyId' => $surveyId,
+                'surveyType' => $survey->type,
+                'remindedCount' => count($recipients)
+            ]]);
+            EventManager::instance()->dispatch($event);
+
             $survey->reminder_sent = date('Y-m-d H:i:s');
 
             return $surveysTable->save($survey);
