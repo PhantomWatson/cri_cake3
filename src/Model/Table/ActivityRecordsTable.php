@@ -121,7 +121,11 @@ class ActivityRecordsTable extends Table
 
         $activityRecord = $this->newEntity($recordData);
         if ($activityRecord->errors() || ! $this->save($activityRecord)) {
-            throw new InternalErrorException('There was an error adding a record to the activity log');
+            $msg = 'There was an error adding a record to the activity log';
+            if ($activityRecord->errors()) {
+                $msg .= ': ' . print_r($activityRecord->errors(), true);
+            }
+            throw new InternalErrorException($msg);
         }
     }
 }

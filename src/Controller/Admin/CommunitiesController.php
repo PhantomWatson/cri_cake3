@@ -301,6 +301,12 @@ class CommunitiesController extends AppController
         $community = $this->Communities->get($communityId);
         if ($this->Communities->delete($community)) {
             $this->Flash->success('Community deleted');
+
+            // Dispatch event
+            $event = new Event('Model.Community.afterDelete', $this, ['meta' => [
+                'communityName' => $community->name
+            ]]);
+            $this->eventManager()->dispatch($event);
         } else {
             $this->Flash->error('There was an error deleting that community');
         }

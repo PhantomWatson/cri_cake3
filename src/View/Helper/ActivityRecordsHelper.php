@@ -21,6 +21,7 @@ class ActivityRecordsHelper extends Helper
             'Model' => [
                 'Community' => [
                     'afterAdd' => 'Community added',
+                    'afterDelete' => 'Community deleted',
                     'afterScoreDecrease' => 'Community demoted',
                     'afterScoreIncrease' => 'Community promoted',
                 ],
@@ -87,6 +88,7 @@ class ActivityRecordsHelper extends Helper
         $detailsFormats = [
             'Model' => [
                 'Community' => [
+                    'afterDelete' => '[communityName]',
                     'afterScoreDecrease' => 'From Step [previousScore] to Step [newScore]',
                     'afterScoreIncrease' => 'From Step [previousScore] to Step [newScore]'
                 ],

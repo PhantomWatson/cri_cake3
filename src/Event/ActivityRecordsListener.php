@@ -23,6 +23,7 @@ class ActivityRecordsListener implements EventListenerInterface
     {
         $events = [
             'Model.Community.afterAdd',
+            'Model.Community.afterDelete',
             'Model.User.afterAdd',
             'Model.Survey.afterLinked',
             'Model.Survey.afterLinkUpdated',
