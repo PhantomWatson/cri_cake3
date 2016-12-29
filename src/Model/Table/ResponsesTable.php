@@ -128,18 +128,13 @@ class ResponsesTable extends Table
     }
 
     /**
-     * Retrieves SurveyMonkey responses for the specified respondents
+     * Retrieves new SurveyMonkey responses
      *
      * @param int $surveyId Survey ID
-     * @param array $smRespondentIds Array of respondent IDs
      * @return array [success / fail, responses / error message]
      */
-    public function getFromSurveyMonkeyForRespondents($surveyId, $smRespondentIds)
+    public function getNewFromSurveyMonkey($surveyId)
     {
-        if (empty($smRespondentIds)) {
-            return [true, 'No new respondents'];
-        }
-
         $surveysTable = TableRegistry::get('Surveys');
         try {
             $survey = $surveysTable->get($surveyId);
@@ -151,27 +146,23 @@ class ResponsesTable extends Table
             return [false, "Questionnaire #$surveyId has not yet been linked to SurveyMonkey"];
         }
 
+        $params = ['status' => 'completed'];
+        if ($survey->respondents_last_modified_date) {
+            $lastResponseDate = $survey->respondents_last_modified_date->format('Y-m-d H:i:s');
+            $params['start_modified_at'] = $this->advanceOneSecond($lastResponseDate);
+        }
+
         $SurveyMonkey = $this->getSurveyMonkeyObject();
+        $result = $SurveyMonkey->getResponses((string)$survey->sm_id, $params);
+
+        if (! $result) {
+            return [true, 'No new respondents'];
+        }
+
         $retval = [];
-
-        $smRespondentIdsSplit = array_chunk($smRespondentIds, 100);
-        foreach ($smRespondentIdsSplit as $smRespondentIdsChunk) {
-            /* The SurveyMonkey API limits us to 2 API requests per second and an API call was just
-             * made in Respondent::getNewFromSurveyMonkey(). For extra safety, we'll delay for one second before
-             * each additional API call. */
-            sleep(1);
-
-            $result = $SurveyMonkey->getResponses((string)$survey->sm_id, array_values($smRespondentIdsChunk));
-            if (! $result['success']) {
-                return [false, $result['message']];
-            }
-
-            $responses = $result['data'];
-            foreach ($responses as $response) {
-                $smRespondentId = $response['respondent_id'];
-                $response = $response['questions'];
-                $retval[$smRespondentId] = $response;
-            }
+        foreach ($result as $response) {
+            $smRespondentId = $response['id'];
+            $retval[$smRespondentId] = $response;
         }
 
         return [true, $retval];
@@ -217,20 +208,21 @@ class ResponsesTable extends Table
         ];
 
         // Assume the first field contains the respondent's name
-        if (isset($response[0]['answers'][0]['text'])) {
-            $retval['name'] = $response[0]['answers'][0]['text'];
+        if (isset($response['pages'][0]['questions'][0]['answers'][0]['text'])) {
+            $retval['name'] = $response['pages'][0]['questions'][0]['answers'][0]['text'];
         }
 
         // Search for the first response that's a valid email address
-        foreach ($response as $section) {
+        foreach ($response['pages'][0]['questions'] as $section) {
             foreach ($section['answers'] as $answer) {
                 if (! isset($answer['text'])) {
                     continue;
                 }
-                $answer = trim($answer['text']);
-                if (Validation::email($answer)) {
-                    $retval['email'] = strtolower($answer);
-                    break;
+                $answerText = trim($answer['text']);
+                if (Validation::email($answerText)) {
+                    $retval['email'] = strtolower($answerText);
+
+                    return $retval;
                 }
             }
         }
@@ -334,9 +326,9 @@ class ResponsesTable extends Table
         // The question ID that covers PWRRR ranking
         $pwrrrQid = $survey->pwrrr_qid;
 
-        $unserialized = unserialize(base64_decode($serializedResponse));
-        foreach ($unserialized as $section) {
-            if ($section['question_id'] != $pwrrrQid) {
+        $response = unserialize(base64_decode($serializedResponse));
+        foreach ($response['pages'][0]['questions'] as $section) {
+            if ($section['id'] != $pwrrrQid) {
                 continue;
             }
             foreach ($section['answers'] as $answer) {
@@ -366,10 +358,10 @@ class ResponsesTable extends Table
     {
         $answerIds = $survey->toArray();
 
-        $sectorId = $answer['row'];
+        $sectorId = $answer['row_id'];
         $sector = str_replace('_aid', '', array_search($sectorId, $answerIds));
 
-        $rankId = $answer['col'];
+        $rankId = $answer['choice_id'];
         $rank = str_replace('_aid', '', array_search($rankId, $answerIds));
 
         return [$sector, $rank];

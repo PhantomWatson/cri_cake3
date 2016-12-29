@@ -37,4 +37,21 @@ class SurveyMonkeyBehavior extends Behavior
 
         return trim($smResponse['pages'][0]['questions'][1]['answers'][0]['text']);
     }
+
+    /**
+     * Advances a datetime string by one second
+     *
+     * Used to determine the earliest modified date for any new responses
+     * based on the most recent modified date of old responses
+     *
+     * @param string $date Datetime string
+     * @return false|string
+     */
+    public function advanceOneSecond($date)
+    {
+        $timestamp = strtotime($date);
+        $timestamp += 1;
+
+        return date('Y-m-d H:i:s', $timestamp);
+    }
 }

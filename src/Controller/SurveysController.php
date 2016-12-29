@@ -45,29 +45,16 @@ class SurveysController extends AppController
             return $this->render('import');
         }
 
-        // Collect respondents
-        $respondentsTable = TableRegistry::get('Respondents');
-        list($success, $respondents) = $respondentsTable->getNewFromSurveyMonkey($surveyId);
-        if (! $success) {
-            return $this->renderImportError($respondents);
-        }
-
-        // Convert IDs from integers to strings (the SurveyMonkey API is particular about this)
-        $smRespondentIds = array_keys($respondents);
-        foreach ($smRespondentIds as &$smRId) {
-            $smRId = (string)$smRId;
-        }
-
         // Collect responses
         $responsesTable = TableRegistry::get('Responses');
-        list($success, $responses) = $responsesTable->getFromSurveyMonkeyForRespondents($surveyId, $smRespondentIds);
+        list($success, $responses) = $responsesTable->getNewFromSurveyMonkey($surveyId);
         if (! $success) {
             return $this->renderImportError($responses);
         }
 
         // Loop through each response and add to / update records
         $areasTable = TableRegistry::get('Areas');
-        $usersTable = TableRegistry::get('Users');
+        $respondentsTable = TableRegistry::get('Respondents');
         $errorMsgs = [];
         if (is_array($responses)) {
             foreach ($responses as $smRespondentId => $response) {
@@ -159,7 +146,7 @@ class SurveysController extends AppController
                     'response' => $serializedResponse,
                     'local_area_pwrrr_alignment' => $alignmentVsLocal,
                     'parent_area_pwrrr_alignment' => $alignmentVsParent,
-                    'response_date' => new Time($respondents[$smRespondentId])
+                    'response_date' => new Time($response['date_modified'])
                 ];
                 foreach ($responseRanks as $sector => $rank) {
                     $responseFields["{$sector}_rank"] = $rank;
@@ -180,8 +167,8 @@ class SurveysController extends AppController
              * (if this set of responses contains errors, advancing the last_modified_date
              * would prevent those responses from being imported after those errors are corrected) */
             if (empty($errorMsgs)) {
-                $dates = array_values($respondents);
-                $survey->respondents_last_modified_date = new Time(max($dates));
+                $mostRecentDate = $this->Surveys->getMostRecentModifiedDate($responses);
+                $survey->respondents_last_modified_date = new Time($mostRecentDate);
             }
             $survey->import_errors = $errorMsgs ? serialize($errorMsgs) : null;
             $this->Surveys->save($survey);
@@ -216,6 +203,7 @@ class SurveysController extends AppController
             $event = new Event('Model.Response.afterImport', $this, ['meta' => [
                 'communityId' => $survey->communityId,
                 'surveyId' => $survey->id,
+                'surveyType' => $survey->type,
                 'responseCount' => $importedCount
             ]]);
             $this->eventManager()->dispatch($event);

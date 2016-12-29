@@ -858,4 +858,23 @@ class SurveysTable extends Table
     {
         return ! $this->isActive($surveyId) && $this->hasResponses($surveyId);
     }
+
+    /**
+     * Takes the results of a SurveyMonkey API call and returns
+     * the most recent modified date in 'Y-m-d H:i:s' format
+     *
+     * @param array $smResponses Result of call to /surveys/{id}/responses/bulk
+     * @return false|string
+     */
+    public function getMostRecentModifiedDate($smResponses)
+    {
+        $dates = [];
+        foreach ($smResponses as $smResponseId => $response) {
+            $dates[] = $response['date_modified'];
+        }
+        $mostRecentDate = max($dates);
+        $timestamp = strtotime($mostRecentDate);
+
+        return date('Y-m-d H:i:s', $timestamp);
+    }
 }
