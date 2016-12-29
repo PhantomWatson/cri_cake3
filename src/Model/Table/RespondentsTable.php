@@ -475,7 +475,7 @@ class RespondentsTable extends Table
 
     /**
      * Uses the SurveyMonkey API to determine the SurveyMonkey respondent
-     * id corresponding to a CRI respondent ID
+     * id (aka response ID) corresponding to a CRI respondent ID
      *
      * @param int $respondentId Respondent ID
      * @return string
@@ -507,8 +507,7 @@ class RespondentsTable extends Table
 
         $SurveyMonkey = $this->getSurveyMonkeyObject();
         $result = $SurveyMonkey->getRespondentList((string)$smSurveyId, [
-            'start_modified_date' => $responseDate,
-            'fields' => ['email']
+            'start_modified_at' => $responseDate
         ]);
         if (! $result['success']) {
             $msg = 'Error retrieving response data from SurveyMonkey.';
@@ -516,9 +515,10 @@ class RespondentsTable extends Table
             throw new InternalErrorException($msg);
         }
 
-        foreach ($result['data']['respondents'] as $returnedRespondent) {
-            if ($returnedRespondent['email'] == $email) {
-                return $returnedRespondent['respondent_id'];
+        foreach ($result['data']['data'] as $returnedRespondent) {
+            $responseEmail = $this->getEmailFromSmResponse($returnedRespondent);
+            if ($responseEmail == $email) {
+                return $returnedRespondent['id'];
             }
         }
         throw new NotFoundException('SurveyMonkey didn\'t return any data about this respondent');
