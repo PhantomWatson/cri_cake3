@@ -234,10 +234,6 @@ class ResponsesController extends AppController
         } else {
             $smRespondentId = $respondentsTable->getSmRespondentId($respondentId);
 
-            // The SurveyMonkey API limits us to 2 API requests per second.
-            // For extra safety, we'll delay for one second before the next API call.
-            sleep(1);
-
             // And save it in this respondent's DB record
             $respondent = $respondentsTable->patchEntity($respondent, [
                 'sm_respondent_id' => $smRespondentId

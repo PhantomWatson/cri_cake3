@@ -627,15 +627,11 @@ class ResponsesTable extends Table
     public function getFullResponseFromSurveyMonkey($smSurveyId, $smRespondentId)
     {
         $SurveyMonkey = $this->getSurveyMonkeyObject();
-        $result = $SurveyMonkey->getResponses((string)$smSurveyId, [$smRespondentId]);
+        $result = $SurveyMonkey->getResponse((string)$smSurveyId, (string)$smRespondentId);
         if (! $result['success'] || empty($result['data'])) {
             throw new NotFoundException("Could not find a response for respondent #$smRespondentId");
         }
         $response = $result['data'];
-
-        // The SurveyMonkey API limits us to 2 API requests per second.
-        // For extra safety, we'll delay for one second before the next API call.
-        sleep(1);
 
         $result = $SurveyMonkey->getSurveyDetails((string)$smSurveyId);
         if (! $result['success'] || empty($result['data'])) {
@@ -643,34 +639,63 @@ class ResponsesTable extends Table
         }
         $survey = $result['data'];
 
+        // Get question IDs
         $questions = [];
+        foreach ($survey['pages'] as $page) {
+            foreach ($page['questions'] as $q) {
+                $questions[$q['id']] = $q['headings'][0]['heading'];
+            }
+        }
+
+        // Get multiple-choice answer IDs
         $choices = [];
         foreach ($survey['pages'] as $page) {
             foreach ($page['questions'] as $q) {
-                $questions[$q['question_id']] = $q['heading'];
-                foreach ($q['answers'] as $a) {
-                    $choices[$a['answer_id']] = $a['text'];
+                if (! isset($q['answers'])) {
+                    continue;
+                }
+
+                $answers = $q['answers'];
+                if (isset($answers['rows'])) {
+                    foreach ($answers['rows'] as $a) {
+                        $choices[$a['id']] = $a['text'];
+                    }
+                }
+                if (isset($answers['choices'])) {
+                    foreach ($answers['choices'] as $a) {
+                        $choices[$a['id']] = $a['text'];
+                    }
+                }
+                if (isset($answers['other'])) {
+                    $choices[$answers['other']['id']] = $answers['other']['text'];
                 }
             }
         }
+
         $retval = [];
-        foreach ($response[0]['questions'] as $q) {
-            $questionLabel = $questions[$q['question_id']];
-            $answers = [];
-            foreach ($q['answers'] as $a) {
-                $answer = '';
-                if (isset($a['row']) && $a['row']) {
-                    $answer .= $choices[$a['row']] . ': ';
+        foreach ($response['pages'] as $page) {
+            foreach ($page['questions'] as $q) {
+                $questionLabel = $questions[$q['id']];
+                $answers = [];
+                foreach ($q['answers'] as $a) {
+                    $answer = '';
+
+                    // For multiple-choice answers, display "Row text: Choice text"
+                    if (isset($a['row_id']) && $a['row_id']) {
+                        $answer .= $choices[$a['row_id']] . ': ';
+                    }
+                    if (isset($a['choice_id']) && $a['choice_id']) {
+                        $answer .= $choices[$a['choice_id']];
+                    }
+
+                    // Otherwise, just display typed-in answer text
+                    if (isset($a['text']) && $a['text']) {
+                        $answer .= $a['text'];
+                    }
+                    $answers[] = $answer;
                 }
-                if (isset($a['col']) && $a['col']) {
-                    $answer .= $choices[$a['col']];
-                }
-                if (isset($a['text']) && $a['text']) {
-                    $answer .= $a['text'];
-                }
-                $answers[] = $answer;
+                $retval[$questionLabel] = $answers;
             }
-            $retval[$questionLabel] = $answers;
         }
 
         return $retval;
