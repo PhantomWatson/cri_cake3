@@ -182,19 +182,14 @@ class RespondentsTable extends Table
         $surveyMonkeySurveyId = (string)$survey->sm_id;
         while (true) {
             $params = [
-                'order_asc' => true,
-                'order_by' => 'date_modified',
-                'fields' => [
-                    'email',
-                    'status',
-                    'date_modified'
-                ],
+                'sort_order' => 'ASC',
+                'sort_by' => 'date_modified',
                 'page' => $page,
-                'page_size' => $pageSize,
-                'survey_id' => $surveyMonkeySurveyId
+                'per_page' => $pageSize,
+                'status' => 'completed'
             ];
             if ($lastResponseDate) {
-                $params['start_modified_date'] = $lastResponseDate;
+                $params['start_modified_at'] = $lastResponseDate;
             }
 
             $result = $SurveyMonkey->getRespondentList($surveyMonkeySurveyId, $params);
@@ -202,16 +197,14 @@ class RespondentsTable extends Table
                 return [false, $result['message'], null];
             }
 
-            $respondents = $result['data']['respondents'];
+            $respondents = $result['data']['data'];
             if (empty($respondents) && $page == 1) {
                 return [true, [], null];
             }
 
             foreach ($respondents as $respondent) {
-                if ($respondent['status'] == 'completed') {
-                    $respondentSmId = $respondent['respondent_id'];
-                    $retval[$respondentSmId] = $respondent['date_modified'];
-                }
+                $respondentSmId = $respondent['id'];
+                $retval[$respondentSmId] = $respondent['date_modified'];
 
                 if (! $lastResponseDate || $lastResponseDate < $respondent['date_modified']) {
                     $lastResponseDate = $respondent['date_modified'];
