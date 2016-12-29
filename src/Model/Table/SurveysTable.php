@@ -445,7 +445,8 @@ class SurveysTable extends Table
         foreach ($result['data']['pages'] as $page) {
             foreach ($page['questions'] as $question) {
                 foreach ($keyPhrases as $keyPhrase) {
-                    if (strpos($question['heading'], $keyPhrase) !== false) {
+                    $heading = $question['headings'][0]['heading'];
+                    if (strpos($heading, $keyPhrase) !== false) {
                         $pwrrrQuestion = $question;
                         break 3;
                     }
@@ -462,24 +463,26 @@ class SurveysTable extends Table
         $qnaIdFields = $this->getQnaIdFieldNames();
         $nulls = array_fill(0, count($qnaIdFields), null);
         $data = array_combine($qnaIdFields, $nulls);
-        $data['pwrrr_qid'] = $pwrrrQuestion['question_id'];
-        foreach ($pwrrrQuestion['answers'] as $answer) {
-            // For some reason, in_array($answer['text'], range('1', '5')) doesn't work
-            switch ($answer['text']) {
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                    $field = $answer['text'] . '_aid';
-                    $data[$field] = $answer['answer_id'];
-                    continue;
-            }
-            foreach ($sectors as $sector) {
-                if (stripos($answer['text'], $sector) !== false) {
-                    $field = $sector . '_aid';
-                    $data[$field] = $answer['answer_id'];
-                    break;
+        $data['pwrrr_qid'] = $pwrrrQuestion['id'];
+        foreach ($pwrrrQuestion['answers'] as $choices) {
+            foreach ($choices as $choice) {
+                // For some reason, in_array($answer['text'], range('1', '5')) doesn't work
+                switch ($choice['text']) {
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                        $field = $choice['text'] . '_aid';
+                        $data[$field] = $choice['id'];
+                        continue;
+                }
+                foreach ($sectors as $sector) {
+                    if (stripos($choice['text'], $sector) !== false) {
+                        $field = $sector . '_aid';
+                        $data[$field] = $choice['id'];
+                        break;
+                    }
                 }
             }
         }
