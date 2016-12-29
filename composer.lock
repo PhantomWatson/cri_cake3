@@ -4,45 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7c74d79eba2b1e512ae95526c45ee81f",
-    "content-hash": "6eb71f18f7f1ac0c906ae2449b1d2460",
+    "hash": "300cc48c8d165d11f8d9270b6560ac1c",
+    "content-hash": "5859f2235c82b0dfb531054d16918571",
     "packages": [
-        {
-            "name": "ascension/php-surveymonkey",
-            "version": "1.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ascension/php-surveymonkey.git",
-                "reference": "f3e38b8e9217ce669dc179a000fe45864181c5ca"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ascension/php-surveymonkey/zipball/f3e38b8e9217ce669dc179a000fe45864181c5ca",
-                "reference": "f3e38b8e9217ce669dc179a000fe45864181c5ca",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Ascension": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jerrod Bunce",
-                    "email": "jerrod@gameplanlabs.com"
-                }
-            ],
-            "description": "PHP class for SurveyMonkey API",
-            "time": "2015-06-10 22:22:01"
-        },
         {
             "name": "aura/installer-default",
             "version": "1.0.0",
@@ -604,6 +568,43 @@
                 "php"
             ],
             "time": "2016-08-30 02:07:17"
+        },
+        {
+            "name": "liogi/surveymonkey-api-v3",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/liogi/surveymonkey-api-v3.git",
+                "reference": "8e8ec36b052928fdce3fe13948bddcff0b6e0926"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/liogi/surveymonkey-api-v3/zipball/8e8ec36b052928fdce3fe13948bddcff0b6e0926",
+                "reference": "8e8ec36b052928fdce3fe13948bddcff0b6e0926",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SurveyMonkey": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "liogi",
+                    "homepage": "https://github.com/liogi"
+                }
+            ],
+            "description": "PHP class for SurveyMonkey API.",
+            "homepage": "https://github.com/liogi/surveymonkey-api-v3",
+            "keywords": [
+                "php"
+            ],
+            "time": "2016-11-03 14:04:31"
         },
         {
             "name": "m1/env",
@@ -2730,6 +2731,42 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "ascension/php-surveymonkey",
+            "version": "1.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ascension/php-surveymonkey.git",
+                "reference": "f3e38b8e9217ce669dc179a000fe45864181c5ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ascension/php-surveymonkey/zipball/f3e38b8e9217ce669dc179a000fe45864181c5ca",
+                "reference": "f3e38b8e9217ce669dc179a000fe45864181c5ca",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Ascension": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jerrod Bunce",
+                    "email": "jerrod@gameplanlabs.com"
+                }
+            ],
+            "description": "PHP class for SurveyMonkey API",
+            "time": "2015-06-10 22:22:01"
+        },
         {
             "name": "cakephp/bake",
             "version": "1.2.8",

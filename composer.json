@@ -6,7 +6,6 @@
     "license": "MIT",
     "require": {
         "php": ">=5.4.16",
-        "ascension/php-surveymonkey": "~1.0",
         "ballstatecber/datacenter-plugin-cakephp3": "dev-master",
         "cakephp/cakephp": "~3.0",
         "cakephp/cakephp-codesniffer": "*",
@@ -19,7 +18,8 @@
         "xety/cake3-cookieauth": "1.*",
         "dereuromark/cakephp-shim": "dev-master",
         "phantomwatson/form-protector": "dev-master",
-        "josegonzalez/dotenv": "dev-master"
+        "josegonzalez/dotenv": "dev-master",
+        "liogi/surveymonkey-api-v3": "1.*"
     },
     "require-dev": {
         "psy/psysh": "@stable",
