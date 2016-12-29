@@ -178,21 +178,20 @@ class SurveysTable extends Table
         $retval = [];
         while (true) {
             $defaultParams = [
-                'fields' => ['title'],
                 'page' => $page,
-                'page_size' => $pageSize
+                'per_page' => $pageSize
             ];
             $params = array_merge($defaultParams, $params);
             $result = $SurveyMonkey->getSurveyList($params);
-            if (isset($result['data']['surveys']) && ! empty($result['data']['surveys'])) {
-                foreach ($result['data']['surveys'] as $survey) {
+            if (isset($result['data']['data']) && ! empty($result['data']['data'])) {
+                foreach ($result['data']['data'] as $survey) {
                     $retval[] = [
-                        'sm_id' => $survey['survey_id'],
+                        'sm_id' => $survey['id'],
                         'title' => $survey['title'],
-                        'url' => $this->getCachedSMSurveyUrl($survey['survey_id'])
+                        'url' => $this->getCachedSMSurveyUrl($survey['id'])
                     ];
                 }
-                if (count($result['data']['surveys']) == $pageSize) {
+                if (count($result['data']['data']) == $pageSize) {
                     $page++;
                 } else {
                     break;
