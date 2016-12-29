@@ -229,13 +229,13 @@ class SurveysTable extends Table
         // Nab URL from SurveyMonkey
         $SurveyMonkey = $this->getSurveyMonkeyObject();
         $params = [
-            'fields' => ['type', 'url']
+            'include' => 'type,url'
         ];
         $collectors = $SurveyMonkey->getCollectorList((string)$smId, $params);
         $retval = false;
-        if (isset($collectors['data']['collectors']) && ! empty($collectors['data']['collectors'])) {
-            foreach ($collectors['data']['collectors'] as $collector) {
-                if ($collector['type'] == 'url') {
+        if (isset($collectors['data']['data']) && ! empty($collectors['data']['data'])) {
+            foreach ($collectors['data']['data'] as $collector) {
+                if ($collector['type'] == 'weblink') {
                     $retval = $collector['url'];
                     break;
                 }
