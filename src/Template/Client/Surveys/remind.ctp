@@ -72,7 +72,7 @@
         <?php if ($survey->reminder_sent): ?>
             A reminder was last sent for this questionnaire on
             <strong>
-                <?= $survey->reminder_sent->format('F j, Y') ?>.
+                <?= $this->Time->format($survey->reminder_sent, 'MMMM d, Y', false, 'America/New_York'); ?>.
             </strong>
         <?php else: ?>
             <strong>

@@ -338,8 +338,7 @@ class ClientHomeHelper extends Helper
             $description .= '<br /> You will be contacted by a CRI representative ' .
                 'to schedule Presentation ' . strtoupper($letter) . '.';
         } else {
-            $description .= ' for ' . $date->format('F j') . '<sup>' . $date->format('S') . '</sup>' .
-                $date->format(', Y');
+            $description .= ' for ' . $this->Time->format($date, 'MMMM d, Y', false, 'America/New_York');
         }
         $icon = $this->glyphicon($date != null);
 

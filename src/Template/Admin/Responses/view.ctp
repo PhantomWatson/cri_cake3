@@ -13,8 +13,7 @@
             <p>
                 <?= number_format(count($responses)) ?>
                 complete responses as of
-                <?= $survey->responses_checked->format('F j') ?><sup><?= $survey->responses_checked->format('S') ?></sup>,
-                <?= $survey->responses_checked->format('Y') ?>
+                <?= $this->Time->format($survey->responses_checked, 'MMMM d, Y', false, 'America/New_York'); ?>
             </p>
             <?php $area = $community->local_area ?: $community->parent_area; ?>
             <table class="table" id="responses-summary">

@@ -72,7 +72,7 @@
                         <?= ucwords($user['role']) ?>
                     </td>
                     <td>
-                        <?= $user->created->format('F j, Y') ?>
+                        <?= $this->Time->format($user->created, 'MMMM d, Y', false, 'America/New_York'); ?>
                     </td>
                     <td class="actions btn-group">
                         <?= $this->Html->link(

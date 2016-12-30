@@ -151,7 +151,10 @@
                                         <?php if ($community->{$surveyType}['respondents_last_modified_date']): ?>
                                             <li class="dropdown-header">
                                                 Last response:
-                                                <?= $community->{$surveyType}['respondents_last_modified_date']->format('n/j/Y') ?>
+                                                <?php
+                                                    $date = $community->{$surveyType}['respondents_last_modified_date'];
+                                                    echo $this->Time->format($date, 'M/d/YYYY', false, 'America/New_York');
+                                                ?>
                                             </li>
                                         <?php endif; ?>
 

@@ -54,7 +54,7 @@
         <?php foreach ($purchases as $purchase): ?>
             <tr>
                 <td>
-                    <?= $purchase->created->format('n/j/Y') ?>
+                    <?= $this->Time->format($purchase->created, 'M/d/YYYY', false, 'America/New_York'); ?>
                 </td>
                 <td>
                     <?= $purchase->community['name'] ?>
@@ -122,7 +122,7 @@
                                     an unknown user
                                 <?php endif; ?>
                                 on
-                                <?= $purchase->refunded->format('F j, Y') ?>
+                                <?= $this->Time->format($purchase->refunded, 'MMMM d, Y', false, 'America/New_York'); ?>
                             </li>
                         <?php endif; ?>
                         <?php if ($purchase->notes): ?>
