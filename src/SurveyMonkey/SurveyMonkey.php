@@ -88,7 +88,7 @@ class SurveyMonkey
      */
     public function getSurveyList($params)
     {
-        if (false && Configure::read('debug')) {
+        if (Configure::read('debug')) {
             return [[
                 'sm_id' => '52953452',
                 'title' => 'Leader Alignment Data Request (DEBUG MODE)',
