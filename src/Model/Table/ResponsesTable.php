@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Response;
+use App\SurveyMonkey\SurveyMonkey;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -153,7 +154,7 @@ class ResponsesTable extends Table
             $params['start_modified_at'] = date('Y-m-d H:i:s', $timestamp + 1);
         }
 
-        $SurveyMonkey = $this->getSurveyMonkeyObject();
+        $SurveyMonkey = new SurveyMonkey();
         $result = $SurveyMonkey->getResponses((string)$survey->sm_id, $params);
 
         if (! $result) {

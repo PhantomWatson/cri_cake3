@@ -1,6 +1,7 @@
 <?php
 namespace App\SurveyMonkey;
 
+use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
@@ -52,6 +53,88 @@ class SurveyMonkey
     public function getRespondentList($smSurveyId, $params = [])
     {
         return $this->api->getRespondentList($smSurveyId, $params);
+    }
+
+    /**
+     * Returns responses for the specified survey
+     *
+     * @param string $smSurveyId SurveyMonkey (not CRI) survey ID
+     * @param array $params Query parameters
+     * @return mixed
+     */
+    public function getResponses($smSurveyId, $params = [])
+    {
+        return $this->api->getResponses($smSurveyId, $params);
+    }
+
+    /**
+     * Returns a list of collectors for the specified survey
+     *
+     * @param string $smSurveyId SurveyMonkey (not CRI) survey ID
+     * @param array $params Query parameters
+     * @return mixed
+     */
+    public function getCollectorList($smSurveyId, $params = [])
+    {
+        return $this->api->getCollectorList($smSurveyId, $params);
+    }
+
+    /**
+     * Returns details about the specified survey
+     *
+     * @param string $smSurveyId SurveyMonkey (not CRI) survey ID
+     * @return mixed
+     */
+    public function getSurveyDetails($smSurveyId)
+    {
+        return $this->api->getSurveyDetails($smSurveyId);
+    }
+
+    /**
+     * Returns a list of surveys
+     *
+     * @param array $params Query parameters
+     * @return mixed
+     */
+    public function getSurveyList($params)
+    {
+        if (false && Configure::read('debug')) {
+            return [[
+                'sm_id' => '52953452',
+                'title' => 'Leader Alignment Data Request (DEBUG MODE)',
+                'url' => 'https://www.surveymonkey.com/r/R57K8HC'
+            ]];
+        }
+
+        $pageSize = 1000;
+        $page = 1;
+        $retval = [];
+        while (true) {
+            $defaultParams = [
+                'page' => $page,
+                'per_page' => $pageSize
+            ];
+            $params = array_merge($defaultParams, $params);
+            $result = $this->api->getSurveyList($params);
+            if (isset($result['data']['data']) && ! empty($result['data']['data'])) {
+                foreach ($result['data']['data'] as $survey) {
+                    $retval[] = [
+                        'sm_id' => $survey['id'],
+                        'title' => $survey['title'],
+                        'url' => $this->getCachedSMSurveyUrl($survey['id'])
+                    ];
+                }
+                if (count($result['data']['data']) == $pageSize) {
+                    $page++;
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        return $retval;
     }
 
     /**
@@ -188,5 +271,60 @@ class SurveyMonkey
         }
 
         return $retval;
+    }
+
+    /**
+     * Returns a SurveyMonkey survey URL from the cache
+     *
+     * @param string $smId SurveyMonkey survey ID
+     * @return string|null
+     */
+    public function getCachedSMSurveyUrl($smId)
+    {
+        return Cache::read($smId, 'survey_urls');
+    }
+
+    /**
+     * Returns the URL for a SurveyMonkey survey
+     *
+     * @param string $smSurveyId SurveyMonkey-defined survey ID
+     * @return string
+     * @throws NotFoundException
+     */
+    public function getSurveyUrl($smSurveyId = null)
+    {
+        // Validate ID
+        if (! $smSurveyId) {
+            throw new NotFoundException('SurveyMonkey ID not specified');
+        } elseif (! is_numeric($smSurveyId)) {
+            throw new NotFoundException("SurveyMonkey ID '$smSurveyId' is not numeric");
+        }
+
+        // Pull from cache if possible
+        $cached = $this->getCachedSMSurveyUrl($smSurveyId);
+        if ($cached) {
+            return $cached;
+        }
+
+        // Nab URL from SurveyMonkey
+        $params = ['include' => 'type,url'];
+        $collectors = $this->getCollectorList((string)$smSurveyId, $params);
+        $retval = false;
+        if (isset($collectors['data']['data']) && ! empty($collectors['data']['data'])) {
+            foreach ($collectors['data']['data'] as $collector) {
+                if ($collector['type'] == 'weblink') {
+                    $retval = $collector['url'];
+                    break;
+                }
+            }
+        }
+
+        if (empty($retval)) {
+            throw new NotFoundException("SurveyMonkey survey #$smSurveyId URL not found");
+        } else {
+            Cache::write($smSurveyId, $retval, 'survey_urls');
+
+            return $retval;
+        }
     }
 }

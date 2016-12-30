@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Survey;
+use App\SurveyMonkey\SurveyMonkey;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Network\Exception\BadRequestException;
@@ -157,101 +158,6 @@ class SurveysTable extends Table
     }
 
     /**
-     * Returns an array of surveys (arrays with keys 'id' and 'title') currently hosted by SurveyMonkey
-     *
-     * @param array $params Parameters for SurveyMonkey API request
-     * @return array
-     */
-    public function getSMSurveyList($params)
-    {
-        if (Configure::read('debug')) {
-            return [[
-                'sm_id' => '52953452',
-                'title' => 'Leader Alignment Data Request (DEBUG MODE)',
-                'url' => 'https://www.surveymonkey.com/r/R57K8HC'
-            ]];
-        }
-
-        $SurveyMonkey = $this->getSurveyMonkeyObject();
-        $pageSize = 1000;
-        $page = 1;
-        $retval = [];
-        while (true) {
-            $defaultParams = [
-                'page' => $page,
-                'per_page' => $pageSize
-            ];
-            $params = array_merge($defaultParams, $params);
-            $result = $SurveyMonkey->getSurveyList($params);
-            if (isset($result['data']['data']) && ! empty($result['data']['data'])) {
-                foreach ($result['data']['data'] as $survey) {
-                    $retval[] = [
-                        'sm_id' => $survey['id'],
-                        'title' => $survey['title'],
-                        'url' => $this->getCachedSMSurveyUrl($survey['id'])
-                    ];
-                }
-                if (count($result['data']['data']) == $pageSize) {
-                    $page++;
-                } else {
-                    break;
-                }
-            } else {
-                break;
-            }
-        }
-
-        return $retval;
-    }
-
-    /**
-     * Returns the URL for a SurveyMonkey survey
-     *
-     * @param string $smId SurveyMonkey-defined survey ID
-     * @return string
-     * @throws NotFoundException
-     */
-    public function getSMSurveyUrl($smId = null)
-    {
-        // Validate ID
-        if (! $smId) {
-            throw new NotFoundException('SurveyMonkey ID not specified');
-        } elseif (! is_numeric($smId)) {
-            throw new NotFoundException("SurveyMonkey ID '$smId' is not numeric");
-        }
-
-        // Pull from cache if possible
-        $cached = $this->getCachedSMSurveyUrl($smId);
-        if ($cached) {
-            return $cached;
-        }
-
-        // Nab URL from SurveyMonkey
-        $SurveyMonkey = $this->getSurveyMonkeyObject();
-        $params = [
-            'include' => 'type,url'
-        ];
-        $collectors = $SurveyMonkey->getCollectorList((string)$smId, $params);
-        $retval = false;
-        if (isset($collectors['data']['data']) && ! empty($collectors['data']['data'])) {
-            foreach ($collectors['data']['data'] as $collector) {
-                if ($collector['type'] == 'weblink') {
-                    $retval = $collector['url'];
-                    break;
-                }
-            }
-        }
-
-        if (empty($retval)) {
-            throw new NotFoundException("SurveyMonkey survey #$smId URL not found");
-        } else {
-            Cache::write($smId, $retval, 'survey_urls');
-
-            return $retval;
-        }
-    }
-
-    /**
      * Returns the community_id for the first survey that matches $conditions
      * @param array $conditions Query conditions
      * @return int|null
@@ -264,17 +170,6 @@ class SurveysTable extends Table
             ->limit(1);
 
         return $results->isEmpty() ? null : $results->first()->community_id;
-    }
-
-    /**
-     * Returns a SurveyMonkey survey URL from the cache
-     *
-     * @param string $smId SurveyMonkey survey ID
-     * @return string|null
-     */
-    public function getCachedSMSurveyUrl($smId)
-    {
-        return Cache::read($smId, 'survey_urls');
     }
 
     /**
@@ -429,7 +324,7 @@ class SurveysTable extends Table
             ]];
         }
 
-        $SurveyMonkey = $this->getSurveyMonkeyObject();
+        $SurveyMonkey = new SurveyMonkey();
         $result = $SurveyMonkey->getSurveyDetails((string)$smId);
         if (! isset($result['data'])) {
             return [false, 'Could not get questionnaire details from SurveyMonkey. This might be a temporary network error.'];
@@ -507,7 +402,7 @@ class SurveysTable extends Table
      */
     public function getEmailQuestionId($smId)
     {
-        $SurveyMonkey = $this->getSurveyMonkeyObject();
+        $SurveyMonkey = new SurveyMonkey();
         $result = $SurveyMonkey->getSurveyDetails((string)$smId);
         if (! $result['data']) {
             return null;

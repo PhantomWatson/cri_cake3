@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\SurveyMonkey\SurveyMonkey;
 use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
@@ -233,8 +234,8 @@ class SurveysController extends AppController
      */
     public function getSurveyList()
     {
-        $params = $this->request->query;
-        $result = $this->Surveys->getSMSurveyList($params);
+        $SurveyMonkey = new SurveyMonkey();
+        $result = $SurveyMonkey->getSurveyList($this->request->query);
         $this->set([
             'result' => json_encode($result)
         ]);
@@ -250,8 +251,9 @@ class SurveysController extends AppController
      */
     public function getSurveyUrl($smId = null)
     {
+        $SurveyMonkey = new SurveyMonkey();
         $this->set([
-            'result' => $this->Surveys->getSMSurveyUrl($smId)
+            'result' => $SurveyMonkey->getSurveyUrl($smId)
         ]);
         $this->viewBuilder()->layout('json');
         $this->render('api');

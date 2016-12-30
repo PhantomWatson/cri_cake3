@@ -171,7 +171,7 @@ class RespondentsTable extends Table
             return [false, "Questionnaire #$surveyId has not yet been linked to SurveyMonkey", null];
         }
 
-        $SurveyMonkey = $this->getSurveyMonkeyObject();
+        $SurveyMonkey = new SurveyMonkey();
         $page = 1;
         $pageSize = 1000;
         if ($survey->respondents_last_modified_date) {
