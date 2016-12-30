@@ -394,4 +394,117 @@ class SurveyMonkey
 
         return [true, $retval];
     }
+
+    /**
+     * Queries SurveyMonkey to determine the IDs associated with the PWRRR-ranking question and its set of answers
+     *
+     * @param string $smId SurveyMonkey survey ID
+     * @return array First value is true/false for success/failure, second value is status message, third is data array for saving Survey with
+     */
+    public function getPwrrrQuestionAndAnswerIds($smId)
+    {
+        if (Configure::read('debug')) {
+            return [true, "", [
+                'pwrrr_qid' => '663503753',
+                'production_aid' => '7822870969',
+                'wholesale_aid' => '7822870971',
+                'recreation_aid' => '7822870974',
+                'retail_aid' => '7822870976',
+                'residential_aid' => '7822870977',
+                '1_aid' => '7822870979',
+                '2_aid' => '7822870981',
+                '3_aid' => '7822870982',
+                '4_aid' => '7822870984',
+                '5_aid' => '7822870987'
+            ]];
+        }
+
+        $result = $this->getSurveyDetails((string)$smId);
+        if (! isset($result['data'])) {
+            return [false, 'Could not get questionnaire details from SurveyMonkey. This might be a temporary network error.'];
+        }
+
+        /* Find the appropriate question using one of the key phrases that have been
+         * used in various versions of the surveys */
+        $pwrrrQuestion = null;
+        $keyPhrases = [
+            'PWR3 is a tool for thinking about the economic future of your community.',
+            'Each Indiana community uses a combination of 5 activities'
+        ];
+        foreach ($result['data']['pages'] as $page) {
+            foreach ($page['questions'] as $question) {
+                foreach ($keyPhrases as $keyPhrase) {
+                    $heading = $question['headings'][0]['heading'];
+                    if (strpos($heading, $keyPhrase) !== false) {
+                        $pwrrrQuestion = $question;
+                        break 3;
+                    }
+                }
+            }
+        }
+
+        if (! $pwrrrQuestion) {
+            return [false, 'Error: This questionnaire does not contain a PWR<sup>3</sup> ranking question.'];
+        }
+
+        // Create an array to save this data with
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
+        $qnaIdFields = $surveysTable->getQnaIdFieldNames();
+        $nulls = array_fill(0, count($qnaIdFields), null);
+        $data = array_combine($qnaIdFields, $nulls);
+        $data['pwrrr_qid'] = $pwrrrQuestion['id'];
+        foreach ($pwrrrQuestion['answers'] as $choices) {
+            foreach ($choices as $choice) {
+                // For some reason, in_array($answer['text'], range('1', '5')) doesn't work
+                switch ($choice['text']) {
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                        $field = $choice['text'] . '_aid';
+                        $data[$field] = $choice['id'];
+                        continue;
+                }
+                foreach ($sectors as $sector) {
+                    if (stripos($choice['text'], $sector) !== false) {
+                        $field = $sector . '_aid';
+                        $data[$field] = $choice['id'];
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Make sure all fields have values
+        foreach ($data as $field => $value) {
+            if (! $value) {
+                $answer = str_replace('_aid', '', $field);
+
+                return [false, "Error: Could not find the answer ID for the answer '$answer'"];
+            }
+        }
+
+        return [true, '', $data];
+    }
+
+    /**
+     * Takes the results of a SurveyMonkey API call and returns
+     * the most recent modified date in 'Y-m-d H:i:s' format
+     *
+     * @param array $smResponses Result of call to /surveys/{id}/responses/bulk
+     * @return false|string
+     */
+    public function getMostRecentModifiedDate($smResponses)
+    {
+        $dates = [];
+        foreach ($smResponses as $smResponseId => $response) {
+            $dates[] = $response['date_modified'];
+        }
+        $mostRecentDate = max($dates);
+        $timestamp = strtotime($mostRecentDate);
+
+        return date('Y-m-d H:i:s', $timestamp);
+    }
 }

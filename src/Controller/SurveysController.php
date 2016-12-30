@@ -169,7 +169,7 @@ class SurveysController extends AppController
              * (if this set of responses contains errors, advancing the last_modified_date
              * would prevent those responses from being imported after those errors are corrected) */
             if (empty($errorMsgs)) {
-                $mostRecentDate = $this->Surveys->getMostRecentModifiedDate($responses);
+                $mostRecentDate = $SurveyMonkey->getMostRecentModifiedDate($responses);
                 $survey->respondents_last_modified_date = new Time($mostRecentDate);
             }
             $survey->import_errors = $errorMsgs ? serialize($errorMsgs) : null;
@@ -295,7 +295,8 @@ class SurveysController extends AppController
      */
     public function getQnaIds($smId)
     {
-        $result = $this->Surveys->getPwrrrQuestionAndAnswerIds($smId);
+        $SurveyMonkey = new SurveyMonkey();
+        $result = $SurveyMonkey->getPwrrrQuestionAndAnswerIds($smId);
         $this->set('result', json_encode($result));
         $this->viewBuilder()->layout('json');
         $this->render('api');
