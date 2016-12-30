@@ -201,7 +201,7 @@ class SurveysController extends AppController
         }
         if ($importedCount) {
             $event = new Event('Model.Response.afterImport', $this, ['meta' => [
-                'communityId' => $survey->communityId,
+                'communityId' => $survey->community_id,
                 'surveyId' => $survey->id,
                 'surveyType' => $survey->type,
                 'responseCount' => $importedCount
