@@ -250,7 +250,7 @@ class ResponsesController extends AppController
         $surveysTable = TableRegistry::get('Surveys');
         $survey = $surveysTable->get($respondent->survey_id);
         try {
-            $fullResponse = $SurveyMonkey->getFullResponseFromSurveyMonkey($survey->sm_id, $smRespondentId);
+            $fullResponse = $SurveyMonkey->getFullResponse($survey->sm_id, $smRespondentId);
             $this->set('response', $fullResponse);
             $this->set('_serialize', ['response']);
         } catch (NotFoundException $e) {

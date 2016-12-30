@@ -114,7 +114,7 @@ class SurveyMonkey
      * @return array
      * @throws NotFoundException
      */
-    public function getFullResponseFromSurveyMonkey($smSurveyId, $smRespondentId)
+    public function getFullResponse($smSurveyId, $smRespondentId)
     {
         $result = $this->api->getResponse((string)$smSurveyId, (string)$smRespondentId);
         if (! $result['success'] || empty($result['data'])) {
