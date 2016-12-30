@@ -37,7 +37,6 @@ class RespondentsTable extends Table
         $this->hasMany('Responses', [
             'foreignKey' => 'respondent_id'
         ]);
-        $this->addBehavior('SurveyMonkey');
     }
 
     /**
