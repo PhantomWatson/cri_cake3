@@ -1,15 +1,10 @@
 <?php
 namespace App\Model\Table;
 
-use App\Model\Entity\Response;
-use App\SurveyMonkey\SurveyMonkey;
-use Cake\Network\Exception\NotFoundException;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
 /**

@@ -2,10 +2,6 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Respondent;
-use App\SurveyMonkey\SurveyMonkey;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\NotFoundException;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;

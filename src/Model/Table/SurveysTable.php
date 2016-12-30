@@ -1,14 +1,9 @@
 <?php
 namespace App\Model\Table;
 
-use App\Model\Entity\Survey;
 use App\SurveyMonkey\SurveyMonkey;
-use Cake\Cache\Cache;
 use Cake\Core\Configure;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
