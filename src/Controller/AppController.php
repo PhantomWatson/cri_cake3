@@ -155,7 +155,7 @@ class AppController extends Controller
     public function beforeRender(\Cake\Event\Event $event)
     {
         $this->setLayoutVariables();
-        if ($this->request->prefix == 'admin') {
+        if ($this->Auth->user('role') == 'admin') {
             $this->prepareAdminHeader();
         }
     }

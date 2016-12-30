@@ -5,7 +5,7 @@
     use Cake\Core\Configure;
     $script = Configure::read('debug') ? 'script.js' : 'script.min.js';
     $this->Html->script($script, ['block' => 'scriptBottom']);
-    if ($this->request->prefix == 'admin') {
+    if ($authUser['role'] == 'admin') {
         $this->element('script', ['script' => 'admin']);
     }
 ?>
