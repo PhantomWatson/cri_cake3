@@ -516,8 +516,8 @@ class RespondentsTable extends Table
         }
 
         foreach ($result['data']['data'] as $returnedRespondent) {
-            $responseEmail = $this->getEmailFromSmResponse($returnedRespondent);
-            if ($responseEmail == $email) {
+            $respondent = $responsesTable->extractRespondentInfo($returnedRespondent);
+            if ($respondent['email'] == $email) {
                 return $returnedRespondent['id'];
             }
         }
