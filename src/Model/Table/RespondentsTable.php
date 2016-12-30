@@ -214,10 +214,6 @@ class RespondentsTable extends Table
             // If there may be more respondents on additional pages of results, continue
             if (count($respondents) == $pageSize) {
                 $page++;
-
-                // The SurveyMonkey API limits us to 2 API requests per second.
-                // For extra safety, we'll delay for one second before the second API call.
-                sleep(1);
             } else {
                 break;
             }
