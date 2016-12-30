@@ -395,39 +395,6 @@ class SurveysTable extends Table
     }
 
     /**
-     * Gets the SurveyMonkey question ID for the respondent's email address
-     *
-     * @param string $smId SurveyMonkey survey ID
-     * @return int|null
-     */
-    public function getEmailQuestionId($smId)
-    {
-        $SurveyMonkey = new SurveyMonkey();
-        $result = $SurveyMonkey->getSurveyDetails((string)$smId);
-        if (! $result['data']) {
-            return null;
-        }
-
-        $pages = $result['data']['pages'];
-        foreach ($pages as $page) {
-            $questions = $page['questions'];
-            foreach ($questions as $question) {
-                $answers = isset($question['answers']) ? $question['answers'] : [];
-                foreach ($answers as $answer) {
-                    $rows = isset($answer['rows']) ? $answer['rows'] : $answer;
-                    foreach ($rows as $row) {
-                        if ($row['text'] == 'Email') {
-                            return $row['id'];
-                        }
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Sets the SurveyMonkey Q&A IDs associated with the PWRRR-ranking question and its set of answers
      *
      * @param string $smId SurveyMonkey survey ID
