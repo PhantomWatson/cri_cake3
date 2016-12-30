@@ -56,7 +56,7 @@
                     <?= $this->ActivityRecords->user($activityRecord) ?>
                 </td>
                 <td>
-                    <?= $activityRecord->created->format('M j, Y - g:ia') ?>
+                    <?= $this->Time->format($activityRecord->created, 'MMM d Y, h:mma', false, 'America/New_York') ?>
                 </td>
             </tr>
             <tr class="details">
