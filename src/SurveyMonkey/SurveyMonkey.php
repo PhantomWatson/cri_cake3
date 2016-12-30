@@ -137,7 +137,8 @@ class SurveyMonkey
      */
     public function getSmRespondentId($respondentId)
     {
-        $respondent = $this->find('all')
+        $respondentsTable = TableRegistry::get('Respondents');
+        $respondent = $respondentsTable->find('all')
             ->select(['email', 'survey_id'])
             ->where(['id' => $respondentId])
             ->first();
@@ -368,7 +369,7 @@ class SurveyMonkey
             return [false, "Questionnaire #$surveyId not found"];
         }
 
-        if (! $survey->sm_id) {
+        if (!$survey->sm_id) {
             return [false, "Questionnaire #$surveyId has not yet been linked to SurveyMonkey"];
         }
 
@@ -381,7 +382,7 @@ class SurveyMonkey
 
         $result = $this->getResponses((string)$survey->sm_id, $params);
 
-        if (! $result) {
+        if (!$result) {
             return [true, 'No new respondents'];
         }
 
