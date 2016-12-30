@@ -513,11 +513,17 @@ class SurveysTable extends Table
             return null;
         }
 
-        foreach ($result['data']['pages'] as $page) {
-            foreach ($page['questions'] as $question) {
-                foreach ($question['answers'] as $answer) {
-                    if ($answer['text'] == 'Email') {
-                        return $answer['answer_id'];
+        $pages = $result['data']['pages'];
+        foreach ($pages as $page) {
+            $questions = $page['questions'];
+            foreach ($questions as $question) {
+                $answers = isset($question['answers']) ? $question['answers'] : [];
+                foreach ($answers as $answer) {
+                    $rows = isset($answer['rows']) ? $answer['rows'] : $answer;
+                    foreach ($rows as $row) {
+                        if ($row['text'] == 'Email') {
+                            return $row['id'];
+                        }
                     }
                 }
             }
