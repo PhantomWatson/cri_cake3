@@ -129,48 +129,6 @@ class ResponsesTable extends Table
     }
 
     /**
-     * Retrieves new SurveyMonkey responses
-     *
-     * @param int $surveyId Survey ID
-     * @return array [success / fail, responses / error message]
-     */
-    public function getNewFromSurveyMonkey($surveyId)
-    {
-        $surveysTable = TableRegistry::get('Surveys');
-        try {
-            $survey = $surveysTable->get($surveyId);
-        } catch (RecordNotFoundException $e) {
-            return [false, "Questionnaire #$surveyId not found"];
-        }
-
-        if (! $survey->sm_id) {
-            return [false, "Questionnaire #$surveyId has not yet been linked to SurveyMonkey"];
-        }
-
-        $params = ['status' => 'completed'];
-        if ($survey->respondents_last_modified_date) {
-            $lastResponseDate = $survey->respondents_last_modified_date->format('Y-m-d H:i:s');
-            $timestamp = strtotime($lastResponseDate);
-            $params['start_modified_at'] = date('Y-m-d H:i:s', $timestamp + 1);
-        }
-
-        $SurveyMonkey = new SurveyMonkey();
-        $result = $SurveyMonkey->getResponses((string)$survey->sm_id, $params);
-
-        if (! $result) {
-            return [true, 'No new respondents'];
-        }
-
-        $retval = [];
-        foreach ($result as $response) {
-            $smRespondentId = $response['id'];
-            $retval[$smRespondentId] = $response;
-        }
-
-        return [true, $retval];
-    }
-
-    /**
      * Returns whether or not the given response has already been recorded
      *
      * @param int $respondentId Respondent ID
@@ -194,42 +152,6 @@ class ResponsesTable extends Table
             ->count();
 
         return $count > 0;
-    }
-
-    /**
-     * Returns an array with values for 'name' and 'email'
-     *
-     * @param array $response Response array
-     * @return array
-     */
-    public function extractRespondentInfo($response)
-    {
-        $retval = [
-            'name' => '',
-            'email' => ''
-        ];
-
-        // Assume the first field contains the respondent's name
-        if (isset($response['pages'][0]['questions'][0]['answers'][0]['text'])) {
-            $retval['name'] = $response['pages'][0]['questions'][0]['answers'][0]['text'];
-        }
-
-        // Search for the first response that's a valid email address
-        foreach ($response['pages'][0]['questions'] as $section) {
-            foreach ($section['answers'] as $answer) {
-                if (! isset($answer['text'])) {
-                    continue;
-                }
-                $answerText = trim($answer['text']);
-                if (Validation::email($answerText)) {
-                    $retval['email'] = strtolower($answerText);
-
-                    return $retval;
-                }
-            }
-        }
-
-        return $retval;
     }
 
     /**

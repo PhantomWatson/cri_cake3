@@ -48,7 +48,8 @@ class SurveysController extends AppController
 
         // Collect responses
         $responsesTable = TableRegistry::get('Responses');
-        list($success, $responses) = $responsesTable->getNewFromSurveyMonkey($surveyId);
+        $SurveyMonkey = new SurveyMonkey();
+        list($success, $responses) = $SurveyMonkey->getNewResponses($surveyId);
         if (! $success) {
             return $this->renderImportError($responses);
         }
@@ -59,7 +60,7 @@ class SurveysController extends AppController
         $errorMsgs = [];
         if (is_array($responses)) {
             foreach ($responses as $smRespondentId => $response) {
-                $respondent = $responsesTable->extractRespondentInfo($response);
+                $respondent = $SurveyMonkey->extractRespondentInfo($response);
                 $name = $respondent['name'] ?: '(no name)';
                 $respondentRecord = $respondentsTable->getMatching($surveyId, $respondent, $smRespondentId);
                 $serializedResponse = base64_encode(serialize($response));

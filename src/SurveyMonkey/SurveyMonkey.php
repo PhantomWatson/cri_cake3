@@ -3,9 +3,11 @@ namespace App\SurveyMonkey;
 
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
+use Cake\Validation\Validation;
 
 /**
  * Utility class for using the SurveyMonkey API
@@ -157,8 +159,7 @@ class SurveyMonkey
             ->first();
         $smSurveyId = $survey->sm_id;
 
-        $SurveyMonkey = new SurveyMonkey();
-        $result = $SurveyMonkey->getRespondentList((string)$smSurveyId, [
+        $result = $this->getRespondentList((string)$smSurveyId, [
             'start_modified_at' => $responseDate
         ]);
         if (! $result['success']) {
@@ -168,7 +169,7 @@ class SurveyMonkey
         }
 
         foreach ($result['data']['data'] as $returnedRespondent) {
-            $respondent = $responsesTable->extractRespondentInfo($returnedRespondent);
+            $respondent = $this->extractRespondentInfo($returnedRespondent);
             if ($respondent['email'] == $email) {
                 return $returnedRespondent['id'];
             }
@@ -314,5 +315,82 @@ class SurveyMonkey
 
             return $retval;
         }
+    }
+
+    /**
+     * Returns an array with values for 'name' and 'email'
+     *
+     * @param array $response Response array
+     * @return array
+     */
+    public function extractRespondentInfo($response)
+    {
+        $retval = [
+            'name' => '',
+            'email' => ''
+        ];
+
+        // Assume the first field contains the respondent's name
+        if (isset($response['pages'][0]['questions'][0]['answers'][0]['text'])) {
+            $retval['name'] = $response['pages'][0]['questions'][0]['answers'][0]['text'];
+        }
+
+        // Search for the first response that's a valid email address
+        foreach ($response['pages'][0]['questions'] as $section) {
+            foreach ($section['answers'] as $answer) {
+                if (! isset($answer['text'])) {
+                    continue;
+                }
+                $answerText = trim($answer['text']);
+                if (Validation::email($answerText)) {
+                    $retval['email'] = strtolower($answerText);
+
+                    return $retval;
+                }
+            }
+        }
+
+        return $retval;
+    }
+
+    /**
+     * Retrieves new SurveyMonkey responses
+     *
+     * @param int $surveyId Survey ID
+     * @return array [success / fail, responses / error message]
+     */
+    public function getNewResponses($surveyId)
+    {
+        $surveysTable = TableRegistry::get('Surveys');
+        try {
+            $survey = $surveysTable->get($surveyId);
+        } catch (RecordNotFoundException $e) {
+            return [false, "Questionnaire #$surveyId not found"];
+        }
+
+        if (! $survey->sm_id) {
+            return [false, "Questionnaire #$surveyId has not yet been linked to SurveyMonkey"];
+        }
+
+        $params = ['status' => 'completed'];
+        if ($survey->respondents_last_modified_date) {
+            $lastResponseDate = $survey->respondents_last_modified_date->format('Y-m-d H:i:s');
+            $timestamp = strtotime($lastResponseDate);
+            $params['start_modified_at'] = date('Y-m-d H:i:s', $timestamp + 1);
+        }
+
+        $result = $this->getResponses((string)$survey->sm_id, $params);
+
+        if (! $result) {
+            return [true, 'No new respondents'];
+        }
+
+        $retval = [];
+        foreach ($result as $response) {
+            $smRespondentId = $response['id'];
+            $retval[$smRespondentId] = $response;
+        }
+
+        return [true, $retval];
     }
 }
