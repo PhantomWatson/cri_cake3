@@ -149,7 +149,8 @@ class ResponsesTable extends Table
         $params = ['status' => 'completed'];
         if ($survey->respondents_last_modified_date) {
             $lastResponseDate = $survey->respondents_last_modified_date->format('Y-m-d H:i:s');
-            $params['start_modified_at'] = $this->advanceOneSecond($lastResponseDate);
+            $timestamp = strtotime($lastResponseDate);
+            $params['start_modified_at'] = date('Y-m-d H:i:s', $timestamp + 1);
         }
 
         $SurveyMonkey = $this->getSurveyMonkeyObject();
