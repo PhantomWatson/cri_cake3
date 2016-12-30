@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\SurveyMonkey\SurveyMonkey;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
@@ -226,13 +227,14 @@ class ResponsesController extends AppController
     {
         $respondentsTable = TableRegistry::get('Respondents');
         $respondent = $respondentsTable->get($respondentId);
+        $SurveyMonkey = new SurveyMonkey();
 
         if ($respondent->sm_respondent_id) {
             $smRespondentId = $respondent->sm_respondent_id;
 
         // If sm_respondent_id is not set, retrieve it
         } else {
-            $smRespondentId = $respondentsTable->getSmRespondentId($respondentId);
+            $smRespondentId = $SurveyMonkey->getSmRespondentId($respondentId);
 
             // And save it in this respondent's DB record
             $respondent = $respondentsTable->patchEntity($respondent, [
@@ -248,7 +250,7 @@ class ResponsesController extends AppController
         $surveysTable = TableRegistry::get('Surveys');
         $survey = $surveysTable->get($respondent->survey_id);
         try {
-            $fullResponse = $this->Responses->getFullResponseFromSurveyMonkey($survey->sm_id, $smRespondentId);
+            $fullResponse = $SurveyMonkey->getFullResponseFromSurveyMonkey($survey->sm_id, $smRespondentId);
             $this->set('response', $fullResponse);
             $this->set('_serialize', ['response']);
         } catch (NotFoundException $e) {
