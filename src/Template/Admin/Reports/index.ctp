@@ -231,6 +231,17 @@
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>
+                                <p>
+                                    <?= $this->Html->link(
+                                        'View all activity associated with ' . $community['name'],
+                                        [
+                                            'prefix' => 'admin',
+                                            'controller' => 'ActivityRecords',
+                                            'action' => 'community',
+                                            $communityId
+                                        ]
+                                    ) ?>
+                                </p>
                             </div>
                         <?php endif; ?>
                     </td>

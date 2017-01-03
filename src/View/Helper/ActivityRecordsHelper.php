@@ -174,13 +174,25 @@ class ActivityRecordsHelper extends Helper
     {
         // Pull community name from the database
         if ($activityRecord->has('community')) {
-            return $activityRecord->community->name;
-        }
+            $name = $activityRecord->community->name;
 
         // Use stored community name in case community record is no longer in the database
-        $meta = unserialize($activityRecord->meta);
-        if (isset($meta['communityName'])) {
-            return $meta['communityName'];
+        } else {
+            $meta = unserialize($activityRecord->meta);
+            $name = isset($meta['communityName']) ? $meta['communityName'] : null;
+        }
+
+        if ($name) {
+            return $this->Html->link(
+                $name,
+                [
+                    'prefix' => 'admin',
+                    'controller' => 'ActivityRecords',
+                    'action' => 'community',
+                    $activityRecord->community_id
+                ],
+                ['title' => 'View all activity associated with this community']
+            );
         }
 
         return null;

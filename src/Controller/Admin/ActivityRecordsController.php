@@ -2,6 +2,8 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\ORM\TableRegistry;
 
 /**
  * ActivityRecords Controller
@@ -12,13 +14,23 @@ class ActivityRecordsController extends AppController
 {
 
     /**
+     * Initialization hook method.
+     *
+     * @return void
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        $this->viewBuilder()->helpers(['ActivityRecords']);
+    }
+
+    /**
      * Index method
      *
      * @return void
      */
     public function index()
     {
-        $this->viewBuilder()->helpers(['ActivityRecords']);
         $this->paginate = [
             'contain' => ['Users', 'Communities', 'Surveys'],
             'order' => ['created' => 'DESC']
@@ -27,7 +39,6 @@ class ActivityRecordsController extends AppController
             $this->paginate['conditions'] = ['dummy' => 0];
         }
 
-        $activityRecords = $this->paginate($this->ActivityRecords);
         $trackedEvents = [
             'Community added or deleted',
             'User account added or deleted',
@@ -43,9 +54,45 @@ class ActivityRecordsController extends AppController
             'Reminders sent'
         ];
         $this->set([
-            'activityRecords' => $activityRecords,
+            'activityRecords' => $this->paginate($this->ActivityRecords),
             'titleForLayout' => 'Activity Log',
             'trackedEvents' => $trackedEvents
+        ]);
+        $this->set('_serialize', ['activityRecords']);
+    }
+
+    /**
+     * Shows activity records associated with the specified community
+     *
+     * @param int $communityId Community ID
+     * @return void
+     */
+    public function community($communityId)
+    {
+        $this->paginate = [
+            'contain' => ['Users', 'Communities', 'Surveys'],
+            'order' => ['created' => 'DESC'],
+            'conditions' => ['ActivityRecords.community_id' => $communityId]
+        ];
+        $communitiesTable = TableRegistry::get('Communities');
+        $communityName = null;
+        $activityRecords = $this->paginate($this->ActivityRecords);
+        try {
+            $community = $communitiesTable->get($communityId);
+            $communityName = $community->name;
+        } catch (RecordNotFoundException $e) {
+            foreach ($activityRecords as $record) {
+                if (strpos($record->meta, 'communityName') !== false) {
+                    $meta = unserialize($record->meta);
+                    $communityName = $meta['communityName'];
+                    break;
+                }
+            }
+        }
+
+        $this->set([
+            'activityRecords' => $activityRecords,
+            'titleForLayout' => 'Activity Log: ' . ($communityName ?: "Community #$communityId")
         ]);
         $this->set('_serialize', ['activityRecords']);
     }
