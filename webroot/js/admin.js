@@ -945,10 +945,18 @@ var adminReport = {
         $('#notes-modal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             var communityId = button.data('community-id');
-            var note = adminReport.notes[communityId];
             var communityName = button.data('community-name');
-            $(this).find('.modal-title').html(communityName + ' Notes');
-            $(this).find('.modal-body').html(note);
+            var title = null;
+            var body = null;
+            if (button.hasClass('notes')) {
+                title = communityName + ' - Notes';
+                body = adminReport.notes[communityId];
+            } else if (button.hasClass('recent-activity')) {
+                title = communityName + ' - Recent Activity';
+                body = button.siblings('div.recent-activity').html();
+            }
+            $(this).find('.modal-title').html(title);
+            $(this).find('.modal-body').html(body);
         });
     }
 };
@@ -1003,7 +1011,6 @@ var activityRecords = {
             var button = $('<button class="btn btn-link"></button>');
             button.click(function (event) {
                 event.preventDefault();
-                console.log('foo');
                 details.slideToggle();
             });
             details

@@ -1340,6 +1340,13 @@ ul.ui-autocomplete {
     tbody {
         td:first-child {
             border-right: 1px solid @table-border-color;
+
+            button {
+                border: 0;
+                font-size: 100%;
+                line-height: 100%;
+                padding: 0 0 0 5px;
+            }
         }
     }
     thead {
@@ -1354,11 +1361,8 @@ ul.ui-autocomplete {
             }
         }
     }
-    button.notes {
-        border: 0;
-        font-size: 100%;
-        line-height: 100%;
-        padding: 0 0 0 10px;
+    .hidden-modal-content {
+        display: none;
     }
 }
 html.report-layout,

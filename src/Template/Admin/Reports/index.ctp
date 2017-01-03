@@ -114,8 +114,12 @@
         The admin report can be viewed in your browser below or downloaded as a spreadsheet. Below, click on each survey
         type to expand and see more details, and click on the notes icon
         (<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>) to view notes related to a community.
-        <strong>Communities in bold</strong> have had activity in the last 30 days.
-        <br />
+    </p>
+    <p>
+        <strong>Communities in bold</strong> have had activity in the last 30 days. Click on the calendar icon
+        (<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>) to view details.
+    </p>
+    <p>
         <?= $this->Html->link(
             $icon . ' Download Admin Report',
             ['action' => 'admin'],
@@ -175,12 +179,17 @@
         </thead>
         <tbody>
             <?php foreach ($report as $communityId => $community): ?>
-                <tr class="<?= $community['recentUpdates'] ? 'active' : null ?>">
+                <tr class="<?= $community['recentActivity'] ? 'active' : null ?>">
                     <td>
                         <?= $community['name'] ?>
                         <?php if ($community['notes']): ?>
                             <button type="button" class="btn btn-link notes" data-toggle="modal" data-target="#notes-modal" title="View notes" data-community-id="<?= $communityId ?>" data-community-name="<?= $community['name'] ?>">
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                            </button>
+                        <?php endif; ?>
+                        <?php if ($community['recentActivity']): ?>
+                            <button type="button" class="btn btn-link recent-activity" data-toggle="modal" data-target="#notes-modal" title="View recent activity" data-community-id="<?= $communityId ?>" data-community-name="<?= $community['name'] ?>">
+                                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
                             </button>
                         <?php endif; ?>
                         <br />
@@ -191,6 +200,39 @@
                         <span class="area-details">
                             <?= $community['parentAreaFips'] ?>
                         </span>
+
+                        <?php if ($community['recentActivity']): ?>
+                            <?php
+                                $community['recentActivity'] = array_slice($community['recentActivity'], 0, 5);
+                                $count = count($community['recentActivity']);
+                            ?>
+                            <div class="recent-activity hidden-modal-content" data-community-id="<?= $communityId ?>">
+                                <p>
+                                    <?php if ($count > 1): ?>
+                                        The <?= $count ?> most recent updates
+                                    <?php elseif ($count == 1): ?>
+                                        The only update
+                                    <?php endif; ?>
+                                    to <?= $community['name'] ?> in the last 30 days:
+                                </p>
+                                <ul>
+                                    <?php foreach ($community['recentActivity'] as $activityRecord): ?>
+                                        <li>
+                                            <strong>
+                                                <?= $this->Time->format(
+                                                    $activityRecord->created,
+                                                    'MMM d Y, h:mma',
+                                                    false,
+                                                    'America/New_York'
+                                                ) ?>
+                                            </strong>
+                                            -
+                                            <?= $this->ActivityRecords->event($activityRecord) ?>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        <?php endif; ?>
                     </td>
 
                     <?php $survey = $community['official_survey']; ?>

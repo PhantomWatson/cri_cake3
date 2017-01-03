@@ -41,9 +41,11 @@ class Reports
                     return $q->select(['id', 'alignment']);
                 },
                 'ActivityRecords' => function ($q) use ($dateThreshold) {
-                    return $q->where(function ($exp, $q) use ($dateThreshold) {
-                        return $exp->gte('ActivityRecords.created', $dateThreshold);
-                    });
+                    return $q
+                        ->where(function ($exp, $q) use ($dateThreshold) {
+                            return $exp->gte('ActivityRecords.created', $dateThreshold);
+                        })
+                        ->order(['ActivityRecords.created' => 'DESC']);
                 },
             ])
             ->order(['Communities.name' => 'ASC']);
@@ -83,7 +85,7 @@ class Reports
                 'parentAreaFips' => $community->parent_area->fips,
                 'presentationsGiven' => $presentationsGiven,
                 'notes' => $community->notes,
-                'recentUpdates' => ! empty($community->activity_records)
+                'recentActivity' => $community->activity_records
             ];
 
             // Collect information about survey responses and alignment
