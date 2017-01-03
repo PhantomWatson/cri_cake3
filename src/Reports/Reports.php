@@ -1,6 +1,7 @@
 <?php
 namespace App\Reports;
 
+use Cake\Chronos\Date;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -17,6 +18,7 @@ class Reports
         $report = [];
 
         $communitiesTable = TableRegistry::get('Communities');
+        $dateThreshold = new Date('-30 days');
         $communities = $communitiesTable->find('all')
             ->select([
                 'id',
@@ -37,7 +39,12 @@ class Reports
                 },
                 'OrganizationSurvey' => function ($q) {
                     return $q->select(['id', 'alignment']);
-                }
+                },
+                'ActivityRecords' => function ($q) use ($dateThreshold) {
+                    return $q->where(function ($exp, $q) use ($dateThreshold) {
+                        return $exp->gte('ActivityRecords.created', $dateThreshold);
+                    });
+                },
             ])
             ->order(['Communities.name' => 'ASC']);
 
@@ -75,7 +82,8 @@ class Reports
                 'parentArea' => $community->parent_area->name,
                 'parentAreaFips' => $community->parent_area->fips,
                 'presentationsGiven' => $presentationsGiven,
-                'notes' => $community->notes
+                'notes' => $community->notes,
+                'recentUpdates' => ! empty($community->activity_records)
             ];
 
             // Collect information about survey responses and alignment

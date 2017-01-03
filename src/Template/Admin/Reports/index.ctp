@@ -114,6 +114,7 @@
         The admin report can be viewed in your browser below or downloaded as a spreadsheet. Below, click on each survey
         type to expand and see more details, and click on the notes icon
         (<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>) to view notes related to a community.
+        <strong>Communities in bold</strong> have had activity in the last 30 days.
         <br />
         <?= $this->Html->link(
             $icon . ' Download Admin Report',
@@ -174,7 +175,7 @@
         </thead>
         <tbody>
             <?php foreach ($report as $communityId => $community): ?>
-                <tr>
+                <tr class="<?= $community['recentUpdates'] ? 'active' : null ?>">
                     <td>
                         <?= $community['name'] ?>
                         <?php if ($community['notes']): ?>

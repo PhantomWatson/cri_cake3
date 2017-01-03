@@ -77,6 +77,9 @@ class CommunitiesTable extends Table
             'targetForeignKey' => 'client_id',
             'saveStrategy' => 'replace'
         ]);
+        $this->hasMany('ActivityRecords', [
+            'foreignKey' => 'community_id'
+        ]);
     }
 
     /**
