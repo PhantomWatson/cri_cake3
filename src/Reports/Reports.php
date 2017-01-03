@@ -435,6 +435,15 @@ class Reports
                     );
                 }
             }
+
+            // Embolden rows if communities have had recent activity
+            if ($community['recentActivity']) {
+                $objPHPExcel->getActiveSheet()
+                    ->getStyle("A{$currentRow}:{$lastCol}{$currentRow}")
+                    ->applyFromArray([
+                        'font' => ['bold' => true]
+                    ]);
+            }
         }
 
         // Style data cells
