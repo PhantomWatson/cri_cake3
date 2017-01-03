@@ -75,6 +75,20 @@
 
 <?= $this->element('pagination') ?>
 
+<p>
+    <?php if ($this->request->query('show-dummy')): ?>
+        <?= $this->Html->link(
+            'Hide activities for dummy communities',
+            ['?' => ['show-dummy' => 0]]
+        ) ?>
+    <?php else: ?>
+        <?= $this->Html->link(
+            'Show activities for dummy communities',
+            ['?' => ['show-dummy' => 1]]
+        ) ?>
+    <?php endif; ?>
+</p>
+
 <?php $this->append('buffered'); ?>
     activityRecords.init();
 <?php $this->end(); ?>

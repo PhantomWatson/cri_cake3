@@ -23,6 +23,10 @@ class ActivityRecordsController extends AppController
             'contain' => ['Users', 'Communities', 'Surveys'],
             'order' => ['created' => 'DESC']
         ];
+        if (! $this->request->query('show-dummy')) {
+            $this->paginate['conditions'] = ['dummy' => 0];
+        }
+
         $activityRecords = $this->paginate($this->ActivityRecords);
         $trackedEvents = [
             'Community added or deleted',
