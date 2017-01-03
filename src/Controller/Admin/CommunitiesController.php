@@ -304,6 +304,7 @@ class CommunitiesController extends AppController
 
             // Dispatch event
             $event = new Event('Model.Community.afterDelete', $this, ['meta' => [
+                'communityId' => $communityId,
                 'communityName' => $community->name
             ]]);
             $this->eventManager()->dispatch($event);
