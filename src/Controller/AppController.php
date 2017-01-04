@@ -340,7 +340,12 @@ class AppController extends Controller
             'Clients' => Router::url($route + ['action' => 'clients']) . '/{community-id}',
             'Client Home' => Router::url($route + ['action' => 'clienthome']) . '/{community-id}',
             'Presentations' => Router::url($route + ['action' => 'presentations']) . '/{community-id}',
-            'Notes' => Router::url($route + ['action' => 'notes']) . '/{community-id}'
+            'Notes' => Router::url($route + ['action' => 'notes']) . '/{community-id}',
+            'Activity' => Router::url([
+                'prefix' => 'admin',
+                'controller' => 'ActivityRecords',
+                'action' => 'community'
+            ]) . '/{community-id}'
         ];
 
         $surveyPages = [

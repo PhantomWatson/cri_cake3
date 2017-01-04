@@ -92,6 +92,7 @@ class ActivityRecordsController extends AppController
 
         $this->set([
             'activityRecords' => $activityRecords,
+            'communityId' => $communityId,
             'titleForLayout' => 'Activity Log: ' . ($communityName ?: "Community #$communityId")
         ]);
         $this->set('_serialize', ['activityRecords']);

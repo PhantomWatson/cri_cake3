@@ -345,6 +345,18 @@
                                 </li>
                                 <li>
                                     <?= $this->Html->link(
+                                        '<span class="glyphicon glyphicon-list" aria-hidden="true"></span> Activity',
+                                        [
+                                            'prefix' => 'admin',
+                                            'controller' => 'ActivityRecords',
+                                            'action' => 'community',
+                                            $community->id
+                                        ],
+                                        ['escape' => false]
+                                    ) ?>
+                                </li>
+                                <li>
+                                    <?= $this->Html->link(
                                         '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit Community',
                                         [
                                             'prefix' => 'admin',
