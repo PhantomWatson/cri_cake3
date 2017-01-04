@@ -43,8 +43,8 @@
         (<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>) to view notes related to a community.
     </p>
     <p>
-        <strong>Communities in bold</strong> have had activity in the last 30 days. Click on the calendar icon
-        (<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>) to view details.
+        <strong>Communities in bold</strong> have had activity in the last 30 days. Click on the activities icon
+        (<span class="glyphicon glyphicon-list" aria-hidden="true"></span>) to view details.
     </p>
 
     <table class="table" id="report">
@@ -105,7 +105,7 @@
                         <?php endif; ?>
                         <?php if ($community['recentActivity']): ?>
                             <button type="button" class="btn btn-link recent-activity" data-toggle="modal" data-target="#notes-modal" title="View recent activity" data-community-id="<?= $communityId ?>" data-community-name="<?= $community['name'] ?>">
-                                <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                                <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                             </button>
                         <?php endif; ?>
                         <br />
