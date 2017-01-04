@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Community;
+use Cake\Chronos\Date;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -593,6 +594,50 @@ class CommunitiesTable extends Table
                 'Communities.score',
                 'Communities.created'
             ]);
+
+        return $query;
+    }
+
+    /**
+     * A finder for /admin/reports/index
+     *
+     * @param \Cake\ORM\Query $query Query
+     * @param array $options Options array
+     * @return \Cake\ORM\Query
+     */
+    public function findForReport(\Cake\ORM\Query $query, array $options)
+    {
+        $dateThreshold = new Date('-30 days');
+        $query
+            ->select([
+                'id',
+                'name',
+                'score',
+                'presentation_a',
+                'presentation_b',
+                'presentation_c',
+                'notes'
+            ])
+            ->where(['dummy' => 0])
+            ->contain([
+                'ParentAreas' => function ($q) {
+                    return $q->select(['id', 'name', 'fips']);
+                },
+                'OfficialSurvey' => function ($q) {
+                    return $q->select(['id', 'alignment']);
+                },
+                'OrganizationSurvey' => function ($q) {
+                    return $q->select(['id', 'alignment']);
+                },
+                'ActivityRecords' => function ($q) use ($dateThreshold) {
+                    return $q
+                        ->where(function ($exp, $q) use ($dateThreshold) {
+                            return $exp->gte('ActivityRecords.created', $dateThreshold);
+                        })
+                        ->order(['ActivityRecords.created' => 'DESC']);
+                },
+            ])
+            ->order(['Communities.name' => 'ASC']);
 
         return $query;
     }

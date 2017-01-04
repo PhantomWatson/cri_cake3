@@ -173,7 +173,7 @@
                         <?= $survey['responseRate'] ?>
                     </td>
                     <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['alignment']) ?>>
-                        <?= $survey['alignment'] ? $survey['alignment'] : 'Not calculated' ?>
+                        <?= $survey['alignment'] ?>
                     </td>
                     <?php foreach ($sectors as $sector): ?>
                         <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
@@ -204,7 +204,7 @@
                         <?= $survey['responseRate'] ?>
                     </td>
                     <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['alignment']) ?>>
-                        <?= $survey['alignment'] ? $survey['alignment'] : 'Not calculated' ?>
+                        <?= $survey['alignment'] ?>
                     </td>
                     <?php foreach ($sectors as $sector): ?>
                         <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>

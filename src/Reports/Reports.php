@@ -1,7 +1,8 @@
 <?php
 namespace App\Reports;
 
-use Cake\Chronos\Date;
+use App\Model\Entity\Community;
+use App\Model\Entity\Survey;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -18,72 +19,16 @@ class Reports
         $report = [];
 
         $communitiesTable = TableRegistry::get('Communities');
-        $dateThreshold = new Date('-30 days');
-        $communities = $communitiesTable->find('all')
-            ->select([
-                'id',
-                'name',
-                'score',
-                'presentation_a',
-                'presentation_b',
-                'presentation_c',
-                'notes'
-            ])
-            ->where(['dummy' => 0])
-            ->contain([
-                'ParentAreas' => function ($q) {
-                    return $q->select(['id', 'name', 'fips']);
-                },
-                'OfficialSurvey' => function ($q) {
-                    return $q->select(['id', 'alignment']);
-                },
-                'OrganizationSurvey' => function ($q) {
-                    return $q->select(['id', 'alignment']);
-                },
-                'ActivityRecords' => function ($q) use ($dateThreshold) {
-                    return $q
-                        ->where(function ($exp, $q) use ($dateThreshold) {
-                            return $exp->gte('ActivityRecords.created', $dateThreshold);
-                        })
-                        ->order(['ActivityRecords.created' => 'DESC']);
-                },
-            ])
-            ->order(['Communities.name' => 'ASC']);
+        $communities = $communitiesTable->find('forReport');
+        $respondents = $this->getRespondents();
 
-        $respondentsTable = TableRegistry::get('Respondents');
-        $respondents = $respondentsTable->find('all')
-            ->select(['id', 'approved', 'invited', 'survey_id'])
-            ->contain([
-                'Responses' => function ($q) {
-                    return $q->select(['id', 'respondent_id']);
-                }
-            ])
-            ->toArray();
-        $respondents = Hash::combine($respondents, '{n}.id', '{n}', '{n}.survey_id');
-
-        $responsesTable = TableRegistry::get('Responses');
-        $surveysTable = TableRegistry::get('Surveys');
-        $sectors = $surveysTable->getSectors();
         foreach ($communities as $community) {
             // Collect general information about this community
-            $presentationsGiven = [];
-            foreach (['a', 'b', 'c'] as $letter) {
-                $date = $community->{'presentation_' . $letter};
-                if ($date) {
-                    if ($date->format('Y-m-d') <= date('Y-m-d')) {
-                        $presentationsGiven[$letter] = 'Completed';
-                    } else {
-                        $presentationsGiven[$letter] = 'Scheduled';
-                    }
-                } else {
-                    $presentationsGiven[$letter] = 'Not scheduled';
-                }
-            }
             $report[$community->id] = [
                 'name' => $community->name,
                 'parentArea' => $community->parent_area->name,
                 'parentAreaFips' => $community->parent_area->fips,
-                'presentationsGiven' => $presentationsGiven,
+                'presentationsGiven' => $this->getPresentationStatuses($community),
                 'notes' => $community->notes,
                 'recentActivity' => $community->activity_records
             ];
@@ -93,69 +38,16 @@ class Reports
                 'official_survey' => $community->official_survey,
                 'organization_survey' => $community->organization_survey,
             ];
-            foreach ($surveyTypes as $key => $survey) {
-                $invitationCount = 0;
-                $approvedResponseCount = 0;
-                $responseRate = 'N/A';
-                if ($survey && isset($respondents[$survey->id])) {
-                    foreach ($respondents[$survey->id] as $respondent) {
-                        if ($respondent->invited) {
-                            $invitationCount++;
-                        }
-                        if ($respondent->approved && ! empty($respondent->responses)) {
-                            $approvedResponseCount++;
-                        }
-                    }
-                    if ($invitationCount) {
-                        $responseRate = round(($approvedResponseCount / $invitationCount) * 100) . '%';
-                    } else {
-                        $responseRate = 'N/A';
-                    }
-                }
-
-                // Format and sum internal alignment
-                $internalAlignment = [];
-                if ($survey) {
-                    $internalAlignment = $responsesTable->getInternalAlignmentPerSector($survey->id);
-                    if ($internalAlignment) {
-                        foreach ($internalAlignment as $sector => &$value) {
-                            $value = round($value, 1);
-                        }
-                        $internalAlignment['total'] = array_sum($internalAlignment);
-                    }
-                }
-                if (! $internalAlignment) {
-                    $internalAlignment = array_combine($sectors, [null, null, null, null, null]);
-                    $internalAlignment['total'] = null;
-                }
-
-                // Determine status
-                $correspondingStep = ($key == 'official_survey') ? 2 : 3;
-                if ($community->score < $correspondingStep) {
-                    $status = 'Not started yet';
-                } elseif ($community->score < ($correspondingStep + 1)) {
-                    $status = 'In progress';
-                } else {
-                    $status = 'Complete';
-                }
-
-                // PWRRR alignment
-                if ($survey) {
-                    $alignment = $survey->alignment ? $survey->alignment . '%' : null;
-                    $alignmentCalculated = $survey->alignment ? 'Yes' : 'No';
-                } else {
-                    $alignment = null;
-                    $alignmentCalculated = 'No';
-                }
-
-                $report[$community->id][$key] = [
+            foreach ($surveyTypes as $surveyKey => $survey) {
+                $invitationCount = $this->getInvitationCount($survey, $respondents);
+                $approvedResponseCount = $this->getApprovedResponseCount($survey, $respondents);
+                $report[$community->id][$surveyKey] = [
                     'invitations' => $invitationCount,
                     'responses' => $approvedResponseCount,
-                    'responseRate' => $responseRate,
-                    'alignment' => $alignment,
-                    'alignmentCalculated' => $alignmentCalculated,
-                    'internalAlignment' => $internalAlignment,
-                    'status' => $status
+                    'responseRate' => $this->getResponseRate($invitationCount, $approvedResponseCount),
+                    'alignment' => $this->getAlignment($survey),
+                    'internalAlignment' => $this->getInternalAlignment($survey),
+                    'status' => $this->getStatus($community, $surveyKey)
                 ];
             }
         }
@@ -514,5 +406,172 @@ class Reports
         } else {
             return $letter;
         }
+    }
+
+    /**
+     * Returns an array of letter => status for each presentation
+     *
+     * @param Community $community Community entity
+     * @return array
+     */
+    private function getPresentationStatuses($community)
+    {
+        $presentationsGiven = [];
+        foreach (['a', 'b', 'c'] as $letter) {
+            $date = $community->{'presentation_' . $letter};
+            if ($date) {
+                if ($date->format('Y-m-d') <= date('Y-m-d')) {
+                    $presentationsGiven[$letter] = 'Completed';
+                } else {
+                    $presentationsGiven[$letter] = 'Scheduled';
+                }
+            } else {
+                $presentationsGiven[$letter] = 'Not scheduled';
+            }
+        }
+
+        return $presentationsGiven;
+    }
+
+    /**
+     * Returns response rate or 'N/A'
+     *
+     * @param int $invitationCount Invitation count
+     * @param int $approvedResponseCount Approved response count
+     * @return string
+     */
+    private function getResponseRate($invitationCount, $approvedResponseCount)
+    {
+        if ($invitationCount) {
+            return round(($approvedResponseCount / $invitationCount) * 100) . '%';
+        } else {
+            return 'N/A';
+        }
+    }
+
+    /**
+     * Returns the number of invitations that were sent out for this survey
+     *
+     * @param Survey $survey Survey entity
+     * @param array $respondents Array of $surveyId => $respondentId => $respondent
+     * @return int
+     */
+    private function getInvitationCount($survey, $respondents)
+    {
+        $invitationCount = 0;
+        if ($survey && isset($respondents[$survey->id])) {
+            foreach ($respondents[$survey->id] as $respondent) {
+                if ($respondent->invited) {
+                    $invitationCount++;
+                }
+            }
+        }
+
+        return $invitationCount;
+    }
+
+    /**
+     * Returns the number of responses for this survey that have been approved
+     *
+     * @param Survey $survey Survey entity
+     * @param array $respondents Array of $surveyId => $respondentId => $respondent
+     * @return int
+     */
+    private function getApprovedResponseCount($survey, $respondents)
+    {
+        $approvedResponseCount = 0;
+        if ($survey && isset($respondents[$survey->id])) {
+            foreach ($respondents[$survey->id] as $respondent) {
+                if ($respondent->approved && ! empty($respondent->responses)) {
+                    $approvedResponseCount++;
+                }
+            }
+        }
+
+        return $approvedResponseCount;
+    }
+
+    /**
+     * Returns formatted and summed internal alignment scores
+     *
+     * @param Survey $survey Survey entity
+     * @return array
+     */
+    private function getInternalAlignment($survey)
+    {
+        $responsesTable = TableRegistry::get('Responses');
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
+        $internalAlignment = [];
+        if ($survey) {
+            $internalAlignment = $responsesTable->getInternalAlignmentPerSector($survey->id);
+            if ($internalAlignment) {
+                foreach ($internalAlignment as $sector => &$value) {
+                    $value = round($value, 1);
+                }
+                $internalAlignment['total'] = array_sum($internalAlignment);
+            }
+        }
+        if (! $internalAlignment) {
+            $internalAlignment = array_combine($sectors, [null, null, null, null, null]);
+            $internalAlignment['total'] = null;
+        }
+
+        return $internalAlignment;
+    }
+
+    /**
+     * Returns a string that sums up the status of the specified community
+     * and the specified survey type
+     *
+     * @param Community $community Community entity
+     * @param string $surveyKey Either 'official_survey' or 'organization_survey'
+     * @return string
+     */
+    private function getStatus($community, $surveyKey)
+    {
+        $correspondingStep = ($surveyKey == 'official_survey') ? 2 : 3;
+        if ($community->score < $correspondingStep) {
+            return 'Not started yet';
+        } elseif ($community->score < ($correspondingStep + 1)) {
+            return 'In progress';
+        } else {
+            return 'Complete';
+        }
+    }
+
+    /**
+     * Returns the alignment percentage or 'Not calculated'
+     *
+     * @param Survey $survey Survey entity
+     * @return string
+     */
+    private function getAlignment($survey)
+    {
+        if ($survey && $survey->alignment) {
+            return $survey->alignment . '%';
+        }
+
+        return 'Not calculated';
+    }
+
+    /**
+     * Returns an array of $surveyId => $respondentId => $respondent
+     *
+     * @return array
+     */
+    private function getRespondents()
+    {
+        $respondentsTable = TableRegistry::get('Respondents');
+        $respondents = $respondentsTable->find('all')
+            ->select(['id', 'approved', 'invited', 'survey_id'])
+            ->contain([
+                'Responses' => function ($q) {
+                    return $q->select(['id', 'respondent_id']);
+                }
+            ])
+            ->toArray();
+
+        return Hash::combine($respondents, '{n}.id', '{n}', '{n}.survey_id');
     }
 }
