@@ -225,7 +225,7 @@
             <?php
                 $buttonClass = (isset($hasNewResponses) && $hasNewResponses) ? 'primary' : 'default';
                 echo $this->Html->link(
-                    'Review and Update Alignment',
+                    'Alignment Calculations',
                     [
                         'prefix' => 'admin',
                         'controller' => 'Responses',
@@ -238,7 +238,7 @@
 
             <?php if ($survey['type'] == 'official' && $uninvitedRespondentCount > 0): ?>
                 <?= $this->Html->link(
-                    'Review / Approve Uninvited Responses',
+                    'Uninvited Responses',
                     [
                         'prefix' => 'admin',
                         'controller' => 'Respondents',
