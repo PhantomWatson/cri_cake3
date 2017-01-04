@@ -1,84 +1,3 @@
-<?php
-    function surveyHeader($sectors, $type) {
-        $cells = [
-            'Invitations',
-            'Responses',
-            'Completion Rate',
-            'Average Alignment',
-        ];
-        foreach ($sectors as $sector) {
-            $cells[] = ucwords($sector);
-        }
-        $cells[] = 'Overall';
-        if ($type == 'officials') {
-            $cells[] = 'Presentation A';
-            $cells[] = 'Presentation B';
-        } else {
-            $cells[] = 'Presentation C';
-        }
-        $cells[] = 'Status';
-        $retval = '';
-        $numericColumns = $sectors;
-        array_walk($numericColumns, function (&$sector) {
-            $sector = ucwords($sector);
-        });
-        $numericColumns = array_merge($numericColumns, [
-            'Overall',
-            'Invitations',
-            'Responses',
-            'Completion Rate',
-            'Average Alignment'
-        ]);
-        foreach ($cells as $cell) {
-            // Build CSS class string
-            $class = 'survey';
-            if (in_array(strtolower($cell), $sectors) || $cell == 'Overall') {
-                $class .= ' int-alignment';
-            }
-            if ($cell == 'Production') {
-                $class .= ' int-alignment-left-edge';
-            } elseif ($cell == 'Overall') {
-                $class .= ' int-alignment-right-edge';
-            } elseif ($cell == 'Status') {
-                $class .= ' survey-status';
-            }
-
-            // Add "data type" data attribute, used for sorting
-            $dataType = in_array($cell, $numericColumns) ? 'float' : 'string';
-
-            // Abbreviate
-            $abbreviations = [
-                'Production' => 'P',
-                'Wholesale' => 'W',
-                'Retail' => 'Ret',
-                'Residential' => 'Res',
-                'Recreation' => 'Rec'
-            ];
-            if (isset($abbreviations[$cell])) {
-                $cell = $abbreviations[$cell];
-            }
-
-            $retval .= "<th class=\"{$class}\" data-survey-type=\"{$type}\" data-sort=\"{$dataType}\">";
-            $retval .= $cell;
-            $retval .= '</th>';
-        }
-        $retval .=
-            '<th class="minimized-status-header" data-survey-type="' . $type . '">' .
-            '<button class="survey-toggler btn btn-link" data-survey-type="' . $type . '">' .
-            (($type == 'officials') ? 'Community Leadership Status' : 'Community Organizations Status') .
-            '</button>' .
-            '</th>';
-        return $retval;
-    }
-    function sortValue($value) {
-        $sortValue = str_replace('%', '', $value);
-        if (! is_numeric($sortValue)) {
-            $sortValue = -1;
-        }
-        return 'data-sort-value="' . $sortValue . '"';
-    }
-?>
-
 <div class="page-header">
     <h1>
         <?= $titleForLayout ?>
@@ -170,8 +89,8 @@
                 <th data-sort="string">
                     Community
                 </th>
-                <?= surveyHeader($sectors, 'officials'); ?>
-                <?= surveyHeader($sectors, 'organizations'); ?>
+                <?= $this->Reports->surveyHeader($sectors, 'officials'); ?>
+                <?= $this->Reports->surveyHeader($sectors, 'organizations'); ?>
             </tr>
         </thead>
         <tbody>
@@ -244,24 +163,24 @@
                     </td>
 
                     <?php $survey = $community['official_survey']; ?>
-                    <td class="survey" data-survey-type="officials" <?= sortValue($survey['invitations']) ?>>
+                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['invitations']) ?>>
                         <?= $survey['invitations'] ?>
                     </td>
-                    <td class="survey" data-survey-type="officials" <?= sortValue($survey['responses']) ?>>
+                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['responses']) ?>>
                         <?= $survey['responses'] ?>
                     </td>
-                    <td class="survey" data-survey-type="officials" <?= sortValue($survey['responseRate']) ?>>
+                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['responseRate']) ?>>
                         <?= $survey['responseRate'] ?>
                     </td>
-                    <td class="survey" data-survey-type="officials" <?= sortValue($survey['alignment']) ?>>
+                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['alignment']) ?>>
                         <?= $survey['alignment'] ? $survey['alignment'] : 'Not calculated' ?>
                     </td>
                     <?php foreach ($sectors as $sector): ?>
-                        <td class="survey" data-survey-type="officials" <?= sortValue($survey['internalAlignment'][$sector]) ?>>
+                        <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
                             <?= $survey['internalAlignment'][$sector] ?>
                         </td>
                     <?php endforeach; ?>
-                    <td class="survey" data-survey-type="officials" <?= sortValue($survey['internalAlignment']['total']) ?>>
+                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['internalAlignment']['total']) ?>>
                         <?= $survey['internalAlignment']['total'] ?>
                     </td>
                     <td class="survey" data-survey-type="officials">
@@ -275,24 +194,24 @@
                     </td>
 
                     <?php $survey = $community['organization_survey']; ?>
-                    <td class="survey" data-survey-type="organizations" <?= sortValue($survey['invitations']) ?>>
+                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['invitations']) ?>>
                         <?= $survey['invitations'] ?>
                     </td>
-                    <td class="survey" data-survey-type="organizations" <?= sortValue($survey['responses']) ?>>
+                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['responses']) ?>>
                         <?= $survey['responses'] ?>
                     </td>
-                    <td class="survey" data-survey-type="organizations" <?= sortValue($survey['responseRate']) ?>>
+                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['responseRate']) ?>>
                         <?= $survey['responseRate'] ?>
                     </td>
-                    <td class="survey" data-survey-type="organizations" <?= sortValue($survey['alignment']) ?>>
+                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['alignment']) ?>>
                         <?= $survey['alignment'] ? $survey['alignment'] : 'Not calculated' ?>
                     </td>
                     <?php foreach ($sectors as $sector): ?>
-                        <td class="survey" data-survey-type="organizations" <?= sortValue($survey['internalAlignment'][$sector]) ?>>
+                        <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
                             <?= $survey['internalAlignment'][$sector] ?>
                         </td>
                     <?php endforeach; ?>
-                    <td class="survey" data-survey-type="organizations" <?= sortValue($survey['internalAlignment']['total']) ?>>
+                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['internalAlignment']['total']) ?>>
                         <?= $survey['internalAlignment']['total'] ?>
                     </td>
                     <td class="survey" data-survey-type="organizations">

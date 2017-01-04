@@ -29,7 +29,7 @@ class ReportsController extends AppController
             'sectors' => $surveysTable->getSectors(),
             'titleForLayout' => 'CRI Reports'
         ]);
-        $this->viewBuilder()->helpers(['ActivityRecords']);
+        $this->viewBuilder()->helpers(['ActivityRecords', 'Reports']);
     }
 
 
