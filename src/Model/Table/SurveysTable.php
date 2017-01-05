@@ -2,7 +2,6 @@
 namespace App\Model\Table;
 
 use App\SurveyMonkey\SurveyMonkey;
-use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
