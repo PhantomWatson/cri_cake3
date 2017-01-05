@@ -3,7 +3,9 @@ namespace App\Model\Table;
 
 use App\SurveyMonkey\SurveyMonkey;
 use Cake\Core\Configure;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -629,5 +631,71 @@ class SurveysTable extends Table
     public function isComplete($surveyId)
     {
         return ! $this->isActive($surveyId) && $this->hasResponses($surveyId);
+    }
+
+    /**
+     * Recalculates and sets Surveys.alignment_vs_local and alignment_vs_parent
+     *
+     * @param int $surveyId Survey ID
+     * @return void
+     * @throws NotFoundException
+     * @throws InternalErrorException
+     */
+    public function updateAlignment($surveyId)
+    {
+        $survey = $this->get($surveyId);
+
+        $communityId = $this->getCommunityId(['id' => $surveyId]);
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->find('all')
+            ->select(['id', 'local_area_id', 'parent_area_id'])
+            ->where(['id' => $communityId])
+            ->first();
+        if (!$community) {
+            $msg = "No community associated with Questionnaire #$surveyId can be found";
+            throw new RecordNotFoundException($msg);
+        }
+
+        $responsesTable = TableRegistry::get('Responses');
+        $responses = $responsesTable->getCurrent($surveyId);
+        if (!$responses) {
+            return;
+        }
+
+        // Collect alignments for individual responses
+        $alignments = [
+            'vsLocal' => [],
+            'vsParent' => []
+        ];
+        $areasTable = TableRegistry::get('Areas');
+        foreach ($responses as $response) {
+            $responseRanks = [
+                'production' => $response->production_rank,
+                'wholesale' => $response->wholesale_rank,
+                'retail' => $response->retail_rank,
+                'residential' => $response->residential_rank,
+                'recreation' => $response->recreation_rank
+            ];
+            $actualRanksLocal = $areasTable->getPwrrrRanks($community->local_area_id);
+            $actualRanksParent = $areasTable->getPwrrrRanks($community->parent_area_id);
+            $alignments['vsLocal'][] = $responsesTable->calculateAlignment($actualRanksLocal, $responseRanks);
+            $alignments['vsParent'][] = $responsesTable->calculateAlignment($actualRanksParent, $responseRanks);
+        }
+
+        // Average the alignments of all responses to get total alignments
+        $alignmentVsLocal = array_sum($alignments['vsLocal']) / count($alignments['vsLocal']);
+        $alignmentVsParent = array_sum($alignments['vsParent']) / count($alignments['vsParent']);
+
+        // Save alignments
+        $survey = $this->patchEntity($survey, [
+            'alignment_vs_local' => $alignmentVsLocal,
+            'alignment_vs_parent' => $alignmentVsParent
+        ]);
+        if ($survey->errors()) {
+            $msg = 'There was an error updating that questionnaire\'s response alignments: ';
+            $msg .= print_r($survey->errors(), true);
+            throw new InternalErrorException($msg);
+        }
+        $this->save($survey);
     }
 }
