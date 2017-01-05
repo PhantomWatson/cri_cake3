@@ -15,6 +15,7 @@
 namespace App\Controller;
 
 use App\Event\ActivityRecordsListener;
+use App\Event\SurveysListener;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -90,10 +91,12 @@ class AppController extends Controller
         // Prevents cookies from being accessible in Javascript
         $this->Cookie->httpOnly = true;
 
-        // Set up Activity Records listener for entire app
-        $listener = new ActivityRecordsListener();
-        $listener->userId($this->Auth->user('id'));
-        EventManager::instance()->on($listener);
+        // Set up listeners
+        $activityRecordsListener = new ActivityRecordsListener();
+        $activityRecordsListener->userId($this->Auth->user('id'));
+        EventManager::instance()->on($activityRecordsListener);
+        $surveysListener = new SurveysListener();
+        EventManager::instance()->on($surveysListener);
     }
 
     /**
