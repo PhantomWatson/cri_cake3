@@ -348,7 +348,7 @@ var adminViewResponses = {
                     alert.fadeOut(300, function () {
                         alert.removeClass('alert-danger');
                         alert.addClass('alert-success');
-                        alert.html('Alignment corrected. ');
+                        alert.html('Alignment data saved. ');
                         var refreshButton = $('<button class="btn btn-default btn-sm">Refresh this page</button>');
                         refreshButton.click(function () {
                             location.reload();

@@ -32,14 +32,22 @@
             </strong>
             The total alignment of these responses versus the actual PWR<sup>3</sup> rankings for
             <?= $community[$savedAlignmentError['areaType'] . '_area']['name'] ?>
-            has been saved as
-            <?= $savedAlignmentError['savedAlignment'] ?>%,
-            but the most recent calculation suggests that it should be updated to
-            <?= $savedAlignmentError['calculatedAlignment'] ?>%.
+            <?php if ($savedAlignmentError['savedAlignment']): ?>
+                has been saved as <?= $savedAlignmentError['savedAlignment'] ?>%,
+                but the most recent calculation suggests that it should be updated to
+                <?= $savedAlignmentError['calculatedAlignment'] ?>%.
+            <?php else: ?>
+                has not been saved to the database. Click the button below to save this community's
+                alignment as <?= $savedAlignmentError['calculatedAlignment'] ?>%.
+            <?php endif; ?>
         </p>
         <p>
             <button id="update-alignment" class="btn btn-default" data-update-url="<?= $updateUrl ?>">
-                Update alignment
+                <?php if ($savedAlignmentError['savedAlignment']): ?>
+                    Update alignment
+                <?php else: ?>
+                    Save alignment
+                <?php endif; ?>
             </button>
         </p>
     </div>
