@@ -76,7 +76,6 @@ class Reports
                         'vsLocal' => $survey['alignment_vs_local'],
                         'vsParent' => $survey['alignment_vs_parent']
                     ],
-                    'alignmentCalculated' => $this->isAlignmentCalculated($survey),
                     'internalAlignment' => $this->getInternalAlignment($survey),
                     'status' => $this->getStatus($community, $surveyKey)
                 ];
@@ -648,17 +647,6 @@ class Reports
     }
 
     /**
-     * Returns 'Yes' or 'No', depending on whether survey has an alignment value
-     *
-     * @param Survey $survey Survey entity
-     * @return string
-     */
-    private function isAlignmentCalculated($survey)
-    {
-        return ($survey && $survey->alignment) ? 'Yes' : 'No';
-    }
-
-    /**
      * Writes values to all of the cells in the body of the spreadsheet
      *
      * @param array $report Report
@@ -683,7 +671,9 @@ class Reports
                 $cells[] = $survey['responses'];
                 $cells[] = $survey['responseRate'];
                 if ($version == 'ocra') {
-                    $cells[] = $survey['alignmentCalculated'];
+                    $cells[] = ($survey['alignments']['vsLocal'] || $survey['alignments']['vsParent']) ?
+                        'Yes' :
+                        'No';
                 } elseif ($version == 'admin') {
                     $cells[] = $this->getPwrrrAlignmentsDisplayed($survey['alignments']);
                     foreach ($sectors as $sector) {
