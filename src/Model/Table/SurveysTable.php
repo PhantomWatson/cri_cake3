@@ -706,8 +706,8 @@ class SurveysTable extends Table
 
         // Save alignments
         $survey = $this->patchEntity($survey, [
-            'alignment_vs_local' => $alignmentVsLocal,
-            'alignment_vs_parent' => $alignmentVsParent
+            'alignment_vs_local' => (int)$alignmentVsLocal,
+            'alignment_vs_parent' => (int)$alignmentVsParent
         ]);
         if ($survey->errors()) {
             $msg = 'There was an error updating that questionnaire\'s response alignments: ';
