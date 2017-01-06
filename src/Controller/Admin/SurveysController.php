@@ -461,4 +461,16 @@ class SurveysController extends AppController
             'titleForLayout' => 'Resend All Invitations for Survey' . (isset($surveyId) ? " #$surveyId" : null)
         ]);
     }
+
+    /**
+     * Calculates and updates survey alignment fields
+     * or throws exceptions if errors encountered
+     *
+     * @param int $surveyId Survey ID
+     */
+    public function updateAlignment($surveyId)
+    {
+        $this->Surveys->updateAlignment($surveyId);
+        $this->viewBuilder()->layout('blank');
+    }
 }
