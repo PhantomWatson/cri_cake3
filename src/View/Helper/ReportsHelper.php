@@ -115,6 +115,7 @@ class ReportsHelper extends Helper
     public function pwrrrAlignments($alignments)
     {
         $Report = new Reports();
+
         return $Report->getPwrrrAlignmentsDisplayed($alignments);
     }
 }
