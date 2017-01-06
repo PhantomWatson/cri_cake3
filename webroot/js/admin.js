@@ -190,6 +190,10 @@ var adminSurveysIndex = {
 
 var adminViewResponses = {
     init: function () {
+        this.setupAlignmentTable();
+        this.setupUpdateAlignment();
+    },
+    setupAlignmentTable: function () {
         $('.custom_alignment_calc').change(function () {
             var container = $(this).closest('.responses');
             adminViewResponses.updateAlignment(container);
@@ -203,9 +207,10 @@ var adminViewResponses = {
             adminViewResponses.updateRespondentCount(container);
             adminViewResponses.updateAlignment(container);
         });
+        var userIcon = '<span class="glyphicon glyphicon-user"></span>';
         var showRespondentsLabel = {
-            show: '<span class="glyphicon glyphicon-user"></span> Show respondent info',
-            hide: '<span class="glyphicon glyphicon-user"></span> Hide respondent info'
+            show: userIcon + ' Show respondent info',
+            hide: userIcon + ' Hide respondent info'
         };
         $('#show-respondents')
             .html(showRespondentsLabel.show)
@@ -223,9 +228,11 @@ var adminViewResponses = {
                 }
             });
         $('ul.nav-tabs li[role=presentation]').first().find('a').tab('show');
+        var fullscreenIcon = '<span class="glyphicon glyphicon-fullscreen"></span>';
+        var windowIcon = '<span class="glyphicon glyphicon-list-alt"></span>';
         var toggleFullscreenLabel = {
-            fullscreen: '<span class="glyphicon glyphicon-fullscreen"></span> <span class="text">Show table full size</span>',
-            window: '<span class="glyphicon glyphicon-list-alt"></span> <span class="text">Show table in window</span>'
+            fullscreen: fullscreenIcon + ' <span class="text">Show table full size</span>',
+            window: windowIcon + ' <span class="text">Show table in window</span>'
         };
         $('#toggle-table-scroll')
             .html(toggleFullscreenLabel.fullscreen)
@@ -249,7 +256,6 @@ var adminViewResponses = {
             var respondentId = button.data('respondent-id');
             adminViewResponses.showFullResponse(respondentId);
         });
-        this.setupUpdateAlignment();
     },
     showFullResponse: function (respondentId) {
         $.ajax({
@@ -257,7 +263,8 @@ var adminViewResponses = {
             dataType: 'json',
             beforeSend: function (xhr) {
                 var modal = $('#full-response-modal');
-                modal.find('.modal-body').html('Loading... <img src="/data_center/img/loading_small.gif" />');
+                var loadingIcon = '<img src="/data_center/img/loading_small.gif" />';
+                modal.find('.modal-body').html('Loading... ' + loadingIcon);
                 modal.modal();
             },
             success: function (data, textStatus, jqXHR) {
