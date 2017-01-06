@@ -373,7 +373,7 @@ class Reports
                 'Responses',
                 'Completion Rate'
             ];
-            $alignmentColHeader = ($version == 'ocra') ? 'Alignment Calculated' : 'Average Alignment';
+            $alignmentColHeader = ($version == 'ocra') ? 'Alignment Calculated' : 'PWRRR Alignment';
             $this->surveyColumnHeaders[$surveyType][] = $alignmentColHeader;
 
             // Note how many columns come before internal alignment in each survey group

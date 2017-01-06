@@ -19,7 +19,7 @@ class ReportsHelper extends Helper
             'Invitations',
             'Responses',
             'Completion Rate',
-            'Average Alignment',
+            'PWR<sup>3</sup> Alignment',
         ];
         foreach ($sectors as $sector) {
             $cells[] = ucwords($sector);
