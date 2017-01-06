@@ -212,7 +212,7 @@ class ResponsesTable extends Table
         }
         $alignment = (($score - 1) / 2) * 100;
 
-        return $alignment;
+        return (int)$alignment;
     }
 
     /**
