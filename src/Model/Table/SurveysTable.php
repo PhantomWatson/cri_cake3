@@ -667,6 +667,8 @@ class SurveysTable extends Table
             'vsParent' => []
         ];
         $areasTable = TableRegistry::get('Areas');
+        $actualRanksLocal = $areasTable->getPwrrrRanks($community->local_area_id);
+        $actualRanksParent = $areasTable->getPwrrrRanks($community->parent_area_id);
         foreach ($responses as $response) {
             $responseRanks = [
                 'production' => $response->production_rank,
@@ -675,10 +677,27 @@ class SurveysTable extends Table
                 'residential' => $response->residential_rank,
                 'recreation' => $response->recreation_rank
             ];
-            $actualRanksLocal = $areasTable->getPwrrrRanks($community->local_area_id);
-            $actualRanksParent = $areasTable->getPwrrrRanks($community->parent_area_id);
-            $alignments['vsLocal'][] = $responsesTable->calculateAlignment($actualRanksLocal, $responseRanks);
-            $alignments['vsParent'][] = $responsesTable->calculateAlignment($actualRanksParent, $responseRanks);
+
+            // Calculate each response's PWRRR alignment
+            $alignmentVsLocal = $responsesTable->calculateAlignment($actualRanksLocal, $responseRanks);
+            $alignments['vsLocal'][$response->id] = $alignmentVsLocal;
+            $alignmentVsParent = $responsesTable->calculateAlignment($actualRanksParent, $responseRanks);
+            $alignments['vsParent'][$response->id] = $alignmentVsParent;
+
+            // Update stored response alignment if it differs from the value that was just calculated
+            if ($alignmentVsLocal != $response->local_area_pwrrr_alignment) {
+                $response = $responsesTable->patchEntity($response, [
+                    'local_area_pwrrr_alignment' => $alignmentVsLocal
+                ]);
+            }
+            if ($alignmentVsParent != $response->parent_area_pwrrr_alignment) {
+                $response = $responsesTable->patchEntity($response, [
+                    'parent_area_pwrrr_alignment' => $alignmentVsParent
+                ]);
+            }
+            if ($response->dirty()) {
+                $responsesTable->save($response);
+            }
         }
 
         // Average the alignments of all responses to get total alignments
