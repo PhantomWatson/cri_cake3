@@ -227,6 +227,7 @@ var adminViewResponses = {
                     button.html(showRespondentsLabel.show);
                 }
             });
+        $('tr.respondent').hide();
         $('ul.nav-tabs li[role=presentation]').first().find('a').tab('show');
         var fullscreenIcon = '<span class="glyphicon glyphicon-fullscreen"></span>';
         var windowIcon = '<span class="glyphicon glyphicon-list-alt"></span>';
