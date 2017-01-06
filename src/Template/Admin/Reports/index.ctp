@@ -204,8 +204,9 @@
                     <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['responseRate']) ?>>
                         <?= $survey['responseRate'] ?>
                     </td>
-                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['alignment']) ?>>
-                        <?= $survey['alignment'] ?>
+                    <?php $sortValue = max(array_values($survey['alignments'])); ?>
+                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($sortValue) ?>>
+                        <?= $this->Reports->pwrrrAlignments($survey['alignments']) ?>
                     </td>
                     <?php foreach ($sectors as $sector): ?>
                         <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
