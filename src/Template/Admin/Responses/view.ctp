@@ -75,6 +75,9 @@
                 <button class="btn btn-sm btn-default" id="toggle-table-scroll"></button>
                 <button class="btn btn-sm btn-default" id="show-respondents" data-label="show"></button>
             </h2>
+
+            <?= $this->element('Surveys/verify_alignment') ?>
+
             <p>
                 These are the currently known responses to
                 <strong>

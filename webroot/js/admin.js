@@ -249,6 +249,7 @@ var adminViewResponses = {
             var respondentId = button.data('respondent-id');
             adminViewResponses.showFullResponse(respondentId);
         });
+        this.setupUpdateAlignment();
     },
     showFullResponse: function (respondentId) {
         $.ajax({
@@ -322,6 +323,42 @@ var adminViewResponses = {
     },
     getCalcMode: function (container) {
         return container.find('.calc-mode').val();
+    },
+    setupUpdateAlignment: function () {
+        $('#update-alignment').click(function (event) {
+            event.preventDefault();
+            var button = $(this);
+            $.ajax({
+                url: button.data('update-url'),
+                beforeSend: function () {
+                    button.addClass('disabled');
+                    var loading_indicator = $('<img src="/data_center/img/loading_small.gif" alt="Loading..." />');
+                    button.append(loading_indicator);
+                },
+                success: function (data) {
+                    var alert = button.closest('.alert');
+                    alert.fadeOut(300, function () {
+                        alert.removeClass('alert-danger');
+                        alert.addClass('alert-success');
+                        alert.html('Alignment corrected. ');
+                        var refreshButton = $('<button class="btn btn-default btn-sm">Refresh this page</button>');
+                        refreshButton.click(function () {
+                            location.reload();
+                        });
+                        alert.append(refreshButton);
+                        alert.fadeIn();
+                    });
+                },
+                error: function () {
+                    var msg = 'There was an error updating this community\'s alignment score';
+                    $(msg).insertAfter(button);
+                },
+                complete: function () {
+                    button.removeClass('disabled');
+                    button.children('img').remove();
+                }
+            });
+        });
     }
 };
 
