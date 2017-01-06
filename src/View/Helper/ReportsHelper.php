@@ -1,6 +1,7 @@
 <?php
 namespace App\View\Helper;
 
+use App\Reports\Reports;
 use Cake\View\Helper;
 
 class ReportsHelper extends Helper
@@ -102,5 +103,18 @@ class ReportsHelper extends Helper
         }
 
         return 'data-sort-value="' . $sortValue . '"';
+    }
+
+    /**
+     * Accepts an array of PWRRR alignments (vs local area and vs parent area)
+     * and outputs a string for display
+     *
+     * @param array $alignments ['vsLocal' => int|null, 'vsParent' => int|null]
+     * @return string
+     */
+    public function pwrrrAlignments($alignments)
+    {
+        $Report = new Reports();
+        return $Report->getPwrrrAlignmentsDisplayed($alignments);
     }
 }

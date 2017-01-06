@@ -72,7 +72,10 @@ class Reports
                     'invitations' => $invitationCount,
                     'responses' => $approvedResponseCount,
                     'responseRate' => $this->getResponseRate($invitationCount, $approvedResponseCount),
-                    'alignment' => $this->getAlignment($survey),
+                    'alignments' => [
+                        'vsLocal' => $survey['alignment_vs_local'],
+                        'vsParent' => $survey['alignment_vs_parent']
+                    ],
                     'alignmentCalculated' => $this->isAlignmentCalculated($survey),
                     'internalAlignment' => $this->getInternalAlignment($survey),
                     'status' => $this->getStatus($community, $surveyKey)
@@ -281,21 +284,6 @@ class Reports
         } else {
             return 'Complete';
         }
-    }
-
-    /**
-     * Returns the alignment percentage or 'Not calculated'
-     *
-     * @param Survey $survey Survey entity
-     * @return string
-     */
-    private function getAlignment($survey)
-    {
-        if ($survey && $survey->alignment) {
-            return $survey->alignment . '%';
-        }
-
-        return 'Not calculated';
     }
 
     /**
@@ -697,7 +685,7 @@ class Reports
                 if ($version == 'ocra') {
                     $cells[] = $survey['alignmentCalculated'];
                 } elseif ($version == 'admin') {
-                    $cells[] = $survey['alignment'];
+                    $cells[] = $this->getPwrrrAlignmentsDisplayed($survey['alignments']);
                     foreach ($sectors as $sector) {
                         $cells[] = $survey['internalAlignment'][$sector];
                     }
@@ -852,5 +840,36 @@ class Reports
         // Set the width of the last column (notes) to a fixed width
         $colLetter = $this->getColumnKey($this->totalColCount - 1);
         $this->objPHPExcel->getActiveSheet()->getColumnDimension($colLetter)->setWidth(30);
+    }
+
+    /**
+     * Accepts an array of PWRRR alignments (vs local area and vs parent area)
+     * and outputs a string for display
+     *
+     * @param array $alignments ['vsLocal' => int|null, 'vsParent' => int|null]
+     * @return string
+     */
+    public function getPwrrrAlignmentsDisplayed($alignments)
+    {
+        $avLocal = $alignments['vsLocal'];
+        $avParent = $alignments['vsParent'];
+        if ($avLocal && $avParent) {
+            if ($avLocal == $avParent) {
+                return $avLocal . '%';
+            }
+
+            return
+                min(array_values($alignments)) . '%' .
+                ' - ' .
+                max(array_values($alignments)) . '%';
+        }
+        if ($avLocal) {
+            return $avLocal . '%';
+        }
+        if ($avParent) {
+            return $avParent . '%';
+        }
+
+        return 'Not calculated';
     }
 }

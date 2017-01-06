@@ -624,10 +624,10 @@ class CommunitiesTable extends Table
                     return $q->select(['id', 'name', 'fips']);
                 },
                 'OfficialSurvey' => function ($q) {
-                    return $q->select(['id', 'alignment']);
+                    return $q->select(['id', 'alignment_vs_local', 'alignment_vs_parent']);
                 },
                 'OrganizationSurvey' => function ($q) {
-                    return $q->select(['id', 'alignment']);
+                    return $q->select(['id', 'alignment_vs_local', 'alignment_vs_parent']);
                 },
                 'ActivityRecords' => function ($q) use ($dateThreshold) {
                     return $q
