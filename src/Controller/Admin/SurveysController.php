@@ -467,6 +467,7 @@ class SurveysController extends AppController
      * or throws exceptions if errors encountered
      *
      * @param int $surveyId Survey ID
+     * @return void
      */
     public function updateAlignment($surveyId)
     {
