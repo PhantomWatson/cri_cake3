@@ -43,7 +43,7 @@ class ReportsHelper extends Helper
             'Invitations',
             'Responses',
             'Completion Rate',
-            'Average Alignment'
+            'PWR<sup>3</sup> Alignment'
         ]);
         foreach ($cells as $cell) {
             // Build CSS class string
