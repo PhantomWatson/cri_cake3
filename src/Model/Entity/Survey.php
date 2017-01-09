@@ -32,7 +32,6 @@ class Survey extends Entity
         '5_aid' => true,
         'respondents_last_modified_date' => true,
         'responses_checked' => true,
-        'alignment' => true,
         'alignment_vs_local' => true,
         'alignment_vs_parent' => true,
         'alignment_calculated' => true,
