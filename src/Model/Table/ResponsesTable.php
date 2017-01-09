@@ -311,7 +311,7 @@ class ResponsesTable extends Table
      * @param int $surveyId Survey ID
      * @return \Cake\ORM\Query
      */
-    public function getCurrent($surveyId)
+    public function getCurrentApproved($surveyId)
     {
         $surveysTable = TableRegistry::get('Surveys');
         $sectorFields = $surveysTable->getSectorFieldNames();
@@ -507,7 +507,7 @@ class ResponsesTable extends Table
      */
     public function getInternalAlignmentPerSector($surveyId)
     {
-        $responses = $this->getCurrent($surveyId);
+        $responses = $this->getCurrentApproved($surveyId);
         if (empty($responses)) {
             return null;
         }

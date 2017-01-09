@@ -660,7 +660,7 @@ class SurveysTable extends Table
         }
 
         $responsesTable = TableRegistry::get('Responses');
-        $responses = $responsesTable->getCurrent($surveyId);
+        $responses = $responsesTable->getCurrentApproved($surveyId);
         if (!$responses) {
             return;
         }
