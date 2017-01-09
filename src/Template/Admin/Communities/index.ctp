@@ -1,3 +1,6 @@
+<?php
+    $Report = new \App\Reports\Reports();
+?>
 <div id="communities_admin_index">
     <div class="page-header">
         <h1>
@@ -141,11 +144,11 @@
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
                                         <li class="dropdown-header">
-                                            <?php if ($community->{$surveyType}['alignment'] === null): ?>
-                                                Alignment: Not set
-                                            <?php else: ?>
-                                                Alignment: <?php echo $community->{$surveyType}['alignment']; ?>%
-                                            <?php endif; ?>
+                                            Alignment:
+                                            <?= $Report->getPwrrrAlignmentsDisplayed([
+                                                'vsLocal' => $community->{$surveyType}['alignment_vs_local'],
+                                                'vsParent' => $community->{$surveyType}['alignment_vs_parent']
+                                            ]) ?>
                                         </li>
 
                                         <?php if ($community->{$surveyType}['respondents_last_modified_date']): ?>

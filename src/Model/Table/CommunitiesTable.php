@@ -569,7 +569,8 @@ class CommunitiesTable extends Table
                     return $q->select([
                         'OfficialSurvey.id',
                         'OfficialSurvey.sm_id',
-                        'OfficialSurvey.alignment',
+                        'OfficialSurvey.alignment_vs_local',
+                        'OfficialSurvey.alignment_vs_parent',
                         'OfficialSurvey.respondents_last_modified_date',
                         'OfficialSurvey.active'
                     ]);
@@ -578,7 +579,8 @@ class CommunitiesTable extends Table
                     return $q->select([
                         'OrganizationSurvey.id',
                         'OrganizationSurvey.sm_id',
-                        'OrganizationSurvey.alignment',
+                        'OrganizationSurvey.alignment_vs_local',
+                        'OrganizationSurvey.alignment_vs_parent',
                         'OrganizationSurvey.respondents_last_modified_date',
                         'OrganizationSurvey.active'
                     ]);
