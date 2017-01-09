@@ -67,57 +67,59 @@
                 </tr>
             </thead>
 
-            <?php foreach ($respondents['unaddressed'] as $respondent): ?>
-                <tr>
-                    <td>
-                        <?php if ($respondent['name']): ?>
-                            <?= $respondent['name'] ?>
-                        <?php else: ?>
-                            <span class="no_name">
-                                No name provided
-                            </span>
-                        <?php endif; ?>
-                        <br />
-                        <?php if (Validation::email($respondent['email'])): ?>
-                            <a href="mailto:<?= $respondent['email'] ?>">
+            <tbody>
+                <?php foreach ($respondents['unaddressed'] as $respondent): ?>
+                    <tr>
+                        <td>
+                            <?php if ($respondent['name']): ?>
+                                <?= $respondent['name'] ?>
+                            <?php else: ?>
+                                <span class="no_name">
+                                    No name provided
+                                </span>
+                            <?php endif; ?>
+                            <br />
+                            <?php if (Validation::email($respondent['email'])): ?>
+                                <a href="mailto:<?= $respondent['email'] ?>">
+                                    <?= $respondent['email'] ?>
+                                </a>
+                            <?php else: ?>
                                 <?= $respondent['email'] ?>
-                            </a>
-                        <?php else: ?>
-                            <?= $respondent['email'] ?>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <span class="actions">
-                            <?= $this->Html->link(
-                                'Approve',
-                                [
-                                    $this->request->prefix => true,
-                                    'controller' => 'Respondents',
-                                    'action' => 'approveUninvited',
-                                    $respondent['id']
-                                ],
-                                [
-                                    'class' => 'btn btn-default approve',
-                                    'data-respondent-id' => $respondent['id']
-                                ]
-                            ) ?>
-                            <?= $this->Html->link(
-                                'Dismiss',
-                                [
-                                    $this->request->prefix => true,
-                                    'controller' => 'Respondents',
-                                    'action' => 'dismissUninvited',
-                                    $respondent['id']
-                                ],
-                                [
-                                    'class' => 'btn btn-default dismiss',
-                                    'data-respondent-id' => $respondent['id']
-                                ]
-                            ) ?>
-                        </span>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <span class="actions">
+                                <?= $this->Html->link(
+                                    'Approve',
+                                    [
+                                        $this->request->prefix => true,
+                                        'controller' => 'Respondents',
+                                        'action' => 'approveUninvited',
+                                        $respondent['id']
+                                    ],
+                                    [
+                                        'class' => 'btn btn-default approve',
+                                        'data-respondent-id' => $respondent['id']
+                                    ]
+                                ) ?>
+                                <?= $this->Html->link(
+                                    'Dismiss',
+                                    [
+                                        $this->request->prefix => true,
+                                        'controller' => 'Respondents',
+                                        'action' => 'dismissUninvited',
+                                        $respondent['id']
+                                    ],
+                                    [
+                                        'class' => 'btn btn-default dismiss',
+                                        'data-respondent-id' => $respondent['id']
+                                    ]
+                                ) ?>
+                            </span>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
         </table>
     <?php endif; ?>
 </div>
