@@ -146,8 +146,8 @@ class SurveysController extends AppController
                     'respondent_id' => $respondentId,
                     'survey_id' => $surveyId,
                     'response' => $serializedResponse,
-                    'local_area_pwrrr_alignment' => $alignmentVsLocal,
-                    'parent_area_pwrrr_alignment' => $alignmentVsParent,
+                    'alignment_vs_local' => $alignmentVsLocal,
+                    'alignment_vs_parent' => $alignmentVsParent,
                     'response_date' => new Time($response['date_modified'])
                 ];
                 foreach ($responseRanks as $sector => $rank) {

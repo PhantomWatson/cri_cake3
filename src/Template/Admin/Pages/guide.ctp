@@ -528,7 +528,7 @@
                 ) ?>
             </strong>
             <br />
-            Are any responses missing their local_area_pwrrr_alignment or parent_area_pwrrr_alignment values?
+            Are any responses missing their alignment_vs_local or alignment_vs_parent values?
             Visit the page linked above and missing alignment values will be calculated and saved.
         </li>
         <li>

@@ -406,7 +406,7 @@ class SurveyProcessingComponent extends Component
      * Returns the sum of alignments between respondent PWRRR ranks and either local-area or parent-area actual ranks
      *
      * @param array $responses Responses array
-     * @param string $alignmentField Alignment field name (local_area_pwrrr_alignment or parent_area_pwrrr_alignment)
+     * @param string $alignmentField Alignment field name (alignment_vs_local or alignment_vs_parent)
      * @return int
      */
     public static function getAlignmentSum($responses, $alignmentField)

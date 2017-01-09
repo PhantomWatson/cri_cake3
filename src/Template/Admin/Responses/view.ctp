@@ -125,7 +125,7 @@
                         <div role="tabpanel" class="tab-pane active" id="vsLocalArea">
                             <?= $this->element('Respondents'.DS.'admin_table', [
                                 'area' => $community->local_area,
-                                'alignmentField' => 'local_area_pwrrr_alignment'
+                                'alignmentField' => 'alignment_vs_local'
                             ]) ?>
                         </div>
                     <?php endif; ?>
@@ -133,7 +133,7 @@
                         <div role="tabpanel" class="tab-pane" id="vsParentArea">
                             <?= $this->element('Respondents'.DS.'admin_table', [
                                 'area' => $community->parent_area,
-                                'alignmentField' => 'parent_area_pwrrr_alignment'
+                                'alignmentField' => 'alignment_vs_parent'
                             ]) ?>
                         </div>
                     <?php endif; ?>

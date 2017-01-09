@@ -143,8 +143,8 @@ class ResponsesController extends AppController
     }
 
     /**
-     * Looks for responses with missing local_area_pwrrr_alignment and
-     * parent_area_pwrrr_alignment values and populates them.
+     * Looks for responses with missing alignment_vs_local and
+     * alignment_vs_parent values and populates them
      *
      * @return void
      */
@@ -155,10 +155,10 @@ class ResponsesController extends AppController
             ->where([
                 'OR' => [
                     function ($exp, $q) {
-                        return $exp->isNull('local_area_pwrrr_alignment');
+                        return $exp->isNull('alignment_vs_local');
                     },
                     function ($exp, $q) {
-                        return $exp->isNull('parent_area_pwrrr_alignment');
+                        return $exp->isNull('alignment_vs_parent');
                     }
                 ]
             ])
@@ -181,8 +181,7 @@ class ResponsesController extends AppController
             $community = $communitiesTable->get($survey->community_id);
             $areasTable = TableRegistry::get('Areas');
             foreach (['local', 'parent'] as $scope) {
-                $fieldName = "{$scope}_area_id";
-                $areaId = $community->$fieldName;
+                $areaId = $community->{"{$scope}_area_id"};
                 if (! $areaId) {
                     if (! isset($missingAreaReports[$survey->community_id][$scope])) {
                         $msg = 'Community #' . $survey->community_id . ' has no ' . $scope . ' area';
@@ -203,8 +202,7 @@ class ResponsesController extends AppController
                 ];
                 $alignment = $this->Responses->calculateAlignment($actualRanks, $responseRanks);
 
-                $fieldName = "{$scope}_area_pwrrr_alignment";
-                $response->$fieldName = $alignment;
+                $response->{"alignment_vs_{$scope}"} = $alignment;
             }
 
             if ($this->Responses->save($response)) {

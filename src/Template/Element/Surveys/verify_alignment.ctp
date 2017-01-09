@@ -6,7 +6,7 @@
         foreach (['local', 'parent'] as $areaType) {
             $alignmentSum = SurveyProcessingComponent::getAlignmentSum(
                 $responses,
-                $areaType . '_area_pwrrr_alignment'
+                'alignment_vs_' . $areaType
             );
             $savedAlignment = $survey->{'alignment_vs_' . $areaType};
             $calculatedAlignment = (int)($alignmentSum / $approvedCount);

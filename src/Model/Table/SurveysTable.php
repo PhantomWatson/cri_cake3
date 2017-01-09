@@ -689,14 +689,14 @@ class SurveysTable extends Table
             $alignments['vsParent'][$response->id] = $alignmentVsParent;
 
             // Update stored response alignment if it differs from the value that was just calculated
-            if ($alignmentVsLocal != $response->local_area_pwrrr_alignment) {
+            if ($alignmentVsLocal != $response->alignment_vs_local) {
                 $response = $responsesTable->patchEntity($response, [
-                    'local_area_pwrrr_alignment' => $alignmentVsLocal
+                    'alignment_vs_local' => $alignmentVsLocal
                 ]);
             }
-            if ($alignmentVsParent != $response->parent_area_pwrrr_alignment) {
+            if ($alignmentVsParent != $response->alignment_vs_parent) {
                 $response = $responsesTable->patchEntity($response, [
-                    'parent_area_pwrrr_alignment' => $alignmentVsParent
+                    'alignment_vs_parent' => $alignmentVsParent
                 ]);
             }
             if ($response->dirty()) {
