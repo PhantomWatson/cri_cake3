@@ -128,9 +128,12 @@ class SurveysTable extends Table
             ->notEmpty('responses_checked');
 
         $validator
-            ->add('alignment_vs_local', 'valid', ['rule' => 'numeric']);
+            ->add('alignment_vs_local', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('alignment_vs_local');
+
         $validator
-            ->add('alignment_vs_parent', 'valid', ['rule' => 'numeric']);
+            ->add('alignment_vs_parent', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('alignment_vs_parent');
 
         $validator
             ->add('alignment_calculated', 'valid', ['rule' => 'datetime'])
