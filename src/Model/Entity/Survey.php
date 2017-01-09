@@ -34,7 +34,7 @@ class Survey extends Entity
         'responses_checked' => true,
         'alignment_vs_local' => true,
         'alignment_vs_parent' => true,
-        'alignment_calculated' => true,
+        'alignment_calculated_date' => true,
         'community' => true,
         'sm' => true,
         'respondents' => true,

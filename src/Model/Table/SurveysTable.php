@@ -136,8 +136,8 @@ class SurveysTable extends Table
             ->allowEmpty('alignment_vs_parent');
 
         $validator
-            ->add('alignment_calculated', 'valid', ['rule' => 'datetime'])
-            ->notEmpty('alignment_calculated');
+            ->add('alignment_calculated_date', 'valid', ['rule' => 'datetime'])
+            ->notEmpty('alignment_calculated_date');
 
         return $validator;
     }
@@ -443,7 +443,7 @@ class SurveysTable extends Table
         $count = $responsesTable->find('all')
             ->where([
                 'survey_id' => $surveyId,
-                'created >' => $survey->alignment_calculated
+                'created >' => $survey->alignment_calculated_date
             ])
             ->count();
 
