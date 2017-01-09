@@ -3,6 +3,7 @@ namespace App\Model\Table;
 
 use App\SurveyMonkey\SurveyMonkey;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\I18n\Time;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Query;
@@ -711,7 +712,8 @@ class SurveysTable extends Table
         // Save alignments
         $survey = $this->patchEntity($survey, [
             'alignment_vs_local' => (int)$alignmentVsLocal,
-            'alignment_vs_parent' => (int)$alignmentVsParent
+            'alignment_vs_parent' => (int)$alignmentVsParent,
+            'alignment_calculated_date' => Time::now()
         ]);
         if ($survey->errors()) {
             $msg = 'There was an error updating that questionnaire\'s response alignments: ';
