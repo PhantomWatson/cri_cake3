@@ -55,6 +55,17 @@
             If you approve these responses, they will be used as part of your community's alignment calculation.
         </p>
 
+        <?php if (count($respondents['unaddressed']) > 1): ?>
+            <p id="bulk-actions">
+                <button class="btn btn-default" data-action="approve">
+                    Approve all
+                </button>
+                <button class="btn btn-default" data-action="dismiss">
+                    Dismiss all
+                </button>
+            </p>
+        <?php endif; ?>
+
         <table class="table">
             <thead>
                 <tr>

@@ -370,6 +370,8 @@ var clientHome = {
 };
 
 var unapprovedRespondents = {
+    currentBulkAction: null,
+
     init: function () {
         $('#toggle_dismissed').click(function (event) {
             event.preventDefault();
@@ -380,7 +382,47 @@ var unapprovedRespondents = {
             var link = $(this);
             unapprovedRespondents.updateRespondent(link);
         });
+        this.setupBulkAction();
     },
+    setupBulkAction: function () {
+        $('#bulk-actions button').click(function (event) {
+            event.preventDefault();
+            var button = $(this);
+            var loadingIndicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
+            button.append(loadingIndicator);
+            unapprovedRespondents.currentBulkAction = button.data('action');
+            button.addClass('disabled');
+            button.siblings('button').addClass('disabled');
+            $('a.' + button.data('action')).each(function () {
+                var link = $(this);
+
+                // Skip over action links that are hidden because they were recently clicked on
+                if (link.is(':visible')) {
+                    unapprovedRespondents.updateRespondent(link);
+                }
+            });
+        });
+    },
+
+    /**
+     * If the current bulk action appears to be complete, removes bulk action buttons
+     */
+    checkBulkActionsComplete: function () {
+        if (! this.currentBulkAction) {
+            return;
+        }
+
+        var isComplete = $('a.' + this.currentBulkAction + '.disabled').length === 0;
+        if (! isComplete) {
+            return;
+        }
+
+        $('#bulk-actions').slideUp(1000, function () {
+            $('#bulk-actions').remove();
+        });
+        this.currentBulkAction = null;
+    },
+
     updateRespondent: function (link) {
         $.ajax({
             url: link.attr('href'),
@@ -419,6 +461,7 @@ var unapprovedRespondents = {
             complete: function () {
                 link.find('.loading').remove();
                 link.parent().children('a').removeClass('disabled');
+                unapprovedRespondents.checkBulkActionsComplete();
             }
         });
     }
