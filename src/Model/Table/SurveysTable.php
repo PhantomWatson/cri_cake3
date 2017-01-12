@@ -709,10 +709,15 @@ class SurveysTable extends Table
         $alignmentVsLocal = array_sum($alignments['vsLocal']) / count($alignments['vsLocal']);
         $alignmentVsParent = array_sum($alignments['vsParent']) / count($alignments['vsParent']);
 
+        // Get internal alignment
+        $intAlignmentsPerSector = $responsesTable->getInternalAlignmentPerSector($surveyId);
+        $intAlignment = empty($intAlignmentsPerSector) ? null : array_sum($intAlignmentsPerSector);
+
         // Save alignments
         $survey = $this->patchEntity($survey, [
             'alignment_vs_local' => (int)$alignmentVsLocal,
             'alignment_vs_parent' => (int)$alignmentVsParent,
+            'internal_alignment' => $intAlignment,
             'alignment_calculated_date' => Time::now()
         ]);
         if ($survey->errors()) {
