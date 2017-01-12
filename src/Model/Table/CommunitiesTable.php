@@ -643,4 +643,19 @@ class CommunitiesTable extends Table
 
         return $query;
     }
+
+    /**
+     * Returns dummy community IDs
+     *
+     * @return array
+     */
+    public function getDummyCommunityIds()
+    {
+        $communities = $this->find('all')
+            ->select(['id'])
+            ->where(['dummy' => 1])
+            ->toArray();
+
+        return Hash::extract($communities, '{n}.id');
+    }
 }

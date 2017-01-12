@@ -10,6 +10,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
 /**
@@ -726,5 +727,39 @@ class SurveysTable extends Table
             throw new InternalErrorException($msg);
         }
         $this->save($survey);
+    }
+
+
+
+    /**
+     * Returns the average internal alignment for all surveys
+     *
+     * @param bool $includeDummy Include surveys for dummy communities
+     * @return float|null
+     */
+    public function getAvgIntAlignment($includeDummy = false)
+    {
+        $query = $this->find('all')
+            ->select(['id', 'internal_alignment'])
+            ->where(function ($exp, $q) {
+                return $exp->isNotNull('internal_alignment');
+            });
+        if (! $includeDummy) {
+            $communitiesTable = TableRegistry::get('Communities');
+            $dummyCommunityIds = $communitiesTable->getDummyCommunityIds();
+            $query->where(function ($exp, $q) use ($dummyCommunityIds) {
+                return $exp->notIn('community_id', $dummyCommunityIds);
+            });
+        }
+        $surveys = $query->toArray();
+
+        if (empty($surveys)) {
+            return null;
+        }
+
+        $intAlignments = Hash::extract($surveys, '{n}.internal_alignment');
+        $avgIntAlignment = array_sum($intAlignments) / count($intAlignments);
+
+        return round($avgIntAlignment, 2);
     }
 }

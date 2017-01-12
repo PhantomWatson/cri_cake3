@@ -547,14 +547,20 @@ class CommunitiesController extends AppController
             ->toArray();
         $settings = Hash::combine($settings, '{n}.name', '{n}.value');
         $conditions = [];
-        if (! $this->request->query('show-dummy')) {
+        $includeDummy = (bool)$this->request->query('show-dummy');
+        if (! $includeDummy) {
             $conditions['dummy'] = 0;
         }
         $communities = $this->Communities->find('all')
             ->select(['id', 'name', 'intAlignmentAdjustment', 'intAlignmentThreshhold'])
             ->where($conditions)
             ->order(['created' => 'DESC']);
+
+        $surveysTable = TableRegistry::get('Surveys');
+        $avgIntAlignment = $surveysTable->getAvgIntAlignment($includeDummy);
+
         $this->set([
+            'avgIntAlignment' => $avgIntAlignment,
             'communities' => $communities,
             'settings' => $settings,
             'titleForLayout' => 'Internal Alignment Calculation Settings'

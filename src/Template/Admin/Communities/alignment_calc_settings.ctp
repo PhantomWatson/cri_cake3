@@ -4,6 +4,12 @@
     </h1>
 </div>
 
+<?php if ($avgIntAlignment): ?>
+    <p class="well">
+        Average internal alignment: <strong><?= $avgIntAlignment ?></strong>
+    </p>
+<?php endif; ?>
+
 <table class="table" id="alignmentCalcSettings">
     <thead>
         <tr>
