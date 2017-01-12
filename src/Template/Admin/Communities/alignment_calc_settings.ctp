@@ -10,6 +10,14 @@
     </p>
 <?php endif; ?>
 
+<div class="input-group" id="filter-by-community">
+    <div class="input-group-addon">
+        <span class="glyphicon glyphicon-search"></span>
+        Filter
+    </div>
+    <input type="text" name="search" class="form-control" placeholder="Enter community name" />
+</div>
+
 <table class="table" id="alignmentCalcSettings">
     <thead>
         <tr>
@@ -91,3 +99,7 @@
         ) ?>
     <?php endif; ?>
 </p>
+
+<?php $this->append('buffered'); ?>
+    alignmentCalculationSettings.init();
+<?php $this->end(); ?>
