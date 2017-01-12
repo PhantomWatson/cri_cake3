@@ -71,3 +71,17 @@
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<p>
+    <?php if ($this->request->query('show-dummy')): ?>
+        <?= $this->Html->link(
+            'Hide dummy communities',
+            ['?' => ['show-dummy' => 0]]
+        ) ?>
+    <?php else: ?>
+        <?= $this->Html->link(
+            'Show dummy communities',
+            ['?' => ['show-dummy' => 1]]
+        ) ?>
+    <?php endif; ?>
+</p>

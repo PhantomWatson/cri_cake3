@@ -546,8 +546,13 @@ class CommunitiesController extends AppController
             })
             ->toArray();
         $settings = Hash::combine($settings, '{n}.name', '{n}.value');
+        $conditions = [];
+        if (! $this->request->query('show-dummy')) {
+            $conditions['dummy'] = 0;
+        }
         $communities = $this->Communities->find('all')
             ->select(['id', 'name', 'intAlignmentAdjustment', 'intAlignmentThreshhold'])
+            ->where($conditions)
             ->order(['created' => 'DESC']);
         $this->set([
             'communities' => $communities,
