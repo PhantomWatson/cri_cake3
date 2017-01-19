@@ -47,10 +47,8 @@ Router::scope('/', function ($routes) {
     $routes->connect('/fasttrack', ['controller' => 'Pages', 'action' => 'fasttrack']);
     $routes->connect('/faq', ['controller' => 'Pages', 'action' => 'home']);
     $routes->connect('/communityFAQ', ['controller' => 'Pages', 'action' => 'faqCommunity']);
-    $routes->connect('/consultantFAQ', ['controller' => 'Pages', 'action' => 'faqConsultants']);
     $routes->connect('/clear-cache', ['controller' => 'Pages', 'action' => 'clearCache']);
     $routes->connect('/maintenance', ['controller' => 'Pages', 'action' => 'maintenance']);
-    $routes->redirect('/consultantfaq', '/consultantFAQ');
     $routes->redirect('/communityfaq', '/communityFAQ');
 
     $routes->connect('/login', ['controller' => 'Users', 'action' => 'login']);

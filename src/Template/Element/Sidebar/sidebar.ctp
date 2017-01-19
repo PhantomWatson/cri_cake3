@@ -83,16 +83,6 @@
         </li>
         <li class="link">
             <?= $this->Html->link(
-                'FAQs for Consultants',
-                [
-                    'prefix' => false,
-                    'controller' => 'Pages',
-                    'action' => 'faqConsultants'
-                ]
-            ) ?>
-        </li>
-        <li class="link">
-            <?= $this->Html->link(
                 'Credits and Sources',
                 [
                     'prefix' => false,

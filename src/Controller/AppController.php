@@ -133,7 +133,6 @@ class AppController extends Controller
                 'maintenance',
                 'home',
                 'faqCommunity',
-                'faqConsultants',
                 'enroll',
                 'credits',
                 'glossary',

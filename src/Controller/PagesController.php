@@ -70,16 +70,6 @@ class PagesController extends AppController
     }
 
     /**
-     * Method for /pages/faq-consultants
-     *
-     * @return void
-     */
-    public function faqConsultants()
-    {
-        $this->set('titleForLayout', 'Frequently Asked Questions for CRI Consultants');
-    }
-
-    /**
      * Method for /pages/credits
      *
      * @return void
