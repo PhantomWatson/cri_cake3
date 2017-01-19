@@ -1082,7 +1082,7 @@ var alignmentCalculationSettings = {
     filter: function (matching) {
         matching = matching.toLowerCase();
         var rows = $('#alignmentCalcSettings tbody tr').not('.default');
-        if (matching == '') {
+        if (matching === '') {
             rows.show();
             return;
         }
