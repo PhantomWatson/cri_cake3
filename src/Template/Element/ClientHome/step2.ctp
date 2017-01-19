@@ -27,6 +27,7 @@
         'importErrors' => $importErrors['official'],
         'onCurrentStep' => ($score == 2),
         'responsesReceived' => $criteria[2]['responses_received'][1],
+        'step' => 2,
         'surveyActive' => $surveyIsActive['official'],
         'surveyId' => $officialSurveyId,
         'timeResponsesLastChecked' => $officialResponsesChecked

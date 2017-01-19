@@ -27,6 +27,7 @@
         'importErrors' => $importErrors['organization'],
         'onCurrentStep' => ($score == 3),
         'responsesReceived' => $criteria[3]['responses_received'][1],
+        'step' => 3,
         'surveyActive' => $surveyIsActive['organization'],
         'surveyId' => $organizationSurveyId,
         'timeResponsesLastChecked' => $organizationResponsesChecked

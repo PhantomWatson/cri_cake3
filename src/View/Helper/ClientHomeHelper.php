@@ -2,6 +2,7 @@
 namespace App\View\Helper;
 
 use Cake\Chronos\Date;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\View\Helper;
 
 class ClientHomeHelper extends Helper
@@ -157,6 +158,7 @@ class ClientHomeHelper extends Helper
      *
      * @param array $params Parameters
      * @return string
+     * @throws InternalErrorException
      */
     public function responsesRow($params)
     {
@@ -209,13 +211,20 @@ class ClientHomeHelper extends Helper
             }
         }
         if ($params['responsesReceived']) {
+            if ($params['step'] == 2) {
+                $surveyType = 'official';
+            } elseif ($params['step'] == 3) {
+                $surveyType = 'organization';
+            } else {
+                throw new InternalErrorException('"' . $params['step'] . '" is not a valid step.');
+            }
             $actions .= $this->Html->link(
                 'Review Responses',
                 [
                     'prefix' => 'client',
                     'controller' => 'Respondents',
                     'action' => 'index',
-                    'official'
+                    $surveyType
                 ],
                 ['class' => 'btn btn-default']
             );
