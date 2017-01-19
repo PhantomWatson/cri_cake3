@@ -393,11 +393,16 @@ class CommunitiesController extends AppController
     public function clienthome($communityId)
     {
         $this->Cookie->write('communityId', $communityId);
-        $clientId = $this->Communities->getCommunityClientId($communityId);
-        $this->Cookie->write('clientId', $clientId);
+        $this->loadComponent('ClientHome');
+        $prepResult = $this->ClientHome->prepareClientHome($communityId);
+        if ($prepResult) {
+            return $this->render('/Client/Communities/index');
+        }
+
+        $this->Flash->error('That client home page is currently unavailable.');
 
         return $this->redirect([
-            'prefix' => 'client',
+            'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'index'
         ]);

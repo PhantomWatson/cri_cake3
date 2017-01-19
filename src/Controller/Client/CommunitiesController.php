@@ -14,76 +14,14 @@ class CommunitiesController extends AppController
     public function index()
     {
         $this->viewBuilder()->helpers(['ClientHome']);
-        $clientId = $this->getClientId();
-        if (! $clientId) {
-            return $this->chooseClientToImpersonate();
-        }
-        $communityId = $this->Communities->getClientCommunityId($clientId);
-
-        if ($communityId) {
-            try {
-                $community = $this->Communities->get($communityId);
-            } catch (RecordNotFoundException $e) {
-                $this->set('titleForLayout', 'CRI Account Not Yet Ready For Use');
-
-                return $this->render('notready');
-            }
-        } else {
+        $userId = $this->Auth->user('id');
+        $communityId = $this->Communities->getClientCommunityId($userId);
+        $this->loadComponent('ClientHome');
+        $prepResult = $this->ClientHome->prepareClientHome($communityId);
+        if (! $prepResult) {
             $this->set('titleForLayout', 'CRI Account Not Yet Ready For Use');
 
             return $this->render('notready');
-        }
-
-        $purchaseUrls = [];
-        $productsTable = TableRegistry::get('Products');
-        for ($productId = 1; $productId <= 5; $productId++) {
-            $purchaseUrls[$productId] = $productsTable->getPurchaseUrl($productId, $clientId, $communityId);
-        }
-
-        $criteria = $this->Communities->getProgress($communityId);
-        $step2SurveyPurchased = $criteria[2]['survey_purchased'];
-        $step3PolicyDevPurchased = $criteria[3]['policy_dev_purchased'];
-
-        $surveysTable = TableRegistry::get('Surveys');
-        $officialSurveyId = $surveysTable->getSurveyId($communityId, 'official');
-        $organizationSurveyId = $surveysTable->getSurveyId($communityId, 'organization');
-        $importErrors = [
-            'official' => $surveysTable->getImportErrors($officialSurveyId),
-            'organization' => $surveysTable->getImportErrors($organizationSurveyId)
-        ];
-        $respondentsTable = TableRegistry::get('Respondents');
-        $this->set([
-            'titleForLayout' => $community->name . '\'s Progress in the CRI Program',
-            'score' => $community->score,
-            'officialUninvitedRespondents' => $respondentsTable->getUninvitedCount($officialSurveyId),
-            'officialResponsesChecked' => $surveysTable->getChecked($officialSurveyId),
-            'organizationResponsesChecked' => $surveysTable->getChecked($organizationSurveyId),
-            'autoImportFrequency' => $surveysTable->getPerSurveyAutoImportFrequency(),
-            'surveyExists' => [
-                'official' => (bool)$officialSurveyId,
-                'organization' => (bool)$organizationSurveyId
-            ],
-            'surveyIsActive' => [
-                'official' => $surveysTable->isActive($officialSurveyId),
-                'organization' => $surveysTable->isActive($organizationSurveyId)
-            ],
-            'surveyIsComplete' => [
-                'official' => $surveysTable->isComplete($officialSurveyId),
-                'organization' => $surveysTable->isComplete($organizationSurveyId)
-            ]
-        ]);
-        $this->set(compact(
-            'criteria',
-            'importErrors',
-            'purchaseUrls',
-            'officialSurveyId',
-            'organizationSurveyId',
-            'step2SurveyPurchased',
-            'step3PolicyDevPurchased'
-        ));
-        if ($this->Auth->user('role') == 'admin') {
-            $this->prepareAdminHeader();
-            $this->set(compact('community'));
         }
     }
 }
