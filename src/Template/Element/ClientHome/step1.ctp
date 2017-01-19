@@ -1,7 +1,7 @@
 <?= $this->ClientHome->tbodyForStep(1, $score) ?>
     <tr>
         <th colspan="3">
-            <button class="step-header">
+            <button class="step-header step-header-expandable">
                 Step One: Sign Up
             </button>
         </th>

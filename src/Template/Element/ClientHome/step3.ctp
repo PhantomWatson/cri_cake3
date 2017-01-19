@@ -1,7 +1,7 @@
 <?= $this->ClientHome->tbodyForStep(3, $score) ?>
     <tr>
         <th colspan="3">
-            <button class="step-header">
+            <button class="step-header step-header-expandable">
                 Step Three: Community Organizations Alignment Assessment
             </button>
         </th>
