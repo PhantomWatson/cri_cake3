@@ -4,10 +4,6 @@
     </h1>
 </div>
 
-<?php if ($authUser['role'] == 'admin'): ?>
-    <?php $this->element('script', ['script' => 'admin']); ?>
-<?php endif; ?>
-
 <div id="client_home">
     <table>
         <?= $this->element('ClientHome/step1') ?>
