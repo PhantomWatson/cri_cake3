@@ -2,7 +2,7 @@
     <tr>
         <th colspan="3">
             <button class="step-header">
-                Step Four: Review of Findings
+                Step Four: Policy Development
             </button>
         </th>
     </tr>
