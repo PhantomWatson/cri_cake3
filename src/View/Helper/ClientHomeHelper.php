@@ -192,7 +192,7 @@ class ClientHomeHelper extends Helper
         if ($params['importErrors']) {
             $description .= '<div class="import-results alert alert-danger">';
             $description .= __n('An error was', 'Errors were', count($params['importErrors']));
-            $description .= 'encountered the last time responses were imported:';
+            $description .= ' encountered the last time responses were imported:';
             $description .= '<ul>';
             foreach ($params['importErrors'] as $error) {
                 $description .= "<li>$error</li>";
