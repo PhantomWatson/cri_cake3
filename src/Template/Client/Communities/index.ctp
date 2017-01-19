@@ -4,6 +4,8 @@
     </h1>
 </div>
 
+<?php $this->ClientHome->setUserRole($authUser['role']); ?>
+
 <div id="client_home">
     <table>
         <?= $this->element('ClientHome/step1') ?>

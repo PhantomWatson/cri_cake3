@@ -8,6 +8,33 @@ use Cake\View\Helper;
 class ClientHomeHelper extends Helper
 {
     public $helpers = ['Html', 'Time'];
+    public $userRole = null;
+
+    /**
+     * Sets the userRole property
+     *
+     * @param string $role Either 'client' or 'admin'
+     * @return void
+     */
+    public function setUserRole($role)
+    {
+        $this->userRole = $role;
+    }
+
+    /**
+     * Returns the non-null userRole property or throws an exception
+     *
+     * @return string
+     * @throws InternalErrorException
+     */
+    private function getUserRole()
+    {
+        if (! $this->userRole) {
+            throw new InternalErrorException('User role not set');
+        }
+
+        return $this->userRole;
+    }
 
     /**
      * Returns a Bootstrap glyphicon indicating success or failure
@@ -136,14 +163,24 @@ class ClientHomeHelper extends Helper
         if ($params['surveyActive']) {
             $buttonClass = 'btn btn-';
             $buttonClass .= ($params['invitationsSent'] ? 'default' : 'primary');
-            $actions = $this->Html->link(
-                'Send ' . ($params['invitationsSent'] ? 'More ' : '') . 'Invitations',
-                [
+            if ($this->getUserRole() == 'admin') {
+                $path = [
+                    'prefix' => 'admin',
+                    'controller' => 'Surveys',
+                    'action' => 'invite',
+                    $params['surveyId']
+                ];
+            } else {
+                $path = [
                     'prefix' => 'client',
                     'controller' => 'Surveys',
                     'action' => 'invite',
                     'officials'
-                ],
+                ];
+            }
+            $actions = $this->Html->link(
+                'Send ' . ($params['invitationsSent'] ? 'More ' : '') . 'Invitations',
+                $path,
                 ['class' => $buttonClass]
             );
         } else {

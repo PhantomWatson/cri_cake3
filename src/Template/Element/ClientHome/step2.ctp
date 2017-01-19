@@ -16,6 +16,7 @@
     ]) ?>
 
     <?= $this->ClientHome->invitationRow([
+        'surveyId' => $officialSurveyId,
         'description' => $criteria[2]['invitations_sent'][0],
         'invitationsSent' => $criteria[2]['invitations_sent'][1],
         'surveyActive' => $surveyIsActive['official']
