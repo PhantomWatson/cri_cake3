@@ -18,7 +18,7 @@
     <div>
         <p>
             The 'Progress' page for each community gives details about what criteria it has passed and should be
-            consulted before advancing communities through the five steps of the CRI program.
+            consulted before advancing communities through the four steps of the CRI program.
         </p>
         <ol>
             <li>
@@ -54,10 +54,6 @@
             </li>
             <li>
                 Advance the community to <strong>Step Four</strong> once it has passed all of the Step Three criteria
-            </li>
-            <li>
-                Advance the community to <strong>Step Five</strong> once its participation in CRI has
-                concluded
             </li>
         </ol>
     </div>
@@ -417,7 +413,7 @@
         <ul>
             <li>
                 <strong>Progress</strong>
-                <br />Shows which of the five steps of CRI this community is currently on and what criteria for advancement have been passed in order to help administrators determine if it is ready for advancement.
+                <br />Shows which of the four steps of CRI this community is currently on and what criteria for advancement have been passed in order to help administrators determine if it is ready for advancement.
                 <br />A community's stage/score can be updated through this page.
             </li>
             <li>

@@ -14,7 +14,6 @@
         <?= $this->element('ClientHome/step2') ?>
         <?= $this->element('ClientHome/step3') ?>
         <?= $this->element('ClientHome/step4') ?>
-        <?= $this->element('ClientHome/step5') ?>
     </table>
 </div>
 

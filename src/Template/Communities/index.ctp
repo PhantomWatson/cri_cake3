@@ -14,7 +14,7 @@
         <p>
             The following are all of the communities that have signed up to
             participate in the Community Readiness Initiative, as well as their
-            progress through <button class="btn-link" id="explain_steps">CRI's five-step process</button>.
+            progress through <button class="btn-link" id="explain_steps">CRI's four-step process</button>.
         </p>
         <div class="steps">
             <dl>

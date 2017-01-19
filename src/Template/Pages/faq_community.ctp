@@ -98,7 +98,7 @@
         </p>
 
         <p>
-            Completion of all five steps in the CRI will prepare communities to work with OCRA and other agencies on future projects.
+            Completion of all four steps in the CRI will prepare communities to work with OCRA and other agencies on future projects.
         </p>
     </section>
 
