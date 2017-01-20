@@ -272,7 +272,7 @@ class ClientHomeHelper extends Helper
             }
 
             $actions .= $this->Html->link(
-                'Review Responses',
+                'Review Respondents',
                 $path,
                 ['class' => 'btn btn-default']
             );
