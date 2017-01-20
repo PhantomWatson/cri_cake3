@@ -376,13 +376,17 @@ class Reports
                     $this->surveyColumnHeaders[$surveyType][] = ucwords($sector);
                 }
                 $this->surveyColumnHeaders[$surveyType][] = 'Overall';
+                $this->surveyColumnHeaders[$surveyType][] = 'Aware of Plan';
+                $this->surveyColumnHeaders[$surveyType][] = 'Unaware of Plan';
             }
+
             if ($surveyType == 'officials') {
                 $this->surveyColumnHeaders[$surveyType][] = 'Presentation A';
                 $this->surveyColumnHeaders[$surveyType][] = 'Presentation B';
             } else {
                 $this->surveyColumnHeaders[$surveyType][] = 'Presentation C';
             }
+
             $this->surveyColumnHeaders[$surveyType][] = 'Status';
         }
         $this->afterSurveysColTitles = ['Notes'];
@@ -683,6 +687,8 @@ class Reports
                         $cells[] = $survey['internalAlignment'][$sector];
                     }
                     $cells[] = $survey['internalAlignment']['total'];
+                    $cells[] = $survey['awareOfPlanCount'];
+                    $cells[] = $survey['unawareOfPlanCount'];
                 }
                 if ($surveyType == 'official_survey') {
                     $cells[] = $community['presentationsGiven']['a'];
