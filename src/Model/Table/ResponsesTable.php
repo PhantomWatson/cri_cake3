@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Survey;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -531,5 +532,58 @@ class ResponsesTable extends Table
         }
 
         return $alignmentPerSector;
+    }
+
+    /**
+     * Decodes the response and returns a boolean indicating if the respondent is aware of
+     * an existing comprehensive community plan, or NULL if either the respondent did not
+     * answer that question or if that question's ID is unknown
+     *
+     * @param string $serializedResponse Serialized response
+     * @param Survey $survey The result of a call to SurveysTable::get()
+     * @return array|null
+     */
+    public function getAwareOfPlan($serializedResponse, Survey $survey)
+    {
+        if (! $survey->aware_of_plan_qid) {
+            return null;
+        }
+
+        $rawResponse = unserialize(base64_decode($serializedResponse));
+        $questions = isset($rawResponse['pages']) ? $rawResponse['pages'][0]['questions'] : $rawResponse;
+        $affirmativeAnswerIds = [
+            $survey->aware_of_city_plan_aid,
+            $survey->aware_of_county_plan_aid,
+            $survey->aware_of_regional_plan_aid
+        ];
+        $negativeAnswerId = $survey->unaware_of_plan_aid;
+
+        foreach ($questions as $section) {
+            if (isset($section['id'])) {
+                $questionId = $section['id'];
+            } elseif (isset($section['question_id'])) {
+                $questionId = $section['question_id'];
+            } else {
+                continue;
+            }
+
+            if ($questionId != $survey->aware_of_plan_qid) {
+                continue;
+            }
+
+            foreach ($section['answers'] as $answer) {
+                if (! isset($answer['choice_id'])) {
+                    continue;
+                }
+                if ($answer['choice_id'] == $negativeAnswerId) {
+                    return false;
+                }
+                if (in_array($answer['choice_id'], $affirmativeAnswerIds)) {
+                    return true;
+                }
+            }
+        }
+
+        return null;
     }
 }

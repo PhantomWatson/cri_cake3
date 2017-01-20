@@ -148,7 +148,8 @@ class SurveysController extends AppController
                     'response' => $serializedResponse,
                     'alignment_vs_local' => $alignmentVsLocal,
                     'alignment_vs_parent' => $alignmentVsParent,
-                    'response_date' => new Time($response['date_modified'])
+                    'response_date' => new Time($response['date_modified']),
+                    'aware_of_plan' => $responsesTable->getAwareOfPlan($serializedResponse, $survey)
                 ];
                 foreach ($responseRanks as $sector => $rank) {
                     $responseFields["{$sector}_rank"] = $rank;
