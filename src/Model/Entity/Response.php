@@ -25,6 +25,7 @@ class Response extends Entity
         'recreation_rank' => true,
         'alignment_vs_local' => true,
         'alignment_vs_parent' => true,
+        'aware_of_plan' => true,
         'response_date' => true,
         'respondent' => true,
         'survey' => true,
