@@ -35,12 +35,6 @@ class PagesControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
-    public function testFaqConsultants()
-    {
-        $this->get('/consultantFAQ');
-        $this->assertResponseOk();
-    }
-
     public function testCredits()
     {
         $this->get('/credits');
