@@ -292,14 +292,24 @@ class ClientHomeHelper extends Helper
         $icon = $this->glyphicon($params['thresholdReached']);
 
         if ($params['surveyActive'] && $params['responsesReceived']) {
-            $actions = $this->Html->link(
-                'Reminders',
-                [
+            if ($this->getUserRole() == 'admin') {
+                $path = [
+                    'prefix' => 'admin',
+                    'controller' => 'Surveys',
+                    'action' => 'remind',
+                    $params['surveyId']
+                ];
+            } else {
+                $path = [
                     'prefix' => 'client',
                     'controller' => 'Surveys',
                     'action' => 'remind',
                     'official'
-                ],
+                ];
+            }
+            $actions = $this->Html->link(
+                'Reminders',
+                $path,
                 ['class' => 'btn btn-default']
             );
         } else {

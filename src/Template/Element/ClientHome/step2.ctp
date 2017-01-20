@@ -38,6 +38,7 @@
         'description' => $criteria[2]['response_threshhold_reached'][0],
         'responsesReceived' => $criteria[2]['responses_received'][1],
         'surveyActive' => $surveyIsActive['official'],
+        'surveyId' => $officialSurveyId,
         'thresholdReached' => $criteria[2]['response_threshhold_reached'][1]
     ]) ?>
 
