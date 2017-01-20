@@ -8,20 +8,22 @@
     </h1>
 </div>
 
-<p>
-    <?= $this->Html->link(
-        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Client Home',
-        [
-            'prefix' => 'client',
-            'controller' => 'Communities',
-            'action' => 'index'
-        ],
-        [
-            'class' => 'btn btn-default',
-            'escape' => false
-        ]
-    ) ?>
-</p>
+<?php if ($this->request->prefix == 'client'): ?>
+    <p>
+        <?= $this->Html->link(
+            '<span class="glyphicon glyphicon-arrow-left"></span> Back to Client Home',
+            [
+                'prefix' => 'client',
+                'controller' => 'Communities',
+                'action' => 'index'
+            ],
+            [
+                'class' => 'btn btn-default',
+                'escape' => false
+            ]
+        ) ?>
+    </p>
+<?php endif; ?>
 
 <?php if (empty($respondents)): ?>
     <p class="alert alert-info">
