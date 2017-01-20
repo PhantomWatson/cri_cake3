@@ -236,6 +236,18 @@
                                         <?php endif; ?>
                                         <li>
                                             <?= $this->Html->link(
+                                                '<span class="glyphicon glyphicon-user" aria-hidden="true"></span> Respondents',
+                                                [
+                                                    'prefix' => 'admin',
+                                                    'controller' => 'Respondents',
+                                                    'action' => 'view',
+                                                    $community->{$surveyType}['id']
+                                                ],
+                                                ['escape' => false]
+                                            ) ?>
+                                        </li>
+                                        <li>
+                                            <?= $this->Html->link(
                                                 '<span class="glyphicon glyphicon-scale" aria-hidden="true"></span> Alignment',
                                                 [
                                                     'prefix' => 'admin',

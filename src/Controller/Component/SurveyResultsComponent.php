@@ -54,6 +54,7 @@ class SurveyResultsComponent extends Component
         $this->_registry->getController()->paginate['sortWhitelist'] = ['approved', 'email', 'name'];
         $respondents = $this->_registry->getController()->paginate($query)->toArray();
         $this->_registry->getController()->set([
+            'communityId' => $community->id,
             'respondents' => $respondents,
             'surveyType' => $surveyType,
             'titleForLayout' => $community->name . ' ' . ucwords($surveyType) . ' Questionnaire Respondents'

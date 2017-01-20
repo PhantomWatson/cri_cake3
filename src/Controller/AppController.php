@@ -356,6 +356,7 @@ class AppController extends Controller
             'Activate' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'activate']) . '/{survey-id}',
             'Invitations' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'invite']) . '/{survey-id}',
             'Reminders' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'remind']) . '/{survey-id}',
+            'Respondents' => Router::url(['prefix' => 'admin', 'controller' => 'Respondents', 'action' => 'view']) . '/{survey-id}',
             'Alignment' => Router::url(['prefix' => 'admin', 'controller' => 'Responses', 'action' => 'view']) . '/{survey-id}'
         ];
 
