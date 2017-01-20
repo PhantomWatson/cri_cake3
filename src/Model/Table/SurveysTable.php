@@ -297,7 +297,12 @@ class SurveysTable extends Table
             '2_aid',
             '3_aid',
             '4_aid',
-            '5_aid'
+            '5_aid',
+            'aware_of_plan_qid',
+            'aware_of_city_plan_aid',
+            'aware_of_county_plan_aid',
+            'aware_of_regional_plan_aid',
+            'unaware_of_plan_aid'
         ];
     }
 
@@ -318,7 +323,7 @@ class SurveysTable extends Table
         }
         $survey = $results->first();
         $SurveyMonkey = new SurveyMonkey();
-        $data = $SurveyMonkey->getPwrrrQuestionAndAnswerIds($smId)[2];
+        $data = $SurveyMonkey->getQuestionAndAnswerIds($smId)[2];
         $this->patchEntity($survey, $data);
         if ($this->save($survey)) {
             return [true, 'Question and answer IDs saved.'];

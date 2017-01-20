@@ -396,12 +396,12 @@ class SurveyMonkey
     }
 
     /**
-     * Queries SurveyMonkey to determine the IDs associated with the PWRRR-ranking question and its set of answers
+     * Queries SurveyMonkey to determine the IDs associated with relevant questions and answers
      *
      * @param string $smId SurveyMonkey survey ID
      * @return array First value is true/false for success/failure, second value is status message, third is data array for saving Survey with
      */
-    public function getPwrrrQuestionAndAnswerIds($smId)
+    public function getQuestionAndAnswerIds($smId)
     {
         if (Configure::read('debug')) {
             return [true, "", [
@@ -415,7 +415,12 @@ class SurveyMonkey
                 '2_aid' => '7822870981',
                 '3_aid' => '7822870982',
                 '4_aid' => '7822870984',
-                '5_aid' => '7822870987'
+                '5_aid' => '7822870987',
+                'aware_of_plan_qid' => '',
+                'aware_of_city_plan_aid' => '',
+                'aware_of_county_plan_aid' => '',
+                'aware_of_regional_plan_aid' => '',
+                'unaware_of_plan_aid' => ''
             ]];
         }
 
@@ -424,27 +429,27 @@ class SurveyMonkey
             return [false, 'Could not get questionnaire details from SurveyMonkey. This might be a temporary network error.'];
         }
 
-        /* Find the appropriate question using one of the key phrases that have been
+        /* Find the PWRRR-ranking question using one of the key phrases that have been
          * used in various versions of the surveys */
-        $pwrrrQuestion = null;
         $keyPhrases = [
             'PWR3 is a tool for thinking about the economic future of your community.',
             'Each Indiana community uses a combination of 5 activities'
         ];
-        foreach ($result['data']['pages'] as $page) {
-            foreach ($page['questions'] as $question) {
-                foreach ($keyPhrases as $keyPhrase) {
-                    $heading = $question['headings'][0]['heading'];
-                    if (strpos($heading, $keyPhrase) !== false) {
-                        $pwrrrQuestion = $question;
-                        break 3;
-                    }
-                }
-            }
+        $pwrrrQuestion = $this->findQuestion($result, $keyPhrases);
+        if (! $pwrrrQuestion) {
+            $msg = 'Error: This questionnaire does not contain a PWR<sup>3</sup> ranking question.';
+
+            return [false, $msg];
         }
 
-        if (! $pwrrrQuestion) {
-            return [false, 'Error: This questionnaire does not contain a PWR<sup>3</sup> ranking question.'];
+        // Find the "aware of comprehensive community plan" question
+        //aware_of_plan_qid
+        $keyPhrases = ['Please check the box for each comprehensive community plan'];
+        $awareOfPlanQuestion = $this->findQuestion($result, $keyPhrases);
+        if (! $awareOfPlanQuestion) {
+            $msg = 'Error: This questionnaire does not contain a question about comprehensive community plans.';
+
+            return [false, $msg];
         }
 
         // Create an array to save this data with
@@ -453,6 +458,8 @@ class SurveyMonkey
         $qnaIdFields = $surveysTable->getQnaIdFieldNames();
         $nulls = array_fill(0, count($qnaIdFields), null);
         $data = array_combine($qnaIdFields, $nulls);
+
+        // Stash PWRRR Q&A IDs
         $data['pwrrr_qid'] = $pwrrrQuestion['id'];
         foreach ($pwrrrQuestion['answers'] as $choices) {
             foreach ($choices as $choice) {
@@ -477,6 +484,23 @@ class SurveyMonkey
             }
         }
 
+        // Stash "aware of plan" Q&A IDs
+        $data['aware_of_plan_qid'] = $awareOfPlanQuestion['id'];
+        $keyPhrases = [
+            'City' => 'aware_of_city_plan_aid',
+            'County' => 'aware_of_county_plan_aid',
+            'Regional' => 'aware_of_regional_plan_aid',
+            'I do not know' => 'unaware_of_plan_aid'
+        ];
+        foreach ($awareOfPlanQuestion['answers']['choices'] as $choice) {
+            foreach ($keyPhrases as $phrase => $field) {
+                if (strpos($choice['text'], $phrase) !== false) {
+                    $data[$field] = $choice['id'];
+                    break;
+                }
+            }
+        }
+
         // Make sure all fields have values
         foreach ($data as $field => $value) {
             if (! $value) {
@@ -487,6 +511,29 @@ class SurveyMonkey
         }
 
         return [true, '', $data];
+    }
+
+    /**
+     * Returns a full question array with matching heading text
+     *
+     * @param array $surveyDetails Result of survey details API call
+     * @param string[] $keyPhrases Array of phrases to search for
+     * @return null|array
+     */
+    public function findQuestion($surveyDetails, array $keyPhrases)
+    {
+        foreach ($surveyDetails['data']['pages'] as $page) {
+            foreach ($page['questions'] as $question) {
+                foreach ($keyPhrases as $keyPhrase) {
+                    $heading = $question['headings'][0]['heading'];
+                    if (strpos($heading, $keyPhrase) !== false) {
+                        return $question;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

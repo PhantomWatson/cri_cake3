@@ -296,7 +296,7 @@ class SurveysController extends AppController
     public function getQnaIds($smId)
     {
         $SurveyMonkey = new SurveyMonkey();
-        $result = $SurveyMonkey->getPwrrrQuestionAndAnswerIds($smId);
+        $result = $SurveyMonkey->getQuestionAndAnswerIds($smId);
         $this->set('result', json_encode($result));
         $this->viewBuilder()->layout('json');
         $this->render('api');
