@@ -45,7 +45,8 @@
     <?= $this->ClientHome->unapprovedResponsesRow([
         'allUnapprovedAddressed' => $criteria[2]['unapproved_addressed'][1],
         'description' => $criteria[2]['unapproved_addressed'][0],
-        'hasUninvitedResponses' => $criteria[2]['hasUninvitedResponses']
+        'hasUninvitedResponses' => $criteria[2]['hasUninvitedResponses'],
+        'surveyId' => $officialSurveyId
     ]) ?>
 
     <?= $this->ClientHome->presentationScheduledRow('A', $community->presentation_a) ?>

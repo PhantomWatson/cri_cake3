@@ -330,14 +330,24 @@ class ClientHomeHelper extends Helper
         $icon = $this->glyphicon($params['allUnapprovedAddressed']);
 
         if ($params['hasUninvitedResponses']) {
-            $actions = $this->Html->link(
-                'Approve / Dismiss',
-                [
+            if ($this->getUserRole() == 'admin') {
+                $path = [
+                    'prefix' => 'admin',
+                    'controller' => 'Respondents',
+                    'action' => 'unapproved',
+                    $params['surveyId']
+                ];
+            } else {
+                $path = [
                     'prefix' => 'client',
                     'controller' => 'Respondents',
                     'action' => 'unapproved',
                     'official'
-                ],
+                ];
+            }
+            $actions = $this->Html->link(
+                'Approve / Dismiss',
+                $path,
                 ['class' => 'btn btn-' . ($params['allUnapprovedAddressed'] ? 'default' : 'primary')]
             );
         } else {
