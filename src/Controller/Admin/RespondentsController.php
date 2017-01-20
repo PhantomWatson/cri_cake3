@@ -106,4 +106,11 @@ class RespondentsController extends AppController
         ]]);
         $this->eventManager()->dispatch($event);
     }
+
+    public function view($surveyId)
+    {
+        $this->loadComponent('SurveyResults');
+        $this->SurveyResults->prepareRespondentsClientsPage(compact('surveyId'));
+        return $this->render('/Client/Respondents/index');
+    }
 }

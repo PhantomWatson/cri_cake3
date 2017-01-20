@@ -41,45 +41,20 @@ class RespondentsController extends AppController
             throw new BadRequestException('Questionnaire type not specified');
         }
 
-        $clientId = $this->getClientId();
-        if (! $clientId) {
-            return $this->chooseClientToImpersonate();
-        }
+        $clientId = $this->Auth->user('id');
         $communitiesTable = TableRegistry::get('Communities');
         $communityId = $communitiesTable->getClientCommunityId($clientId);
+
         if ($communityId) {
-            $community = $communitiesTable->get($communityId);
-            $titleForLayout = $community->name . ' ' . ucwords($surveyType) . ' Questionnaire Respondents';
-            $surveysTable = TableRegistry::get('Surveys');
-            $surveyId = $surveysTable->getSurveyId($community->id, $surveyType);
-            $query = $this->Respondents->find('all')
-                ->select([
-                    'Respondents.id',
-                    'Respondents.email',
-                    'Respondents.name',
-                    'Respondents.title',
-                    'Respondents.approved'
-                ])
-                ->where(['Respondents.survey_id' => $surveyId])
-                ->contain([
-                    'Responses' => function ($q) {
-                        return $q
-                            ->select(['respondent_id', 'response_date'])
-                            ->order(['Responses.response_date' => 'DESC']);
-                    }
-                ])
-                ->order(['name' => 'ASC']);
-            $this->paginate['sortWhitelist'] = ['approved', 'email', 'name'];
-            $respondents = $this->paginate($query)->toArray();
+            $this->loadComponent('SurveyResults');
+            $this->SurveyResults->prepareRespondentsClientsPage(compact('communityId', 'surveyType'));
         } else {
-            $titleForLayout = 'Questionnaire Respondents';
-            $respondents = [];
+            $this->set([
+                'titleForLayout' => 'Questionnaire Respondents',
+                'respondents' => [],
+                'surveyType' => $surveyType
+            ]);
         }
-        $this->set(compact(
-            'titleForLayout',
-            'respondents',
-            'surveyType'
-        ));
     }
 
     /**

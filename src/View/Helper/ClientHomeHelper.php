@@ -255,14 +255,25 @@ class ClientHomeHelper extends Helper
             } else {
                 throw new InternalErrorException('"' . $params['step'] . '" is not a valid step.');
             }
-            $actions .= $this->Html->link(
-                'Review Responses',
-                [
+            if ($this->getUserRole() == 'admin') {
+                $path = [
+                    'prefix' => 'admin',
+                    'controller' => 'Respondents',
+                    'action' => 'view',
+                    $params['surveyId']
+                ];
+            } else {
+                $path = [
                     'prefix' => 'client',
                     'controller' => 'Respondents',
                     'action' => 'index',
                     $surveyType
-                ],
+                ];
+            }
+
+            $actions .= $this->Html->link(
+                'Review Responses',
+                $path,
                 ['class' => 'btn btn-default']
             );
         }
