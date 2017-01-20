@@ -30,6 +30,45 @@
         No invitations have been sent out for this questionnaire.
     </p>
 <?php else: ?>
+    <table class="table" id="respondents-summary">
+        <tbody>
+            <tr>
+                <th>
+                    Invitations
+                </th>
+                <td>
+                    <?= $invitationCount ?>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <?php if ($surveyType == 'official'): ?>
+                        Approved
+                    <?php endif; ?>
+                    Responses
+                </th>
+                <td>
+                    <?= $approvedResponseCount ?>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Response Rate
+                </th>
+                <td>
+                    <?= $responseRate ?>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Most Recent Response
+                </th>
+                <td>
+                    <?= $mostRecentResponseDate ?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
     <?= $this->element('pagination') ?>
 

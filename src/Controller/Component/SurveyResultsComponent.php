@@ -40,6 +40,7 @@ class SurveyResultsComponent extends Component
                 'Respondents.email',
                 'Respondents.name',
                 'Respondents.title',
+                'Respondents.invited',
                 'Respondents.approved'
             ])
             ->where(['Respondents.survey_id' => $surveyId])
@@ -51,11 +52,47 @@ class SurveyResultsComponent extends Component
                 }
             ])
             ->order(['name' => 'ASC']);
+
+        $invitationCount = 0;
+        $approvedResponseCount = 0;
+        $mostRecentResponseDate = null;
+        $respondents = $query->all();
+        foreach ($respondents as $respondent) {
+            if ($respondent->invited) {
+                $invitationCount++;
+            }
+            if ($respondent->approved && ! empty($respondent->responses)) {
+                $approvedResponseCount++;
+            }
+            if (! empty($respondent->responses)) {
+                $date = $respondent->responses[0]['response_date']->format('Y-m-d');
+                if ($date > $mostRecentResponseDate) {
+                    $mostRecentResponseDate = $date;
+                }
+            }
+        }
+        if ($mostRecentResponseDate) {
+            $mostRecentResponseDate = date('F j, Y', strtotime($mostRecentResponseDate));
+        } else {
+            $mostRecentResponseDate = 'N/A';
+        }
+
+        if ($invitationCount) {
+            $responseRate = round(($approvedResponseCount / $invitationCount) * 100) . '%';
+        } else {
+            $responseRate = 'N/A';
+        }
+
         $this->_registry->getController()->paginate['sortWhitelist'] = ['approved', 'email', 'name'];
-        $respondents = $this->_registry->getController()->paginate($query)->toArray();
+        $paginatedRespondents = $this->_registry->getController()->paginate($query)->toArray();
+
         $this->_registry->getController()->set([
+            'approvedResponseCount' => $approvedResponseCount,
             'communityId' => $community->id,
-            'respondents' => $respondents,
+            'invitationCount' => $invitationCount,
+            'mostRecentResponseDate' => $mostRecentResponseDate,
+            'respondents' => $paginatedRespondents,
+            'responseRate' => $responseRate,
             'surveyType' => $surveyType,
             'titleForLayout' => $community->name . ' ' . ucwords($surveyType) . ' Questionnaire Respondents'
         ]);
