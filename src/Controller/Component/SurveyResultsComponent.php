@@ -9,6 +9,12 @@ class SurveyResultsComponent extends Component
 {
     public $components = ['Flash', 'Auth'];
 
+    /**
+     * Prepares /admin/respondents/view or /client/respondents/index
+     *
+     * @param array $params Parameters
+     * @return void
+     */
     public function prepareRespondentsClientsPage($params)
     {
         $surveysTable = TableRegistry::get('Surveys');

@@ -107,10 +107,17 @@ class RespondentsController extends AppController
         $this->eventManager()->dispatch($event);
     }
 
+    /**
+     * View method
+     *
+     * @param int $surveyId Survey ID
+     * @return \Cake\Network\Response
+     */
     public function view($surveyId)
     {
         $this->loadComponent('SurveyResults');
         $this->SurveyResults->prepareRespondentsClientsPage(compact('surveyId'));
+
         return $this->render('/Client/Respondents/index');
     }
 }

@@ -33,7 +33,7 @@ class RespondentsController extends AppController
      * Index method
      *
      * @param string|null $surveyType Survey type
-     * @return \App\Controller\Response
+     * @return void
      */
     public function index($surveyType = null)
     {
