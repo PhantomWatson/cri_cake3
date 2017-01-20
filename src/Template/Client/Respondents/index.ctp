@@ -50,9 +50,6 @@
                 <th>
                     Completed Questionnaire
                 </th>
-                <th>
-                    Completion Date
-                </th>
             </tr>
         </thead>
         <tbody>
@@ -85,15 +82,13 @@
                     <?php endif; ?>
 
                     <td class="boolean_icon">
-                        <span class="glyphicon glyphicon-<?= empty($respondent->responses) ? 'remove' : 'ok' ?>"></span>
-                    </td>
-                    <td>
-                        <?php
-                            if (isset($respondent->responses[0]['response_date']) && $respondent->responses[0]['response_date'] != null) {
-                                $timestamp = strtotime($respondent->responses[0]['response_date']);
-                                echo date('F j, Y', $timestamp);
-                            }
-                        ?>
+                        <?php if (empty($respondent->responses)): ?>
+                            <span class="glyphicon glyphicon-remove"></span>
+                        <?php else: ?>
+                            <span class="glyphicon glyphicon-ok"></span>
+                            <?php $timestamp = strtotime($respondent->responses[0]['response_date']); ?>
+                            <?= date('F j, Y', $timestamp) ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
