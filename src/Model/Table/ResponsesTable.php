@@ -586,4 +586,46 @@ class ResponsesTable extends Table
 
         return null;
     }
+
+    /**
+     * Returns the count of the respondents (approved or unapproved) to
+     * the specified survey that answered that they were aware of a
+     * comprehensive plan for their community
+     *
+     * @param int $surveyId Survey ID
+     * @return int
+     */
+    public function getApprovedAwareOfPlanCount($surveyId)
+    {
+        return $this->find('all')
+            ->where([
+                'Responses.survey_id' => $surveyId,
+                'Responses.aware_of_plan' => true
+            ])
+            ->matching('Respondents', function ($q) {
+                return $q->where(['Respondents.approved' => 1]);
+            })
+            ->count();
+    }
+
+    /**
+     * Returns the count of the respondents (approved or unapproved) to
+     * the specified survey that answered that they were not aware of any
+     * comprehensive plan for their community
+     *
+     * @param int $surveyId Survey ID
+     * @return int
+     */
+    public function getApprovedUnawareOfPlanCount($surveyId)
+    {
+        return $this->find('all')
+            ->where([
+                'Responses.survey_id' => $surveyId,
+                'Responses.aware_of_plan' => false
+            ])
+            ->matching('Respondents', function ($q) {
+                return $q->where(['Respondents.approved' => 1]);
+            })
+            ->count();
+    }
 }

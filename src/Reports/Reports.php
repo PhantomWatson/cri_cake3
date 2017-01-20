@@ -48,6 +48,7 @@ class Reports
         $communitiesTable = TableRegistry::get('Communities');
         $communities = $communitiesTable->find('forReport');
         $respondents = $this->getRespondents();
+        $responsesTable = TableRegistry::get('Responses');
 
         foreach ($communities as $community) {
             // Collect general information about this community
@@ -77,6 +78,8 @@ class Reports
                         'vsParent' => $survey['alignment_vs_parent']
                     ],
                     'internalAlignment' => $this->getInternalAlignment($survey),
+                    'awareOfPlanCount' => $responsesTable->getApprovedAwareOfPlanCount($survey['id']),
+                    'unawareOfPlanCount' => $responsesTable->getApprovedUnawareOfPlanCount($survey['id']),
                     'status' => $this->getStatus($community, $surveyKey)
                 ];
             }

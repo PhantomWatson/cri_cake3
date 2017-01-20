@@ -52,20 +52,20 @@
             <col span="1" />
         </colgroup>
         <colgroup class="survey">
-            <col span="13" />
+            <col span="15" />
         </colgroup>
         <colgroup class="survey">
-            <col span="12" />
+            <col span="14" />
         </colgroup>
         <thead>
             <tr class="survey-group-header">
                 <td colspan="3"></td>
-                <th colspan="14" data-full-colspan="14" data-survey-type="officials" class="survey">
+                <th colspan="16" data-full-colspan="16" data-survey-type="officials" class="survey">
                     <button class="survey-toggler btn btn-link" data-survey-type="officials">
                         Community Leadership
                     </button>
                 </th>
-                <th colspan="13" data-full-colspan="13" data-survey-type="organizations" class="survey">
+                <th colspan="15" data-full-colspan="15" data-survey-type="organizations" class="survey">
                     <button class="survey-toggler btn btn-link" data-survey-type="organizations">
                         Community Organizations
                     </button>
@@ -78,12 +78,12 @@
                 <th colspan="6" data-survey-type="officials">
                     Internal Alignment
                 </th>
-                <td colspan="3" data-survey-type="officials" class="empty"></td>
+                <td colspan="5" data-survey-type="officials" class="empty"></td>
                 <td colspan="4" data-survey-type="organizations" class="empty"></td>
                 <th colspan="6" data-survey-type="organizations">
                     Internal Alignment
                 </th>
-                <td colspan="2" data-survey-type="organizations" class="empty"></td>
+                <td colspan="4" data-survey-type="organizations" class="empty"></td>
             </tr>
             <tr class="general-header">
                 <th data-sort="string">
@@ -184,6 +184,12 @@
                     <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['internalAlignment']['total']) ?>>
                         <?= $survey['internalAlignment']['total'] ?>
                     </td>
+                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['awareOfPlanCount']) ?>>
+                        <?= $survey['awareOfPlanCount'] ?>
+                    </td>
+                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['awareOfPlanCount']) ?>>
+                        <?= $survey['unawareOfPlanCount'] ?>
+                    </td>
                     <td class="survey" data-survey-type="officials">
                         <?= $community['presentationsGiven']['a'] ?>
                     </td>
@@ -215,6 +221,12 @@
                     <?php endforeach; ?>
                     <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['internalAlignment']['total']) ?>>
                         <?= $survey['internalAlignment']['total'] ?>
+                    </td>
+                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['awareOfPlanCount']) ?>>
+                        <?= $survey['awareOfPlanCount'] ?>
+                    </td>
+                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['awareOfPlanCount']) ?>>
+                        <?= $survey['unawareOfPlanCount'] ?>
                     </td>
                     <td class="survey" data-survey-type="organizations">
                         <?= $community['presentationsGiven']['c'] ?>

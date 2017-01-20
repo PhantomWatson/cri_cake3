@@ -26,6 +26,8 @@ class ReportsHelper extends Helper
             $cells[] = ucwords($sector);
         }
         $cells[] = 'Overall';
+        $cells[] = 'Aware of Plan';
+        $cells[] = 'Unaware of Plan';
         if ($type == 'officials') {
             $cells[] = 'Presentation A';
             $cells[] = 'Presentation B';
