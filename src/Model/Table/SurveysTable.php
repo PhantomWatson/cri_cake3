@@ -323,10 +323,15 @@ class SurveysTable extends Table
         }
         $survey = $results->first();
         $SurveyMonkey = new SurveyMonkey();
-        $data = $SurveyMonkey->getQuestionAndAnswerIds($smId)[2];
-        $this->patchEntity($survey, $data);
-        if ($this->save($survey)) {
-            return [true, 'Question and answer IDs saved.'];
+
+        $results = $SurveyMonkey->getQuestionAndAnswerIds($smId); pr($results);
+        if (isset($results[2])) {
+            $data = $results[2];
+            $this->patchEntity($survey, $data);
+
+            if ($this->save($survey)) {
+                return [true, 'Question and answer IDs saved.'];
+            }
         }
 
         return [false, 'Error: Could not save question and answer IDs'];
