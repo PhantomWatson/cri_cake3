@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\Controller\AppController;
 use App\Mailer\Mailer;
 use App\Model\Entity\Community;
+use App\SurveyMonkey\SurveyMonkey;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Network\Exception\ForbiddenException;
@@ -473,5 +474,45 @@ class SurveysController extends AppController
     {
         $this->Surveys->updateAlignment($surveyId);
         $this->viewBuilder()->layout('blank');
+    }
+
+    public function populateAwareFields()
+    {
+        $this->viewBuilder()->layout('json');
+        $this->render('/Pages/blank');
+        $surveys = $this->Surveys->find('all')
+            ->select(['id', 'sm_id'])
+            ->where([
+                function ($exp, $q) {
+                    return $exp->isNotNull('sm_id');
+                },
+                function ($exp, $q) {
+                    return $exp->isNull('aware_of_plan_qid');
+                }
+            ])
+            ->all();
+        if (empty($surveys)) {
+            echo 'All surveys have aware_of_plan_qid field set.';
+            return;
+        }
+        echo count($surveys) . " surveys to process<br />";
+        $SurveyMonkey = new SurveyMonkey();
+        foreach ($surveys as $survey) {
+            echo "Processing survey #" . $survey->id . "<br />";
+            $results = $SurveyMonkey->getQuestionAndAnswerIds($survey->sm_id);
+            echo "getQuestionAndAnswerIds() results: <br />";
+            echo '<pre>' . print_r($results, true) . '</pre>';
+            if (isset($results[2])) {
+                $data = $results[2];
+                $this->patchEntity($survey, $data);
+
+                if (! $this->save($survey)) {
+                    echo 'Error saving<br />';
+                }
+            }
+            $this->Surveys->setQuestionAndAnswerIds($survey->sm_id);
+            echo "Survey #" . $survey->id . " processed<br />";
+        }
+        echo "All surveys processed<br />";
     }
 }
