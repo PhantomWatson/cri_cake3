@@ -324,7 +324,7 @@ class SurveysTable extends Table
         $survey = $results->first();
         $SurveyMonkey = new SurveyMonkey();
 
-        $results = $SurveyMonkey->getQuestionAndAnswerIds($smId); pr($results);
+        $results = $SurveyMonkey->getQuestionAndAnswerIds($smId);
         if (isset($results[2])) {
             $data = $results[2];
             $this->patchEntity($survey, $data);
