@@ -981,7 +981,7 @@ var adminReport = {
             colspan = table.hasClass('officials-expanded') ? 15 : 1;
             table.find('.survey-group-header th[data-survey-type=officials]').attr('colspan', colspan);
 
-            colspan = table.hasClass('organizations-expanded') ? 14 : 1;
+            colspan = table.hasClass('organizations-expanded') ? 12 : 1;
             table.find('.survey-group-header th[data-survey-type=organizations]').attr('colspan', colspan);
         });
 

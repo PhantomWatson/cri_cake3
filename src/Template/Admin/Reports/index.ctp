@@ -55,7 +55,7 @@
             <col span="15" />
         </colgroup>
         <colgroup class="survey">
-            <col span="14" />
+            <col span="12" />
         </colgroup>
         <thead>
             <tr class="survey-group-header">
@@ -65,7 +65,7 @@
                         Community Leadership
                     </button>
                 </th>
-                <th colspan="15" data-full-colspan="15" data-survey-type="organizations" class="survey">
+                <th colspan="13" data-full-colspan="13" data-survey-type="organizations" class="survey">
                     <button class="survey-toggler btn btn-link" data-survey-type="organizations">
                         Community Organizations
                     </button>
@@ -83,7 +83,7 @@
                 <th colspan="6" data-survey-type="organizations">
                     Internal Alignment
                 </th>
-                <td colspan="4" data-survey-type="organizations" class="empty"></td>
+                <td colspan="2" data-survey-type="organizations" class="empty"></td>
             </tr>
             <tr class="general-header">
                 <th data-sort="string">
@@ -221,12 +221,6 @@
                     <?php endforeach; ?>
                     <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['internalAlignment']['total']) ?>>
                         <?= $survey['internalAlignment']['total'] ?>
-                    </td>
-                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['awareOfPlanCount']) ?>>
-                        <?= $survey['awareOfPlanCount'] ?>
-                    </td>
-                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['awareOfPlanCount']) ?>>
-                        <?= $survey['unawareOfPlanCount'] ?>
                     </td>
                     <td class="survey" data-survey-type="organizations">
                         <?= $community['presentationsGiven']['c'] ?>
