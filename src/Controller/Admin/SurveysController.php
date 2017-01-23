@@ -487,6 +487,7 @@ class SurveysController extends AppController
         $surveys = $this->Surveys->find('all')
             ->select(['id', 'sm_id'])
             ->where([
+                'type' => 'official',
                 function ($exp, $q) {
                     return $exp->isNotNull('sm_id');
                 },
