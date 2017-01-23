@@ -429,37 +429,32 @@ class SurveyMonkey
             return [false, 'Could not get questionnaire details from SurveyMonkey. This might be a temporary network error.'];
         }
 
-        /* Find the PWRRR-ranking question using one of the key phrases that have been
-         * used in various versions of the surveys */
+        // Get survey type
+        $surveysTable = TableRegistry::get('Surveys');
+        $survey = $surveysTable->find('all')
+            ->select(['type'])
+            ->where(['sm_id', $smId])
+            ->first();
+        $surveyType = $survey->type;
+
+        // Create an array to save this data with
+        $sectors = $surveysTable->getSectors();
+        $qnaIdFields = $surveysTable->getQnaIdFieldNames($surveyType);
+        $nulls = array_fill(0, count($qnaIdFields), null);
+        $data = array_combine($qnaIdFields, $nulls);
+
+        // Find the PWRRR-ranking question and store its corresponding Q&A IDs in $data
         $keyPhrases = [
             'PWR3 is a tool for thinking about the economic future of your community.',
             'Each Indiana community uses a combination of 5 activities'
         ];
         $pwrrrQuestion = $this->findQuestion($result, $keyPhrases);
         if (! $pwrrrQuestion) {
-            $msg = 'Error: This questionnaire does not contain a PWR<sup>3</sup> ranking question.';
-
-            return [false, $msg];
+            return [
+                false,
+                'Error: This questionnaire does not contain a PWR<sup>3</sup> ranking question.'
+            ];
         }
-
-        // Find the "aware of comprehensive community plan" question
-        //aware_of_plan_qid
-        $keyPhrases = ['Please check the box for each comprehensive community plan'];
-        $awareOfPlanQuestion = $this->findQuestion($result, $keyPhrases);
-        if (! $awareOfPlanQuestion) {
-            $msg = 'Error: This questionnaire does not contain a question about comprehensive community plans.';
-
-            return [false, $msg];
-        }
-
-        // Create an array to save this data with
-        $surveysTable = TableRegistry::get('Surveys');
-        $sectors = $surveysTable->getSectors();
-        $qnaIdFields = $surveysTable->getQnaIdFieldNames();
-        $nulls = array_fill(0, count($qnaIdFields), null);
-        $data = array_combine($qnaIdFields, $nulls);
-
-        // Stash PWRRR Q&A IDs
         $data['pwrrr_qid'] = $pwrrrQuestion['id'];
         foreach ($pwrrrQuestion['answers'] as $choices) {
             foreach ($choices as $choice) {
@@ -484,19 +479,29 @@ class SurveyMonkey
             }
         }
 
-        // Stash "aware of plan" Q&A IDs
-        $data['aware_of_plan_qid'] = $awareOfPlanQuestion['id'];
-        $keyPhrases = [
-            'City' => 'aware_of_city_plan_aid',
-            'County' => 'aware_of_county_plan_aid',
-            'Regional' => 'aware_of_regional_plan_aid',
-            'I do not know' => 'unaware_of_plan_aid'
-        ];
-        foreach ($awareOfPlanQuestion['answers']['choices'] as $choice) {
-            foreach ($keyPhrases as $phrase => $field) {
-                if (strpos($choice['text'], $phrase) !== false) {
-                    $data[$field] = $choice['id'];
-                    break;
+        // Find the "aware of comprehensive community plan" question and store its corresponding Q&A IDs in $data
+        if ($surveyType == 'official') {
+            $keyPhrases = ['Please check the box for each comprehensive community plan'];
+            $awareOfPlanQuestion = $this->findQuestion($result, $keyPhrases);
+            if (! $awareOfPlanQuestion) {
+                return [
+                    false,
+                    'Error: This questionnaire does not contain a question about comprehensive community plans.'
+                ];
+            }
+            $data['aware_of_plan_qid'] = $awareOfPlanQuestion['id'];
+            $keyPhrases = [
+                'City' => 'aware_of_city_plan_aid',
+                'County' => 'aware_of_county_plan_aid',
+                'Regional' => 'aware_of_regional_plan_aid',
+                'I do not know' => 'unaware_of_plan_aid'
+            ];
+            foreach ($awareOfPlanQuestion['answers']['choices'] as $choice) {
+                foreach ($keyPhrases as $phrase => $field) {
+                    if (strpos($choice['text'], $phrase) !== false) {
+                        $data[$field] = $choice['id'];
+                        break;
+                    }
                 }
             }
         }
@@ -504,9 +509,10 @@ class SurveyMonkey
         // Make sure all fields have values
         foreach ($data as $field => $value) {
             if (! $value) {
-                $answer = str_replace('_aid', '', $field);
-
-                return [false, "Error: Could not find the answer ID for the answer '$answer'"];
+                return [
+                    false,
+                    'Error: Could not find the answer ID for the answer ' . str_replace('_aid', '', $field)
+                ];
             }
         }
 
