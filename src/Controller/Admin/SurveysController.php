@@ -476,10 +476,13 @@ class SurveysController extends AppController
         $this->viewBuilder()->layout('blank');
     }
 
+    /**
+     * Populates all "aware of plan" Q&A ID fields for surveys
+     *
+     * @return void
+     */
     public function populateAwareFields()
     {
-        $this->viewBuilder()->layout('json');
-        $this->render('/Pages/blank');
         $surveys = $this->Surveys->find('all')
             ->select(['id', 'sm_id'])
             ->where([
@@ -491,28 +494,39 @@ class SurveysController extends AppController
                 }
             ])
             ->all();
+
         if (empty($surveys)) {
-            echo 'All surveys have aware_of_plan_qid field set.';
+            $this->Flash->success('All surveys have aware_of_plan_qid field set.');
+
             return;
         }
-        echo count($surveys) . " surveys to process<br />";
+
+        $this->Flash->notification(count($surveys) . " surveys to process");
+
         $SurveyMonkey = new SurveyMonkey();
         foreach ($surveys as $survey) {
-            echo "Processing survey #" . $survey->id . "<br />";
+            $msg = ["Processing survey #" . $survey->id];
             $results = $SurveyMonkey->getQuestionAndAnswerIds($survey->sm_id);
-            echo "getQuestionAndAnswerIds() results: <br />";
-            echo '<pre>' . print_r($results, true) . '</pre>';
-            if (isset($results[2])) {
+            $msg[] = "getQuestionAndAnswerIds() results:";
+            $msg[] = '<pre>' . print_r($results, true) . '</pre>';
+            $success = $results[0];
+            if ($success && isset($results[2])) {
                 $data = $results[2];
-                $this->patchEntity($survey, $data);
-
-                if (! $this->save($survey)) {
-                    echo 'Error saving<br />';
+                $this->Surveys->patchEntity($survey, $data);
+                if (! $this->Surveys->save($survey)) {
+                    $msg[] = "Error saving";
+                    $success = false;
                 }
             }
             $this->Surveys->setQuestionAndAnswerIds($survey->sm_id);
-            echo "Survey #" . $survey->id . " processed<br />";
+            $msg[] = "Survey #" . $survey->id . " processed";
+            if ($success) {
+                $this->Flash->success(implode('<br />', $msg));
+            } else {
+                $this->Flash->error(implode('<br />', $msg));
+            }
         }
-        echo "All surveys processed<br />";
+        $this->Flash->notification('All surveys processed');
+        $this->set('titleForLayout', 'Populate "aware of plan" fields');
     }
 }
