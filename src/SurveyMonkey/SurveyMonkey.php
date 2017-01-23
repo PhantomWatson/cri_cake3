@@ -403,27 +403,6 @@ class SurveyMonkey
      */
     public function getQuestionAndAnswerIds($smId)
     {
-        if (Configure::read('debug')) {
-            return [true, "", [
-                'pwrrr_qid' => '923457295',
-                'production_aid' => '9941036145',
-                'wholesale_aid' => '9941036146',
-                'recreation_aid' => '9941036147',
-                'retail_aid' => '9941036149',
-                'residential_aid' => '9941036151',
-                '1_aid' => '9941036152',
-                '2_aid' => '9941036155',
-                '3_aid' => '9941036158',
-                '4_aid' => '9941036159',
-                '5_aid' => '9941036161',
-                'aware_of_plan_qid' => '923457284',
-                'aware_of_city_plan_aid' => '9941036041',
-                'aware_of_county_plan_aid' => '9941036042',
-                'aware_of_regional_plan_aid' => '9941036043',
-                'unaware_of_plan_aid' => '9941036046'
-            ]];
-        }
-
         $result = $this->getSurveyDetails((string)$smId);
         if (! isset($result['data'])) {
             return [false, 'Could not get questionnaire details from SurveyMonkey. This might be a temporary network error.'];
