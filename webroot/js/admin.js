@@ -703,35 +703,39 @@ var surveyOverview = {
                 return;
             }
 
-            var survey_id = link.data('survey-id');
-            $.ajax({
-                url: '/surveys/import/'+survey_id,
-                beforeSend: function () {
-                    link.addClass('disabled');
-                    var loading_indicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
-                    link.append(loading_indicator);
-                    if (resultsContainer.is(':visible')) {
-                        resultsContainer.slideUp(200);
-                    }
-                },
-                success: function (data) {
-                    resultsContainer.attr('class', 'alert alert-success');
-                    resultsContainer.html(data);
-                    resultsContainer.slideDown();
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    resultsContainer.attr('class', 'alert alert-danger');
-                    resultsContainer.html(jqXHR.responseText);
-                    resultsContainer.slideDown();
-                },
-                complete: function () {
-                    link.removeClass('disabled');
-                    link.find('.loading').remove();
-                    link.parent().children('.last_import_time').html('Responses were last imported a moment ago');
-                }
-            });
+            importResponses(link, resultsContainer);
         });
     }
+};
+
+var importResponses = function (button, resultsContainer) {
+    var surveyId = button.data('survey-id');
+    $.ajax({
+        url: '/surveys/import/'+surveyId,
+        beforeSend: function () {
+            button.addClass('disabled');
+            var loading_indicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
+            button.append(loading_indicator);
+            if (resultsContainer.is(':visible')) {
+                resultsContainer.slideUp(200);
+            }
+        },
+        success: function (data) {
+            resultsContainer.attr('class', 'alert alert-success');
+            resultsContainer.html(data);
+            resultsContainer.slideDown();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            resultsContainer.attr('class', 'alert alert-danger');
+            resultsContainer.html(jqXHR.responseText);
+            resultsContainer.slideDown();
+        },
+        complete: function () {
+            button.removeClass('disabled');
+            button.find('.loading').remove();
+            button.parent().children('.last_import_time').html('Responses were last imported a moment ago');
+        }
+    });
 };
 
 var adminHeader = {
