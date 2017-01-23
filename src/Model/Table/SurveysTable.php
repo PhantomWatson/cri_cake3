@@ -123,11 +123,11 @@ class SurveysTable extends Table
 
         $validator
             ->add('respondents_last_modified_date', 'valid', ['rule' => 'datetime'])
-            ->notEmpty('respondents_last_modified_date');
+            ->allowEmpty('respondents_last_modified_date');
 
         $validator
             ->add('responses_checked', 'valid', ['rule' => 'datetime'])
-            ->notEmpty('responses_checked');
+            ->allowEmpty('responses_checked');
 
         $validator
             ->add('alignment_vs_local', 'valid', ['rule' => 'numeric'])
@@ -139,7 +139,7 @@ class SurveysTable extends Table
 
         $validator
             ->add('alignment_calculated_date', 'valid', ['rule' => 'datetime'])
-            ->notEmpty('alignment_calculated_date');
+            ->allowEmpty('alignment_calculated_date');
 
         return $validator;
     }
@@ -282,11 +282,14 @@ class SurveysTable extends Table
     }
 
     /**
+     * Returns the Q&A field names relevant to the specified survey type
+     *
+     * @param string $surveyType Either 'official' or 'organization'
      * @return array
      */
-    public function getQnaIdFieldNames()
+    public function getQnaIdFieldNames($surveyType = 'official')
     {
-        return [
+        $fields = [
             'pwrrr_qid',
             'production_aid',
             'wholesale_aid',
@@ -297,13 +300,19 @@ class SurveysTable extends Table
             '2_aid',
             '3_aid',
             '4_aid',
-            '5_aid',
-            'aware_of_plan_qid',
-            'aware_of_city_plan_aid',
-            'aware_of_county_plan_aid',
-            'aware_of_regional_plan_aid',
-            'unaware_of_plan_aid'
+            '5_aid'
         ];
+        if ($surveyType == 'official') {
+            $fields += [
+                'aware_of_plan_qid',
+                'aware_of_city_plan_aid',
+                'aware_of_county_plan_aid',
+                'aware_of_regional_plan_aid',
+                'unaware_of_plan_aid'
+            ];
+        }
+
+        return $fields;
     }
 
     /**

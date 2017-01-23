@@ -24,6 +24,7 @@ class SurveysController extends AppController
     {
         parent::initialize();
         $this->loadComponent('SurveyProcessing');
+        $this->loadComponent('RequestHandler');
     }
 
     /**
@@ -528,5 +529,65 @@ class SurveysController extends AppController
         }
         $this->Flash->notification('All surveys processed');
         $this->set('titleForLayout', 'Populate "aware of plan" fields');
+    }
+
+    /**
+     * Displays a page with buttons for clearing and importing responses for each survey
+     *
+     * @return void
+     */
+    public function importAll()
+    {
+        $communitiesTable = TableRegistry::get('Communities');
+        $communities = $communitiesTable->find('all')
+            ->select(['id', 'name'])
+            ->contain([
+                'OfficialSurvey' => function ($q) {
+                    return $q->select(['id', 'aware_of_plan_qid', 'active']);
+                },
+                'OrganizationSurvey' => function ($q) {
+                    return $q->select(['id', 'aware_of_plan_qid', 'active']);
+                }
+            ])
+            ->order(['name' => 'ASC'])
+            ->all();
+        $this->set([
+            'communities' => $communities,
+            'titleForLayout' => 'Clear and Import Responses'
+        ]);
+    }
+
+    /**
+     * Removes all responses to the specified survey and resets that survey's fields to the state they were
+     * at before any responses were imported
+     *
+     * @param int $surveyId Survey ID
+     * @return void
+     */
+    public function clearResponses($surveyId)
+    {
+        $this->set('_serialize', ['success']);
+
+        $survey = $this->Surveys->get($surveyId);
+        $data = [
+            'respondents_last_modified_date' => null,
+            'responses_checked' => null,
+            'alignment_vs_local' => null,
+            'alignment_vs_parent' => null,
+            'internal_alignment' => null,
+            'alignment_calculated_date' => null,
+            'import_errors' => null
+        ];
+        $this->Surveys->patchEntity($survey, $data);
+        $result = $this->Surveys->save($survey);
+        if (! $result) {
+            $this->set('success', false);
+
+            return;
+        }
+
+        $responsesTable = TableRegistry::get('Responses');
+        $result = $responsesTable->deleteAll(['survey_id' => $surveyId]);
+        $this->set('success', (bool)$result);
     }
 }
