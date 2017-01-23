@@ -412,7 +412,7 @@ class SurveyMonkey
         $surveysTable = TableRegistry::get('Surveys');
         $survey = $surveysTable->find('all')
             ->select(['type'])
-            ->where(['sm_id', $smId])
+            ->where(['sm_id' => $smId])
             ->first();
         $surveyType = $survey->type;
 
