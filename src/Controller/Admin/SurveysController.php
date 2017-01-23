@@ -566,7 +566,7 @@ class SurveysController extends AppController
      */
     public function clearResponses($surveyId)
     {
-        $this->set('_serialize', ['success']);
+        $this->set('_serialize', ['success', 'message']);
 
         $survey = $this->Surveys->get($surveyId);
         $data = [
@@ -581,13 +581,28 @@ class SurveysController extends AppController
         $this->Surveys->patchEntity($survey, $data);
         $result = $this->Surveys->save($survey);
         if (! $result) {
-            $this->set('success', false);
+            $this->set([
+                'success' => false,
+                'message' => 'Survey errors: ' . print_r($result->errors(), true)
+            ]);
 
             return;
         }
 
         $responsesTable = TableRegistry::get('Responses');
+        $count = $responsesTable->find('all')
+            ->where(['survey_id' => $surveyId])
+            ->count();
+        if ($count === 0) {
+            $this->set('success', true);
+
+            return;
+        }
+
         $result = $responsesTable->deleteAll(['survey_id' => $surveyId]);
         $this->set('success', (bool)$result);
+        if (! $result) {
+            $this->set('message', 'Response delete errors: ' . print_r($result, true));
+        }
     }
 }
