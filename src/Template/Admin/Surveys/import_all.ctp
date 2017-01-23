@@ -36,8 +36,11 @@
                         <button class="btn btn-default import_button" data-survey-id="<?= $community->official_survey->id ?>">
                             Import
                         </button>
+                        <?php if (! $community->official_survey->pwrrr_qid): ?>
+                            <div class="text-danger">Missing <em>pwrrr_qid</em></div>
+                        <?php endif; ?>
                         <?php if (! $community->official_survey->aware_of_plan_qid): ?>
-                            <br />Missing <em>aware_of_plan_qid</em>
+                            <div class="text-danger">Missing <em>aware_of_plan_qid</em></div>
                         <?php endif; ?>
                     <?php endif; ?>
                 </td>
@@ -53,6 +56,9 @@
                         <button class="btn btn-default import_button" data-survey-id="<?= $community->organization_survey->id ?>">
                             Import
                         </button>
+                        <?php if (! $community->organization_survey->pwrrr_qid): ?>
+                            <div class="text-danger">Missing <em>pwrrr_qid</em></div>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </td>
             </tr>

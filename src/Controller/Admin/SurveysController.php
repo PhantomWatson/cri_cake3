@@ -543,10 +543,10 @@ class SurveysController extends AppController
             ->select(['id', 'name'])
             ->contain([
                 'OfficialSurvey' => function ($q) {
-                    return $q->select(['id', 'aware_of_plan_qid', 'active']);
+                    return $q->select(['id', 'aware_of_plan_qid', 'pwrrr_qid', 'active']);
                 },
                 'OrganizationSurvey' => function ($q) {
-                    return $q->select(['id', 'aware_of_plan_qid', 'active']);
+                    return $q->select(['id', 'pwrrr_qid', 'active']);
                 }
             ])
             ->order(['name' => 'ASC'])
