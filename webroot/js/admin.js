@@ -1062,7 +1062,7 @@ var adminReport = {
         table.removeClass(surveyType + '-int-alignment-expanded');
         var header = table.find('.internal-alignment-headers th[data-survey-type=' + surveyType + ']');
         header.prop('colspan', 1);
-        header.find('button').html('Expand').click(function (event) {
+        header.find('button').html('Details').click(function (event) {
             event.preventDefault();
             adminReport.maximizeIntAlignment($(this).data('survey-type'));
             adminReport.updateColspans();
