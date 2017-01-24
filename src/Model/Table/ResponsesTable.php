@@ -588,44 +588,53 @@ class ResponsesTable extends Table
     }
 
     /**
-     * Returns the count of the respondents (approved or unapproved) to
-     * the specified survey that answered that they were aware of a
-     * comprehensive plan for their community
+     * Returns the count of approved respondents to the specified
+     * survey that gave a yes or no/skipped response to the
+     * "aware of plan" question
      *
      * @param int $surveyId Survey ID
+     * @param bool $aware TRUE for aware and FALSE for unaware/unknown
      * @return int
      */
-    public function getApprovedAwareOfPlanCount($surveyId)
+    public function getApprovedAwareOfPlanCount($surveyId, $aware = true)
     {
-        return $this->find('all')
-            ->where([
-                'Responses.survey_id' => $surveyId,
-                'Responses.aware_of_plan' => true
-            ])
+        $query = $this->find('all')
+            ->select(['respondent_id'])
+            ->where(['Responses.survey_id' => $surveyId])
             ->matching('Respondents', function ($q) {
                 return $q->where(['Respondents.approved' => 1]);
-            })
-            ->count();
+            });
+        if ($aware) {
+            $query->where(['Responses.aware_of_plan' => true]);
+        } else {
+            $query->where([
+                'OR' => [
+                    'Responses.aware_of_plan' => false,
+                    function ($exp, $q) {
+                        return $exp->isNull('Responses.aware_of_plan');
+                    }
+                ]
+            ]);
+        }
+
+        // Make sure only one response per respondent is counted
+        $results = $query->toArray();
+        $respondentIds = Hash::extract($results, '{n}.respondent_id');
+        $respondentIds = array_unique($respondentIds);
+
+        return count($respondentIds);
     }
 
     /**
-     * Returns the count of the respondents (approved or unapproved) to
-     * the specified survey that answered that they were not aware of any
-     * comprehensive plan for their community
+     * Returns the count of approved respondents to the specified survey
+     * that answered that they were not aware of any comprehensive plan
+     * for their community, or who did not answer that question
      *
      * @param int $surveyId Survey ID
      * @return int
      */
     public function getApprovedUnawareOfPlanCount($surveyId)
     {
-        return $this->find('all')
-            ->where([
-                'Responses.survey_id' => $surveyId,
-                'Responses.aware_of_plan' => false
-            ])
-            ->matching('Respondents', function ($q) {
-                return $q->where(['Respondents.approved' => 1]);
-            })
-            ->count();
+        return $this->getApprovedAwareOfPlanCount($surveyId, false);
     }
 }
