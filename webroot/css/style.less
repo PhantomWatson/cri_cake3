@@ -1195,6 +1195,10 @@ ul.ui-autocomplete {
         th.survey[data-survey-type=officials] {
             display: table-cell;
         }
+        td.int-alignment-details[data-survey-type=officials],
+        th.int-alignment-details[data-survey-type=officials] {
+            display: none;
+        }
         .survey-group-header {
             display: table-row;
 
@@ -1228,6 +1232,10 @@ ul.ui-autocomplete {
         th.survey[data-survey-type=organizations] {
             display: table-cell;
         }
+        td.int-alignment-details[data-survey-type=organizations],
+        th.int-alignment-details[data-survey-type=organizations] {
+            display: none;
+        }
         .survey-group-header {
             display: table-row;
 
@@ -1247,6 +1255,18 @@ ul.ui-autocomplete {
                     display: table-cell;
                 }
             }
+        }
+    }
+    &.officials-int-alignment-expanded {
+        td.int-alignment-details[data-survey-type=officials],
+        th.int-alignment-details[data-survey-type=officials] {
+            display: table-cell;
+        }
+    }
+    &.organizations-int-alignment-expanded {
+        td.int-alignment-details[data-survey-type=organizations],
+        th.int-alignment-details[data-survey-type=organizations] {
+            display: table-cell;
         }
     }
     tr {
@@ -1298,18 +1318,18 @@ ul.ui-autocomplete {
             border-top: none;
             border-right-color: transparent;
         }
-        td.empty {
-            border-left: 1px solid @table-border-color;
-            border-right: 1px solid @table-border-color;
-        }
         td.empty,
         th {
             border-bottom: 0;
+            border-left: 1px solid @table-border-color;
+            border-right: 1px solid @table-border-color;
             border-top: 0;
             display: none;
         }
         th {
             border-top: 1px solid @table-border-color;
+            border-left: 1px solid @table-border-color;
+            border-right: 1px solid @table-border-color;
             border-bottom: 0;
         }
         .spacer {
@@ -1319,12 +1339,6 @@ ul.ui-autocomplete {
     .general-header {
         .int-alignment {
             border-top: none;
-        }
-        .int-alignment-left-edge {
-            border-left: 1px solid @table-border-color;
-        }
-        .int-alignment-right-edge {
-            border-right: 1px solid @table-border-color;
         }
         th[data-sort]:not([data-sort=""]) {
             cursor: pointer;
@@ -1348,6 +1362,9 @@ ul.ui-autocomplete {
             border-right: 1px solid @table-border-color;
 
             button {
+                .btn;
+                .btn-link;
+
                 border: 0;
                 font-size: 100%;
                 line-height: 100%;
@@ -1356,6 +1373,10 @@ ul.ui-autocomplete {
         }
     }
     thead {
+        button {
+            .btn;
+            .btn-link;
+        }
         th {
             vertical-align: middle;
 
@@ -1369,6 +1390,9 @@ ul.ui-autocomplete {
     }
     .hidden-modal-content {
         display: none;
+    }
+    .int-alignment {
+        display: table-cell;
     }
 }
 html.report-layout,

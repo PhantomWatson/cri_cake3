@@ -61,12 +61,12 @@
             <tr class="survey-group-header">
                 <td colspan="3"></td>
                 <th colspan="16" data-full-colspan="16" data-survey-type="officials" class="survey">
-                    <button class="survey-toggler btn btn-link" data-survey-type="officials">
+                    <button class="survey-toggler" data-survey-type="officials">
                         Community Leadership
                     </button>
                 </th>
                 <th colspan="13" data-full-colspan="13" data-survey-type="organizations" class="survey">
-                    <button class="survey-toggler btn btn-link" data-survey-type="organizations">
+                    <button class="survey-toggler" data-survey-type="organizations">
                         Community Organizations
                     </button>
                 </th>
@@ -76,12 +76,16 @@
                 <td colspan="1" class="spacer"></td>
                 <td colspan="4" data-survey-type="officials" class="empty"></td>
                 <th colspan="6" data-survey-type="officials">
-                    Internal Alignment
+                    <button data-survey-type="officials">
+                        Internal Alignment
+                    </button>
                 </th>
                 <td colspan="5" data-survey-type="officials" class="empty"></td>
                 <td colspan="4" data-survey-type="organizations" class="empty"></td>
                 <th colspan="6" data-survey-type="organizations">
-                    Internal Alignment
+                    <button data-survey-type="organizations">
+                        Internal Alignment
+                    </button>
                 </th>
                 <td colspan="2" data-survey-type="organizations" class="empty"></td>
             </tr>
@@ -99,12 +103,12 @@
                     <td>
                         <?= $community['name'] ?>
                         <?php if ($community['notes']): ?>
-                            <button type="button" class="btn btn-link notes" data-toggle="modal" data-target="#notes-modal" title="View notes" data-community-id="<?= $communityId ?>" data-community-name="<?= $community['name'] ?>">
+                            <button type="button" class="notes" data-toggle="modal" data-target="#notes-modal" title="View notes" data-community-id="<?= $communityId ?>" data-community-name="<?= $community['name'] ?>">
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                             </button>
                         <?php endif; ?>
                         <?php if ($community['recentActivity']): ?>
-                            <button type="button" class="btn btn-link recent-activity" data-toggle="modal" data-target="#notes-modal" title="View recent activity" data-community-id="<?= $communityId ?>" data-community-name="<?= $community['name'] ?>">
+                            <button type="button" class="recent-activity" data-toggle="modal" data-target="#notes-modal" title="View recent activity" data-community-id="<?= $communityId ?>" data-community-name="<?= $community['name'] ?>">
                                 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                             </button>
                         <?php endif; ?>
@@ -177,7 +181,7 @@
                         <?= $this->Reports->pwrrrAlignments($survey['alignments']) ?>
                     </td>
                     <?php foreach ($sectors as $sector): ?>
-                        <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
+                        <td class="survey int-alignment-details" data-survey-type="officials" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
                             <?= $survey['internalAlignment'][$sector] ?>
                         </td>
                     <?php endforeach; ?>
@@ -215,7 +219,7 @@
                         <?= $this->Reports->pwrrrAlignments($survey['alignments']) ?>
                     </td>
                     <?php foreach ($sectors as $sector): ?>
-                        <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
+                        <td class="survey int-alignment-details" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
                             <?= $survey['internalAlignment'][$sector] ?>
                         </td>
                     <?php endforeach; ?>

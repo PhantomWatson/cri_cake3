@@ -52,6 +52,11 @@ class ReportsHelper extends Helper
             $class = 'survey';
             if (in_array(strtolower($cell), $sectors) || $cell == 'Overall') {
                 $class .= ' int-alignment';
+                if ($cell == 'Overall') {
+                    $class .= ' int-overall-alignment';
+                } else {
+                    $class .= ' int-alignment-details';
+                }
             }
             if ($cell == 'Production') {
                 $class .= ' int-alignment-left-edge';

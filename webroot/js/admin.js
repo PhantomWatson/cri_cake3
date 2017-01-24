@@ -1019,6 +1019,10 @@ function compareNumbers(a, b) {
 
 var adminReport = {
     notes: [],
+    minimizedIntAlignment: {
+        officials: false,
+        organizations: false
+    },
 
     init: function () {
         $('#report button.survey-toggler').click(function (event) {
@@ -1026,15 +1030,10 @@ var adminReport = {
             var type = $(this).data('survey-type');
             var table = $('#report');
             table.toggleClass(type + '-expanded');
-
-            var colspan = table.hasClass('officials-expanded') ? 1 : 2;
-            table.find('.survey-group-header td').attr('colspan', colspan);
-
-            colspan = table.hasClass('officials-expanded') ? 15 : 1;
-            table.find('.survey-group-header th[data-survey-type=officials]').attr('colspan', colspan);
-
-            colspan = table.hasClass('organizations-expanded') ? 12 : 1;
-            table.find('.survey-group-header th[data-survey-type=organizations]').attr('colspan', colspan);
+            if (! adminReport.minimizedIntAlignment[type]) {
+                adminReport.minimizeIntAlignment(type);
+            }
+            adminReport.updateColspans();
         });
 
         $('#report').stupidtable();
@@ -1055,6 +1054,57 @@ var adminReport = {
             $(this).find('.modal-title').html(title);
             $(this).find('.modal-body').html(body);
         });
+    },
+
+    minimizeIntAlignment: function (surveyType) {
+        this.minimizedIntAlignment[surveyType] = true;
+        var table = $('#report');
+        table.removeClass(surveyType + '-int-alignment-expanded');
+        var header = table.find('.internal-alignment-headers th[data-survey-type=' + surveyType + ']');
+        header.prop('colspan', 1);
+        header.find('button').click(function (event) {
+            event.preventDefault();
+            adminReport.maximizeIntAlignment($(this).data('survey-type'));
+            adminReport.updateColspans();
+        });
+    },
+
+    maximizeIntAlignment: function (surveyType) {
+        var table = $('#report');
+        table.addClass(surveyType + '-int-alignment-expanded');
+        var header = table.find('.internal-alignment-headers th[data-survey-type=' + surveyType + ']');
+        header.prop('colspan', 6);
+        header.find('button').click(function (event) {
+            event.preventDefault();
+            adminReport.minimizeIntAlignment($(this).data('survey-type'));
+            adminReport.updateColspans();
+        });
+    },
+
+    updateColspans: function () {
+        var table = $('#report');
+
+        // Leading blank cell, top row
+        var colspan = table.hasClass('officials-expanded') ? 1 : 2;
+        var surveyGroupHeader = table.find('.survey-group-header');
+        surveyGroupHeader.find('td').attr('colspan', colspan);
+
+        // Officials survey header
+        if (table.hasClass('officials-expanded')) {
+            colspan = table.hasClass('officials-int-alignment-expanded') ? 15 : 10;
+        } else {
+            colspan = 1;
+        }
+        surveyGroupHeader.find('th[data-survey-type=officials]').attr('colspan', colspan);
+
+        // Organizations survey header
+        if (table.hasClass('organizations-expanded')) {
+            colspan = table.hasClass('organizations-int-alignment-expanded') ? 12 : 7;
+            console.log('colspan is ' + colspan);
+        } else {
+            colspan = 1;
+        }
+        surveyGroupHeader.find('th[data-survey-type=organizations]').attr('colspan', colspan);
     }
 };
 
