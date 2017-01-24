@@ -52,12 +52,12 @@
             <tr class="survey-group-header">
                 <td colspan="3"></td>
                 <th colspan="16" data-survey-type="officials" class="survey">
-                    <button class="survey-toggler" data-survey-type="officials">
+                    <button class="survey-toggler">
                         Community Leadership
                     </button>
                 </th>
                 <th colspan="13" data-survey-type="organizations" class="survey">
-                    <button class="survey-toggler" data-survey-type="organizations">
+                    <button class="survey-toggler">
                         Community Organizations
                     </button>
                 </th>

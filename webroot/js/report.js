@@ -12,7 +12,7 @@ var adminReport = {
         // Set up expanding/collapsing survey groups
         table.find('button.survey-toggler').click(function (event) {
             event.preventDefault();
-            var surveyType = $(this).data('survey-type');
+            var surveyType = $(this).parent().data('survey-type');
             $('#report').toggleClass(surveyType + '-expanded');
             if (! adminReport.minimizedIntAlignment[surveyType]) {
                 adminReport.toggleIntAlignment(surveyType);

@@ -87,7 +87,7 @@ class ReportsHelper extends Helper
         }
         $retval .=
             '<th class="minimized-status-header" data-survey-type="' . $type . '">' .
-            '<button class="survey-toggler btn btn-link" data-survey-type="' . $type . '">' .
+            '<button class="survey-toggler btn btn-link">' .
             (($type == 'officials') ? 'Community Leadership Status' : 'Community Organizations Status') .
             '</button>' .
             '</th>';
