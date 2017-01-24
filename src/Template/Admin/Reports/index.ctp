@@ -51,12 +51,12 @@
         <thead>
             <tr class="survey-group-header">
                 <td colspan="3"></td>
-                <th colspan="16" data-survey-type="officials" class="survey">
+                <th colspan="16" class="survey">
                     <button class="survey-toggler">
                         Community Leadership
                     </button>
                 </th>
-                <th colspan="13" data-survey-type="organizations" class="survey">
+                <th colspan="13" class="survey">
                     <button class="survey-toggler">
                         Community Organizations
                     </button>
@@ -65,20 +65,20 @@
             <tr class="internal-alignment-headers">
                 <td></td>
                 <td class="spacer"></td>
-                <td colspan="4" data-survey-type="officials" class="empty"></td>
-                <th colspan="6" data-survey-type="officials">
-                    <button data-survey-type="officials">
+                <td colspan="4" class="empty"></td>
+                <th colspan="6">
+                    <button>
                         Internal Alignment
                     </button>
                 </th>
-                <td colspan="5" data-survey-type="officials" class="empty"></td>
-                <td colspan="4" data-survey-type="organizations" class="empty"></td>
-                <th colspan="6" data-survey-type="organizations">
-                    <button data-survey-type="organizations">
+                <td colspan="5" class="empty"></td>
+                <td colspan="4" class="empty"></td>
+                <th colspan="6">
+                    <button>
                         Internal Alignment
                     </button>
                 </th>
-                <td colspan="2" data-survey-type="organizations" class="empty"></td>
+                <td colspan="2" class="empty"></td>
             </tr>
             <tr class="general-header">
                 <th data-sort="string">
@@ -158,37 +158,37 @@
                     </td>
 
                     <?php $survey = $community['official_survey']; ?>
-                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['invitations']) ?>>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['invitations']) ?>>
                         <?= $survey['invitations'] ?>
                     </td>
-                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['responses']) ?>>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['responses']) ?>>
                         <?= $survey['responses'] ?>
                     </td>
-                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['responseRate']) ?>>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['responseRate']) ?>>
                         <?= $survey['responseRate'] ?>
                     </td>
                     <?php $sortValue = max(array_values($survey['alignments'])); ?>
-                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($sortValue) ?>>
+                    <td class="survey" <?= $this->Reports->sortValue($sortValue) ?>>
                         <?= $this->Reports->pwrrrAlignments($survey['alignments']) ?>
                     </td>
                     <?php foreach ($sectors as $sector): ?>
-                        <td class="survey int-alignment-details" data-survey-type="officials" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
+                        <td class="survey int-alignment-details" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
                             <?= $survey['internalAlignment'][$sector] ?>
                         </td>
                     <?php endforeach; ?>
-                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['internalAlignment']['total']) ?>>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['internalAlignment']['total']) ?>>
                         <?= $survey['internalAlignment']['total'] ?>
                     </td>
-                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['awareOfPlanCount']) ?>>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['awareOfPlanCount']) ?>>
                         <?= $survey['awareOfPlanCount'] ?>
                     </td>
-                    <td class="survey" data-survey-type="officials" <?= $this->Reports->sortValue($survey['awareOfPlanCount']) ?>>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['awareOfPlanCount']) ?>>
                         <?= $survey['unawareOfPlanCount'] ?>
                     </td>
-                    <td class="survey" data-survey-type="officials">
+                    <td class="survey">
                         <?= $community['presentationsGiven']['a'] ?>
                     </td>
-                    <td class="survey" data-survey-type="officials">
+                    <td class="survey">
                         <?= $community['presentationsGiven']['b'] ?>
                     </td>
                     <td class="survey-status">
@@ -196,28 +196,28 @@
                     </td>
 
                     <?php $survey = $community['organization_survey']; ?>
-                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['invitations']) ?>>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['invitations']) ?>>
                         <?= $survey['invitations'] ?>
                     </td>
-                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['responses']) ?>>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['responses']) ?>>
                         <?= $survey['responses'] ?>
                     </td>
-                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['responseRate']) ?>>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['responseRate']) ?>>
                         <?= $survey['responseRate'] ?>
                     </td>
                     <?php $sortValue = max(array_values($survey['alignments'])); ?>
-                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($sortValue) ?>>
+                    <td class="survey" <?= $this->Reports->sortValue($sortValue) ?>>
                         <?= $this->Reports->pwrrrAlignments($survey['alignments']) ?>
                     </td>
                     <?php foreach ($sectors as $sector): ?>
-                        <td class="survey int-alignment-details" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
+                        <td class="survey int-alignment-details" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
                             <?= $survey['internalAlignment'][$sector] ?>
                         </td>
                     <?php endforeach; ?>
-                    <td class="survey" data-survey-type="organizations" <?= $this->Reports->sortValue($survey['internalAlignment']['total']) ?>>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['internalAlignment']['total']) ?>>
                         <?= $survey['internalAlignment']['total'] ?>
                     </td>
-                    <td class="survey" data-survey-type="organizations">
+                    <td class="survey">
                         <?= $community['presentationsGiven']['c'] ?>
                     </td>
                     <td class="survey-status">

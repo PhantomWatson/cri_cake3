@@ -81,12 +81,12 @@ class ReportsHelper extends Helper
                 $cell = $abbreviations[$cell];
             }
 
-            $retval .= "<th class=\"{$class}\" data-survey-type=\"{$type}\" data-sort=\"{$dataType}\">";
+            $retval .= "<th class=\"{$class}\" data-sort=\"{$dataType}\">";
             $retval .= $cell;
             $retval .= '</th>';
         }
         $retval .=
-            '<th class="minimized-status-header" data-survey-type="' . $type . '">' .
+            '<th class="minimized-status-header">' .
             '<button class="survey-toggler">' .
             (($type == 'officials') ? 'Community Leadership Status' : 'Community Organizations Status') .
             '</button>' .

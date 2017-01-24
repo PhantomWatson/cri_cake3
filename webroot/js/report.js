@@ -7,6 +7,7 @@ var adminReport = {
     },
 
     init: function () {
+        this.setSurveyTypes();
         var table = $('#report');
 
         // Set up expanding/collapsing survey groups
@@ -24,7 +25,7 @@ var adminReport = {
         table.addClass('officials-int-alignment-expanded organizations-int-alignment-expanded');
         table.find('.internal-alignment-headers th button').click(function (event) {
             event.preventDefault();
-            adminReport.toggleIntAlignment($(this).data('survey-type'));
+            adminReport.toggleIntAlignment($(this).parent().data('survey-type'));
             adminReport.updateColspans();
         });
 
@@ -80,7 +81,7 @@ var adminReport = {
         // Make leading blank cell stretch over officials survey col if it's minimized
         var colspan = table.hasClass('officials-expanded') ? 1 : 2;
         var surveyGroupHeader = table.find('.survey-group-header');
-        surveyGroupHeader.find('td').attr('colspan', colspan);
+        surveyGroupHeader.find('td').prop('colspan', colspan);
 
         this.updateSurveyHeaderColspan('officials');
         this.updateSurveyHeaderColspan('organizations');
@@ -93,6 +94,34 @@ var adminReport = {
         count++;
 
         var header = $('#report .survey-group-header th[data-survey-type="' + surveyType + '"]');
-        header.attr('colspan', count);
-    }
+        header.prop('colspan', count);
+    },
+
+    setSurveyTypes: function () {
+        var table = $('#report');
+
+        var cells = table.find('.survey-group-header th');
+        this.markOfficialsSurvey(cells.filter(':nth-child(2)'));
+        this.markOrgsSurvey(cells.filter(':nth-child(3)'));
+
+        cells = table.find('.internal-alignment-headers').find('td, th');
+        this.markOfficialsSurvey(cells.filter(':nth-child(n+3):nth-child(-n+5)'));
+        this.markOrgsSurvey(cells.filter(':nth-child(n+6):nth-child(-n+8)'));
+
+        cells = table.find('.general-header th');
+        this.markOfficialsSurvey(cells.filter(':nth-child(n+2):nth-child(-n+17)'));
+        this.markOrgsSurvey(cells.filter(':nth-child(n+18):nth-child(-n+30)'));
+
+        cells = table.find('tbody td');
+        this.markOfficialsSurvey(cells.filter(':nth-child(n+2):nth-child(-n+15)'));
+        this.markOrgsSurvey(cells.filter(':nth-child(n+17):nth-child(-n+27)'));
+    },
+
+    markOfficialsSurvey: function (element) {
+        element.attr('data-survey-type', 'officials');
+    },
+
+    markOrgsSurvey: function (element) {
+        element.attr('data-survey-type', 'organizations');
+    },
 };
