@@ -1062,11 +1062,12 @@ var adminReport = {
         table.removeClass(surveyType + '-int-alignment-expanded');
         var header = table.find('.internal-alignment-headers th[data-survey-type=' + surveyType + ']');
         header.prop('colspan', 1);
-        header.find('button').click(function (event) {
+        header.find('button').html('Expand').click(function (event) {
             event.preventDefault();
             adminReport.maximizeIntAlignment($(this).data('survey-type'));
             adminReport.updateColspans();
         });
+        table.find('.general-header .int-overall-alignment').html('Internal Alignment');
     },
 
     maximizeIntAlignment: function (surveyType) {
@@ -1074,11 +1075,12 @@ var adminReport = {
         table.addClass(surveyType + '-int-alignment-expanded');
         var header = table.find('.internal-alignment-headers th[data-survey-type=' + surveyType + ']');
         header.prop('colspan', 6);
-        header.find('button').click(function (event) {
+        header.find('button').html('Internal Alignment').click(function (event) {
             event.preventDefault();
             adminReport.minimizeIntAlignment($(this).data('survey-type'));
             adminReport.updateColspans();
         });
+        table.find('.general-header .int-overall-alignment').html('Overall');
     },
 
     updateColspans: function () {
