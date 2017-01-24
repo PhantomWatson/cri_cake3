@@ -1101,21 +1101,18 @@ var adminReport = {
         var surveyGroupHeader = table.find('.survey-group-header');
         surveyGroupHeader.find('td').attr('colspan', colspan);
 
-        // Officials survey header
-        if (table.hasClass('officials-expanded')) {
-            colspan = table.hasClass('officials-int-alignment-expanded') ? 15 : 10;
-        } else {
-            colspan = 1;
-        }
-        surveyGroupHeader.find('th[data-survey-type=officials]').attr('colspan', colspan);
+        this.updateSurveyHeaderColspan('officials');
+        this.updateSurveyHeaderColspan('organizations');
+    },
 
-        // Organizations survey header
-        if (table.hasClass('organizations-expanded')) {
-            colspan = table.hasClass('organizations-int-alignment-expanded') ? 12 : 7;
-        } else {
-            colspan = 1;
-        }
-        surveyGroupHeader.find('th[data-survey-type=organizations]').attr('colspan', colspan);
+    updateSurveyHeaderColspan: function (surveyType) {
+        var count = $('#report tbody tr:first-child td[data-survey-type="' + surveyType + '"]:visible').length;
+
+        // Add one for the 'status' column, which isn't covered by the above selector
+        count++;
+
+        var header = $('#report .survey-group-header th[data-survey-type="' + surveyType + '"]');
+        header.attr('colspan', count);
     }
 };
 
