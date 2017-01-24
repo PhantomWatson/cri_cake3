@@ -378,7 +378,7 @@ class Reports
                 $this->surveyColumnHeaders[$surveyType][] = 'Overall';
                 if ($surveyType == 'officials') {
                     $this->surveyColumnHeaders[$surveyType][] = 'Aware of Plan';
-                    $this->surveyColumnHeaders[$surveyType][] = 'Unaware of Plan';
+                    $this->surveyColumnHeaders[$surveyType][] = 'Unaware / Unknown';
                 }
             }
 
