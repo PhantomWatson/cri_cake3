@@ -48,15 +48,6 @@
     </p>
 
     <table class="table" id="report">
-        <colgroup>
-            <col span="1" />
-        </colgroup>
-        <colgroup class="survey">
-            <col span="15" />
-        </colgroup>
-        <colgroup class="survey">
-            <col span="12" />
-        </colgroup>
         <thead>
             <tr class="survey-group-header">
                 <td colspan="3"></td>
