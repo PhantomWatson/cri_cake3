@@ -77,7 +77,7 @@ var adminReport = {
     updateColspans: function () {
         var table = $('#report');
 
-        // Leading blank cell, top row
+        // Make leading blank cell stretch over officials survey col if it's minimized
         var colspan = table.hasClass('officials-expanded') ? 1 : 2;
         var surveyGroupHeader = table.find('.survey-group-header');
         surveyGroupHeader.find('td').attr('colspan', colspan);
