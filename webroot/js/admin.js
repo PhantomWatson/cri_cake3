@@ -1020,18 +1020,35 @@ function compareNumbers(a, b) {
 var adminReport = {
     notes: [],
 
+    minimizedIntAlignment: {
+        officials: false,
+        organizations: false
+    },
+
     init: function () {
+        var table = $('#report');
+
         // Set up expanding/collapsing survey groups
-        $('#report button.survey-toggler').click(function (event) {
+        table.find('button.survey-toggler').click(function (event) {
             event.preventDefault();
             var surveyType = $(this).data('survey-type');
             $('#report').toggleClass(surveyType + '-expanded');
-            adminReport.minimizeIntAlignment(surveyType);
+            if (! adminReport.minimizedIntAlignment[surveyType]) {
+                adminReport.toggleIntAlignment(surveyType);
+            }
+            adminReport.updateColspans();
+        });
+
+        // Set up internal alignment expanding/collapsing
+        table.addClass('officials-int-alignment-expanded organizations-int-alignment-expanded');
+        table.find('.internal-alignment-headers th button').click(function (event) {
+            event.preventDefault();
+            adminReport.toggleIntAlignment($(this).data('survey-type'));
             adminReport.updateColspans();
         });
 
         // Set up sorting
-        $('#report').stupidtable();
+        table.stupidtable();
 
         // Set up showing notes for communities
         $('#notes-modal').on('show.bs.modal', function (event) {
@@ -1052,32 +1069,28 @@ var adminReport = {
         });
     },
 
-    minimizeIntAlignment: function (surveyType) {
+    toggleIntAlignment: function (surveyType) {
         var table = $('#report');
-        table.removeClass(surveyType + '-int-alignment-expanded');
-        var header = table.find('.internal-alignment-headers th[data-survey-type=' + surveyType + ']');
-        header.prop('colspan', 1);
-        header.find('button').html('Details').click(function (event) {
-            event.preventDefault();
-            adminReport.maximizeIntAlignment($(this).data('survey-type'));
-            adminReport.updateColspans();
-        });
-        var overallColHeader = table.find('.general-header .int-overall-alignment[data-survey-type=' + surveyType + ']');
-        overallColHeader.html('Internal Alignment');
-    },
+        var currentlyExpanded = table.hasClass(surveyType + '-int-alignment-expanded');
+        if (currentlyExpanded) {
+            this.minimizedIntAlignment[surveyType] = true;
+        }
 
-    maximizeIntAlignment: function (surveyType) {
-        var table = $('#report');
-        table.addClass(surveyType + '-int-alignment-expanded');
+        // Expand/collapse columns
+        table.toggleClass(surveyType + '-int-alignment-expanded');
         var header = table.find('.internal-alignment-headers th[data-survey-type=' + surveyType + ']');
-        header.prop('colspan', 6);
-        header.find('button').html('Internal Alignment').click(function (event) {
-            event.preventDefault();
-            adminReport.minimizeIntAlignment($(this).data('survey-type'));
-            adminReport.updateColspans();
-        });
+        var newColspan = currentlyExpanded ? 1 : 6;
+        header.prop('colspan', newColspan);
+
+        // Update button labels
+        var button = header.find('button');
+        var newLabel = currentlyExpanded ? 'Details' : 'Internal Alignment';
+        button.html(newLabel);
+
+        // Update 'overall internal alignment' column header
         var overallColHeader = table.find('.general-header .int-overall-alignment[data-survey-type=' + surveyType + ']');
-        overallColHeader.html('Overall');
+        newLabel = currentlyExpanded ? 'Internal Alignment' : 'Overall';
+        overallColHeader.html(newLabel);
     },
 
     updateColspans: function () {
@@ -1099,7 +1112,6 @@ var adminReport = {
         // Organizations survey header
         if (table.hasClass('organizations-expanded')) {
             colspan = table.hasClass('organizations-int-alignment-expanded') ? 12 : 7;
-            console.log('colspan is ' + colspan);
         } else {
             colspan = 1;
         }

@@ -1188,6 +1188,12 @@ ul.ui-autocomplete {
     background-color: #fff;
 
     &.officials-expanded {
+        &.officials-int-alignment-expanded {
+            td.int-alignment-details[data-survey-type=officials],
+            th.int-alignment-details[data-survey-type=officials] {
+                display: table-cell;
+            }
+        }
         .minimized-status-header[data-survey-type=officials] {
             display: none;
         }
@@ -1225,6 +1231,12 @@ ul.ui-autocomplete {
         }
     }
     &.organizations-expanded {
+        &.organizations-int-alignment-expanded {
+            td.int-alignment-details[data-survey-type=organizations],
+            th.int-alignment-details[data-survey-type=organizations] {
+                display: table-cell;
+            }
+        }
         .minimized-status-header[data-survey-type=organizations] {
             display: none;
         }
@@ -1255,18 +1267,6 @@ ul.ui-autocomplete {
                     display: table-cell;
                 }
             }
-        }
-    }
-    &.officials-int-alignment-expanded {
-        td.int-alignment-details[data-survey-type=officials],
-        th.int-alignment-details[data-survey-type=officials] {
-            display: table-cell;
-        }
-    }
-    &.organizations-int-alignment-expanded {
-        td.int-alignment-details[data-survey-type=organizations],
-        th.int-alignment-details[data-survey-type=organizations] {
-            display: table-cell;
         }
     }
     tr {
