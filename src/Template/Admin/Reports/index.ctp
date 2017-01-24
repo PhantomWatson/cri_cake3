@@ -63,8 +63,8 @@
                 </th>
             </tr>
             <tr class="internal-alignment-headers">
-                <td colspan="1"></td>
-                <td colspan="1" class="spacer"></td>
+                <td></td>
+                <td class="spacer"></td>
                 <td colspan="4" data-survey-type="officials" class="empty"></td>
                 <th colspan="6" data-survey-type="officials">
                     <button data-survey-type="officials">
