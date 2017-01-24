@@ -1062,7 +1062,8 @@ var adminReport = {
             adminReport.maximizeIntAlignment($(this).data('survey-type'));
             adminReport.updateColspans();
         });
-        table.find('.general-header .int-overall-alignment').html('Internal Alignment');
+        var overallColHeader = table.find('.general-header .int-overall-alignment[data-survey-type=' + surveyType + ']');
+        overallColHeader.html('Internal Alignment');
     },
 
     maximizeIntAlignment: function (surveyType) {
@@ -1075,7 +1076,8 @@ var adminReport = {
             adminReport.minimizeIntAlignment($(this).data('survey-type'));
             adminReport.updateColspans();
         });
-        table.find('.general-header .int-overall-alignment').html('Overall');
+        var overallColHeader = table.find('.general-header .int-overall-alignment[data-survey-type=' + surveyType + ']');
+        overallColHeader.html('Overall');
     },
 
     updateColspans: function () {
