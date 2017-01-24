@@ -1019,25 +1019,21 @@ function compareNumbers(a, b) {
 
 var adminReport = {
     notes: [],
-    minimizedIntAlignment: {
-        officials: false,
-        organizations: false
-    },
 
     init: function () {
+        // Set up expanding/collapsing survey groups
         $('#report button.survey-toggler').click(function (event) {
             event.preventDefault();
-            var type = $(this).data('survey-type');
-            var table = $('#report');
-            table.toggleClass(type + '-expanded');
-            if (! adminReport.minimizedIntAlignment[type]) {
-                adminReport.minimizeIntAlignment(type);
-            }
+            var surveyType = $(this).data('survey-type');
+            $('#report').toggleClass(surveyType + '-expanded');
+            adminReport.minimizeIntAlignment(surveyType);
             adminReport.updateColspans();
         });
 
+        // Set up sorting
         $('#report').stupidtable();
 
+        // Set up showing notes for communities
         $('#notes-modal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             var communityId = button.data('community-id');
@@ -1057,7 +1053,6 @@ var adminReport = {
     },
 
     minimizeIntAlignment: function (surveyType) {
-        this.minimizedIntAlignment[surveyType] = true;
         var table = $('#report');
         table.removeClass(surveyType + '-int-alignment-expanded');
         var header = table.find('.internal-alignment-headers th[data-survey-type=' + surveyType + ']');
