@@ -90,17 +90,22 @@
         }
     }
     tbody {
-        td:first-child {
-            border-right: 1px solid @table-border-color;
+        td {
+            text-align: center;
 
-            button {
-                .btn;
-                .btn-link;
+            &:first-child {
+                border-right: 1px solid @table-border-color;
+                text-align: left;
 
-                border: 0;
-                font-size: 100%;
-                line-height: 100%;
-                padding: 0 0 0 5px;
+                button {
+                    .btn;
+                    .btn-link;
+
+                    border: 0;
+                    font-size: 100%;
+                    line-height: 100%;
+                    padding: 0 0 0 5px;
+                }
             }
         }
     }
