@@ -40,13 +40,6 @@ class ReportsHelper extends Helper
         array_walk($numericColumns, function (&$sector) {
             $sector = ucwords($sector);
         });
-        $numericColumns = array_merge($numericColumns, [
-            'Overall',
-            'Invitations',
-            'Responses',
-            'Completion Rate',
-            'PWR<sup>3</sup> Alignment'
-        ]);
         foreach ($cells as $cell) {
             // Build CSS class string
             $class = 'survey';
@@ -66,9 +59,6 @@ class ReportsHelper extends Helper
                 $class .= ' survey-status';
             }
 
-            // Add "data type" data attribute, used for sorting
-            $dataType = in_array($cell, $numericColumns) ? 'float' : 'string';
-
             // Abbreviate
             $abbreviations = [
                 'Production' => 'P',
@@ -81,16 +71,11 @@ class ReportsHelper extends Helper
                 $cell = $abbreviations[$cell];
             }
 
-            $retval .= "<th class=\"{$class}\">";
-            $retval .= $cell;
-            $retval .= '</th>';
+            $retval .= "<th class=\"$class\">$cell</th>";
         }
-        $retval .=
-            '<th class="minimized-status-header">' .
-            '<button class="survey-toggler">' .
-            (($type == 'officials') ? 'Community Leadership Status' : 'Community Organizations Status') .
-            '</button>' .
-            '</th>';
+        $label = ($type == 'officials') ? 'Community Leadership Status' : 'Community Organizations Status';
+        $button = "<button class=\"survey-toggler\">$label</button>";
+        $retval .= "<th class=\"minimized-status-header\">$button</th>";
 
         return $retval;
     }
