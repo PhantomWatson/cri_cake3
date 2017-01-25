@@ -81,7 +81,7 @@
                 <td colspan="2" class="empty"></td>
             </tr>
             <tr class="general-header">
-                <th data-sort="string">
+                <th>
                     Community
                 </th>
                 <?= $this->Reports->surveyHeader($sectors, 'officials'); ?>

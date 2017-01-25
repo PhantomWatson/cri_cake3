@@ -81,7 +81,7 @@ class ReportsHelper extends Helper
                 $cell = $abbreviations[$cell];
             }
 
-            $retval .= "<th class=\"{$class}\" data-sort=\"{$dataType}\">";
+            $retval .= "<th class=\"{$class}\">";
             $retval .= $cell;
             $retval .= '</th>';
         }

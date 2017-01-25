@@ -8,6 +8,7 @@ var adminReport = {
 
     init: function () {
         this.setSurveyTypes();
+        this.setupSorting();
         var table = $('#report');
 
         // Set up expanding/collapsing survey groups
@@ -28,9 +29,6 @@ var adminReport = {
             adminReport.toggleIntAlignment($(this).parent().data('survey-type'));
             adminReport.updateColspans();
         });
-
-        // Set up sorting
-        table.stupidtable();
 
         // Set up showing notes for communities
         $('#notes-modal').on('show.bs.modal', function (event) {
@@ -124,4 +122,15 @@ var adminReport = {
     markOrgsSurvey: function (element) {
         element.attr('data-survey-type', 'organizations');
     },
+
+    setupSorting: function () {
+        var table = $('#report');
+        var cells = table.find('.general-header th');
+        cells.filter(':nth-child(1)').attr('data-sort', 'string');
+        cells.filter(':nth-child(n+2):nth-child(-n+11)').attr('data-sort', 'float');
+        cells.filter(':nth-child(n+12):nth-child(-n+16)').attr('data-sort', 'string');
+        cells.filter(':nth-child(n+18):nth-child(-n+27)').attr('data-sort', 'float');
+        cells.filter(':nth-child(n+28):nth-child(-n+29)').attr('data-sort', 'string');
+        table.stupidtable();
+    }
 };
