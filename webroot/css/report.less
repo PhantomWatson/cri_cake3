@@ -189,12 +189,13 @@
             padding-bottom: 0;
             padding-top: 0;
         }
-        td.empty,
+        td,
         th {
-            border-left: 1px solid @table-border-color;
-            border-right: 1px solid @table-border-color;
-            border-top: 0;
-            display: none;
+            &[data-survey-type] {
+                border-left: 1px solid @table-border-color;
+                border-right: 1px solid @table-border-color;
+                display: none;
+            }
         }
         th {
             border-top: 1px solid @table-border-color;
@@ -207,6 +208,9 @@
         td {
             border-bottom: 1px solid @table-border-color;
 
+            &[data-survey-type] {
+                border-top: 0;
+            }
             &:first-child {
                 border-top: none;
                 border-right-color: transparent;

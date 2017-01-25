@@ -65,7 +65,7 @@
             <tr class="col-group-headers">
                 <td></td>
                 <td class="spacer"></td>
-                <td colspan="3" class="empty"></td>
+                <td colspan="3"></td>
                 <th colspan="2">
                     PWR<sup>3</sup> Alignment
                 </th>
@@ -77,8 +77,8 @@
                 <th colspan="2">
                     Aware of Plan
                 </th>
-                <td colspan="3" class="empty"></td>
-                <td colspan="3" class="empty"></td>
+                <td colspan="3"></td>
+                <td colspan="3"></td>
                 <th colspan="2">
                     PWR<sup>3</sup> Alignment
                 </th>
@@ -87,7 +87,7 @@
                         Internal Alignment
                     </button>
                 </th>
-                <td colspan="2" class="empty"></td>
+                <td colspan="2"></td>
             </tr>
             <tr class="general-header">
                 <th>
