@@ -144,11 +144,20 @@
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
                                         <li class="dropdown-header">
-                                            Alignment:
-                                            <?= $Report->getPwrrrAlignmentsDisplayed([
-                                                'vsLocal' => $community->{$surveyType}['alignment_vs_local'],
-                                                'vsParent' => $community->{$surveyType}['alignment_vs_parent']
-                                            ]) ?>
+                                            <?php
+                                                $alignmentsDisplayed = [];
+                                                if ($community->{$surveyType}['alignment_vs_local']) {
+                                                    $alignmentsDisplayed[] = 'PWR<sup>3</sup> Alignment vs local area: ' . $community->{$surveyType}['alignment_vs_local'] . '%';
+                                                }
+                                                if ($community->{$surveyType}['alignment_vs_parent']) {
+                                                    $alignmentsDisplayed[] = 'PWR<sup>3</sup> Alignment vs wider area: ' . $community->{$surveyType}['alignment_vs_parent'] . '%';
+                                                }
+                                                if (empty($alignmentsDisplayed)) {
+                                                    echo 'Alignment: Not calculated';
+                                                } else {
+                                                    echo implode('<br />', $alignmentsDisplayed);
+                                                }
+                                            ?>
                                         </li>
 
                                         <?php if ($community->{$surveyType}['respondents_last_modified_date']): ?>

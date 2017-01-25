@@ -20,7 +20,8 @@ class ReportsHelper extends Helper
             'Invitations',
             'Responses',
             'Completion Rate',
-            'PWR<sup>3</sup> Alignment',
+            'PWR<sup>3</sup> Alignment vs Local Area',
+            'PWR<sup>3</sup> Alignment vs Wider Area'
         ];
         foreach ($sectors as $sector) {
             $cells[] = ucwords($sector);
@@ -95,19 +96,5 @@ class ReportsHelper extends Helper
         }
 
         return 'data-sort-value="' . $sortValue . '"';
-    }
-
-    /**
-     * Accepts an array of PWRRR alignments (vs local area and vs parent area)
-     * and outputs a string for display
-     *
-     * @param array $alignments ['vsLocal' => int|null, 'vsParent' => int|null]
-     * @return string
-     */
-    public function pwrrrAlignments($alignments)
-    {
-        $Report = new Reports();
-
-        return $Report->getPwrrrAlignmentsDisplayed($alignments);
     }
 }

@@ -51,12 +51,12 @@
         <thead>
             <tr class="survey-group-header">
                 <td colspan="3"></td>
-                <th colspan="16" class="survey">
+                <th colspan="17" class="survey">
                     <button class="survey-toggler">
                         Community Leadership
                     </button>
                 </th>
-                <th colspan="13" class="survey">
+                <th colspan="14" class="survey">
                     <button class="survey-toggler">
                         Community Organizations
                     </button>
@@ -65,14 +65,14 @@
             <tr class="internal-alignment-headers">
                 <td></td>
                 <td class="spacer"></td>
-                <td colspan="4" class="empty"></td>
+                <td colspan="5" class="empty"></td>
                 <th colspan="6">
                     <button>
                         Internal Alignment
                     </button>
                 </th>
                 <td colspan="5" class="empty"></td>
-                <td colspan="4" class="empty"></td>
+                <td colspan="5" class="empty"></td>
                 <th colspan="6">
                     <button>
                         Internal Alignment
@@ -167,9 +167,15 @@
                     <td class="survey" <?= $this->Reports->sortValue($survey['responseRate']) ?>>
                         <?= $survey['responseRate'] ?>
                     </td>
-                    <?php $sortValue = max(array_values($survey['alignments'])); ?>
-                    <td class="survey" <?= $this->Reports->sortValue($sortValue) ?>>
-                        <?= $this->Reports->pwrrrAlignments($survey['alignments']) ?>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['alignments']['vsLocal']) ?>>
+                        <?php if ($survey['alignments']['vsLocal']): ?>
+                            <?= $survey['alignments']['vsLocal'] ?>%
+                        <?php endif; ?>
+                    </td>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['alignments']['vsParent']) ?>>
+                        <?php if ($survey['alignments']['vsParent']): ?>
+                            <?= $survey['alignments']['vsParent'] ?>%
+                        <?php endif; ?>
                     </td>
                     <?php foreach ($sectors as $sector): ?>
                         <td class="survey int-alignment-details" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
@@ -205,9 +211,15 @@
                     <td class="survey" <?= $this->Reports->sortValue($survey['responseRate']) ?>>
                         <?= $survey['responseRate'] ?>
                     </td>
-                    <?php $sortValue = max(array_values($survey['alignments'])); ?>
-                    <td class="survey" <?= $this->Reports->sortValue($sortValue) ?>>
-                        <?= $this->Reports->pwrrrAlignments($survey['alignments']) ?>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['alignments']['vsLocal']) ?>>
+                        <?php if ($survey['alignments']['vsLocal']): ?>
+                            <?= $survey['alignments']['vsLocal'] ?>%
+                        <?php endif; ?>
+                    </td>
+                    <td class="survey" <?= $this->Reports->sortValue($survey['alignments']['vsParent']) ?>>
+                        <?php if ($survey['alignments']['vsParent']): ?>
+                            <?= $survey['alignments']['vsParent'] ?>%
+                        <?php endif; ?>
                     </td>
                     <?php foreach ($sectors as $sector): ?>
                         <td class="survey int-alignment-details" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>

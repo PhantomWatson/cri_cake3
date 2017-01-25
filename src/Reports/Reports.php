@@ -363,8 +363,12 @@ class Reports
                 'Responses',
                 'Completion Rate'
             ];
-            $alignmentColHeader = ($version == 'ocra') ? 'Alignment Calculated' : 'PWRRR Alignment';
-            $this->surveyColumnHeaders[$surveyType][] = $alignmentColHeader;
+            if ($version == 'ocra') {
+                $this->surveyColumnHeaders[$surveyType][] = 'Alignment Calculated';
+            } else {
+                $this->surveyColumnHeaders[$surveyType][] = 'PWRRR Alignment vs Local Area';
+                $this->surveyColumnHeaders[$surveyType][] = 'PWRRR Alignment vs Wider Area';
+            }
 
             // Note how many columns come before internal alignment in each survey group
             if (! $this->intAlignmentColOffset) {
@@ -684,7 +688,8 @@ class Reports
                         'Yes' :
                         'No';
                 } elseif ($version == 'admin') {
-                    $cells[] = $this->getPwrrrAlignmentsDisplayed($survey['alignments']);
+                    $cells[] = $survey['alignments']['vsLocal'];
+                    $cells[] = $survey['alignments']['vsParent'];
                     foreach ($sectors as $sector) {
                         $cells[] = $survey['internalAlignment'][$sector];
                     }
@@ -843,36 +848,5 @@ class Reports
         // Set the width of the last column (notes) to a fixed width
         $colLetter = $this->getColumnKey($this->totalColCount - 1);
         $this->objPHPExcel->getActiveSheet()->getColumnDimension($colLetter)->setWidth(30);
-    }
-
-    /**
-     * Accepts an array of PWRRR alignments (vs local area and vs parent area)
-     * and outputs a string for display
-     *
-     * @param array $alignments ['vsLocal' => int|null, 'vsParent' => int|null]
-     * @return string
-     */
-    public function getPwrrrAlignmentsDisplayed($alignments)
-    {
-        $avLocal = $alignments['vsLocal'];
-        $avParent = $alignments['vsParent'];
-        if ($avLocal && $avParent) {
-            if ($avLocal == $avParent) {
-                return $avLocal . '%';
-            }
-
-            return
-                min(array_values($alignments)) . '%' .
-                ' - ' .
-                max(array_values($alignments)) . '%';
-        }
-        if ($avLocal) {
-            return $avLocal . '%';
-        }
-        if ($avParent) {
-            return $avParent . '%';
-        }
-
-        return 'Not calculated';
     }
 }

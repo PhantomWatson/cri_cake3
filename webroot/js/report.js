@@ -107,12 +107,12 @@ var adminReport = {
         this.markOrgsSurvey(cells.filter(':nth-child(n+6):nth-child(-n+8)'));
 
         cells = table.find('.general-header th');
-        this.markOfficialsSurvey(cells.filter(':nth-child(n+2):nth-child(-n+17)'));
-        this.markOrgsSurvey(cells.filter(':nth-child(n+18):nth-child(-n+30)'));
+        this.markOfficialsSurvey(cells.filter(':nth-child(n+2):nth-child(-n+18)'));
+        this.markOrgsSurvey(cells.filter(':nth-child(n+19):nth-child(-n+32)'));
 
         cells = table.find('tbody td');
-        this.markOfficialsSurvey(cells.filter(':nth-child(n+2):nth-child(-n+15)'));
-        this.markOrgsSurvey(cells.filter(':nth-child(n+17):nth-child(-n+27)'));
+        this.markOfficialsSurvey(cells.filter(':nth-child(n+2):nth-child(-n+16)'));
+        this.markOrgsSurvey(cells.filter(':nth-child(n+18):nth-child(-n+29)'));
     },
 
     markOfficialsSurvey: function (element) {
@@ -127,10 +127,10 @@ var adminReport = {
         var table = $('#report');
         var cells = table.find('.general-header th');
         cells.filter(':nth-child(1)').attr('data-sort', 'string');
-        cells.filter(':nth-child(n+2):nth-child(-n+11)').attr('data-sort', 'float');
-        cells.filter(':nth-child(n+12):nth-child(-n+16)').attr('data-sort', 'string');
-        cells.filter(':nth-child(n+18):nth-child(-n+27)').attr('data-sort', 'float');
-        cells.filter(':nth-child(n+28):nth-child(-n+29)').attr('data-sort', 'string');
+        cells.filter(':nth-child(n+2):nth-child(-n+12)').attr('data-sort', 'float');
+        cells.filter(':nth-child(n+13):nth-child(-n+17)').attr('data-sort', 'string');
+        cells.filter(':nth-child(n+19):nth-child(-n+29)').attr('data-sort', 'float');
+        cells.filter(':nth-child(n+30):nth-child(-n+31)').attr('data-sort', 'string');
         table.stupidtable();
     }
 };
