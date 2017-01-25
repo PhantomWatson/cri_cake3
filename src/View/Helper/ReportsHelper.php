@@ -28,8 +28,8 @@ class ReportsHelper extends Helper
         }
         $cells[] = 'Overall';
         if ($type == 'officials') {
-            $cells[] = 'Aware of Plan';
-            $cells[] = 'Unaware / Unknown';
+            $cells[] = 'Yes';
+            $cells[] = 'No / Unknown';
             $cells[] = 'Presentation A';
             $cells[] = 'Presentation B';
         } else {

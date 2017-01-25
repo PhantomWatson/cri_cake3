@@ -74,7 +74,10 @@
                         Internal Alignment
                     </button>
                 </th>
-                <td colspan="5" class="empty"></td>
+                <th colspan="2">
+                    Aware of Plan
+                </th>
+                <td colspan="3" class="empty"></td>
                 <td colspan="3" class="empty"></td>
                 <th colspan="2">
                     PWR<sup>3</sup> Alignment
