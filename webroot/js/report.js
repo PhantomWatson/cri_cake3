@@ -24,7 +24,7 @@ var adminReport = {
 
         // Set up internal alignment expanding/collapsing
         table.addClass('officials-int-alignment-expanded organizations-int-alignment-expanded');
-        table.find('.internal-alignment-headers th button').click(function (event) {
+        table.find('.col-group-headers th button').click(function (event) {
             event.preventDefault();
             adminReport.toggleIntAlignment($(this).parent().data('survey-type'));
             adminReport.updateColspans();
@@ -58,7 +58,7 @@ var adminReport = {
 
         // Expand/collapse columns
         table.toggleClass(surveyType + '-int-alignment-expanded');
-        var header = table.find('.internal-alignment-headers th[data-survey-type=' + surveyType + ']');
+        var header = table.find('.col-group-headers th[data-survey-type=' + surveyType + ']');
         var newColspan = currentlyExpanded ? 1 : 6;
         header.prop('colspan', newColspan);
 
@@ -102,7 +102,7 @@ var adminReport = {
         this.markOfficialsSurvey(cells.filter(':nth-child(2)'));
         this.markOrgsSurvey(cells.filter(':nth-child(3)'));
 
-        cells = table.find('.internal-alignment-headers').find('td, th');
+        cells = table.find('.col-group-headers').find('td, th');
         this.markOfficialsSurvey(cells.filter(':nth-child(n+3):nth-child(-n+5)'));
         this.markOrgsSurvey(cells.filter(':nth-child(n+6):nth-child(-n+8)'));
 

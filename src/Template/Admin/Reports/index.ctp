@@ -62,7 +62,7 @@
                     </button>
                 </th>
             </tr>
-            <tr class="internal-alignment-headers">
+            <tr class="col-group-headers">
                 <td></td>
                 <td class="spacer"></td>
                 <td colspan="5" class="empty"></td>
