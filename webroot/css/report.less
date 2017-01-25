@@ -104,10 +104,20 @@
             }
         }
     }
-    thead {
+    > thead {
         button {
             .btn;
             .btn-link;
+        }
+        > tr.general-header {
+            > th {
+                border-top: none;
+
+                &.minimized-status-header,
+                &:first-child {
+                    border-top: 1px solid @table-border-color;
+                }
+            }
         }
         th {
             vertical-align: middle;
@@ -176,7 +186,6 @@
         }
         td.empty,
         th {
-            border-bottom: 0;
             border-left: 1px solid @table-border-color;
             border-right: 1px solid @table-border-color;
             border-top: 0;
@@ -190,18 +199,19 @@
             padding-bottom: 4px;
             padding-top: 4px;
         }
-        td:first-child {
-            border-top: none;
-            border-right-color: transparent;
+        td {
+            border-bottom: 1px solid @table-border-color;
+
+            &:first-child {
+                border-top: none;
+                border-right-color: transparent;
+            }
         }
         .spacer {
             border: none;
         }
     }
     .general-header {
-        .int-alignment {
-            border-top: none;
-        }
         th[data-sort]:not([data-sort=""]) {
             cursor: pointer;
             white-space: nowrap;

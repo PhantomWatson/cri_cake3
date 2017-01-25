@@ -65,14 +65,20 @@
             <tr class="col-group-headers">
                 <td></td>
                 <td class="spacer"></td>
-                <td colspan="5" class="empty"></td>
+                <td colspan="3" class="empty"></td>
+                <th colspan="2">
+                    PWR<sup>3</sup> Alignment
+                </th>
                 <th colspan="6">
                     <button>
                         Internal Alignment
                     </button>
                 </th>
                 <td colspan="5" class="empty"></td>
-                <td colspan="5" class="empty"></td>
+                <td colspan="3" class="empty"></td>
+                <th colspan="2">
+                    PWR<sup>3</sup> Alignment
+                </th>
                 <th colspan="6">
                     <button>
                         Internal Alignment
