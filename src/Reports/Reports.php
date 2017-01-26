@@ -111,7 +111,8 @@ class Reports
 
         // Write and style
         $this->writeTitle();
-        $this->writeSurveyGroupingHeaders($version);
+        $this->writeSurveyGroupingHeaders();
+        $this->writeColGroupingHeaders($version);
         $this->writeColumnTitles();
         $this->styleColumnTitles();
         $this->firstDataRow = $this->currentRow + 1;
@@ -425,10 +426,9 @@ class Reports
     /**
      * Writes grouping headers for each survey to the spreadsheet and styles them
      *
-     * @param string $version Report version (ocra or admin)
      * @return void
      */
-    private function writeSurveyGroupingHeaders($version)
+    private function writeSurveyGroupingHeaders()
     {
         // Write survey-type grouping headers
         $this->currentRow++;
@@ -470,10 +470,6 @@ class Reports
                     'right' => $this->getBorder()
                 ]
             ]);
-
-        if ($version == 'admin') {
-            $this->writeIntAlignmentGroupingHeaders();
-        }
     }
 
     /**
@@ -508,12 +504,49 @@ class Reports
     /**
      * Writes and styles grouping headers for each survey's internal alignment
      *
+     * @param string $version Report version (ocra or admin)
+     * @return void
+     */
+    private function writeColGroupingHeaders($version)
+    {
+        $this->currentRow++;
+
+        // Add right-borders
+        $cellsForRightBorder = [
+            $this->lastGeneralCol . $this->currentRow,
+            $this->lastOfficialsSurveyCol . $this->currentRow,
+            $this->lastOrgSurveyCol . $this->currentRow
+        ];
+        foreach ($cellsForRightBorder as $cell) {
+            $this->objPHPExcel->getActiveSheet()
+                ->getStyle("$cell:$cell")
+                ->applyFromArray([
+                    'borders' => ['right' => $this->getBorder()]
+                ]);
+        }
+
+        // Add bottom-borders (later erased by any column group headers)
+        $from = $this->firstOfficialsSurveyCol . $this->currentRow;
+        $to = $this->lastCol . $this->currentRow;
+        $this->objPHPExcel->getActiveSheet()
+            ->getStyle("$from:$to")
+            ->applyFromArray([
+                'borders' => ['bottom' => $this->getBorder()]
+            ]);
+
+        if ($version == 'admin') {
+            $this->writeIntAlignmentGroupingHeaders();
+        }
+    }
+
+    /**
+     * Writes and styles "internal alignment" grouping headers
+     *
      * @return void
      */
     private function writeIntAlignmentGroupingHeaders()
     {
-        // Write "internal alignment" grouping headers
-        $this->currentRow++;
+        // Write
         $firstIntAlignmentCol = $this->beforeSurveysColCount + $this->intAlignmentColOffset;
         $this->write(
             $firstIntAlignmentCol,
@@ -527,7 +560,7 @@ class Reports
             'Internal Alignment'
         );
 
-        // Style "internal alignment" grouping header row
+        // Style
         $intAlignmentGroups = [];
 
         $surveysTable = TableRegistry::get('Surveys');
@@ -550,44 +583,10 @@ class Reports
                     'borders' => [
                         'top' => $this->getBorder(),
                         'left' => $this->getBorder(),
-                        'right' => $this->getBorder()
+                        'right' => $this->getBorder(),
+                        'bottom' => ['style' => \PHPExcel_Style_Border::BORDER_NONE]
                     ],
                     'font' => ['bold' => true]
-                ]);
-        }
-        $cellsForRightBorder = [
-            $this->lastGeneralCol . $this->currentRow,
-            $this->lastOfficialsSurveyCol . $this->currentRow,
-            $this->lastOrgSurveyCol . $this->currentRow
-        ];
-        foreach ($cellsForRightBorder as $cell) {
-            $this->objPHPExcel->getActiveSheet()
-                ->getStyle("$cell:$cell")
-                ->applyFromArray([
-                    'borders' => ['right' => $this->getBorder()]
-                ]);
-        }
-        $spansForBottomBorder = [];
-        $offset = $this->beforeSurveysColCount + $this->intAlignmentColOffset;
-
-        $from = $this->firstOfficialsSurveyCol . $this->currentRow;
-        $to = $this->getColumnKey($offset - 1) . $this->currentRow;
-        $spansForBottomBorder[] = "$from:$to";
-
-        $from = $this->getColumnKey($offset + $intAlignmentColCount) . $this->currentRow;
-        $to = $this->getColumnKey($offset + $this->officialsColCount - 1) . $this->currentRow;
-        $spansForBottomBorder[] = "$from:$to";
-
-        $colNum = $offset + $this->officialsColCount + $intAlignmentColCount;
-        $from = $this->getColumnKey($colNum) . $this->currentRow;
-        $to = $this->lastCol . $this->currentRow;
-        $spansForBottomBorder[] = "$from:$to";
-
-        foreach ($spansForBottomBorder as $span) {
-            $this->objPHPExcel->getActiveSheet()
-                ->getStyle($span)
-                ->applyFromArray([
-                    'borders' => ['bottom' => $this->getBorder()]
                 ]);
         }
     }
