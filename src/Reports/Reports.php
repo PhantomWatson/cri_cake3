@@ -581,34 +581,17 @@ class Reports
         );
 
         // Style
-        $intAlignmentGroups = [];
-
         $surveysTable = TableRegistry::get('Surveys');
         $sectors = $surveysTable->getSectors();
         $intAlignmentColCount = count($sectors) + 1; // Sectors + "Overall"
+
         $from = $this->getColumnKey($firstIntAlignmentCol) . $this->currentRow;
         $to = $this->getColumnKey($firstIntAlignmentCol + $intAlignmentColCount - 1) . $this->currentRow;
-        $intAlignmentGroups[] = "$from:$to";
+        $this->styleColGroupHeader("$from:$to");
 
         $from = $this->getColumnKey($secondIntAlignmentCol) . $this->currentRow;
         $to = $this->getColumnKey($secondIntAlignmentCol + $intAlignmentColCount - 1) . $this->currentRow;
-        $intAlignmentGroups[] = "$from:$to";
-
-        foreach ($intAlignmentGroups as $span) {
-            $this->objPHPExcel->getActiveSheet()
-                ->mergeCells($span)
-                ->getStyle($span)
-                ->applyFromArray([
-                    'alignment' => $this->align('center'),
-                    'borders' => [
-                        'top' => $this->getBorder(),
-                        'left' => $this->getBorder(),
-                        'right' => $this->getBorder(),
-                        'bottom' => ['style' => \PHPExcel_Style_Border::BORDER_NONE]
-                    ],
-                    'font' => ['bold' => true]
-                ]);
-        }
+        $this->styleColGroupHeader("$from:$to");
     }
 
     /**
@@ -633,31 +616,13 @@ class Reports
         );
 
         // Style
-        $pwrrrAlignmentGroups = [];
-
         $from = $this->getColumnKey($firstPwrrrAlignmentCol) . $this->currentRow;
         $to = $this->getColumnKey($firstPwrrrAlignmentCol + 1) . $this->currentRow;
-        $pwrrrAlignmentGroups[] = "$from:$to";
+        $this->styleColGroupHeader("$from:$to");
 
         $from = $this->getColumnKey($secondPwrrrAlignmentCol) . $this->currentRow;
         $to = $this->getColumnKey($secondPwrrrAlignmentCol + 1) . $this->currentRow;
-        $pwrrrAlignmentGroups[] = "$from:$to";
-
-        foreach ($pwrrrAlignmentGroups as $span) {
-            $this->objPHPExcel->getActiveSheet()
-                ->mergeCells($span)
-                ->getStyle($span)
-                ->applyFromArray([
-                    'alignment' => $this->align('center'),
-                    'borders' => [
-                        'top' => $this->getBorder(),
-                        'left' => $this->getBorder(),
-                        'right' => $this->getBorder(),
-                        'bottom' => ['style' => \PHPExcel_Style_Border::BORDER_NONE]
-                    ],
-                    'font' => ['bold' => true]
-                ]);
-        }
+        $this->styleColGroupHeader("$from:$to");
     }
 
     /**
@@ -678,9 +643,20 @@ class Reports
         // Style
         $from = $this->getColumnKey($awareCol) . $this->currentRow;
         $to = $this->getColumnKey($awareCol + 1) . $this->currentRow;
+        $this->styleColGroupHeader("$from:$to");
+    }
+
+    /**
+     * Styles column group headers
+     *
+     * @param string $span e.g. "B2:D2"
+     * @return void
+     */
+    private function styleColGroupHeader($span)
+    {
         $this->objPHPExcel->getActiveSheet()
-            ->mergeCells("$from:$to")
-            ->getStyle("$from:$to")
+            ->mergeCells($span)
+            ->getStyle($span)
             ->applyFromArray([
                 'alignment' => $this->align('center'),
                 'borders' => [
