@@ -20,6 +20,7 @@ class Reports
     private $afterSurveysColCount = 0;
     private $beforeSurveysColCount = 0;
     private $intAlignmentColOffset = 0;
+    private $pwrrrAlignmentColOffset = 0;
     private $totalColCount = 0;
     private $officialsColCount = 0;
     private $orgsColCount = 0;
@@ -364,11 +365,17 @@ class Reports
                 'Responses',
                 'Completion Rate'
             ];
+
+            // Note how many columns come before PWRRR alignment in each survey group
+            if (! $this->pwrrrAlignmentColOffset) {
+                $this->pwrrrAlignmentColOffset = count($this->surveyColumnHeaders[$surveyType]);
+            }
+
             if ($version == 'ocra') {
                 $this->surveyColumnHeaders[$surveyType][] = 'Alignment Calculated';
             } else {
-                $this->surveyColumnHeaders[$surveyType][] = 'PWRRR Alignment vs Local Area';
-                $this->surveyColumnHeaders[$surveyType][] = 'PWRRR Alignment vs Wider Area';
+                $this->surveyColumnHeaders[$surveyType][] = 'vs Local Area';
+                $this->surveyColumnHeaders[$surveyType][] = 'vs Wider Area';
             }
 
             // Note how many columns come before internal alignment in each survey group
@@ -535,6 +542,7 @@ class Reports
             ]);
 
         if ($version == 'admin') {
+            $this->writePwrrrAlignmentGroupingHeaders();
             $this->writeIntAlignmentGroupingHeaders();
         }
     }
@@ -575,6 +583,57 @@ class Reports
         $intAlignmentGroups[] = "$from:$to";
 
         foreach ($intAlignmentGroups as $span) {
+            $this->objPHPExcel->getActiveSheet()
+                ->mergeCells($span)
+                ->getStyle($span)
+                ->applyFromArray([
+                    'alignment' => $this->align('center'),
+                    'borders' => [
+                        'top' => $this->getBorder(),
+                        'left' => $this->getBorder(),
+                        'right' => $this->getBorder(),
+                        'bottom' => ['style' => \PHPExcel_Style_Border::BORDER_NONE]
+                    ],
+                    'font' => ['bold' => true]
+                ]);
+        }
+    }
+
+    /**
+     * Writes and styles "PWRRR alignment" grouping headers
+     *
+     * @return void
+     */
+    private function writePwrrrAlignmentGroupingHeaders()
+    {
+        //pwrrrAlignmentColOffset
+
+        // Write
+        $firstPwrrrAlignmentCol = $this->beforeSurveysColCount + $this->pwrrrAlignmentColOffset;
+        $this->write(
+            $firstPwrrrAlignmentCol,
+            $this->currentRow,
+            'PWRRR Alignment'
+        );
+        $secondPwrrrAlignmentCol = $firstPwrrrAlignmentCol + $this->officialsColCount;
+        $this->write(
+            $secondPwrrrAlignmentCol,
+            $this->currentRow,
+            'PWRRR Alignment'
+        );
+
+        // Style
+        $pwrrrAlignmentGroups = [];
+
+        $from = $this->getColumnKey($firstPwrrrAlignmentCol) . $this->currentRow;
+        $to = $this->getColumnKey($firstPwrrrAlignmentCol + 1) . $this->currentRow;
+        $pwrrrAlignmentGroups[] = "$from:$to";
+
+        $from = $this->getColumnKey($secondPwrrrAlignmentCol) . $this->currentRow;
+        $to = $this->getColumnKey($secondPwrrrAlignmentCol + 1) . $this->currentRow;
+        $pwrrrAlignmentGroups[] = "$from:$to";
+
+        foreach ($pwrrrAlignmentGroups as $span) {
             $this->objPHPExcel->getActiveSheet()
                 ->mergeCells($span)
                 ->getStyle($span)
