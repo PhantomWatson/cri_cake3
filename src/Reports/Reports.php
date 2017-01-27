@@ -516,6 +516,10 @@ class Reports
      */
     private function writeColGroupingHeaders($version)
     {
+        if ($version != 'admin') {
+            return;
+        }
+
         $this->currentRow++;
 
         // Add right-borders
