@@ -18,12 +18,13 @@ class Reports
 
     // Column Counts
     private $afterSurveysColCount = 0;
+    private $awareColOffset = 0;
     private $beforeSurveysColCount = 0;
     private $intAlignmentColOffset = 0;
-    private $pwrrrAlignmentColOffset = 0;
-    private $totalColCount = 0;
     private $officialsColCount = 0;
     private $orgsColCount = 0;
+    private $pwrrrAlignmentColOffset = 0;
+    private $totalColCount = 0;
 
     // Column keys
     private $firstColAfterSurveys;
@@ -388,9 +389,15 @@ class Reports
                     $this->surveyColumnHeaders[$surveyType][] = ucwords($sector);
                 }
                 $this->surveyColumnHeaders[$surveyType][] = 'Overall';
+
+                // Note how many columns come before "aware of plan" cols
+                if (! $this->awareColOffset) {
+                    $this->awareColOffset = count($this->surveyColumnHeaders[$surveyType]);
+                }
+
                 if ($surveyType == 'officials') {
-                    $this->surveyColumnHeaders[$surveyType][] = 'Aware of Plan';
-                    $this->surveyColumnHeaders[$surveyType][] = 'Unaware / Unknown';
+                    $this->surveyColumnHeaders[$surveyType][] = 'Yes';
+                    $this->surveyColumnHeaders[$surveyType][] = 'No / Unknown';
                 }
             }
 
@@ -548,6 +555,7 @@ class Reports
         if ($version == 'admin') {
             $this->writePwrrrAlignmentGroupingHeaders();
             $this->writeIntAlignmentGroupingHeaders();
+            $this->writeAwareGroupingHeaders();
         }
     }
 
@@ -610,8 +618,6 @@ class Reports
      */
     private function writePwrrrAlignmentGroupingHeaders()
     {
-        //pwrrrAlignmentColOffset
-
         // Write
         $firstPwrrrAlignmentCol = $this->beforeSurveysColCount + $this->pwrrrAlignmentColOffset;
         $this->write(
@@ -652,6 +658,39 @@ class Reports
                     'font' => ['bold' => true]
                 ]);
         }
+    }
+
+    /**
+     * Writes and styles "aware of comprehensive plan" grouping header
+     *
+     * @return void
+     */
+    private function writeAwareGroupingHeaders()
+    {
+        // Write
+        $awareCol = $this->beforeSurveysColCount + $this->awareColOffset;
+        $this->write(
+            $awareCol,
+            $this->currentRow,
+            'Aware of Plan'
+        );
+
+        // Style
+        $from = $this->getColumnKey($awareCol) . $this->currentRow;
+        $to = $this->getColumnKey($awareCol + 1) . $this->currentRow;
+        $this->objPHPExcel->getActiveSheet()
+            ->mergeCells("$from:$to")
+            ->getStyle("$from:$to")
+            ->applyFromArray([
+                'alignment' => $this->align('center'),
+                'borders' => [
+                    'top' => $this->getBorder(),
+                    'left' => $this->getBorder(),
+                    'right' => $this->getBorder(),
+                    'bottom' => ['style' => \PHPExcel_Style_Border::BORDER_NONE]
+                ],
+                'font' => ['bold' => true]
+            ]);
     }
 
     /**
