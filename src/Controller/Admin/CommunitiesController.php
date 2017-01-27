@@ -260,11 +260,21 @@ class CommunitiesController extends AppController
             $community = $this->Communities->patchEntity($community, $this->request->data(), [
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
+            $areaUpdated = $community->dirty('local_area_id') || $community->dirty('parent_area_id');
             $errors = $community->errors();
+
             if (empty($errors) && $this->Communities->save($community)) {
                 $this->Flash->success('Community updated');
+
+                // Dispatch events
                 if ($previousScore != $community->score) {
                     $this->dispatchScoreChangeEvent($previousScore, $community->score, $communityId);
+                }
+                if ($areaUpdated) {
+                    $event = new Event('Model.Community.afterUpdateCommunityArea', $this, ['meta' => [
+                        'communityId' => $communityId
+                    ]]);
+                    $this->eventManager()->dispatch($event);
                 }
 
                 return $this->redirect([

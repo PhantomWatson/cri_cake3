@@ -18,7 +18,8 @@ class SurveysListener implements EventListenerInterface
     {
         return [
             'Model.Response.afterImport' => 'updateAlignment',
-            'Model.Respondent.afterUninvitedApprove' => 'updateAlignment'
+            'Model.Respondent.afterUninvitedApprove' => 'updateAlignment',
+            'Model.Community.afterUpdateCommunityArea' => 'updateAlignment'
         ];
     }
 
@@ -31,11 +32,19 @@ class SurveysListener implements EventListenerInterface
      */
     public function updateAlignment(Event $event, array $meta = [])
     {
-        if (! isset($meta['surveyId'])) {
+        $surveysTable = TableRegistry::get('Surveys');
+        if (isset($meta['surveyId'])) {
+            $surveysTable->updateAlignment($meta['surveyId']);
+        } elseif (isset($meta['communityId'])) {
+            $surveys = $surveysTable->find('all')
+                ->select(['id'])
+                ->where(['community_id' => $meta['communityId']]);
+            foreach ($surveys as $survey) {
+                $surveysTable->updateAlignment($survey->id);
+            }
+        } else {
             $msg = 'Cannot update alignment: Questionnaire ID not specified';
             throw new InternalErrorException($msg);
         }
-        $surveysTable = TableRegistry::get('Surveys');
-        $surveysTable->updateAlignment($meta['surveyId']);
     }
 }
