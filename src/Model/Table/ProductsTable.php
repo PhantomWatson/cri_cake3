@@ -101,9 +101,9 @@ class ProductsTable extends Table
     {
         /* Products:
          * 1: Community Leadership Alignment Assessment
-         * 2: Leadership Summit (discontinued)
-         * 3: Community Alignment Assessment
-         * 4: Facilitated Community Awareness Conversation (discontinued)
+         * 2: Leadership Summit
+         * 3: Community Organizations Alignment Assessment
+         * 4: Facilitated Community Awareness Conversation
          * 5: PWR3 Policy Development */
 
         // Has this been purchased?
@@ -112,20 +112,12 @@ class ProductsTable extends Table
             return [2, 'Purchased'];
         }
 
+        // Is this purchase not possible because the community isn't in the correct CRI step?
         $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($communityId);
-
-        // Is this purchase not possible because the community isn't in the correct CRI step?
-        if ($productId > 1 && $community->step < 3) {
-            return [0, 'Community has not completed Step 2 yet.'];
-        }
-        if ($productId > 3 && $community->step < 4) {
-            return [0, 'Community has not completed Step 3 yet.'];
-        }
-
-        // Is this purchase not possible because the community isn't at the correct stage?
-        if ($productId == 3 && $community->score < 2) { // Community Alignment Assessment
-            return [0, 'Community has not completed Step 1 yet.'];
+        $product = $this->get($productId);
+        if ($community->score < $product->step) {
+            return [0, 'Cannot purchase before beginning Step ' . $product->step . '.'];
         }
 
         $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);
