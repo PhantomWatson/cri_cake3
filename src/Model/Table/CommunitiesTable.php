@@ -381,8 +381,9 @@ class CommunitiesTable extends Table
             $this->getClientCount($communityId) > 0
         ];
 
+        $product = $productsTable->get(1);
         $criteria[1]['survey_purchased'] = [
-            'Purchased Community Leadership Alignment Assessment ($3,500)',
+            'Purchased ' . $product->description . ' ($' . number_format($product->price) . ')',
             $productsTable->isPurchased($communityId, 1)
         ];
 
@@ -451,13 +452,15 @@ class CommunitiesTable extends Table
             ];
         }
 
+        $product = $productsTable->get(2);
         $criteria[2]['leadership_summit_purchased'] = [
-            'Purchased optional Leadership Summit ($1,500)',
+            'Purchased optional ' . $product->description . ' ($' . number_format($product->price) . ')',
             $productsTable->isPurchased($communityId, 2)
         ];
 
+        $product = $productsTable->get(3);
         $criteria[2]['survey_purchased'] = [
-            'Purchased Community Organizations Alignment Assessment ($3,500)',
+            'Purchased ' . $product->description . ' ($' . number_format($product->price) . ')',
             $productsTable->isPurchased($communityId, 3)
         ];
 
@@ -499,8 +502,9 @@ class CommunitiesTable extends Table
             $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
         ];
 
+        $product = $productsTable->get(4);
         $criteria[3]['orgs_summit_purchased'] = [
-            'Purchased optional Facilitated Community Awareness Conversation ($1,500)',
+            'Purchased optional ' . $product->description . ' ($' . number_format($product->price) . ')',
             $productsTable->isPurchased($communityId, 4)
         ];
 
@@ -514,8 +518,11 @@ class CommunitiesTable extends Table
             $date ? ($date->format('Y-m-d') <= date('Y-m-d')) : false
         ];
 
+        $product = $productsTable->get(5);
+        $description = 'Purchased ' . $product->description . ' ($' . number_format($product->price) . ')';
+        $description = str_replace('PWRRR', 'PWR<sup>3</sup>', $description);
         $criteria[3]['policy_dev_purchased'] = [
-            'PWR<sup>3</sup> Policy Development Purchased',
+            $description,
             $productsTable->isPurchased($communityId, 5)
         ];
 
