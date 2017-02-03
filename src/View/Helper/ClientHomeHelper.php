@@ -437,4 +437,48 @@ class ClientHomeHelper extends Helper
 
         return $this->row($icon, $description, null);
     }
+
+    /**
+     * "Leadership Summit has been purchased" row
+     *
+     * @param array $params Parameters
+     * @return string
+     */
+    public function leadershipSummitRow(array $params)
+    {
+        $icon = $this->glyphicon($params['purchased']);
+
+        if ($params['purchased']) {
+            $actions = null;
+        } else {
+            $actions =
+                '<a href="' . $params['purchaseUrl'] . '" class="btn btn-primary">' .
+                    'Purchase Now' .
+                '</a>';
+        }
+
+        return $this->row($icon, $params['description'], $actions);
+    }
+
+    /**
+     * "Facilitated Community Awareness Conversation has been purchased" row
+     *
+     * @param array $params Parameters
+     * @return string
+     */
+    public function orgsSummitRow(array $params)
+    {
+        $icon = $this->glyphicon($params['purchased']);
+
+        if ($params['purchased']) {
+            $actions = null;
+        } else {
+            $actions =
+                '<a href="' . $params['purchaseUrl'] . '" class="btn btn-primary">' .
+                'Purchase Now' .
+                '</a>';
+        }
+
+        return $this->row($icon, $params['description'], $actions);
+    }
 }

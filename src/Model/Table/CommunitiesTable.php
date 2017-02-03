@@ -451,6 +451,11 @@ class CommunitiesTable extends Table
             ];
         }
 
+        $criteria[2]['leadership_summit_purchased'] = [
+            'Purchased optional Leadership Summit ($1,500)',
+            $productsTable->isPurchased($communityId, 2)
+        ];
+
         $criteria[2]['survey_purchased'] = [
             'Purchased Community Organizations Alignment Assessment ($3,500)',
             $productsTable->isPurchased($communityId, 3)
@@ -492,6 +497,11 @@ class CommunitiesTable extends Table
         $criteria[3]['response_threshhold_reached'] = [
             'At least 25% of invited community organizations have responded to the questionnaire',
             $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
+        ];
+
+        $criteria[3]['orgs_summit_purchased'] = [
+            'Purchased optional Facilitated Community Awareness Conversation ($1,500)',
+            $productsTable->isPurchased($communityId, 4)
         ];
 
         $date = $community->presentation_c;

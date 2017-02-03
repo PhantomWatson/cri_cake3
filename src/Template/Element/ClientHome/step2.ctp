@@ -53,9 +53,16 @@
 
     <?= $this->ClientHome->presentationCompletedRow('A', $community->presentation_a) ?>
 
-    <?= $this->ClientHome->presentationScheduledRow('B', $community->presentation_b) ?>
+    <?= $this->ClientHome->leadershipSummitRow([
+        'description' => $criteria[2]['leadership_summit_purchased'][0],
+        'purchased' => $criteria[2]['leadership_summit_purchased'][1],
+        'purchaseUrl' => $purchaseUrls[2]
+    ]) ?>
 
-    <?= $this->ClientHome->presentationCompletedRow('B', $community->presentation_b) ?>
+    <?php if ($criteria[2]['leadership_summit_purchased'][1]): ?>
+        <?= $this->ClientHome->presentationScheduledRow('B', $community->presentation_b) ?>
+        <?= $this->ClientHome->presentationCompletedRow('B', $community->presentation_b) ?>
+    <?php endif; ?>
 
     <?= $this->ClientHome->orgSurveyPurchasedRow([
         'description' => $step2SurveyPurchased[0],
