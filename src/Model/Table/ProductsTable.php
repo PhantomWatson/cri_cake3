@@ -123,11 +123,6 @@ class ProductsTable extends Table
             return [0, 'Community has not completed Step 3 yet.'];
         }
 
-        // Is this a discontinued half-setp product?
-        if ($productId == 2 || $productId == 4) { // Leadership Summit || Facilitated Community Awareness Conversation
-            return [0, 'This community summit is no longer part of CRI and cannot be purchased'];
-        }
-
         // Is this purchase not possible because the community isn't at the correct stage?
         if ($productId == 3 && $community->score < 2) { // Community Alignment Assessment
             return [0, 'Community has not completed Step 1 yet.'];
