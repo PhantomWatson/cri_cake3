@@ -35,25 +35,23 @@ class ClientHomeComponent extends Component
             $purchaseUrls[$productId] = $productsTable->getPurchaseUrl($productId, $userId, $communityId);
         }
 
-        $criteria = $communitiesTable->getProgress($communityId);
-        $step2SurveyPurchased = $criteria[2]['survey_purchased'];
-        $step3PolicyDevPurchased = $criteria[3]['policy_dev_purchased'];
-
+        $respondentsTable = TableRegistry::get('Respondents');
         $surveysTable = TableRegistry::get('Surveys');
         $officialSurveyId = $surveysTable->getSurveyId($communityId, 'official');
         $organizationSurveyId = $surveysTable->getSurveyId($communityId, 'organization');
-        $importErrors = [
-            'official' => $surveysTable->getImportErrors($officialSurveyId),
-            'organization' => $surveysTable->getImportErrors($organizationSurveyId)
-        ];
-        $respondentsTable = TableRegistry::get('Respondents');
+        $criteria = $communitiesTable->getProgress($communityId);
         $this->_registry->getController()->set([
-            'titleForLayout' => $community->name . '\'s Progress in the CRI Program',
-            'score' => $community->score,
-            'officialUninvitedRespondents' => $respondentsTable->getUninvitedCount($officialSurveyId),
-            'officialResponsesChecked' => $surveysTable->getChecked($officialSurveyId),
-            'organizationResponsesChecked' => $surveysTable->getChecked($organizationSurveyId),
             'autoImportFrequency' => $surveysTable->getPerSurveyAutoImportFrequency(),
+            'importErrors' => [
+                'official' => $surveysTable->getImportErrors($officialSurveyId),
+                'organization' => $surveysTable->getImportErrors($organizationSurveyId)
+            ],
+            'officialResponsesChecked' => $surveysTable->getChecked($officialSurveyId),
+            'officialUninvitedRespondents' => $respondentsTable->getUninvitedCount($officialSurveyId),
+            'organizationResponsesChecked' => $surveysTable->getChecked($organizationSurveyId),
+            'score' => $community->score,
+            'step2SurveyPurchased' => $criteria[2]['survey_purchased'],
+            'step3PolicyDevPurchased' => $criteria[3]['policy_dev_purchased'],
             'surveyExists' => [
                 'official' => (bool)$officialSurveyId,
                 'organization' => (bool)$organizationSurveyId
@@ -65,17 +63,15 @@ class ClientHomeComponent extends Component
             'surveyIsComplete' => [
                 'official' => $surveysTable->isComplete($officialSurveyId),
                 'organization' => $surveysTable->isComplete($organizationSurveyId)
-            ]
+            ],
+            'titleForLayout' => $community->name . '\'s Progress in the CRI Program'
         ]);
         $this->_registry->getController()->set(compact(
             'community',
             'criteria',
-            'importErrors',
             'purchaseUrls',
             'officialSurveyId',
-            'organizationSurveyId',
-            'step2SurveyPurchased',
-            'step3PolicyDevPurchased'
+            'organizationSurveyId'
         ));
 
         return true;
