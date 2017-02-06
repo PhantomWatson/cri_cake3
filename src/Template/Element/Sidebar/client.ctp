@@ -15,6 +15,16 @@
     <?php if ($authUser && $authUser['role'] == 'client'): ?>
         <li class="link">
             <?= $this->Html->link(
+                'Purchases',
+                [
+                    'prefix' => 'client',
+                    'controller' => 'Purchases',
+                    'action' => 'index'
+                ]
+            ) ?>
+        </li>
+        <li class="link">
+            <?= $this->Html->link(
                 'Update Contact Info',
                 [
                     'prefix' => false,

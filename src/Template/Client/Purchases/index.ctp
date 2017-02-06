@@ -11,6 +11,9 @@
                 Product
             </th>
             <th>
+                Cost
+            </th>
+            <th>
                 Status
             </th>
         </tr>
@@ -19,10 +22,10 @@
         <?php foreach ($products as $product): ?>
             <tr>
                 <td>
-                    <?= $product['description'] ?>
-                    <span class="price">
-                        <?= $product['price'] ?>
-                    </span>
+                    <?= str_replace('PWRRR', 'PWR<sup>3</sup>', $product['description']) ?>
+                </td>
+                <td>
+                    <?= $product['price'] ?>
                 </td>
                 <td>
                     <?php

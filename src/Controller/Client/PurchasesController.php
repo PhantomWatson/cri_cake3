@@ -32,7 +32,8 @@ class PurchasesController extends AppController
 
         $community = $communitiesTable->get($communityId);
         $this->set([
-            'titleForLayout' => 'Products Purchased for ' . $community->name,
+            'currentStep' => $community->score,
+            'titleForLayout' => 'CRI Products Purchased for ' . $community->name,
             'products' => $products
         ]);
     }
