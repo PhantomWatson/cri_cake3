@@ -120,6 +120,13 @@ class ProductsTable extends Table
             return [0, 'Cannot purchase before beginning Step ' . $product->step . '.'];
         }
 
+        // Is this purchase not possible because a prerequisite has not been purchased?
+        if ($product->prerequisite && ! $this->isPurchased($communityId, $product->prerequisite)) {
+            $prerequisite = $this->get($product->prerequisite);
+
+            return [0, 'Cannot purchase before purchasing ' . $prerequisite->description . '.'];
+        }
+
         $purchaseUrl = $this->getPurchaseUrl($productId, $clientId, $communityId);
 
         return [1, 'Can be purchased', $purchaseUrl];
