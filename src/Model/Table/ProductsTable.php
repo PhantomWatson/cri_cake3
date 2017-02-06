@@ -112,15 +112,8 @@ class ProductsTable extends Table
             return [2, 'Purchased'];
         }
 
-        // Is this purchase not possible because the community isn't in the correct CRI step?
-        $communitiesTable = TableRegistry::get('Communities');
-        $community = $communitiesTable->get($communityId);
-        $product = $this->get($productId);
-        if ($community->score < $product->step) {
-            return [0, 'Cannot purchase before beginning Step ' . $product->step . '.'];
-        }
-
         // Is this purchase not possible because a prerequisite has not been purchased?
+        $product = $this->get($productId);
         if ($product->prerequisite && ! $this->isPurchased($communityId, $product->prerequisite)) {
             $prerequisite = $this->get($product->prerequisite);
 
