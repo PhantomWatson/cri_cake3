@@ -259,7 +259,12 @@ class CommunitiesTable extends Table
                 return $exp->in('client_id', $clientIds);
             });
         }
+
         $results = $query->toArray();
+        if (! $results) {
+            return [];
+        }
+
         $communityIds = array_values($results);
 
         return $this->find('list')

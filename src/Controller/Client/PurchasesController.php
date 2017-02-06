@@ -20,6 +20,12 @@ class PurchasesController extends AppController
         }
         $communityId = $communitiesTable->getClientCommunityId($clientId);
 
+        if (! $communityId) {
+            $this->set('titleForLayout', 'CRI Account Not Yet Ready For Use');
+
+            return $this->render('../Communities/notready');
+        }
+
         $productsTable = TableRegistry::get('Products');
         $products = $productsTable->find('all')->toArray();
 

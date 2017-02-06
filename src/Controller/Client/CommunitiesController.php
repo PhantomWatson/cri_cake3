@@ -14,14 +14,18 @@ class CommunitiesController extends AppController
     public function index()
     {
         $this->viewBuilder()->helpers(['ClientHome']);
+
         $userId = $this->Auth->user('id');
         $communityId = $this->Communities->getClientCommunityId($userId);
-        $this->loadComponent('ClientHome');
-        $prepResult = $this->ClientHome->prepareClientHome($communityId);
-        if (! $prepResult) {
-            $this->set('titleForLayout', 'CRI Account Not Yet Ready For Use');
-
-            return $this->render('notready');
+        if ($communityId) {
+            $this->loadComponent('ClientHome');
+            if ($this->ClientHome->prepareClientHome($communityId)) {
+                return;
+            }
         }
+
+        $this->set('titleForLayout', 'CRI Account Not Yet Ready For Use');
+
+        return $this->render('notready');
     }
 }
