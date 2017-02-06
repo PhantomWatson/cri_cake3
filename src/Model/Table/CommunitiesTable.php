@@ -444,6 +444,12 @@ class CommunitiesTable extends Table
             ];
         }
 
+        $product = $productsTable->get(2);
+        $criteria[2]['leadership_summit_purchased'] = [
+            'Purchased optional ' . $product->description . ' ($' . number_format($product->price) . ')',
+            $productsTable->isPurchased($communityId, 2)
+        ];
+
         $community = $this->get($communityId);
         foreach (['a', 'b'] as $letter) {
             $date = $community->{"presentation_$letter"};
@@ -456,12 +462,6 @@ class CommunitiesTable extends Table
                 $date ? ($date->format('Y-m-d') <= date('Y-m-d')) : false
             ];
         }
-
-        $product = $productsTable->get(2);
-        $criteria[2]['leadership_summit_purchased'] = [
-            'Purchased optional ' . $product->description . ' ($' . number_format($product->price) . ')',
-            $productsTable->isPurchased($communityId, 2)
-        ];
 
         $product = $productsTable->get(3);
         $criteria[2]['survey_purchased'] = [
