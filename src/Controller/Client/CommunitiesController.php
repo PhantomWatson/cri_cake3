@@ -9,7 +9,7 @@ class CommunitiesController extends AppController
     /**
      * Client home page
      *
-     * @return \App\Controller\Response
+     * @return \App\Controller\Response|void
      */
     public function index()
     {
