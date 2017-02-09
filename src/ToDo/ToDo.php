@@ -1,16 +1,19 @@
 <?php
 namespace App\ToDo;
 
+use App\Model\Table\ProductsTable;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 
 class ToDo
 {
     public $communitiesTable;
+    public $productsTable;
 
     public function __construct()
     {
         $this->communitiesTable = TableRegistry::get('Communities');
+        $this->productsTable = TableRegistry::get('Products');
     }
 
     /**
@@ -35,6 +38,14 @@ class ToDo
             ];
         }
 
+        if ($this->waitingForOfficialsSurveyPurchase($communityId)) {
+            $product = $this->productsTable->get(ProductsTable::OFFICIALS_SURVEY);
+            return [
+                'class' => 'waiting',
+                'msg' => 'Waiting for client to purchase ' . $product->description
+            ];
+        }
+
         return [
             'class' => 'incomplete',
             'msg' => '(criteria tests incomplete)'
@@ -52,5 +63,18 @@ class ToDo
         $clients = $this->communitiesTable->getClients($communityId);
 
         return empty($clients);
+    }
+
+    /**
+     * Returns whether or not the community needs to purchase the Step Two survey
+     *
+     * @param int $communityId Community ID
+     * @return bool
+     */
+    private function waitingForOfficialsSurveyPurchase($communityId)
+    {
+        $productId = ProductsTable::OFFICIALS_SURVEY;
+
+        return ! $this->productsTable->isPurchased($communityId, $productId);
     }
 }
