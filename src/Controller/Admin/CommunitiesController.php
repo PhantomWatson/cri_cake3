@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\Controller\AppController;
 use App\Event\ActivityRecordsListener;
 use App\Mailer\Mailer;
+use App\ToDo\ToDo;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Network\Exception\MethodNotAllowedException;
@@ -669,5 +670,27 @@ class CommunitiesController extends AppController
         $eventName = 'Model.Community.afterScore' . ($increase ? 'Increase' : 'Decrease');
         $event = new Event($eventName, $this, ['meta' => compact('previousScore', 'newScore', 'communityId')]);
         $this->eventManager()->dispatch($event);
+    }
+
+    /**
+     * Admin To-Do page
+     *
+     * @return void
+     */
+    public function toDo()
+    {
+        $communities = $this->Communities->find('all')
+            ->select(['id', 'name'])
+            //->where(['dummy' => false])
+            ->order(['name' => 'ASC']);
+        $ToDo = new ToDo();
+        foreach ($communities as $community) {
+            $community->toDo = $ToDo->getToDo($community->id);
+        }
+
+        $this->set([
+            'communities' => $communities,
+            'titleForLayout' => 'Admin To-Do'
+        ]);
     }
 }

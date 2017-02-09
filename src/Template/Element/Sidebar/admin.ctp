@@ -1,6 +1,16 @@
 <ul>
     <li class="link">
         <?= $this->Html->link(
+            'Admin To-Do',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Communities',
+                'action' => 'toDo'
+            ]
+        ) ?>
+    </li>
+    <li class="link">
+        <?= $this->Html->link(
             'Reports',
             [
                 'prefix' => 'admin',
