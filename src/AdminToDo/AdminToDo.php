@@ -1,5 +1,5 @@
 <?php
-namespace App\ToDo;
+namespace App\AdminToDo;
 
 use App\Model\Table\ProductsTable;
 use Cake\ORM\TableRegistry;
@@ -12,18 +12,18 @@ use Cake\Routing\Router;
  * it in getToDo() returned positive. In other words, these checks are meant to work in a chain,
  * but not in isolation.
  *
- * Class ToDo
- * @package App\ToDo
+ * Class AdminToDo
+ * @package App\AdminToDo
  */
-class ToDo
+class AdminToDo
 {
     public $communitiesTable;
     public $productsTable;
 
     /**
-     * ToDo constructor
+     * AdminToDo constructor
      *
-     * @return ToDo
+     * @return AdminToDo
      */
     public function __construct()
     {

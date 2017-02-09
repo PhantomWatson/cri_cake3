@@ -1,10 +1,10 @@
 <?php
 namespace App\Controller\Admin;
 
+use App\AdminToDo\AdminToDo;
 use App\Controller\AppController;
 use App\Event\ActivityRecordsListener;
 use App\Mailer\Mailer;
-use App\ToDo\ToDo;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Network\Exception\MethodNotAllowedException;
@@ -683,9 +683,9 @@ class CommunitiesController extends AppController
             ->select(['id', 'name'])
             //->where(['dummy' => false])
             ->order(['name' => 'ASC']);
-        $ToDo = new ToDo();
+        $AdminToDo = new AdminToDo();
         foreach ($communities as $community) {
-            $community->toDo = $ToDo->getToDo($community->id);
+            $community->toDo = $AdminToDo->getToDo($community->id);
         }
 
         $this->set([
