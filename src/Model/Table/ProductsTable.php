@@ -16,6 +16,11 @@ use Cake\Validation\Validator;
  */
 class ProductsTable extends Table
 {
+    const OFFICIALS_SURVEY = 1;
+    const OFFICIALS_SUMMIT = 2;
+    const ORGANIZATIONS_SURVEY = 3;
+    const ORGANIZATIONS_SUMMIT = 4;
+    const POLICY_DEVELOPMENT = 5;
 
     /**
      * Initialize method
