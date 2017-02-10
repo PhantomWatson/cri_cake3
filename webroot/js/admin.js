@@ -43,8 +43,9 @@ var adminUserEdit = {
     },
 
     addCommunity: function (id, name, animate) {
-        var li = $('<li data-community-id="'+id+'"></li>');
-        var link = $('<a href="#"><span class="glyphicon glyphicon-remove"></span> <span class="link_label">'+name+'</span></a>');
+        var li = $('<li data-community-id="' + id + '"></li>');
+        var label = '<span class="glyphicon glyphicon-remove"></span> <span class="link_label">' + name + '</span>';
+        var link = $('<a href="#">' + label + '</a>');
         link.click(function (event) {
             event.preventDefault();
             li.slideUp(300, function () {
@@ -52,7 +53,9 @@ var adminUserEdit = {
             });
         });
         li.append(link);
-        li.append('<input type="hidden" name="consultant_communities['+this.community_counter+'][id]" value="'+id+'" />');
+        var input = '<input type="hidden" name="consultant_communities[' + this.community_counter + '][id]" ' +
+            'value="' + id + '" />';
+        li.append(input);
         this.community_counter++;
         if (animate) {
             li.hide();
@@ -530,26 +533,36 @@ var surveyLink = {
             url: '/surveys/check_survey_assignment/'+sm_id,
             dataType: 'json',
             beforeSend: function () {
-                loadingMessages.html('<span class="loading"><img src="/data_center/img/loading_small.gif" /> Checking questionnaire uniqueness...</span>');
+                var msg = '<img src="/data_center/img/loading_small.gif" /> Checking questionnaire uniqueness...';
+                msg = '<span class="loading">' + msg + '</span>';
+                loadingMessages.html(msg);
             },
             success: function (data) {
                 var displayError = function (msg) {
-                    $('.loading_messages').html('<span class="label label-danger">Error</span><p class="url_error">'+msg+'</p>');
+                    msg = '<span class="label label-danger">Error</span><p class="url_error">' + msg + '</p>';
+                    $('.loading_messages').html(msg);
                 };
+                var msg;
                 if (data === null) {
                     loadingMessages.html(' ');
                     success_callback();
                 } else if (data.id != surveyLink.community_id) {
-                    displayError('That questionnaire is already assigned to another community: <a href="/admin/communities/edit/'+data.id+'">'+data.name+'</a>');
+                    msg = 'That questionnaire is already assigned to another community: ';
+                    msg += '<a href="/admin/communities/edit/' + data.id + '">' + data.name + '</a>';
+                    displayError(msg);
                 } else if (data.type != surveyLink.survey_type) {
-                    displayError('That questionnaire is already linked as this community\'s community '+data.type+'s questionnaire.');
+                    msg = 'That questionnaire is already linked as this community\'s community ';
+                    msg += data.type + 's questionnaire.';
+                    displayError(msg);
                 } else {
                     loadingMessages.html(' ');
                     success_callback();
                 }
             },
             error: function (jqXHR, errorType, exception) {
-                loadingMessages.html('<p class="url_error"><span class="label label-danger">Error</span> Error checking questionnaire uniqueness. </p>');
+                var msg = '<span class="label label-danger">Error</span> Error checking questionnaire uniqueness. ';
+                msg = '<p class="url_error">' + msg + '</p>';
+                loadingMessages.html(msg);
                 var retry_link = $('<a href="#" class="retry">Retry</a>');
                 retry_link.click(function (event) {
                     event.preventDefault();
@@ -576,7 +589,9 @@ var surveyLink = {
         $.ajax({
             url: '/surveys/get_qna_ids/'+sm_id,
             beforeSend: function () {
-                loadingMessages.html('<span class="loading"><img src="/data_center/img/loading_small.gif" /> Extracting PWR<sup>3</sup> question info...</span>');
+                var msg = 'Extracting PWR<sup>3</sup> question info...';
+                msg = '<span class="loading"><img src="/data_center/img/loading_small.gif" /> ' + msg + '</span>';
+                loadingMessages.html(msg);
             },
             success: function (data) {
                 data = jQuery.parseJSON(data);
@@ -623,7 +638,9 @@ var surveyLink = {
         var url_field = $('#sm-url');
         var linkStatus = container.find('.link_status');
         var surveyUrl = container.find('span.survey_url');
-        var readyStatusMsg = '<span class="text-warning"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Ready to be linked</span>';
+        var readyStatusMsg = '<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> ';
+        readyStatusMsg += 'Ready to be linked';
+        readyStatusMsg = '<span class="text-warning">' + readyStatusMsg + '</span>';
         if (url) {
             url_field.val(url);
             linkStatus.html(readyStatusMsg);
@@ -638,8 +655,9 @@ var surveyLink = {
             url: '/surveys/get_survey_url/'+sm_id,
             beforeSend: function () {
                 url_field.prop('disabled', true);
-                var loading_indicator = '<span class="loading"><img src="/data_center/img/loading_small.gif" /> Retrieving URL...</span>';
-                loadingMessages.html(loading_indicator);
+                var loadingIndicator = '<img src="/data_center/img/loading_small.gif" /> Retrieving URL...';
+                loadingIndicator = '<span class="loading">' + loadingIndicator + '</span>';
+                loadingMessages.html(loadingIndicator);
             },
             success: function (data) {
                 url_field.val(data);
@@ -647,8 +665,9 @@ var surveyLink = {
                 surveyUrl.html('<a href="'+data+'">'+data+'</a>');
             },
             error: function (jqXHR, errorType, exception) {
-                var error_msg = 'No URL found for this questionnaire. Web link collector may not be configured yet.';
-                loadingMessages.html('<p class="url_error"><span class="label label-danger">Error</span> '+error_msg+' </p>');
+                var msg = 'No URL found for this questionnaire. Web link collector may not be configured yet.';
+                msg = '<p class="url_error"><span class="label label-danger">Error</span> ' + msg + ' </p>';
+                loadingMessages.html(msg);
                 var retry_link = $('<a href="#" class="retry">Retry</a>');
                 retry_link.click(function (event) {
                     event.preventDefault();
@@ -836,7 +855,8 @@ var adminHeader = {
             url = url.replace('{survey-id}', surveyId);
         } else if (url.search('{survey-id}') != -1) {
             var communityName = $('#admin-sidebar-community select[name=community] option:selected').text().trim();
-            this.displayError('The ' + surveyType  + ' questionnaire has not yet been set up for ' + communityName + '.');
+            var msg = 'The ' + surveyType  + ' questionnaire has not yet been set up for ' + communityName + '.';
+            this.displayError(msg);
             return false;
         }
 
