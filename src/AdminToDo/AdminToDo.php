@@ -68,12 +68,7 @@ class AdminToDo
         }
 
         if ($this->readyToAdvanceToStepTwo($communityId)) {
-            $url = Router::url([
-                'prefix' => 'admin',
-                'controller' => 'Communities',
-                'action' => 'progress',
-                $communityId
-            ]);
+            $url = $this->getProgressUrl($communityId);
 
             return [
                 'class' => 'ready',
@@ -82,13 +77,7 @@ class AdminToDo
         }
 
         if ($this->readyToCreateOfficialsSurvey($communityId)) {
-            $url = Router::url([
-                'prefix' => 'admin',
-                'controller' => 'Surveys',
-                'action' => 'link',
-                $communityId,
-                'official'
-            ]);
+            $url = $this->getLinkUrl($communityId, 'official');
 
             return [
                 'class' => 'ready',
@@ -99,12 +88,7 @@ class AdminToDo
         $officialsSurveyId = $this->surveysTable->getSurveyId($communityId, 'official');
 
         if ($this->readyToActivateSurvey($officialsSurveyId)) {
-            $url = Router::url([
-                'prefix' => 'admin',
-                'controller' => 'Surveys',
-                'action' => 'activate',
-                $officialsSurveyId
-            ]);
+            $url = $this->getActivateUrl($officialsSurveyId);
 
             return [
                 'class' => 'ready',
@@ -134,12 +118,7 @@ class AdminToDo
         }
 
         if ($this->readyToSchedulePresentation($communityId, 'a')) {
-            $url = Router::url([
-                'prefix' => 'admin',
-                'controller' => 'Communities',
-                'action' => 'presentations',
-                $communityId
-            ]);
+            $url = $this->getPresentationsUrl($communityId);
 
             return [
                 'class' => 'ready',
@@ -148,12 +127,7 @@ class AdminToDo
         }
 
         if ($this->readyToSchedulePresentation($communityId, 'b')) {
-            $url = Router::url([
-                'prefix' => 'admin',
-                'controller' => 'Communities',
-                'action' => 'presentations',
-                $communityId
-            ]);
+            $url = $this->getPresentationsUrl($communityId);
 
             return [
                 'class' => 'ready',
@@ -171,12 +145,7 @@ class AdminToDo
         }
 
         if ($this->readyToAdvanceToStepThree($communityId)) {
-            $url = Router::url([
-                'prefix' => 'admin',
-                'controller' => 'Communities',
-                'action' => 'progress',
-                $communityId
-            ]);
+            $url = $this->getProgressUrl($communityId);
 
             return [
                 'class' => 'ready',
@@ -185,13 +154,7 @@ class AdminToDo
         }
 
         if ($this->readyToCreateOrganizationsSurvey($communityId)) {
-            $url = Router::url([
-                'prefix' => 'admin',
-                'controller' => 'Surveys',
-                'action' => 'link',
-                $communityId,
-                'organization'
-            ]);
+            $url = $this->getLinkUrl($communityId, 'organization');
 
             return [
                 'class' => 'ready',
@@ -202,12 +165,7 @@ class AdminToDo
         $organizationsSurveyId = $this->surveysTable->getSurveyId($communityId, 'organization');
 
         if ($this->readyToActivateSurvey($organizationsSurveyId)) {
-            $url = Router::url([
-                'prefix' => 'admin',
-                'controller' => 'Surveys',
-                'action' => 'activate',
-                $organizationsSurveyId
-            ]);
+            $url = $this->getActivateUrl($organizationsSurveyId);
 
             return [
                 'class' => 'ready',
@@ -237,12 +195,7 @@ class AdminToDo
         }
 
         if ($this->readyToSchedulePresentation($communityId, 'c')) {
-            $url = Router::url([
-                'prefix' => 'admin',
-                'controller' => 'Communities',
-                'action' => 'presentations',
-                $communityId
-            ]);
+            $url = $this->getPresentationsUrl($communityId);
 
             return [
                 'class' => 'ready',
@@ -251,12 +204,7 @@ class AdminToDo
         }
 
         if ($this->readyToSchedulePresentation($communityId, 'd')) {
-            $url = Router::url([
-                'prefix' => 'admin',
-                'controller' => 'Communities',
-                'action' => 'presentations',
-                $communityId
-            ]);
+            $url = $this->getPresentationsUrl($communityId);
 
             return [
                 'class' => 'ready',
@@ -375,13 +323,7 @@ class AdminToDo
      */
     private function getDeactivationMsg($surveyId)
     {
-        $url = Router::url([
-            'prefix' => 'admin',
-            'controller' => 'Surveys',
-            'action' => 'activate',
-            $surveyId
-        ]);
-
+        $url = $this->getActivateUrl($surveyId);
         $approvedResponseCount = $this->responsesTable->getApprovedCount($surveyId);
         $invitationCount = $this->respondentsTable->getInvitedCount($surveyId);
         $mostRecentResponse = $this->responsesTable->find('all')
@@ -477,5 +419,71 @@ class AdminToDo
     private function readyToCreateOrganizationsSurvey($communityId)
     {
         return ! $this->surveysTable->hasBeenCreated($communityId, 'organization');
+    }
+
+    /**
+     * Returns the URL for this community's 'update presentations' page
+     *
+     * @param int $communityId Community ID
+     * @return string
+     */
+    private function getPresentationsUrl($communityId)
+    {
+        return Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'presentations',
+            $communityId
+        ]);
+    }
+
+    /**
+     * Returns the URL for this community's 'progress' page
+     *
+     * @param int $communityId Community ID
+     * @return string
+     */
+    private function getProgressUrl($communityId)
+    {
+        return Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'progress',
+            $communityId
+        ]);
+    }
+
+    /**
+     * Returns the URL for this survey's (de)activation page
+     *
+     * @param int $surveyId Survey ID
+     * @return string
+     */
+    private function getActivateUrl($surveyId)
+    {
+        return Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Surveys',
+            'action' => 'activate',
+            $surveyId
+        ]);
+    }
+
+    /**
+     * Returns the URL for this community / survey's 'link survey' page
+     *
+     * @param int $communityId Community ID
+     * @param string $surveyType Survey type
+     * @return string
+     */
+    private function getLinkUrl($communityId, $surveyType)
+    {
+        return Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Surveys',
+            'action' => 'link',
+            $communityId,
+            $surveyType
+        ]);
     }
 }
