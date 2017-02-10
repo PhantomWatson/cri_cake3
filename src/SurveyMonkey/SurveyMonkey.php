@@ -88,14 +88,6 @@ class SurveyMonkey
      */
     public function getSurveyList($params)
     {
-        if (Configure::read('debug')) {
-            return [[
-                'sm_id' => '52953452',
-                'title' => 'Leader Alignment Data Request (DEBUG MODE)',
-                'url' => 'https://www.surveymonkey.com/r/R57K8HC'
-            ]];
-        }
-
         $pageSize = 1000;
         $page = 1;
         $retval = [];
