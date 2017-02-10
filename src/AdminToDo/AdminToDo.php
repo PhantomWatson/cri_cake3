@@ -224,7 +224,10 @@ class AdminToDo
      */
     private function readyToActivateSurvey($surveyId)
     {
-        return ! $this->surveysTable->isActive($surveyId);
+        $hasResponses = $this->surveysTable->hasResponses($surveyId);
+        $isActive = $this->surveysTable->isActive($surveyId);
+
+        return ! $hasResponses && ! $isActive;
     }
 
     /**
