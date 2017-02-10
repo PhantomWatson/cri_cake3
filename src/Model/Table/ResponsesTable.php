@@ -124,6 +124,24 @@ class ResponsesTable extends Table
     }
 
     /**
+     * Returns the number of approved respondents who have any responses
+     * (not the number of distinct responses including repeats)
+     *
+     * @param int $surveyId Survey ID
+     * @return int
+     */
+    public function getApprovedCount($surveyId)
+    {
+        return $this->find('all')
+            ->select(['Responses.id', 'Respondents.id'])
+            ->where(['Responses.survey_id' => $surveyId])
+            ->matching('Respondents', function ($q) {
+                return $q->where(['Respondents.approved' => 1]);
+            })
+            ->count();
+    }
+
+    /**
      * Returns whether or not the given response has already been recorded
      *
      * @param int $respondentId Respondent ID

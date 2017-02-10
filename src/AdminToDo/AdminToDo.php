@@ -30,6 +30,8 @@ class AdminToDo
     {
         $this->communitiesTable = TableRegistry::get('Communities');
         $this->productsTable = TableRegistry::get('Products');
+        $this->respondentsTable = TableRegistry::get('Respondents');
+        $this->responsesTable = TableRegistry::get('Responses');
         $this->surveysTable = TableRegistry::get('Surveys');
     }
 
@@ -124,6 +126,37 @@ class AdminToDo
             ];
         }
 
+        if ($this->readyToConsiderDeactivating($officialsSurveyId)) {
+            $url = Router::url([
+                'prefix' => 'admin',
+                'controller' => 'Surveys',
+                'action' => 'activate',
+                $officialsSurveyId
+            ]);
+
+            $approvedResponseCount = $this->responsesTable->getApprovedCount($officialsSurveyId);
+            $invitationCount = $this->respondentsTable->getInvitedCount($officialsSurveyId);
+            $mostRecentResponse = $this->responsesTable->find('all')
+                ->select(['response_date'])
+                ->where(['survey_id' => $officialsSurveyId])
+                ->order(['response_date' => 'DESC'])
+                ->first();
+            $lastResponseDate = $mostRecentResponse->response_date->format('F j, Y g:ia');
+
+            $msg = 'Ready to consider <a href="' . $url . '">deactivating officials questionnaire</a>';
+            $details = [
+                '<li>Invitations: ' . $invitationCount . '</li>',
+                '<li>Approved responses: ' . $approvedResponseCount . '</li>',
+                '<li>Last response: ' . $lastResponseDate . '</li>'
+            ];
+            $msg .= '<ul class="details">' . implode('', $details) . '</ul>';
+
+            return [
+                'class' => 'ready',
+                'msg' => $msg
+            ];
+        }
+
         return [
             'class' => 'incomplete',
             'msg' => '(criteria tests incomplete)'
@@ -211,5 +244,16 @@ class AdminToDo
     private function waitingForSurveyResponses($surveyId)
     {
         return ! $this->surveysTable->hasResponses($surveyId);
+    }
+
+    /**
+     * Returns whether or not the community might qualify for survey deactivation
+     *
+     * @param int $surveyId Survey ID
+     * @return bool
+     */
+    private function readyToConsiderDeactivating($surveyId)
+    {
+        return $this->surveysTable->isActive($surveyId);
     }
 }
