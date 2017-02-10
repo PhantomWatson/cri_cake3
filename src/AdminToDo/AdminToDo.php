@@ -19,6 +19,7 @@ class AdminToDo
 {
     public $communitiesTable;
     public $productsTable;
+    public $surveyTable;
 
     /**
      * AdminToDo constructor
@@ -29,6 +30,7 @@ class AdminToDo
     {
         $this->communitiesTable = TableRegistry::get('Communities');
         $this->productsTable = TableRegistry::get('Products');
+        $this->surveysTable = TableRegistry::get('Surveys');
     }
 
     /**
@@ -77,6 +79,21 @@ class AdminToDo
             ];
         }
 
+        if ($this->readyToCreateOfficialsSurvey($communityId)) {
+            $url = Router::url([
+                'prefix' => 'admin',
+                'controller' => 'Surveys',
+                'action' => 'link',
+                $communityId,
+                'official'
+            ]);
+
+            return [
+                'class' => 'ready',
+                'msg' => 'Ready to create and <a href="' . $url . '">link community-officials survey</a>'
+            ];
+        }
+
         return [
             'class' => 'incomplete',
             'msg' => '(criteria tests incomplete)'
@@ -120,5 +137,16 @@ class AdminToDo
         $community = $this->communitiesTable->get($communityId);
 
         return $community->score < 2;
+    }
+
+    /**
+     * Returns whether or not the community needs an officials survey created
+     *
+     * @param int $communityId Community ID
+     * @return bool
+     */
+    private function readyToCreateOfficialsSurvey($communityId)
+    {
+        return ! $this->surveysTable->hasBeenCreated($communityId, 'official');
     }
 }

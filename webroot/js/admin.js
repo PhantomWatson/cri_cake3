@@ -582,7 +582,8 @@ var surveyLink = {
                 surveyLink.setQnaIds(container, sm_id, success_callback);
             });
 
-            loadingMessages.html('<p class="url_error"><span class="label label-danger">Error</span> '+message+' </p>');
+            var msg = '<p class="url_error"><span class="label label-danger">Error</span> ' + message + ' </p>';
+            loadingMessages.html(msg);
             loadingMessages.find('p').append(retry_link);
         };
 
@@ -597,10 +598,30 @@ var surveyLink = {
                 data = jQuery.parseJSON(data);
                 var success = data[0];
                 if (success) {
+
+                    // Make sure all required fields have values
                     var fields = data[2];
+                    var officialsExclusiveFields = [
+                        'aware_of_plan_qid',
+                        'aware_of_city_plan_aid',
+                        'aware_of_county_plan_aid',
+                        'aware_of_regional_plan_aid',
+                        'unaware_of_plan_aid'
+                    ];
+                    var surveyType = surveyLink.getSurveyType();
                     for (var fieldname in fields) {
                         var hidden_field = container.find("input[data-fieldname='"+fieldname+"']");
                         var id = fields[fieldname];
+
+                        // Skip over inapplicable fields
+                        if (surveyType != 'official' && officialsExclusiveFields.indexOf(fieldname) != -1) {
+                            continue;
+                        }
+
+                        if (! id) {
+                            displayError('This questionnaire is missing a question or answer ID (' + fieldname + ')');
+                            return;
+                        }
                         hidden_field.val(id);
                     }
                     success_callback();
@@ -616,6 +637,10 @@ var surveyLink = {
                 container.find('.loading').remove();
             }
         });
+    },
+
+    getSurveyType: function () {
+        return $('#surveyType').val();
     },
 
     selectSurvey: function (container, sm_id, url) {

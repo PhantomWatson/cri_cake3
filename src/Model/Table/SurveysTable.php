@@ -282,12 +282,11 @@ class SurveysTable extends Table
     }
 
     /**
-     * Returns the Q&A field names relevant to the specified survey type
+     * Returns question and answer field names
      *
-     * @param string $surveyType Either 'official' or 'organization'
      * @return array
      */
-    public function getQnaIdFieldNames($surveyType = 'official')
+    public function getQnaIdFieldNames()
     {
         $fields = [
             'pwrrr_qid',
@@ -300,17 +299,13 @@ class SurveysTable extends Table
             '2_aid',
             '3_aid',
             '4_aid',
-            '5_aid'
+            '5_aid',
+            'aware_of_plan_qid',
+            'aware_of_city_plan_aid',
+            'aware_of_county_plan_aid',
+            'aware_of_regional_plan_aid',
+            'unaware_of_plan_aid'
         ];
-        if ($surveyType == 'official') {
-            $fields += [
-                'aware_of_plan_qid',
-                'aware_of_city_plan_aid',
-                'aware_of_county_plan_aid',
-                'aware_of_regional_plan_aid',
-                'unaware_of_plan_aid'
-            ];
-        }
 
         return $fields;
     }

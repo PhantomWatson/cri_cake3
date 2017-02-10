@@ -408,17 +408,10 @@ class SurveyMonkey
             return [false, 'Could not get questionnaire details from SurveyMonkey. This might be a temporary network error.'];
         }
 
-        // Get survey type
-        $surveysTable = TableRegistry::get('Surveys');
-        $survey = $surveysTable->find('all')
-            ->select(['type'])
-            ->where(['sm_id' => $smId])
-            ->first();
-        $surveyType = $survey->type;
-
         // Create an array to save this data with
+        $surveysTable = TableRegistry::get('Surveys');
         $sectors = $surveysTable->getSectors();
-        $qnaIdFields = $surveysTable->getQnaIdFieldNames($surveyType);
+        $qnaIdFields = $surveysTable->getQnaIdFieldNames();
         $nulls = array_fill(0, count($qnaIdFields), null);
         $data = array_combine($qnaIdFields, $nulls);
 
@@ -458,16 +451,11 @@ class SurveyMonkey
             }
         }
 
-        // Find the "aware of comprehensive community plan" question and store its corresponding Q&A IDs in $data
-        if ($surveyType == 'official') {
-            $keyPhrases = ['Please check the box for each comprehensive community plan'];
-            $awareOfPlanQuestion = $this->findQuestion($result, $keyPhrases);
-            if (! $awareOfPlanQuestion) {
-                return [
-                    false,
-                    'Error: This questionnaire does not contain a question about comprehensive community plans.'
-                ];
-            }
+        /* Find the "aware of comprehensive community plan" question (for officials surveys)
+         * and store its corresponding Q&A IDs in $data */
+        $keyPhrases = ['Please check the box for each comprehensive community plan'];
+        $awareOfPlanQuestion = $this->findQuestion($result, $keyPhrases);
+        if ($awareOfPlanQuestion) {
             $data['aware_of_plan_qid'] = $awareOfPlanQuestion['id'];
             $keyPhrases = [
                 'City' => 'aware_of_city_plan_aid',
@@ -482,16 +470,6 @@ class SurveyMonkey
                         break;
                     }
                 }
-            }
-        }
-
-        // Make sure all fields have values
-        foreach ($data as $field => $value) {
-            if (! $value) {
-                return [
-                    false,
-                    'Error: Could not find the answer ID for the answer ' . str_replace('_aid', '', $field)
-                ];
             }
         }
 

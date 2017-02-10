@@ -89,9 +89,9 @@
 
             <div class="details well">
                 <?php
-                    echo $this->Form->hidden("id");
-                    echo $this->Form->hidden("type");
-                    echo $this->Form->hidden("community_id");
+                    echo $this->Form->hidden('id');
+                    echo $this->Form->hidden('type', ['id' => 'surveyType']);
+                    echo $this->Form->hidden('community_id');
                 ?>
 
                 <table class="table">
