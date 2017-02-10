@@ -92,7 +92,7 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to create and <a href="' . $url . '">link community-officials questionnaire</a>'
+                'msg' => 'Ready to create and <a href="' . $url . '">link officials questionnaire</a>'
             ];
         }
 
@@ -108,14 +108,14 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to <a href="' . $url . '">activate community-officials questionnaire</a>'
+                'msg' => 'Ready to <a href="' . $url . '">activate officials questionnaire</a>'
             ];
         }
 
         if ($this->waitingForSurveyInvitations($officialsSurveyId)) {
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for client to send community officials questionnaire invitations'
+                'msg' => 'Waiting for client to send officials questionnaire invitations'
             ];
         }
 
@@ -208,6 +208,21 @@ class AdminToDo
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">advance to Step Three</a>'
+            ];
+        }
+
+        if ($this->readyToCreateOrganizationsSurvey($communityId)) {
+            $url = Router::url([
+                'prefix' => 'admin',
+                'controller' => 'Surveys',
+                'action' => 'link',
+                $communityId,
+                'organization'
+            ]);
+
+            return [
+                'class' => 'ready',
+                'msg' => 'Ready to create and <a href="' . $url . '">link organizations questionnaire</a>'
             ];
         }
 
@@ -372,5 +387,16 @@ class AdminToDo
         $notYetAdvanced = $community->score < 3;
 
         return $purchaseMade && $notYetAdvanced;
+    }
+
+    /**
+     * Returns whether or not the community needs an organizations survey created
+     *
+     * @param int $communityId Community ID
+     * @return bool
+     */
+    private function readyToCreateOrganizationsSurvey($communityId)
+    {
+        return ! $this->surveysTable->hasBeenCreated($communityId, 'organization');
     }
 }
