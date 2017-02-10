@@ -250,6 +250,20 @@ class AdminToDo
             ];
         }
 
+        if ($this->readyToSchedulePresentation($communityId, 'd')) {
+            $url = Router::url([
+                'prefix' => 'admin',
+                'controller' => 'Communities',
+                'action' => 'presentations',
+                $communityId
+            ]);
+
+            return [
+                'class' => 'ready',
+                'msg' => 'Ready to <a href="' . $url . '">schedule Presentation D</a>'
+            ];
+        }
+
         return [
             'class' => 'incomplete',
             'msg' => '(criteria tests incomplete)'
@@ -419,9 +433,12 @@ class AdminToDo
             return true;
         }
 
-        // Optional Presentation B should only be scheduled if purchased
+        // Optional Presentations B and D should only be scheduled if purchased
         if ($presentationLetter == 'b') {
             return $this->productsTable->isPurchased($communityId, ProductsTable::OFFICIALS_SUMMIT);
+        }
+        if ($presentationLetter == 'd') {
+            return $this->productsTable->isPurchased($communityId, ProductsTable::ORGANIZATIONS_SUMMIT);
         }
     }
 
