@@ -242,6 +242,20 @@ class AdminToDo
             ];
         }
 
+        if ($this->waitingForSurveyInvitations($organizationsSurveyId)) {
+            return [
+                'class' => 'waiting',
+                'msg' => 'Waiting for client to send organizations questionnaire invitations'
+            ];
+        }
+
+        if ($this->waitingForSurveyResponses($organizationsSurveyId)) {
+            return [
+                'class' => 'waiting',
+                'msg' => 'Waiting for responses to organizations questionnaire'
+            ];
+        }
+
         if ($this->readyToSchedulePresentation($communityId, 'c')) {
             $url = Router::url([
                 'prefix' => 'admin',
