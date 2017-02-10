@@ -404,7 +404,7 @@ class AdminToDo
             ->where([
                 'id' => $communityId,
                 function ($exp, $q) use ($presentationLetter) {
-                    return$exp->isNotNull("presentation_$presentationLetter");
+                    return $exp->isNotNull("presentation_$presentationLetter");
                 }
             ])
             ->count();
