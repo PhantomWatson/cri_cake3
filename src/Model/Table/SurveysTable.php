@@ -288,7 +288,7 @@ class SurveysTable extends Table
      */
     public function getQnaIdFieldNames()
     {
-        $fields = [
+        return [
             'pwrrr_qid',
             'production_aid',
             'wholesale_aid',
@@ -306,8 +306,6 @@ class SurveysTable extends Table
             'aware_of_regional_plan_aid',
             'unaware_of_plan_aid'
         ];
-
-        return $fields;
     }
 
     /**
