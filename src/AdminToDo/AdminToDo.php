@@ -160,6 +160,20 @@ class AdminToDo
             ];
         }
 
+        if ($this->readyToSchedulePresentation($communityId, 'a')) {
+            $url = Router::url([
+                'prefix' => 'admin',
+                'controller' => 'Communities',
+                'action' => 'presentations',
+                $communityId
+            ]);
+
+            return [
+                'class' => 'ready',
+                'msg' => 'Ready to <a href="' . $url . '">schedule Presentation A</a>'
+            ];
+        }
+
         return [
             'class' => 'incomplete',
             'msg' => '(criteria tests incomplete)'
@@ -261,5 +275,26 @@ class AdminToDo
     private function readyToConsiderDeactivating($surveyId)
     {
         return $this->surveysTable->isActive($surveyId);
+    }
+
+    /**
+     * Returns whether or not the community might qualify for survey deactivation
+     *
+     * @param int $communityId Community ID
+     * @param string $presentationLetter a, b, c, or d
+     * @return bool
+     */
+    private function readyToSchedulePresentation($communityId, $presentationLetter)
+    {
+        $count = $this->communitiesTable->find('all')
+            ->where([
+                'id' => $communityId,
+                function ($exp, $q) use ($presentationLetter) {
+                    return$exp->isNotNull("presentation_$presentationLetter");
+                }
+            ])
+            ->count();
+
+        return $count == 0;
     }
 }
