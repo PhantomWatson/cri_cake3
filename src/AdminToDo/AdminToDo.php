@@ -226,6 +226,22 @@ class AdminToDo
             ];
         }
 
+        $organizationsSurveyId = $this->surveysTable->getSurveyId($communityId, 'organization');
+
+        if ($this->readyToActivateSurvey($organizationsSurveyId)) {
+            $url = Router::url([
+                'prefix' => 'admin',
+                'controller' => 'Surveys',
+                'action' => 'activate',
+                $organizationsSurveyId
+            ]);
+
+            return [
+                'class' => 'ready',
+                'msg' => 'Ready to <a href="' . $url . '">activate organizations questionnaire</a>'
+            ];
+        }
+
         return [
             'class' => 'incomplete',
             'msg' => '(criteria tests incomplete)'
