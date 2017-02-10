@@ -40,8 +40,6 @@
         }
     ?>
 
-    <?= score_radio_input(5, $community->score, $this) ?>
-
     <?= $this->Form->button(
         'Update',
         ['class' => 'btn btn-primary']
