@@ -117,6 +117,13 @@ class AdminToDo
             ];
         }
 
+        if ($this->waitingForSurveyResponses($officialsSurveyId)) {
+            return [
+                'class' => 'waiting',
+                'msg' => 'Waiting for responses to officials questionnaire'
+            ];
+        }
+
         return [
             'class' => 'incomplete',
             'msg' => '(criteria tests incomplete)'
@@ -193,5 +200,16 @@ class AdminToDo
     private function waitingForSurveyInvitations($surveyId)
     {
         return ! $this->surveysTable->hasSentInvitations($surveyId);
+    }
+
+    /**
+     * Returns whether or not the community is waiting for responses
+     *
+     * @param int $surveyId Survey ID
+     * @return bool
+     */
+    private function waitingForSurveyResponses($surveyId)
+    {
+        return ! $this->surveysTable->hasResponses($surveyId);
     }
 }
