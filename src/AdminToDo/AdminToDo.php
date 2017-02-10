@@ -212,19 +212,19 @@ class AdminToDo
             ];
         }
 
-        if ($this->waitingForPolicyDevPurchase($communityId)) {
-            $product = $this->productsTable->get(ProductsTable::POLICY_DEVELOPMENT);
-            $productName = str_replace('PWRRR', 'PWR<sup>3</sup>', $product->description);
+        $policyDev = $this->productsTable->get(ProductsTable::POLICY_DEVELOPMENT);
+        $policyDevProductName = str_replace('PWRRR', 'PWR<sup>3</sup>', $policyDev->description);
 
+        if ($this->waitingForPolicyDevPurchase($communityId)) {
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for client to purchase ' . $productName
+                'msg' => 'Waiting for client to purchase ' . $policyDevProductName
             ];
         }
 
         return [
-            'class' => 'incomplete',
-            'msg' => '(criteria tests incomplete)'
+            'class' => 'complete',
+            'msg' => 'Client has purchased ' . $policyDevProductName
         ];
     }
 
