@@ -94,6 +94,21 @@ class AdminToDo
             ];
         }
 
+        if ($this->readyToActivateOfficialsSurvey($communityId)) {
+            $surveyId = $this->surveysTable->getSurveyId($communityId, 'official');
+            $url = Router::url([
+                'prefix' => 'admin',
+                'controller' => 'Surveys',
+                'action' => 'activate',
+                $surveyId
+            ]);
+
+            return [
+                'class' => 'ready',
+                'msg' => 'Ready to <a href="' . $url . '">activate community-officials survey</a>'
+            ];
+        }
+
         return [
             'class' => 'incomplete',
             'msg' => '(criteria tests incomplete)'
@@ -148,5 +163,18 @@ class AdminToDo
     private function readyToCreateOfficialsSurvey($communityId)
     {
         return ! $this->surveysTable->hasBeenCreated($communityId, 'official');
+    }
+
+    /**
+     * Returns whether or not the community needs its officials survey activated
+     *
+     * @param int $communityId Community ID
+     * @return bool
+     */
+    private function readyToActivateOfficialsSurvey($communityId)
+    {
+        $surveyId = $this->surveysTable->getSurveyId($communityId, 'official');
+
+        return ! $this->surveysTable->isActive($surveyId);
     }
 }
