@@ -90,7 +90,7 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to create and <a href="' . $url . '">link community-officials survey</a>'
+                'msg' => 'Ready to create and <a href="' . $url . '">link community-officials questionnaire</a>'
             ];
         }
 
@@ -105,7 +105,7 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to <a href="' . $url . '">activate community-officials survey</a>'
+                'msg' => 'Ready to <a href="' . $url . '">activate community-officials questionnaire</a>'
             ];
         }
 
@@ -186,7 +186,7 @@ class AdminToDo
     }
 
     /**
-     * Returns whether or not the community needs its officials survey activated
+     * Returns whether or not the community needs to send its first officials survey invitations
      *
      * @param int $communityId Community ID
      * @return bool
