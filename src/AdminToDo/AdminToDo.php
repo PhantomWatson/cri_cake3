@@ -242,6 +242,20 @@ class AdminToDo
             ];
         }
 
+        if ($this->readyToSchedulePresentation($communityId, 'c')) {
+            $url = Router::url([
+                'prefix' => 'admin',
+                'controller' => 'Communities',
+                'action' => 'presentations',
+                $communityId
+            ]);
+
+            return [
+                'class' => 'ready',
+                'msg' => 'Ready to <a href="' . $url . '">schedule Presentation C</a>'
+            ];
+        }
+
         return [
             'class' => 'incomplete',
             'msg' => '(criteria tests incomplete)'
@@ -368,8 +382,8 @@ class AdminToDo
             return false;
         }
 
-        // Scheduling Presentation A is mandatory
-        if ($presentationLetter == 'a') {
+        // Scheduling Presentations A and C is mandatory
+        if (in_array($presentationLetter, ['a', 'c'])) {
             return true;
         }
 
