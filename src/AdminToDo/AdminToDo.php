@@ -174,6 +174,20 @@ class AdminToDo
             ];
         }
 
+        if ($this->readyToSchedulePresentation($communityId, 'b')) {
+            $url = Router::url([
+                'prefix' => 'admin',
+                'controller' => 'Communities',
+                'action' => 'presentations',
+                $communityId
+            ]);
+
+            return [
+                'class' => 'ready',
+                'msg' => 'Ready to <a href="' . $url . '">schedule Presentation B</a>'
+            ];
+        }
+
         return [
             'class' => 'incomplete',
             'msg' => '(criteria tests incomplete)'
@@ -278,7 +292,7 @@ class AdminToDo
     }
 
     /**
-     * Returns whether or not the community might qualify for survey deactivation
+     * Returns whether or not the community needs to schedule the specified presentation
      *
      * @param int $communityId Community ID
      * @param string $presentationLetter a, b, c, or d
@@ -295,6 +309,19 @@ class AdminToDo
             ])
             ->count();
 
-        return $count == 0;
+        // Already scheduled
+        if ($count !== 0) {
+            return false;
+        }
+
+        // Scheduling Presentation A is mandatory
+        if ($presentationLetter == 'a') {
+            return true;
+        }
+
+        // Optional Presentation B should only be scheduled if purchased
+        if ($presentationLetter == 'b') {
+            return $this->productsTable->isPurchased($communityId, ProductsTable::OFFICIALS_SUMMIT);
+        }
     }
 }
