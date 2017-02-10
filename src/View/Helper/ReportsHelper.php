@@ -34,6 +34,7 @@ class ReportsHelper extends Helper
             $cells[] = 'Presentation B';
         } else {
             $cells[] = 'Presentation C';
+            $cells[] = 'Presentation D';
         }
         $cells[] = 'Status';
         $retval = '';

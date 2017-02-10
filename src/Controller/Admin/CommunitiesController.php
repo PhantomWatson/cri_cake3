@@ -600,7 +600,7 @@ class CommunitiesController extends AppController
 
         if ($this->request->is('post') || $this->request->is('put')) {
             $this->request->data['id'] = $communityId;
-            foreach (['a', 'b', 'c'] as $letter) {
+            foreach (['a', 'b', 'c', 'd'] as $letter) {
                 if (! $this->request->data('presentation_' . $letter . '_scheduled')) {
                     $this->request->data['presentation_' . $letter] = null;
                 }
@@ -618,7 +618,7 @@ class CommunitiesController extends AppController
             }
         }
 
-        foreach (['a', 'b', 'c'] as $letter) {
+        foreach (['a', 'b', 'c', 'd'] as $letter) {
             $community->{'presentation_' . $letter . '_scheduled'} = isset($community->{'presentation_' . $letter});
         }
         $this->set([

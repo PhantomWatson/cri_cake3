@@ -168,7 +168,7 @@ class Reports
     private function getPresentationStatuses($community)
     {
         $presentationsGiven = [];
-        foreach (['a', 'b', 'c'] as $letter) {
+        foreach (['a', 'b', 'c', 'd'] as $letter) {
             $date = $community->{'presentation_' . $letter};
             if ($date) {
                 if ($date->format('Y-m-d') <= date('Y-m-d')) {

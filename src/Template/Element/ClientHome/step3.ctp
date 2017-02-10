@@ -42,6 +42,10 @@
         'thresholdReached' => $criteria[3]['response_threshhold_reached'][1]
     ]) ?>
 
+    <?= $this->ClientHome->presentationScheduledRow('C', $community->presentation_c) ?>
+
+    <?= $this->ClientHome->presentationCompletedRow('C', $community->presentation_c) ?>
+
     <?= $this->ClientHome->orgsSummitRow([
         'description' => $criteria[3]['orgs_summit_purchased'][0],
         'purchased' => $criteria[3]['orgs_summit_purchased'][1],
@@ -49,8 +53,8 @@
     ]) ?>
 
     <?php if ($criteria[3]['orgs_summit_purchased'][1]): ?>
-        <?= $this->ClientHome->presentationScheduledRow('C', $community->presentation_c) ?>
-        <?= $this->ClientHome->presentationCompletedRow('C', $community->presentation_c) ?>
+        <?= $this->ClientHome->presentationScheduledRow('D', $community->presentation_d) ?>
+        <?= $this->ClientHome->presentationCompletedRow('D', $community->presentation_d) ?>
     <?php endif; ?>
 
     <?= $this->ClientHome->policyDevPurchasedRow([

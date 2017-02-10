@@ -513,15 +513,17 @@ class CommunitiesTable extends Table
             $productsTable->isPurchased($communityId, 4)
         ];
 
-        $date = $community->presentation_c;
-        $criteria[3]['presentation_c_scheduled'] = [
-            'Scheduled Presentation C',
-            $date != null
-        ];
-        $criteria[3]['presentation_c_completed'] = [
-            'Completed Presentation C',
-            $date ? ($date->format('Y-m-d') <= date('Y-m-d')) : false
-        ];
+        foreach (['c', 'd'] as $letter) {
+            $date = $community->{"presentation_$letter"};
+            $criteria[2]["presentation_{$letter}_scheduled"] = [
+                'Scheduled Presentation ' . strtoupper($letter),
+                $date != null
+            ];
+            $criteria[2]["presentation_{$letter}_completed"] = [
+                'Completed Presentation ' . strtoupper($letter),
+                $date ? ($date->format('Y-m-d') <= date('Y-m-d')) : false
+            ];
+        }
 
         $product = $productsTable->get(5);
         $description = 'Purchased ' . $product->description . ' ($' . number_format($product->price) . ')';

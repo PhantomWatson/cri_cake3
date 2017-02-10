@@ -87,7 +87,7 @@
                         Internal Alignment
                     </button>
                 </th>
-                <td colspan="2"></td>
+                <td colspan="3"></td>
             </tr>
             <tr class="general-header">
                 <th>
@@ -240,6 +240,9 @@
                     </td>
                     <td class="survey">
                         <?= $community['presentationsGiven']['c'] ?>
+                    </td>
+                    <td class="survey">
+                        <?= $community['presentationsGiven']['d'] ?>
                     </td>
                     <td class="survey-status">
                         <?= $survey['status'] ?>

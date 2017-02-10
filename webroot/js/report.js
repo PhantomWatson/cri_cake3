@@ -112,11 +112,11 @@ var adminReport = {
 
         cells = table.find('.general-header th');
         this.markOfficialsSurvey(cells.filter(':nth-child(n+2):nth-child(-n+18)'));
-        this.markOrgsSurvey(cells.filter(':nth-child(n+19):nth-child(-n+32)'));
+        this.markOrgsSurvey(cells.filter(':nth-child(n+19):nth-child(-n+33)'));
 
         cells = table.find('tbody td');
         this.markOfficialsSurvey(cells.filter(':nth-child(n+2):nth-child(-n+16)'));
-        this.markOrgsSurvey(cells.filter(':nth-child(n+18):nth-child(-n+29)'));
+        this.markOrgsSurvey(cells.filter(':nth-child(n+18):nth-child(-n+30)'));
     },
 
     markOfficialsSurvey: function (element) {

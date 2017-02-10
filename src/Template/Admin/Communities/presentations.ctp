@@ -6,7 +6,7 @@
 
 <div id="presentations-form">
     <?= $this->Form->create($community) ?>
-    <?php foreach (['a', 'b', 'c'] as $letter): ?>
+    <?php foreach (['a', 'b', 'c', 'd'] as $letter): ?>
         <?php
             $class = 'well';
             if ($community->{'presentation_' . $letter . '_scheduled'}) {
