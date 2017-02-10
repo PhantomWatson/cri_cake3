@@ -515,11 +515,11 @@ class CommunitiesTable extends Table
 
         foreach (['c', 'd'] as $letter) {
             $date = $community->{"presentation_$letter"};
-            $criteria[2]["presentation_{$letter}_scheduled"] = [
+            $criteria[3]["presentation_{$letter}_scheduled"] = [
                 'Scheduled Presentation ' . strtoupper($letter),
                 $date != null
             ];
-            $criteria[2]["presentation_{$letter}_completed"] = [
+            $criteria[3]["presentation_{$letter}_completed"] = [
                 'Completed Presentation ' . strtoupper($letter),
                 $date ? ($date->format('Y-m-d') <= date('Y-m-d')) : false
             ];
