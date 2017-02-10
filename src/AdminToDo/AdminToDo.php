@@ -212,6 +212,16 @@ class AdminToDo
             ];
         }
 
+        if ($this->waitingForPolicyDevPurchase($communityId)) {
+            $product = $this->productsTable->get(ProductsTable::POLICY_DEVELOPMENT);
+            $productName = str_replace('PWRRR', 'PWR<sup>3</sup>', $product->description);
+
+            return [
+                'class' => 'waiting',
+                'msg' => 'Waiting for client to purchase ' . $productName
+            ];
+        }
+
         return [
             'class' => 'incomplete',
             'msg' => '(criteria tests incomplete)'
@@ -485,5 +495,16 @@ class AdminToDo
             $communityId,
             $surveyType
         ]);
+    }
+
+    /**
+     * Returns whether or not the community needs to purchase policy development
+     *
+     * @param int $communityId Community ID
+     * @return bool
+     */
+    private function waitingForPolicyDevPurchase($communityId)
+    {
+        return ! $this->productsTable->isPurchased($communityId, ProductsTable::POLICY_DEVELOPMENT);
     }
 }
