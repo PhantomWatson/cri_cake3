@@ -188,6 +188,20 @@ class AdminToDo
             ];
         }
 
+        if ($this->readyToAdvanceToStepThree($communityId)) {
+            $url = Router::url([
+                'prefix' => 'admin',
+                'controller' => 'Communities',
+                'action' => 'progress',
+                $communityId
+            ]);
+
+            return [
+                'class' => 'ready',
+                'msg' => 'Ready to <a href="' . $url . '">advance to Step Three</a>'
+            ];
+        }
+
         return [
             'class' => 'incomplete',
             'msg' => '(criteria tests incomplete)'
@@ -323,5 +337,20 @@ class AdminToDo
         if ($presentationLetter == 'b') {
             return $this->productsTable->isPurchased($communityId, ProductsTable::OFFICIALS_SUMMIT);
         }
+    }
+
+    /**
+     * Returns whether or not the community is ready to advance to Step Three
+     *
+     * @param int $communityId Community ID
+     * @return bool
+     */
+    private function readyToAdvanceToStepThree($communityId)
+    {
+        $purchaseMade = $this->productsTable->isPurchased($communityId, ProductsTable::ORGANIZATIONS_SURVEY);
+        $community = $this->communitiesTable->get($communityId);
+        $notYetAdvanced = $community->score < 3;
+
+        return $purchaseMade && $notYetAdvanced;
     }
 }
