@@ -623,7 +623,7 @@ class CommunitiesController extends AppController
         }
         $this->set([
             'community' => $community,
-            'titleForLayout' => 'Community Presentations'
+            'titleForLayout' => $community->name . ' Presentations'
         ]);
     }
 
