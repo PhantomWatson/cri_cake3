@@ -145,8 +145,7 @@ class SurveysTable extends Table
     }
 
     /**
-     * Returns a rules checker object that will be used for validating
-     * application integrity.
+     * Returns a rules checker object that will be used for validating application integrity.
      *
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
@@ -160,6 +159,7 @@ class SurveysTable extends Table
 
     /**
      * Returns the community_id for the first survey that matches $conditions
+     *
      * @param array $conditions Query conditions
      * @return int|null
      */
@@ -174,7 +174,9 @@ class SurveysTable extends Table
     }
 
     /**
-     * Returns an array of invited_respondent_count, uninvited_respondent_count, and percent_invited_responded for a single survey type or an array of both
+     * Returns an array of invited_respondent_count, uninvited_respondent_count, and percent_invited_responded for
+     * a single survey type or an array of both
+     *
      * @param int $communityId Community ID
      * @param string $surveyType Survey type (optional)
      * @return array
@@ -225,6 +227,8 @@ class SurveysTable extends Table
     }
 
     /**
+     * Returns the ID of the specified survey
+     *
      * @param int $communityId Community ID
      * @param string $type Survey type
      * @return int|null
@@ -243,6 +247,8 @@ class SurveysTable extends Table
     }
 
     /**
+     * Sets the responses_checked date
+     *
      * @param int $surveyId Survey ID
      * @return bool
      */
@@ -255,6 +261,8 @@ class SurveysTable extends Table
     }
 
     /**
+     * Returns the responses_checked date or null
+     *
      * @param int $surveyId Survey ID
      * @return DateTime|null
      */
@@ -269,6 +277,7 @@ class SurveysTable extends Table
 
     /**
      * Returns the ID of the least-recently-imported survey
+     *
      * @return null|int
      */
     public function getIdForAutomatedImport()
