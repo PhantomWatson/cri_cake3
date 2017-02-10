@@ -127,36 +127,9 @@ class AdminToDo
         }
 
         if ($this->readyToConsiderDeactivating($officialsSurveyId)) {
-            $url = Router::url([
-                'prefix' => 'admin',
-                'controller' => 'Surveys',
-                'action' => 'activate',
-                $officialsSurveyId
-            ]);
-
-            $approvedResponseCount = $this->responsesTable->getApprovedCount($officialsSurveyId);
-            $invitationCount = $this->respondentsTable->getInvitedCount($officialsSurveyId);
-            $mostRecentResponse = $this->responsesTable->find('all')
-                ->select(['response_date'])
-                ->where(['survey_id' => $officialsSurveyId])
-                ->order(['response_date' => 'DESC'])
-                ->first();
-            $lastResponseDate = $mostRecentResponse->response_date->timeAgoInWords([
-                'format' => 'MMM d, YYY',
-                'end' => '+1 year'
-            ]);
-
-            $msg = 'Ready to consider <a href="' . $url . '">deactivating officials questionnaire</a>';
-            $details = [
-                '<li>Invitations: ' . $invitationCount . '</li>',
-                '<li>Approved responses: ' . $approvedResponseCount . '</li>',
-                '<li>Last response ' . $lastResponseDate . '</li>'
-            ];
-            $msg .= '<ul class="details">' . implode('', $details) . '</ul>';
-
             return [
                 'class' => 'ready',
-                'msg' => $msg
+                'msg' => $this->getDeactivationMsg($officialsSurveyId)
             ];
         }
 
@@ -253,6 +226,13 @@ class AdminToDo
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for responses to organizations questionnaire'
+            ];
+        }
+
+        if ($this->readyToConsiderDeactivating($organizationsSurveyId)) {
+            return [
+                'class' => 'ready',
+                'msg' => $this->getDeactivationMsg($organizationsSurveyId)
             ];
         }
 
@@ -371,6 +351,38 @@ class AdminToDo
     private function readyToConsiderDeactivating($surveyId)
     {
         return $this->surveysTable->isActive($surveyId);
+    }
+
+    private function getDeactivationMsg($surveyId)
+    {
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Surveys',
+            'action' => 'activate',
+            $surveyId
+        ]);
+
+        $approvedResponseCount = $this->responsesTable->getApprovedCount($surveyId);
+        $invitationCount = $this->respondentsTable->getInvitedCount($surveyId);
+        $mostRecentResponse = $this->responsesTable->find('all')
+            ->select(['response_date'])
+            ->where(['survey_id' => $surveyId])
+            ->order(['response_date' => 'DESC'])
+            ->first();
+        $lastResponseDate = $mostRecentResponse->response_date->timeAgoInWords([
+            'format' => 'MMM d, YYY',
+            'end' => '+1 year'
+        ]);
+
+        $msg = 'Ready to consider <a href="' . $url . '">deactivating officials questionnaire</a>';
+        $details = [
+            '<li>Invitations: ' . $invitationCount . '</li>',
+            '<li>Approved responses: ' . $approvedResponseCount . '</li>',
+            '<li>Last response ' . $lastResponseDate . '</li>'
+        ];
+        $msg .= '<ul class="details">' . implode('', $details) . '</ul>';
+
+        return $msg;
     }
 
     /**
