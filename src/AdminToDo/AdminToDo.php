@@ -141,13 +141,16 @@ class AdminToDo
                 ->where(['survey_id' => $officialsSurveyId])
                 ->order(['response_date' => 'DESC'])
                 ->first();
-            $lastResponseDate = $mostRecentResponse->response_date->format('F j, Y g:ia');
+            $lastResponseDate = $mostRecentResponse->response_date->timeAgoInWords([
+                'format' => 'MMM d, YYY',
+                'end' => '+1 year'
+            ]);
 
             $msg = 'Ready to consider <a href="' . $url . '">deactivating officials questionnaire</a>';
             $details = [
                 '<li>Invitations: ' . $invitationCount . '</li>',
                 '<li>Approved responses: ' . $approvedResponseCount . '</li>',
-                '<li>Last response: ' . $lastResponseDate . '</li>'
+                '<li>Last response ' . $lastResponseDate . '</li>'
             ];
             $msg .= '<ul class="details">' . implode('', $details) . '</ul>';
 
