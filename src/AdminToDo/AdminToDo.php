@@ -222,9 +222,18 @@ class AdminToDo
             ];
         }
 
+        if ($this->readyToAdvanceToStepFour($communityId)) {
+            $url = $this->getProgressUrl($communityId);
+
+            return [
+                'class' => 'ready',
+                'msg' => 'Ready to <a href="' . $url . '">advance to Step Four</a>'
+            ];
+        }
+
         return [
             'class' => 'complete',
-            'msg' => 'Client has purchased ' . $policyDevProductName
+            'msg' => 'Complete'
         ];
     }
 
@@ -506,5 +515,18 @@ class AdminToDo
     private function waitingForPolicyDevPurchase($communityId)
     {
         return ! $this->productsTable->isPurchased($communityId, ProductsTable::POLICY_DEVELOPMENT);
+    }
+
+    /**
+     * Returns whether or not the community is ready to advance to Step Four
+     *
+     * @param int $communityId Community ID
+     * @return bool
+     */
+    private function readyToAdvanceToStepFour($communityId)
+    {
+        $community = $this->communitiesTable->get($communityId);
+
+        return $community->score < 4;
     }
 }
