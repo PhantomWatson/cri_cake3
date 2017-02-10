@@ -638,8 +638,8 @@ class SurveysTable extends Table
      */
     public function hasResponses($surveyId)
     {
-        $respondentsTable = TableRegistry::get('Respondents');
-        $count = $respondentsTable->find('all')
+        $responsesTable = TableRegistry::get('Responses');
+        $count = $responsesTable->find('all')
             ->where([
                 'survey_id' => $surveyId
             ])
