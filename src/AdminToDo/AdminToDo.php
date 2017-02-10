@@ -188,6 +188,15 @@ class AdminToDo
             ];
         }
 
+        if ($this->waitingForOrganizationsSurveyPurchase($communityId)) {
+            $product = $this->productsTable->get(ProductsTable::ORGANIZATIONS_SURVEY);
+
+            return [
+                'class' => 'waiting',
+                'msg' => 'Waiting for client to purchase ' . $product->description
+            ];
+        }
+
         if ($this->readyToAdvanceToStepThree($communityId)) {
             $url = Router::url([
                 'prefix' => 'admin',
@@ -337,6 +346,17 @@ class AdminToDo
         if ($presentationLetter == 'b') {
             return $this->productsTable->isPurchased($communityId, ProductsTable::OFFICIALS_SUMMIT);
         }
+    }
+
+    /**
+     * Returns whether or not the community needs to purchase the Step Three survey
+     *
+     * @param int $communityId Community ID
+     * @return bool
+     */
+    private function waitingForOrganizationsSurveyPurchase($communityId)
+    {
+        return ! $this->productsTable->isPurchased($communityId, ProductsTable::ORGANIZATIONS_SURVEY);
     }
 
     /**
