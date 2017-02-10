@@ -94,13 +94,14 @@ class AdminToDo
             ];
         }
 
-        if ($this->readyToActivateOfficialsSurvey($communityId)) {
-            $surveyId = $this->surveysTable->getSurveyId($communityId, 'official');
+        $officialsSurveyId = $this->surveysTable->getSurveyId($communityId, 'official');
+
+        if ($this->readyToActivateSurvey($officialsSurveyId)) {
             $url = Router::url([
                 'prefix' => 'admin',
                 'controller' => 'Surveys',
                 'action' => 'activate',
-                $surveyId
+                $officialsSurveyId
             ]);
 
             return [
@@ -109,7 +110,7 @@ class AdminToDo
             ];
         }
 
-        if ($this->waitingForOfficialsSurveyInvitations($communityId)) {
+        if ($this->waitingForSurveyInvitations($officialsSurveyId)) {
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to send community officials questionnaire invitations'
@@ -173,28 +174,24 @@ class AdminToDo
     }
 
     /**
-     * Returns whether or not the community needs its officials survey activated
+     * Returns whether or not the community needs this survey activated
      *
-     * @param int $communityId Community ID
+     * @param int $surveyId Survey ID
      * @return bool
      */
-    private function readyToActivateOfficialsSurvey($communityId)
+    private function readyToActivateSurvey($surveyId)
     {
-        $surveyId = $this->surveysTable->getSurveyId($communityId, 'official');
-
         return ! $this->surveysTable->isActive($surveyId);
     }
 
     /**
-     * Returns whether or not the community needs to send its first officials survey invitations
+     * Returns whether or not the community needs to send its first invitations for this survey
      *
-     * @param int $communityId Community ID
+     * @param int $surveyId Survey ID
      * @return bool
      */
-    private function waitingForOfficialsSurveyInvitations($communityId)
+    private function waitingForSurveyInvitations($surveyId)
     {
-        $surveyId = $this->surveysTable->getSurveyId($communityId, 'official');
-
         return ! $this->surveysTable->hasSentInvitations($surveyId);
     }
 }
