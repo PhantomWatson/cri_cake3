@@ -353,6 +353,12 @@ class AdminToDo
         return $this->surveysTable->isActive($surveyId);
     }
 
+    /**
+     * Returns a detailed message for "waiting for deactivation criteria to be met"
+     *
+     * @param int $surveyId Survey ID
+     * @return string
+     */
     private function getDeactivationMsg($surveyId)
     {
         $url = Router::url([
