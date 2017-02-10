@@ -109,6 +109,13 @@ class AdminToDo
             ];
         }
 
+        if ($this->waitingForOfficialsSurveyInvitations($communityId)) {
+            return [
+                'class' => 'waiting',
+                'msg' => 'Waiting for client to send community officials questionnaire invitations'
+            ];
+        }
+
         return [
             'class' => 'incomplete',
             'msg' => '(criteria tests incomplete)'
@@ -176,5 +183,18 @@ class AdminToDo
         $surveyId = $this->surveysTable->getSurveyId($communityId, 'official');
 
         return ! $this->surveysTable->isActive($surveyId);
+    }
+
+    /**
+     * Returns whether or not the community needs its officials survey activated
+     *
+     * @param int $communityId Community ID
+     * @return bool
+     */
+    private function waitingForOfficialsSurveyInvitations($communityId)
+    {
+        $surveyId = $this->surveysTable->getSurveyId($communityId, 'official');
+
+        return ! $this->surveysTable->hasSentInvitations($surveyId);
     }
 }

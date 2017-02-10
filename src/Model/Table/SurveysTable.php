@@ -783,4 +783,23 @@ class SurveysTable extends Table
 
         return round($avgIntAlignment, 2);
     }
+
+    /**
+     * Returns whether or not any survey has invited respondents
+     *
+     * @param int $surveyId Survey ID
+     * @return bool
+     */
+    public function hasSentInvitations($surveyId)
+    {
+        $respondentsTable = TableRegistry::get('Respondents');
+        $count = $respondentsTable->find('all')
+            ->where([
+                'survey_id' => $surveyId,
+                'invited' => 1
+            ])
+            ->count();
+
+        return $count > 0;
+    }
 }
