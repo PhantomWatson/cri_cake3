@@ -126,12 +126,30 @@ class AdminToDo
             ];
         }
 
+        $community = $this->communitiesTable->get($communityId);
+
+        if ($this->waitingToCompletePresentation($communityId, 'a')) {
+            return [
+                'class' => 'waiting',
+                'msg' => 'Waiting for Presentation A to complete ' .
+                    '(' . $community->presentation_a->format('F j, Y') . ')'
+            ];
+        }
+
         if ($this->readyToSchedulePresentation($communityId, 'b')) {
             $url = $this->getPresentationsUrl($communityId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">schedule Presentation B</a>'
+            ];
+        }
+
+        if ($this->waitingToCompletePresentation($communityId, 'b')) {
+            return [
+                'class' => 'waiting',
+                'msg' => 'Waiting for Presentation B to complete ' .
+                    '(' . $community->presentation_b->format('F j, Y') . ')'
             ];
         }
 
@@ -203,12 +221,28 @@ class AdminToDo
             ];
         }
 
+        if ($this->waitingToCompletePresentation($communityId, 'c')) {
+            return [
+                'class' => 'waiting',
+                'msg' => 'Waiting for Presentation C to complete ' .
+                    '(' . $community->presentation_c->format('F j, Y') . ')'
+            ];
+        }
+
         if ($this->readyToSchedulePresentation($communityId, 'd')) {
             $url = $this->getPresentationsUrl($communityId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">schedule Presentation D</a>'
+            ];
+        }
+
+        if ($this->waitingToCompletePresentation($communityId, 'd')) {
+            return [
+                'class' => 'waiting',
+                'msg' => 'Waiting for Presentation D to complete ' .
+                    '(' . $community->presentation_d->format('F j, Y') . ')'
             ];
         }
 
@@ -528,5 +562,21 @@ class AdminToDo
         $community = $this->communitiesTable->get($communityId);
 
         return $community->score < 4;
+    }
+
+    /**
+     * Returns whether or not a scheduled presentation has not yet concluded
+     *
+     * @param int $communityId Community ID
+     * @param string $presentationLetter a, b, c, or d
+     * @return bool
+     */
+    private function waitingToCompletePresentation($communityId, $presentationLetter)
+    {
+        $community = $this->communitiesTable->get($communityId);
+        $presentationDate = $community->{"presentation_$presentationLetter"};
+        $today = date('Y-m-d');
+
+        return $presentationDate && $presentationDate->format('Y-m-d') > $today;
     }
 }
