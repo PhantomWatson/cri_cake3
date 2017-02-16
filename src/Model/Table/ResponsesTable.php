@@ -333,7 +333,6 @@ class ResponsesTable extends Table
     public function getCurrentApproved($surveyId)
     {
         $surveysTable = TableRegistry::get('Surveys');
-        $sectorFields = $surveysTable->getSectorFieldNames();
 
         $respondentsTable = TableRegistry::get('Respondents');
         $respondents = $respondentsTable->find('all')
