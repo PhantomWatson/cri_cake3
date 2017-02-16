@@ -116,10 +116,6 @@
                         <span class="area-details">
                             <?= $community['parentArea'] ?>
                         </span>
-                        <br />
-                        <span class="area-details">
-                            <?= $community['parentAreaFips'] ?>
-                        </span>
 
                         <?php if ($community['recentActivity']): ?>
                             <?php

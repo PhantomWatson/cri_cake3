@@ -57,7 +57,6 @@ class Reports
             $report[$community->id] = [
                 'name' => $community->name,
                 'parentArea' => $community->parent_area->name,
-                'parentAreaFips' => $community->parent_area->fips,
                 'presentationsGiven' => $this->getPresentationStatuses($community),
                 'notes' => $community->notes,
                 'recentActivity' => $community->activity_records
@@ -353,7 +352,6 @@ class Reports
         $this->columnTitles = [
             'Community',
             'Area',
-            'Area FIPS'
         ];
         $this->surveyColumnHeaders = [];
         $this->intAlignmentColOffset = 0;
@@ -753,7 +751,6 @@ class Reports
             $cells = [
                 $community['name'],
                 $community['parentArea'],
-                $community['parentAreaFips']
             ];
             foreach (['official_survey', 'organization_survey'] as $surveyType) {
                 $survey = $community[$surveyType];
