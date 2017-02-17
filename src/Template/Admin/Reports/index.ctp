@@ -4,7 +4,7 @@
     </h1>
 </div>
 
-<section>
+<section class="report">
     <h2>
         Download Reports
 
@@ -35,7 +35,7 @@
     </p>
 </section>
 
-<section>
+<section class="report">
     <h2>
         Community Officials Questionnaire (Step Two)
     </h2>
@@ -136,7 +136,7 @@
     </table>
 </section>
 
-<section>
+<section class="report">
     <h2>
         Community Organizations Questionnaire (Step Three)
     </h2>
