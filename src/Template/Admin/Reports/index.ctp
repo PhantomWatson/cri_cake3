@@ -235,7 +235,7 @@
 <?php $this->end(); ?>
 
 <?php $this->Html->script('stupidtable.min', ['block' => 'scriptBottom']); ?>
-<?php $this->Html->script('report', ['block' => 'scriptBottom']); ?>
+<?php $this->Html->script('report.min', ['block' => 'scriptBottom']); ?>
 <?php $this->append('buffered'); ?>
     adminReport.notes = <?= json_encode($notes) ?>;
     adminReport.init();
