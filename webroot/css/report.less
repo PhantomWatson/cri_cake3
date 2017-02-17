@@ -1,32 +1,32 @@
-#report {
+table.report {
     background-color: #fff;
     white-space: nowrap;
 
-    &.officials-expanded {
-        &.officials-int-alignment-expanded {
+    &.expanded {
+        &.int-alignment-expanded {
             td,
             th {
-                &.int-alignment-details[data-survey-type=officials] {
+                &.int-alignment-details {
                     display: table-cell;
                 }
             }
         }
         td,
         th {
-            &.survey[data-survey-type=officials] {
+            &.survey {
                 display: table-cell;
             }
-            &.int-alignment-details[data-survey-type=officials] {
+            &.int-alignment-details {
                 display: none;
             }
         }
-        .minimized-status-header[data-survey-type=officials] {
+        .minimized-status-header {
             display: none;
         }
         .survey-group-header {
             display: table-row;
 
-            th[data-survey-type=officials] {
+            th {
                 display: table-cell;
             }
         }
@@ -35,9 +35,7 @@
 
             td,
             th {
-                &[data-survey-type=officials] {
-                    display: table-cell;
-                }
+                display: table-cell;
             }
             td:first-child {
                 display: table-cell;
@@ -45,48 +43,6 @@
             }
             .spacer {
                 display: none;
-            }
-        }
-    }
-    &.organizations-expanded {
-        &.organizations-int-alignment-expanded {
-            td,
-            th {
-                &.int-alignment-details[data-survey-type=organizations] {
-                    display: table-cell;
-                }
-            }
-        }
-        td,
-        th {
-            &.survey[data-survey-type=organizations] {
-                display: table-cell;
-            }
-            &.int-alignment-details[data-survey-type=organizations] {
-                display: none;
-            }
-        }
-        .minimized-status-header[data-survey-type=organizations] {
-            display: none;
-        }
-        .survey-group-header {
-            display: table-row;
-
-            th[data-survey-type=organizations] {
-                display: table-cell;
-            }
-        }
-        .col-group-headers {
-            display: table-row;
-
-            td,
-            th {
-                &[data-survey-type=organizations] {
-                    display: table-cell;
-                }
-            }
-            td:first-child {
-                display: table-cell;
             }
         }
     }
@@ -125,6 +81,18 @@
                 }
             }
         }
+        > tr.survey-group-header {
+            display: none;
+
+            > th {
+                border-bottom: none;
+                border-left: 1px solid @table-border-color;
+                border-right: 1px solid @table-border-color;
+                border-top: 1px solid @table-border-color !important;
+                display: none;
+                text-align: center;
+            }
+        }
         th {
             vertical-align: middle;
 
@@ -156,24 +124,6 @@
             display: table-cell;
         }
     }
-    .survey-group-header {
-        display: none;
-
-        th {
-            border-top: 1px solid @table-border-color;
-            border-left: 1px solid @table-border-color;
-            border-right: 1px solid @table-border-color;
-            border-bottom: none;
-            text-align: center;
-
-            &[data-survey-type=officials] {
-                display: none;
-            }
-            &[data-survey-type=organizations] {
-                display: none;
-            }
-        }
-    }
     .minimized-status-header {
         border-right: 1px solid @table-border-color;
     }
@@ -192,10 +142,9 @@
         }
         td,
         th {
-            &[data-survey-type] {
+            &:not(:first-child) {
                 border-left: 1px solid @table-border-color;
                 border-right: 1px solid @table-border-color;
-                display: none;
             }
         }
         th {
@@ -208,12 +157,9 @@
         }
         td {
             border-bottom: 1px solid @table-border-color;
+            border-top: none;
 
-            &[data-survey-type] {
-                border-top: 0;
-            }
             &:first-child {
-                border-top: none;
                 border-right-color: transparent;
             }
         }

@@ -47,18 +47,13 @@
         (<span class="glyphicon glyphicon-list" aria-hidden="true"></span>) to view details.
     </p>
 
-    <table class="table" id="report">
+    <table class="table report">
         <thead>
             <tr class="survey-group-header">
-                <td colspan="3"></td>
+                <td></td>
                 <th colspan="17" class="survey">
                     <button class="survey-toggler">
                         Community Leadership
-                    </button>
-                </th>
-                <th colspan="14" class="survey">
-                    <button class="survey-toggler">
-                        Community Organizations
                     </button>
                 </th>
             </tr>
@@ -78,88 +73,22 @@
                     Aware of Plan
                 </th>
                 <td colspan="3"></td>
-                <td colspan="3"></td>
-                <th colspan="2">
-                    PWR<sup>3</sup> Alignment
-                </th>
-                <th colspan="6">
-                    <button>
-                        Internal Alignment
-                    </button>
-                </th>
-                <td colspan="3"></td>
             </tr>
             <tr class="general-header">
                 <th>
                     Community
                 </th>
                 <?= $this->Reports->surveyHeader($sectors, 'officials'); ?>
-                <?= $this->Reports->surveyHeader($sectors, 'organizations'); ?>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($report as $communityId => $community): ?>
                 <tr class="<?= $community['recentActivity'] ? 'active' : null ?>">
                     <td>
-                        <?= $community['name'] ?>
-                        <?php if ($community['notes']): ?>
-                            <button type="button" class="notes" data-toggle="modal" data-target="#notes-modal" title="View notes" data-community-id="<?= $communityId ?>" data-community-name="<?= $community['name'] ?>">
-                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                            </button>
-                        <?php endif; ?>
-                        <?php if ($community['recentActivity']): ?>
-                            <button type="button" class="recent-activity" data-toggle="modal" data-target="#notes-modal" title="View recent activity" data-community-id="<?= $communityId ?>" data-community-name="<?= $community['name'] ?>">
-                                <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-                            </button>
-                        <?php endif; ?>
-                        <br />
-                        <span class="area-details">
-                            <?= $community['parentArea'] ?>
-                        </span>
-
-                        <?php if ($community['recentActivity']): ?>
-                            <?php
-                                $community['recentActivity'] = array_slice($community['recentActivity'], 0, 5);
-                                $count = count($community['recentActivity']);
-                            ?>
-                            <div class="recent-activity hidden-modal-content" data-community-id="<?= $communityId ?>">
-                                <p>
-                                    <?php if ($count > 1): ?>
-                                        The <?= $count ?> most recent updates
-                                    <?php elseif ($count == 1): ?>
-                                        The only update
-                                    <?php endif; ?>
-                                    to <?= $community['name'] ?> in the last 30 days:
-                                </p>
-                                <ul>
-                                    <?php foreach ($community['recentActivity'] as $activityRecord): ?>
-                                        <li>
-                                            <strong>
-                                                <?= $this->Time->format(
-                                                    $activityRecord->created,
-                                                    'MMM d Y, h:mma',
-                                                    false,
-                                                    'America/New_York'
-                                                ) ?>
-                                            </strong>
-                                            -
-                                            <?= $this->ActivityRecords->event($activityRecord) ?>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                                <p>
-                                    <?= $this->Html->link(
-                                        'View all activity associated with ' . $community['name'],
-                                        [
-                                            'prefix' => 'admin',
-                                            'controller' => 'ActivityRecords',
-                                            'action' => 'community',
-                                            $communityId
-                                        ]
-                                    ) ?>
-                                </p>
-                            </div>
-                        <?php endif; ?>
+                        <?= $this->element('Reports' . DS . 'community_name_cell', compact(
+                            'community',
+                            'communityId'
+                        )) ?>
                     </td>
 
                     <?php $survey = $community['official_survey']; ?>
@@ -205,46 +134,91 @@
                     <td class="survey-status">
                         <?= $survey['status'] ?>
                     </td>
-
-                    <?php $survey = $community['organization_survey']; ?>
-                    <td class="survey" <?= $this->Reports->sortValue($survey['invitations']) ?>>
-                        <?= $survey['invitations'] ?>
-                    </td>
-                    <td class="survey" <?= $this->Reports->sortValue($survey['responses']) ?>>
-                        <?= $survey['responses'] ?>
-                    </td>
-                    <td class="survey" <?= $this->Reports->sortValue($survey['responseRate']) ?>>
-                        <?= $survey['responseRate'] ?>
-                    </td>
-                    <td class="survey" <?= $this->Reports->sortValue($survey['alignments']['vsLocal']) ?>>
-                        <?php if ($survey['alignments']['vsLocal']): ?>
-                            <?= $survey['alignments']['vsLocal'] ?>%
-                        <?php endif; ?>
-                    </td>
-                    <td class="survey" <?= $this->Reports->sortValue($survey['alignments']['vsParent']) ?>>
-                        <?php if ($survey['alignments']['vsParent']): ?>
-                            <?= $survey['alignments']['vsParent'] ?>%
-                        <?php endif; ?>
-                    </td>
-                    <?php foreach ($sectors as $sector): ?>
-                        <td class="survey int-alignment-details" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
-                            <?= $survey['internalAlignment'][$sector] ?>
-                        </td>
-                    <?php endforeach; ?>
-                    <td class="survey" <?= $this->Reports->sortValue($survey['internalAlignment']['total']) ?>>
-                        <?= $survey['internalAlignment']['total'] ?>
-                    </td>
-                    <td class="survey">
-                        <?= $community['presentationsGiven']['c'] ?>
-                    </td>
-                    <td class="survey">
-                        <?= $community['presentationsGiven']['d'] ?>
-                    </td>
-                    <td class="survey-status">
-                        <?= $survey['status'] ?>
-                    </td>
                 </tr>
             <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <table class="table report">
+        <thead>
+            <tr class="survey-group-header">
+                <td></td>
+                <th colspan="14" class="survey">
+                    <button class="survey-toggler">
+                        Community Organizations
+                    </button>
+                </th>
+            </tr>
+            <tr class="col-group-headers">
+                <td></td>
+                <td class="spacer"></td>
+                <td colspan="3"></td>
+                <th colspan="2">
+                    PWR<sup>3</sup> Alignment
+                </th>
+                <th colspan="6">
+                    <button>
+                        Internal Alignment
+                    </button>
+                </th>
+                <td colspan="3"></td>
+            </tr>
+            <tr class="general-header">
+                <th>
+                    Community
+                </th>
+                <?= $this->Reports->surveyHeader($sectors, 'organizations'); ?>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($report as $communityId => $community): ?>
+            <tr class="<?= $community['recentActivity'] ? 'active' : null ?>">
+                <td>
+                    <?= $this->element('Reports' . DS . 'community_name_cell', compact(
+                        'community',
+                        'communityId'
+                    )) ?>
+                </td>
+
+                <?php $survey = $community['organization_survey']; ?>
+                <td class="survey" <?= $this->Reports->sortValue($survey['invitations']) ?>>
+                    <?= $survey['invitations'] ?>
+                </td>
+                <td class="survey" <?= $this->Reports->sortValue($survey['responses']) ?>>
+                    <?= $survey['responses'] ?>
+                </td>
+                <td class="survey" <?= $this->Reports->sortValue($survey['responseRate']) ?>>
+                    <?= $survey['responseRate'] ?>
+                </td>
+                <td class="survey" <?= $this->Reports->sortValue($survey['alignments']['vsLocal']) ?>>
+                    <?php if ($survey['alignments']['vsLocal']): ?>
+                        <?= $survey['alignments']['vsLocal'] ?>%
+                    <?php endif; ?>
+                </td>
+                <td class="survey" <?= $this->Reports->sortValue($survey['alignments']['vsParent']) ?>>
+                    <?php if ($survey['alignments']['vsParent']): ?>
+                        <?= $survey['alignments']['vsParent'] ?>%
+                    <?php endif; ?>
+                </td>
+                <?php foreach ($sectors as $sector): ?>
+                    <td class="survey int-alignment-details" <?= $this->Reports->sortValue($survey['internalAlignment'][$sector]) ?>>
+                        <?= $survey['internalAlignment'][$sector] ?>
+                    </td>
+                <?php endforeach; ?>
+                <td class="survey" <?= $this->Reports->sortValue($survey['internalAlignment']['total']) ?>>
+                    <?= $survey['internalAlignment']['total'] ?>
+                </td>
+                <td class="survey">
+                    <?= $community['presentationsGiven']['c'] ?>
+                </td>
+                <td class="survey">
+                    <?= $community['presentationsGiven']['d'] ?>
+                </td>
+                <td class="survey-status">
+                    <?= $survey['status'] ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
         </tbody>
     </table>
 </section>
@@ -264,7 +238,7 @@
 <?php $this->end(); ?>
 
 <?php $this->Html->script('stupidtable.min', ['block' => 'scriptBottom']); ?>
-<?php $this->Html->script('report.min', ['block' => 'scriptBottom']); ?>
+<?php $this->Html->script('report', ['block' => 'scriptBottom']); ?>
 <?php $this->append('buffered'); ?>
     adminReport.notes = <?= json_encode($notes) ?>;
     adminReport.init();
