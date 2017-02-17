@@ -6,10 +6,20 @@
 
 <section>
     <h2>
-        OCRA Report
+        Download Reports
+
         <?php $icon = '<img src="/data_center/img/icons/document-excel-table.png" alt="Microsoft Excel (.xlsx)" />'; ?>
         <?= $this->Html->link(
-            $icon . ' Download',
+            $icon . ' Admin Report',
+            ['action' => 'admin'],
+            [
+                'class' => 'btn btn-sm btn-default',
+                'escape' => false,
+                'title' => 'Download the version of this report for CRI administrators as a Microsoft Excel (.xlsx) file'
+            ]
+        ) ?>
+        <?= $this->Html->link(
+            $icon . ' OCRA Report',
             ['action' => 'ocra'],
             [
                 'class' => 'btn btn-sm btn-default',
@@ -18,33 +28,23 @@
             ]
         ) ?>
     </h2>
+
     <p>
         The OCRA Report excludes PWR<sup>3</sup> and internal alignment calculations, but is otherwise the same as
-        the admin version of the report.
+        the admin version of the report. Communities in bold have had activity in the last 30 days.
     </p>
 </section>
 
 <section>
     <h2>
-        Admin Report
-        <?= $this->Html->link(
-            $icon . ' Download',
-            ['action' => 'admin'],
-            [
-                'class' => 'btn btn-sm btn-default',
-                'escape' => false,
-                'title' => 'Download the version of this report for CRI administrators as a Microsoft Excel (.xlsx) file'
-            ]
-        ) ?>
+        Community Officials Questionnaire (Step Two)
     </h2>
+
     <p>
-        The admin report can be viewed in your browser below or downloaded as a spreadsheet. Below, click on each survey
-        type to expand and see more details, and click on the notes icon
+        Click the links in the table headers below to expand and see more details, and click on the notes icon
         (<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>) to view notes related to a community.
-    </p>
-    <p>
-        <strong>Communities in bold</strong> have had activity in the last 30 days. Click on the activities icon
-        (<span class="glyphicon glyphicon-list" aria-hidden="true"></span>) to view details.
+        Click on the activities icon (<span class="glyphicon glyphicon-list" aria-hidden="true"></span>) to view
+        details about recent activities.
     </p>
 
     <table class="table report">
@@ -138,7 +138,12 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+</section>
 
+<section>
+    <h2>
+        Community Organizations Questionnaire (Step Three)
+    </h2>
     <table class="table report">
         <thead>
             <tr class="survey-group-header">
