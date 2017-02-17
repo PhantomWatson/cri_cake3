@@ -75,8 +75,7 @@ class ReportsHelper extends Helper
 
             $retval .= "<th class=\"$class\">$cell</th>";
         }
-        $label = ($type == 'officials') ? 'Community Leadership Status' : 'Community Organizations Status';
-        $button = "<button class=\"survey-toggler\">$label</button>";
+        $button = "<button class=\"survey-toggler\">Status</button>";
         $retval .= "<th class=\"minimized-status-header\">$button</th>";
 
         return $retval;

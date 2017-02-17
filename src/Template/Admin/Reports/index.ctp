@@ -53,7 +53,7 @@
                 <td></td>
                 <th colspan="17" class="survey">
                     <button class="survey-toggler">
-                        Community Leadership
+                        Status
                     </button>
                 </th>
             </tr>
@@ -150,7 +150,7 @@
                 <td></td>
                 <th colspan="14" class="survey">
                     <button class="survey-toggler">
-                        Community Organizations
+                        Status
                     </button>
                 </th>
             </tr>
