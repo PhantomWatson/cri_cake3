@@ -1,5 +1,4 @@
 table.report {
-    background-color: #fff;
     white-space: nowrap;
 
     &.expanded {
@@ -23,13 +22,6 @@ table.report {
         .minimized-status-header {
             display: none;
         }
-        .survey-group-header {
-            display: table-row;
-
-            th {
-                display: table-cell;
-            }
-        }
         .col-group-headers {
             display: table-row;
 
@@ -39,7 +31,7 @@ table.report {
             }
             td:first-child {
                 display: table-cell;
-                border-right: 1px solid @table-border-color;
+                text-align: center;
             }
             .spacer {
                 display: none;
@@ -47,6 +39,8 @@ table.report {
         }
     }
     tbody {
+        background-color: #fff;
+
         td {
             text-align: center;
 
@@ -81,19 +75,8 @@ table.report {
                 }
             }
         }
-        > tr.survey-group-header {
-            display: none;
-
-            > th {
-                border-bottom: none;
-                border-left: 1px solid @table-border-color;
-                border-right: 1px solid @table-border-color;
-                border-top: 1px solid @table-border-color !important;
-                display: none;
-                text-align: center;
-            }
-        }
         th {
+            background-color: #fff;
             vertical-align: middle;
 
             &:first-child {
@@ -140,18 +123,11 @@ table.report {
             padding-bottom: 0;
             padding-top: 0;
         }
-        td,
         th {
-            &:not(:first-child) {
-                border-left: 1px solid @table-border-color;
-                border-right: 1px solid @table-border-color;
-            }
-        }
-        th {
-            border-top: 1px solid @table-border-color;
+            border-bottom: 0;
             border-left: 1px solid @table-border-color;
             border-right: 1px solid @table-border-color;
-            border-bottom: 0;
+            border-top: 1px solid @table-border-color  !important;
             padding-bottom: 4px;
             padding-top: 4px;
         }

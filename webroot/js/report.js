@@ -28,8 +28,6 @@ var adminReport = {
             if (! adminReport.minimizedIntAlignment[surveyType]) {
                 adminReport.toggleIntAlignment(table);
             }
-
-            adminReport.updateColspans(table);
         });
 
         // Set up internal alignment expanding/collapsing
@@ -44,7 +42,6 @@ var adminReport = {
             event.preventDefault();
             var table = $(this).closest('table');
             adminReport.toggleIntAlignment(table);
-            adminReport.updateColspans(table);
         });
 
         // Set up showing notes for communities
@@ -88,12 +85,6 @@ var adminReport = {
         var overallColHeader = table.find('.general-header .int-overall-alignment');
         newLabel = currentlyExpanded ? 'Internal Alignment' : 'Overall';
         overallColHeader.html(newLabel);
-    },
-
-    updateColspans: function (table) {
-        var count = table.find('tbody tr:first-child td:visible').length;
-        var header = table.find('.survey-group-header th');
-        header.prop('colspan', count);
     },
 
     setSurveyTypes: function () {

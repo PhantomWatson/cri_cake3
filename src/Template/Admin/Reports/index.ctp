@@ -49,16 +49,12 @@
 
     <table class="table report">
         <thead>
-            <tr class="survey-group-header">
-                <td></td>
-                <th colspan="17" class="survey">
-                    <button class="survey-toggler">
-                        Status
-                    </button>
-                </th>
-            </tr>
             <tr class="col-group-headers">
-                <td></td>
+                <td>
+                    <button class="survey-toggler">
+                        Minimize
+                    </button>
+                </td>
                 <td class="spacer"></td>
                 <td colspan="3"></td>
                 <th colspan="2">
@@ -146,16 +142,12 @@
     </h2>
     <table class="table report">
         <thead>
-            <tr class="survey-group-header">
-                <td></td>
-                <th colspan="14" class="survey">
-                    <button class="survey-toggler">
-                        Status
-                    </button>
-                </th>
-            </tr>
             <tr class="col-group-headers">
-                <td></td>
+                <td>
+                    <button class="survey-toggler">
+                        Minimize
+                    </button>
+                </td>
                 <td class="spacer"></td>
                 <td colspan="3"></td>
                 <th colspan="2">
