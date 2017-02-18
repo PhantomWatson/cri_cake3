@@ -694,7 +694,10 @@ class Reports
         $this->objPHPExcel->getActiveSheet()
             ->getStyle("$from:$to")
             ->applyFromArray([
-                'alignment' => $this->align('center'),
+                'alignment' => [
+                    'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                    'rotation' => -90
+                ],
                 'borders' => ['bottom' => $this->getBorder()],
                 'font' => ['bold' => true]
             ]);

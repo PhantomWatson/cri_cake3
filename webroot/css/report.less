@@ -81,6 +81,12 @@ table.report {
                 &:first-child {
                     border-top: 1px solid @table-border-color;
                 }
+
+                span {
+                    -ms-writing-mode: tb-rl;
+                    -webkit-writing-mode: vertical-rl;
+                    writing-mode: vertical-lr;
+                }
             }
         }
         th {

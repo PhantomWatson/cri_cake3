@@ -82,7 +82,7 @@ var adminReport = {
         button.html(newLabel);
 
         // Update 'overall internal alignment' column header
-        var overallColHeader = table.find('.general-header .int-overall-alignment');
+        var overallColHeader = table.find('.general-header .int-overall-alignment span');
         newLabel = currentlyExpanded ? 'Internal Alignment' : 'Overall';
         overallColHeader.html(newLabel);
     },

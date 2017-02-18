@@ -73,7 +73,7 @@ class ReportsHelper extends Helper
                 $cell = $abbreviations[$cell];
             }
 
-            $retval .= "<th class=\"$class\">$cell</th>";
+            $retval .= "<th class=\"$class\"><span>$cell</span></th>";
         }
         $button = "<button class=\"survey-toggler\">Status</button>";
         $retval .= "<th class=\"minimized-status-header\">$button</th>";
