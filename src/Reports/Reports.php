@@ -9,6 +9,7 @@ use Cake\Utility\Hash;
 
 class Reports
 {
+    private $version;
     private $afterSurveysColTitles = [];
     private $columnTitles = [];
     private $currentRow = 1;
@@ -102,25 +103,26 @@ class Reports
         }
 
         // Setup
+        $this->version = $version;
         $report = $this->getReport();
         $this->objPHPExcel = $this->getPhpExcelObject();
         $this->setDefaultStyles();
-        $this->setMetaData($version);
-        $this->setColumnHeaders($version);
+        $this->setMetaData();
+        $this->setColumnHeaders();
         $this->setColumnCounts();
         $this->setColumnKeys();
 
         // Write and style
         $this->writeTitle();
         $this->writeSurveyGroupingHeaders();
-        $this->writeColGroupingHeaders($version);
+        $this->writeColGroupingHeaders();
         $this->writeColumnTitles();
         $this->styleColumnTitles();
         $this->firstDataRow = $this->currentRow + 1;
-        $this->writeAllDataCells($report, $version);
+        $this->writeAllDataCells($report);
         $this->styleRecentActivity($report);
         $this->styleDataCells();
-        $this->setCellWidth($version);
+        $this->setCellWidth();
 
         return $this->objPHPExcel;
     }
@@ -309,12 +311,11 @@ class Reports
     /**
      * Sets metadata for $this->objPHPExcel
      *
-     * @param string $version Version of report (ocra or admin)
      * @return void
      */
-    private function setMetaData($version)
+    private function setMetaData()
     {
-        $this->title = ($version == 'ocra') ? 'CRI Report for OCRA - ' : 'CRI Admin Report - ';
+        $this->title = ($this->version == 'ocra') ? 'CRI Report for OCRA - ' : 'CRI Admin Report - ';
         $this->title .= date('F j, Y');
         $author = 'Center for Business and Economic Research, Ball State University';
         $this->objPHPExcel->getProperties()
@@ -340,10 +341,9 @@ class Reports
     /**
      * Sets $this->columnTitles and $this->surveyColumnHeaders
      *
-     * @param string $version Version of report (ocra or admin)
      * @return void
      */
-    private function setColumnHeaders($version)
+    private function setColumnHeaders()
     {
         $this->columnTitles = [
             'Community',
@@ -366,7 +366,7 @@ class Reports
                 $this->pwrrrAlignmentColOffset = count($this->surveyColumnHeaders[$surveyType]);
             }
 
-            if ($version == 'ocra') {
+            if ($this->version == 'ocra') {
                 $this->surveyColumnHeaders[$surveyType][] = 'Alignment Calculated';
             } else {
                 $this->surveyColumnHeaders[$surveyType][] = 'vs Local Area';
@@ -378,7 +378,7 @@ class Reports
                 $this->intAlignmentColOffset = count($this->surveyColumnHeaders[$surveyType]);
             }
 
-            if ($version == 'admin') {
+            if ($this->version == 'admin') {
                 foreach ($sectors as $sector) {
                     $this->surveyColumnHeaders[$surveyType][] = ucwords($sector);
                 }
@@ -512,12 +512,11 @@ class Reports
     /**
      * Writes and styles grouping headers for each survey's internal alignment
      *
-     * @param string $version Report version (ocra or admin)
      * @return void
      */
-    private function writeColGroupingHeaders($version)
+    private function writeColGroupingHeaders()
     {
-        if ($version != 'admin') {
+        if ($this->version != 'admin') {
             return;
         }
 
@@ -546,7 +545,7 @@ class Reports
                 'borders' => ['bottom' => $this->getBorder()]
             ]);
 
-        if ($version == 'admin') {
+        if ($this->version == 'admin') {
             $this->writePwrrrAlignmentGroupingHeaders();
             $this->writeIntAlignmentGroupingHeaders();
             $this->writeAwareGroupingHeaders();
@@ -738,10 +737,9 @@ class Reports
      * Writes values to all of the cells in the body of the spreadsheet
      *
      * @param array $report Report
-     * @param string $version Report version (ocra or admin)
      * @return void
      */
-    private function writeAllDataCells($report, $version)
+    private function writeAllDataCells($report)
     {
         $surveysTable = TableRegistry::get('Surveys');
         $sectors = $surveysTable->getSectors();
@@ -757,11 +755,11 @@ class Reports
                 $cells[] = $survey['invitations'];
                 $cells[] = $survey['responses'];
                 $cells[] = $survey['responseRate'];
-                if ($version == 'ocra') {
+                if ($this->version == 'ocra') {
                     $cells[] = ($survey['alignments']['vsLocal'] || $survey['alignments']['vsParent']) ?
                         'Yes' :
                         'No';
-                } elseif ($version == 'admin') {
+                } elseif ($this->version == 'admin') {
                     $cells[] = $survey['alignments']['vsLocal'];
                     $cells[] = $survey['alignments']['vsParent'];
                     foreach ($sectors as $sector) {
@@ -909,13 +907,12 @@ class Reports
     /**
      * Sets the width of spreadsheet cells
      *
-     * @param string $version 'ocra' or 'admin'
      * @return void
      */
-    private function setCellWidth($version)
+    private function setCellWidth()
     {
         // Set the width of certain cells (the rest will be automatically sized to fit their contents)
-        if ($version == 'admin') {
+        if ($this->version == 'admin') {
             $widths = [
                 5 => 9, // PWRRR alignment...
                 6 => 9,
