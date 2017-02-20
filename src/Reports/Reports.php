@@ -691,11 +691,18 @@ class Reports
             ->applyFromArray([
                 'alignment' => [
                     'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                    'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
-                    'rotation' => -90
+                    'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER
                 ],
                 'borders' => ['bottom' => $this->getBorder()],
                 'font' => ['bold' => true]
+            ]);
+
+        $from = 'C' . $this->currentRow;
+        $to = $this->getColumnKey($this->totalColCount - 2) . $this->currentRow;
+        $this->objPHPExcel->getActiveSheet()
+            ->getStyle("$from:$to")
+            ->applyFromArray([
+                'alignment' => ['rotation' => -90]
             ]);
 
         $from = 'A' . $this->currentRow;
