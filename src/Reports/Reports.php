@@ -696,6 +696,7 @@ class Reports
             ->applyFromArray([
                 'alignment' => [
                     'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                    'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
                     'rotation' => -90
                 ],
                 'borders' => ['bottom' => $this->getBorder()],
