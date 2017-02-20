@@ -120,7 +120,7 @@ class Reports
         $this->writeAllDataCells($report, $version);
         $this->styleRecentActivity($report);
         $this->styleDataCells();
-        $this->setCellWidth();
+        $this->setCellWidth($version);
 
         return $this->objPHPExcel;
     }
@@ -913,18 +913,46 @@ class Reports
     /**
      * Sets the width of spreadsheet cells
      *
+     * @param string $version 'ocra' or 'admin'
      * @return void
      */
-    private function setCellWidth()
+    private function setCellWidth($version)
     {
-        // Set the width of all columns (except the last) to fit their content
-        for ($n = 0; $n < $this->totalColCount - 1; $n++) {
-            $colLetter = $this->getColumnKey($n);
-            $this->objPHPExcel->getActiveSheet()->getColumnDimension($colLetter)->setAutoSize(true);
+        // Set the width of certain cells (the rest will be automatically sized to fit their contents)
+        if ($version == 'admin') {
+            $widths = [
+                5 => 9, // PWRRR alignment...
+                6 => 9,
+                7 => 4, // Internal alignment...
+                8 => 4,
+                9 => 4,
+                10 => 4,
+                11 => 4,
+                12 => 4,
+                13 => 7, // aware of plan...
+                14 => 7,
+                21 => 9, // PWRRR alignment...
+                22 => 9,
+                23 => 4, // Internal alignment...
+                24 => 4,
+                25 => 4,
+                26 => 4,
+                27 => 4,
+                28 => 4,
+                ($this->totalColCount - 1) => 30
+            ];
+        } else {
+            $widths = [($this->totalColCount - 1) => 30];
         }
 
-        // Set the width of the last column (notes) to a fixed width
-        $colLetter = $this->getColumnKey($this->totalColCount - 1);
-        $this->objPHPExcel->getActiveSheet()->getColumnDimension($colLetter)->setWidth(30);
+        for ($n = 0; $n <= $this->totalColCount - 1; $n++) {
+            $colLetter = $this->getColumnKey($n);
+            if (isset($widths[$n])) {
+                $width = $widths[$n];
+                $this->objPHPExcel->getActiveSheet()->getColumnDimension($colLetter)->setWidth($width);
+            } else {
+                $this->objPHPExcel->getActiveSheet()->getColumnDimension($colLetter)->setAutoSize(true);
+            }
+        }
     }
 }
