@@ -170,11 +170,7 @@ class Reports
         foreach (['a', 'b', 'c', 'd'] as $letter) {
             $date = $community->{'presentation_' . $letter};
             if ($date) {
-                if ($date->format('Y-m-d') <= date('Y-m-d')) {
-                    $presentationsGiven[$letter] = 'Completed';
-                } else {
-                    $presentationsGiven[$letter] = 'Scheduled';
-                }
+                $presentationsGiven[$letter] = $date->format('F j, Y');
             } else {
                 $presentationsGiven[$letter] = 'Not scheduled';
             }
