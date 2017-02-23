@@ -10,34 +10,16 @@ use Cake\Utility\Hash;
 class Reports
 {
     private $version;
-    private $afterSurveysColTitles = [];
-    private $columnTitles = [];
     private $currentRow = 1;
     private $objPHPExcel;
-    private $surveyColumnHeaders = [];
-    private $title = '';
-
-    // Column Counts
-    private $afterSurveysColCount = 0;
-    private $awareColOffset = 0;
-    private $beforeSurveysColCount = 0;
-    private $intAlignmentColOffset = 0;
-    private $officialsColCount = 0;
-    private $orgsColCount = 0;
-    private $pwrrrAlignmentColOffset = 0;
-    private $totalColCount = 0;
-
-    // Column keys
-    private $firstColAfterSurveys;
-    private $firstOfficialsSurveyCol;
-    private $firstOrgSurveyCol;
-    private $lastCol;
-    private $lastGeneralCol;
-    private $lastOfficialsSurveyCol;
-    private $lastOrgSurveyCol;
 
     // Row numbers
     private $firstDataRow;
+    private $lastDataRow;
+
+    const SHEET_TITLE_OFFICIALS = 'Community Officials';
+    const SHEET_TITLE_ORGANIZATIONS = 'Community Organizations';
+    const SHEET_TITLE_NOTES = 'Notes';
 
     /**
      * Returns an array used in browser-based and Excel reports
@@ -106,25 +88,142 @@ class Reports
         $this->version = $version;
         $report = $this->getReport();
         $this->objPHPExcel = $this->getPhpExcelObject();
+
         $this->setDefaultStyles();
         $this->setMetaData();
-        $this->setColumnHeaders();
-        $this->setColumnCounts();
-        $this->setColumnKeys();
 
-        // Write and style
-        $this->writeTitle();
-        $this->writeSurveyGroupingHeaders();
-        $this->writeColGroupingHeaders();
-        $this->writeColumnTitles();
-        $this->styleColumnTitles();
-        $this->firstDataRow = $this->currentRow + 1;
-        $this->writeAllDataCells($report);
-        $this->styleRecentActivity($report);
-        $this->styleDataCells();
-        $this->setCellWidth();
+        // Community Officials
+        $this->objPHPExcel->getActiveSheet()->setTitle(Reports::SHEET_TITLE_OFFICIALS);
+        $this->writeSurveySheet($report);
+
+        // Community Organizations
+        $this->currentRow = 1;
+        $this->objPHPExcel->createSheet()->setTitle(Reports::SHEET_TITLE_ORGANIZATIONS);
+        $this->objPHPExcel->setActiveSheetIndexByName(Reports::SHEET_TITLE_ORGANIZATIONS);
+        $this->writeSurveySheet($report);
+
+        // Notes
+        $this->currentRow = 1;
+        $this->objPHPExcel->createSheet()->setTitle(Reports::SHEET_TITLE_NOTES);
+        $this->objPHPExcel->setActiveSheetIndexByName(Reports::SHEET_TITLE_NOTES);
+        $this->writeNotes($report);
+
+        // Select first sheet
+        $this->objPHPExcel->setActiveSheetIndexByName(Reports::SHEET_TITLE_OFFICIALS);
 
         return $this->objPHPExcel;
+    }
+
+    /**
+     * Does all the writing and styling for the currently-selected survey-related sheet
+     *
+     * @param array $report Report array
+     * @return void
+     */
+    private function writeSurveySheet($report)
+    {
+        $this->writeTitle();
+        $this->styleTitle();
+        $this->currentRow++;
+        $this->writeSubtitle();
+        $this->styleSubtitle();
+        if ($this->version == 'admin') {
+            $this->currentRow++;
+            $this->writeGroupingHeaders();
+            $this->styleGroupingHeaders();
+        }
+        $this->currentRow++;
+        $this->writeColumnTitles();
+        $this->styleColumnTitles();
+        $this->currentRow++;
+        $this->writeDataCells($report);
+        $this->styleDataCells();
+        $this->styleRecentActivity($report);
+        $this->setCellWidth();
+    }
+
+    /**
+     * Does all the writing and styling for the currently-selected notes sheet
+     *
+     * @param array $report Report array
+     * @return void
+     */
+    private function writeNotes($report)
+    {
+        $this->writeTitle();
+        $this->styleTitle();
+        $this->currentRow++;
+        $this->writeSubtitle();
+        $this->styleSubtitle();
+        $this->currentRow++;
+        $this->writeColumnTitles();
+        $this->styleColumnTitles();
+        $this->currentRow++;
+
+        $this->firstDataRow = $this->currentRow;
+        foreach ($report as $community) {
+            $cells = [
+                $community['name'],
+                $community['parentArea'],
+                $community['notes']
+            ];
+            foreach ($cells as $col => $value) {
+                $this->write($col, $this->currentRow, $value);
+            }
+            $this->currentRow++;
+        }
+        $this->lastDataRow = $this->currentRow - 1;
+
+        $this->styleDataCells();
+        $this->styleRecentActivity($report);
+        $this->setCellWidth();
+    }
+
+    /**
+     * Returns an array of column titles for the currently-selected sheet
+     *
+     * @return array
+     */
+    private function getColumnTitles()
+    {
+        $columnTitles = [
+            'Community',
+            'Area'
+        ];
+        $surveyType = $this->getCurrentSurveyType();
+        if ($surveyType) {
+            $columnTitles[] = 'Invitations';
+            $columnTitles[] = 'Responses';
+            $columnTitles[] = 'Completion Rate';
+
+            if ($this->version == 'ocra') {
+                $columnTitles[] = 'Alignment Calculated';
+            } elseif ($this->version == 'admin') {
+                $columnTitles[] = 'vs Local Area';
+                $columnTitles[] = 'vs Wider Area';
+                $surveysTable = TableRegistry::get('Surveys');
+                foreach ($surveysTable->getSectors() as $sector) {
+                    $columnTitles[] = ucwords($sector);
+                }
+                $columnTitles[] = 'Overall';
+                if ($surveyType == 'official') {
+                    $columnTitles[] = 'Yes';
+                    $columnTitles[] = 'No / Unknown';
+                }
+            }
+            if ($this->getCurrentSurveyType() == 'official') {
+                $columnTitles[] = 'Presentation A';
+                $columnTitles[] = 'Presentation B';
+            } else {
+                $columnTitles[] = 'Presentation C';
+                $columnTitles[] = 'Presentation D';
+            }
+            $columnTitles[] = 'Status';
+        } else {
+            $columnTitles[] = 'Notes';
+        }
+
+        return $columnTitles;
     }
 
     /**
@@ -315,15 +414,27 @@ class Reports
      */
     private function setMetaData()
     {
-        $this->title = ($this->version == 'ocra') ? 'CRI Report for OCRA - ' : 'CRI Admin Report - ';
-        $this->title .= date('F j, Y');
+        $title = $this->getTitle();
         $author = 'Center for Business and Economic Research, Ball State University';
         $this->objPHPExcel->getProperties()
             ->setCreator($author)
             ->setLastModifiedBy($author)
-            ->setTitle($this->title)
-            ->setSubject($this->title)
+            ->setTitle($title)
+            ->setSubject($title)
             ->setDescription('');
+    }
+
+    /**
+     * Returns the title for this entire report
+     *
+     * @return string
+     */
+    private function getTitle()
+    {
+        $title = ($this->version == 'ocra') ? 'CRI Report for OCRA - ' : 'CRI Admin Report - ';
+        $title .= date('F j, Y');
+
+        return $title;
     }
 
     /**
@@ -339,145 +450,92 @@ class Reports
     }
 
     /**
-     * Sets $this->columnTitles and $this->surveyColumnHeaders
+     * Returns 'official' or 'organization' depending on which
+     * survey-specific sheet is selected, or false if neither is
      *
-     * @return void
+     * @return string|bool
+     * @throws InternalErrorException
      */
-    private function setColumnHeaders()
+    private function getCurrentSurveyType()
     {
-        $this->columnTitles = [
-            'Community',
-            'Area',
-        ];
-        $this->surveyColumnHeaders = [];
-        $this->intAlignmentColOffset = 0;
-        $surveysTable = TableRegistry::get('Surveys');
-        $sectors = $surveysTable->getSectors();
-
-        foreach (['officials', 'organizations'] as $surveyType) {
-            $this->surveyColumnHeaders[$surveyType] = [
-                'Invitations',
-                'Responses',
-                'Completion Rate'
-            ];
-
-            // Note how many columns come before PWRRR alignment in each survey group
-            if (! $this->pwrrrAlignmentColOffset) {
-                $this->pwrrrAlignmentColOffset = count($this->surveyColumnHeaders[$surveyType]);
-            }
-
-            if ($this->version == 'ocra') {
-                $this->surveyColumnHeaders[$surveyType][] = 'Alignment Calculated';
-            } else {
-                $this->surveyColumnHeaders[$surveyType][] = 'vs Local Area';
-                $this->surveyColumnHeaders[$surveyType][] = 'vs Wider Area';
-            }
-
-            // Note how many columns come before internal alignment in each survey group
-            if (! $this->intAlignmentColOffset) {
-                $this->intAlignmentColOffset = count($this->surveyColumnHeaders[$surveyType]);
-            }
-
-            if ($this->version == 'admin') {
-                foreach ($sectors as $sector) {
-                    $this->surveyColumnHeaders[$surveyType][] = ucwords($sector);
-                }
-                $this->surveyColumnHeaders[$surveyType][] = 'Overall';
-
-                // Note how many columns come before "aware of plan" cols
-                if (! $this->awareColOffset) {
-                    $this->awareColOffset = count($this->surveyColumnHeaders[$surveyType]);
-                }
-
-                if ($surveyType == 'officials') {
-                    $this->surveyColumnHeaders[$surveyType][] = 'Yes';
-                    $this->surveyColumnHeaders[$surveyType][] = 'No / Unknown';
-                }
-            }
-
-            if ($surveyType == 'officials') {
-                $this->surveyColumnHeaders[$surveyType][] = 'Presentation A';
-                $this->surveyColumnHeaders[$surveyType][] = 'Presentation B';
-            } else {
-                $this->surveyColumnHeaders[$surveyType][] = 'Presentation C';
-            }
-
-            $this->surveyColumnHeaders[$surveyType][] = 'Status';
+        switch ($this->objPHPExcel->getActiveSheet()->getTitle()) {
+            case Reports::SHEET_TITLE_OFFICIALS:
+                return 'official';
+            case Reports::SHEET_TITLE_ORGANIZATIONS:
+                return 'organization';
+            default:
+                return false;
         }
-        $this->afterSurveysColTitles = ['Notes'];
-        $this->columnTitles = array_merge($this->columnTitles, $this->surveyColumnHeaders['officials']);
-        $this->columnTitles = array_merge($this->columnTitles, $this->surveyColumnHeaders['organizations']);
-        $this->columnTitles = array_merge($this->columnTitles, $this->afterSurveysColTitles);
     }
 
     /**
-     * Writes and styles the title in the top row of this spreadsheet
+     * Writes the title of this spreadsheet
      *
      * @return void
      */
     private function writeTitle()
     {
-        // Write title
-        $this->write(0, $this->currentRow, $this->title);
+        $this->write(0, $this->currentRow, $this->getTitle());
+    }
 
-        // Style title
+    /**
+     * Styles the title cell
+     *
+     * @return void
+     */
+    private function styleTitle()
+    {
         $this->objPHPExcel->getActiveSheet()->getStyle('A1:A1')->applyFromArray([
             'font' => [
                 'bold' => true,
                 'size' => 24
             ]
         ]);
-        $span = "A{$this->currentRow}:{$this->lastCol}{$this->currentRow}";
+        $lastCol = $this->getLastColumnLetter();
+        $span = "A1:{$lastCol}1";
         $this->objPHPExcel->getActiveSheet()->mergeCells($span);
     }
 
     /**
-     * Writes grouping headers for each survey to the spreadsheet and styles them
+     * Writes the subtitle of this sheet
      *
      * @return void
      */
-    private function writeSurveyGroupingHeaders()
+    private function writeSubtitle()
     {
-        // Write survey-type grouping headers
-        $this->currentRow++;
-        $this->write($this->beforeSurveysColCount, $this->currentRow, 'Community Leadership');
-        $this->write(
-            $this->beforeSurveysColCount + $this->officialsColCount,
-            $this->currentRow,
-            'Community Organizations'
-        );
+        $subtitle = $this->objPHPExcel->getActiveSheet()->getTitle();
+        $this->write(0, $this->currentRow, $subtitle);
+    }
 
-        // Style officials-survey grouping header
-        $from = $this->firstOfficialsSurveyCol . $this->currentRow;
-        $to = $this->lastOfficialsSurveyCol . $this->currentRow;
-        $groupingSpan = "$from:$to";
-        $this->objPHPExcel
-            ->getActiveSheet()
-            ->mergeCells($groupingSpan)
-            ->getStyle($groupingSpan)->applyFromArray([
-                'font' => ['bold' => true],
-                'alignment' => $this->align('center'),
-                'borders' => [
-                    'top' => $this->getBorder(),
-                    'left' => $this->getBorder(),
-                    'right' => $this->getBorder()
-                ]
-            ]);
+    /**
+     * Styles the subtitle cell
+     *
+     * @return void
+     */
+    private function styleSubtitle()
+    {
+        $cell = 'A' . $this->currentRow;
+        $this->objPHPExcel->getActiveSheet()->getStyle("$cell:$cell")->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 18
+            ]
+        ]);
+        $lastCol = $this->getLastColumnLetter();
+        $span = "$cell:$lastCol" . $this->currentRow;
+        $this->objPHPExcel->getActiveSheet()->mergeCells($span);
+    }
 
-        // Style organizations-survey grouping header
-        $groupingSpan = "{$this->firstOrgSurveyCol}{$this->currentRow}:{$this->lastOrgSurveyCol}{$this->currentRow}";
-        $this->objPHPExcel
-            ->getActiveSheet()
-            ->mergeCells($groupingSpan)
-            ->getStyle($groupingSpan)->applyFromArray([
-                'font' => ['bold' => true],
-                'alignment' => $this->align('center'),
-                'borders' => [
-                    'top' => $this->getBorder(),
-                    'left' => $this->getBorder(),
-                    'right' => $this->getBorder()
-                ]
-            ]);
+    /**
+     * Returns the letter corresponding to the rightmost populated column
+     *
+     * @return string
+     */
+    private function getLastColumnLetter()
+    {
+        $columnCount = count($this->getColumnTitles()) - 1;
+
+        return $this->getColumnKey($columnCount);
     }
 
     /**
@@ -510,133 +568,96 @@ class Reports
     }
 
     /**
-     * Writes and styles grouping headers for each survey's internal alignment
+     * Writes grouping headers
      *
      * @return void
      */
-    private function writeColGroupingHeaders()
+    private function writeGroupingHeaders()
     {
-        if ($this->version != 'admin') {
-            return;
-        }
-
-        $this->currentRow++;
-
-        // Add right-borders
-        $cellsForRightBorder = [
-            $this->lastGeneralCol . $this->currentRow,
-            $this->lastOfficialsSurveyCol . $this->currentRow,
-            $this->lastOrgSurveyCol . $this->currentRow
-        ];
-        foreach ($cellsForRightBorder as $cell) {
-            $this->objPHPExcel->getActiveSheet()
-                ->getStyle("$cell:$cell")
-                ->applyFromArray([
-                    'borders' => ['right' => $this->getBorder()]
-                ]);
-        }
-
-        // Add bottom-borders (later erased by any column group headers)
-        $from = $this->firstOfficialsSurveyCol . $this->currentRow;
-        $to = $this->lastCol . $this->currentRow;
-        $this->objPHPExcel->getActiveSheet()
-            ->getStyle("$from:$to")
-            ->applyFromArray([
-                'borders' => ['bottom' => $this->getBorder()]
-            ]);
-
-        if ($this->version == 'admin') {
-            $this->writePwrrrAlignmentGroupingHeaders();
-            $this->writeIntAlignmentGroupingHeaders();
-            $this->writeAwareGroupingHeaders();
-        }
-    }
-
-    /**
-     * Writes and styles "internal alignment" grouping headers
-     *
-     * @return void
-     */
-    private function writeIntAlignmentGroupingHeaders()
-    {
-        // Write
-        $firstIntAlignmentCol = $this->beforeSurveysColCount + $this->intAlignmentColOffset;
+        $colNum = $this->getColNumWithTitle('vs Local Area');
         $this->write(
-            $firstIntAlignmentCol,
+            $colNum,
             $this->currentRow,
-            'Internal Alignment'
-        );
-        $secondIntAlignmentCol = $firstIntAlignmentCol + $this->officialsColCount;
-        $this->write(
-            $secondIntAlignmentCol,
-            $this->currentRow,
-            'Internal Alignment'
+            'PWRRR Alignment'
         );
 
-        // Style
         $surveysTable = TableRegistry::get('Surveys');
         $sectors = $surveysTable->getSectors();
-        $intAlignmentColCount = count($sectors) + 1; // Sectors + "Overall"
+        $colNum = $this->getColNumWithTitle(ucwords($sectors[0]));
+        $this->write(
+            $colNum,
+            $this->currentRow,
+            'Internal Alignment'
+        );
 
-        $from = $this->getColumnKey($firstIntAlignmentCol) . $this->currentRow;
-        $to = $this->getColumnKey($firstIntAlignmentCol + $intAlignmentColCount - 1) . $this->currentRow;
-        $this->styleColGroupHeader("$from:$to");
-
-        $from = $this->getColumnKey($secondIntAlignmentCol) . $this->currentRow;
-        $to = $this->getColumnKey($secondIntAlignmentCol + $intAlignmentColCount - 1) . $this->currentRow;
-        $this->styleColGroupHeader("$from:$to");
+        if ($this->getCurrentSurveyType() == 'official') {
+            $colNum = $this->getColNumWithTitle('Yes');
+            $this->write(
+                $colNum,
+                $this->currentRow,
+                'Aware of Plan'
+            );
+        }
     }
 
     /**
-     * Writes and styles "PWRRR alignment" grouping headers
+     * Returns a column number corresponding to a column with the specified title
      *
-     * @return void
+     * @param string $title Title
+     * @return int
+     * @throws InternalErrorException
      */
-    private function writePwrrrAlignmentGroupingHeaders()
+    private function getColNumWithTitle($title)
     {
-        // Write
-        $firstPwrrrAlignmentCol = $this->beforeSurveysColCount + $this->pwrrrAlignmentColOffset;
-        $this->write(
-            $firstPwrrrAlignmentCol,
-            $this->currentRow,
-            'PWRRR Alignment'
-        );
-        $secondPwrrrAlignmentCol = $firstPwrrrAlignmentCol + $this->officialsColCount;
-        $this->write(
-            $secondPwrrrAlignmentCol,
-            $this->currentRow,
-            'PWRRR Alignment'
-        );
+        $colNum = array_search($title, $this->getColumnTitles());
+        if ($colNum === false) {
+            throw new InternalErrorException("Column title '$title' not found");
+        }
 
-        // Style
-        $from = $this->getColumnKey($firstPwrrrAlignmentCol) . $this->currentRow;
-        $to = $this->getColumnKey($firstPwrrrAlignmentCol + 1) . $this->currentRow;
-        $this->styleColGroupHeader("$from:$to");
-
-        $from = $this->getColumnKey($secondPwrrrAlignmentCol) . $this->currentRow;
-        $to = $this->getColumnKey($secondPwrrrAlignmentCol + 1) . $this->currentRow;
-        $this->styleColGroupHeader("$from:$to");
+        return $colNum;
     }
 
     /**
-     * Writes and styles "aware of comprehensive plan" grouping header
+     * Returns a column key (letter) corresponding to a column with the specified title
+     *
+     * @param string $title Title
+     * @return string
+     */
+    private function getColKeyWithTitle($title)
+    {
+        $colNum = $this->getColNumWithTitle($title);
+
+        return $this->getColumnKey($colNum);
+    }
+
+    /**
+     * Apply styleColGroupHeader() to all column grouping headers
      *
      * @return void
      */
-    private function writeAwareGroupingHeaders()
+    private function styleGroupingHeaders()
     {
-        // Write
-        $awareCol = $this->beforeSurveysColCount + $this->awareColOffset;
-        $this->write(
-            $awareCol,
-            $this->currentRow,
-            'Aware of Plan'
-        );
-
-        // Style
-        $from = $this->getColumnKey($awareCol) . $this->currentRow;
-        $to = $this->getColumnKey($awareCol + 1) . $this->currentRow;
+        // PWRRR alignment
+        $colNum = $this->getColNumWithTitle('vs Local Area');
+        $from = $this->getColumnKey($colNum) . $this->currentRow;
+        $to = $this->getColumnKey($colNum + 1) . $this->currentRow;
         $this->styleColGroupHeader("$from:$to");
+
+        // Internal alignment
+        $surveysTable = TableRegistry::get('Surveys');
+        $sectors = $surveysTable->getSectors();
+        $colNum = $this->getColNumWithTitle(ucwords($sectors[0]));
+        $from = $this->getColumnKey($colNum) . $this->currentRow;
+        $to = $this->getColumnKey($colNum + count($sectors)) . $this->currentRow;
+        $this->styleColGroupHeader("$from:$to");
+
+        // Aware of plan
+        if ($this->getCurrentSurveyType() == 'official') {
+            $colNum = $this->getColNumWithTitle('Yes');
+            $from = $this->getColumnKey($colNum) . $this->currentRow;
+            $to = $this->getColumnKey($colNum + 1) . $this->currentRow;
+            $this->styleColGroupHeader("$from:$to");
+        }
     }
 
     /**
@@ -684,8 +705,9 @@ class Reports
      */
     private function styleColumnTitles()
     {
+        // Styles for entire row
         $from = 'A' . $this->currentRow;
-        $to = $this->lastCol . $this->currentRow;
+        $to = $this->getLastColumnLetter() . $this->currentRow;
         $this->objPHPExcel->getActiveSheet()
             ->getStyle("$from:$to")
             ->applyFromArray([
@@ -693,33 +715,53 @@ class Reports
                     'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
                     'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER
                 ],
-                'borders' => ['bottom' => $this->getBorder()],
+                'borders' => [
+                    'outline' => $this->getBorder()
+                ],
                 'font' => ['bold' => true]
             ]);
 
-        $from = 'C' . $this->currentRow;
-        $to = $this->getColumnKey($this->totalColCount - 2) . $this->currentRow;
+        // Community information columns
+        $from = 'A' . $this->currentRow;
+        $to = $this->getColKeyWithTitle('Area') . $this->currentRow;
+        $this->applyBorders($from, $to, ['left', 'top']);
+
+        // No more styling for notes sheet
+        if ($this->objPHPExcel->getActiveSheet()->getTitle() == Reports::SHEET_TITLE_NOTES) {
+            return;
+        }
+
+        // Survey information columns
+        $from = $this->getColKeyWithTitle('Invitations') . $this->currentRow;
+        $to = $this->getColKeyWithTitle('Status') . $this->currentRow;
+        $this->applyBorders($from, $to, ['left', 'right']);
+
+        // Rotate titles
+        $from = $this->getColKeyWithTitle('Invitations') . $this->currentRow;
+        $to = $this->getColumnKey($this->getColNumWithTitle('Status') - 1) . $this->currentRow;
         $this->objPHPExcel->getActiveSheet()
             ->getStyle("$from:$to")
             ->applyFromArray([
                 'alignment' => ['rotation' => -90]
             ]);
 
-        $from = 'A' . $this->currentRow;
-        $to = $this->lastGeneralCol . $this->currentRow;
-        $this->applyBorders($from, $to, ['left', 'top']);
-
-        $from = $this->firstOfficialsSurveyCol . $this->currentRow;
-        $to = $this->lastOfficialsSurveyCol . $this->currentRow;
-        $this->applyBorders($from, $to, ['left', 'right']);
-
-        $from = $this->firstOrgSurveyCol . $this->currentRow;
-        $to = $this->lastOrgSurveyCol . $this->currentRow;
-        $this->applyBorders($from, $to, ['left', 'right']);
-
-        $from = $this->firstColAfterSurveys . $this->currentRow;
-        $to = $this->lastCol . $this->currentRow;
-        $this->applyBorders($from, $to, ['right', 'top']);
+        // Remove top border from titles under column group headers
+        if ($this->version == 'admin') {
+            $from = $this->getColKeyWithTitle('vs Local Area') . $this->currentRow;
+            if ($this->getCurrentSurveyType() == 'official') {
+                $colNum = $this->getColNumWithTitle('Yes') + 1;
+            } else {
+                $colNum = $this->getColNumWithTitle('Overall');
+            }
+            $to = $this->getColumnKey($colNum) . $this->currentRow;
+            $this->objPHPExcel->getActiveSheet()
+                ->getStyle("$from:$to")
+                ->applyFromArray([
+                    'borders' => [
+                        'top' => ['style' => \PHPExcel_Style_Border::BORDER_NONE]
+                    ]
+                ]);
+        }
     }
 
     /**
@@ -746,8 +788,9 @@ class Reports
      * @param array $report Report
      * @return void
      */
-    private function writeAllDataCells($report)
+    private function writeDataCells($report)
     {
+        $this->firstDataRow = $this->currentRow;
         $surveysTable = TableRegistry::get('Surveys');
         $sectors = $surveysTable->getSectors();
 
@@ -757,39 +800,37 @@ class Reports
                 $community['name'],
                 $community['parentArea'],
             ];
-            foreach (['official_survey', 'organization_survey'] as $surveyType) {
-                $survey = $community[$surveyType];
-                $cells[] = $survey['invitations'];
-                $cells[] = $survey['responses'];
-                $cells[] = $survey['responseRate'];
-                if ($this->version == 'ocra') {
-                    $cells[] = ($survey['alignments']['vsLocal'] || $survey['alignments']['vsParent']) ?
-                        'Yes' :
-                        'No';
-                } elseif ($this->version == 'admin') {
-                    $cells[] = $survey['alignments']['vsLocal'];
-                    $cells[] = $survey['alignments']['vsParent'];
-                    foreach ($sectors as $sector) {
-                        $cells[] = $survey['internalAlignment'][$sector];
-                    }
-                    $cells[] = $survey['internalAlignment']['total'];
-                    if ($surveyType == 'official_survey') {
-                        $cells[] = $survey['awareOfPlanCount'];
-                        $cells[] = $survey['unawareOfPlanCount'];
-                    }
+            $surveyType = $this->getCurrentSurveyType();
+            $survey = $community["{$surveyType}_survey"];
+            $cells[] = $survey['invitations'];
+            $cells[] = $survey['responses'];
+            $cells[] = $survey['responseRate'];
+            if ($this->version == 'ocra') {
+                $cells[] = ($survey['alignments']['vsLocal'] || $survey['alignments']['vsParent']) ?
+                    'Yes' :
+                    'No';
+            } elseif ($this->version == 'admin') {
+                $cells[] = $survey['alignments']['vsLocal'];
+                $cells[] = $survey['alignments']['vsParent'];
+                foreach ($sectors as $sector) {
+                    $cells[] = $survey['internalAlignment'][$sector];
                 }
-                if ($surveyType == 'official_survey') {
-                    $cells[] = $community['presentationsGiven']['a'];
-                    $cells[] = $community['presentationsGiven']['b'];
-                } else {
-                    $cells[] = $community['presentationsGiven']['c'];
+                $cells[] = $survey['internalAlignment']['total'];
+                if ($surveyType == 'official') {
+                    $cells[] = $survey['awareOfPlanCount'];
+                    $cells[] = $survey['unawareOfPlanCount'];
                 }
-                $cells[] = $survey['status'];
             }
-            $cells[] = $community['notes'];
+            if ($surveyType == 'official') {
+                $cells[] = $community['presentationsGiven']['a'];
+                $cells[] = $community['presentationsGiven']['b'];
+            } else {
+                $cells[] = $community['presentationsGiven']['c'];
+                $cells[] = $community['presentationsGiven']['d'];
+            }
+            $cells[] = $survey['status'];
 
-            // Write values to PHPExcel object
-            $this->currentRow++;
+            // Write values
             foreach ($cells as $col => $value) {
                 // Non-percentage values
                 if (strpos($value, '%') === false) {
@@ -804,7 +845,11 @@ class Reports
                     );
                 }
             }
+
+            $this->currentRow++;
         }
+
+        $this->lastDataRow = $this->currentRow - 1;
     }
 
     /**
@@ -819,7 +864,7 @@ class Reports
         foreach ($report as $community) {
             if ($community['recentActivity']) {
                 $from = 'A' . $row;
-                $to = $this->lastCol . $row;
+                $to = $this->getLastColumnLetter() . $row;
                 $this->objPHPExcel->getActiveSheet()
                     ->getStyle("$from:$to")
                     ->applyFromArray([
@@ -837,30 +882,24 @@ class Reports
      */
     private function styleDataCells()
     {
+        // Style all data cells
         $from = 'A' . $this->firstDataRow;
-        $to = $this->lastOrgSurveyCol . $this->currentRow;
+        $to = $this->getLastColumnLetter() . $this->lastDataRow;
         $this->objPHPExcel->getActiveSheet()
             ->getStyle("$from:$to")
             ->applyFromArray([
-                'alignment' => $this->align('left')
+                'alignment' => [
+                    'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                    'vertical' => \PHPExcel_Style_Alignment::VERTICAL_TOP
+                ]
             ]);
         $this->applyBorders($from, $to, ['outline']);
 
-        $from = $this->firstColAfterSurveys . $this->firstDataRow;
-        $to = $this->lastCol . $this->currentRow;
-        $this->objPHPExcel->getActiveSheet()
-            ->getStyle("$from:$to")
-            ->applyFromArray([
-                'alignment' => $this->align('left')
-            ]);
-        $this->applyBorders($from, $to, ['outline']);
-
-        $from = $this->firstOfficialsSurveyCol . $this->firstDataRow;
-        $to = $this->firstOfficialsSurveyCol . $this->currentRow;
-        $this->applyBorders($from, $to, ['left']);
-
-        $from = $this->firstOrgSurveyCol . $this->firstDataRow;
-        $to = $this->firstOrgSurveyCol . $this->currentRow;
+        // Add border separating community info and survey info
+        $colNum = $this->getColNumWithTitle('Area') + 1;
+        $colKey = $this->getColumnKey($colNum);
+        $from = $colKey . $this->firstDataRow;
+        $to = $colKey . $this->lastDataRow;
         $this->applyBorders($from, $to, ['left']);
     }
 
@@ -871,44 +910,9 @@ class Reports
      */
     private function writeColumnTitles()
     {
-        $this->currentRow++;
-        foreach ($this->columnTitles as $col => $colTitle) {
+        foreach ($this->getColumnTitles() as $col => $colTitle) {
             $this->write($col, $this->currentRow, $colTitle);
         }
-    }
-
-    /**
-     * Sets various private properties that store the count of certain column types
-     *
-     * @return void
-     */
-    private function setColumnCounts()
-    {
-        $this->officialsColCount = count($this->surveyColumnHeaders['officials']);
-        $this->orgsColCount = count($this->surveyColumnHeaders['organizations']);
-        $this->afterSurveysColCount = count($this->afterSurveysColTitles);
-        $this->beforeSurveysColCount =
-            count($this->columnTitles)
-            - $this->officialsColCount
-            - $this->orgsColCount
-            - $this->afterSurveysColCount;
-        $this->totalColCount = $this->beforeSurveysColCount + $this->officialsColCount + $this->orgsColCount + $this->afterSurveysColCount;
-    }
-
-    /**
-     * Sets various private properties that store the keys of certain columns
-     *
-     * @return void
-     */
-    private function setColumnKeys()
-    {
-        $this->lastCol = $this->getColumnKey($this->totalColCount - 1);
-        $this->lastGeneralCol = $this->getColumnKey($this->beforeSurveysColCount - 1);
-        $this->firstOfficialsSurveyCol = $this->getColumnKey($this->beforeSurveysColCount);
-        $this->lastOfficialsSurveyCol = $this->getColumnKey($this->beforeSurveysColCount + $this->officialsColCount - 1);
-        $this->firstOrgSurveyCol = $this->getColumnKey($this->beforeSurveysColCount + $this->officialsColCount);
-        $this->lastOrgSurveyCol = $this->getColumnKey($this->beforeSurveysColCount + $this->officialsColCount + $this->orgsColCount - 1);
-        $this->firstColAfterSurveys = $this->getColumnKey($this->beforeSurveysColCount + $this->officialsColCount + $this->orgsColCount);
     }
 
     /**
@@ -919,39 +923,42 @@ class Reports
     private function setCellWidth()
     {
         // Set the width of certain cells (the rest will be automatically sized to fit their contents)
-        if ($this->version == 'admin') {
-            $widths = [
-                5 => 9, // PWRRR alignment...
-                6 => 9,
-                7 => 4, // Internal alignment...
-                8 => 4,
-                9 => 4,
-                10 => 4,
-                11 => 4,
-                12 => 4,
-                13 => 7, // aware of plan...
-                14 => 7,
-                21 => 9, // PWRRR alignment...
-                22 => 9,
-                23 => 4, // Internal alignment...
-                24 => 4,
-                25 => 4,
-                26 => 4,
-                27 => 4,
-                28 => 4,
-                ($this->totalColCount - 1) => 30
-            ];
-        } else {
-            $widths = [($this->totalColCount - 1) => 30];
+        $widthsByColTitle = [
+            'vs Local Area' => 9,
+            'vs Wider Area' => 9,
+            'Production' => 4,
+            'Wholesale' => 4,
+            'Retail' => 4,
+            'Residential' => 4,
+            'Recreation' => 4,
+            'Overall' => 4,
+            'Yes' => 7,
+            'No / Unknown' => 7,
+            'Notes' => 60
+        ];
+        $widthsByColNum = [];
+        $colTitles = $this->getColumnTitles();
+        foreach ($widthsByColTitle as $title => $width) {
+            $colNum = array_search($title, $colTitles);
+            if ($colNum) {
+                $widthsByColNum[$colNum] = $width;
+            }
         }
-
-        for ($n = 0; $n <= $this->totalColCount - 1; $n++) {
+        for ($n = 0; true; $n++) {
             $colLetter = $this->getColumnKey($n);
-            if (isset($widths[$n])) {
-                $width = $widths[$n];
-                $this->objPHPExcel->getActiveSheet()->getColumnDimension($colLetter)->setWidth($width);
+            if (isset($widthsByColNum[$n])) {
+                $this->objPHPExcel
+                    ->getActiveSheet()
+                    ->getColumnDimension($colLetter)
+                    ->setWidth($widthsByColNum[$n]);
             } else {
-                $this->objPHPExcel->getActiveSheet()->getColumnDimension($colLetter)->setAutoSize(true);
+                $this->objPHPExcel
+                    ->getActiveSheet()
+                    ->getColumnDimension($colLetter)
+                    ->setAutoSize(true);
+            }
+            if ($colLetter == $this->getLastColumnLetter()) {
+                break;
             }
         }
     }
