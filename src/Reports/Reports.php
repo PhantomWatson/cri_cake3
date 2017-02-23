@@ -175,6 +175,13 @@ class Reports
         $this->lastDataRow = $this->currentRow - 1;
 
         $this->styleDataCells();
+        $colKey = $this->getColKeyWithTitle('Notes');
+        $span = $colKey . $this->firstDataRow . ':' . $colKey . $this->lastDataRow;
+        $this->objPHPExcel
+            ->getActiveSheet()
+            ->getStyle($span)
+            ->getAlignment()
+            ->setWrapText(true);
         $this->styleRecentActivity($report);
         $this->setCellWidth();
     }
