@@ -890,25 +890,30 @@ class Reports
         $this->writeColumnTitles();
         $this->styleColumnTitles();
         $this->currentRow++;
-
         $this->firstDataRow = $this->currentRow;
+
+        // Arrange all communities' recent activity into a single array indexed by date
+        $recentActivity = [];
         $View = new \Cake\View\View();
         $ActivityRecordsHelper = new ActivityRecordsHelper($View);
         $Time = new TimeHelper($View);
         foreach ($report as $community) {
-            if (empty($community['recentActivity'])) {
-                continue;
-            }
-
-            /* Write the first activity on the same line as the community name,
-             * subsequent activities on additional lines */
-            foreach ($community['recentActivity'] as $i => $activityRecord) {
-                $cells = [
-                    $i ? null : $community['name'],
-                    $i ? null : $community['parentArea'],
-                    $ActivityRecordsHelper->event($activityRecord),
-                    $Time->format($activityRecord->created, 'MMM d Y, h:mma', false, 'America/New_York')
+            foreach ($community['recentActivity'] as $activityRecord) {
+                $timeKey = $Time->format($activityRecord->created, 'yyyy-MM-dd HH:mm:ss', false, 'America/New_York');
+                $recentActivity[$timeKey][] = [
+                    'community' => $community['name'],
+                    'area' => $community['parentArea'],
+                    'event' => $ActivityRecordsHelper->event($activityRecord),
+                    'time' => $Time->format($activityRecord->created, 'MMM d Y, h:mma', false, 'America/New_York')
                 ];
+            }
+        }
+        krsort($recentActivity);
+
+        // Write rows
+        foreach ($recentActivity as $time => $concurrentActivities) {
+            foreach ($concurrentActivities as $i => $activityRecord) {
+                $cells = array_values($activityRecord);
                 foreach ($cells as $col => $value) {
                     $this->write($col, $this->currentRow, $value);
                 }
@@ -917,6 +922,7 @@ class Reports
         }
         $this->lastDataRow = $this->currentRow - 1;
 
+        // Style cells
         $this->styleDataCells();
         $colKey = $this->getColKeyWithTitle('Date');
         $span = $colKey . $this->firstDataRow . ':' . $colKey . $this->lastDataRow;
