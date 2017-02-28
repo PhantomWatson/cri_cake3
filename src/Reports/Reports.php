@@ -3,9 +3,12 @@ namespace App\Reports;
 
 use App\Model\Entity\Community;
 use App\Model\Entity\Survey;
+use App\View\Helper\ActivityRecordsHelper;
+use Cake\I18n\Time;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\View\Helper\TimeHelper;
 
 class Reports
 {
@@ -20,6 +23,7 @@ class Reports
     const SHEET_TITLE_OFFICIALS = 'Community Officials';
     const SHEET_TITLE_ORGANIZATIONS = 'Community Organizations';
     const SHEET_TITLE_NOTES = 'Notes';
+    const SHEET_TITLE_ACTIVITY = 'Recent Activity';
 
     /**
      * Returns an array used in browser-based and Excel reports
@@ -108,6 +112,12 @@ class Reports
         $this->objPHPExcel->setActiveSheetIndexByName(Reports::SHEET_TITLE_NOTES);
         $this->writeNotes($report);
 
+        // Recent Activity
+        $this->currentRow = 1;
+        $this->objPHPExcel->createSheet()->setTitle(Reports::SHEET_TITLE_ACTIVITY);
+        $this->objPHPExcel->setActiveSheetIndexByName(Reports::SHEET_TITLE_ACTIVITY);
+        $this->writeRecentActivity($report);
+
         // Select first sheet
         $this->objPHPExcel->setActiveSheetIndexByName(Reports::SHEET_TITLE_OFFICIALS);
 
@@ -138,7 +148,6 @@ class Reports
         $this->currentRow++;
         $this->writeDataCells($report);
         $this->styleDataCells();
-        $this->styleRecentActivity($report);
         $this->setCellWidth();
     }
 
@@ -182,7 +191,6 @@ class Reports
             ->getStyle($span)
             ->getAlignment()
             ->setWrapText(true);
-        $this->styleRecentActivity($report);
         $this->setCellWidth();
     }
 
@@ -226,8 +234,11 @@ class Reports
                 $columnTitles[] = 'Presentation D';
             }
             $columnTitles[] = 'Status';
-        } else {
+        } elseif ($this->objPHPExcel->getActiveSheet()->getTitle() == Reports::SHEET_TITLE_NOTES) {
             $columnTitles[] = 'Notes';
+        } elseif ($this->objPHPExcel->getActiveSheet()->getTitle() == Reports::SHEET_TITLE_ACTIVITY) {
+            $columnTitles[] = 'Activity';
+            $columnTitles[] = 'Date';
         }
 
         return $columnTitles;
@@ -511,6 +522,9 @@ class Reports
     private function writeSubtitle()
     {
         $subtitle = $this->objPHPExcel->getActiveSheet()->getTitle();
+        if ($subtitle == Reports::SHEET_TITLE_ACTIVITY) {
+            $subtitle .= ' (last 30 days)';
+        }
         $this->write(0, $this->currentRow, $subtitle);
     }
 
@@ -733,8 +747,8 @@ class Reports
         $to = $this->getColKeyWithTitle('Area') . $this->currentRow;
         $this->applyBorders($from, $to, ['left', 'top']);
 
-        // No more styling for notes sheet
-        if ($this->objPHPExcel->getActiveSheet()->getTitle() == Reports::SHEET_TITLE_NOTES) {
+        // No more styling for non-survey sheets
+        if (!$this->getCurrentSurveyType()) {
             return;
         }
 
@@ -860,26 +874,58 @@ class Reports
     }
 
     /**
-     * Styles rows for communities with recent activity
+     * Does all the writing and styling for the currently-selected "recent activity" sheet
      *
-     * @param array $report Report
+     * @param array $report Report array
      * @return void
      */
-    private function styleRecentActivity($report)
+    private function writeRecentActivity($report)
     {
-        $row = $this->firstDataRow;
+        $this->writeTitle();
+        $this->styleTitle();
+        $this->currentRow++;
+        $this->writeSubtitle();
+        $this->styleSubtitle();
+        $this->currentRow++;
+        $this->writeColumnTitles();
+        $this->styleColumnTitles();
+        $this->currentRow++;
+
+        $this->firstDataRow = $this->currentRow;
+        $View = new \Cake\View\View();
+        $ActivityRecordsHelper = new ActivityRecordsHelper($View);
+        $Time = new TimeHelper($View);
         foreach ($report as $community) {
-            if ($community['recentActivity']) {
-                $from = 'A' . $row;
-                $to = $this->getLastColumnLetter() . $row;
-                $this->objPHPExcel->getActiveSheet()
-                    ->getStyle("$from:$to")
-                    ->applyFromArray([
-                        'font' => ['bold' => true]
-                    ]);
+            if (empty($community['recentActivity'])) {
+                continue;
             }
-            $row++;
+
+            /* Write the first activity on the same line as the community name,
+             * subsequent activities on additional lines */
+            foreach ($community['recentActivity'] as $i => $activityRecord) {
+                $cells = [
+                    $i ? null : $community['name'],
+                    $i ? null : $community['parentArea'],
+                    $ActivityRecordsHelper->event($activityRecord),
+                    $Time->format($activityRecord->created, 'MMM d Y, h:mma', false, 'America/New_York')
+                ];
+                foreach ($cells as $col => $value) {
+                    $this->write($col, $this->currentRow, $value);
+                }
+                $this->currentRow++;
+            }
         }
+        $this->lastDataRow = $this->currentRow - 1;
+
+        $this->styleDataCells();
+        $colKey = $this->getColKeyWithTitle('Date');
+        $span = $colKey . $this->firstDataRow . ':' . $colKey . $this->lastDataRow;
+        $this->objPHPExcel
+            ->getActiveSheet()
+            ->getStyle($span)
+            ->getAlignment()
+            ->setWrapText(true);
+        $this->setCellWidth();
     }
 
     /**
