@@ -17,6 +17,14 @@ class PagesControllerTest extends IntegrationTestCase
      */
     public $fixtures = [];
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->configRequest([
+            'environment' => ['HTTPS' => 'on']
+        ]);
+    }
+
     public function testHome()
     {
         $this->get('/');

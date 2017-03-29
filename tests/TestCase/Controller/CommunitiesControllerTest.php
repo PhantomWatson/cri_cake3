@@ -30,6 +30,14 @@ class CommunitiesControllerTest extends IntegrationTestCase
         'app.users'
     ];
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->configRequest([
+            'environment' => ['HTTPS' => 'on']
+        ]);
+    }
+
     public function testIndex()
     {
         $this->get('/communities');
