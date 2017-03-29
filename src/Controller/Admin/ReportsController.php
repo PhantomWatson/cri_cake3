@@ -32,7 +32,6 @@ class ReportsController extends AppController
         $this->viewBuilder()->helpers(['ActivityRecords', 'Reports']);
     }
 
-
     /**
      * Method for /admin/reports/ocra
      *

@@ -750,8 +750,6 @@ class SurveysTable extends Table
         $this->save($survey);
     }
 
-
-
     /**
      * Returns the average internal alignment for all surveys
      *

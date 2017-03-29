@@ -198,7 +198,6 @@ class UsersTable extends Table
         return isset($accessibleCommunities[$communityId]);
     }
 
-
     /**
      * Returns an array of client full-names, indexed by client user IDs
      *

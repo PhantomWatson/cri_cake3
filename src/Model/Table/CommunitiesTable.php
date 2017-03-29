@@ -379,7 +379,6 @@ class CommunitiesTable extends Table
         $responsesTable = TableRegistry::get('Responses');
         $criteria = [];
 
-
         // Step 1
         $criteria[1]['client_assigned'] = [
             'At least one client account has been created for this community',
@@ -391,7 +390,6 @@ class CommunitiesTable extends Table
             'Purchased ' . $product->description . ' ($' . number_format($product->price) . ')',
             $productsTable->isPurchased($communityId, 1)
         ];
-
 
         // If survey is not ready, put this at the end of step one
         // Otherwise, at the beginning of step two
@@ -408,7 +406,6 @@ class CommunitiesTable extends Table
             'Leadership alignment assessment questionnaire has been prepared' . $note,
             (bool)$surveyId
         ];
-
 
         // Step 2
         $count = $surveyId ? $respondentsTable->getInvitedCount($surveyId) : 0;
@@ -468,7 +465,6 @@ class CommunitiesTable extends Table
             'Purchased ' . $product->description . ' ($' . number_format($product->price) . ')',
             $productsTable->isPurchased($communityId, 3)
         ];
-
 
         // Step 3
         $surveyId = $surveysTable->getSurveyId($communityId, 'organization');
