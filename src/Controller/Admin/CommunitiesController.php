@@ -224,7 +224,7 @@ class CommunitiesController extends AppController
             $this->request->data['score'] = 1;
             $settingsTable = TableRegistry::get('Settings');
             $this->request->data['intAlignmentAdjustment'] = $settingsTable->getIntAlignmentAdjustment();
-            $this->request->data['intAlignmentThreshhold'] = $settingsTable->getIntAlignmentThreshhold();
+            $this->request->data['intAlignmentThreshold'] = $settingsTable->getIntAlignmentThreshold();
         }
 
         $this->prepareForm($community);
@@ -556,7 +556,7 @@ class CommunitiesController extends AppController
         $settings = $settingsTable->find('all')
             ->select(['name', 'value'])
             ->where(function ($exp, $q) {
-                return $exp->in('name', ['intAlignmentAdjustment', 'intAlignmentThreshhold']);
+                return $exp->in('name', ['intAlignmentAdjustment', 'intAlignmentThreshold']);
             })
             ->toArray();
         $settings = Hash::combine($settings, '{n}.name', '{n}.value');
@@ -566,7 +566,7 @@ class CommunitiesController extends AppController
             $conditions['dummy'] = 0;
         }
         $communities = $this->Communities->find('all')
-            ->select(['id', 'name', 'intAlignmentAdjustment', 'intAlignmentThreshhold'])
+            ->select(['id', 'name', 'intAlignmentAdjustment', 'intAlignmentThreshold'])
             ->where($conditions)
             ->order(['created' => 'DESC']);
 

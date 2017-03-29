@@ -28,7 +28,7 @@
                 Adjustment
             </th>
             <th>
-                Threshhold
+                Threshold
             </th>
             <th>
                 Actions
@@ -44,7 +44,7 @@
                 <?= $settings['intAlignmentAdjustment'] ?>
             </td>
             <td>
-                +/- <?= $settings['intAlignmentThreshhold'] ?>
+                +/- <?= $settings['intAlignmentThreshold'] ?>
             </td>
             <td>
                 <?= $this->Html->link(
@@ -67,7 +67,7 @@
                     <?= $community->intAlignmentAdjustment ?>
                 </td>
                 <td>
-                    +/- <?= $community->intAlignmentThreshhold ?>
+                    +/- <?= $community->intAlignmentThreshold ?>
                 </td>
                 <td>
                     <?= $this->Html->link(

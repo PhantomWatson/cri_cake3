@@ -35,11 +35,11 @@
     ]) ?>
 
     <?= $this->ClientHome->responseRateRow([
-        'description' => $criteria[2]['response_threshhold_reached'][0],
+        'description' => $criteria[2]['response_threshold_reached'][0],
         'responsesReceived' => $criteria[2]['responses_received'][1],
         'surveyActive' => $surveyIsActive['official'],
         'surveyId' => $officialSurveyId,
-        'thresholdReached' => $criteria[2]['response_threshhold_reached'][1]
+        'thresholdReached' => $criteria[2]['response_threshold_reached'][1]
     ]) ?>
 
     <?= $this->ClientHome->unapprovedResponsesRow([

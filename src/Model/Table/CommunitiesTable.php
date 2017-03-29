@@ -120,13 +120,13 @@ class CommunitiesTable extends Table
             ->requirePresence('intAlignmentAdjustment', 'create');
 
         $validator
-            ->add('intAlignmentThreshhold', 'decimalFormat', [
+            ->add('intAlignmentThreshold', 'decimalFormat', [
                 'rule' => ['decimal', null]
             ])
-            ->add('intAlignmentThreshhold', 'valueInRange', [
+            ->add('intAlignmentThreshold', 'valueInRange', [
                 'rule' => ['range', 0, 99.99]
             ])
-            ->requirePresence('intAlignmentThreshhold', 'create');
+            ->requirePresence('intAlignmentThreshold', 'create');
 
         return $validator;
     }
@@ -419,7 +419,7 @@ class CommunitiesTable extends Table
             $surveyId && $count > 0
         ];
 
-        $criteria[2]['response_threshhold_reached'] = [
+        $criteria[2]['response_threshold_reached'] = [
             'At least 25% of invited community leaders have responded to the questionnaire',
             $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
         ];
@@ -495,7 +495,7 @@ class CommunitiesTable extends Table
             $surveyId && $count > 0
         ];
 
-        $criteria[3]['response_threshhold_reached'] = [
+        $criteria[3]['response_threshold_reached'] = [
             'At least 25% of invited community organizations have responded to the questionnaire',
             $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
         ];

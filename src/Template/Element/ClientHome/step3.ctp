@@ -35,11 +35,11 @@
     ]) ?>
 
     <?= $this->ClientHome->responseRateRow([
-        'description' => $criteria[3]['response_threshhold_reached'][0],
+        'description' => $criteria[3]['response_threshold_reached'][0],
         'responsesReceived' => $criteria[3]['responses_received'][1],
         'surveyActive' => $surveyIsActive['organization'],
         'surveyId' => $organizationSurveyId,
-        'thresholdReached' => $criteria[3]['response_threshhold_reached'][1]
+        'thresholdReached' => $criteria[3]['response_thresold_reached'][1]
     ]) ?>
 
     <?= $this->ClientHome->presentationScheduledRow('C', $community->presentation_c) ?>

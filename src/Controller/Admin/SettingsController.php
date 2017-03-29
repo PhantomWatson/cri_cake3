@@ -12,7 +12,7 @@ class SettingsController extends AppController
      */
     public function editCalculationSettings()
     {
-        $settingNames = ['intAlignmentAdjustment', 'intAlignmentThreshhold'];
+        $settingNames = ['intAlignmentAdjustment', 'intAlignmentThreshold'];
         $settings = $this->Settings->find('all')
             ->where(function ($exp, $q) use ($settingNames) {
                 return $exp->in('name', $settingNames);

@@ -73,14 +73,14 @@ class SettingsTable extends Table
      * @return float
      * @throws NotFoundException
      */
-    public function getIntAlignmentThreshhold()
+    public function getIntAlignmentThreshold()
     {
         $result = $this->find('all')
             ->select(['value'])
-            ->where(['name' => 'intAlignmentThreshhold'])
+            ->where(['name' => 'intAlignmentThreshold'])
             ->first();
         if (empty($result)) {
-            throw new NotFoundException('intAlignmentThreshhold setting not found');
+            throw new NotFoundException('intAlignmentThreshold setting not found');
         }
 
         return $result->value;

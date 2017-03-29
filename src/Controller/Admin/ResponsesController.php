@@ -128,17 +128,17 @@ class ResponsesController extends AppController
     {
         $adjustedScore = $sum - $community->intAlignmentAdjustment;
 
-        // Green if adjusted alignment is more aligned (smaller number) than the acceptable threshhold
-        if ($adjustedScore < (-1 * $community->intAlignmentThreshhold)) {
+        // Green if adjusted alignment is more aligned (smaller number) than the acceptable threshold
+        if ($adjustedScore < (-1 * $community->intAlignmentThreshold)) {
             return 'aligned-well';
         }
 
-        // Yellow if its alignment falls within the acceptable threshhold
-        if (abs($adjustedScore) <= $community->intAlignmentThreshhold) {
+        // Yellow if its alignment falls within the acceptable threshold
+        if (abs($adjustedScore) <= $community->intAlignmentThreshold) {
             return 'aligned-acceptably';
         }
 
-        // Red if its alignment is worse (greater than) the acceptable threshhold
+        // Red if its alignment is worse (greater than) the acceptable threshold
         return 'aligned-poorly';
     }
 

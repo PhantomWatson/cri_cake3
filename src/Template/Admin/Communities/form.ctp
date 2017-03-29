@@ -77,8 +77,8 @@
         'max' => '99.99',
         'min' => '0'
     ]) ?>
-    <?= $this->Form->input('intAlignmentThreshhold', [
-        'label' => 'Internal Alignment Threshhold',
+    <?= $this->Form->input('intAlignmentThreshold', [
+        'label' => 'Internal Alignment Threshold',
         'max' => '99.99',
         'min' => '0'
     ]) ?>
