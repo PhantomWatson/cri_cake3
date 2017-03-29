@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\Controller\AppController;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 class PurchasesController extends AppController
 {
@@ -145,6 +146,18 @@ class PurchasesController extends AppController
             'purchase' => $purchase,
             'titleForLayout' => 'Add a New Payment Record',
             'sources' => $this->Purchases->getSourceOptions()
+        ]);
+    }
+
+    public function ocra()
+    {
+        $purchases = $this->Purchases->find('ocra')->toArray();
+        $costs = Hash::extract($purchases, '{n}.product.price');
+        $total = array_sum($costs);
+        $this->set([
+            'purchases' => $purchases,
+            'titleForLayout' => 'Payments by OCRA',
+            'total' => $total
         ]);
     }
 }

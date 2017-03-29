@@ -124,4 +124,19 @@ class PurchasesTable extends Table
             'self' => 'Paid for by client community'
         ];
     }
+
+    /**
+     * Finds OCRA-funded purchases
+     *
+     * @param \Cake\ORM\Query $query Query
+     * @param array $options Options array
+     * @return \Cake\ORM\Query
+     */
+    public function findOcra(\Cake\ORM\Query $query, array $options)
+    {
+        return $query
+            ->where(['Purchases.source' => 'ocra'])
+            ->contain(['Communities', 'Products'])
+            ->order(['Purchases.created' => 'DESC']);
+    }
 }

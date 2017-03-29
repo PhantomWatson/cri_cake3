@@ -14,6 +14,15 @@
         ],
         ['class' => 'btn btn-success']
     ) ?>
+    <?= $this->Html->link(
+        'OCRA Funding',
+        [
+            'prefix' => 'admin',
+            'controller' => 'Purchases',
+            'action' => 'ocra'
+        ],
+        ['class' => 'btn btn-default']
+    ) ?>
 </p>
 
 <p>
