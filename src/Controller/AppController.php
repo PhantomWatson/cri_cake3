@@ -107,7 +107,7 @@ class AppController extends Controller
      * beforeFilter method
      *
      * @param \Cake\Event\Event $event Event
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function beforeFilter(\Cake\Event\Event $event)
     {
@@ -194,7 +194,7 @@ class AppController extends Controller
     /**
      * Redirects to SSL version of page
      *
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function forceSSL()
     {
@@ -204,7 +204,7 @@ class AppController extends Controller
     /**
      * Redirects (returns a redirect Response object) to the page used by admins for choosing a client to impersonate
      *
-     * @return Response
+     * @return \Cake\Http\Response
      * @throws ForbiddenException
      */
     protected function chooseClientToImpersonate()

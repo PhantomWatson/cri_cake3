@@ -47,7 +47,7 @@ class PurchasesController extends AppController
      * Refund method
      *
      * @param int $purchaseId Purchase record ID
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function refund($purchaseId)
     {
@@ -100,7 +100,7 @@ class PurchasesController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function add()
     {

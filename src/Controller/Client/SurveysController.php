@@ -116,7 +116,7 @@ class SurveysController extends AppController
      * Remind function
      *
      * @param string $surveyType Survey type
-     * @return \App\Controller\Response|\Cake\Network\Response|null
+     * @return \App\Controller\Response|\Cake\Http\Response|null
      * @throws NotFoundException
      * @throws ForbiddenException
      */

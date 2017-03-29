@@ -32,7 +32,7 @@ class SurveysController extends AppController
      *
      * @param int|null $communityId Community ID
      * @param int|null $surveyType Survey type
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function view($communityId = null, $surveyType = null)
     {
@@ -216,7 +216,7 @@ class SurveysController extends AppController
      * Method for /admin/surveys/invite
      *
      * @param int|null $surveyId Survey ID
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function invite($surveyId = null)
     {
@@ -293,7 +293,7 @@ class SurveysController extends AppController
      * Method for /admin/surveys/remind
      *
      * @param int $surveyId Survey ID
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function remind($surveyId)
     {

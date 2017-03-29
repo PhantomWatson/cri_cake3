@@ -29,7 +29,7 @@ class UsersController extends AppController
     /**
      * Method for /users/login
      *
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function login()
     {
@@ -71,7 +71,7 @@ class UsersController extends AppController
     /**
      * Method for /users/logout
      *
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function logout()
     {
@@ -196,7 +196,7 @@ class UsersController extends AppController
      * @param null|int $userId User ID
      * @param null|int $timestamp Timestamp of hash generation
      * @param null|string $hash Security hash emailed to user
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      * @throws NotFoundException
      * @throws ForbiddenException
      */

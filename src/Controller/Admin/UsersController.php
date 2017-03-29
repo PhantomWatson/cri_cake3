@@ -170,7 +170,7 @@ class UsersController extends AppController
      * Edit method
      *
      * @param int|null $id User ID
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function edit($id = null)
     {
@@ -223,7 +223,7 @@ class UsersController extends AppController
      * Delete method
      *
      * @param int|null $id User ID
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function delete($id = null)
     {
@@ -254,7 +254,7 @@ class UsersController extends AppController
     /**
      * ChooseClient method
      *
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function chooseClient()
     {

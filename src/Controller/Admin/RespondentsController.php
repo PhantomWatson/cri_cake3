@@ -111,7 +111,7 @@ class RespondentsController extends AppController
      * View method
      *
      * @param int $surveyId Survey ID
-     * @return \Cake\Network\Response
+     * @return \Cake\Http\Response
      */
     public function view($surveyId)
     {

@@ -178,7 +178,7 @@ class CommunitiesController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function add()
     {
@@ -238,7 +238,7 @@ class CommunitiesController extends AppController
      * Edit method
      *
      * @param int|null $communityId Community ID
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      * @throws NotFoundException
      */
     public function edit($communityId = null)
@@ -297,7 +297,7 @@ class CommunitiesController extends AppController
      * Delete method
      *
      * @param int|null $communityId Community ID
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
@@ -399,7 +399,7 @@ class CommunitiesController extends AppController
      * Client home method
      *
      * @param int $communityId Community ID
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function clienthome($communityId)
     {
@@ -423,7 +423,7 @@ class CommunitiesController extends AppController
      * Add client method
      *
      * @param int $communityId Community ID
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function addClient($communityId)
     {
@@ -478,7 +478,7 @@ class CommunitiesController extends AppController
      *
      * @param int $clientId Client user ID
      * @param int $communityId Community ID
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function removeClient($clientId, $communityId)
     {
@@ -496,7 +496,7 @@ class CommunitiesController extends AppController
      * Select client method
      *
      * @param int $communityId Community ID
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      */
     public function selectClient($communityId)
     {
@@ -587,7 +587,7 @@ class CommunitiesController extends AppController
      * Method for /admin/communities/presentations
      *
      * @param null|int $communityId Community ID
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      * @throws NotFoundException
      */
     public function presentations($communityId = null)

@@ -82,7 +82,7 @@ class PagesController extends AppController
     /**
      * Method for /pages/enroll
      *
-     * @return \Cake\Network\Response
+     * @return \Cake\Http\Response
      */
     public function enroll()
     {

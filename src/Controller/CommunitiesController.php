@@ -96,7 +96,7 @@ class CommunitiesController extends AppController
      * View method
      *
      * @param string|null $communityId Community ID
-     * @return \Cake\Network\Response|null
+     * @return \Cake\Http\Response|null
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function view($communityId = null)

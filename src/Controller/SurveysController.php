@@ -30,7 +30,7 @@ class SurveysController extends AppController
      * Method for /surveys/import
      *
      * @param null|int $surveyId Survey ID
-     * @return \Cake\Network\Response
+     * @return \Cake\Http\Response
      */
     public function import($surveyId = null)
     {
@@ -219,7 +219,7 @@ class SurveysController extends AppController
      * Sets a 500 status code and passes $message to the view
      *
      * @param string $message Error message
-     * @return \Cake\Network\Response
+     * @return \Cake\Http\Response
      */
     private function renderImportError($message)
     {
@@ -326,7 +326,7 @@ class SurveysController extends AppController
      * Method for clearing this user's save invitation data for the specified survey
      *
      * @param int $surveyId Survey ID
-     * @return \Cake\Network\Response
+     * @return \Cake\Http\Response
      */
     public function clearSavedInvitationData($surveyId)
     {
