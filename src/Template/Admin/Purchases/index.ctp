@@ -66,14 +66,20 @@
                     <?= $this->Time->format($purchase->created, 'M/d/YYYY', false, 'America/New_York'); ?>
                 </td>
                 <td>
-                    <?= $purchase->community['name'] ?>
+                    <?php if ($purchase->community): ?>
+                        <?= $purchase->community['name'] ?>
+                    <?php else: ?>
+                        <span class="text-danger">
+                            Unknown community (#<?= $purchase->community_id ?>)
+                        </span>
+                    <?php endif; ?>
                 </td>
                 <td>
                     <?php if ($purchase->product['description']): ?>
                         <?= $purchase->product['description'] ?>
                     <?php else: ?>
-                        <span class="unknown">
-                            Unknown product
+                        <span class="text-danger">
+                            Unknown product (#<?= $purchase->product_id ?>)
                         </span>
                     <?php endif; ?>
 
@@ -113,14 +119,34 @@
                     <ul>
                         <li>
                             <?php if ($purchase->admin_added): ?>
-                                Purchase record added by admin <?= $purchase->user['name'] ?>
+                                Purchase record added by
+                                <?php if ($purchase->user): ?>
+                                    <?= $purchase->user['name'] ?>
+                                <?php else: ?>
+                                    <span class="text-danger">
+                                        an unknown admin (#<?= $purchase->user_id ?>)
+                                    </span>
+                                <?php endif; ?>
                             <?php else: ?>
-                                Purchase made online by <?= $purchase->user['name'] ?>
+                                Purchase made online by
+                                <?php if ($purchase->user): ?>
+                                    <?= $purchase->user['name'] ?>
+                                <?php else: ?>
+                                    <span class="text-danger">
+                                        an unknown admin (#<?= $purchase->user_id ?>)
+                                    </span>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </li>
                         <li>
                             Funding source:
-                            <?= $purchase->source ? $sources[$purchase->source] : 'Unknown' ?>
+                            <?php if ($purchase->source): ?>
+                                <?= $sources[$purchase->source] ?>
+                            <?php else: ?>
+                                <span class="text-danger">
+                                    unknown
+                                </span>
+                            <?php endif; ?>
                         </li>
                         <?php if ($purchase->refunded): ?>
                             <li>
@@ -128,10 +154,17 @@
                                 <?php if ($purchase->refunder['name']): ?>
                                     <?= $purchase->refunder['name'] ?>
                                 <?php else: ?>
-                                    an unknown user
+                                    <span class="text-danger">
+                                        an unknown admin (#<?= $purchase->refunder_id ?>)
+                                    </span>
                                 <?php endif; ?>
                                 on
-                                <?= $this->Time->format($purchase->refunded, 'MMMM d, Y', false, 'America/New_York'); ?>
+                                <?= $this->Time->format(
+                                    $purchase->refunded,
+                                    'MMMM d, Y',
+                                    false,
+                                    'America/New_York'
+                                ); ?>
                             </li>
                         <?php endif; ?>
                         <?php if ($purchase->notes): ?>

@@ -30,15 +30,15 @@ class PurchasesTable extends Table
         $this->addBehavior('Timestamp');
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
         ]);
         $this->belongsTo('Communities', [
             'foreignKey' => 'community_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
         ]);
         $this->belongsTo('Products', [
             'foreignKey' => 'product_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
         ]);
         $this->belongsTo('Refunders', [
             'className' => 'App\Model\Table\UsersTable',
