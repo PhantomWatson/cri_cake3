@@ -53,7 +53,7 @@
                     <?= $purchase->product->description ?>
                     ($<?= number_format($purchase->product['price']) ?>)
 
-                    <?php if (! $purchase->redunded): ?>
+                    <?php if ($purchase->redunded): ?>
                         <span class="label label-warning">
                             Refunded
                         </span>
