@@ -16,7 +16,7 @@
         <meta name="viewport" content="width=device-width" />
         <meta http-equiv="imagetoolbar" content="false" />
         <link rel="shortcut icon" href="/data_center/img/favicon.ico" />
-        <link href='http://fonts.googleapis.com/css?family=Asap:400,400italic,700' rel='stylesheet' type='text/css'>
+        <link href="//fonts.googleapis.com/css?family=Asap:400,400italic,700" rel="stylesheet" type="text/css">
         <?= $this->Html->css('style') ?>
         <?= $this->fetch('css') ?>
         <?= $this->fetch('scriptTop') ?>

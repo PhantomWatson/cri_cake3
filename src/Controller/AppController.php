@@ -54,6 +54,10 @@ class AppController extends Controller
         parent::initialize();
         $this->loadComponent('DataCenter.Flash');
 
+        $this->loadComponent('Security', [
+            'blackHoleCallback' => 'forceSSL'
+        ]);
+
         $this->loadComponent('Cookie', [
             'encryption' => 'aes',
             'key' => Configure::read('cookie_key')
@@ -107,6 +111,8 @@ class AppController extends Controller
      */
     public function beforeFilter(\Cake\Event\Event $event)
     {
+        $this->Security->requireSecure();
+
         // Set accessible communities
         $usersTable = TableRegistry::get('Users');
         $this->set([
@@ -183,6 +189,16 @@ class AppController extends Controller
         $prefix = isset($this->request->params['prefix']) ? $this->request->params['prefix'] : null;
 
         return $prefix === $user['role'];
+    }
+
+    /**
+     * Redirects to SSL version of page
+     *
+     * @return \Cake\Network\Response|null
+     */
+    public function forceSSL()
+    {
+        return $this->redirect('https://' . env('SERVER_NAME') . $this->request->here());
     }
 
     /**
