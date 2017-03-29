@@ -4,7 +4,6 @@ namespace App\Reports;
 use App\Model\Entity\Community;
 use App\Model\Entity\Survey;
 use App\View\Helper\ActivityRecordsHelper;
-use Cake\I18n\Time;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;

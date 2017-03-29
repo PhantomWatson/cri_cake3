@@ -3,10 +3,8 @@ namespace App\Controller\Admin;
 
 use App\AdminToDo\AdminToDo;
 use App\Controller\AppController;
-use App\Event\ActivityRecordsListener;
 use App\Mailer\Mailer;
 use Cake\Event\Event;
-use Cake\Event\EventManager;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;

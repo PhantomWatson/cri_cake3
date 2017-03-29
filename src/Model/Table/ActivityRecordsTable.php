@@ -2,7 +2,6 @@
 namespace App\Model\Table;
 
 use Cake\Network\Exception\InternalErrorException;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;

@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
 use App\SurveyMonkey\SurveyMonkey;
 use Cake\Event\Event;
 use Cake\I18n\Time;

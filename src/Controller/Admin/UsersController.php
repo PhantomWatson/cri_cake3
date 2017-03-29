@@ -6,7 +6,6 @@ use App\Mailer\Mailer;
 use App\Model\Entity\User;
 use Cake\Event\Event;
 use Cake\Network\Exception\MethodNotAllowedException;
-use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 
 class UsersController extends AppController

@@ -1,7 +1,6 @@
 <?php
 namespace App\View\Helper;
 
-use App\Reports\Reports;
 use Cake\View\Helper;
 
 class ReportsHelper extends Helper

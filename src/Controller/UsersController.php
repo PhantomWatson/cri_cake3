@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
 use App\Mailer\Mailer;
 use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;

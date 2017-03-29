@@ -18,7 +18,6 @@ use App\Event\ActivityRecordsListener;
 use App\Event\SurveysListener;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;

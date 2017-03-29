@@ -5,9 +5,7 @@ use App\Mailer\Mailer;
 use Cake\Controller\Component;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
-use Cake\Routing\Router;
 
 class SurveyProcessingComponent extends Component
 {

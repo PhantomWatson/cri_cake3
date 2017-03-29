@@ -1,7 +1,6 @@
 <?php
 namespace App\View\Helper;
 
-use Cake\Chronos\Date;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\View\Helper;
 
