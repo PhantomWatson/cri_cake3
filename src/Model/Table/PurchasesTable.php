@@ -139,4 +139,53 @@ class PurchasesTable extends Table
             ->contain(['Communities', 'Products'])
             ->order(['Purchases.created' => 'DESC']);
     }
+
+    /**
+     * Finds purchases corresponding to products that have been delivered
+     *
+     * @param \Cake\ORM\Query $query Query
+     * @param array $options Options array
+     * @return \Cake\ORM\Query
+     */
+    public function findBillable(\Cake\ORM\Query $query, array $options)
+    {
+        return $query
+            ->where(['OR' => [
+                function ($exp) {
+                    return $exp
+                        ->eq('Products.id', ProductsTable::OFFICIALS_SURVEY)
+
+                        // The date of the community's Step Two mandatory presentation has passed
+                        ->lt('Communities.presentation_a', date('Y-m-d'));
+                },
+                function ($exp) {
+                    return $exp
+                        ->eq('Products.id', ProductsTable::OFFICIALS_SUMMIT)
+
+                        // The date of the community's Step Two optional presentation has passed
+                        ->lt('Communities.presentation_b', date('Y-m-d'));
+                },
+                function ($exp) {
+                    return $exp
+                        ->eq('Products.id', ProductsTable::ORGANIZATIONS_SURVEY)
+
+                        // The date of the community's Step Three mandatory presentation has passed
+                        ->lt('Communities.presentation_c', date('Y-m-d'));
+                },
+                function ($exp) {
+                    return $exp
+                        ->eq('Products.id', ProductsTable::ORGANIZATIONS_SUMMIT)
+
+                        // The date of the community's Step Three optional presentation has passed
+                        ->lt('Communities.presentation_d', date('Y-m-d'));
+                },
+                function ($exp) {
+                    return $exp
+                        ->eq('Products.id', ProductsTable::POLICY_DEVELOPMENT)
+
+                        // Community has been advanced to Step Four
+                        ->gte('Communities.score', 4);
+                },
+            ]]);
+    }
 }
