@@ -9,6 +9,7 @@ use Cake\Utility\Hash;
 class PurchasesController extends AppController
 {
     public $paginate = [
+        'conditions' => ['Communities.dummy' => false],
         'contain' => [
             'Communities' => [
                 'fields' => ['id', 'name']
