@@ -57,6 +57,27 @@ class PurchasesController extends AppController
     }
 
     /**
+     * View method
+     *
+     * @param int $communityId Community ID
+     * @return void
+     */
+    public function view($communityId)
+    {
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->get($communityId);
+        $this->paginate['conditions']['community_id'] = $communityId;
+        $this->set([
+            'communityId' => $communityId,
+            'purchases' => $this
+                ->paginate()
+                ->toArray(),
+            'sources' => $this->Purchases->getSourceOptions(),
+            'titleForLayout' => $community->name . ' Payment Records'
+        ]);
+    }
+
+    /**
      * Refund method
      *
      * @param int $purchaseId Purchase record ID
