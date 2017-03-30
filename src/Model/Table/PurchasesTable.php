@@ -188,4 +188,68 @@ class PurchasesTable extends Table
                 },
             ]]);
     }
+
+    /**
+     * Finds purchases corresponding to products that have not yet been delivered
+     *
+     * @param \Cake\ORM\Query $query Query
+     * @param array $options Options array
+     * @return \Cake\ORM\Query
+     */
+    public function findNotBillable(\Cake\ORM\Query $query, array $options)
+    {
+        return $query
+            ->where(['OR' => [
+                [
+                    'Products.id' => ProductsTable::OFFICIALS_SURVEY,
+                    'OR' => [
+                        function ($exp) {
+                            return $exp->gte('Communities.presentation_a', date('Y-m-d'));
+                        },
+                        function ($exp) {
+                            return $exp->isNull('Communities.presentation_a');
+                        }
+                    ]
+                ],
+                [
+                    'Products.id' => ProductsTable::OFFICIALS_SUMMIT,
+                    'OR' => [
+                        function ($exp) {
+                            return $exp->gte('Communities.presentation_b', date('Y-m-d'));
+                        },
+                        function ($exp) {
+                            return $exp->isNull('Communities.presentation_b');
+                        }
+                    ]
+                ],
+                [
+                    'Products.id' => ProductsTable::ORGANIZATIONS_SURVEY,
+                    'OR' => [
+                        function ($exp) {
+                            return $exp->gte('Communities.presentation_c', date('Y-m-d'));
+                        },
+                        function ($exp) {
+                            return $exp->isNull('Communities.presentation_c');
+                        }
+                    ]
+                ],
+                [
+                    'Products.id' => ProductsTable::ORGANIZATIONS_SUMMIT,
+                    'OR' => [
+                        function ($exp) {
+                            return $exp->gte('Communities.presentation_d', date('Y-m-d'));
+                        },
+                        function ($exp) {
+                            return $exp->isNull('Communities.presentation_d');
+                        }
+                    ]
+                ],
+                [
+                    'Products.id' => ProductsTable::POLICY_DEVELOPMENT,
+                    function ($exp) {
+                        return $exp->lt('Communities.score', 4);
+                    }
+                ]
+            ]]);
+    }
 }

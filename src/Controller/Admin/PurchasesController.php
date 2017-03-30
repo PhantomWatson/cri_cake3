@@ -161,15 +161,28 @@ class PurchasesController extends AppController
         ]);
     }
 
+    /**
+     * Page for OCRA-funded purchases
+     *
+     * @return void
+     */
     public function ocra()
     {
-        $purchases = $this->Purchases->find('ocra')->toArray();
-        $costs = Hash::extract($purchases, '{n}.product.price');
-        $total = array_sum($costs);
+        $query = $this->Purchases->find('ocra');
+        $purchases = [
+            'not yet billable' => $query->find('notBillable')->toArray(),
+            'billable' => $query->find('billable')->toArray(),
+            'billed' => []
+        ];
+        $totals = [];
+        foreach ($purchases as $label => $group) {
+            $costs = Hash::extract($group, '{n}.product.price');
+            $totals[$label] = array_sum($costs);
+        }
         $this->set([
             'purchases' => $purchases,
             'titleForLayout' => 'Payments by OCRA',
-            'total' => $total
+            'totals' => $totals
         ]);
     }
 }

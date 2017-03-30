@@ -19,47 +19,63 @@
     ) ?>
 </p>
 
-<p class="well" id="total-ocra-payments">
-    Total OCRA-designated payments:
-    <strong>
-        $<?= number_format($total) ?>
-    </strong>
-</p>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Date
-            </th>
-            <th>
-                Community
-            </th>
-            <th>
-                Product
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($purchases as $purchase): ?>
+<?php foreach ($purchases as $label => $purchaseGroup): ?>
+    <section class="ocra-billing">
+        <h1>
+            <?= ucwords($label) ?>
+        </h1>
+        <p>
+            Total:
+            <strong>
+                $<?= number_format($totals[$label]) ?>
+            </strong>
+        </p>
+        <table class="table">
+            <thead>
             <tr>
-                <td>
-                    <?= $this->Time->format($purchase->created, 'M/d/YYYY', false, 'America/New_York'); ?>
-                </td>
-                <td>
-                    <?= $purchase->community->name ?>
-                </td>
-                <td>
-                    <?= $purchase->product->description ?>
-                    ($<?= number_format($purchase->product['price']) ?>)
-
-                    <?php if ($purchase->redunded): ?>
-                        <span class="label label-warning">
-                            Refunded
-                        </span>
-                    <?php endif; ?>
-                </td>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Community
+                </th>
+                <th>
+                    Product
+                </th>
             </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+            </thead>
+            <tbody>
+            <?php if ($purchaseGroup): ?>
+                <?php foreach ($purchaseGroup as $purchase): ?>
+                    <tr>
+                        <td>
+                            <?= $this->Time->format($purchase->created, 'M/d/YYYY', false, 'America/New_York'); ?>
+                        </td>
+                        <td>
+                            <?= $purchase->community->name ?>
+                        </td>
+                        <td>
+                            <?= $purchase->product->description ?>
+                            ($<?= number_format($purchase->product['price']) ?>)
+
+                            <?php if ($purchase->redunded): ?>
+                                <span class="label label-warning">
+                                    Refunded
+                                </span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="3">
+                        <p class="alert alert-info">
+                            No charges found
+                        </p>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            </tbody>
+        </table>
+    </section>
+<?php endforeach; ?>
