@@ -59,7 +59,25 @@ class PurchasesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->notEmpty('source', 'create');
+            ->notEmpty('source', 'create')
+            ->add('source', 'validOcra', [
+                'rule' => function ($source, $context) {
+                    if ($source != 'ocra') {
+                        return true;
+                    }
+                    $ocraFundedProducts = [
+                        ProductsTable::OFFICIALS_SURVEY,
+                        ProductsTable::OFFICIALS_SUMMIT
+                    ];
+                    $productId = $context['data']['product_id'];
+                    if (in_array($productId, $ocraFundedProducts)) {
+                        return true;
+                    }
+
+                    return false;
+                },
+                'message' => 'OCRA is only funding products related to Step Two at this time'
+            ]);
 
         $validator
             ->requirePresence('postback', 'create')
@@ -68,6 +86,25 @@ class PurchasesTable extends Table
         $validator
             ->add('refunded', 'valid', ['rule' => 'datetime'])
             ->allowEmpty('refunded');
+
+        $validator
+            ->add('product_id', 'valid', ['rule' => 'numeric'])
+            ->notEmpty('product_id')
+            ->requirePresence('product_id');
+
+        $validator
+            ->add('community_id', 'valid', ['rule' => 'numeric'])
+            ->notEmpty('community_id')
+            ->requirePresence('community_id');
+
+        $validator
+            ->add('user_id', 'valid', ['rule' => 'numeric'])
+            ->notEmpty('user_id')
+            ->requirePresence('user_id');
+
+        $validator
+            ->add('refunder_id', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('refunder_id');
 
         return $validator;
     }
@@ -81,10 +118,26 @@ class PurchasesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['user_id'], 'Users'));
-        $rules->add($rules->existsIn(['community_id'], 'Communities'));
-        $rules->add($rules->existsIn(['product_id'], 'Products'));
-        $rules->add($rules->existsIn(['refunder_id'], 'Refunders'));
+        $rules->add(
+            $rules->existsIn(['user_id'], 'Users'),
+            'userExists',
+            ['message' => 'The selected user was not found in the database']
+        );
+        $rules->add(
+            $rules->existsIn(['community_id'], 'Communities'),
+            'communityExists',
+            ['message' => 'The selected community was not found in the database']
+        );
+        $rules->add(
+            $rules->existsIn(['product_id'], 'Products'),
+            'productExists',
+            ['message' => 'The selected product was not found in the database']
+        );
+        $rules->add(
+            $rules->existsIn(['refunder_id'], 'Users'),
+            'refunderExists',
+            ['message' => 'The selected refunding user was not found in the database']
+        );
 
         return $rules;
     }
@@ -126,7 +179,7 @@ class PurchasesTable extends Table
     }
 
     /**
-     * Finds OCRA-funded purchases
+     * Finds valid OCRA-funded purchases
      *
      * @param \Cake\ORM\Query $query Query
      * @param array $options Options array
@@ -135,7 +188,15 @@ class PurchasesTable extends Table
     public function findOcra(\Cake\ORM\Query $query, array $options)
     {
         return $query
-            ->where(['Purchases.source' => 'ocra'])
+            ->where([
+                'Purchases.source' => 'ocra',
+                function ($exp, $q) {
+                    return $exp->in('Purchases.product_id', [
+                        ProductsTable::OFFICIALS_SURVEY,
+                        ProductsTable::OFFICIALS_SUMMIT
+                    ]);
+                }
+            ])
             ->contain(['Communities', 'Products'])
             ->order(['Purchases.created' => 'DESC']);
     }
