@@ -43,6 +43,9 @@ class CommunitiesTable extends Table
         $this->hasMany('Purchases', [
             'foreignKey' => 'community_id'
         ]);
+        $this->hasMany('OptOuts', [
+            'foreignKey' => 'community_id'
+        ]);
         $this->hasMany('Surveys', [
             'foreignKey' => 'community_id'
         ]);

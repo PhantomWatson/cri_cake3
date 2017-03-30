@@ -30,6 +30,9 @@ class UsersTable extends Table
         $this->hasMany('Purchases', [
             'foreignKey' => 'user_id'
         ]);
+        $this->hasMany('OptOuts', [
+            'foreignKey' => 'user_id'
+        ]);
         $this->belongsToMany('ConsultantCommunities', [
             'className' => 'Communities',
             'joinTable' => 'communities_consultants',
