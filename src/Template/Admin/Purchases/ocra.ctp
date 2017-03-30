@@ -30,52 +30,56 @@
                 $<?= number_format($totals[$label]) ?>
             </strong>
         </p>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>
-                    Date
-                </th>
-                <th>
-                    Community
-                </th>
-                <th>
-                    Product
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php if ($purchaseGroup): ?>
-                <?php foreach ($purchaseGroup as $purchase): ?>
+        <?php if ($purchaseGroup): ?>
+            <?php $hyphenatedLabel = str_replace(' ', '-', $label); ?>
+            <button class="btn btn-default" data-toggle="collapse" data-target="#<?= $hyphenatedLabel ?>">
+                Show
+                <?= count($purchaseGroup) ?>
+                <?= __n('charge', 'charges', count($purchaseGroup)) ?>
+            </button>
+            <div class="collapse" id="<?= $hyphenatedLabel ?>">
+                <table class="table">
+                    <thead>
                     <tr>
-                        <td>
-                            <?= $this->Time->format($purchase->created, 'M/d/YYYY', false, 'America/New_York'); ?>
-                        </td>
-                        <td>
-                            <?= $purchase->community->name ?>
-                        </td>
-                        <td>
-                            <?= $purchase->product->description ?>
-                            ($<?= number_format($purchase->product['price']) ?>)
-
-                            <?php if ($purchase->redunded): ?>
-                                <span class="label label-warning">
-                                    Refunded
-                                </span>
-                            <?php endif; ?>
-                        </td>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Community
+                        </th>
+                        <th>
+                            Product
+                        </th>
                     </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="3">
-                        <p class="alert alert-info">
-                            No charges found
-                        </p>
-                    </td>
-                </tr>
-            <?php endif; ?>
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($purchaseGroup as $purchase): ?>
+                            <tr>
+                                <td>
+                                    <?= $this->Time->format($purchase->created, 'M/d/YYYY', false, 'America/New_York'); ?>
+                                </td>
+                                <td>
+                                    <?= $purchase->community->name ?>
+                                </td>
+                                <td>
+                                    <?= $purchase->product->description ?>
+                                    ($<?= number_format($purchase->product['price']) ?>)
+
+                                    <?php if ($purchase->redunded): ?>
+                                        <span class="label label-warning">
+                                        Refunded
+                                    </span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else: ?>
+            <p class="alert alert-info">
+                No charges found
+            </p>
+        <?php endif; ?>
     </section>
 <?php endforeach; ?>
