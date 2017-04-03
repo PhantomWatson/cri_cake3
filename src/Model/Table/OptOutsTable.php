@@ -98,9 +98,9 @@ class OptOutsTable extends Table
      */
     public function addOptOut(array $params)
     {
-        if ($params['product_id']) {
+        if (isset($params['product_id'])) {
             $productId = $params['product_id'];
-        } elseif ($params['presentation_letter']) {
+        } elseif (isset($params['presentation_letter'])) {
             $productsTable = TableRegistry::get('Products');
             $productId = $productsTable->getProductIdForPresentation($params['presentation_letter']);
         } else {
