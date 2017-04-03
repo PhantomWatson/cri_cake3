@@ -17,20 +17,26 @@
             <h2>
                 Presentation <?= strtoupper($letter) ?>
             </h2>
-            <div class="checkbox">
-                <?= $this->Form->radio(
-                    'presentation_' . $letter . '_scheduled',
-                    [
-                        0 => 'Not scheduled yet',
-                        'opted-out' => 'Opted out',
-                        1 => 'Scheduled'
-                    ]
+            <?php if ($community->{'presentation_' . $letter . '_scheduled'} == 'opted-out'): ?>
+                <span class="label label-success">
+                    Opted out
+                </span>
+            <?php else: ?>
+                <div class="checkbox">
+                    <?= $this->Form->radio(
+                        'presentation_' . $letter . '_scheduled',
+                        [
+                            0 => 'Not scheduled yet',
+                            'opted-out' => 'Opted out',
+                            1 => 'Scheduled'
+                        ]
+                    ) ?>
+                </div>
+                <?= $this->Form->input(
+                    'presentation_' . $letter,
+                    ['label' => false]
                 ) ?>
-            </div>
-            <?= $this->Form->input(
-                'presentation_' . $letter,
-                ['label' => false]
-            ) ?>
+            <?php endif; ?>
         </section>
     <?php endforeach; ?>
     <?= $this->Form->button(
