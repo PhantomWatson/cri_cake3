@@ -1,9 +1,11 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -85,5 +87,32 @@ class OptOutsTable extends Table
         $rules->add($rules->existsIn(['product_id'], 'Products'));
 
         return $rules;
+    }
+
+    /**
+     * Creates a new opt-out record
+     *
+     * @param array $params Parameters
+     * @return bool
+     * @throws InternalErrorException
+     */
+    public function addOptOut(array $params)
+    {
+        if ($params['product_id']) {
+            $productId = $params['product_id'];
+        } elseif ($params['presentation_letter']) {
+            $productsTable = TableRegistry::get('Products');
+            $productId = $productsTable->getProductIdForPresentation($params['presentation_letter']);
+        } else {
+            throw new InternalErrorException('Could not opt out (missing product ID)');
+        }
+
+        $optOut = $this->newEntity([
+            'user_id' => $params['user_id'],
+            'community_id' => $params['community_id'],
+            'product_id' => $productId
+        ]);
+
+        return (bool)$this->save($optOut);
     }
 }
