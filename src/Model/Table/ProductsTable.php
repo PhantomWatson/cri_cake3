@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use Cake\Core\Configure;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
@@ -176,5 +177,30 @@ class ProductsTable extends Table
             ->toArray();
 
         return isset($result['id']) ? $result['id'] : null;
+    }
+
+    /**
+     * Returns the product ID for presentation a, b, c, or d
+     *
+     * @param string $presentationLetter Presentation letter
+     * @return int
+     * @throws InternalErrorException
+     */
+    public function getProductIdForPresentation($presentationLetter)
+    {
+        $presentationLetter = strtolower($presentationLetter);
+        switch ($presentationLetter) {
+            case 'a':
+                return $this::OFFICIALS_SURVEY;
+            case 'b':
+                return $this::OFFICIALS_SUMMIT;
+            case 'c':
+                return $this::ORGANIZATIONS_SURVEY;
+            case 'd':
+                return $this::ORGANIZATIONS_SUMMIT;
+        }
+
+        $msg = 'No product found for presentation "' . $presentationLetter . '"';
+        throw new InternalErrorException($msg);
     }
 }
