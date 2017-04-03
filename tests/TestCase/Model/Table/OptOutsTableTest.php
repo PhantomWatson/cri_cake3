@@ -24,31 +24,7 @@ class OptOutsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.opt_outs',
-        'app.users',
-        'app.purchases',
-        'app.communities',
-        'app.local_areas',
-        'app.statistics',
-        'app.areas',
-        'app.stat_categories',
-        'app.statistic',
-        'app.parent_areas',
-        'app.surveys',
-        'app.respondents',
-        'app.responses',
-        'app.surveys_backup',
-        'app.official_survey',
-        'app.organization_survey',
-        'app.consultants',
-        'app.consultant_communities',
-        'app.communities_consultants',
-        'app.clients',
-        'app.client_communities',
-        'app.clients_communities',
-        'app.activity_records',
-        'app.products',
-        'app.refunders'
+        'app.opt_outs'
     ];
 
     /**
