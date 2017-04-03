@@ -107,6 +107,19 @@ class OptOutsTable extends Table
             throw new InternalErrorException('Could not opt out (missing product ID)');
         }
 
+        $existingOptOut = $this->find('all')
+            ->where([
+                'user_id' => $params['user_id'],
+                'community_id' => $params['community_id'],
+                'product_id' => $productId
+            ])
+            ->count();
+
+        // Avoid adding redundant opt-outs
+        if ($existingOptOut) {
+            return true;
+        }
+
         $optOut = $this->newEntity([
             'user_id' => $params['user_id'],
             'community_id' => $params['community_id'],
