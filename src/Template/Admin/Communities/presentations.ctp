@@ -9,7 +9,7 @@
     <?php foreach (['a', 'b', 'c', 'd'] as $letter): ?>
         <?php
             $class = 'well';
-            if ($community->{'presentation_' . $letter . '_scheduled'}) {
+            if ($community->{'presentation_' . $letter . '_scheduled'} == 1) {
                 $class .= ' show-date';
             }
         ?>
@@ -22,6 +22,7 @@
                     'presentation_' . $letter . '_scheduled',
                     [
                         0 => 'Not scheduled yet',
+                        'opted-out' => 'Opted out',
                         1 => 'Scheduled'
                     ]
                 ) ?>

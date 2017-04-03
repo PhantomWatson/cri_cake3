@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\AdminToDo\AdminToDo;
 use App\Controller\AppController;
 use App\Mailer\Mailer;
+use App\Model\Table\ProductsTable;
 use Cake\Event\Event;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\Network\Exception\NotFoundException;
@@ -595,16 +596,28 @@ class CommunitiesController extends AppController
         }
 
         $community = $this->Communities->get($communityId);
-
+        $community = $this->Communities->patchEntity($community, $this->request->getData());
+        $optOutsTable = TableRegistry::get('OptOuts');
         if ($this->request->is('post') || $this->request->is('put')) {
-            $this->request->data['id'] = $communityId;
             foreach (['a', 'b', 'c', 'd'] as $letter) {
-                if (! $this->request->data('presentation_' . $letter . '_scheduled')) {
-                    $this->request->data['presentation_' . $letter] = null;
+                $selection = $this->request->getData('presentation_' . $letter . '_scheduled');
+                if ($selection == 'opted-out') {
+                    $addResult = $optOutsTable->addOptOut([
+                        'user_id' => $this->Auth->user('id'),
+                        'community_id' => $communityId,
+                        'presentation_letter' => $letter
+                    ]);
+                    if (! $addResult) {
+                        $msg = 'There was an error opting this community out of Presentation ' .
+                            strtoupper($letter);
+                        $this->Flash->error($msg);
+                    }
+                    $community->{'presentation_' . $letter} = null;
+                } elseif ($selection == 0) {
+                    $community->{'presentation_' . $letter} = null;
                 }
             }
 
-            $community = $this->Communities->patchEntity($community, $this->request->data());
             $errors = $community->errors();
             if (empty($errors) && $this->Communities->save($community)) {
                 $this->Flash->success('Community presentation info updated');
@@ -616,8 +629,22 @@ class CommunitiesController extends AppController
             }
         }
 
-        foreach (['a', 'b', 'c', 'd'] as $letter) {
-            $community->{'presentation_' . $letter . '_scheduled'} = isset($community->{'presentation_' . $letter});
+        $optOutsTable = TableRegistry::get('OptOuts');
+        $presentations = [
+            ProductsTable::OFFICIALS_SURVEY => 'a',
+            ProductsTable::OFFICIALS_SUMMIT => 'b',
+            ProductsTable::ORGANIZATIONS_SURVEY => 'c',
+            ProductsTable::ORGANIZATIONS_SUMMIT => 'd'
+        ];
+        foreach ($presentations as $productId => $letter) {
+            $field = 'presentation_' . $letter . '_scheduled';
+            $optedOut = $optOutsTable->find('all')
+                ->where([
+                    'community_id' => $communityId,
+                    'product_id' => $productId
+                ])
+                ->count();
+            $community->$field = $optedOut ? 'opted-out' : isset($community->{'presentation_' . $letter});
         }
         $this->set([
             'community' => $community,
