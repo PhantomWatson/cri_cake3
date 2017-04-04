@@ -17,7 +17,7 @@
             <h2>
                 Presentation <?= strtoupper($letter) ?>
             </h2>
-            <?php if ($community->{'presentation_' . $letter . '_scheduled'} == 'opted-out'): ?>
+            <?php if ($community->{'presentation_' . $letter . '_scheduled'} === 'opted-out'): ?>
                 <span class="label label-success">
                     Opted out
                 </span>
