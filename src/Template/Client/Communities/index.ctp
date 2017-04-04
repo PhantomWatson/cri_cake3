@@ -11,8 +11,10 @@
         <?= $this->element('ClientHome/step1') ?>
         <?php if (! in_array(\App\Model\Table\ProductsTable::OFFICIALS_SURVEY, $optOuts)): ?>
             <?= $this->element('ClientHome/step2') ?>
-            <?= $this->element('ClientHome/step3') ?>
-            <?= $this->element('ClientHome/step4') ?>
+            <?php if (! in_array(\App\Model\Table\ProductsTable::ORGANIZATIONS_SURVEY, $optOuts)): ?>
+                <?= $this->element('ClientHome/step3') ?>
+                <?= $this->element('ClientHome/step4') ?>
+            <?php endif; ?>
         <?php endif; ?>
     </table>
 </div>

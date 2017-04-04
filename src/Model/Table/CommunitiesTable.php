@@ -480,10 +480,19 @@ class CommunitiesTable extends Table
         }
 
         $product = $productsTable->get(3);
-        $criteria[2]['survey_purchased'] = [
-            'Purchased ' . $product->description . ' ($' . number_format($product->price) . ')',
-            $productsTable->isPurchased($communityId, 3)
-        ];
+        $productDescription = $product->description . ' ($' . number_format($product->price) . ')';
+        $optedOut = in_array($productsTable::ORGANIZATIONS_SURVEY, $optOuts);
+        if ($optedOut) {
+            $criteria[2]['survey_purchased'] = [
+                "Opted out of purchasing $productDescription",
+                true
+            ];
+        } else {
+            $criteria[2]['survey_purchased'] = [
+                "Purchased $productDescription",
+                $productsTable->isPurchased($communityId, 3)
+            ];
+        }
 
         // Step 3
         $surveyId = $surveysTable->getSurveyId($communityId, 'organization');

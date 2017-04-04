@@ -54,7 +54,6 @@
     <?= $this->ClientHome->presentationCompletedRow('A', $community->presentation_a) ?>
 
     <?php $optedOut = in_array(\App\Model\Table\ProductsTable::OFFICIALS_SUMMIT, $optOuts); ?>
-
     <?= $this->ClientHome->leadershipSummitRow([
         'communityId' => $community['id'],
         'description' => $criteria[2]['leadership_summit_purchased'][0],
@@ -69,7 +68,9 @@
     <?php endif; ?>
 
     <?= $this->ClientHome->orgSurveyPurchasedRow([
+        'communityId' => $community['id'],
         'description' => $step2SurveyPurchased[0],
+        'optedOut' => in_array(\App\Model\Table\ProductsTable::ORGANIZATIONS_SURVEY, $optOuts),
         'purchased' => $step2SurveyPurchased[1],
         'purchaseUrl' => $purchaseUrls[3]
     ]) ?>
