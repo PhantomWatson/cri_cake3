@@ -308,30 +308,37 @@ class SurveyProcessingComponent extends Component
         $seCount = count($this->successEmails);
         if ($seCount) {
             $list = $this->arrayToList($this->successEmails);
-            $msg = 'Questionnaire ' . __n('invitation', 'invitations', $seCount) . ' sent to ' . $list;
+            $msg = 'Questionnaire ' .
+                __n('invitation', 'invitations', $seCount) .
+                " sent to $list";
             $this->Flash->success($msg);
         }
 
         $reCount = count($this->redundantEmails);
         if ($reCount) {
             $list = $this->arrayToList($this->redundantEmails);
-            $msg = $list . __n(' has', ' have', $reCount) . ' already received a questionnaire invitation';
+            $msg = $list .
+                __n(' has', ' have', $reCount) .
+                ' already received a questionnaire invitation';
             $this->Flash->set($msg);
         }
 
         $eeCount = count($this->errorEmails);
         if ($eeCount) {
             $list = $this->arrayToList($this->errorEmails);
-            $msg = "There was an error inviting $list.";
-            $msg .= ' Please try again or contact an administrator if you need assistance.';
+            $msg = "There was an error inviting $list." .
+                ' Please try again or contact an administrator if you need assistance.';
             $this->Flash->error($msg);
         }
 
         $rieCount = count($this->uninvApprovedEmails);
         if ($rieCount) {
             $list = $this->arrayToList($this->uninvApprovedEmails);
-            $msg = 'The uninvited ' . __n('response', 'responses', $rieCount);
-            $msg .= ' received from ' . $list . __n(' has', ' have', $rieCount) . ' been approved';
+            $msg = 'The uninvited ' .
+                __n('response', 'responses', $rieCount) .
+                " received from $list " .
+                __n('has', 'have', $rieCount) .
+                ' been approved';
             $this->Flash->success($msg);
         }
     }
