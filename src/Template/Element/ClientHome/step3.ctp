@@ -61,7 +61,9 @@
     <?php endif; ?>
 
     <?= $this->ClientHome->policyDevPurchasedRow([
+        'communityId' => $community['id'],
         'description' => $step3PolicyDevPurchased[0],
+        'optedOut' => in_array(\App\Model\Table\ProductsTable::POLICY_DEVELOPMENT, $optOuts),
         'purchased' => $step3PolicyDevPurchased[1],
         'purchaseUrl' => $purchaseUrls[5]
     ]) ?>

@@ -559,12 +559,20 @@ class CommunitiesTable extends Table
         }
 
         $product = $productsTable->get(5);
-        $description = 'Purchased ' . $product->description . ' ($' . number_format($product->price) . ')';
-        $description = str_replace('PWRRR', 'PWR<sup>3</sup>', $description);
-        $criteria[3]['policy_dev_purchased'] = [
-            $description,
-            $productsTable->isPurchased($communityId, 5)
-        ];
+        $productDescription = $product->description . ' ($' . number_format($product->price) . ')';
+        $productDescription = str_replace('PWRRR', 'PWR<sup>3</sup>', $productDescription);
+        $optedOut = in_array($productsTable::POLICY_DEVELOPMENT, $optOuts);
+        if ($optedOut) {
+            $criteria[3]['policy_dev_purchased'] = [
+                "Opted out of purchasing $productDescription",
+                true
+            ];
+        } else {
+            $criteria[3]['policy_dev_purchased'] = [
+                "Purchased $productDescription",
+                $productsTable->isPurchased($communityId, 5)
+            ];
+        }
 
         return $criteria;
     }

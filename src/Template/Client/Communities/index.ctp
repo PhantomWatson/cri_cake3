@@ -13,7 +13,9 @@
             <?= $this->element('ClientHome/step2') ?>
             <?php if (! in_array(\App\Model\Table\ProductsTable::ORGANIZATIONS_SURVEY, $optOuts)): ?>
                 <?= $this->element('ClientHome/step3') ?>
-                <?= $this->element('ClientHome/step4') ?>
+                <?php if (! in_array(\App\Model\Table\ProductsTable::POLICY_DEVELOPMENT, $optOuts)): ?>
+                    <?= $this->element('ClientHome/step4') ?>
+                <?php endif; ?>
             <?php endif; ?>
         <?php endif; ?>
     </table>
