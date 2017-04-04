@@ -1,3 +1,5 @@
+<?php use App\Model\Table\ProductsTable; ?>
+
 <div class="page-header">
     <h1>
         <?= $titleForLayout ?>
@@ -9,11 +11,11 @@
 <div id="client_home">
     <table>
         <?= $this->element('ClientHome/step1') ?>
-        <?php if (! in_array(\App\Model\Table\ProductsTable::OFFICIALS_SURVEY, $optOuts)): ?>
+        <?php if (! in_array(ProductsTable::OFFICIALS_SURVEY, $optOuts)): ?>
             <?= $this->element('ClientHome/step2') ?>
-            <?php if (! in_array(\App\Model\Table\ProductsTable::ORGANIZATIONS_SURVEY, $optOuts)): ?>
+            <?php if (! in_array(ProductsTable::ORGANIZATIONS_SURVEY, $optOuts)): ?>
                 <?= $this->element('ClientHome/step3') ?>
-                <?php if (! in_array(\App\Model\Table\ProductsTable::POLICY_DEVELOPMENT, $optOuts)): ?>
+                <?php if (! in_array(ProductsTable::POLICY_DEVELOPMENT, $optOuts)): ?>
                     <?= $this->element('ClientHome/step4') ?>
                 <?php endif; ?>
             <?php endif; ?>
