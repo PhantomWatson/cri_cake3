@@ -474,13 +474,14 @@ class ClientHomeHelper extends Helper
     {
         $icon = $this->glyphicon($params['purchased']);
 
-        if ($params['purchased']) {
+        if ($params['purchased'] || $params['optedOut']) {
             $actions = null;
         } else {
             $actions =
                 '<a href="' . $params['purchaseUrl'] . '" class="btn btn-primary">' .
-                'Purchase Now' .
-                '</a>';
+                    'Purchase Now' .
+                '</a>' .
+                $this->optOutLink(ProductsTable::ORGANIZATIONS_SUMMIT, $params['communityId']);
         }
 
         return $this->row($icon, $params['description'], $actions);

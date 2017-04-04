@@ -532,10 +532,19 @@ class CommunitiesTable extends Table
         ];
 
         $product = $productsTable->get(4);
-        $criteria[3]['orgs_summit_purchased'] = [
-            'Purchased optional ' . $product->description . ' ($' . number_format($product->price) . ')',
-            $productsTable->isPurchased($communityId, 4)
-        ];
+        $productDescription = $product->description . ' ($' . number_format($product->price) . ')';
+        $optedOut = in_array($productsTable::ORGANIZATIONS_SUMMIT, $optOuts);
+        if ($optedOut) {
+            $criteria[3]['orgs_summit_purchased'] = [
+                "Opted out of purchasing optional $productDescription",
+                true
+            ];
+        } else {
+            $criteria[3]['orgs_summit_purchased'] = [
+                "Purchased optional $productDescription",
+                $productsTable->isPurchased($communityId, 4)
+            ];
+        }
 
         foreach (['c', 'd'] as $letter) {
             $date = $community->{"presentation_$letter"};

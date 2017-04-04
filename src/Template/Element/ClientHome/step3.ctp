@@ -46,13 +46,16 @@
 
     <?= $this->ClientHome->presentationCompletedRow('C', $community->presentation_c) ?>
 
+    <?php $optedOut = in_array(\App\Model\Table\ProductsTable::ORGANIZATIONS_SUMMIT, $optOuts); ?>
     <?= $this->ClientHome->orgsSummitRow([
+        'communityId' => $community['id'],
         'description' => $criteria[3]['orgs_summit_purchased'][0],
+        'optedOut' => $optedOut,
         'purchased' => $criteria[3]['orgs_summit_purchased'][1],
         'purchaseUrl' => $purchaseUrls[4]
     ]) ?>
 
-    <?php if ($criteria[3]['orgs_summit_purchased'][1]): ?>
+    <?php if (! $optedOut && $criteria[3]['orgs_summit_purchased'][1]): ?>
         <?= $this->ClientHome->presentationScheduledRow('D', $community->presentation_d) ?>
         <?= $this->ClientHome->presentationCompletedRow('D', $community->presentation_d) ?>
     <?php endif; ?>
