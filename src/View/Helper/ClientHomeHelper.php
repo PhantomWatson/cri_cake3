@@ -92,9 +92,7 @@ class ClientHomeHelper extends Helper
     {
         $icon = $this->glyphicon($params['purchased']);
 
-        if ($params['purchased']) {
-            $actions = null;
-        } elseif ($params['optedOut']) {
+        if ($params['purchased'] || $params['optedOut']) {
             $actions = null;
         } else {
             $actions =
@@ -452,9 +450,7 @@ class ClientHomeHelper extends Helper
     {
         $icon = $this->glyphicon($params['purchased']);
 
-        if ($params['purchased']) {
-            $actions = null;
-        } elseif ($params['optedOut']) {
+        if ($params['purchased'] || $params['optedOut']) {
             $actions = null;
         } else {
             $actions =
