@@ -1,7 +1,9 @@
 <?php
 namespace App\View\Helper;
 
+use App\Model\Table\ProductsTable;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\Routing\Router;
 use Cake\View\Helper;
 
 class ClientHomeHelper extends Helper
@@ -92,10 +94,31 @@ class ClientHomeHelper extends Helper
 
         if ($params['purchased']) {
             $actions = null;
+        } elseif ($params['optedOut']) {
+            $actions = null;
         } else {
+            if ($this->getUserRole() == 'admin') {
+                $optOutUrl = Router::url([
+                    'prefix' => 'admin',
+                    'controller' => 'OptOuts',
+                    'action' => 'optOut',
+                    $params['communityId'],
+                    ProductsTable::OFFICIALS_SURVEY
+                ]);
+            } else {
+                $optOutUrl = Router::url([
+                    'prefix' => 'client',
+                    'controller' => 'OptOuts',
+                    'action' => 'optOut',
+                    ProductsTable::OFFICIALS_SURVEY
+                ]);
+            }
             $actions =
                 '<a href="' . $params['purchaseUrl'] . '" class="btn btn-primary">' .
                     'Purchase Now' .
+                '</a>' .
+                '<a href="' . $optOutUrl . '" class="btn btn-default opt-out">' .
+                    'Opt Out' .
                 '</a>';
         }
 

@@ -9,9 +9,11 @@
 <div id="client_home">
     <table>
         <?= $this->element('ClientHome/step1') ?>
-        <?= $this->element('ClientHome/step2') ?>
-        <?= $this->element('ClientHome/step3') ?>
-        <?= $this->element('ClientHome/step4') ?>
+        <?php if (! in_array(\App\Model\Table\ProductsTable::OFFICIALS_SURVEY, $optOuts)): ?>
+            <?= $this->element('ClientHome/step2') ?>
+            <?= $this->element('ClientHome/step3') ?>
+            <?= $this->element('ClientHome/step4') ?>
+        <?php endif; ?>
     </table>
 </div>
 

@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
 /**
@@ -127,5 +128,21 @@ class OptOutsTable extends Table
         ]);
 
         return (bool)$this->save($optOut);
+    }
+
+    /**
+     * Returns an array of all product IDs that this community has opted out of
+     *
+     * @param int $communityId Community ID
+     * @return array
+     */
+    public function getOptOuts($communityId)
+    {
+        $results = $this->find('all')
+            ->select(['product_id'])
+            ->where(['community_id' => $communityId])
+            ->toArray();
+
+        return Hash::extract($results, '{n}.product_id');
     }
 }

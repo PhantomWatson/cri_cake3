@@ -377,6 +377,7 @@ class CommunitiesTable extends Table
         $surveysTable = TableRegistry::get('Surveys');
         $respondentsTable = TableRegistry::get('Respondents');
         $responsesTable = TableRegistry::get('Responses');
+        $optOutsTable = TableRegistry::get('OptOuts');
         $criteria = [];
 
         // Step 1
@@ -386,10 +387,19 @@ class CommunitiesTable extends Table
         ];
 
         $product = $productsTable->get(1);
-        $criteria[1]['survey_purchased'] = [
-            'Purchased ' . $product->description . ' ($' . number_format($product->price) . ')',
-            $productsTable->isPurchased($communityId, 1)
-        ];
+        $optOuts = $optOutsTable->getOptOuts($communityId);
+        $productDescription = $product->description . ' ($' . number_format($product->price) . ')';
+        if (in_array($productsTable::OFFICIALS_SURVEY, $optOuts)) {
+            $criteria[1]['survey_purchased'] = [
+                "Opted out of purchasing $productDescription",
+                true
+            ];
+        } else {
+            $criteria[1]['survey_purchased'] = [
+                "Purchased $productDescription",
+                $productsTable->isPurchased($communityId, 1)
+            ];
+        }
 
         // If survey is not ready, put this at the end of step one
         // Otherwise, at the beginning of step two

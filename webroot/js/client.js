@@ -280,6 +280,7 @@ var clientHome = {
     init: function () {
         this.setupImport();
         this.setupToggledContainers();
+        this.setupConfirmationButtons();
         
         $('.importing_note_toggler').click(function (event) {
             event.preventDefault();
@@ -365,6 +366,15 @@ var clientHome = {
                 details.toggle();
                 button.toggleClass('closed');
             });
+        });
+    },
+    setupConfirmationButtons: function () {
+        $('.opt-out').click(function (event) {
+            var msg = 'Are you sure you want to permanently opt out of this part ' +
+                'of the Community Readiness Initiative?';
+            if (! confirm(msg)) {
+                event.preventDefault();
+            }
         });
     }
 };

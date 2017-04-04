@@ -40,6 +40,7 @@ class ClientHomeComponent extends Component
         $officialSurveyId = $surveysTable->getSurveyId($communityId, 'official');
         $organizationSurveyId = $surveysTable->getSurveyId($communityId, 'organization');
         $criteria = $communitiesTable->getProgress($communityId);
+        $optOutsTable = TableRegistry::get('OptOuts');
         $this->_registry->getController()->set([
             'autoImportFrequency' => $surveysTable->getPerSurveyAutoImportFrequency(),
             'importErrors' => [
@@ -49,6 +50,7 @@ class ClientHomeComponent extends Component
             'officialResponsesChecked' => $surveysTable->getChecked($officialSurveyId),
             'officialUninvitedRespondents' => $respondentsTable->getUninvitedCount($officialSurveyId),
             'organizationResponsesChecked' => $surveysTable->getChecked($organizationSurveyId),
+            'optOuts' => $optOutsTable->getOptOuts($communityId),
             'score' => $community->score,
             'step2SurveyPurchased' => $criteria[2]['survey_purchased'],
             'step3PolicyDevPurchased' => $criteria[3]['policy_dev_purchased'],
