@@ -646,9 +646,12 @@ class CommunitiesController extends AppController
                 ->count();
             $community->$field = $optedOut ? 'opted-out' : isset($community->{'presentation_' . $letter});
         }
+        $productsTable = TableRegistry::get('Products');
         $this->set([
             'community' => $community,
-            'titleForLayout' => $community->name . ' Presentations'
+            'titleForLayout' => $community->name . ' Presentations',
+            'presentations' => $presentations,
+            'products' => $productsTable->find('list')->toArray()
         ]);
     }
 

@@ -6,7 +6,7 @@
 
 <div id="presentations-form">
     <?= $this->Form->create($community) ?>
-    <?php foreach (['a', 'b', 'c', 'd'] as $letter): ?>
+    <?php foreach ($presentations as $productId => $letter): ?>
         <?php
             $class = 'well';
             if ($community->{'presentation_' . $letter . '_scheduled'} == 1) {
@@ -19,7 +19,7 @@
             </h2>
             <?php if ($community->{'presentation_' . $letter . '_scheduled'} === 'opted-out'): ?>
                 <span class="label label-success">
-                    Opted out
+                    Opted out of <?= $products[$productId] ?>
                 </span>
             <?php else: ?>
                 <div class="checkbox">
@@ -27,7 +27,7 @@
                         'presentation_' . $letter . '_scheduled',
                         [
                             0 => 'Not scheduled yet',
-                            'opted-out' => 'Opted out',
+                            'opted-out' => 'Opted out of ' . $products[$productId],
                             1 => 'Scheduled'
                         ]
                     ) ?>
