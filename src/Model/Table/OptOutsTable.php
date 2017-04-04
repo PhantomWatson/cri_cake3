@@ -145,4 +145,23 @@ class OptOutsTable extends Table
 
         return Hash::extract($results, '{n}.product_id');
     }
+
+    /**
+     * Returns true or false, indicating if this community has opted out of purchasing the selected product
+     *
+     * @param int $communityId Community ID
+     * @param int $productId Product ID
+     * @return bool
+     */
+    public function optedOut($communityId, $productId)
+    {
+        $count = $this->find('all')
+            ->where([
+                'community_id' => $communityId,
+                'product_id' => $productId
+            ])
+            ->count();
+
+        return $count > 0;
+    }
 }

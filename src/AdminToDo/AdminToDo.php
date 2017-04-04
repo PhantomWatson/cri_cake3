@@ -18,7 +18,10 @@ use Cake\Routing\Router;
 class AdminToDo
 {
     public $communitiesTable;
+    public $optOutsTable;
     public $productsTable;
+    public $respondentsTable;
+    public $responsesTable;
     public $surveyTable;
 
     /**
@@ -29,6 +32,7 @@ class AdminToDo
     public function __construct()
     {
         $this->communitiesTable = TableRegistry::get('Communities');
+        $this->optOutsTable = TableRegistry::get('OptOuts');
         $this->productsTable = TableRegistry::get('Products');
         $this->respondentsTable = TableRegistry::get('Respondents');
         $this->responsesTable = TableRegistry::get('Responses');
@@ -55,6 +59,13 @@ class AdminToDo
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">assign a client</a>'
+            ];
+        }
+
+        if ($this->optOutsTable->optedOut($communityId, ProductsTable::OFFICIALS_SURVEY)) {
+            return [
+                'class' => 'complete',
+                'msg' => 'Opted out of further participation'
             ];
         }
 
@@ -136,20 +147,29 @@ class AdminToDo
             ];
         }
 
-        if ($this->readyToSchedulePresentation($communityId, 'b')) {
-            $url = $this->getPresentationsUrl($communityId);
+        if (! $this->optOutsTable->optedOut($communityId, ProductsTable::OFFICIALS_SUMMIT)) {
+            if ($this->readyToSchedulePresentation($communityId, 'b')) {
+                $url = $this->getPresentationsUrl($communityId);
 
-            return [
-                'class' => 'ready',
-                'msg' => 'Ready to <a href="' . $url . '">schedule Presentation B</a>'
-            ];
+                return [
+                    'class' => 'ready',
+                    'msg' => 'Ready to <a href="' . $url . '">schedule Presentation B</a>'
+                ];
+            }
+
+            if ($this->waitingToCompletePresentation($communityId, 'b')) {
+                return [
+                    'class' => 'waiting',
+                    'msg' => 'Waiting for Presentation B to complete ' .
+                        '(' . $community->presentation_b->format('F j, Y') . ')'
+                ];
+            }
         }
 
-        if ($this->waitingToCompletePresentation($communityId, 'b')) {
+        if ($this->optOutsTable->optedOut($communityId, ProductsTable::ORGANIZATIONS_SURVEY)) {
             return [
-                'class' => 'waiting',
-                'msg' => 'Waiting for Presentation B to complete ' .
-                    '(' . $community->presentation_b->format('F j, Y') . ')'
+                'class' => 'complete',
+                'msg' => 'Opted out of further participation'
             ];
         }
 
@@ -229,20 +249,29 @@ class AdminToDo
             ];
         }
 
-        if ($this->readyToSchedulePresentation($communityId, 'd')) {
-            $url = $this->getPresentationsUrl($communityId);
+        if (! $this->optOutsTable->optedOut($communityId, ProductsTable::ORGANIZATIONS_SUMMIT)) {
+            if ($this->readyToSchedulePresentation($communityId, 'd')) {
+                $url = $this->getPresentationsUrl($communityId);
 
-            return [
-                'class' => 'ready',
-                'msg' => 'Ready to <a href="' . $url . '">schedule Presentation D</a>'
-            ];
+                return [
+                    'class' => 'ready',
+                    'msg' => 'Ready to <a href="' . $url . '">schedule Presentation D</a>'
+                ];
+            }
+
+            if ($this->waitingToCompletePresentation($communityId, 'd')) {
+                return [
+                    'class' => 'waiting',
+                    'msg' => 'Waiting for Presentation D to complete ' .
+                        '(' . $community->presentation_d->format('F j, Y') . ')'
+                ];
+            }
         }
 
-        if ($this->waitingToCompletePresentation($communityId, 'd')) {
+        if ($this->optOutsTable->optedOut($communityId, ProductsTable::POLICY_DEVELOPMENT)) {
             return [
-                'class' => 'waiting',
-                'msg' => 'Waiting for Presentation D to complete ' .
-                    '(' . $community->presentation_d->format('F j, Y') . ')'
+                'class' => 'complete',
+                'msg' => 'Opted out of further participation'
             ];
         }
 
