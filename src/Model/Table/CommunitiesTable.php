@@ -452,10 +452,19 @@ class CommunitiesTable extends Table
         }
 
         $product = $productsTable->get(2);
-        $criteria[2]['leadership_summit_purchased'] = [
-            'Purchased optional ' . $product->description . ' ($' . number_format($product->price) . ')',
-            $productsTable->isPurchased($communityId, 2)
-        ];
+        $productDescription = $product->description . ' ($' . number_format($product->price) . ')';
+        $optedOut = in_array($productsTable::OFFICIALS_SUMMIT, $optOuts);
+        if ($optedOut) {
+            $criteria[2]['leadership_summit_purchased'] = [
+                "Opted out of purchasing $productDescription",
+                true
+            ];
+        } else {
+            $criteria[2]['leadership_summit_purchased'] = [
+                "Purchased optional $productDescription",
+                $productsTable->isPurchased($communityId, 2)
+            ];
+        }
 
         $community = $this->get($communityId);
         foreach (['a', 'b'] as $letter) {

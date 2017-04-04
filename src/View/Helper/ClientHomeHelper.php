@@ -97,29 +97,11 @@ class ClientHomeHelper extends Helper
         } elseif ($params['optedOut']) {
             $actions = null;
         } else {
-            if ($this->getUserRole() == 'admin') {
-                $optOutUrl = Router::url([
-                    'prefix' => 'admin',
-                    'controller' => 'OptOuts',
-                    'action' => 'optOut',
-                    $params['communityId'],
-                    ProductsTable::OFFICIALS_SURVEY
-                ]);
-            } else {
-                $optOutUrl = Router::url([
-                    'prefix' => 'client',
-                    'controller' => 'OptOuts',
-                    'action' => 'optOut',
-                    ProductsTable::OFFICIALS_SURVEY
-                ]);
-            }
             $actions =
                 '<a href="' . $params['purchaseUrl'] . '" class="btn btn-primary">' .
                     'Purchase Now' .
                 '</a>' .
-                '<a href="' . $optOutUrl . '" class="btn btn-default opt-out">' .
-                    'Opt Out' .
-                '</a>';
+                $this->optOutLink(ProductsTable::OFFICIALS_SURVEY, $params['communityId']);
         }
 
         return $this->row($icon, $params['description'], $actions);
@@ -472,11 +454,14 @@ class ClientHomeHelper extends Helper
 
         if ($params['purchased']) {
             $actions = null;
+        } elseif ($params['optedOut']) {
+            $actions = null;
         } else {
             $actions =
                 '<a href="' . $params['purchaseUrl'] . '" class="btn btn-primary">' .
                     'Purchase Now' .
-                '</a>';
+                '</a>' .
+                $this->optOutLink(ProductsTable::OFFICIALS_SUMMIT, $params['communityId']);
         }
 
         return $this->row($icon, $params['description'], $actions);
@@ -502,5 +487,40 @@ class ClientHomeHelper extends Helper
         }
 
         return $this->row($icon, $params['description'], $actions);
+    }
+
+    /**
+     * Returns a string for a purchase opt-out link
+     *
+     * @param int $productId Product ID
+     * @param null|int $communityId Community ID (if user is an admin)
+     * @return string
+     * @throws InternalErrorException
+     */
+    public function optOutLink($productId, $communityId = null)
+    {
+        if ($this->getUserRole() == 'admin') {
+            if (! $communityId) {
+                throw new InternalErrorException('Cannot create opt-out link. Community ID missing.');
+            }
+            $optOutUrl = Router::url([
+                'prefix' => 'admin',
+                'controller' => 'OptOuts',
+                'action' => 'optOut',
+                $communityId,
+                $productId
+            ]);
+        } else {
+            $optOutUrl = Router::url([
+                'prefix' => 'client',
+                'controller' => 'OptOuts',
+                'action' => 'optOut',
+                $productId
+            ]);
+        }
+        return
+            '<a href="' . $optOutUrl . '" class="btn btn-default opt-out">' .
+                'Opt Out' .
+            '</a>';
     }
 }

@@ -53,13 +53,17 @@
 
     <?= $this->ClientHome->presentationCompletedRow('A', $community->presentation_a) ?>
 
+    <?php $optedOut = in_array(\App\Model\Table\ProductsTable::OFFICIALS_SUMMIT, $optOuts); ?>
+
     <?= $this->ClientHome->leadershipSummitRow([
+        'communityId' => $community['id'],
         'description' => $criteria[2]['leadership_summit_purchased'][0],
+        'optedOut' => $optedOut,
         'purchased' => $criteria[2]['leadership_summit_purchased'][1],
         'purchaseUrl' => $purchaseUrls[2]
     ]) ?>
 
-    <?php if ($criteria[2]['leadership_summit_purchased'][1]): ?>
+    <?php if (! $optedOut && $criteria[2]['leadership_summit_purchased'][1]): ?>
         <?= $this->ClientHome->presentationScheduledRow('B', $community->presentation_b) ?>
         <?= $this->ClientHome->presentationCompletedRow('B', $community->presentation_b) ?>
     <?php endif; ?>
