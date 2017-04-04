@@ -3,6 +3,7 @@ namespace App\Reports;
 
 use App\Model\Entity\Community;
 use App\Model\Entity\Survey;
+use App\Model\Table\ProductsTable;
 use App\View\Helper\ActivityRecordsHelper;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
@@ -285,13 +286,28 @@ class Reports
     private function getPresentationStatuses($community)
     {
         $presentationsGiven = [];
+        $optOutsTable = TableRegistry::get('OptOuts');
+        $productIds = [
+            'a' => ProductsTable::OFFICIALS_SURVEY,
+            'b' => ProductsTable::OFFICIALS_SUMMIT,
+            'c' => ProductsTable::ORGANIZATIONS_SURVEY,
+            'd' => ProductsTable::ORGANIZATIONS_SUMMIT
+        ];
         foreach (['a', 'b', 'c', 'd'] as $letter) {
+            $optedOut = $optOutsTable->optedOut($community->id, $productIds[$letter]);
+
+            if ($optedOut) {
+                $presentationsGiven[$letter] = 'Opted out';
+                continue;
+            }
+
             $date = $community->{'presentation_' . $letter};
             if ($date) {
                 $presentationsGiven[$letter] = $date->format('F j, Y');
-            } else {
-                $presentationsGiven[$letter] = 'Not scheduled';
+                continue;
             }
+
+            $presentationsGiven[$letter] = 'Not scheduled';
         }
 
         return $presentationsGiven;
