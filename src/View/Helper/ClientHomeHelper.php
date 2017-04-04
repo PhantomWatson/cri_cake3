@@ -517,6 +517,7 @@ class ClientHomeHelper extends Helper
                 $productId
             ]);
         }
+
         return
             '<a href="' . $optOutUrl . '" class="btn btn-default opt-out">' .
                 'Opt Out' .
