@@ -464,7 +464,6 @@ var surveyLink = {
         var lookup_link = container.find('button.lookup');
         var lookup_url = '/surveys/get_survey_list';
         var results_container = container.find('.lookup_results');
-        var loadingMessages = $('.loading_messages');
 
         $.ajax({
             url: lookup_url,
@@ -477,7 +476,8 @@ var surveyLink = {
                 data = jQuery.parseJSON(data);
                 results_container.empty();
                 if (data.length === 0) {
-                    results_container.append('<p class="alert alert-danger">Error: No questionnaires found</p>');
+                    results_container.append('<p class="alert alert-info">No questionnaires found</p>');
+                    results_container.slideDown();
                     return;
                 }
                 results_container.append('<p>Please select the correct SurveyMonkey questionnaire:</p>');
