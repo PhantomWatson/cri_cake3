@@ -32,7 +32,7 @@ class SurveysController extends AppController
      * Invite method
      *
      * @param string|null $respondentTypePlural Either 'officials' or 'organizations'
-     * @return \App\Controller\Response
+     * @return \Cake\Http\Response
      * @throws BadRequestException
      */
     public function invite($respondentTypePlural = null)
