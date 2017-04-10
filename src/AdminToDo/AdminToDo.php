@@ -147,7 +147,9 @@ class AdminToDo
             ];
         }
 
-        if (! $this->optOutsTable->optedOut($communityId, ProductsTable::OFFICIALS_SUMMIT)) {
+        $purchased = $this->productsTable->isPurchased($communityId, ProductsTable::OFFICIALS_SUMMIT);
+        $optedOut = $this->optOutsTable->optedOut($communityId, ProductsTable::OFFICIALS_SUMMIT);
+        if ($purchased) {
             if ($this->readyToSchedulePresentation($communityId, 'b')) {
                 $url = $this->getPresentationsUrl($communityId);
 
@@ -164,9 +166,15 @@ class AdminToDo
                         '(' . $community->presentation_b->format('F j, Y') . ')'
                 ];
             }
+        } elseif (! $optedOut) {
+            return [
+                'class' => 'waiting',
+                'msg' => 'Waiting for client to purchase or opt out of Presentation B'
+            ];
         }
 
-        if ($this->optOutsTable->optedOut($communityId, ProductsTable::ORGANIZATIONS_SURVEY)) {
+        $optedOut = $this->optOutsTable->optedOut($communityId, ProductsTable::ORGANIZATIONS_SURVEY);
+        if ($optedOut) {
             return [
                 'class' => 'complete',
                 'msg' => 'Opted out of further participation'
@@ -249,7 +257,9 @@ class AdminToDo
             ];
         }
 
-        if (! $this->optOutsTable->optedOut($communityId, ProductsTable::ORGANIZATIONS_SUMMIT)) {
+        $purchased = $this->productsTable->isPurchased($communityId, ProductsTable::ORGANIZATIONS_SUMMIT);
+        $optedOut = $this->optOutsTable->optedOut($communityId, ProductsTable::ORGANIZATIONS_SUMMIT);
+        if ($purchased) {
             if ($this->readyToSchedulePresentation($communityId, 'd')) {
                 $url = $this->getPresentationsUrl($communityId);
 
@@ -266,6 +276,11 @@ class AdminToDo
                         '(' . $community->presentation_d->format('F j, Y') . ')'
                 ];
             }
+        } elseif (! $optedOut) {
+            return [
+                'class' => 'waiting',
+                'msg' => 'Waiting for client to purchase or opt out of Presentation D'
+            ];
         }
 
         if ($this->optOutsTable->optedOut($communityId, ProductsTable::POLICY_DEVELOPMENT)) {
