@@ -294,10 +294,23 @@ class Reports
             'd' => ProductsTable::ORGANIZATIONS_SUMMIT
         ];
         foreach (['a', 'b', 'c', 'd'] as $letter) {
+            if (isset($presentationsGiven[$letter])) {
+                continue;
+            }
+
             $optedOut = $optOutsTable->optedOut($community->id, $productIds[$letter]);
 
             if ($optedOut) {
                 $presentationsGiven[$letter] = 'Opted out';
+
+                // If a community opts out of a survey, its optional presentation becomes irrelevant
+                if ($letter == 'a') {
+                    $presentationsGiven['b'] = 'N/A';
+                }
+                if ($letter == 'c') {
+                    $presentationsGiven['d'] = 'N/A';
+                }
+
                 continue;
             }
 
