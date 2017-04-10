@@ -404,17 +404,21 @@ class CommunitiesTable extends Table
         // If survey is not ready, put this at the end of step one
         // Otherwise, at the beginning of step two
         $surveyId = $surveysTable->getSurveyId($communityId, 'official');
-        if ($surveyId) {
+        $isActive = $surveyId ? $surveysTable->isActive($surveyId) : false;
+        $isComplete = $surveyId ? $surveysTable->isComplete($surveyId) : false;
+        if ($surveyId && ($isActive || $isComplete)) {
             $survey = $surveysTable->get($surveyId);
             $note = '<br />Questionnaire URL: <a href="' . $survey->sm_url . '">' . $survey->sm_url . '</a>';
+            $completed = true;
         } else {
             $survey = null;
             $note = '';
+            $completed = false;
         }
         $step = $surveyId ? 2 : 1;
         $criteria[$step]['survey_created'] = [
             'Leadership alignment assessment questionnaire has been prepared' . $note,
-            (bool)$surveyId
+            $completed
         ];
 
         // Step 2
