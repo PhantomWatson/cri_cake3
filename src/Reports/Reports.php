@@ -410,14 +410,25 @@ class Reports
      */
     private function getStatus($community, $surveyKey)
     {
+        $optOutsTable = TableRegistry::get('OptOuts');
+        $productId = ($surveyKey == 'official_survey')
+            ? ProductsTable::OFFICIALS_SURVEY
+            : ProductsTable::ORGANIZATIONS_SURVEY;
+        $optedOut = $optOutsTable->optedOut($community->id, $productId);
+        if ($optedOut) {
+            return 'Opted out';
+        }
+
         $correspondingStep = ($surveyKey == 'official_survey') ? 2 : 3;
         if ($community->score < $correspondingStep) {
             return 'Not started yet';
-        } elseif ($community->score < ($correspondingStep + 1)) {
-            return 'In progress';
-        } else {
-            return 'Complete';
         }
+
+        if ($community->score < ($correspondingStep + 1)) {
+            return 'In progress';
+        }
+
+        return 'Complete';
     }
 
     /**
