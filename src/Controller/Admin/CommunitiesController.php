@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\AdminToDo\AdminToDo;
 use App\Controller\AppController;
 use App\Mailer\Mailer;
+use App\Model\Entity\Community;
 use App\Model\Table\ProductsTable;
 use Cake\Event\Event;
 use Cake\Network\Exception\MethodNotAllowedException;
@@ -16,7 +17,8 @@ class CommunitiesController extends AppController
 {
 
     public $paginate = [
-        'order' => ['Communities.name' => 'ASC']
+        'order' => ['Communities.name' => 'ASC'],
+        'contain' => ['OptOuts']
     ];
     public $filters = [];
 
@@ -167,11 +169,72 @@ class CommunitiesController extends AppController
         $this->cookieSort('AdminCommunityIndex');
         $this->paginate['finder'] = 'adminIndex';
         $this->paginate['sortWhitelist'] = ['Communities.name', 'ParentAreas.name'];
+        $communities = $this->paginate()->toArray();
+        $communities = $this->addSurveyStatuses($communities);
+
         $this->adminIndexSetupFilterButtons();
         $this->set([
-            'communities' => $this->paginate()->toArray(),
+            'communities' => $communities,
             'titleForLayout' => 'Indiana Communities'
         ]);
+    }
+
+    /**
+     * Adds the field $community[$surveyType]['status'] to each community in the provided array
+     *
+     * @param array $communities Array of Community entities
+     * @return array
+     */
+    private function addSurveyStatuses($communities)
+    {
+        foreach ($communities as &$community) {
+            foreach (['official_survey', 'organization_survey'] as $surveyType) {
+                if (! isset($community[$surveyType])) {
+                    $community[$surveyType] = [];
+                }
+                $community[$surveyType]['status'] = $this->getSurveyStatus($community, $surveyType);
+            }
+        }
+
+        return $communities;
+    }
+
+    /**
+     * Adds the field $community[$surveyType]['status']
+     *
+     * @param Community $community Community entity
+     * @param string $surveyType 'official_survey' or 'organization_survey'
+     * @return string
+     */
+    private function getSurveyStatus($community, $surveyType)
+    {
+        if ($community['opt_outs']) {
+            foreach ($community['opt_outs'] as $optOut) {
+                $relevantProductId = $surveyType == 'official_survey'
+                    ? ProductsTable::OFFICIALS_SURVEY
+                    : ProductsTable::ORGANIZATIONS_SURVEY;
+                if ($optOut['product_id'] == $relevantProductId) {
+                    return 'Opted out';
+                }
+            }
+        }
+
+        if (! isset($community[$surveyType]['sm_id'])) {
+            return 'Not set up';
+        }
+
+        $currentStep = floor($community['score']);
+        $stepForSurvey = $surveyType == 'official_survey' ? 2 : 3;
+        $active = $community[$surveyType]['active'];
+        if ($currentStep == $stepForSurvey) {
+            return $active ? 'In progress' : 'Being finalized';
+        }
+
+        if ($currentStep < $stepForSurvey) {
+            return $active ? 'Activated early' : 'Ready';
+        }
+
+        return $active ? 'Ready to deactivate' : 'Complete';
     }
 
     /**

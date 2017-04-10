@@ -126,22 +126,10 @@
                     <?php foreach (['official_survey', 'organization_survey'] as $surveyType): ?>
                         <td>
                             <div class="dropdown">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <?= $community[$surveyType]['status'] ?> <span class="caret"></span>
+                                </button>
                                 <?php if (isset($community->{$surveyType}['sm_id']) && $community->{$surveyType}['sm_id']): ?>
-                                    <?php
-                                        $currentStep = floor($community->score);
-                                        $stepForSurvey = $surveyType == 'official_survey' ? 2 : 3;
-                                        $active = $community->{$surveyType}['active'];
-                                        if ($currentStep == $stepForSurvey) {
-                                            $label = $active ? 'In progress' : 'Being finalized';
-                                        } elseif ($currentStep < $stepForSurvey) {
-                                            $label = $active ? 'Activated early' : 'Ready';
-                                        } else {
-                                            $label = $active ? 'Ready to deactivate' : 'Complete';
-                                        }
-                                    ?>
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                        <?= $label ?> <span class="caret"></span>
-                                    </button>
                                     <ul class="dropdown-menu" role="menu">
                                         <li class="dropdown-header">
                                             <?php
@@ -202,9 +190,9 @@
                                             <?php
                                                 $label =
                                                     '<span class="glyphicon glyphicon-' .
-                                                    ($active ? 'remove-circle' : 'ok-circle') .
+                                                    ($community->{$surveyType}['active'] ? 'remove-circle' : 'ok-circle') .
                                                     '" aria-hidden="true"></span> ' .
-                                                    ($active ? 'Deactivate' : 'Activate');
+                                                    ($community->{$surveyType}['active'] ? 'Deactivate' : 'Activate');
                                                 echo $this->Html->link(
                                                     $label,
                                                     [
@@ -269,9 +257,6 @@
                                         </li>
                                     </ul>
                                 <?php else: ?>
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                        Not set up <span class="caret"></span>
-                                    </button>
                                     <ul class="dropdown-menu" role="menu">
                                         <li>
                                             <?= $this->Html->link(
