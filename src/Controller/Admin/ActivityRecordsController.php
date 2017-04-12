@@ -35,7 +35,7 @@ class ActivityRecordsController extends AppController
             'contain' => ['Users', 'Communities', 'Surveys'],
             'order' => ['created' => 'DESC']
         ];
-        if (! $this->request->query('show-dummy')) {
+        if (! $this->request->getQuery('show-dummy')) {
             $this->paginate['conditions'] = ['dummy' => 0];
         }
 
