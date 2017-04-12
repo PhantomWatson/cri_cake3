@@ -131,6 +131,9 @@ class CommunitiesTable extends Table
             ])
             ->requirePresence('intAlignmentThreshold', 'create');
 
+        $validator
+            ->add('active', 'valid', ['rule' => 'boolean']);
+
         return $validator;
     }
 
@@ -663,7 +666,8 @@ class CommunitiesTable extends Table
                 'Communities.id',
                 'Communities.name',
                 'Communities.score',
-                'Communities.created'
+                'Communities.created',
+                'Communities.active'
             ]);
 
         return $query;

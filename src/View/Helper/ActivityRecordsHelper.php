@@ -24,6 +24,8 @@ class ActivityRecordsHelper extends Helper
                     'afterDelete' => 'Community deleted',
                     'afterScoreDecrease' => 'Community demoted',
                     'afterScoreIncrease' => 'Community promoted',
+                    'afterActivate' => 'Community reactivated',
+                    'afterDeactivate' => 'Community marked inactive'
                 ],
                 'Product' => [
                     'afterPurchase' => 'Product purchased'

@@ -790,4 +790,43 @@ class CommunitiesController extends AppController
             'titleForLayout' => 'Admin To-Do'
         ]);
     }
+
+    public function activate($communityId)
+    {
+        $community = $this->Communities->get($communityId);
+        $currentlyActive = $community->active;
+        if ($this->request->is('put')) {
+            $community = $this->Communities->patchEntity($community, $this->request->getData());
+            if ($community->errors()) {
+                $msg = 'There was an error updating the selected community';
+                $this->Flash->error($msg);
+            } elseif ($this->Communities->save($community)) {
+                $currentlyActive = $this->request->getData('active');
+                $msg = 'Questionnaire ' . ($currentlyActive ? 'activated' : 'deactivated');
+                $this->Flash->success($msg);
+
+                // Event
+                $eventName = 'Model.Community.after' . ($currentlyActive ? 'Activate' : 'Deactivate');
+                $event = new Event($eventName, $this, ['meta' => [
+                    'communityId' => $communityId
+                ]]);
+                $this->eventManager()->dispatch($event);
+            } else {
+                $msg = 'There was an error updating the selected community';
+                $this->Flash->error($msg);
+            }
+        }
+
+        if ($currentlyActive) {
+            $title = 'Mark ' . $community->name . ' inactive';
+        } else {
+            $title = 'Reactivate ' . $community->name;
+        }
+
+        $this->set([
+            'community' => $community,
+            'currentlyActive' => $currentlyActive,
+            'titleForLayout' => $title
+        ]);
+    }
 }

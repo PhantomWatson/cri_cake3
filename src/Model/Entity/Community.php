@@ -33,7 +33,8 @@ class Community extends Entity
         'presentation_b' => true,
         'presentation_c' => true,
         'presentation_d' => true,
-        'notes' => true
+        'notes' => true,
+        'active' => true
     ];
 
     /**

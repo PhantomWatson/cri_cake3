@@ -105,6 +105,25 @@
             ) ?>
         </li>
         <li>
+            <?php
+            $label =
+                '<span class="glyphicon glyphicon-' .
+                ($community['active'] ? 'remove-circle' : 'ok-circle') .
+                '" aria-hidden="true"></span> ' .
+                ($community['active'] ? 'Deactivate' : 'Reactivate');
+            echo $this->Html->link(
+                $label,
+                [
+                    'prefix' => 'admin',
+                    'controller' => 'Communities',
+                    'action' => 'activate',
+                    $community['id']
+                ],
+                ['escape' => false]
+            );
+            ?>
+        </li>
+        <li>
             <?= $this->Html->link(
                 '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> ' .
                 'Edit Community',
