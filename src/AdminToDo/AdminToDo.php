@@ -65,7 +65,8 @@ class AdminToDo
         if ($this->optOutsTable->optedOut($communityId, ProductsTable::OFFICIALS_SURVEY)) {
             return [
                 'class' => 'complete',
-                'msg' => 'Opted out of further participation'
+                'msg' => 'Opted out of further participation',
+                'done' => true
             ];
         }
 
@@ -177,7 +178,8 @@ class AdminToDo
         if ($optedOut) {
             return [
                 'class' => 'complete',
-                'msg' => 'Opted out of further participation'
+                'msg' => 'Opted out of further participation',
+                'done' => true
             ];
         }
 
@@ -286,7 +288,8 @@ class AdminToDo
         if ($this->optOutsTable->optedOut($communityId, ProductsTable::POLICY_DEVELOPMENT)) {
             return [
                 'class' => 'complete',
-                'msg' => 'Opted out of further participation'
+                'msg' => 'Opted out of further participation',
+                'done' => true
             ];
         }
 
@@ -311,7 +314,8 @@ class AdminToDo
 
         return [
             'class' => 'complete',
-            'msg' => 'Complete'
+            'msg' => 'Complete',
+            'done' => true
         ];
     }
 

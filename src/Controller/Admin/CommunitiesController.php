@@ -773,10 +773,16 @@ class CommunitiesController extends AppController
         $communities = $this->Communities->find('all')
             ->select(['id', 'name'])
             ->where(['dummy' => false])
-            ->order(['name' => 'ASC']);
+            ->order(['name' => 'ASC'])
+            ->toArray();
         $AdminToDo = new AdminToDo();
-        foreach ($communities as $community) {
-            $community->toDo = $AdminToDo->getToDo($community->id);
+        foreach ($communities as $key => $community) {
+            $community['toDo'] = $AdminToDo->getToDo($community['id']);
+
+            // Exclude any communities that are done participating in CRI
+            if (isset($community['toDo']['done'])) {
+                unset($communities[$key]);
+            }
         }
 
         $this->set([
