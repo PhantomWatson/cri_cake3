@@ -2,8 +2,10 @@
 namespace App\AdminToDo;
 
 use App\Model\Table\ProductsTable;
+use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use NumberFormatter;
 
 /**
  * Handles the logic for the Admin To-Do page
@@ -70,12 +72,14 @@ class AdminToDo
             ];
         }
 
+        $community = $this->communitiesTable->get($communityId);
         if ($this->waitingForOfficialsSurveyPurchase($communityId)) {
             $product = $this->productsTable->get(ProductsTable::OFFICIALS_SURVEY);
 
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for client to purchase ' . $product->description
+                'msg' => 'Waiting for client to purchase ' . $product->description,
+                'since' => $this->getWaitingPeriod($community->created)
             ];
         }
 
@@ -108,17 +112,30 @@ class AdminToDo
             ];
         }
 
+        $officialsSurvey = $this->surveysTable->get($officialsSurveyId);
+        $activityRecordsTable = TableRegistry::get('ActivityRecords');
+
         if ($this->waitingForSurveyInvitations($officialsSurveyId)) {
+            $activationDate = $activityRecordsTable->getSurveyActivationDate($officialsSurveyId);
+            $since = $activationDate ?: $officialsSurvey->created;
+
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for client to send officials questionnaire invitations'
+                'msg' => 'Waiting for client to send officials questionnaire invitations',
+                'since' => $this->getWaitingPeriod($since)
             ];
         }
 
+        $respondentsTable = TableRegistry::get('Respondents');
+
         if ($this->waitingForSurveyResponses($officialsSurveyId)) {
+            $invitationDate = $respondentsTable->getFirstInvitationDate($officialsSurveyId);
+            $since = $invitationDate ?: $officialsSurvey->created;
+
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for responses to officials questionnaire'
+                'msg' => 'Waiting for responses to officials questionnaire',
+                'since' => $this->getWaitingPeriod($since)
             ];
         }
 
@@ -137,8 +154,6 @@ class AdminToDo
                 'msg' => 'Ready to <a href="' . $url . '">schedule Presentation A</a>'
             ];
         }
-
-        $community = $this->communitiesTable->get($communityId);
 
         if ($this->waitingToCompletePresentation($communityId, 'a')) {
             return [
@@ -170,7 +185,8 @@ class AdminToDo
         } elseif (! $optedOut) {
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for client to purchase or opt out of Presentation B'
+                'msg' => 'Waiting for client to purchase or opt out of Presentation B',
+                'since' => $this->getWaitingPeriod($community->presentation_a)
             ];
         }
 
@@ -185,10 +201,12 @@ class AdminToDo
 
         if ($this->waitingForOrganizationsSurveyPurchase($communityId)) {
             $product = $this->productsTable->get(ProductsTable::ORGANIZATIONS_SURVEY);
+            $mostRecentPresentation = $community->presentation_b ?: $community->presentation_a;
 
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for client to purchase ' . $product->description
+                'msg' => 'Waiting for client to purchase or opt out of ' . $product->description,
+                'since' => $this->getWaitingPeriod($mostRecentPresentation)
             ];
         }
 
@@ -221,17 +239,27 @@ class AdminToDo
             ];
         }
 
+        $organizationsSurvey = $this->surveysTable->get($organizationsSurveyId);
+
         if ($this->waitingForSurveyInvitations($organizationsSurveyId)) {
+            $activationDate = $activityRecordsTable->getSurveyActivationDate($organizationsSurveyId);
+            $since = $activationDate ?: $organizationsSurvey->created;
+
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for client to send organizations questionnaire invitations'
+                'msg' => 'Waiting for client to send organizations questionnaire invitations',
+                'since' => $this->getWaitingPeriod($since)
             ];
         }
 
         if ($this->waitingForSurveyResponses($organizationsSurveyId)) {
+            $invitationDate = $respondentsTable->getFirstInvitationDate($organizationsSurveyId);
+            $since = $invitationDate ?: $organizationsSurvey->created;
+
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for responses to organizations questionnaire'
+                'msg' => 'Waiting for responses to organizations questionnaire',
+                'since' => $since
             ];
         }
 
@@ -267,7 +295,8 @@ class AdminToDo
 
                 return [
                     'class' => 'ready',
-                    'msg' => 'Ready to <a href="' . $url . '">schedule Presentation D</a>'
+                    'msg' => 'Ready to <a href="' . $url . '">schedule Presentation D</a>',
+                    'since' => $this->getWaitingPeriod($community->presentation_c)
                 ];
             }
 
@@ -281,7 +310,8 @@ class AdminToDo
         } elseif (! $optedOut) {
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for client to purchase or opt out of Presentation D'
+                'msg' => 'Waiting for client to purchase or opt out of Presentation D',
+                'since' => $this->getWaitingPeriod($organizationsSurvey->presentation_c)
             ];
         }
 
@@ -297,9 +327,12 @@ class AdminToDo
         $policyDevProductName = str_replace('PWRRR', 'PWR<sup>3</sup>', $policyDev->description);
 
         if ($this->waitingForPolicyDevPurchase($communityId)) {
+            $mostRecentPresentation = $community->presentation_d ?: $community->presentation_c;
+
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for client to purchase ' . $policyDevProductName
+                'msg' => 'Waiting for client to purchase ' . $policyDevProductName,
+                'since' => $this->getWaitingPeriod($mostRecentPresentation)
             ];
         }
 
@@ -626,5 +659,71 @@ class AdminToDo
         $today = date('Y-m-d');
 
         return $presentationDate && $presentationDate->format('Y-m-d') > $today;
+    }
+
+    /**
+     * Returns a string like "more than a year", "five months", "12 days", or "less than a minute", depending
+     * on how much time has passed since $time
+     *
+     * @param Time $time Time object
+     * @return string
+     */
+    private function getWaitingPeriod($time)
+    {
+        $now = time();
+        $waitingSince = $time->toUnixString();
+        $waitingFor = $now - $waitingSince;
+
+        $minute = 60;
+        $hour = $minute * 60;
+        $day = $hour * 24;
+        $week = $day * 7;
+        $month = $day * 30;
+        $year = $day * 365;
+
+        $formatWaitingPeriod = function ($count, $singular, $plural) {
+            $f = new NumberFormatter('en', NumberFormatter::SPELLOUT);
+            if ($count >= 10) {
+                return "$count $plural";
+            }
+
+            return $f->format($count) . ' ' . __n($singular, $plural, $count);
+        };
+
+        if ($waitingFor > $year) {
+            return 'more than a year';
+        }
+
+        if ($waitingFor >= $month) {
+            $months = floor($waitingFor / $month);
+
+            return $formatWaitingPeriod($months, 'month', 'months');
+        }
+
+        if ($waitingFor >= $week) {
+            $weeks = floor($waitingFor / $week);
+
+            return $formatWaitingPeriod($weeks, 'week', 'weeks');
+        }
+
+        if ($waitingFor >= $day) {
+            $days = floor($waitingFor / $day);
+
+            return $formatWaitingPeriod($days, 'day', 'days');
+        }
+
+        if ($waitingFor >= $hour) {
+            $hours = floor($waitingFor / $hour);
+
+            return $formatWaitingPeriod($hours, 'hour', 'hours');
+        }
+
+        if ($waitingFor >= $minute) {
+            $hours = floor($waitingFor / $hour);
+
+            return $formatWaitingPeriod($hours, 'hour', 'hours');
+        }
+
+        return 'less than a minute';
     }
 }

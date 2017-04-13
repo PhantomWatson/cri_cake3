@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\I18n\Time;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -144,5 +145,25 @@ class ActivityRecordsTable extends Table
             }
             throw new InternalErrorException($msg);
         }
+    }
+
+    /**
+     * Returns the first date of this survey getting activated, or NULL if no record is found
+     *
+     * @param int $surveyId Survey ID
+     * @return Time|null
+     */
+    public function getSurveyActivationDate($surveyId)
+    {
+        $result = $this->find('all')
+            ->select(['created'])
+            ->where([
+                'survey_id' => $surveyId,
+                'event' => 'Model.Survey.afterActivate'
+            ])
+            ->order(['created' => 'ASC'])
+            ->first();
+
+        return $result ? $result->created : null;
     }
 }

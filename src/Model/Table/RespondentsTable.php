@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Respondent;
+use Cake\I18n\Time;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -392,5 +393,25 @@ class RespondentsTable extends Table
         }
 
         return $query->toArray();
+    }
+
+    /**
+     * Returns the earliest date of an invitation sent for the specified survey
+     *
+     * @param int $surveyId Survey ID
+     * @return Time|null
+     */
+    public function getFirstInvitationDate($surveyId)
+    {
+        $result = $this->find('all')
+            ->select(['created'])
+            ->where([
+                'survey_id' => $surveyId,
+                'invited' => 1
+            ])
+            ->order(['created' => 'ASC'])
+            ->first();
+
+        return $result ? $result['created'] : null;
     }
 }

@@ -23,6 +23,9 @@
                 </td>
                 <td class="<?= $community->toDo['class'] ?>">
                     <?= $community->toDo['msg'] ?>
+                    <?php if (isset($community->toDo['since'])): ?>
+                        for <?= $community->toDo['since'] ?>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
