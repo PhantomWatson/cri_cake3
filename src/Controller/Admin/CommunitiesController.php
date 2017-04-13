@@ -793,7 +793,7 @@ class CommunitiesController extends AppController
                 $this->Flash->error($msg);
             } elseif ($this->Communities->save($community)) {
                 $currentlyActive = $this->request->getData('active');
-                $msg = 'Questionnaire ' . ($currentlyActive ? 'activated' : 'deactivated');
+                $msg = 'Community ' . ($currentlyActive ? 'reactivated' : 'marked inactive');
                 $this->Flash->success($msg);
 
                 // Event
