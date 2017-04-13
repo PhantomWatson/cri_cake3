@@ -776,6 +776,12 @@ class CommunitiesController extends AppController
         ]);
     }
 
+    /**
+     * Method for /admin/communities/activate
+     *
+     * @param int $communityId Community ID
+     * @return void
+     */
     public function activate($communityId)
     {
         $community = $this->Communities->get($communityId);
