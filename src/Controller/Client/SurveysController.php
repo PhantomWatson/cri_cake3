@@ -61,13 +61,13 @@ class SurveysController extends AppController
 
         $userId = $this->Auth->user('id');
         if ($this->request->is('post')) {
-            $submitMode = $this->request->data('submit_mode');
+            $submitMode = $this->request->getData('submit_mode');
             if (stripos($submitMode, 'send') !== false) {
                 $this->SurveyProcessing->sendInvitations($communityId, $respondentType, $surveyId);
                 $this->SurveyProcessing->clearSavedInvitations($surveyId, $userId);
             } elseif (stripos($submitMode, 'save') !== false) {
                 list($saveResult, $msg) = $this->SurveyProcessing->saveInvitations(
-                    $this->request->data('invitees'),
+                    $this->request->getData('invitees'),
                     $surveyId,
                     $userId
                 );

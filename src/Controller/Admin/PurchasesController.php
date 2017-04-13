@@ -144,7 +144,7 @@ class PurchasesController extends AppController
             $this->request->data['admin_added'] = true;
             $this->request->data['user_id'] = $this->Auth->user('id');
             $this->request->data['postback'] = '';
-            $purchase = $this->Purchases->patchEntity($purchase, $this->request->data());
+            $purchase = $this->Purchases->patchEntity($purchase, $this->request->getData());
             $errors = $purchase->errors();
             if (empty($errors) && $this->Purchases->save($purchase)) {
                 $this->Flash->success('Purchase record added');

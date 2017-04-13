@@ -100,7 +100,7 @@ class SurveysController extends AppController
         }
 
         if ($this->request->is(['post', 'put'])) {
-            $survey = $this->Surveys->patchEntity($survey, $this->request->data());
+            $survey = $this->Surveys->patchEntity($survey, $this->request->getData());
             $errors = $survey->errors();
             $isNew = $survey->isNew();
             if (empty($errors) && $this->Surveys->save($survey)) {
@@ -232,13 +232,13 @@ class SurveysController extends AppController
         $userId = $this->Auth->user('id');
 
         if ($this->request->is('post')) {
-            $submitMode = $this->request->data('submit_mode');
+            $submitMode = $this->request->getData('submit_mode');
             if (stripos($submitMode, 'send') !== false) {
                 $this->SurveyProcessing->sendInvitations($communityId, $respondentType, $surveyId);
                 $this->SurveyProcessing->clearSavedInvitations($surveyId, $userId);
             } elseif (stripos($submitMode, 'save') !== false) {
                 list($saveResult, $msg) = $this->SurveyProcessing->saveInvitations(
-                    $this->request->data('invitees'),
+                    $this->request->getData('invitees'),
                     $surveyId,
                     $userId
                 );
@@ -363,11 +363,11 @@ class SurveysController extends AppController
         $community = $communitiesTable->get($survey->community_id);
         $warning = null;
         if ($this->request->is('put')) {
-            $survey = $this->Surveys->patchEntity($survey, $this->request->data());
+            $survey = $this->Surveys->patchEntity($survey, $this->request->getData());
             if ($survey->errors()) {
                 $this->Flash->error('There was an error updating the selected questionnaire');
             } elseif ($this->Surveys->save($survey)) {
-                $currentlyActive = $this->request->data('active');
+                $currentlyActive = $this->request->getData('active');
                 $msg = 'Questionnaire ' . ($currentlyActive ? 'activated' : 'deactivated');
                 $this->Flash->success($msg);
 
@@ -423,7 +423,7 @@ class SurveysController extends AppController
     public function resendInvitations()
     {
         if ($this->request->is('post')) {
-            $surveyId = $this->request->data('surveyId');
+            $surveyId = $this->request->getData('surveyId');
             $survey = $this->Surveys->get($surveyId);
             $communitiesTable = TableRegistry::get('Communities');
             $community = $communitiesTable->get($survey->community_id);
@@ -432,9 +432,9 @@ class SurveysController extends AppController
                 ->where(['survey_id' => $surveyId])
                 ->toArray();
             $usersTable = TableRegistry::get('Users');
-            $user = $usersTable->get($this->request->data('userId'));
+            $user = $usersTable->get($this->request->getData('userId'));
 
-            if ($this->request->data('confirmed')) {
+            if ($this->request->getData('confirmed')) {
                 $step = 'results';
                 $Mailer = new Mailer();
                 $result = $Mailer->sendInvitations([

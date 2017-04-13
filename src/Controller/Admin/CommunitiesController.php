@@ -232,7 +232,7 @@ class CommunitiesController extends AppController
         $community = $this->Communities->newEntity();
 
         if ($this->request->is('post')) {
-            $community = $this->Communities->patchEntity($community, $this->request->data(), [
+            $community = $this->Communities->patchEntity($community, $this->request->getData(), [
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
 
@@ -305,7 +305,7 @@ class CommunitiesController extends AppController
         if ($this->request->is('post') || $this->request->is('put')) {
             $this->request->data['id'] = $communityId;
 
-            $community = $this->Communities->patchEntity($community, $this->request->data(), [
+            $community = $this->Communities->patchEntity($community, $this->request->getData(), [
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
             $areaUpdated = $community->dirty('local_area_id') || $community->dirty('parent_area_id');
@@ -419,7 +419,7 @@ class CommunitiesController extends AppController
         $previousScore = $community->score;
 
         if ($this->request->is('put')) {
-            $community = $this->Communities->patchEntity($community, $this->request->data(), [
+            $community = $this->Communities->patchEntity($community, $this->request->getData(), [
                 'fieldList' => ['score']
             ]);
             if ($community->dirty('score')) {
@@ -478,16 +478,16 @@ class CommunitiesController extends AppController
         $usersTable = TableRegistry::get('Users');
 
         if ($this->request->is('post')) {
-            $client = $usersTable->newEntity($this->request->data());
+            $client = $usersTable->newEntity($this->request->getData());
             $client->role = 'client';
             $client->client_communities = [$this->Communities->get($communityId)];
-            $client->password = $this->request->data('unhashed_password');
+            $client->password = $this->request->getData('unhashed_password');
             $errors = $client->errors();
             if (empty($errors) && $usersTable->save($client)) {
                 $Mailer = new Mailer();
                 $result = $Mailer->sendNewAccountEmail(
                     $client,
-                    $this->request->data('unhashed_password')
+                    $this->request->getData('unhashed_password')
                 );
                 if ($result) {
                     $msg = 'Client account created for ' . $client->name . ' and login instructions emailed';
@@ -551,7 +551,7 @@ class CommunitiesController extends AppController
         $usersTable = TableRegistry::get('Users');
 
         if ($this->request->is('post')) {
-            $clientId = $this->request->data('client_id');
+            $clientId = $this->request->getData('client_id');
             $client = $usersTable->get($clientId, ['contain' => ['ClientCommunities']]);
             $alreadyLinked = false;
 
@@ -713,7 +713,7 @@ class CommunitiesController extends AppController
     {
         $community = $this->Communities->get($communityId);
         if ($this->request->is(['post', 'put'])) {
-            $community = $this->Communities->patchEntity($community, $this->request->data());
+            $community = $this->Communities->patchEntity($community, $this->request->getData());
             if ($community->errors()) {
                 $this->Flash->error('There was an error updating this community\'s notes');
             } else {

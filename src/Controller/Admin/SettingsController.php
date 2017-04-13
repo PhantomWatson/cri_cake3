@@ -19,7 +19,7 @@ class SettingsController extends AppController
             })
             ->toArray();
         if ($this->request->is(['post', 'put'])) {
-            foreach ($this->request->data('settings') as $settingId => $settingValue) {
+            foreach ($this->request->getData('settings') as $settingId => $settingValue) {
                 $setting = $this->Settings->get($settingId);
                 $setting = $this->Settings->patchEntity($setting, ['value' => $settingValue]);
                 $errors = $setting->errors();

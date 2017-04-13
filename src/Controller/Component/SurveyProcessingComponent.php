@@ -181,7 +181,7 @@ class SurveyProcessingComponent extends Component
      */
     private function setInvitees()
     {
-        $invitees = $this->request->data('invitees');
+        $invitees = $this->request->getData('invitees');
         $invitees = is_array($invitees) ? $invitees : [];
         $this->invitees = $invitees;
     }

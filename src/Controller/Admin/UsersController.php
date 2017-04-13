@@ -188,7 +188,7 @@ class UsersController extends AppController
                 $this->request->data['consultant_communities'] = [];
             }
 
-            $user = $this->Users->patchEntity($user, $this->request->data());
+            $user = $this->Users->patchEntity($user, $this->request->getData());
             $errors = $user->errors();
             if (empty($errors)) {
                 $roleChanged = $user->dirty('role');
@@ -263,7 +263,7 @@ class UsersController extends AppController
             $this->Cookie->write('communityId', $communityId);
             $clientId = $communitiesTable->getCommunityClientId($communityId);
             $this->Cookie->write('clientId', $clientId);
-            if ($this->request->data('redirect')) {
+            if ($this->request->getData('redirect')) {
                 return $this->redirect($this->request->data['redirect']);
             } elseif ($this->request->is('ajax')) {
                 $this->render('/Pages/blank');

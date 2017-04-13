@@ -38,19 +38,19 @@ class UsersController extends AppController
                 $this->Auth->setUser($user);
                 if ($this->Auth->authenticationProvider()->needsPasswordRehash()) {
                     $user = $this->Users->get($this->Auth->user('id'));
-                    $user = $this->Users->patchEntity($user, ['password' => $this->request->data('password')]);
+                    $user = $this->Users->patchEntity($user, ['password' => $this->request->getData('password')]);
                     $this->Users->save($user);
                 }
 
                 // Remember login information
-                if ($this->request->data('auto_login')) {
+                if ($this->request->getData('auto_login')) {
                     $this->Cookie->configKey('CookieAuth', [
                         'expires' => '+1 year',
                         'httpOnly' => true
                     ]);
                     $this->Cookie->write('CookieAuth', [
-                        'email' => $this->request->data('email'),
-                        'password' => $this->request->data('password')
+                        'email' => $this->request->getData('email'),
+                        'password' => $this->request->getData('password')
                     ]);
                 }
 
@@ -104,8 +104,8 @@ class UsersController extends AppController
         $userId = $this->Auth->user('id');
         $user = $this->Users->get($userId);
         if ($this->request->is('post') || $this->request->is('put')) {
-            $this->request->data['password'] = $this->request->data('new_password');
-            $user = $this->Users->patchEntity($user, $this->request->data());
+            $this->request->data['password'] = $this->request->getData('new_password');
+            $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your password has been updated');
             }
@@ -127,9 +127,9 @@ class UsersController extends AppController
         $id = $this->Auth->user('id');
         $user = $this->Users->get($id);
         if ($this->request->is('post') || $this->request->is('put')) {
-            $user = $this->Users->patchEntity($user, $this->request->data());
+            $user = $this->Users->patchEntity($user, $this->request->getData());
             if (! $user->errors()) {
-                $saveResult = $this->Users->save($user, $this->request->data(), [
+                $saveResult = $this->Users->save($user, $this->request->getData(), [
                     'fieldList' => ['name', 'email']
                 ]);
                 if ($saveResult) {
@@ -152,7 +152,7 @@ class UsersController extends AppController
     {
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
-            $email = $this->request->data('email');
+            $email = $this->request->getData('email');
             $email = strtolower(trim($email));
             $adminEmail = Configure::read('admin_email');
             if (empty($email)) {
@@ -218,8 +218,8 @@ class UsersController extends AppController
         $email = $user->email;
 
         if ($this->request->is(['post', 'put'])) {
-            $this->request->data['password'] = $this->request->data('new_password');
-            $user = $this->Users->patchEntity($user, $this->request->data());
+            $this->request->data['password'] = $this->request->getData('new_password');
+            $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your password has been updated.');
 
