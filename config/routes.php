@@ -34,6 +34,7 @@ Router::prefix('admin', function ($routes) {
 
 Router::prefix('client', function ($routes) {
     $routes->connect('/home', ['controller' => 'Communities', 'action' => 'index']);
+    $routes->connect('/reactivate', ['controller' => 'Communities', 'action' => 'reactivate']);
     $routes->redirect('/', ['controller' => 'Communities', 'action' => 'index']);
 
     $routes->fallbacks('DashedRoute');
