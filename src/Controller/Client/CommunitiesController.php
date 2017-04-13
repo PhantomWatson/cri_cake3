@@ -11,7 +11,7 @@ class CommunitiesController extends AppController
     /**
      * Client home page
      *
-     * @return \App\Controller\Response|void
+     * @return \Cake\Http\Response
      */
     public function index()
     {
@@ -20,9 +20,14 @@ class CommunitiesController extends AppController
         $userId = $this->Auth->user('id');
         $communityId = $this->Communities->getClientCommunityId($userId);
         if ($communityId) {
+            $community = $this->Communities->get($communityId);
+            if (! $community->active) {
+                return $this->redirect(['action' => 'reactivate']);
+            }
+
             $this->loadComponent('ClientHome');
             if ($this->ClientHome->prepareClientHome($communityId)) {
-                return;
+                return $this->render();
             }
         }
 
