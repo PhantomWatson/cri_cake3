@@ -490,7 +490,7 @@ class SurveysTable extends Table
                 function ($exp, $q) {
                     return $exp->isNotNull('Surveys.sm_id');
                 },
-                'active' => 1,
+                'Surveys.active' => 1,
                 'OR' => [
                     [
                         'Surveys.type' => 'official',
