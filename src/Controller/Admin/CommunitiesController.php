@@ -33,7 +33,7 @@ class CommunitiesController extends AppController
         $cookieParentKey = 'AdminCommunityIndex';
 
         // Remember selected filters
-        $this->filters = $this->request->query('filters');
+        $this->filters = $this->request->getQuery('filters');
         if (is_array($this->filters)) {
             foreach ($this->filters as $group => $filter) {
                 $this->Cookie->write("$cookieParentKey.filters.$group", $filter);
@@ -43,7 +43,7 @@ class CommunitiesController extends AppController
         }
 
         // Use remembered filters when no filters manually specified
-        $filterTypes = ['progress']; // More may be added later
+        $filterTypes = ['status']; // More may be added later
         foreach ($filterTypes as $group) {
             if (! isset($this->filters[$group])) {
                 $key = "$cookieParentKey.filters.$group";
@@ -54,25 +54,28 @@ class CommunitiesController extends AppController
         }
 
         // Default filters if completely unspecified
-        if (! isset($this->filters['progress'])) {
-            $this->filters['progress'] = 'ongoing';
+        if (! isset($this->filters['status'])) {
+            $this->filters['status'] = 'active';
         }
 
         // Apply filters
-        foreach ($this->filters as $filter) {
+        foreach ($this->filters as $group => $filter) {
             switch ($filter) {
-                case 'ongoing':
-                    $this->paginate['conditions']['Communities.score <'] = '5';
-                    break;
-                case 'completed':
-                    $this->paginate['conditions']['Communities.score'] = '5';
+                case 'inactive':
+                    $this->paginate['conditions']['Communities.active'] = false;
                     break;
                 case 'all':
+                    unset($this->paginate['conditions']['Communities.active']);
+                    break;
+                case 'active':
                 default:
-                    // No action
+                    $this->paginate['conditions']['Communities.active'] = true;
                     break;
             }
         }
+
+        // Pass to view
+        $this->set('filters', $this->filters);
     }
 
     /**
@@ -83,13 +86,18 @@ class CommunitiesController extends AppController
     private function adminIndexSetupFilterButtons()
     {
         $allFilters = [
-            'progress' => [
+            'status' => [
+                'active' => 'Active',
+                'inactive' => 'Inactive',
                 'all' => 'All',
-                'completed' => 'Completed',
-                'ongoing' => 'Ongoing'
             ]
         ];
-        $this->filters = $this->request->query('filters');
+
+        $passedFilters = $this->request->getQuery('filters');
+        if ($passedFilters) {
+            $this->filters = array_merge($this->filters, $passedFilters);
+        }
+
         if (! is_array($this->filters)) {
             $this->filters = [];
         }
@@ -100,37 +108,14 @@ class CommunitiesController extends AppController
         }
         $buttons = [];
         foreach ($allFilters as $group => $filters) {
-            $groupLabel = ucwords($group);
-            $selectedFilterKey = isset($this->filters[$group]) ?
-                $this->filters[$group]
-                : null;
-            if ($selectedFilterKey != 'all') {
-                $selectedFilterLabel = isset($filters[$selectedFilterKey]) ?
-                    $filters[$selectedFilterKey]
-                    : null;
-                if ($selectedFilterLabel) {
-                    $groupLabel .= ': <strong>' . $selectedFilterLabel . '</strong>';
-                }
-            }
-
             $links = [];
             foreach ($filters as $filter => $label) {
-                // Only show 'all' link if filter is active
-                if ($filter == 'all' && ! isset($this->filters[$group])) {
-                    continue;
-                }
-
-                // Don't show links to active filters
-                if (isset($this->filters[$group]) && $this->filters[$group] == $filter) {
-                    continue;
-                }
-
                 $linkFilters = [$group => $filter];
                 $linkFilters = array_merge($this->filters, $linkFilters);
                 $links[$label] = $linkFilters;
             }
 
-            $buttons[$groupLabel] = $links;
+            $buttons[$group] = $links;
         }
         $this->set('buttons', $buttons);
     }

@@ -12,7 +12,12 @@
         <?php foreach ($buttons as $groupLabel => $buttonGroup): ?>
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <?= $groupLabel ?>
+                    <?php
+                        echo "Filter by $groupLabel";
+                        if (isset($filters['status'])) {
+                            echo ': <strong>' . ucwords($filters['status']) . '</strong>';
+                        }
+                    ?>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
