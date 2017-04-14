@@ -118,10 +118,11 @@ class AdminToDo
         if ($this->waitingForSurveyInvitations($officialsSurveyId)) {
             $activationDate = $activityRecordsTable->getSurveyActivationDate($officialsSurveyId);
             $since = $activationDate ?: $officialsSurvey->created;
+            $url = $this->getInvitationUrl($officialsSurveyId);
 
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for client to send officials questionnaire invitations',
+                'msg' => 'Waiting for client to <a href="' . $url . '">send officials questionnaire invitations</a>',
                 'since' => $this->getWaitingPeriod($since)
             ];
         }
@@ -183,9 +184,11 @@ class AdminToDo
                 ];
             }
         } elseif (! $optedOut) {
+            $url = $this->getPresentationsUrl($communityId);
+
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for client to purchase or opt out of Presentation B',
+                'msg' => 'Waiting for client to purchase or <a href="' . $url . '">opt out of</a> Presentation B',
                 'since' => $this->getWaitingPeriod($community->presentation_a)
             ];
         }
@@ -244,10 +247,12 @@ class AdminToDo
         if ($this->waitingForSurveyInvitations($organizationsSurveyId)) {
             $activationDate = $activityRecordsTable->getSurveyActivationDate($organizationsSurveyId);
             $since = $activationDate ?: $organizationsSurvey->created;
+            $url = $this->getInvitationUrl($organizationsSurveyId);
 
             return [
                 'class' => 'waiting',
-                'msg' => 'Waiting for client to send organizations questionnaire invitations',
+                'msg' => 'Waiting for client to ' .
+                    '<a href="' . $url . '">send organizations questionnaire invitations</a>',
                 'since' => $this->getWaitingPeriod($since)
             ];
         }
@@ -618,6 +623,22 @@ class AdminToDo
             'action' => 'link',
             $communityId,
             $surveyType
+        ]);
+    }
+
+    /**
+     * Returns the URL for this survey's invitation page
+     *
+     * @param int $surveyId Survey ID
+     * @return string
+     */
+    private function getInvitationUrl($surveyId)
+    {
+        return Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Surveys',
+            'action' => 'invite',
+            $surveyId
         ]);
     }
 
