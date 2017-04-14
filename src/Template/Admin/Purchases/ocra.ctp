@@ -24,18 +24,12 @@
         <h1>
             <?= ucwords($label) ?>
         </h1>
-        <p>
-            Total:
-            <strong>
-                $<?= number_format($totals[$label]) ?>
-            </strong>
-        </p>
         <?php if ($purchaseGroup): ?>
             <?php $hyphenatedLabel = str_replace(' ', '-', $label); ?>
             <button class="btn btn-default" data-toggle="collapse" data-target="#<?= $hyphenatedLabel ?>">
-                Show
                 <?= count($purchaseGroup) ?>
                 <?= __n('charge', 'charges', count($purchaseGroup)) ?>
+                ($<?= number_format($totals[$label]) ?>)
             </button>
             <div class="collapse" id="<?= $hyphenatedLabel ?>">
                 <table class="table">
@@ -77,8 +71,8 @@
                 </table>
             </div>
         <?php else: ?>
-            <p class="alert alert-info">
-                No charges found
+            <p>
+                No charges
             </p>
         <?php endif; ?>
     </section>
