@@ -193,7 +193,8 @@ class PurchasesController extends AppController
         $purchases = [
             'not yet billable' => $query->find('notBillable')->toArray(),
             'billable' => $query->find('billable')->toArray(),
-            'billed' => []
+            'billed' => [],
+            'paid' => []
         ];
         $totals = [];
         foreach ($purchases as $label => $group) {
