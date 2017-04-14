@@ -19,6 +19,22 @@
         <?php foreach ($communities as $community): ?>
             <tr>
                 <td>
+                    <?php
+                        switch ($community->toDo['class']) {
+                            case 'ready':
+                                $icon = 'exclamation-sign';
+                                break;
+                            case 'waiting':
+                                $icon = 'hourglass';
+                                break;
+                            case 'complete':
+                            default:
+                                $icon = 'check';
+                                break;
+                        }
+
+                    ?>
+                    <span class="<?= $community->toDo['class'] ?> glyphicon glyphicon-<?= $icon ?>"></span>
                     <?= $community->name ?>
                 </td>
                 <td class="<?= $community->toDo['class'] ?>">
