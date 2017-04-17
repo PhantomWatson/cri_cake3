@@ -1153,3 +1153,12 @@ var alignmentCalculationSettings = {
         });
     }
 };
+
+var ocraPayments = {
+    init: function () {
+        $('.select-all button').click(function (event) {
+            event.preventDefault();
+            $(this).closest('table').find('input[type=checkbox]').prop('checked', true);
+        });
+    }
+};

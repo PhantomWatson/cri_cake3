@@ -98,6 +98,14 @@
 
                     <?php if ($group['form']): ?>
                         <tfoot>
+                            <tr class="select-all">
+                                <td colspan="3"></td>
+                                <td class="action">
+                                    <button class="btn btn-link btn-sm">
+                                        Select all
+                                    </button>
+                                </td>
+                            </tr>
                             <tr>
                                 <td colspan="3"></td>
                                 <td class="action">
@@ -123,3 +131,7 @@
         <?php endif; ?>
     </section>
 <?php endforeach; ?>
+
+<?php $this->append('buffered'); ?>
+    ocraPayments.init();
+<?php $this->end(); ?>
