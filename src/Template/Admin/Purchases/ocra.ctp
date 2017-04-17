@@ -101,7 +101,7 @@
                             <tr class="select-all">
                                 <td colspan="3"></td>
                                 <td class="action">
-                                    <button class="btn btn-link btn-sm">
+                                    <button class="btn btn-link btn-sm" data-mode="1">
                                         Select all
                                     </button>
                                 </td>
