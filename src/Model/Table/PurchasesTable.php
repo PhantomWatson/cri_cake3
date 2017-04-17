@@ -319,15 +319,32 @@ class PurchasesTable extends Table
     }
 
     /**
-     * Finds purchases that have associated invoices
+     * Finds purchases that have associated unpaid invoices
      *
      * @param \Cake\ORM\Query $query Query
      * @param array $options Options array
      * @return \Cake\ORM\Query
      */
-    public function findBilled(\Cake\ORM\Query $query, array $options)
+    public function findBilledUnpaid(\Cake\ORM\Query $query, array $options)
     {
         return $query
-            ->matching('Invoices');
+            ->matching('Invoices', function ($q) {
+                return $q->where(['paid' => false]);
+            });
+    }
+
+    /**
+     * Finds purchases that have associated paid invoices
+     *
+     * @param \Cake\ORM\Query $query Query
+     * @param array $options Options array
+     * @return \Cake\ORM\Query
+     */
+    public function findPaid(\Cake\ORM\Query $query, array $options)
+    {
+        return $query
+            ->matching('Invoices', function ($q) {
+                return $q->where(['paid' => true]);
+            });
     }
 }

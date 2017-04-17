@@ -86,10 +86,19 @@
                                 </td>
                                 <?php if ($group['form']): ?>
                                     <td class="action">
-                                        <?= $this->Form->checkbox("purchaseIds[]", [
-                                            'value' => $purchase->id,
-                                            'hiddenField' => false
-                                        ]) ?>
+                                        <?php
+                                            if ($label == 'billable') {
+                                                echo $this->Form->checkbox("purchaseIds[]", [
+                                                    'value' => $purchase->id,
+                                                    'hiddenField' => false
+                                                ]);
+                                            } elseif ($label == 'billed') {
+                                                echo $this->Form->checkbox("invoiceIds[]", [
+                                                    'value' => $purchase->invoice->id,
+                                                    'hiddenField' => false
+                                                ]);
+                                            }
+                                        ?>
                                     </td>
                                 <?php endif; ?>
                             </tr>

@@ -69,4 +69,51 @@ class InvoicesController extends AppController
 
         return $this->redirect($this->request->referer());
     }
+
+    /**
+     * Method for marking the passed invoice IDs as being paid
+     *
+     * @return \Cake\Http\Response
+     */
+    public function markPaid()
+    {
+        $invoiceIds = $this->request->getData('invoiceIds');
+        $successCount = 0;
+        foreach ($invoiceIds as $invoiceId) {
+            if (! $invoiceId) {
+                continue;
+            }
+
+            // Confirm that this invoice exists
+            $invoice = $this->Invoices->get($invoiceId);
+
+            // Skip any already-recorded payments
+            if ($invoice->paid) {
+                $msg = "Invoice #$invoiceId already marked as paid";
+                $this->Flash->set($msg);
+                continue;
+            }
+
+            // Save
+            $this->Invoices->patchEntity($invoice, [
+                'paid' => true
+            ]);
+            if (! $this->Invoices->save($invoice)) {
+                $msg = 'There was an error updating the database. Details: ' . $invoice->getErrors();
+                $this->Flash->error($msg);
+                break;
+            }
+
+            $successCount++;
+        }
+
+        if ($successCount) {
+            $msg = $successCount . __n(' item', ' items', $successCount) . ' marked as paid';
+            $this->Flash->success($msg);
+        } else {
+            $this->Flash->set('No items were marked as paid');
+        }
+
+        return $this->redirect($this->request->referer());
+    }
 }

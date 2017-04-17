@@ -214,12 +214,23 @@ class PurchasesController extends AppController
             'billed' => [
                 'purchases' => $this->Purchases
                     ->find('ocra')
-                    ->find('billed')
+                    ->find('billedUnpaid')
+                    ->contain(['Invoices'])
                     ->toArray(),
-                'form' => null
+                'form' => [
+                    'label' => 'Mark as Paid',
+                    'action' => [
+                        'prefix' => 'admin',
+                        'controller' => 'Invoices',
+                        'action' => 'markPaid'
+                    ]
+                ]
             ],
             'paid' => [
-                'purchases' => [],
+                'purchases' => $this->Purchases
+                    ->find('ocra')
+                    ->find('paid')
+                    ->toArray(),
                 'form' => null
             ]
         ];
