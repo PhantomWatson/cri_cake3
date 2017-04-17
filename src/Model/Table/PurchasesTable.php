@@ -44,6 +44,8 @@ class PurchasesTable extends Table
             'className' => 'App\Model\Table\UsersTable',
             'foreignKey' => 'refunder_id'
         ]);
+        $this->hasOne('Invoices')
+            ->setDependent(true);
     }
 
     /**
@@ -247,7 +249,8 @@ class PurchasesTable extends Table
                         // Community has been advanced to Step Four
                         ->gte('Communities.score', 4);
                 },
-            ]]);
+            ]])
+            ->notMatching('Invoices');
     }
 
     /**
@@ -311,6 +314,20 @@ class PurchasesTable extends Table
                         return $exp->lt('Communities.score', 4);
                     }
                 ]
-            ]]);
+            ]])
+            ->notMatching('Invoices');
+    }
+
+    /**
+     * Finds purchases that have associated invoices
+     *
+     * @param \Cake\ORM\Query $query Query
+     * @param array $options Options array
+     * @return \Cake\ORM\Query
+     */
+    public function findBilled(\Cake\ORM\Query $query, array $options)
+    {
+        return $query
+            ->matching('Invoices');
     }
 }

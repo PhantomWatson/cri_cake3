@@ -189,16 +189,43 @@ class PurchasesController extends AppController
      */
     public function ocra()
     {
-        $query = $this->Purchases->find('ocra');
         $purchases = [
-            'not yet billable' => $query->find('notBillable')->toArray(),
-            'billable' => $query->find('billable')->toArray(),
-            'billed' => [],
-            'paid' => []
+            'not yet billable' => [
+                'purchases' => $this->Purchases
+                    ->find('ocra')
+                    ->find('notBillable')
+                    ->toArray(),
+                'form' => null
+            ],
+            'billable' => [
+                'purchases' => $this->Purchases
+                    ->find('ocra')
+                    ->find('billable')
+                    ->toArray(),
+                'form' => [
+                    'label' => 'Mark as Billed',
+                    'action' => [
+                        'prefix' => 'admin',
+                        'controller' => 'Invoices',
+                        'action' => 'markBilled'
+                    ]
+                ]
+            ],
+            'billed' => [
+                'purchases' => $this->Purchases
+                    ->find('ocra')
+                    ->find('billed')
+                    ->toArray(),
+                'form' => null
+            ],
+            'paid' => [
+                'purchases' => [],
+                'form' => null
+            ]
         ];
         $totals = [];
         foreach ($purchases as $label => $group) {
-            $costs = Hash::extract($group, '{n}.product.price');
+            $costs = Hash::extract($group['purchases'], '{n}.product.price');
             $totals[$label] = array_sum($costs);
         }
         $this->set([
