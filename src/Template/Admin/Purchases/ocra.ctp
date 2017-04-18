@@ -78,71 +78,83 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach ($group['purchases'] as $i => $purchase): ?>
-                            <tr>
-                                <td>
-                                    <?= $this->Time->format(
-                                        $purchase->created,
-                                        'M/d/YYYY',
-                                        false,
-                                        'America/New_York'
-                                    ); ?>
-                                </td>
-                                <td>
-                                    <?= $purchase->community->name ?>
-                                </td>
-                                <td>
-                                    <?= $purchase->product->description ?>
-                                    ($<?= number_format($purchase->product['price']) ?>)
-
-                                    <?php if ($purchase->redunded): ?>
-                                        <span class="label label-warning">
-                                        Refunded
-                                    </span>
-                                    <?php endif; ?>
-                                </td>
-                                <?php if ($group['form']): ?>
-                                    <td class="action">
-                                        <?php
-                                        if ($label == 'billable') {
-                                            echo $this->Form->checkbox("purchaseIds[]", [
-                                                'value' => $purchase->id,
-                                                'hiddenField' => false
-                                            ]);
-                                        } elseif ($label == 'billed') {
-                                            echo $this->Form->checkbox("invoiceIds[]", [
-                                                'value' => $purchase->invoice->id,
-                                                'hiddenField' => false
-                                            ]);
-                                        }
-                                        ?>
+                            <?php foreach ($group['purchases'] as $i => $purchase): ?>
+                                <tr>
+                                    <td>
+                                        <?= $this->Time->format(
+                                            $purchase->created,
+                                            'M/d/YYYY',
+                                            false,
+                                            'America/New_York'
+                                        ); ?>
                                     </td>
-                                <?php endif; ?>
-                            </tr>
-                        <?php endforeach; ?>
+                                    <td>
+                                        <?= $purchase->community->name ?>
+                                    </td>
+                                    <td>
+                                        <?= $purchase->product->description ?>
+                                        ($<?= number_format($purchase->product['price']) ?>)
+
+                                        <?php if ($purchase->redunded): ?>
+                                            <span class="label label-warning">
+                                            Refunded
+                                        </span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <?php if ($group['form']): ?>
+                                        <td class="action">
+                                            <?php
+                                            if ($label == 'billable') {
+                                                echo $this->Form->checkbox("purchaseIds[]", [
+                                                    'value' => $purchase->id,
+                                                    'hiddenField' => false
+                                                ]);
+                                            } elseif ($label == 'billed') {
+                                                echo $this->Form->checkbox("invoiceIds[]", [
+                                                    'value' => $purchase->invoice->id,
+                                                    'hiddenField' => false
+                                                ]);
+                                            }
+                                            ?>
+                                        </td>
+                                    <?php endif; ?>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
-
-                        <?php if ($group['form']): ?>
-                            <tfoot>
-                            <tr class="select-all">
-                                <td colspan="3"></td>
-                                <td class="action">
-                                    <button class="btn btn-link btn-sm" data-mode="1">
-                                        Select all
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3"></td>
-                                <td class="action">
-                                    <?= $this->Form->button('Update', [
-                                        'class' => 'btn btn-default'
-                                    ]) ?>
-                                </td>
-                            </tr>
-                            </tfoot>
-                        <?php endif; ?>
-
+                        <tfoot>
+                            <?php if ($group['form']): ?>
+                                <tr class="select-all">
+                                    <td colspan="3" class="total">
+                                        <strong>
+                                            Total charges:
+                                        </strong>
+                                        $<?= number_format($totals[$label]) ?>
+                                    </td>
+                                    <td class="action">
+                                        <button class="btn btn-link btn-sm" data-mode="1">
+                                            Select all
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"></td>
+                                    <td class="action">
+                                        <?= $this->Form->button('Update', [
+                                            'class' => 'btn btn-default'
+                                        ]) ?>
+                                    </td>
+                                </tr>
+                            <?php else: ?>
+                                <tr class="select-all">
+                                    <td colspan="3" class="total">
+                                        <strong>
+                                            Total charges:
+                                        </strong>
+                                        $<?= number_format($totals[$label]) ?>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tfoot>
                     </table>
 
                     <?php if ($group['form']): ?>
