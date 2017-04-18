@@ -1317,15 +1317,23 @@ section.admin-guide {
         vertical-align: bottom;
     }
 }
+ul.ocra-billing {
+    float: left;
+    width: 100%;
 
-section.ocra-billing {
-    border-bottom: 1px solid #aaa;
-    margin-bottom: 30px;
-    padding-bottom: 30px;
-
-    &:last-of-type {
-        border-bottom: none;
+    li.active {
+        font-weight: bold;
     }
+    a:hover {
+        .badge {
+            text-decoration: none;
+        }
+    }
+    .badge {
+        margin-left: 5px;
+    }
+}
+div.ocra-billing {
     td,
     th {
         &.action {
@@ -1338,5 +1346,10 @@ section.ocra-billing {
                 border-top: none;
             }
         }
+    }
+    .no-charges {
+        float: left;
+        margin-top: 20px;
+        width: 100%;
     }
 }
