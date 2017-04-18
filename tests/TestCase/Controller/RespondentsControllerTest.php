@@ -1,7 +1,6 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\RespondentsController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -28,51 +27,81 @@ class RespondentsControllerTest extends IntegrationTestCase
     ];
 
     /**
-     * Test index method
+     * Test for /admin/respondents/unapproved
      *
      * @return void
      */
-    public function testIndex()
+    public function testAdminUnapproved()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test view method
+     * Test for /admin/respondents/approve-uninvited
      *
      * @return void
      */
-    public function testView()
+    public function testAdminApproveUninvited()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test add method
+     * Test for /admin/respondents/dismiss-uninvited
      *
      * @return void
      */
-    public function testAdd()
+    public function testAdminDismissUninvited()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test edit method
+     * Test for /admin/respondents/view
      *
      * @return void
      */
-    public function testEdit()
+    public function testAdminView()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test delete method
+     * Test for /client/respondents/unapproved
      *
      * @return void
      */
-    public function testDelete()
+    public function testClientUnapproved()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test for /client/respondents/index
+     *
+     * @return void
+     */
+    public function testClientIndex()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test for /client/respondents/approve-uninvited
+     *
+     * @return void
+     */
+    public function testClientApproveUninvited()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test for /client/respondents/dismiss-uninvited
+     *
+     * @return void
+     */
+    public function testClientDismissUninvited()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

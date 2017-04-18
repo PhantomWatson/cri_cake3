@@ -1,7 +1,6 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\ResponsesController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -28,51 +27,31 @@ class ResponsesControllerTest extends IntegrationTestCase
     ];
 
     /**
-     * Test index method
+     * Test for /admin/responses/calculate-missing-alignments
      *
      * @return void
      */
-    public function testIndex()
+    public function testAdminCalculateMissingAlignments()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test view method
+     * Test for /admin/responses/view
      *
      * @return void
      */
-    public function testView()
+    public function testAdminView()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test add method
+     * Test for /admin/responses/get-full-response
      *
      * @return void
      */
-    public function testAdd()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test edit method
-     *
-     * @return void
-     */
-    public function testEdit()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test delete method
-     *
-     * @return void
-     */
-    public function testDelete()
+    public function testAdminGetFullResponse()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

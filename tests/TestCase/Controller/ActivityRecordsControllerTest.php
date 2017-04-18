@@ -1,7 +1,6 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\ActivityRecordsController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -23,51 +22,21 @@ class ActivityRecordsControllerTest extends IntegrationTestCase
     ];
 
     /**
-     * Test index method
+     * Test /admin/activity-records/index
      *
      * @return void
      */
-    public function testIndex()
+    public function testAdminIndex()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test view method
+     * Test /admin/activity-records/community
      *
      * @return void
      */
-    public function testView()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test add method
-     *
-     * @return void
-     */
-    public function testAdd()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test edit method
-     *
-     * @return void
-     */
-    public function testEdit()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test delete method
-     *
-     * @return void
-     */
-    public function testDelete()
+    public function testAdminCommunity()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

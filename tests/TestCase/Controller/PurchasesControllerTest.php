@@ -1,7 +1,6 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\PurchasesController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -28,51 +27,71 @@ class PurchasesControllerTest extends IntegrationTestCase
     ];
 
     /**
-     * Test index method
+     * Test postback method
      *
      * @return void
      */
-    public function testIndex()
+    public function testPostback()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test view method
+     * Test for /admin/purchases/add
      *
      * @return void
      */
-    public function testView()
+    public function testAdminAdd()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test add method
+     * Test for /admin/purchases/index
      *
      * @return void
      */
-    public function testAdd()
+    public function testAdminIndex()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test edit method
+     * Test for /admin/purchases/ocra
      *
      * @return void
      */
-    public function testEdit()
+    public function testAdminOcra()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test delete method
+     * Test for /admin/purchases/refund
      *
      * @return void
      */
-    public function testDelete()
+    public function testAdminRefund()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test for /admin/purchases/view
+     *
+     * @return void
+     */
+    public function testAdminView()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test for /client/purchases/index
+     *
+     * @return void
+     */
+    public function testClientIndex()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

@@ -29,51 +29,21 @@ class StatisticsControllerTest extends IntegrationTestCase
     ];
 
     /**
-     * Test index method
+     * Test for /admin/statistics/import
      *
      * @return void
      */
-    public function testIndex()
+    public function testAdminImport()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test view method
+     * Test for /admin/statistics/import-grouped
      *
      * @return void
      */
-    public function testView()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test add method
-     *
-     * @return void
-     */
-    public function testAdd()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test edit method
-     *
-     * @return void
-     */
-    public function testEdit()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test delete method
-     *
-     * @return void
-     */
-    public function testDelete()
+    public function testAdminImportGrouped()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
