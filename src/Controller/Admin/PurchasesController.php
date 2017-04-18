@@ -195,7 +195,8 @@ class PurchasesController extends AppController
                     ->find('ocra')
                     ->find('notBillable')
                     ->toArray(),
-                'form' => null
+                'form' => null,
+                'date' => 'Purchased'
             ],
             'billable' => [
                 'purchases' => $this->Purchases
@@ -209,7 +210,8 @@ class PurchasesController extends AppController
                         'controller' => 'Invoices',
                         'action' => 'markBilled'
                     ]
-                ]
+                ],
+                'date' => 'Purchased'
             ],
             'billed' => [
                 'purchases' => $this->Purchases
@@ -224,14 +226,16 @@ class PurchasesController extends AppController
                         'controller' => 'Invoices',
                         'action' => 'markPaid'
                     ]
-                ]
+                ],
+                'date' => 'Billed'
             ],
             'paid' => [
                 'purchases' => $this->Purchases
                     ->find('ocra')
                     ->find('paid')
                     ->toArray(),
-                'form' => null
+                'form' => null,
+                'date' => 'Billed'
             ]
         ];
         $totals = [];

@@ -60,33 +60,36 @@
 
                     <table class="table">
                         <thead>
-                        <tr>
-                            <th>
-                                Date
-                            </th>
-                            <th>
-                                Community
-                            </th>
-                            <th>
-                                Product
-                            </th>
-                            <?php if ($group['form']): ?>
-                                <th class="action">
-                                    <?= $group['form']['label'] ?>
+                            <tr>
+                                <th>
+                                    <?= $group['date'] ?>
                                 </th>
-                            <?php endif; ?>
-                        </tr>
+                                <th>
+                                    Community
+                                </th>
+                                <th>
+                                    Product
+                                </th>
+                                <?php if ($group['form']): ?>
+                                    <th class="action">
+                                        <?= $group['form']['label'] ?>
+                                    </th>
+                                <?php endif; ?>
+                            </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($group['purchases'] as $i => $purchase): ?>
                                 <tr>
                                     <td>
-                                        <?= $this->Time->format(
-                                            $purchase->created,
-                                            'M/d/YYYY',
-                                            false,
-                                            'America/New_York'
-                                        ); ?>
+                                        <?php
+                                            $date = $group['date'] == 'Billed' ? $purchase->invoice->created : $purchase->created;
+                                            echo $this->Time->format(
+                                                $date,
+                                                'M/d/YYYY',
+                                                false,
+                                                'America/New_York'
+                                            );
+                                        ?>
                                     </td>
                                     <td>
                                         <?= $purchase->community->name ?>
