@@ -250,6 +250,9 @@ class PurchasesTable extends Table
                         ->gte('Communities.score', 4);
                 },
             ]])
+            ->where(function ($exp, $q) {
+                return $exp->isNull('refunded');
+            })
             ->notMatching('Invoices');
     }
 
@@ -315,6 +318,9 @@ class PurchasesTable extends Table
                     }
                 ]
             ]])
+            ->where(function ($exp, $q) {
+                return $exp->isNull('refunded');
+            })
             ->notMatching('Invoices');
     }
 
@@ -328,6 +334,9 @@ class PurchasesTable extends Table
     public function findBilledUnpaid(\Cake\ORM\Query $query, array $options)
     {
         return $query
+            ->where(function ($exp, $q) {
+                return $exp->isNull('refunded');
+            })
             ->matching('Invoices', function ($q) {
                 return $q->where(['paid' => false]);
             });
@@ -343,6 +352,9 @@ class PurchasesTable extends Table
     public function findPaid(\Cake\ORM\Query $query, array $options)
     {
         return $query
+            ->where(function ($exp, $q) {
+                return $exp->isNull('refunded');
+            })
             ->matching('Invoices', function ($q) {
                 return $q->where(['paid' => true]);
             });
