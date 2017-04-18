@@ -19,6 +19,12 @@
     ) ?>
 </p>
 
+<p class="well">
+    The following are the non-refunded charges whose funding source is OCRA. Charges become billable when their
+    products (e.g. presentations) are delivered. Select charges and click 'Update' in order to mark charges
+    as billed or paid.
+</p>
+
 <div>
     <ul class="nav nav-tabs ocra-billing" role="tablist">
         <?php foreach ($purchases as $label => $group): ?>
