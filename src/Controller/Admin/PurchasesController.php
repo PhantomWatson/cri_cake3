@@ -245,7 +245,7 @@ class PurchasesController extends AppController
         }
         $this->set([
             'purchases' => $purchases,
-            'titleForLayout' => 'OCRA Funding',
+            'titleForLayout' => 'Manage OCRA Funding',
             'totals' => $totals
         ]);
     }

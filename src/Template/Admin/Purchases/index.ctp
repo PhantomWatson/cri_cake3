@@ -15,7 +15,7 @@
         ['class' => 'btn btn-success']
     ) ?>
     <?= $this->Html->link(
-        'OCRA Funding',
+        'Manage OCRA Funding',
         [
             'prefix' => 'admin',
             'controller' => 'Purchases',
