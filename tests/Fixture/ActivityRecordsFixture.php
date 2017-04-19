@@ -1,6 +1,7 @@
 <?php
 namespace App\Test\Fixture;
 
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
@@ -42,12 +43,36 @@ class ActivityRecordsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'event' => 1,
+            'event' => 'Model.Community.afterAdd',
             'user_id' => 1,
             'community_id' => 1,
-            'survey_id' => 1,
-            'meta' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+            'survey_id' => null,
+            'meta' => 'a:3:{s:13:"communityName";s:14:"Test Community";s:8:"userName";s:13:"Graham Watson";s:8:"userRole";s:5:"admin";}',
             'created' => '2016-12-21 19:13:51'
         ],
     ];
+
+    public $Communities;
+    public $Users;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->Users = TableRegistry::get('Users');
+        $admin = $this->Users
+            ->find('all')
+            ->select(['id'])
+            ->where(['role' => 'admin'])
+            ->first();
+
+        $this->records[] = [
+            'id' => 1,
+            'event' => 'Model.Community.afterAdd',
+            'user_id' => $admin->id,
+            'community_id' => 1,
+            'survey_id' => null,
+            'meta' => '',
+            'created' => '2016-12-21 19:13:51'
+        ];
+    }
 }

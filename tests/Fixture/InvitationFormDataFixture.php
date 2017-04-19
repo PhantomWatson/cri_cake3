@@ -40,7 +40,7 @@ class InvitationFormDataFixture extends TestFixture
             'id' => 1,
             'user_id' => 1,
             'survey_id' => 1,
-            'data' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+            'data' => 'a:1:{i:1;a:3:{s:4:"name";s:14:"Test Recipient";s:5:"email";s:16:"test@example.com";s:5:"title";s:5:"Title";}}',
             'created' => '2016-10-13 21:24:52',
             'modified' => '2016-10-13 21:24:52'
         ],

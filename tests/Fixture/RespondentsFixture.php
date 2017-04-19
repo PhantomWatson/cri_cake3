@@ -18,10 +18,11 @@ class RespondentsFixture extends TestFixture
     // @codingStandardsIgnoreStart
     public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
-        'email' => ['type' => 'string', 'length' => 100, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
-        'name' => ['type' => 'string', 'length' => 100, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
+        'email' => ['type' => 'string', 'length' => 100, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'name' => ['type' => 'string', 'length' => 100, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'title' => ['type' => 'string', 'length' => 100, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'survey_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
-        'sm_respondent_id' => ['type' => 'string', 'length' => 15, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
+        'sm_respondent_id' => ['type' => 'string', 'length' => 15, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'invited' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null],
         'approved' => ['type' => 'integer', 'length' => 4, 'unsigned' => false, 'null' => false, 'default' => '0', 'comment' => '-1: Dismissed; 0: Not addressed; 1: Approved', 'precision' => null, 'autoIncrement' => null],
         'response_date' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
@@ -45,15 +46,16 @@ class RespondentsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'email' => 'Lorem ipsum dolor sit amet',
-            'name' => 'Lorem ipsum dolor sit amet',
+            'email' => 'test_respondent@example.com',
+            'name' => 'Test Respondent',
+            'title' => 'Title',
             'survey_id' => 1,
-            'sm_respondent_id' => 'Lorem ipsum d',
-            'invited' => 1,
+            'sm_respondent_id' => '3374290102',
+            'invited' => true,
             'approved' => 1,
-            'response_date' => '2015-07-15 19:59:54',
-            'created' => '2015-07-15 19:59:54',
-            'modified' => '2015-07-15 19:59:54'
+            'response_date' => null,
+            'created' => '2014-07-24 16:38:14',
+            'modified' => '2014-07-24 16:38:15'
         ],
     ];
 }
