@@ -60,14 +60,22 @@ class CommunitiesControllerTest extends IntegrationTestCase
      */
     public function testView()
     {
-        $communitiesTable = TableRegistry::get('Communities');
-        $community = $communitiesTable->find('all')->first();
-        $this->get(Router::url([
+        // Publicly-viewable community
+        $this->get([
             'controller' => 'Communities',
             'action' => 'view',
-            $community->id
-        ]));
+            1
+        ]);
         $this->assertResponseOk();
+
+        // Not-publicly-viewable community
+        $this->get([
+            'controller' => 'Communities',
+            'action' => 'view',
+            2
+        ]);
+        $this->assertResponseError();
+        $this->assertResponseCode(403);
     }
 
     /**
