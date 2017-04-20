@@ -1,5 +1,4 @@
 <?php
-
 // Load variables from .env file
 try {
     josegonzalez\Dotenv\Loader::load([
@@ -30,12 +29,13 @@ $config = [
      * Development Mode:
      * true: Errors and warnings shown.
      */
-    'debug' => filter_var(env('DEBUG', false), FILTER_VALIDATE_BOOLEAN),
+    'debug' => filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN),
 
     /**
      * Configure basic information about the application.
      *
      * - namespace - The namespace to find app classes under.
+     * - defaultLocale - The default locale for translation, formatting currencies and numbers, date and time.
      * - encoding - The encoding used for HTML + database connections.
      * - base - The base directory the app resides in. If false this
      *   will be auto detected.
@@ -58,7 +58,8 @@ $config = [
      */
     'App' => [
         'namespace' => 'App',
-        'encoding' => 'UTF-8',
+        'encoding' => env('APP_ENCODING', 'UTF-8'),
+        'defaultLocale' => env('APP_DEFAULT_LOCALE', 'en_US'),
         'base' => false,
         'dir' => 'src',
         'webroot' => 'webroot',
@@ -83,7 +84,7 @@ $config = [
      *   You should treat it as extremely sensitive data.
      */
     'Security' => [
-        'salt' => env('SECURITY_SALT', 'XbnerIJoiqrlkBe4fq3o9lQwCAtwWA7QfpYmdYEz'),
+        'salt' => env('SECURITY_SALT', '__SALT__'),
 
         // Salt used in CakePHP 2 version of website
         'legacySalt' => env('LEGACY_SALT')
@@ -108,32 +109,37 @@ $config = [
         'default' => [
             'className' => 'File',
             'path' => CACHE,
+            'url' => env('CACHE_DEFAULT_URL', null),
         ],
 
         /**
-         * Configure the cache used for general framework caching. Path information,
-         * object listings, and translation cache files are stored with this
-         * configuration.
+         * Configure the cache used for general framework caching.
+         * Translation cache files are stored with this configuration.
+         * Duration will be set to '+2 minutes' in bootstrap.php when debug = true
+         * If you set 'className' => 'Null' core cache will be disabled.
          */
         '_cake_core_' => [
             'className' => 'File',
             'prefix' => 'cri_cake3_cake_core_',
             'path' => CACHE . 'persistent/',
             'serialize' => true,
-            'duration' => '+2 minutes',
+            'duration' => '+1 years',
+            'url' => env('CACHE_CAKECORE_URL', null),
         ],
 
         /**
          * Configure the cache for model and datasource caches. This cache
          * configuration is used to store schema descriptions, and table listings
          * in connections.
+         * Duration will be set to '+2 minutes' in bootstrap.php when debug = true
          */
         '_cake_model_' => [
             'className' => 'File',
             'prefix' => 'cri_cake3_cake_model_',
             'path' => CACHE . 'models/',
             'serialize' => true,
-            'duration' => '+2 minutes',
+            'duration' => '+1 years',
+            'url' => env('CACHE_CAKEMODEL_URL', null),
         ],
 
         'survey_urls' => [
@@ -141,7 +147,8 @@ $config = [
             'prefix' => 'survey_url_',
             'path' => CACHE . 'survey_urls/',
             'serialize' => true,
-            'duration' => '+1 year'
+            'duration' => '+1 year',
+            'url' => null,
         ]
     ],
 
@@ -163,16 +170,19 @@ $config = [
      *   logged errors/exceptions.
      * - `log` - boolean - Whether or not you want exceptions logged.
      * - `exceptionRenderer` - string - The class responsible for rendering
-     *   uncaught exceptions.  If you choose a custom class you should place
+     *   uncaught exceptions. If you choose a custom class you should place
      *   the file for that class in src/Error. This class needs to implement a
      *   render method.
      * - `skipLog` - array - List of exceptions to skip for logging. Exceptions that
      *   extend one of the listed exceptions will also be skipped for logging.
      *   E.g.:
      *   `'skipLog' => ['Cake\Network\Exception\NotFoundException', 'Cake\Network\Exception\UnauthorizedException']`
+     * - `extraFatalErrorMemory` - int - The number of megabytes to increase
+     *   the memory limit by when a fatal error is encountered. This allows
+     *   breathing room to complete logging or error handling.
      */
     'Error' => [
-        'errorLevel' => E_ALL & ~E_DEPRECATED,
+        'errorLevel' => E_ALL,
         'exceptionRenderer' => 'Cake\Error\ExceptionRenderer',
         'skipLog' => [],
         'log' => true,
@@ -182,15 +192,11 @@ $config = [
     /**
      * Email configuration.
      *
-     * You can configure email transports and email delivery profiles here.
-     *
      * By defining transports separately from delivery profiles you can easily
      * re-use transport configuration across multiple profiles.
      *
      * You can specify multiple configurations for production, development and
      * testing.
-     *
-     * ### Configuring transports
      *
      * Each transport needs a `className`. Valid options are as follows:
      *
@@ -199,18 +205,22 @@ $config = [
      *  Debug  - Do not send the email, just return the result
      *
      * You can add custom transports (or override existing transports) by adding the
-     * appropriate file to src/Network/Email.  Transports should be named
+     * appropriate file to src/Mailer/Transport. Transports should be named
      * 'YourTransport.php', where 'Your' is the name of the transport.
-     *
-     * ### Configuring delivery profiles
-     *
-     * Delivery profiles allow you to predefine various properties about email
-     * messages from your application and give the settings a name. This saves
-     * duplication across your application and makes maintenance and development
-     * easier. Each profile accepts a number of keys. See `Cake\Network\Email\Email`
-     * for more information.
      */
     'EmailTransport' => [
+        'default' => [
+            'className' => 'Mail',
+            // The following keys are used in SMTP transports
+            'host' => 'localhost',
+            'port' => 25,
+            'timeout' => 30,
+            'username' => 'user',
+            'password' => 'secret',
+            'client' => null,
+            'tls' => null,
+            'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
+        ],
 
         // Upon most recent testing (2016-12-05), using this transport has resulted in an SMTP timeout error
         'bsurelay' => [
@@ -221,7 +231,8 @@ $config = [
             'username' => env('BSU_RELAY_USERNAME'),
             'password' => env('BSU_RELAY_PASSWORD'),
             'client' => null,
-            'tls' => true
+            'tls' => true,
+            'url' => null
         ],
 
         'office365' => [
@@ -232,7 +243,8 @@ $config = [
             'username' => env('OFFICE_365_USERNAME'),
             'password' => env('OFFICE_365_PASSWORD'),
             'client' => null,
-            'tls' => true
+            'tls' => true,
+            'url' => null
         ],
 
         'localhost' => [
@@ -243,7 +255,8 @@ $config = [
             'username' => env('CBERDATA_USERNAME'),
             'password' => env('CBERDATA_PASSWORD'),
             'client' => null,
-            'tls' => false
+            'tls' => false,
+            'url' => null
         ],
 
         'Debug' => [
@@ -254,10 +267,20 @@ $config = [
             'username' => null,
             'password' => null,
             'client' => null,
-            'tls' => false
+            'tls' => false,
+            'url' => null
         ],
     ],
 
+    /**
+     * Email delivery profiles
+     *
+     * Delivery profiles allow you to predefine various properties about email
+     * messages from your application and give the settings a name. This saves
+     * duplication across your application and makes maintenance and development
+     * easier. Each profile accepts a number of keys. See `Cake\Mailer\Email`
+     * for more information.
+     */
     'Email' => [
         'default' => [
             'transport' => 'default',
@@ -298,6 +321,8 @@ $config = [
     /**
      * Connection information used by the ORM to connect
      * to your application's datastores.
+     * Do not use periods in database name - it may lead to error.
+     * See https://github.com/cakephp/cakephp/issues/6471 for details.
      * Drivers include Mysql Postgres Sqlite Sqlserver
      * See vendor\cakephp\cakephp\src\Database\Driver for complete list
      */
@@ -312,13 +337,15 @@ $config = [
              * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
              * the following line and set the port accordingly
              */
-            //'port' => 'nonstandard_port_number',
+            //'port' => 'non_standard_port_number',
             'username' => env('DB_USERNAME', 'root'),
             'password' => env('DB_PASSWORD'),
             'database' => env('DB_DATABASE', 'dc_cri'),
             'encoding' => 'utf8',
             'timezone' => 'UTC',
+            'flags' => [],
             'cacheMetadata' => true,
+            'log' => false,
 
             /**
              * Set identifier quoting to true if you are using reserved words or
@@ -338,6 +365,8 @@ $config = [
              * which is the recommended value in production environments
              */
             //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
+
+            'url' => env('DATABASE_URL', null),
         ],
 
         /**
@@ -348,7 +377,7 @@ $config = [
             'driver' => 'Cake\Database\Driver\Mysql',
             'persistent' => false,
             'host' => 'localhost',
-            //'port' => 'nonstandard_port_number',
+            //'port' => 'non_standard_port_number',
             'username' => 'root',
             'password' => null,
             'database' => 'dc_cri_testing',
@@ -356,8 +385,10 @@ $config = [
             'timezone' => 'UTC',
             'cacheMetadata' => true,
             'quoteIdentifiers' => false,
+            'log' => false,
             //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
-        ]
+            'url' => env('DATABASE_TEST_URL', null),
+        ],
     ],
 
     /**
@@ -369,12 +400,14 @@ $config = [
             'path' => LOGS,
             'file' => 'debug',
             'levels' => ['notice', 'info', 'debug'],
+            'url' => env('LOG_DEBUG_URL', null),
         ],
         'error' => [
             'className' => 'Cake\Log\Engine\FileLog',
             'path' => LOGS,
             'file' => 'error',
             'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
+            'url' => env('LOG_ERROR_URL', null),
         ],
         'email' => [
             'className' => 'Cake\Log\Engine\FileLog',
@@ -385,7 +418,6 @@ $config = [
     ],
 
     /**
-     *
      * Session configuration.
      *
      * Contains an array of settings to use for session configuration. The
@@ -399,6 +431,9 @@ $config = [
      *   `session.cookie_path` php.ini config. Defaults to base path of app.
      * - `timeout` - The time in minutes the session should be valid for.
      *    Pass 0 to disable checking timeout.
+     *    Please note that php.ini's session.gc_maxlifetime must be equal to or greater
+     *    than the largest Session['timeout'] in all served websites for it to have the
+     *    desired effect.
      * - `defaults` - The default configuration set to use as a basis for your session.
      *    There are four built-in options: php, cake, cache, database.
      * - `handler` - Can be used to enable a custom session handler. Expects an
@@ -422,7 +457,6 @@ $config = [
      */
     'Session' => [
         'defaults' => 'php',
-        'timeout' => 1440
     ],
 
     'data_center_subsite_url' => 'http://cri.cberdata.org',
@@ -438,14 +472,19 @@ $config = [
     'cashNetId' => env('CASHNET_ID')
 ];
 
-// Email
+/**
+ * Email configuration
+ */
+
+// Set default EmailTransport in debug vs. production mode
 $config['EmailTransport']['default'] = $config['EmailTransport']['office365'];
 if ($config['debug']) {
     $config['EmailTransport']['default']['className'] = 'Debug';
 }
+
+// Use default config values when unspecified
 foreach (array_keys($config['Email']) as $configuration) {
     if ($configuration != 'default') {
-        // Use default config values when unspecified
         $config['Email'][$configuration] = array_merge($config['Email']['default'], $config['Email'][$configuration]);
     }
 }
