@@ -113,7 +113,7 @@ class CommunitiesController extends AppController
         if (! ($community->public || $this->isAuthorized($this->Auth->user()))) {
             $this->Flash->error('You are not authorized to access that community.');
 
-            return $this->redirect('/');
+            return $this->redirect('/', 403);
         }
 
         if (! $this->Communities->exists(['id' => $communityId])) {
