@@ -19,7 +19,7 @@ class ActivityRecordsFixture extends TestFixture
     // @codingStandardsIgnoreStart
     public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
-        'event' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'event' => ['type' => 'string', 'length' => 100, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'user_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'community_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'survey_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
@@ -51,28 +51,4 @@ class ActivityRecordsFixture extends TestFixture
             'created' => '2016-12-21 19:13:51'
         ],
     ];
-
-    public $Communities;
-    public $Users;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->Users = TableRegistry::get('Users');
-        $admin = $this->Users
-            ->find('all')
-            ->select(['id'])
-            ->where(['role' => 'admin'])
-            ->first();
-
-        $this->records[] = [
-            'id' => 1,
-            'event' => 'Model.Community.afterAdd',
-            'user_id' => $admin->id,
-            'community_id' => 1,
-            'survey_id' => null,
-            'meta' => '',
-            'created' => '2016-12-21 19:13:51'
-        ];
-    }
 }
