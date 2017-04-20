@@ -1,6 +1,7 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
+use Cake\Routing\Router;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -41,6 +42,19 @@ class ActivityRecordsControllerTest extends IntegrationTestCase
     ];
 
     /**
+     * Sets up this group of tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->configRequest([
+            'environment' => ['HTTPS' => 'on']
+        ]);
+    }
+
+    /**
      * Test /admin/activity-records/index
      *
      * @return void
@@ -51,11 +65,11 @@ class ActivityRecordsControllerTest extends IntegrationTestCase
 
         // Unauthenticated
         $this->get($url);
-        $this->assertRedirect([
+        $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
             'action' => 'login'
-        ]);
+        ]));
 
         // Authenticated
         $this->session($this->adminUser);
