@@ -34,11 +34,11 @@
 		<log type="coverage-clover" target="build/logs/clover.xml"/>
 	</logging>
 
+	<!-- Ignore vendor tests in code coverage reports -->
 	<filter>
-		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">./src</directory>
-			<directory suffix=".php">./tests</directory>
-			<directory suffix=".php">./config</directory>
+		<whitelist>
+			<directory suffix=".php">./src/</directory>
+			<directory suffix=".php">./plugins/*/src/</directory>
 		</whitelist>
 	</filter>
 

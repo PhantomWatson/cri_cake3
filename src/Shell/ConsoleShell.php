@@ -28,7 +28,7 @@ class ConsoleShell extends Shell
     /**
      * Start the shell and interactive console.
      *
-     * @return int|void
+     * @return int|null
      */
     public function main()
     {
@@ -43,7 +43,7 @@ class ConsoleShell extends Shell
             $this->err('<info>$ php composer.phar require --dev psy/psysh</info>');
             $this->err('');
 
-            return 1;
+            return self::CODE_ERROR;
         }
 
         $this->out("You can exit with <info>`CTRL-C`</info> or <info>`exit`</info>");
@@ -62,12 +62,12 @@ class ConsoleShell extends Shell
     /**
      * Display help for this console.
      *
-     * @return ConsoleOptionParser
+     * @return \Cake\Console\ConsoleOptionParser
      */
     public function getOptionParser()
     {
-        $parser = new ConsoleOptionParser('console', false);
-        $parser->description(
+        $parser = new ConsoleOptionParser('console');
+        $parser->setDescription(
             'This shell provides a REPL that you can use to interact ' .
             'with your application in an interactive fashion. You can use ' .
             'it to run adhoc queries with your models, or experiment ' .

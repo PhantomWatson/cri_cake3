@@ -18,6 +18,7 @@ use App\Event\ActivityRecordsListener;
 use App\Event\SurveysListener;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
@@ -35,22 +36,21 @@ use Cake\Utility\Hash;
 class AppController extends Controller
 {
 
-    public $helpers = [
-        'Form' => [
-            'templates' => 'bootstrap_form'
-        ]
-    ];
-
     /**
      * Initialization hook method.
      *
      * Use this method to add common initialization code like loading components.
+     *
+     * e.g. `$this->loadComponent('Security');`
      *
      * @return void
      */
     public function initialize()
     {
         parent::initialize();
+
+        $this->loadComponent('RequestHandler');
+
         $this->loadComponent('DataCenter.Flash');
 
         $this->loadComponent('Security', [
@@ -62,6 +62,32 @@ class AppController extends Controller
             'key' => Configure::read('cookie_key')
         ]);
 
+        $this->loadAuthComponent();
+
+        // Prevents cookies from being accessible in Javascript
+        $this->Cookie->httpOnly = true;
+
+        // Set up listeners
+        $activityRecordsListener = new ActivityRecordsListener();
+        $activityRecordsListener->userId($this->Auth->user('id'));
+        EventManager::instance()->on($activityRecordsListener);
+        $surveysListener = new SurveysListener();
+        EventManager::instance()->on($surveysListener);
+
+        /*
+         * Enable the following components for recommended CakePHP security settings.
+         * see http://book.cakephp.org/3.0/en/controllers/components/security.html
+         */
+        //$this->loadComponent('Csrf');
+    }
+
+    /**
+     * Loads and configures the Auth component
+     *
+     * @return void
+     */
+    public function loadAuthComponent()
+    {
         $this->loadComponent('Auth', [
             'loginAction' => [
                 'prefix' => false,
@@ -90,16 +116,6 @@ class AppController extends Controller
             'Sorry, you are not authorized to access that page.'
             : 'Please log in before accessing that page.';
         $this->Auth->config('authError', $errorMessage);
-
-        // Prevents cookies from being accessible in Javascript
-        $this->Cookie->httpOnly = true;
-
-        // Set up listeners
-        $activityRecordsListener = new ActivityRecordsListener();
-        $activityRecordsListener->userId($this->Auth->user('id'));
-        EventManager::instance()->on($activityRecordsListener);
-        $surveysListener = new SurveysListener();
-        EventManager::instance()->on($surveysListener);
     }
 
     /**
@@ -108,7 +124,7 @@ class AppController extends Controller
      * @param \Cake\Event\Event $event Event
      * @return \Cake\Http\Response|null
      */
-    public function beforeFilter(\Cake\Event\Event $event)
+    public function beforeFilter(Event $event)
     {
         $this->Security->requireSecure();
 
@@ -154,16 +170,23 @@ class AppController extends Controller
     }
 
     /**
-     * beforeRender method
+     * Before render callback.
      *
-     * @param \Cake\Event\Event $event Event
-     * @return void
+     * @param \Cake\Event\Event $event The beforeRender event.
+     * @return \Cake\Network\Response|null|void
      */
-    public function beforeRender(\Cake\Event\Event $event)
+    public function beforeRender(Event $event)
     {
         $this->setLayoutVariables();
+
         if ($this->Auth->user('role') == 'admin') {
             $this->prepareAdminHeader();
+        }
+
+        if (!array_key_exists('_serialize', $this->viewVars) &&
+            in_array($this->response->type(), ['application/json', 'application/xml'])
+        ) {
+            $this->set('_serialize', true);
         }
     }
 

@@ -19,28 +19,31 @@
  */
 
 use Cake\Core\Plugin;
+use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
+use Cake\Routing\Route\DashedRoute;
 
-Router::defaultRouteClass('DashedRoute');
+/**
+ * The default class to use for all routes
+ *
+ * The following route classes are supplied with CakePHP and are appropriate
+ * to set as the default:
+ *
+ * - Route
+ * - InflectedRoute
+ * - DashedRoute
+ *
+ * If no call is made to `Router::defaultRouteClass()`, the class used is
+ * `Route` (`Cake\Routing\Route\Route`)
+ *
+ * Note that `Route` does not do any inflections on URLs which will result in
+ * inconsistently cased URLs when used with `:plugin`, `:controller` and
+ * `:action` markers.
+ *
+ */
+Router::defaultRouteClass(DashedRoute::class);
 
-Router::prefix('admin', function ($routes) {
-    $routes->extensions(['json']);
-
-    $routes->connect('/guide', ['controller' => 'Pages', 'action' => 'guide']);
-    $routes->connect('/choose_client', ['controller' => 'Users', 'action' => 'chooseClient']);
-
-    $routes->fallbacks('DashedRoute');
-});
-
-Router::prefix('client', function ($routes) {
-    $routes->connect('/home', ['controller' => 'Communities', 'action' => 'index']);
-    $routes->connect('/reactivate', ['controller' => 'Communities', 'action' => 'reactivate']);
-    $routes->redirect('/', ['controller' => 'Communities', 'action' => 'index']);
-
-    $routes->fallbacks('DashedRoute');
-});
-
-Router::scope('/', function ($routes) {
+Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/', ['controller' => 'Pages', 'action' => 'home']);
     $routes->connect('/glossary', ['controller' => 'Pages', 'action' => 'glossary']);
     $routes->connect('/credits', ['controller' => 'Pages', 'action' => 'credits']);
@@ -83,7 +86,44 @@ Router::scope('/', function ($routes) {
     $routes->redirect('/xmlrpc.php', '/');
     $routes->redirect('/administrator/*', '/');
 
+    /**
+     * Connect catchall routes for all controllers.
+     *
+     * Using the argument `DashedRoute`, the `fallbacks` method is a shortcut for
+     *    `$routes->connect('/:controller', ['action' => 'index'], ['routeClass' => 'DashedRoute']);`
+     *    `$routes->connect('/:controller/:action/*', [], ['routeClass' => 'DashedRoute']);`
+     *
+     * Any route class can be used with this method, such as:
+     * - DashedRoute
+     * - InflectedRoute
+     * - Route
+     * - Or your own route class
+     *
+     * You can remove these routes once you've connected the
+     * routes you want in your application.
+     */
+    $routes->fallbacks(DashedRoute::class);
+});
+
+Router::prefix('admin', function ($routes) {
+    $routes->extensions(['json']);
+
+    $routes->connect('/guide', ['controller' => 'Pages', 'action' => 'guide']);
+    $routes->connect('/choose_client', ['controller' => 'Users', 'action' => 'chooseClient']);
+
     $routes->fallbacks('DashedRoute');
 });
 
+Router::prefix('client', function ($routes) {
+    $routes->connect('/home', ['controller' => 'Communities', 'action' => 'index']);
+    $routes->connect('/reactivate', ['controller' => 'Communities', 'action' => 'reactivate']);
+    $routes->redirect('/', ['controller' => 'Communities', 'action' => 'index']);
+
+    $routes->fallbacks('DashedRoute');
+});
+
+/**
+ * Load all plugin routes.  See the Plugin documentation on
+ * how to customize the loading of plugin routes.
+ */
 Plugin::routes();
