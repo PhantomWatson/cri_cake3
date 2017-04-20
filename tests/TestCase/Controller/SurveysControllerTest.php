@@ -68,10 +68,10 @@ class SurveysControllerTest extends IntegrationTestCase
     }
 
     /**
-    * Test for /surveys/get-survey-list
-    *
-    * @return void
-    */
+     * Test for /surveys/get-survey-list
+     *
+     * @return void
+     */
     public function testGetSurveyList()
     {
         $this->markTestIncomplete('Not implemented yet.');
@@ -196,7 +196,6 @@ class SurveysControllerTest extends IntegrationTestCase
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
-
 
     /**
      * Test for /client/surveys/invite
