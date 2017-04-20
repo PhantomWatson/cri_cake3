@@ -15,7 +15,6 @@
         <th>
             Time
         </th>
-        <th></th>
     </tr>
     </thead>
     <tbody>
