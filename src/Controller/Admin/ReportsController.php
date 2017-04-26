@@ -39,7 +39,7 @@ class ReportsController extends AppController
      */
     public function ocra()
     {
-        if (! isset($_GET['debug'])) {
+        if (! $this->request->getQuery('debug')) {
             $date = date('M-d-Y');
             $this->respondWithSpreadsheet("CRI Report - OCRA - $date.xlsx");
         }
@@ -57,7 +57,7 @@ class ReportsController extends AppController
      */
     public function admin()
     {
-        if (! isset($_GET['debug'])) {
+        if (! $this->request->getQuery('debug')) {
             $date = date('M-d-Y');
             $this->respondWithSpreadsheet("CRI Report - Admin - $date.xlsx");
         }

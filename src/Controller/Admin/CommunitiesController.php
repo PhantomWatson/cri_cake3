@@ -146,8 +146,9 @@ class CommunitiesController extends AppController
      */
     public function index()
     {
-        if (isset($_GET['search'])) {
-            $this->paginate['conditions']['Communities.name LIKE'] = '%' . $_GET['search'] . '%';
+        $search = $this->request->getQuery('search');
+        if ($search !== null) {
+            $this->paginate['conditions']['Communities.name LIKE'] = "%$search%";
         } else {
             $this->adminIndexFilter();
         }

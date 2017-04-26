@@ -47,10 +47,11 @@ class CommunitiesController extends AppController
         if ($this->request->action == 'view') {
             if (isset($this->request->pass[0]) && ! empty($this->request->pass[0])) {
                 $communityId = $this->request->pass[0];
-            } elseif (isset($_GET['cid']) && ! empty($_GET['cid'])) {
-                $communityId = $_GET['cid'];
             } else {
-                throw new NotFoundException('Community ID not specified');
+                $communityId = $this->request->getQuery('cid');
+                if (! $communityId) {
+                    throw new NotFoundException('Community ID not specified');
+                }
             }
             $userId = isset($user['id']) ? $user['id'] : null;
             $usersTable = TableRegistry::get('Users');
@@ -99,8 +100,8 @@ class CommunitiesController extends AppController
      */
     public function view($communityId = null)
     {
-        if (isset($_GET['cid'])) {
-            $communityId = $_GET['cid'];
+        if ($this->request->getQuery('cid')) {
+            $communityId = $this->request->getQuery('cid');
         }
         if (empty($communityId)) {
             throw new NotFoundException('Community ID not specified');
@@ -156,17 +157,19 @@ class CommunitiesController extends AppController
     {
         $limit = 10;
 
-        if (! isset($_GET['term'])) {
+        $term = $this->request->getQuery('term');
+
+        if ($term === null) {
             throw new NotFoundException('No term provided for autocomplete');
         }
 
         // Communities.name will be compared via LIKE to each of these until $limit communities are found.
         $patterns = [
-            $_GET['term'],
-            $_GET['term'] . ' %',
-            $_GET['term'] . '%',
-            '% ' . $_GET['term'] . '%',
-            '%' . $_GET['term'] . '%'
+            $term,
+            "$term %",
+            "$term%",
+            "% $term%",
+            "%$term%"
         ];
 
         // Collect communities up to $limit
