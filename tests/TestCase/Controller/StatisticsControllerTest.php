@@ -2,12 +2,12 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\StatisticsController;
-use Cake\TestSuite\IntegrationTestCase;
+use App\Test\TestCase\ApplicationTest;
 
 /**
  * App\Controller\StatisticsController Test Case
  */
-class StatisticsControllerTest extends IntegrationTestCase
+class StatisticsControllerTest extends ApplicationTest
 {
 
     /**

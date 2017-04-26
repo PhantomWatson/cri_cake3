@@ -27,6 +27,25 @@ use Cake\TestSuite\IntegrationTestCase;
 class ApplicationTest extends IntegrationTestCase
 {
 
+    public $adminUser = [
+        'Auth' => [
+            'User' => [
+                'id' => 1,
+                'role' => 'admin',
+                'salutation' => '',
+                'name' => 'Test Admin',
+                'email' => 'testadmin@example.com',
+                'phone' => '765-285-3399',
+                'title' => 'Test',
+                'organization' => 'Test',
+                'password' => '$2y$10$oaedH1cbAvt/wayrRJlrVeMWtoQSzgBee81iivOmw4tjMlnvfdP/a',
+                'all_communities' => true,
+                'created' => '2013-10-16 11:49:38',
+                'modified' => '2016-01-26 01:06:26'
+            ]
+        ]
+    ];
+
     /**
      * testMiddleware
      *

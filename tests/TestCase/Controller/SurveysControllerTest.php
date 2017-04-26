@@ -2,12 +2,12 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\SurveysController;
-use Cake\TestSuite\IntegrationTestCase;
+use App\Test\TestCase\ApplicationTest;
 
 /**
  * App\Controller\SurveysController Test Case
  */
-class SurveysControllerTest extends IntegrationTestCase
+class SurveysControllerTest extends ApplicationTest
 {
 
     /**

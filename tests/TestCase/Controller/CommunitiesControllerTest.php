@@ -1,6 +1,7 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
+use App\Test\TestCase\ApplicationTest;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\TestSuite\IntegrationTestCase;
@@ -8,7 +9,7 @@ use Cake\TestSuite\IntegrationTestCase;
 /**
  * App\Controller\CommunitiesController Test Case
  */
-class CommunitiesControllerTest extends IntegrationTestCase
+class CommunitiesControllerTest extends ApplicationTest
 {
 
     /**
