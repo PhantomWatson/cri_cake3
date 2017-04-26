@@ -29,7 +29,6 @@ script:
   - mkdir -p build/logs
   - phpunit --coverage-clover build/logs/clover.xml
 
-
 notifications:
   email: false
   slack: cber:ZeUxtjnpHNEYCkMtUBhskwXl
