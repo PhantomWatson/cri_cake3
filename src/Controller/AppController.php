@@ -390,7 +390,8 @@ class AppController extends Controller
                 'prefix' => 'admin',
                 'controller' => 'ActivityRecords',
                 'action' => 'community'
-            ]) . '/{community-id}'
+            ]) . '/{community-id}',
+            '(De)activate' => Router::url($route + ['action' => 'activate']) . '/{community-id}'
         ];
 
         $surveyPages = [
