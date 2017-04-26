@@ -156,6 +156,10 @@ class CommunitiesController extends AppController
     {
         $limit = 10;
 
+        if (! isset($_GET['term'])) {
+            throw new NotFoundException('No term provided for autocomplete');
+        }
+
         // Communities.name will be compared via LIKE to each of these until $limit communities are found.
         $patterns = [
             $_GET['term'],
