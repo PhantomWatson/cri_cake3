@@ -86,7 +86,12 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAutocomplete()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/communities/autocomplete?term=tes');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Test Community (public)');
+
+        $this->get('/communities/autocomplete');
+        $this->assertResponseError();
     }
 
     /**
