@@ -84,6 +84,22 @@ class ActivityRecordsControllerTest extends IntegrationTestCase
      */
     public function testAdminCommunity()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = '/admin/activity-records/community/1';
+
+        // Unauthenticated
+        $this->get($url);
+        $this->assertRedirectContains(Router::url([
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'login'
+        ]));
+
+        // Authenticated
+        $this->session($this->adminUser);
+        $this->get($url);
+        $this->assertResponseOk();
+        $this->assertResponseContains('Community added');
+        $this->assertResponseContains('Test Community (public)');
+        $this->assertResponseContains('Test Admin');
     }
 }
