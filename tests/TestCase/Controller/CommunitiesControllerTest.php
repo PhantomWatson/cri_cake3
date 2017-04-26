@@ -101,7 +101,40 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminActivate()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = '/admin/communities/activate/1';
+
+        // Unauthenticated
+        $this->get($url);
+        $this->assertRedirectContains(Router::url([
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'login'
+        ]));
+
+        // Authenticated
+        $this->session($this->adminUser);
+        $this->get($url);
+        $this->assertResponseContains('Mark Test Community (public) inactive');
+
+        // Deactivating
+        $this->put($url, [
+            'active' => 0
+        ]);
+        $this->assertResponseSuccess();
+
+        // Checking deactivated community
+        $this->get($url);
+        $this->assertResponseContains('Reactivate Test Community (public)');
+
+        // Reactivating
+        $this->put($url, [
+            'active' => 1
+        ]);
+        $this->assertResponseSuccess();
+
+        // Checking reactivated community
+        $this->get($url);
+        $this->assertResponseContains('Mark Test Community (public) inactive');
     }
 
     /**
