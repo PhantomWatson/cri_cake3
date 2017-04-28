@@ -122,6 +122,11 @@ class RespondentsController extends AppController
         return $this->render('/Client/Respondents/index');
     }
 
+    /**
+     * Shows a list of all invalid email addresses in respondents table
+     *
+     * @return void
+     */
     public function validateEmails()
     {
         $respondents = $this->Respondents->find('all')
