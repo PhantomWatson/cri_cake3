@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\Controller\AppController;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Cake\Validation\Validation;
 
 class RespondentsController extends AppController
 {
@@ -119,5 +120,19 @@ class RespondentsController extends AppController
         $this->SurveyResults->prepareRespondentsClientsPage(compact('surveyId'));
 
         return $this->render('/Client/Respondents/index');
+    }
+
+    public function validateEmails()
+    {
+        $respondents = $this->Respondents->find('all')
+            ->select(['id', 'email']);
+        $invalidEmails = [];
+        foreach ($respondents as $respondent) {
+            if (! Validation::email($respondent->email)) {
+                $invalidEmails[] = $respondent->email;
+            }
+        }
+
+        $this->set(compact('invalidEmails'));
     }
 }
