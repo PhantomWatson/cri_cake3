@@ -54,6 +54,6 @@ composer.lock
 /webroot/js/*.min.js
 
 # Environment variable definitions
-/oonfig/.env
-/oonfig/.env.production
-/oonfig/.env.dev
+/config/.env
+/config/.env.production
+/config/.env.dev
