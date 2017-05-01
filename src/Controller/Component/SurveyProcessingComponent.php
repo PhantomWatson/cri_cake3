@@ -328,9 +328,11 @@ class SurveyProcessingComponent extends Component
 
         $eeCount = count($this->errorEmails);
         if ($eeCount) {
-            $list = $this->arrayToList($this->errorEmails);
-            $msg = "An invitation could not be sent to $list." .
-                ' Please try again or contact an administrator if you need assistance.';
+            $list = $this->arrayToList($this->errorEmails, 'or');
+            $msg = __n('An invitation', 'Invitations', $eeCount) .
+                " could not be sent to $list." .
+                ' Please correct any indicated errors and try again,' .
+                ' or contact an administrator if you need assistance.';
             $this->Flash->error($msg);
         }
 
