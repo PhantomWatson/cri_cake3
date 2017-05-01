@@ -292,8 +292,11 @@ class SurveyProcessingComponent extends Component
             $this->approvedRespondents[] = $respondent->email;
         } else {
             $this->errorEmails[] = $invitee['email'];
-            if (Configure::read('debug')) {
-                $this->Flash->dump($respondent->errors());
+            if (isset($errors['email']['validFormat'])) {
+                $msg = 'The email address "' . $invitee['email'] . '" is not formatted correctly.';
+                $this->Flash->error($msg);
+            } elseif (Configure::read('debug')) {
+                $this->Flash->dump($errors);
             }
         }
     }
@@ -326,7 +329,7 @@ class SurveyProcessingComponent extends Component
         $eeCount = count($this->errorEmails);
         if ($eeCount) {
             $list = $this->arrayToList($this->errorEmails);
-            $msg = "There was an error inviting $list." .
+            $msg = "An invitation could not be sent to $list." .
                 ' Please try again or contact an administrator if you need assistance.';
             $this->Flash->error($msg);
         }
