@@ -285,7 +285,6 @@ class SurveysController extends AppController
             'surveyId',
             'unaddressedUnapprovedRespondents'
         ));
-        $this->render('..' . DS . '..' . DS . 'Client' . DS . 'Surveys' . DS . 'invite');
     }
 
     /**
