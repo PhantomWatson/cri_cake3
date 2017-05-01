@@ -53,7 +53,11 @@ class RespondentsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('email', 'create');
+            ->requirePresence('email', 'create')
+            ->add('email', 'validFormat', [
+                'rule' => 'email',
+                'message' => 'Email address must be in valid format'
+            ]);
 
         $validator
             ->requirePresence('name', 'create');
