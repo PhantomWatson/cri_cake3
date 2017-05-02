@@ -180,9 +180,6 @@
                             [
                                 'class' => 'form-control',
                                 'disabled' => true,
-                                'div' => [
-                                    'class' => 'form-group'
-                                ],
                                 'label' => false,
                                 'name' => 'invitees[0][name]',
                                 'placeholder' => 'Name',
@@ -195,9 +192,6 @@
                             [
                                 'class' => 'form-control',
                                 'disabled' => true,
-                                'div' => [
-                                    'class' => 'form-group'
-                                ],
                                 'label' => false,
                                 'name' => 'invitees[0][email]',
                                 'placeholder' => 'Email',
@@ -210,9 +204,6 @@
                             [
                                 'class' => 'form-control',
                                 'disabled' => true,
-                                'div' => [
-                                    'class' => 'form-group'
-                                ],
                                 'label' => false,
                                 'name' => 'invitees[0][title]',
                                 'placeholder' => 'Professional Title',
@@ -233,9 +224,6 @@
                             'invitees.' . $key . '.name',
                             [
                                 'class' => 'form-control',
-                                'div' => [
-                                    'class' => 'form-group'
-                                ],
                                 'label' => false,
                                 'placeholder' => 'Name',
                                 'required' => true,
@@ -246,9 +234,6 @@
                             'invitees.' . $key . '.email',
                             [
                                 'class' => 'form-control',
-                                'div' => [
-                                    'class' => 'form-group'
-                                ],
                                 'label' => false,
                                 'placeholder' => 'Email',
                                 'required' => true,
@@ -259,9 +244,6 @@
                             'invitees.' . $key . '.title',
                             [
                                 'class' => 'form-control',
-                                'div' => [
-                                    'class' => 'form-group'
-                                ],
                                 'label' => false,
                                 'placeholder' => 'Professional Title',
                                 'required' => true
