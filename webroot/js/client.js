@@ -49,11 +49,24 @@ var surveyInvitationForm = {
         });
         $('#UserClientInviteForm').submit(function (event) {
             var form = $(this);
+
+            // Note redundant emails
             if (form.find('.already_invited').length > 0) {
                 alert('Please remove any email addresses that have already been recorded before continuing.');
                 event.preventDefault();
                 return false;
             }
+
+            // Note any blank fields
+            var inputs = form.find('input:visible');
+            for (var i = 0; i < inputs.length; i++) {
+                if ($(inputs[i]).val() == '') {
+                    alert('All fields (name, email, and professional title) must be filled out before continuing.');
+                    event.preventDefault();
+                    return false;
+                }
+            }
+
             return true;
         });
         $('#UserClientInviteForm button.remove').click(function () {
