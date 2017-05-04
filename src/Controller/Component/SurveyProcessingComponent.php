@@ -201,7 +201,8 @@ class SurveyProcessingComponent extends Component
 
             $invitee['email'] = strtolower($invitee['email']);
 
-            if (empty($invitee['email'])) {
+            // Ignore blank rows
+            if ($invitee['name'] . $invitee['email'] . $invitee['title'] == '') {
                 unset($this->invitees[$i]);
             }
         }
@@ -296,6 +297,8 @@ class SurveyProcessingComponent extends Component
 
             if (isset($errors['email']['validFormat'])) {
                 $this->Flash->error('The email address "' . $invitee['email'] . '" is not formatted correctly.');
+            } elseif ($invitee['email'] == '') {
+                $this->Flash->error('The email address for ' . $invitee['name'] . ' was left blank.');
             } else {
                 $this->Flash->error('There was an error sending an invitation to ' . $invitee['email'] . '. ' .
                     'Make sure that all information is included and formatted correctly.');
