@@ -450,15 +450,16 @@ div.all_communities {
         margin-left: 15px;
         vertical-align: baseline;
     }
-    /* Don't show a 'remove' button if there's only one row */
-    tbody.input {
-        tr:only-child {
-            button {
-                display: none;
-            }
-        }
+    tbody {
         .form-group {
             margin-bottom: 0;
+        }
+        tr {
+            display: none;
+
+            &:first-child {
+                display: table-row;
+            }
         }
     }
     td,
@@ -472,6 +473,9 @@ div.all_communities {
     }
     .submit {
         display: inline;
+    }
+    button.remove {
+        display: none;
     }
 }
 

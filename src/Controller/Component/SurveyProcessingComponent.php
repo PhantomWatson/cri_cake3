@@ -15,6 +15,7 @@ class SurveyProcessingComponent extends Component
     public $communityId = null;
     public $errorEmails = [];
     public $invitees = [];
+    public $pendingInvitees = [];
     public $recipients = [];
     public $redundantEmails = [];
     public $respondentType = null;
@@ -292,12 +293,18 @@ class SurveyProcessingComponent extends Component
             $this->approvedRespondents[] = $respondent->email;
         } else {
             $this->errorEmails[] = $invitee['email'];
+
             if (isset($errors['email']['validFormat'])) {
-                $msg = 'The email address "' . $invitee['email'] . '" is not formatted correctly.';
-                $this->Flash->error($msg);
-            } elseif (Configure::read('debug')) {
-                $this->Flash->dump($errors);
+                $this->Flash->error('The email address "' . $invitee['email'] . '" is not formatted correctly.');
+            } else {
+                $this->Flash->error('There was an error sending an invitation to ' . $invitee['email'] . '. ' .
+                    'Make sure that all information is included and formatted correctly.');
             }
+
+            // Manually set this field so that its value will appear in the form despite being invalid
+            $respondent->email = $invitee['email'];
+
+            $this->pendingInvitees[] = $respondent;
         }
     }
 

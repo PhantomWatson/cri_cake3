@@ -29,7 +29,7 @@
     $bootstrapFormTemplate = include(ROOT.DS.'config'.DS.'bootstrap_form.php');
     $formTemplate = $bootstrapFormTemplate;
     $formTemplate['inputContainer'] = '<td>'.$formTemplate['inputContainer'].'</td>';
-    $formTemplate['inputContainerError'] = '<td>'.$formTemplate['inputContainerError'].'</td>';
+    $formTemplate['inputContainerError'] = '<td>{{error}}'.$formTemplate['inputContainerError'].'</td>';
     echo $this->Form->create(
         'User',
         [
@@ -158,6 +158,8 @@
     </div>
 
     <div>
+
+
         <table>
             <thead>
                 <tr>
@@ -172,88 +174,51 @@
                     </th>
                 </tr>
             </thead>
-            <tbody class="template" style="display: none;">
-                <tr id="invitation_fields_template">
-                    <?php
-                        echo $this->Form->input(
-                            'template.name',
-                            [
-                                'class' => 'form-control',
-                                'disabled' => true,
-                                'label' => false,
-                                'name' => 'invitees[0][name]',
-                                'placeholder' => 'Name',
-                                'required' => true,
-                                'type' => 'text'
-                            ]
-                        );
-                        echo $this->Form->input(
-                            'template.email',
-                            [
-                                'class' => 'form-control',
-                                'disabled' => true,
-                                'label' => false,
-                                'name' => 'invitees[0][email]',
-                                'placeholder' => 'Email',
-                                'required' => true,
-                                'type' => 'email'
-                            ]
-                        );
-                        echo $this->Form->input(
-                            'template.title',
-                            [
-                                'class' => 'form-control',
-                                'disabled' => true,
-                                'label' => false,
-                                'name' => 'invitees[0][title]',
-                                'placeholder' => 'Professional Title',
-                                'required' => true
-                            ]
-                        );
-                    ?>
-                    <td>
-                        <button type="button" class="remove btn btn-danger pull-right">Remove</button>
-                    </td>
-                </tr>
-            </tbody>
-            <tbody class="input">
-                <?php $invitees = isset($this->request->data['invitees']) ? $this->request->data['invitees'] : []; ?>
-                <?php foreach ($invitees as $key => $invitee): ?>
+            <tbody>
+                <?php for ($n = 0; $n < 1; $n++): ?>
                     <tr>
+                        <?php
+                            $this->Form->unlockField("invitees.$n.name");
+                            $this->Form->unlockField("invitees.$n.email");
+                            $this->Form->unlockField("invitees.$n.title");
+                        ?>
                         <?= $this->Form->input(
-                            'invitees.' . $key . '.name',
+                            "invitees.$n.name",
                             [
                                 'class' => 'form-control',
                                 'label' => false,
                                 'placeholder' => 'Name',
                                 'required' => true,
-                                'type' => 'text'
+                                'type' => 'text',
+                                'value' => isset($pendingInvitees[$n]['name']) ? $pendingInvitees[$n]['name'] : null
                             ]
                         ) ?>
                         <?= $this->Form->input(
-                            'invitees.' . $key . '.email',
+                            "invitees.$n.email",
                             [
                                 'class' => 'form-control',
                                 'label' => false,
                                 'placeholder' => 'Email',
                                 'required' => true,
-                                'type' => 'email'
+                                'type' => 'email',
+                                'value' => isset($pendingInvitees[$n]['email']) ? $pendingInvitees[$n]['email'] : null
                             ]
                         ) ?>
                         <?= $this->Form->input(
-                            'invitees.' . $key . '.title',
+                            "invitees.$n.title",
                             [
                                 'class' => 'form-control',
                                 'label' => false,
                                 'placeholder' => 'Professional Title',
-                                'required' => true
+                                'required' => true,
+                                'value' => isset($pendingInvitees[$n]['title']) ? $pendingInvitees[$n]['title'] : null
                             ]
                         ) ?>
                         <td>
                             <button type="button" class="remove btn btn-danger pull-right">Remove</button>
                         </td>
                     </tr>
-                <?php endforeach; ?>
+                <?php endfor; ?>
             </tbody>
             <tfoot>
                 <tr>
