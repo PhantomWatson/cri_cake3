@@ -147,6 +147,18 @@ var surveyInvitationForm = {
                 surveyInvitationForm.displayUploadResult(message, 'alert alert-danger');
             }
         });
+
+        // Set up email trimming / checking
+        $('#UserClientInviteForm input[type=email]').change(function () {
+            var field = $(this);
+
+            // Trim whitespace
+            var trimmedInput = field.val().trim();
+            field.val(trimmedInput);
+
+            // Check validity of email
+            surveyInvitationForm.checkEmail(field);
+        });
     },
     
     insertSpreadsheetData: function (data) {
