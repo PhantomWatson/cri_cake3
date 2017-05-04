@@ -54,7 +54,8 @@ class AppController extends Controller
         $this->loadComponent('DataCenter.Flash');
 
         $this->loadComponent('Security', [
-            'blackHoleCallback' => 'forceSSL'
+            'blackHoleCallback' => 'forceSSL',
+            'validatePost' => false
         ]);
 
         $this->loadComponent('Cookie', [
