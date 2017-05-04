@@ -164,4 +164,19 @@
             <?= $totalAlignment ?>%
         </span>
     </p>
+
+    <?php if ($unaddressedUnapprovedCount): ?>
+        <p>
+            <?= $this->Html->link(
+                "Review and approve $unaddressedUnapprovedCount unapproved " .
+                    __n('response', 'responses', $unaddressedUnapprovedCount),
+                [
+                    'prefix' => 'admin',
+                    'controller' => 'Respondents',
+                    'action' => 'unapproved',
+                    $survey['id']
+                ]
+            ) ?>
+        </p>
+    <?php endif; ?>
 </div>

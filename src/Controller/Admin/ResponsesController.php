@@ -102,6 +102,14 @@ class ResponsesController extends AppController
             $rankOrder = null;
         }
 
+        // Get total unaddressed-unapproved responses
+        $unaddressedUnapprovedCount = 0;
+        foreach ($responses as $response) {
+            if ($response->respondent->approved == 0) {
+                $unaddressedUnapprovedCount++;
+            }
+        }
+
         $this->set([
             'averageRanks' => $averageRanks,
             'community' => $community,
@@ -112,7 +120,8 @@ class ResponsesController extends AppController
             'responses' => $responses,
             'sectors' => $sectors,
             'survey' => $survey,
-            'titleForLayout' => $community->name . ': Community ' . ucwords($survey->type) . 's Alignment'
+            'titleForLayout' => $community->name . ': Community ' . ucwords($survey->type) . 's Alignment',
+            'unaddressedUnapprovedCount' => $unaddressedUnapprovedCount
         ]);
     }
 
