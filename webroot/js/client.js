@@ -60,7 +60,7 @@ var surveyInvitationForm = {
             // Note any blank fields
             var inputs = form.find('input:visible');
             for (var i = 0; i < inputs.length; i++) {
-                if ($(inputs[i]).val() == '') {
+                if ($(inputs[i]).val() === '') {
                     alert('All fields (name, email, and professional title) must be filled out before continuing.');
                     event.preventDefault();
                     return false;
