@@ -175,7 +175,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php for ($n = 0; $n < 1; $n++): ?>
+                <?php for ($n = 0; $n < 20; $n++): ?>
                     <tr>
                         <?php
                             $this->Form->unlockField("invitees.$n.name");
