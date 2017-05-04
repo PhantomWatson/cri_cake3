@@ -105,7 +105,7 @@ var surveyInvitationForm = {
         });
         
         // Set up form protection
-        formProtector.protect('UserClientInviteForm');
+        formProtector.protect('UserClientInviteForm', {});
 
         // Set up email trimming / checking
         $('#UserClientInviteForm input[type=email]').change(function () {
