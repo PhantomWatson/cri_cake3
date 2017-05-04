@@ -126,40 +126,7 @@
         Enter Community <?= ucwords($surveyType) ?>s to Invite
     </h2>
 
-    <p>
-        Enter information for one or more community <?= $respondentTypePlural ?> to send them questionnaire invitations.
-        Alternatively, you can
-        <?php
-            $filename = ($surveyType == 'official') ?
-                'Community Leadership Alignment Assessment invitations.xlsx' :
-                'Community Organizations Alignment Assessment invitations.xlsx';
-        ?>
-        <a href="/files/<?= $filename ?>">download a spreadsheet (.xlsx)</a>,
-        fill it out, and then
-        <button class="btn btn-link" id="toggle-upload">
-            upload it
-        </button>
-        to automatically fill out this form.
-    </p>
-
-    <div id="upload-container">
-        <p>
-            Select an invitation spreadsheet to upload:
-            <span id="spreadsheet-upload">
-                <input type="file" id="spreadsheet-upload-input" name="files[]" accept=".xlsx" />
-            </span>
-        </p>
-        <div class="progress" id="upload-progress">
-            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-                0%
-            </div>
-        </div>
-        <p id="upload-result"></p>
-    </div>
-
     <div>
-
-
         <table>
             <thead>
                 <tr>
