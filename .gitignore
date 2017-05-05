@@ -57,3 +57,6 @@ composer.lock
 /config/.env
 /config/.env.production
 /config/.env.dev
+
+# Code coverage report
+/build/logs/clover.xml
