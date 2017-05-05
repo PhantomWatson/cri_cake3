@@ -28,9 +28,9 @@ class ProductsTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->table('products');
-        $this->displayField('description');
-        $this->primaryKey('id');
+        $this->setTable('products');
+        $this->setDisplayField('description');
+        $this->setPrimaryKey('id');
         $this->hasMany('Purchases', [
             'foreignKey' => 'product_id'
         ]);

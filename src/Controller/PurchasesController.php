@@ -55,6 +55,6 @@ class PurchasesController extends AppController
             }
         }
 
-        $this->viewBuilder()->layout('blank');
+        $this->viewBuilder()->setLayout('blank');
     }
 }

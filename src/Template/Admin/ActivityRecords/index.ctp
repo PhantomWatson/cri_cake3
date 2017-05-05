@@ -26,7 +26,7 @@
 <?= $this->element('activity_records') ?>
 
 <p>
-    <?php if ($this->request->query('show-dummy')): ?>
+    <?php if ($this->request->getQuery('show-dummy')): ?>
         <?= $this->Html->link(
             'Hide activities for dummy communities',
             ['?' => ['show-dummy' => 0]]

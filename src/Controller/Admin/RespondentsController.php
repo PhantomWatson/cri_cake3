@@ -60,7 +60,7 @@ class RespondentsController extends AppController
         $this->set([
             'success' => (bool)$result
         ]);
-        $this->viewBuilder()->layout('blank');
+        $this->viewBuilder()->setLayout('blank');
         $this->render(DS . 'Client' . DS . 'Respondents' . DS . 'approve_uninvited');
     }
 
@@ -81,7 +81,7 @@ class RespondentsController extends AppController
         $this->set([
             'success' => (bool)$result
         ]);
-        $this->viewBuilder()->layout('blank');
+        $this->viewBuilder()->setLayout('blank');
         $this->render(DS . 'Client' . DS . 'Respondents' . DS . 'dismiss_uninvited');
     }
 

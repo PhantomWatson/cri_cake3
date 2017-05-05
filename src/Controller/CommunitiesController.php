@@ -32,7 +32,7 @@ class CommunitiesController extends AppController
     public function beforeRender(\Cake\Event\Event $event)
     {
         parent::beforeRender($event);
-        $this->viewBuilder()->helpers(['GoogleCharts.GoogleCharts']);
+        $this->viewBuilder()->setHelpers(['GoogleCharts.GoogleCharts']);
     }
 
     /**
@@ -195,6 +195,6 @@ class CommunitiesController extends AppController
         }
 
         $this->set(['communities' => $retval]);
-        $this->viewBuilder()->layout('json');
+        $this->viewBuilder()->setLayout('json');
     }
 }

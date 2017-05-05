@@ -74,6 +74,6 @@ class ActivityRecordsListener implements EventListenerInterface
             $meta['userId'] = $this->userId();
         }
         $activityRecordsTable = TableRegistry::get('ActivityRecords');
-        $activityRecordsTable->add($event->name(), $meta);
+        $activityRecordsTable->add($event->getName(), $meta);
     }
 }

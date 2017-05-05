@@ -33,13 +33,13 @@ class SurveysController extends AppController
      */
     public function import($surveyId = null)
     {
-        $this->viewBuilder()->layout('blank');
+        $this->viewBuilder()->setLayout('blank');
         $importedCount = 0;
 
         // Disallow import if survey is inactive
         $survey = $this->Surveys->get($surveyId);
         if (! $survey->active) {
-            $this->response->statusCode(403);
+            $this->response->withStatus(403);
             $this->set('message', 'This questionnaire is currently inactive. New responses cannot be imported.');
 
             return $this->render('import');
@@ -92,7 +92,7 @@ class SurveysController extends AppController
                         'invited' => false,
                         'approved' => $approved ? 1 : 0
                     ]);
-                    $errors = $newRespondent->errors();
+                    $errors = $newRespondent->getErrors();
                     if (empty($errors)) {
                         $respondentsTable->save($newRespondent);
                         $respondentId = $newRespondent->id;
@@ -114,7 +114,7 @@ class SurveysController extends AppController
                     }
                     if (! empty($newData)) {
                         $respondentRecord = $respondentsTable->patchEntity($respondentRecord, $newData);
-                        $errors = $respondentRecord->errors();
+                        $errors = $respondentRecord->getErrors();
                         if (empty($errors)) {
                             $respondentsTable->save($respondentRecord);
                         } else {
@@ -155,7 +155,7 @@ class SurveysController extends AppController
                 }
                 $newResponse = $responsesTable->newEntity($responseFields);
 
-                $errors = $newResponse->errors();
+                $errors = $newResponse->getErrors();
                 if (empty($errors)) {
                     $responsesTable->save($newResponse);
                     $importedCount++;
@@ -199,7 +199,7 @@ class SurveysController extends AppController
                 $message .= '<li>' . $errorMsg . '</li>';
             }
             $message .= '</ul>';
-            $this->response->statusCode(500);
+            $this->response->withStatus(500);
         }
         if ($importedCount) {
             $event = new Event('Model.Response.afterImport', $this, ['meta' => [
@@ -222,7 +222,7 @@ class SurveysController extends AppController
      */
     private function renderImportError($message)
     {
-        $this->response->statusCode(500);
+        $this->response->withStatus(500);
         $this->set(compact('message'));
 
         return $this->render('import');
@@ -236,11 +236,11 @@ class SurveysController extends AppController
     public function getSurveyList()
     {
         $SurveyMonkey = new SurveyMonkey();
-        $result = $SurveyMonkey->getSurveyList($this->request->query);
+        $result = $SurveyMonkey->getSurveyList($this->request->getQueryParams());
         $this->set([
             'result' => json_encode($result)
         ]);
-        $this->viewBuilder()->layout('json');
+        $this->viewBuilder()->setLayout('json');
         $this->render('api');
     }
 
@@ -256,7 +256,7 @@ class SurveysController extends AppController
         $this->set([
             'result' => $SurveyMonkey->getSurveyUrl($smId)
         ]);
-        $this->viewBuilder()->layout('json');
+        $this->viewBuilder()->setLayout('json');
         $this->render('api');
     }
 
@@ -283,7 +283,7 @@ class SurveysController extends AppController
                 'type' => $survey->type
             ];
         }
-        $this->viewBuilder()->layout('json');
+        $this->viewBuilder()->setLayout('json');
         $this->set('community', $community);
     }
 
@@ -298,7 +298,7 @@ class SurveysController extends AppController
         $SurveyMonkey = new SurveyMonkey();
         $result = $SurveyMonkey->getQuestionAndAnswerIds($smId);
         $this->set('result', json_encode($result));
-        $this->viewBuilder()->layout('json');
+        $this->viewBuilder()->setLayout('json');
         $this->render('api');
     }
 
@@ -316,7 +316,7 @@ class SurveysController extends AppController
             $this->Surveys->setChecked($surveyId);
         } else {
             $this->set('message', 'No questionnaires are currently eligible for automatic imports');
-            $this->viewBuilder()->layout('blank');
+            $this->viewBuilder()->setLayout('blank');
         }
         $this->render('import');
     }
@@ -333,11 +333,11 @@ class SurveysController extends AppController
         $userId = $this->Auth->user('id');
         $success = $this->SurveyProcessing->clearSavedInvitations($surveyId, $userId);
         if (! $success) {
-            $this->response->statusCode(500);
+            $this->response->withStatus(500);
         }
         $this->set('result', $success);
         $this->set('_serialize', ['success']);
-        $this->viewBuilder()->layout('json');
+        $this->viewBuilder()->setLayout('json');
 
         return $this->render('api');
     }

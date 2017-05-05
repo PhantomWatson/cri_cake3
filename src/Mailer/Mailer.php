@@ -27,10 +27,10 @@ class Mailer
         $clients = $communitiesTable->getClients($survey->community_id);
 
         $email = new Email('survey_invitation');
-        $email->to(Configure::read('noreply_email'));
+        $email->setTo(Configure::read('noreply_email'));
 
         if ($sender['email']) {
-            $email->replyTo($sender['email'], $sender['name']);
+            $email->setReplyTo($sender['email'], $sender['name']);
         }
 
         $respondentsTable = TableRegistry::get('Respondents');
@@ -40,7 +40,7 @@ class Mailer
             $email->addBcc($recipient);
         }
 
-        $email->viewVars([
+        $email->setViewVars([
             'clients' => $clients,
             'criUrl' => Router::url('/', true),
             'surveyType' => $survey->type,
@@ -82,17 +82,17 @@ class Mailer
         $clients = $communitiesTable->getClients($communityId);
 
         $email = new Email('survey_invitation');
-        $email->to(Configure::read('noreply_email'));
+        $email->setTo(Configure::read('noreply_email'));
 
         if ($senderEmail) {
-            $email->replyTo($senderEmail, $senderName);
+            $email->setReplyTo($senderEmail, $senderName);
         }
 
         foreach ($recipients as $recipient) {
             $email->addBcc($recipient);
         }
 
-        $email->viewVars([
+        $email->setViewVars([
             'clients' => $clients,
             'criUrl' => Router::url('/', true),
             'surveyType' => $survey->type,
@@ -118,9 +118,9 @@ class Mailer
             'action' => 'login'
         ], true);
         $email = new Email('new_account');
-        $email->to($user->email);
+        $email->setTo($user->email);
         $role = $user->role;
-        $email->viewVars(compact(
+        $email->setViewVars(compact(
             'homeUrl',
             'loginUrl',
             'password',
@@ -153,8 +153,8 @@ class Mailer
         ], true);
         $email = new Email('reset_password');
         $user = $usersTable->get($userId);
-        $email->to($user->email);
-        $email->viewVars(compact(
+        $email->setTo($user->email);
+        $email->setViewVars(compact(
             'user',
             'resetUrl'
         ));
@@ -171,9 +171,9 @@ class Mailer
     public function sendTest($recipient)
     {
         $email = new Email();
-        $email->to($recipient);
-        $email->subject('CRI: Test email');
-        $email->template('test');
+        $email->setTo($recipient);
+        $email->setSubject('CRI: Test email');
+        $email->setTemplate('test');
 
         return $email->send();
     }

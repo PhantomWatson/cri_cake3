@@ -21,7 +21,7 @@ class ActivityRecordsController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->viewBuilder()->helpers(['ActivityRecords']);
+        $this->viewBuilder()->setHelpers(['ActivityRecords']);
     }
 
     /**

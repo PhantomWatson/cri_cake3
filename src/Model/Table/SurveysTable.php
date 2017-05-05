@@ -32,9 +32,9 @@ class SurveysTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->table('surveys');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('surveys');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
         $this->belongsTo('Communities', [
             'foreignKey' => 'community_id',
@@ -742,9 +742,9 @@ class SurveysTable extends Table
             'internal_alignment' => $intAlignment,
             'alignment_calculated_date' => Time::now()
         ]);
-        if ($survey->errors()) {
+        if ($survey->getErrors()) {
             $msg = 'There was an error updating that questionnaire\'s response alignments: ';
-            $msg .= print_r($survey->errors(), true);
+            $msg .= print_r($survey->getErrors(), true);
             throw new InternalErrorException($msg);
         }
         $this->save($survey);

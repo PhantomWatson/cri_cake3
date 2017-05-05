@@ -28,9 +28,9 @@ class CommunitiesTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->table('communities');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('communities');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
         $this->belongsTo('LocalAreas', [
             'className' => 'Areas',
@@ -317,7 +317,7 @@ class CommunitiesTable extends Table
                         ->limit(1);
                 }
             ])
-            ->hydrate(false)
+            ->enableHydration(false)
             ->first();
 
         return $result ? $result['clients'][0]['id'] : null;

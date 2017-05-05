@@ -87,7 +87,7 @@
 </table>
 
 <p>
-    <?php if ($this->request->query('show-dummy')): ?>
+    <?php if ($this->request->getQuery('show-dummy')): ?>
         <?= $this->Html->link(
             'Hide dummy communities',
             ['?' => ['show-dummy' => 0]]

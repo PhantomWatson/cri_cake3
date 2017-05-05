@@ -247,7 +247,7 @@ class ResponsesController extends AppController
             $respondent = $respondentsTable->patchEntity($respondent, [
                 'sm_respondent_id' => $smRespondentId
             ]);
-            if ($respondent->errors()) {
+            if ($respondent->getErrors()) {
                 $msg = 'There was an error saving the respondent\'s sm_respondent_id (' . $smRespondentId . ')';
                 throw new InternalErrorException($msg);
             }
@@ -261,7 +261,7 @@ class ResponsesController extends AppController
             $this->set('response', $fullResponse);
             $this->set('_serialize', ['response']);
         } catch (NotFoundException $e) {
-            $this->response->statusCode(404);
+            $this->response->withStatus(404);
             $this->set('message', $e->getMessage());
             $this->set('_serialize', ['message']);
         }

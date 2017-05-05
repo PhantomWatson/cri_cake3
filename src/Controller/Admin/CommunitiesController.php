@@ -237,7 +237,7 @@ class CommunitiesController extends AppController
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
 
-            $errors = $community->errors();
+            $errors = $community->getErrors();
             if (empty($errors)) {
                 $community = $this->Communities->save($community);
 
@@ -310,7 +310,7 @@ class CommunitiesController extends AppController
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
             $areaUpdated = $community->dirty('local_area_id') || $community->dirty('parent_area_id');
-            $errors = $community->errors();
+            $errors = $community->getErrors();
 
             if (empty($errors) && $this->Communities->save($community)) {
                 $this->Flash->success('Community updated');
@@ -483,7 +483,7 @@ class CommunitiesController extends AppController
             $client->role = 'client';
             $client->client_communities = [$this->Communities->get($communityId)];
             $client->password = $this->request->getData('unhashed_password');
-            $errors = $client->errors();
+            $errors = $client->getErrors();
             if (empty($errors) && $usersTable->save($client)) {
                 $Mailer = new Mailer();
                 $result = $Mailer->sendNewAccountEmail(
@@ -611,7 +611,7 @@ class CommunitiesController extends AppController
             ->toArray();
         $settings = Hash::combine($settings, '{n}.name', '{n}.value');
         $conditions = [];
-        $includeDummy = (bool)$this->request->query('show-dummy');
+        $includeDummy = (bool)$this->request->getQuery('show-dummy');
         if (! $includeDummy) {
             $conditions['dummy'] = 0;
         }
@@ -667,7 +667,7 @@ class CommunitiesController extends AppController
                 }
             }
 
-            $errors = $community->errors();
+            $errors = $community->getErrors();
             if (empty($errors) && $this->Communities->save($community)) {
                 $this->Flash->success('Community presentation info updated');
 
@@ -715,7 +715,7 @@ class CommunitiesController extends AppController
         $community = $this->Communities->get($communityId);
         if ($this->request->is(['post', 'put'])) {
             $community = $this->Communities->patchEntity($community, $this->request->getData());
-            if ($community->errors()) {
+            if ($community->getErrors()) {
                 $this->Flash->error('There was an error updating this community\'s notes');
             } else {
                 if ($this->Communities->save($community)) {
@@ -789,7 +789,7 @@ class CommunitiesController extends AppController
         $currentlyActive = $community->active;
         if ($this->request->is('put')) {
             $community = $this->Communities->patchEntity($community, $this->request->getData());
-            if ($community->errors()) {
+            if ($community->getErrors()) {
                 $msg = 'There was an error updating the selected community';
                 $this->Flash->error($msg);
             } elseif ($this->Communities->save($community)) {

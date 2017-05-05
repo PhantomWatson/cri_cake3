@@ -34,7 +34,7 @@ class InvitationFormDataTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('invitation_form_data');
+        $this->setTable('invitation_form_data');
 
         $this->addBehavior('Timestamp');
 

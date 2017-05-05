@@ -23,9 +23,9 @@ class StatisticsTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->table('statistics');
-        $this->displayField('value');
-        $this->primaryKey('id');
+        $this->setTable('statistics');
+        $this->setDisplayField('value');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
         $this->belongsTo('Areas', [
             'foreignKey' => 'area_id',
@@ -152,7 +152,7 @@ class StatisticsTable extends Table
                     // Update record
                     $oldValue = $existingRecord->value;
                     $existingRecord = $this->patchEntity($existingRecord, ['value' => $value]);
-                    $errors = $existingRecord->errors();
+                    $errors = $existingRecord->getErrors();
                     if (! empty($errors)) {
                         exit('Errors: ' . print_r($errors, true));
                     }
@@ -167,7 +167,7 @@ class StatisticsTable extends Table
                         'value' => $value
                     ];
                     $statistic = $this->newEntity($data);
-                    $errors = $statistic->errors();
+                    $errors = $statistic->getErrors();
                     if (! empty($errors)) {
                         exit('Errors: ' . print_r($errors, true));
                     }
@@ -277,7 +277,7 @@ class StatisticsTable extends Table
                         echo 'Would have updated #' . $existingRecord->id . ": $oldValue -> $value for $year<br />";
                     } else {
                         $existingRecord = $this->patchEntity($existingRecord, ['value' => $value]);
-                        $errors = $existingRecord->errors();
+                        $errors = $existingRecord->getErrors();
                         if (!empty($errors)) {
                             exit('Errors: ' . print_r($errors, true));
                         }
@@ -295,7 +295,7 @@ class StatisticsTable extends Table
                     'year' => $year
                 ];
                 $statistic = $this->newEntity($data);
-                $errors = $statistic->errors();
+                $errors = $statistic->getErrors();
                 if (!empty($errors)) {
                     exit('Errors: ' . print_r($errors, true));
                 }

@@ -22,9 +22,9 @@ class SettingsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('settings');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('settings');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
     }

@@ -23,9 +23,9 @@ class AreasTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->table('areas');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('areas');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
         $this->hasMany('Statistics', [
             'foreignKey' => 'area_id'
@@ -612,7 +612,7 @@ class AreasTable extends Table
                 'parent_id' => $this->getIdFromFips($parentFips)
             ];
             $area = $this->newEntity($data);
-            $errors = $area->errors();
+            $errors = $area->getErrors();
             if (empty($errors)) {
                 $this->save($area);
                 echo 'Saved ' . $areaName . '<br />';

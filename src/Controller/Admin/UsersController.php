@@ -21,7 +21,7 @@ class UsersController extends AppController
         $cookieKey = "$cookieParentKey.filter";
 
         // Remember selected filters
-        $filter = $this->request->query('filter');
+        $filter = $this->request->getQuery('filter');
         if ($filter) {
             $this->Cookie->write($cookieKey, $filter);
 
@@ -108,19 +108,20 @@ class UsersController extends AppController
         if ($this->request->is('post') || $this->request->is('put')) {
             $this->request->data['password'] = $this->request->data['new_password'];
 
-            $clientCommunityId = $this->request->data['client_communities'][0]['id'];
+            $clientCommunityId = $this->request->getData('client_communities.0.id');
+
             if (empty($clientCommunityId)) {
                 $this->request->data['client_communities'] = [];
             }
 
             // Ignore ClientCommunity if user is not a client
-            if ($this->request->data['role'] != 'client') {
+            if ($this->request->getData('role') != 'client') {
                 unset($this->request->data['client_communities']);
             }
 
-            $user = $this->Users->patchEntity($user, $this->request->data);
+            $user = $this->Users->patchEntity($user, $this->request->getData());
 
-            $errors = $user->errors();
+            $errors = $user->getErrors();
             if (empty($errors) && $this->Users->save($user)) {
                 // Dispatch event
                 $event = new Event('Model.User.afterAdd', $this, ['meta' => [
@@ -134,7 +135,7 @@ class UsersController extends AppController
                 $Mailer = new Mailer();
                 $result = $Mailer->sendNewAccountEmail(
                     $user,
-                    $this->request->data['new_password']
+                    $this->request->getData('new_password')
                 );
                 if ($result) {
                     $this->Flash->success('User account created and login credentials emailed');
@@ -176,20 +177,20 @@ class UsersController extends AppController
         $user = $this->Users->get($id, ['contain' => ['ClientCommunities', 'ConsultantCommunities']]);
 
         if ($this->request->is('post') || $this->request->is('put')) {
-            if ($this->request->data['new_password'] != '') {
-                $this->request->data['password'] = $this->request->data['new_password'];
+            if ($this->request->getData('new_password') != '') {
+                $this->request->data['password'] = $this->request->getData('new_password');
             }
 
-            if (empty($this->request->data['client_communities'][0]['id'])) {
+            if (empty($this->request->getData('client_communities.0.id'))) {
                 $this->request->data['client_communities'] = [];
             }
 
-            if (empty($this->request->data['consultant_communities'])) {
+            if (empty($this->request->getData('consultant_communities'))) {
                 $this->request->data['consultant_communities'] = [];
             }
 
             $user = $this->Users->patchEntity($user, $this->request->getData());
-            $errors = $user->errors();
+            $errors = $user->getErrors();
             if (empty($errors)) {
                 $roleChanged = $user->dirty('role');
 
@@ -259,15 +260,15 @@ class UsersController extends AppController
     {
         $communitiesTable = TableRegistry::get('Communities');
         if ($this->request->is('post')) {
-            $communityId = $this->request->data['community_id'];
+            $communityId = $this->request->getData('community_id');
             $this->Cookie->write('communityId', $communityId);
             $clientId = $communitiesTable->getCommunityClientId($communityId);
             $this->Cookie->write('clientId', $clientId);
             if ($this->request->getData('redirect')) {
-                return $this->redirect($this->request->data['redirect']);
+                return $this->redirect($this->request->getData('redirect'));
             } elseif ($this->request->is('ajax')) {
                 $this->render('/Pages/blank');
-                $this->viewBuilder()->layout('ajax');
+                $this->viewBuilder()->setLayout('ajax');
             } else {
                 $this->Flash->success('Client selected');
 
@@ -280,7 +281,7 @@ class UsersController extends AppController
         }
         $this->set([
             'communities' => $communitiesTable->getClientCommunityList(),
-            'redirect' => urldecode($this->request->query('redirect')),
+            'redirect' => urldecode($this->request->getQuery('redirect')),
             'titleForLayout' => 'Choose client'
         ]);
     }

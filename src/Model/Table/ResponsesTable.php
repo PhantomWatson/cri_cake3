@@ -25,9 +25,9 @@ class ResponsesTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->table('responses');
-        $this->displayField('respondent_id');
-        $this->primaryKey('id');
+        $this->setTable('responses');
+        $this->setDisplayField('respondent_id');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
         $this->belongsTo('Respondents', [
             'foreignKey' => 'respondent_id',

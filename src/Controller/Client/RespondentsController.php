@@ -119,7 +119,7 @@ class RespondentsController extends AppController
         $this->set([
             'success' => (bool)$result
         ]);
-        $this->viewBuilder()->layout('blank');
+        $this->viewBuilder()->setLayout('blank');
     }
 
     /**
@@ -145,7 +145,7 @@ class RespondentsController extends AppController
         $this->set([
             'success' => (bool)$result
         ]);
-        $this->viewBuilder()->layout('blank');
+        $this->viewBuilder()->setLayout('blank');
     }
 
     /**

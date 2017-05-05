@@ -52,9 +52,9 @@
         <input type="text" name="search" class="form-control" placeholder="Enter community name" />
     </div>
 
-    <?php if (isset($this->request->query['search'])): ?>
+    <?php if ($this->request->getQuery('search')): ?>
         <p class="alert alert-info" id="search_term">
-            Search term: <strong><?= $this->request->query['search'] ?></strong>
+            Search term: <strong><?= $this->request->getQuery('search') ?></strong>
             <?= $this->Html->link(
                 'clear search',
                 [
@@ -83,12 +83,12 @@
                 ?>
                 <th>
                     <?php
-                        $arrow = getSortArrow('Communities.name', $this->request->query);
+                        $arrow = getSortArrow('Communities.name', $this->request->getQueryParams());
                         echo $this->Paginator->sort('Communities.name', 'Community'.$arrow, ['escape' => false]);
                     ?>
                     /
                     <?php
-                        $arrow = getSortArrow('ParentArea.name', $this->request->query);
+                        $arrow = getSortArrow('ParentArea.name', $this->request->getQueryParams());
                         echo $this->Paginator->sort('ParentAreas.name', 'Area'.$arrow, ['escape' => false]);
                     ?>
                 </th>

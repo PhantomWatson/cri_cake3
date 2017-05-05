@@ -24,9 +24,9 @@ class PurchasesTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->table('purchases');
-        $this->displayField('product_id');
-        $this->primaryKey('id');
+        $this->setTable('purchases');
+        $this->setDisplayField('product_id');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',

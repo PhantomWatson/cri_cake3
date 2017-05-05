@@ -101,7 +101,7 @@ class SurveysController extends AppController
 
         if ($this->request->is(['post', 'put'])) {
             $survey = $this->Surveys->patchEntity($survey, $this->request->getData());
-            $errors = $survey->errors();
+            $errors = $survey->getErrors();
             $isNew = $survey->isNew();
             if (empty($errors) && $this->Surveys->save($survey)) {
                 // Flash message
@@ -366,7 +366,7 @@ class SurveysController extends AppController
         $warning = null;
         if ($this->request->is('put')) {
             $survey = $this->Surveys->patchEntity($survey, $this->request->getData());
-            if ($survey->errors()) {
+            if ($survey->getErrors()) {
                 $this->Flash->error('There was an error updating the selected questionnaire');
             } elseif ($this->Surveys->save($survey)) {
                 $currentlyActive = $this->request->getData('active');
@@ -475,7 +475,7 @@ class SurveysController extends AppController
     public function updateAlignment($surveyId)
     {
         $this->Surveys->updateAlignment($surveyId);
-        $this->viewBuilder()->layout('blank');
+        $this->viewBuilder()->setLayout('blank');
     }
 
     /**
@@ -585,7 +585,7 @@ class SurveysController extends AppController
         if (! $result) {
             $this->set([
                 'success' => false,
-                'message' => 'Survey errors: ' . print_r($result->errors(), true)
+                'message' => 'Survey errors: ' . print_r($result->getErrors(), true)
             ]);
 
             return;

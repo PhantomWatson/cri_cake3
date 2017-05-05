@@ -15,7 +15,7 @@ class CommunitiesController extends AppController
      */
     public function index()
     {
-        $this->viewBuilder()->helpers(['ClientHome']);
+        $this->viewBuilder()->setHelpers(['ClientHome']);
 
         $userId = $this->Auth->user('id');
         $communityId = $this->Communities->getClientCommunityId($userId);
@@ -62,7 +62,7 @@ class CommunitiesController extends AppController
             $errorMsg = 'There was an error resuming your participation in CRI. ' .
                 'Please contact <a href="mailto:' . $adminEmail . '">' . $adminEmail . '</a> for assistance.';
 
-            if ($community->errors()) {
+            if ($community->getErrors()) {
                 $this->Flash->error($errorMsg);
             } elseif ($this->Communities->save($community)) {
                 $currentlyActive = true;

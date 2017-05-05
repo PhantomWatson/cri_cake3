@@ -128,7 +128,7 @@ class UsersController extends AppController
         $user = $this->Users->get($id);
         if ($this->request->is('post') || $this->request->is('put')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
-            if (! $user->errors()) {
+            if (! $user->getErrors()) {
                 $saveResult = $this->Users->save($user, $this->request->getData(), [
                     'fieldList' => ['name', 'email']
                 ]);

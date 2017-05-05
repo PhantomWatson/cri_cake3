@@ -27,9 +27,9 @@ class RespondentsTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->table('respondents');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('respondents');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
         $this->belongsTo('Surveys', [
             'foreignKey' => 'survey_id',

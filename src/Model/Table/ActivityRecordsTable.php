@@ -39,9 +39,9 @@ class ActivityRecordsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('activity_records');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('activity_records');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
@@ -138,10 +138,10 @@ class ActivityRecordsTable extends Table
         $recordData['meta'] = serialize($meta);
 
         $activityRecord = $this->newEntity($recordData);
-        if ($activityRecord->errors() || ! $this->save($activityRecord)) {
+        if ($activityRecord->getErrors() || ! $this->save($activityRecord)) {
             $msg = 'There was an error adding a record to the activity log';
-            if ($activityRecord->errors()) {
-                $msg .= ': ' . print_r($activityRecord->errors(), true);
+            if ($activityRecord->getErrors()) {
+                $msg .= ': ' . print_r($activityRecord->getErrors(), true);
             }
             throw new InternalErrorException($msg);
         }

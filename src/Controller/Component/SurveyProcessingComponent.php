@@ -45,7 +45,7 @@ class SurveyProcessingComponent extends Component
             $existingRecord = $formDataTable->patchEntity($existingRecord, [
                 'data' => serialize($formData)
             ]);
-            $errors = $existingRecord->errors();
+            $errors = $existingRecord->getErrors();
             $saveResult = $formDataTable->save($existingRecord);
         } else {
             $savedData = $formDataTable->newEntity([
@@ -53,7 +53,7 @@ class SurveyProcessingComponent extends Component
                 'user_id' => $userId,
                 'data' => serialize($formData)
             ]);
-            $errors = $savedData->errors();
+            $errors = $savedData->getErrors();
             $saveResult = $formDataTable->save($savedData);
         }
         if ($errors || ! $saveResult) {
@@ -172,7 +172,7 @@ class SurveyProcessingComponent extends Component
         }
 
         $this->setInvitationFlashMessages();
-        $this->request->data = [];
+        $this->getController()->request->data = [];
     }
 
     /**
@@ -182,7 +182,7 @@ class SurveyProcessingComponent extends Component
      */
     private function setInvitees()
     {
-        $invitees = $this->request->getData('invitees');
+        $invitees = $this->getController()->request->getData('invitees');
         $invitees = is_array($invitees) ? $invitees : [];
         $this->invitees = $invitees;
     }
@@ -288,7 +288,7 @@ class SurveyProcessingComponent extends Component
             'title' => $invitee['title'],
             'type' => $this->respondentType
         ]);
-        $errors = $respondent->errors();
+        $errors = $respondent->getErrors();
         if (empty($errors) && $respondentsTable->save($respondent)) {
             $this->recipients[] = $respondent->email;
             $this->approvedRespondents[] = $respondent->email;

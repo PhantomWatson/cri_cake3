@@ -22,7 +22,7 @@ class SettingsController extends AppController
             foreach ($this->request->getData('settings') as $settingId => $settingValue) {
                 $setting = $this->Settings->get($settingId);
                 $setting = $this->Settings->patchEntity($setting, ['value' => $settingValue]);
-                $errors = $setting->errors();
+                $errors = $setting->getErrors();
                 if (empty($errors)) {
                     $this->Settings->save($setting);
                     $this->Flash->success($setting->name . ' updated');

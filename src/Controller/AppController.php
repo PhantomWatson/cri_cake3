@@ -116,7 +116,7 @@ class AppController extends Controller
         $errorMessage = $this->Auth->user() ?
             'Sorry, you are not authorized to access that page.'
             : 'Please log in before accessing that page.';
-        $this->Auth->config('authError', $errorMessage);
+        $this->Auth->setConfig('authError', $errorMessage);
     }
 
     /**
@@ -137,7 +137,7 @@ class AppController extends Controller
 
         // Automatically log in
         if (! $this->Auth->user() && $this->Cookie->read('CookieAuth')) {
-            $rememberData = $this->request->data;
+            $rememberData = $this->request->getData();
             $this->request->data = $this->Cookie->read('CookieAuth');
             $user = $this->Auth->identify();
             if ($user) {
@@ -209,7 +209,7 @@ class AppController extends Controller
         }
 
         // Clients and consultants can access the respective role-prefixed actions
-        $prefix = isset($this->request->params['prefix']) ? $this->request->params['prefix'] : null;
+        $prefix = $this->request->getParam('prefix');
 
         return $prefix === $user['role'];
     }
@@ -221,7 +221,7 @@ class AppController extends Controller
      */
     public function forceSSL()
     {
-        return $this->redirect('https://' . env('SERVER_NAME') . $this->request->here());
+        return $this->redirect('https://' . env('SERVER_NAME') . $this->request->getRequestTarget());
     }
 
     /**
@@ -304,14 +304,14 @@ class AppController extends Controller
     {
         // Remember selected sort, but only remember direction if sort is specified
         $param = 'sort';
-        if ($this->request->query($param)) {
-            $value = $this->request->query($param);
+        if ($this->request->getQuery($param)) {
+            $value = $this->request->getQuery($param);
             $key = "$cookieParentKey.$param";
             $this->Cookie->write($key, $value);
 
             $param = 'direction';
-            if ($this->request->query($param)) {
-                $value = $this->request->query($param);
+            if ($this->request->getQuery($param)) {
+                $value = $this->request->getQuery($param);
                 $key = "$cookieParentKey.$param";
                 $this->Cookie->write($key, $value);
 
@@ -345,7 +345,7 @@ class AppController extends Controller
     public function setLayoutVariables()
     {
         // Set up variables for sidebar
-        if ($this->viewBuilder()->layout() == 'default' && $this->Auth->user('role') == 'admin') {
+        if ($this->viewBuilder()->getLayout() == 'default' && $this->Auth->user('role') == 'admin') {
             $communitiesTable = TableRegistry::get('Communities');
             $this->set([
                 'sidebar' => [

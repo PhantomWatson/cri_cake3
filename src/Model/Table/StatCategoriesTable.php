@@ -20,9 +20,9 @@ class StatCategoriesTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->table('stat_categories');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('stat_categories');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
         $this->hasMany('Statistic', [
             'foreignKey' => 'stat_category_id'
@@ -66,7 +66,7 @@ class StatCategoriesTable extends Table
                 continue;
             }
             $category = $this->newEntity(['name' => $name]);
-            $errors = $category->errors();
+            $errors = $category->getErrors();
             if (empty($errors)) {
                 $this->save($category);
                 echo "Saved $name<br />";
