@@ -29,7 +29,7 @@ class ReportsController extends AppController
             'sectors' => $surveysTable->getSectors(),
             'titleForLayout' => 'CRI Reports'
         ]);
-        $this->viewBuilder()->helpers(['ActivityRecords', 'Reports']);
+        $this->viewBuilder()->setHelpers(['ActivityRecords', 'Reports']);
     }
 
     /**
@@ -39,14 +39,11 @@ class ReportsController extends AppController
      */
     public function ocra()
     {
-        if (! $this->request->getQuery('debug')) {
-            $date = date('M-d-Y');
-            $this->respondWithSpreadsheet("CRI Report - OCRA - $date.xlsx");
-        }
         $reports = new Reports();
-        $this->set([
-            'reportSpreadsheet' => $reports->getReportSpreadsheet('ocra')
-        ]);
+        $filename = 'CRI Report - OCRA - ' . date('M-d-Y') . '.xlsx';
+        $this->respondWithSpreadsheet($filename);
+        $this->set('reportSpreadsheet', $reports->getReportSpreadsheet('ocra'));
+        $this->viewBuilder()->setLayout('spreadsheet');
         $this->render('view');
     }
 
@@ -57,14 +54,11 @@ class ReportsController extends AppController
      */
     public function admin()
     {
-        if (! $this->request->getQuery('debug')) {
-            $date = date('M-d-Y');
-            $this->respondWithSpreadsheet("CRI Report - Admin - $date.xlsx");
-        }
         $reports = new Reports();
-        $this->set([
-            'reportSpreadsheet' => $reports->getReportSpreadsheet('admin')
-        ]);
+        $filename = 'CRI Report - Admin - ' . date('M-d-Y') . '.xlsx';
+        $this->respondWithSpreadsheet($filename);
+        $this->set('reportSpreadsheet', $reports->getReportSpreadsheet('admin'));
+        $this->viewBuilder()->setLayout('spreadsheet');
         $this->render('view');
     }
 
@@ -76,9 +70,9 @@ class ReportsController extends AppController
      */
     private function respondWithSpreadsheet($filename)
     {
-        $this->response->type(['excel2007' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
-        $this->response->type('excel2007');
-        $this->response->download($filename);
-        $this->viewBuilder()->layout('spreadsheet');
+        $response = $this->response;
+        $response = $response->withType('xlsx');
+        $response = $response->withDownload($filename);
+        $this->response = $response;
     }
 }
