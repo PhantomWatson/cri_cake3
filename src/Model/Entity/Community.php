@@ -34,7 +34,9 @@ class Community extends Entity
         'presentation_c' => true,
         'presentation_d' => true,
         'notes' => true,
-        'active' => true
+        'active' => true,
+        'intAlignmentAdjustment' => true,
+        'intAlignmentThreshold' => true
     ];
 
     /**
