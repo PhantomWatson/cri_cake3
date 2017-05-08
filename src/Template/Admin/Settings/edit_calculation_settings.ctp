@@ -12,7 +12,7 @@
 
 <?php foreach ($settings as $setting): ?>
     <?= $this->Form->input(
-        'settings.'.$setting->id,
+        'settings.' . $setting->id,
         [
             'label' => $setting->name,
             'max' => '99.99',
