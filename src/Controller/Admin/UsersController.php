@@ -5,6 +5,7 @@ use App\Controller\AppController;
 use App\Mailer\Mailer;
 use App\Model\Entity\User;
 use Cake\Event\Event;
+use Cake\Http\Response;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\ORM\TableRegistry;
 
@@ -99,7 +100,7 @@ class UsersController extends AppController
     /**
      * Add method
      *
-     * @return \App\Controller\Response
+     * @return Response
      */
     public function add()
     {
