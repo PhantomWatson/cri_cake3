@@ -206,7 +206,17 @@
             <?php if ($hasUninvitedUnaddressed): ?>
                 <p>
                     <span class="text-warning">
-                        This questionnaire has uninvited responses that need to be approved or dismissed.
+                        This questionnaire has
+                        <?= $this->Html->link(
+                            'uninvited responses',
+                            [
+                                'prefix' => 'admin',
+                                'controller' => 'Respondents',
+                                'action' => 'unapproved',
+                                $survey['id']
+                            ]
+                        ) ?>
+                        that need to be approved or dismissed.
                     </span>
                     <br />
                     These responses will <strong>not</strong> be included in this community's alignment assessment unless if they are approved.
