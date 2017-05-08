@@ -134,14 +134,18 @@
 ?>
 
 <?php if ($this->request->prefix == 'admin' && $this->request->action == 'edit'): ?>
-    <div id="password-fields-button" class="form-group">
-        <button class="btn btn-default">
-            Change password
-        </button>
-    </div>
-    <div id="password-fields" style="display: none;">
+    <?php if ($hasPasswordError): ?>
         <?= $passwordFields ?>
-    </div>
+    <?php else: ?>
+        <div id="password-fields-button" class="form-group">
+            <button class="btn btn-default">
+                Change password
+            </button>
+        </div>
+        <div id="password-fields" style="display: none;">
+            <?= $passwordFields ?>
+        </div>
+    <?php endif; ?>
 <?php elseif ($this->request->prefix == 'admin' && $this->request->action == 'add'): ?>
     <?= $passwordFields ?>
 <?php endif; ?>
@@ -159,5 +163,5 @@
     adminUserEdit.init({
         selected_communities: <?= json_encode($selectedCommunities) ?>
     });
-    formProtector.protect('UserForm');
+    formProtector.protect('UserForm', {});
 <?php $this->end(); ?>

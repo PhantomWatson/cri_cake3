@@ -79,9 +79,12 @@ class UsersController extends AppController
         }
         $noCommunity = [0 => '(No community)'];
         $communities = $noCommunity + $communities;
+        $errors = $user->getErrors();
+        $hasPasswordError = strpos(implode('', array_keys($errors)), 'password') !== false;
 
         $this->set([
             'communities' => $communities,
+            'hasPasswordError' => $hasPasswordError,
             'roles' => [
                 'admin' => 'Admin',
                 'client' => 'Client',
@@ -89,7 +92,7 @@ class UsersController extends AppController
             ],
             'salutations' => $this->Users->getSalutations(),
             'selectedCommunities' => $selectedCommunities,
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
