@@ -10,6 +10,7 @@ use Cake\Event\Event;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Cake\Utility\Hash;
 
 class SurveysController extends AppController
 {
@@ -138,6 +139,8 @@ class SurveysController extends AppController
                 $msg = 'There was an error ';
                 $msg .= $survey->isNew() ? 'linking questionnaire' : 'updating questionnaire details';
                 $msg .= '. Please try again or contact an administrator for assistance.';
+                $errorMessages = Hash::extract($errors, '{s}.{s}.{*}');
+                $msg .= '<br />Details: ' . implode('; ', $errorMessages);
                 $this->Flash->error($msg);
             }
         }
