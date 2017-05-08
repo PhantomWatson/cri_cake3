@@ -59,11 +59,12 @@ class UsersController extends AppController
                 $this->Flash->error('Email or password is incorrect');
             }
         } else {
-            $this->request->data['auto_login'] = true;
+            $user = $this->Users->newEntity();
+            $user->auto_login = true;
         }
         $this->set([
             'titleForLayout' => 'Log in',
-            'user' => $this->Users->newEntity()
+            'user' => $user
         ]);
     }
 
@@ -104,16 +105,16 @@ class UsersController extends AppController
         $userId = $this->Auth->user('id');
         $user = $this->Users->get($userId);
         if ($this->request->is('post') || $this->request->is('put')) {
-            $this->request->data['password'] = $this->request->getData('new_password');
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            $data = $this->request->getData();
+            $data['password'] = $this->request->getData('new_password');
+            $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your password has been updated');
             }
         }
-        $this->request->data = [];
         $this->set([
             'titleForLayout' => 'Change Password',
-            'user' => $user
+            'user' => $this->Users->newEntity()
         ]);
     }
 
@@ -167,7 +168,7 @@ class UsersController extends AppController
                     if ($Mailer->sendPasswordResetEmail($userId)) {
                         $msg = 'Success! You should be shortly receiving an email with a link to reset your password.';
                         $this->Flash->success($msg);
-                        $this->request->data = [];
+                        $this->set('success', true);
                     } else {
                         $msg =
                             'There was an error sending your password-resetting email. ' .
@@ -218,15 +219,15 @@ class UsersController extends AppController
         $email = $user->email;
 
         if ($this->request->is(['post', 'put'])) {
-            $this->request->data['password'] = $this->request->getData('new_password');
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            $data = $this->request->getData();
+            $data['password'] = $this->request->getData('new_password');
+            $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your password has been updated.');
 
                 return $this->redirect(['action' => 'login']);
             }
         }
-        $this->request->data = [];
 
         $this->set([
             'email' => $email,

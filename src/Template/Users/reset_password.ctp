@@ -10,7 +10,9 @@
 </p>
 
 <?php
-    echo $this->Form->create($user);
+    echo $this->Form->create($user, [
+        'valueSources' => []
+    ]);
     echo $this->Form->input(
         'new_password',
         [
