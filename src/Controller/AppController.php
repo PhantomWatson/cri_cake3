@@ -108,7 +108,12 @@ class AppController extends Controller
                         'hashers' => ['Default', 'Legacy']
                     ]
                 ],
-                'Xety/Cake3CookieAuth.Cookie'
+                'Xety/Cake3CookieAuth.Cookie' => [
+                    'cookie' => [
+                        'name' => 'CookieAuth'
+                    ],
+                    'fields' => ['username' => 'email']
+                ]
             ],
             'authorize' => ['Controller']
         ]);
