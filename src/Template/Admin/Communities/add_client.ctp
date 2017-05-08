@@ -117,5 +117,5 @@
 
 <?php $this->element('script', ['script' => 'form-protector']); ?>
 <?php $this->append('buffered'); ?>
-    formProtector.protect('ClientForm');
+    formProtector.protect('ClientForm', {});
 <?php $this->end();

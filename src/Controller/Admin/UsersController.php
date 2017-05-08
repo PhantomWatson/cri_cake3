@@ -106,20 +106,19 @@ class UsersController extends AppController
         $user = $this->Users->newEntity();
 
         if ($this->request->is('post') || $this->request->is('put')) {
-            $this->request->data['password'] = $this->request->data['new_password'];
-
+            $data = $this->request->getData();
+            $data['password'] = $data['new_password'];
             $clientCommunityId = $this->request->getData('client_communities.0.id');
-
             if (empty($clientCommunityId)) {
-                $this->request->data['client_communities'] = [];
+                $data['client_communities'] = [];
             }
 
             // Ignore ClientCommunity if user is not a client
-            if ($this->request->getData('role') != 'client') {
-                unset($this->request->data['client_communities']);
+            if ($this->request->getData('role') != 'client' && isset($data['client_communities'])) {
+                unset($data['client_communities']);
             }
 
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            $user = $this->Users->patchEntity($user, $data);
 
             $errors = $user->getErrors();
             if (empty($errors) && $this->Users->save($user)) {
@@ -156,7 +155,7 @@ class UsersController extends AppController
                 $this->Flash->error($msg);
             }
         } else {
-            $this->request->data['all_communities'] = false;
+            $user->all_communities = false;
         }
 
         $this->prepareForm($user);
@@ -177,19 +176,20 @@ class UsersController extends AppController
         $user = $this->Users->get($id, ['contain' => ['ClientCommunities', 'ConsultantCommunities']]);
 
         if ($this->request->is('post') || $this->request->is('put')) {
+            $data = $this->request->getData();
             if ($this->request->getData('new_password') != '') {
-                $this->request->data['password'] = $this->request->getData('new_password');
+                $data['password'] = $this->request->getData('new_password');
             }
 
             if (empty($this->request->getData('client_communities.0.id'))) {
-                $this->request->data['client_communities'] = [];
+                $data['client_communities'] = [];
             }
 
             if (empty($this->request->getData('consultant_communities'))) {
-                $this->request->data['consultant_communities'] = [];
+                $data['consultant_communities'] = [];
             }
 
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            $user = $this->Users->patchEntity($user, $data);
             $errors = $user->getErrors();
             if (empty($errors)) {
                 $roleChanged = $user->dirty('role');
