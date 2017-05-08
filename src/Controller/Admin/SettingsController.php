@@ -12,13 +12,8 @@ class SettingsController extends AppController
      */
     public function editCalculationSettings()
     {
-        $settingNames = ['intAlignmentAdjustment', 'intAlignmentThreshold'];
-        $settings = $this->Settings->find('all')
-            ->where(function ($exp, $q) use ($settingNames) {
-                return $exp->in('name', $settingNames);
-            })
-            ->toArray();
         if ($this->request->is(['post', 'put'])) {
+            $settings = [];
             foreach ($this->request->getData('settings') as $settingId => $settingValue) {
                 $setting = $this->Settings->get($settingId);
                 $setting = $this->Settings->patchEntity($setting, ['value' => $settingValue]);
@@ -29,11 +24,19 @@ class SettingsController extends AppController
                 } else {
                     $this->Flash->error('There was an error updating ' . $setting->name);
                 }
+                $settings[] = $setting;
             }
         } else {
-            foreach ($settings as $setting) {
-                $this->request->data['settings'][$setting->id] = $setting->value;
-            }
+            $settingNames = ['intAlignmentAdjustment', 'intAlignmentThreshold'];
+            $settings = $this->Settings->find('all')
+                ->where(function ($exp, $q) use ($settingNames) {
+                    return $exp->in('name', $settingNames);
+                })
+                ->toArray();
+
+            //foreach ($settings as &$setting) {
+            //    $this->request->data['settings'][$setting->id] = $setting->value;
+            //}
         }
         $this->set([
             'settings' => $settings,

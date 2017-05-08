@@ -80,9 +80,6 @@ class UsersController extends AppController
         $noCommunity = [0 => '(No community)'];
         $communities = $noCommunity + $communities;
 
-        $this->request->data['new_password'] = '';
-        $this->request->data['confirm_password'] = '';
-
         $this->set([
             'communities' => $communities,
             'roles' => [

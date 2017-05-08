@@ -271,10 +271,10 @@ class CommunitiesController extends AppController
                 ]);
             }
         } else {
-            $this->request->data['score'] = 1;
+            $community->score = 1;
             $settingsTable = TableRegistry::get('Settings');
-            $this->request->data['intAlignmentAdjustment'] = $settingsTable->getIntAlignmentAdjustment();
-            $this->request->data['intAlignmentThreshold'] = $settingsTable->getIntAlignmentThreshold();
+            $community->intAlignmentAdjustment = $settingsTable->getIntAlignmentAdjustment();
+            $community->intAlignmentThreshold = $settingsTable->getIntAlignmentThreshold();
         }
 
         $this->prepareForm($community);
@@ -304,8 +304,6 @@ class CommunitiesController extends AppController
         $previousScore = $community->score;
 
         if ($this->request->is('post') || $this->request->is('put')) {
-            $this->request->data['id'] = $communityId;
-
             $community = $this->Communities->patchEntity($community, $this->request->getData(), [
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);

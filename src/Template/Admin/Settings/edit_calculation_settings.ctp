@@ -18,7 +18,8 @@
             'max' => '99.99',
             'min' => '0',
             'step' => '0.01',
-            'type' => 'number'
+            'type' => 'number',
+            'value' => $setting->value
         ]
     ) ?>
 <?php endforeach; ?>

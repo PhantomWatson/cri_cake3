@@ -118,7 +118,8 @@
             'autocomplete' => 'off',
             'class' => 'form-control',
             'label' => $this->request->action == 'add' ? 'Password' : 'New Password',
-            'type' => 'password'
+            'type' => 'password',
+            'value' => ''
         ]
     );
     $passwordFields .= $this->Form->input(
@@ -126,7 +127,8 @@
         [
             'class' => 'form-control',
             'label' => 'Confirm password',
-            'type' => 'password'
+            'type' => 'password',
+            'value' => ''
         ]
     );
 ?>
