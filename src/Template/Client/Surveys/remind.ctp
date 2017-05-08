@@ -4,8 +4,13 @@
     </h1>
 </div>
 
-<p>
-    <?php if ($this->request->prefix != 'admin'): ?>
+<?php if ($this->request->prefix == 'admin'): ?>
+    <?= $this->element('back_to_overview_link', [
+        'communityId' => $community['id'],
+        'surveyType' => $survey['type']
+    ]) ?>
+<?php else: ?>
+    <p>
         <?= $this->Html->link(
             '<span class="glyphicon glyphicon-arrow-left"></span> Back to Client Home',
             [
@@ -18,8 +23,8 @@
                 'escape' => false
             ]
         ) ?>
-    <?php endif; ?>
-</p>
+    </p>
+<?php endif; ?>
 
 <p>
     If at least a week has passed since sending invitations to fill out this questionnaire,

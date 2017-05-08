@@ -4,6 +4,11 @@
     </h1>
 </div>
 
+<?= $this->element('back_to_overview_link', [
+    'communityId' => $community['id'],
+    'surveyType' => $survey['type']
+]) ?>
+
 <p>
     After a CRI questionnaire is created in <a href="http://surveymonkey.com/">SurveyMonkey</a>, you must create a link between the
     community and the new questionnaire in order to enable questionnaire invitations and response analysis.

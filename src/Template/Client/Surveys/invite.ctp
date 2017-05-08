@@ -6,6 +6,7 @@
 
 <?php if ($this->request->prefix == 'admin'): ?>
     <?php $this->element('script', ['script' => 'admin']); ?>
+    <?= $this->element('back_to_overview_link') ?>
 <?php endif; ?>
 
 <p>

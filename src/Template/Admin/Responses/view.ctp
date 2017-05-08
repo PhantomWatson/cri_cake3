@@ -4,6 +4,11 @@
     </h1>
 </div>
 
+<?= $this->element('back_to_overview_link', [
+    'communityId' => $community['id'],
+    'surveyType' => $survey['type']
+]) ?>
+
 <div id="admin-responses-view">
     <?php if ($responses): ?>
         <section>

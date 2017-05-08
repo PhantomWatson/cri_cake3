@@ -23,6 +23,8 @@
             ]
         ) ?>
     </p>
+<?php elseif ($this->request->prefix == 'admin'): ?>
+    <?= $this->element('back_to_overview_link') ?>
 <?php endif; ?>
 
 <?php if (empty($respondents)): ?>
