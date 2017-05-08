@@ -28,7 +28,6 @@ class User extends Entity
         'purchases' => true,
         'client_communities' => true,
         'consultant_communities' => true
-
     ];
 
     /**
