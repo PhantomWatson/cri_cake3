@@ -33,10 +33,6 @@ class SettingsController extends AppController
                     return $exp->in('name', $settingNames);
                 })
                 ->toArray();
-
-            //foreach ($settings as &$setting) {
-            //    $this->request->data['settings'][$setting->id] = $setting->value;
-            //}
         }
         $this->set([
             'settings' => $settings,

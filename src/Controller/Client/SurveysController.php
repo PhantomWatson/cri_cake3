@@ -61,10 +61,12 @@ class SurveysController extends AppController
 
         $userId = $this->Auth->user('id');
         if ($this->request->is('post')) {
+            $invitees = [];
             $submitMode = $this->request->getData('submit_mode');
             if (stripos($submitMode, 'send') !== false) {
                 $this->SurveyProcessing->sendInvitations($communityId, $respondentType, $surveyId);
                 $this->SurveyProcessing->clearSavedInvitations($surveyId, $userId);
+                $invitees = $this->SurveyProcessing->pendingInvitees;
             } elseif (stripos($submitMode, 'save') !== false) {
                 list($saveResult, $msg) = $this->SurveyProcessing->saveInvitations(
                     $this->request->getData('invitees'),
@@ -88,7 +90,7 @@ class SurveysController extends AppController
                 $this->Flash->error($msg);
             }
         } else {
-            $this->request->data['invitees'] = $this->SurveyProcessing->getSavedInvitations($surveyId, $userId);
+            $invitees = $this->SurveyProcessing->getSavedInvitations($surveyId, $userId);
         }
 
         $respondentsTable = TableRegistry::get('Respondents');
@@ -105,6 +107,7 @@ class SurveysController extends AppController
             'allRespondents',
             'approvedRespondents',
             'communityId',
+            'invitees',
             'respondentTypePlural',
             'surveyId',
             'titleForLayout',

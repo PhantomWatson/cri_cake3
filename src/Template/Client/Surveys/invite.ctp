@@ -32,7 +32,7 @@
     $formTemplate['inputContainer'] = '<td>'.$formTemplate['inputContainer'].'</td>';
     $formTemplate['inputContainerError'] = '<td>{{error}}'.$formTemplate['inputContainerError'].'</td>';
     echo $this->Form->create(
-        'User',
+        null,
         [
             'id' => 'UserClientInviteForm',
             'enctype' => 'multipart/form-data'
@@ -158,7 +158,7 @@
                                 'placeholder' => 'Name',
                                 'required' => true,
                                 'type' => 'text',
-                                'value' => isset($pendingInvitees[$n]['name']) ? $pendingInvitees[$n]['name'] : null
+                                'value' => isset($invitees[$n]['name']) ? $invitees[$n]['name'] : null
                             ]
                         ) ?>
                         <?= $this->Form->input(
@@ -169,7 +169,7 @@
                                 'placeholder' => 'Email',
                                 'required' => true,
                                 'type' => 'email',
-                                'value' => isset($pendingInvitees[$n]['email']) ? $pendingInvitees[$n]['email'] : null
+                                'value' => isset($invitees[$n]['email']) ? $invitees[$n]['email'] : null
                             ]
                         ) ?>
                         <?= $this->Form->input(
@@ -179,7 +179,7 @@
                                 'label' => false,
                                 'placeholder' => 'Professional Title',
                                 'required' => true,
-                                'value' => isset($pendingInvitees[$n]['title']) ? $pendingInvitees[$n]['title'] : null
+                                'value' => isset($invitees[$n]['title']) ? $invitees[$n]['title'] : null
                             ]
                         ) ?>
                         <td>

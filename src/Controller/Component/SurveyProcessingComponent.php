@@ -172,7 +172,6 @@ class SurveyProcessingComponent extends Component
         }
 
         $this->setInvitationFlashMessages();
-        $this->getController()->request->data = [];
     }
 
     /**
