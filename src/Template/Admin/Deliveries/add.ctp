@@ -19,7 +19,9 @@
     ) ?>
 </p>
 
-<?= $this->Form->create($delivery) ?>
+<?= $this->Form->create($delivery, [
+    'id' => 'report-delivery-form'
+]) ?>
 
 <?= $this->Form->input('deliverable_id', [
     'label' => 'What was delivered?'

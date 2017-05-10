@@ -34,7 +34,7 @@
                 ) ?>
             </td>
             <td>
-                <?= $delivery->deliverable->name ?>
+                <?= ucfirst($delivery->deliverable->name) ?>
             </td>
             <td>
                 <?= $this->Time->format($delivery->created, 'MMM d Y, h:mma', false, 'America/New_York') ?>
