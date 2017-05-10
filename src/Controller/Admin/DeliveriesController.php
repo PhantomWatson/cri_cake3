@@ -70,4 +70,43 @@ class DeliveriesController extends AppController
             'titleForLayout' => "Deliveries: $communityName"
         ]);
     }
+
+    /**
+     * Add method
+     *
+     * @param null $communityId Community ID
+     * @return \Cake\Http\Response|null
+     */
+    public function add($communityId = null)
+    {
+        $delivery = $this->Deliveries->newEntity();
+        if ($this->request->is('post')) {
+            $data = $this->request->getData();
+            $data['user_id'] = $this->Auth->user('id');
+            $delivery = $this->Deliveries->patchEntity($delivery, $data);
+            $errors = $delivery->getErrors();
+            if ($errors || ! $this->Deliveries->save($delivery)) {
+                $this->Flash->error('There was an error reporting that delivery.');
+            } else {
+                $this->Flash->success('Delivery reported');
+
+                return $this->redirect([
+                    'prefix' => 'admin',
+                    'controller' => 'Deliveries',
+                    'action' => 'index'
+                ]);
+            }
+        } elseif ($communityId) {
+            $delivery->community_id = $communityId;
+        }
+
+        $deliverablesTable = TableRegistry::get('Deliverables');
+        $communitiesTable = TableRegistry::get('Communities');
+        $this->set([
+            'delivery' => $delivery,
+            'deliverables' => $deliverablesTable->find('list'),
+            'communities' => $communitiesTable->find('list'),
+            'titleForLayout' => 'Report Delivery',
+        ]);
+    }
 }
