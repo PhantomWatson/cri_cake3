@@ -51,7 +51,8 @@ class ActivityRecordsController extends AppController
             'Community promoted to next step or demoted to previous step',
             'Uninvited respondents approved or dismissed',
             'Invitations sent',
-            'Reminders sent'
+            'Reminders sent',
+            'Delivery recorded'
         ];
         $this->set([
             'activityRecords' => $this->paginate($this->ActivityRecords),

@@ -3,6 +3,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\AppController;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -79,7 +80,9 @@ class DeliveriesController extends AppController
      */
     public function add($communityId = null)
     {
+        $deliverablesTable = TableRegistry::get('Deliverables');
         $delivery = $this->Deliveries->newEntity();
+
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             $data['user_id'] = $this->Auth->user('id');
@@ -89,6 +92,14 @@ class DeliveriesController extends AppController
                 $this->Flash->error('There was an error reporting that delivery.');
             } else {
                 $this->Flash->success('Delivery reported');
+
+                // Dispatch event
+                $deliverable = $deliverablesTable->get($delivery->deliverable_id);
+                $event = new Event('Model.Delivery.afterAdd', $this, ['meta' => [
+                    'communityId' => $delivery->community_id,
+                    'deliverableName' => $deliverable->name
+                ]]);
+                $this->eventManager()->dispatch($event);
 
                 return $this->redirect([
                     'prefix' => 'admin',
@@ -100,7 +111,6 @@ class DeliveriesController extends AppController
             $delivery->community_id = $communityId;
         }
 
-        $deliverablesTable = TableRegistry::get('Deliverables');
         $communitiesTable = TableRegistry::get('Communities');
         $this->set([
             'delivery' => $delivery,

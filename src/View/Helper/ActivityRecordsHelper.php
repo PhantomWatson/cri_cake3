@@ -27,6 +27,9 @@ class ActivityRecordsHelper extends Helper
                     'afterActivate' => 'Community reactivated',
                     'afterDeactivate' => 'Community marked inactive'
                 ],
+                'Delivery' => [
+                    'afterAdd' => 'Delivery recorded'
+                ],
                 'Product' => [
                     'afterPurchase' => 'Product purchased'
                 ],
@@ -105,6 +108,9 @@ class ActivityRecordsHelper extends Helper
                 'Community' => [
                     'afterScoreDecrease' => 'From Step [previousScore] to Step [newScore]',
                     'afterScoreIncrease' => 'From Step [previousScore] to Step [newScore]'
+                ],
+                'Delivery' => [
+                    'afterAdd' => '[deliverableName] delivered',
                 ],
                 'Product' => [
                     'afterAdminAdd' => '[productName]',

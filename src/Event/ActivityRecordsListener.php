@@ -41,7 +41,8 @@ class ActivityRecordsListener implements EventListenerInterface
             'Model.Respondent.afterUninvitedApprove',
             'Model.Respondent.afterUninvitedDismiss',
             'Model.Survey.afterInvitationsSent',
-            'Model.Survey.afterRemindersSent'
+            'Model.Survey.afterRemindersSent',
+            'Model.Delivery.afterAdd'
         ];
 
         return array_fill_keys($events, 'recordActivity');
