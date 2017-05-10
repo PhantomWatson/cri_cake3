@@ -52,6 +52,16 @@
     </li>
     <li class="link">
         <?= $this->Html->link(
+            'Deliveries',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Deliveries',
+                'action' => 'index'
+            ]
+        ) ?>
+    </li>
+    <li class="link">
+        <?= $this->Html->link(
             'Alignment Calculation Settings',
             [
                 'prefix' => 'admin',
