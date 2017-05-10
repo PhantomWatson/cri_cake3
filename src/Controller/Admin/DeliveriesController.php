@@ -115,7 +115,7 @@ class DeliveriesController extends AppController
         $this->set([
             'delivery' => $delivery,
             'deliverables' => $deliverablesTable->find('list'),
-            'communities' => $communitiesTable->find('list'),
+            'communities' => $communitiesTable->find('list')->order(['name' => 'ASC']),
             'titleForLayout' => 'Report Delivery',
         ]);
     }
