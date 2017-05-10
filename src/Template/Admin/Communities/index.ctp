@@ -72,25 +72,8 @@
     <table class="table communities">
         <thead>
             <tr>
-                <?php
-                    function getSortArrow($sortField, $query) {
-                        if (isset($query['sort']) && $query['sort'] == $sortField) {
-                            $direction = strtolower($query['direction']) == 'desc' ? 'up' : 'down';
-                            return '<span class="glyphicon glyphicon-arrow-'.$direction.'" aria-hidden="true"></span>';
-                        }
-                        return '';
-                    }
-                ?>
                 <th>
-                    <?php
-                        $arrow = getSortArrow('Communities.name', $this->request->getQueryParams());
-                        echo $this->Paginator->sort('Communities.name', 'Community'.$arrow, ['escape' => false]);
-                    ?>
-                    /
-                    <?php
-                        $arrow = getSortArrow('ParentArea.name', $this->request->getQueryParams());
-                        echo $this->Paginator->sort('ParentAreas.name', 'Area'.$arrow, ['escape' => false]);
-                    ?>
+                    Community
                 </th>
                 <th>
                     Stage

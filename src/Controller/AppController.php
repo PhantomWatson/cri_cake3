@@ -295,49 +295,6 @@ class AppController extends Controller
     }
 
     /**
-     * Uses cookie to remember current sorting and apply remembered sorting when none is currently specified
-     *
-     * @param string $cookieParentKey Cookie parent key
-     * @return void
-     */
-    public function cookieSort($cookieParentKey)
-    {
-        // Remember selected sort, but only remember direction if sort is specified
-        $param = 'sort';
-        if ($this->request->getQuery($param)) {
-            $value = $this->request->getQuery($param);
-            $key = "$cookieParentKey.$param";
-            $this->Cookie->write($key, $value);
-
-            $param = 'direction';
-            if ($this->request->getQuery($param)) {
-                $value = $this->request->getQuery($param);
-                $key = "$cookieParentKey.$param";
-                $this->Cookie->write($key, $value);
-
-            // Forget direction
-            } elseif ($this->Cookie->check($key)) {
-                $this->Cookie->delete($key);
-            }
-
-        // If no sort specified, apply remembered sort
-        } else {
-            $param = 'sort';
-            $key = "$cookieParentKey.$param";
-            if ($this->Cookie->check($key)) {
-                $this->request->query[$param] = $this->Cookie->read($key);
-
-                // And direction, if remembered
-                $param = 'direction';
-                $key = "$cookieParentKey.$param";
-                if ($this->Cookie->check($key)) {
-                    $this->request->query[$param] = $this->Cookie->read($key);
-                }
-            }
-        }
-    }
-
-    /**
      * Sets variables used in the default layout
      *
      * @return void

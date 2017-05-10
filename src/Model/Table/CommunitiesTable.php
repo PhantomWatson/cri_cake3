@@ -668,7 +668,8 @@ class CommunitiesTable extends Table
                 'Communities.score',
                 'Communities.created',
                 'Communities.active'
-            ]);
+            ])
+            ->order(['Communities.name' => 'ASC']);
 
         return $query;
     }
