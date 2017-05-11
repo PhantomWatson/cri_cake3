@@ -393,6 +393,16 @@ class AdminToDo
             ];
         }
 
+        $deliverableId = DeliverablesTable::POLICY_DEVELOPMENT;
+        if ($this->deliveryNotMade($communityId, $deliverableId)) {
+            $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
+
+            return [
+                'class' => 'ready',
+                'msg' => 'Ready to <a href="' . $url . '">deliver policy development</a>'
+            ];
+        }
+
         return [
             'class' => 'complete',
             'msg' => 'Complete',
