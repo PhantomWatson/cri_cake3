@@ -86,4 +86,24 @@ class DeliveriesTable extends Table
 
         return $rules;
     }
+
+    /**
+     * Returns a boolean indicating whether or not a community has received a specified deliverable
+     *
+     * @param int $communityId Community ID
+     * @param int $deliverableId Deliverable ID
+     * @return bool
+     */
+    public function isRecorded($communityId, $deliverableId)
+    {
+        $count = $this->find('all')
+            ->select(['id'])
+            ->where([
+                'community_id' => $communityId,
+                'deliverable_id' => $deliverableId
+            ])
+            ->count();
+
+        return $count > 0;
+    }
 }

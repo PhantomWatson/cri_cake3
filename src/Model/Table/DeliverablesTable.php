@@ -21,6 +21,11 @@ use Cake\Validation\Validator;
  */
 class DeliverablesTable extends Table
 {
+    const PRESENTATION_A_MATERIALS = 1;
+    const PRESENTATION_B_MATERIALS = 2;
+    const PRESENTATION_C_MATERIALS = 3;
+    const PRESENTATION_D_MATERIALS = 4;
+    const POLICY_DEVELOPMENT = 5;
 
     /**
      * Initialize method

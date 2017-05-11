@@ -75,10 +75,11 @@ class DeliveriesController extends AppController
     /**
      * Add method
      *
-     * @param null $communityId Community ID
+     * @param int|null $communityId Community ID
+     * @param int|null $deliverableId Deliverable ID
      * @return \Cake\Http\Response|null
      */
-    public function add($communityId = null)
+    public function add($communityId = null, $deliverableId = null)
     {
         $deliverablesTable = TableRegistry::get('Deliverables');
         $delivery = $this->Deliveries->newEntity();
@@ -109,6 +110,7 @@ class DeliveriesController extends AppController
             }
         } elseif ($communityId) {
             $delivery->community_id = $communityId;
+            $delivery->deliverable_id = $deliverableId;
         }
 
         $communitiesTable = TableRegistry::get('Communities');

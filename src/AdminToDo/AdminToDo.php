@@ -1,6 +1,7 @@
 <?php
 namespace App\AdminToDo;
 
+use App\Model\Table\DeliverablesTable;
 use App\Model\Table\ProductsTable;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
@@ -25,6 +26,7 @@ class AdminToDo
     public $respondentsTable;
     public $responsesTable;
     public $surveyTable;
+    public $deliveriesTable;
 
     /**
      * AdminToDo constructor
@@ -39,6 +41,7 @@ class AdminToDo
         $this->respondentsTable = TableRegistry::get('Respondents');
         $this->responsesTable = TableRegistry::get('Responses');
         $this->surveysTable = TableRegistry::get('Surveys');
+        $this->deliveriesTable = TableRegistry::get('Deliveries');
     }
 
     /**
@@ -144,6 +147,16 @@ class AdminToDo
             return [
                 'class' => 'ready',
                 'msg' => $this->getDeactivationMsg($officialsSurveyId)
+            ];
+        }
+
+        $deliverableId = DeliverablesTable::PRESENTATION_A_MATERIALS;
+        if ($this->deliveryNotMade($communityId, $deliverableId)) {
+            $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
+
+            return [
+                'class' => 'ready',
+                'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation A materials</a> to ICI'
             ];
         }
 
@@ -746,5 +759,35 @@ class AdminToDo
         }
 
         return 'less than a minute';
+    }
+
+    /**
+     * Returns the URL for a "report delivery" page
+     *
+     * @param int $communityId Community ID
+     * @param int $deliverableId Deliverable ID
+     * @return string
+     */
+    private function getDeliveryReportUrl($communityId, $deliverableId)
+    {
+        return Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Deliveries',
+            'action' => 'add',
+            $communityId,
+            $deliverableId
+        ]);
+    }
+
+    /**
+     * Returns TRUE if the specified delivery has not been made
+     *
+     * @param int $communityId Community ID
+     * @param int $deliverableId Deliverable ID
+     * @return bool
+     */
+    private function deliveryNotMade($communityId, $deliverableId)
+    {
+        return ! $this->deliveriesTable->isRecorded($communityId, $deliverableId);
     }
 }
