@@ -815,7 +815,8 @@ class CommunitiesController extends AppController
         $this->set([
             'community' => $community,
             'currentlyActive' => $currentlyActive,
-            'titleForLayout' => $title
+            'titleForLayout' => $title,
+            'warning' => $this->Communities->getDeactivationWarning($communityId)
         ]);
     }
 }

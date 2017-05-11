@@ -4,6 +4,12 @@
     </h1>
 </div>
 
+<?php if ($warning): ?>
+    <p class="alert alert-danger">
+        Warning: <?= $warning ?>
+    </p>
+<?php endif; ?>
+
 <h2>
     About Community Active/Inactive Status:
 </h2>

@@ -748,4 +748,71 @@ class CommunitiesTable extends Table
 
         return Hash::extract($communities, '{n}.id');
     }
+
+    /**
+     * Returns a string with a warning against prematurely deactivating a community, or null
+     *
+     * @param int $communityId Community ID
+     * @return null|string
+     */
+    public function getDeactivationWarning($communityId)
+    {
+        $community = $this->get($communityId);
+
+        $productsTable = TableRegistry::get('Products');
+        $deliveriesTable = TableRegistry::get('Deliveries');
+        $presentations = [
+            'a' => [
+                'product_id' => ProductsTable::OFFICIALS_SURVEY,
+                'deliverable_id' => DeliverablesTable::PRESENTATION_A_MATERIALS
+            ],
+            'b' => [
+                'product_id' => ProductsTable::OFFICIALS_SUMMIT,
+                'deliverable_id' => DeliverablesTable::PRESENTATION_B_MATERIALS
+            ],
+            'c' => [
+                'product_id' => ProductsTable::ORGANIZATIONS_SURVEY,
+                'deliverable_id' => DeliverablesTable::PRESENTATION_C_MATERIALS
+            ],
+            'd' => [
+                'product_id' => ProductsTable::ORGANIZATIONS_SUMMIT,
+                'deliverable_id' => DeliverablesTable::PRESENTATION_D_MATERIALS
+            ]
+        ];
+
+        foreach ($presentations as $letter => $presentation) {
+            $isPurchased = $productsTable->isPurchased($communityId, $presentation['product_id']);
+            if (! $isPurchased) {
+                continue;
+            }
+
+            $isPrepared = $deliveriesTable->isRecorded($communityId, $presentation['deliverable_id']);
+            if (! $isPrepared) {
+                return 'Presentation ' . strtoupper($letter) . ' materials have not yet been delivered to ICI.';
+            }
+
+            $date = $community->{"presentation_$letter"};
+            $isScheduled = $date != null;
+            if (! $isScheduled) {
+                return 'Presentation ' . strtoupper($letter) . ' has not yet been scheduled.';
+            }
+
+            $isCompleted = $date->format('Y-m-d') <= date('Y-m-d');
+            if (! $isCompleted) {
+                return 'Presentation ' . strtoupper($letter) . ' has not yet been completed.';
+            }
+        }
+
+        $isPurchased = $productsTable->isPurchased($communityId, ProductsTable::POLICY_DEVELOPMENT);
+        if (! $isPurchased) {
+            return null;
+        }
+
+        $isDelivered = $deliveriesTable->isRecorded($communityId, DeliverablesTable::POLICY_DEVELOPMENT);
+        if (! $isDelivered) {
+            return 'Policy development has not yet been delivered to this community.';
+        }
+
+        return null;
+    }
 }
