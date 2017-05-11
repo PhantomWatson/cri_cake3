@@ -281,6 +281,41 @@
 </section>
 
 <section class="admin-guide">
+    <h2>Recording Completion of Deliverables</h2>
+    <ol>
+        <li>
+            Click on <?= $this->Html->link(
+                'Deliverables',
+                [
+                    'prefix' => 'admin',
+                    'controller' => 'Deliveries',
+                    'action' => 'index'
+                ]
+            ) ?> in the sidebar
+        </li>
+        <li>
+            Click on  <?= $this->Html->link(
+                'Report a Delivery',
+                [
+                    'prefix' => 'admin',
+                    'controller' => 'Deliveries',
+                    'action' => 'add'
+                ]
+            ) ?>
+        </li>
+        <li>
+            Select the deliverable that has been delivered
+        </li>
+        <li>
+            Select the community that it was delivered to
+        </li>
+        <li>
+            Click 'Record Delivery'
+        </li>
+    </ol>
+</section>
+
+<section class="admin-guide">
     <h2>Advancing Communities Through the CRI Steps</h2>
     <ol>
         <li>
