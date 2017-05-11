@@ -180,6 +180,16 @@ class AdminToDo
         $purchased = $this->productsTable->isPurchased($communityId, ProductsTable::OFFICIALS_SUMMIT);
         $optedOut = $this->optOutsTable->optedOut($communityId, ProductsTable::OFFICIALS_SUMMIT);
         if ($purchased) {
+            $deliverableId = DeliverablesTable::PRESENTATION_B_MATERIALS;
+            if ($this->deliveryNotMade($communityId, $deliverableId)) {
+                $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
+
+                return [
+                    'class' => 'ready',
+                    'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation B materials</a> to ICI'
+                ];
+            }
+
             if ($this->readyToSchedulePresentation($communityId, 'b')) {
                 $url = $this->getPresentationsUrl($communityId);
 
@@ -288,6 +298,16 @@ class AdminToDo
             ];
         }
 
+        $deliverableId = DeliverablesTable::PRESENTATION_C_MATERIALS;
+        if ($this->deliveryNotMade($communityId, $deliverableId)) {
+            $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
+
+            return [
+                'class' => 'ready',
+                'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation C materials</a> to ICI'
+            ];
+        }
+
         if ($this->readyToSchedulePresentation($communityId, 'c')) {
             $url = $this->getPresentationsUrl($communityId);
 
@@ -308,6 +328,16 @@ class AdminToDo
         $purchased = $this->productsTable->isPurchased($communityId, ProductsTable::ORGANIZATIONS_SUMMIT);
         $optedOut = $this->optOutsTable->optedOut($communityId, ProductsTable::ORGANIZATIONS_SUMMIT);
         if ($purchased) {
+            $deliverableId = DeliverablesTable::PRESENTATION_D_MATERIALS;
+            if ($this->deliveryNotMade($communityId, $deliverableId)) {
+                $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
+
+                return [
+                    'class' => 'ready',
+                    'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation D materials</a> to ICI'
+                ];
+            }
+
             if ($this->readyToSchedulePresentation($communityId, 'd')) {
                 $url = $this->getPresentationsUrl($communityId);
 
