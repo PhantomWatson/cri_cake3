@@ -389,10 +389,11 @@ class CommunitiesTable extends Table
             $this->getClientCount($communityId) > 0
         ];
 
-        $product = $productsTable->get(1);
+        $productId = ProductsTable::OFFICIALS_SURVEY;
+        $product = $productsTable->get($productId);
         $optOuts = $optOutsTable->getOptOuts($communityId);
         $productDescription = $product->description . ' ($' . number_format($product->price) . ')';
-        if (in_array($productsTable::OFFICIALS_SURVEY, $optOuts)) {
+        if (in_array($productId, $optOuts)) {
             $criteria[1]['survey_purchased'] = [
                 "Opted out of purchasing $productDescription",
                 true
@@ -400,7 +401,7 @@ class CommunitiesTable extends Table
         } else {
             $criteria[1]['survey_purchased'] = [
                 "Purchased $productDescription",
-                $productsTable->isPurchased($communityId, 1)
+                $productsTable->isPurchased($communityId, $productId)
             ];
         }
 
@@ -458,9 +459,10 @@ class CommunitiesTable extends Table
             ];
         }
 
-        $product = $productsTable->get(2);
+        $productId = ProductsTable::OFFICIALS_SUMMIT;
+        $product = $productsTable->get($productId);
         $productDescription = $product->description . ' ($' . number_format($product->price) . ')';
-        $optedOut = in_array($productsTable::OFFICIALS_SUMMIT, $optOuts);
+        $optedOut = in_array($productId, $optOuts);
         if ($optedOut) {
             $criteria[2]['leadership_summit_purchased'] = [
                 "Opted out of purchasing $productDescription",
@@ -469,7 +471,7 @@ class CommunitiesTable extends Table
         } else {
             $criteria[2]['leadership_summit_purchased'] = [
                 "Purchased optional $productDescription",
-                $productsTable->isPurchased($communityId, 2)
+                $productsTable->isPurchased($communityId, $productId)
             ];
         }
 
@@ -486,9 +488,10 @@ class CommunitiesTable extends Table
             ];
         }
 
-        $product = $productsTable->get(3);
+        $productId = ProductsTable::ORGANIZATIONS_SURVEY;
+        $product = $productsTable->get($productId);
         $productDescription = $product->description . ' ($' . number_format($product->price) . ')';
-        $optedOut = in_array($productsTable::ORGANIZATIONS_SURVEY, $optOuts);
+        $optedOut = in_array($productId, $optOuts);
         if ($optedOut) {
             $criteria[2]['survey_purchased'] = [
                 "Opted out of purchasing $productDescription",
@@ -497,7 +500,7 @@ class CommunitiesTable extends Table
         } else {
             $criteria[2]['survey_purchased'] = [
                 "Purchased $productDescription",
-                $productsTable->isPurchased($communityId, 3)
+                $productsTable->isPurchased($communityId, $productId)
             ];
         }
 
@@ -538,9 +541,10 @@ class CommunitiesTable extends Table
             $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
         ];
 
-        $product = $productsTable->get(4);
+        $productId = ProductsTable::ORGANIZATIONS_SUMMIT;
+        $product = $productsTable->get($productId);
         $productDescription = $product->description . ' ($' . number_format($product->price) . ')';
-        $optedOut = in_array($productsTable::ORGANIZATIONS_SUMMIT, $optOuts);
+        $optedOut = in_array($productId, $optOuts);
         if ($optedOut) {
             $criteria[3]['orgs_summit_purchased'] = [
                 "Opted out of purchasing optional $productDescription",
@@ -549,7 +553,7 @@ class CommunitiesTable extends Table
         } else {
             $criteria[3]['orgs_summit_purchased'] = [
                 "Purchased optional $productDescription",
-                $productsTable->isPurchased($communityId, 4)
+                $productsTable->isPurchased($communityId, $productId)
             ];
         }
 
@@ -565,10 +569,11 @@ class CommunitiesTable extends Table
             ];
         }
 
-        $product = $productsTable->get(5);
+        $productId = ProductsTable::POLICY_DEVELOPMENT;
+        $product = $productsTable->get($productId);
         $productDescription = $product->description . ' ($' . number_format($product->price) . ')';
         $productDescription = str_replace('PWRRR', 'PWR<sup>3</sup>', $productDescription);
-        $optedOut = in_array($productsTable::POLICY_DEVELOPMENT, $optOuts);
+        $optedOut = in_array($productId, $optOuts);
         if ($optedOut) {
             $criteria[3]['policy_dev_purchased'] = [
                 "Opted out of purchasing $productDescription",
@@ -577,7 +582,7 @@ class CommunitiesTable extends Table
         } else {
             $criteria[3]['policy_dev_purchased'] = [
                 "Purchased $productDescription",
-                $productsTable->isPurchased($communityId, 5)
+                $productsTable->isPurchased($communityId, $productId)
             ];
         }
 
