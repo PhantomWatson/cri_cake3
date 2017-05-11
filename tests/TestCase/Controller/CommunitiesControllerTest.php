@@ -20,6 +20,8 @@ class CommunitiesControllerTest extends ApplicationTest
     public $fixtures = [
         'app.areas',
         'app.communities',
+        'app.deliverables',
+        'app.deliveries',
         'app.products',
         'app.purchases',
         'app.respondents',
