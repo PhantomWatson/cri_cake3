@@ -52,7 +52,7 @@
     </li>
     <li class="link">
         <?= $this->Html->link(
-            'Deliveries',
+            'Deliverables',
             [
                 'prefix' => 'admin',
                 'controller' => 'Deliveries',

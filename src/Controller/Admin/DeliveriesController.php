@@ -34,7 +34,7 @@ class DeliveriesController extends AppController
 
         $this->set([
             'deliveries' => $this->paginate($this->Deliveries),
-            'titleForLayout' => 'Deliveries'
+            'titleForLayout' => 'Deliverables'
         ]);
     }
 

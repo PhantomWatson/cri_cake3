@@ -6,7 +6,7 @@
 
 <p>
     <?= $this->Html->link(
-        '<span class="glyphicon glyphicon-arrow-left"></span> Back to deliveries',
+        '<span class="glyphicon glyphicon-arrow-left"></span> Back to Deliverables',
         [
             'prefix' => 'admin',
             'controller' => 'Deliveries',
