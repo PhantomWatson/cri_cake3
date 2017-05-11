@@ -109,6 +109,7 @@ Router::prefix('admin', function ($routes) {
     $routes->extensions(['json']);
 
     $routes->connect('/guide', ['controller' => 'Pages', 'action' => 'guide']);
+    $routes->connect('/clear-cache', ['controller' => 'Pages', 'action' => 'clearCache']);
     $routes->connect('/choose_client', ['controller' => 'Users', 'action' => 'chooseClient']);
 
     $routes->fallbacks('DashedRoute');

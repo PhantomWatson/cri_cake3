@@ -572,6 +572,19 @@
                 'action' => 'sendTestEmail'
             ], true) ?>/youremail@example.com.
         </li>
+        <li>
+            <strong>
+                <?= $this->Html->link(
+                    'Clear cache',
+                    [
+                        'prefix' => 'admin',
+                        'controller' => 'Pages',
+                        'action' => 'clearCache'
+                    ],
+                    ['escape' => false]
+                ) ?>
+            </strong>
+        </li>
     </ul>
 </section>
 
