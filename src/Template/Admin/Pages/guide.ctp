@@ -124,7 +124,6 @@
             <p>
                 You can repeat this step if multiple clients need accounts created for them.
             </p>
-            </ol>
         </li>
     </ol>
 </section>
