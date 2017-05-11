@@ -376,12 +376,13 @@ class CommunitiesTable extends Table
      */
     public function getProgress($communityId, $isAdmin = false)
     {
+        $criteria = [];
+        $deliveriesTable = TableRegistry::get('Deliveries');
+        $optOutsTable = TableRegistry::get('OptOuts');
         $productsTable = TableRegistry::get('Products');
-        $surveysTable = TableRegistry::get('Surveys');
         $respondentsTable = TableRegistry::get('Respondents');
         $responsesTable = TableRegistry::get('Responses');
-        $optOutsTable = TableRegistry::get('OptOuts');
-        $criteria = [];
+        $surveysTable = TableRegistry::get('Surveys');
 
         // Step 1
         $criteria[1]['client_assigned'] = [
@@ -571,8 +572,8 @@ class CommunitiesTable extends Table
 
         $productId = ProductsTable::POLICY_DEVELOPMENT;
         $product = $productsTable->get($productId);
-        $productDescription = $product->description . ' ($' . number_format($product->price) . ')';
-        $productDescription = str_replace('PWRRR', 'PWR<sup>3</sup>', $productDescription);
+        $price = '$' . number_format($product->price);
+        $productDescription = str_replace('PWRRR', 'PWR<sup>3</sup>', $product->description);
         $optedOut = in_array($productId, $optOuts);
         if ($optedOut) {
             $criteria[3]['policy_dev_purchased'] = [
@@ -581,10 +582,20 @@ class CommunitiesTable extends Table
             ];
         } else {
             $criteria[3]['policy_dev_purchased'] = [
-                "Purchased $productDescription",
+                "Purchased $productDescription ($price)",
                 $productsTable->isPurchased($communityId, $productId)
             ];
         }
+
+        // Step Four
+        $isDelivered = $deliveriesTable->isRecorded($communityId, DeliverablesTable::POLICY_DEVELOPMENT);
+        $msg = $isDelivered
+            ? "Received $productDescription"
+            : "Your $productDescription is currently being prepared";
+        $criteria[4]['policy_dev_delivered'] = [
+            $msg,
+            $isDelivered
+        ];
 
         return $criteria;
     }

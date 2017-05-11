@@ -51,6 +51,7 @@ class ClientHomeComponent extends Component
             'officialUninvitedRespondents' => $respondentsTable->getUninvitedCount($officialSurveyId),
             'organizationResponsesChecked' => $surveysTable->getChecked($organizationSurveyId),
             'optOuts' => $optOutsTable->getOptOuts($communityId),
+            'step4PolicyDev' => $criteria[4]['policy_dev_delivered'],
             'score' => $community->score,
             'step2SurveyPurchased' => $criteria[2]['survey_purchased'],
             'step3PolicyDevPurchased' => $criteria[3]['policy_dev_purchased'],

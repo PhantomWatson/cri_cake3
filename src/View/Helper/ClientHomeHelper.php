@@ -40,12 +40,19 @@ class ClientHomeHelper extends Helper
     /**
      * Returns a Bootstrap glyphicon indicating success or failure
      *
-     * @param bool $bool Boolean for success or failure
+     * @param bool|string $status Boolean for success or failure, or "waiting"
      * @return string
+     * @throws InternalErrorException
      */
-    public function glyphicon($bool)
+    public function glyphicon($status)
     {
-        $class = $bool ? 'ok' : 'remove';
+        if (is_bool($status)) {
+            $class = $status ? 'ok' : 'remove';
+        } elseif ($status === 'waiting') {
+            $class = 'hourglass';
+        } else {
+            throw new InternalErrorException("Invalid parameter passed to glyphicon(): $status");
+        }
 
         return '<span class="glyphicon glyphicon-' . $class . '"></span>';
     }
@@ -522,5 +529,19 @@ class ClientHomeHelper extends Helper
             '<a href="' . $optOutUrl . '" class="btn btn-default opt-out">' .
                 'Opt Out' .
             '</a>';
+    }
+
+    /**
+     * "PWRRR policy development has been delivered" row
+     *
+     * @param array $params Parameters
+     * @return string
+     */
+    public function policyDevDeliveredRow($params)
+    {
+        $icon = $this->glyphicon($params['delivered'] ?: 'waiting');
+        $actions = null;
+
+        return $this->row($icon, $params['msg'], $actions);
     }
 }
