@@ -4,6 +4,20 @@
     </h1>
 </div>
 
+<p class="alert alert-info">
+    Need to mark a community as inactive (dropped out)? From the
+    <?= $this->Html->link(
+        'Manage Communities',
+        [
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'index'
+        ]
+    ) ?>
+    page, find the <em>Actions</em> menu for the correct community, open it, and then select <em>Deactivate</em>.
+
+</p>
+
 <table class="table" id="admin-to-do">
     <thead>
         <tr>
