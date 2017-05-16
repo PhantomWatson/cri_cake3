@@ -63,15 +63,17 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to <a href="' . $url . '">assign a client</a>'
+                'msg' => 'Ready to <a href="' . $url . '">assign a client</a>',
+                'responsible' => 'ICI'
             ];
         }
 
         if ($this->optOutsTable->optedOut($communityId, ProductsTable::OFFICIALS_SURVEY)) {
             return [
                 'class' => 'complete',
+                'done' => true,
                 'msg' => 'Opted out of further participation',
-                'done' => true
+                'responsible' => null
             ];
         }
 
@@ -82,6 +84,7 @@ class AdminToDo
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase ' . $product->description,
+                'responsible' => 'Client',
                 'since' => $this->getWaitingPeriod($community->created)
             ];
         }
@@ -91,7 +94,8 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to <a href="' . $url . '">advance to Step Two</a>'
+                'msg' => 'Ready to <a href="' . $url . '">advance to Step Two</a>',
+                'responsible' => 'ICI'
             ];
         }
 
@@ -100,7 +104,8 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to create and <a href="' . $url . '">link officials questionnaire</a>'
+                'msg' => 'Ready to create and <a href="' . $url . '">link officials questionnaire</a>',
+                'responsible' => 'ICI'
             ];
         }
 
@@ -111,7 +116,8 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to <a href="' . $url . '">activate officials questionnaire</a>'
+                'msg' => 'Ready to <a href="' . $url . '">activate officials questionnaire</a>',
+                'responsible' => 'ICI'
             ];
         }
 
@@ -126,6 +132,7 @@ class AdminToDo
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to <a href="' . $url . '">send officials questionnaire invitations</a>',
+                'responsible' => 'Client',
                 'since' => $this->getWaitingPeriod($since)
             ];
         }
@@ -139,6 +146,7 @@ class AdminToDo
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for responses to officials questionnaire',
+                'responsible' => null,
                 'since' => $this->getWaitingPeriod($since)
             ];
         }
@@ -146,7 +154,8 @@ class AdminToDo
         if ($this->readyToConsiderDeactivating($officialsSurveyId)) {
             return [
                 'class' => 'ready',
-                'msg' => $this->getDeactivationMsg($officialsSurveyId)
+                'msg' => $this->getDeactivationMsg($officialsSurveyId),
+                'responsible' => 'CBER'
             ];
         }
 
@@ -156,7 +165,8 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation A materials</a> to ICI'
+                'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation A materials</a> to ICI',
+                'responsible' => 'CBER'
             ];
         }
 
@@ -165,7 +175,8 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to <a href="' . $url . '">schedule Presentation A</a>'
+                'msg' => 'Ready to <a href="' . $url . '">schedule Presentation A</a>',
+                'responsible' => 'ICI'
             ];
         }
 
@@ -173,7 +184,8 @@ class AdminToDo
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for Presentation A to complete ' .
-                    '(' . $community->presentation_a->format('F j, Y') . ')'
+                    '(' . $community->presentation_a->format('F j, Y') . ')',
+                'responsible' => null
             ];
         }
 
@@ -186,7 +198,8 @@ class AdminToDo
 
                 return [
                     'class' => 'ready',
-                    'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation B materials</a> to ICI'
+                    'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation B materials</a> to ICI',
+                    'responsible' => 'CBER'
                 ];
             }
 
@@ -195,7 +208,8 @@ class AdminToDo
 
                 return [
                     'class' => 'ready',
-                    'msg' => 'Ready to <a href="' . $url . '">schedule Presentation B</a>'
+                    'msg' => 'Ready to <a href="' . $url . '">schedule Presentation B</a>',
+                    'responsible' => 'ICI'
                 ];
             }
 
@@ -203,7 +217,8 @@ class AdminToDo
                 return [
                     'class' => 'waiting',
                     'msg' => 'Waiting for Presentation B to complete ' .
-                        '(' . $community->presentation_b->format('F j, Y') . ')'
+                        '(' . $community->presentation_b->format('F j, Y') . ')',
+                    'responsible' => null
                 ];
             }
         } elseif (! $optedOut) {
@@ -212,6 +227,7 @@ class AdminToDo
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase or <a href="' . $url . '">opt out of</a> Presentation B',
+                'responsible' => 'Client',
                 'since' => $this->getWaitingPeriod($community->presentation_a)
             ];
         }
@@ -220,8 +236,9 @@ class AdminToDo
         if ($optedOut) {
             return [
                 'class' => 'complete',
+                'done' => true,
                 'msg' => 'Opted out of further participation',
-                'done' => true
+                'responsible' => null
             ];
         }
 
@@ -232,6 +249,7 @@ class AdminToDo
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase or opt out of ' . $product->description,
+                'responsible' => 'Client',
                 'since' => $this->getWaitingPeriod($mostRecentPresentation)
             ];
         }
@@ -241,7 +259,8 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to <a href="' . $url . '">advance to Step Three</a>'
+                'msg' => 'Ready to <a href="' . $url . '">advance to Step Three</a>',
+                'responsible' => 'ICI'
             ];
         }
 
@@ -250,7 +269,8 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to create and <a href="' . $url . '">link organizations questionnaire</a>'
+                'msg' => 'Ready to create and <a href="' . $url . '">link organizations questionnaire</a>',
+                'responsible' => 'ICI'
             ];
         }
 
@@ -261,7 +281,8 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to <a href="' . $url . '">activate organizations questionnaire</a>'
+                'msg' => 'Ready to <a href="' . $url . '">activate organizations questionnaire</a>',
+                'responsible' => 'ICI'
             ];
         }
 
@@ -276,6 +297,7 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to ' .
                     '<a href="' . $url . '">send organizations questionnaire invitations</a>',
+                'responsible' => 'Client',
                 'since' => $this->getWaitingPeriod($since)
             ];
         }
@@ -287,6 +309,7 @@ class AdminToDo
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for responses to organizations questionnaire',
+                'responsible' => null,
                 'since' => $since
             ];
         }
@@ -294,7 +317,8 @@ class AdminToDo
         if ($this->readyToConsiderDeactivating($organizationsSurveyId)) {
             return [
                 'class' => 'ready',
-                'msg' => $this->getDeactivationMsg($organizationsSurveyId)
+                'msg' => $this->getDeactivationMsg($organizationsSurveyId),
+                'responsible' => 'CBER'
             ];
         }
 
@@ -304,7 +328,8 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation C materials</a> to ICI'
+                'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation C materials</a> to ICI',
+                'responsible' => 'CBER'
             ];
         }
 
@@ -313,7 +338,8 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to <a href="' . $url . '">schedule Presentation C</a>'
+                'msg' => 'Ready to <a href="' . $url . '">schedule Presentation C</a>',
+                'responsible' => 'ICI'
             ];
         }
 
@@ -321,7 +347,8 @@ class AdminToDo
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for Presentation C to complete ' .
-                    '(' . $community->presentation_c->format('F j, Y') . ')'
+                    '(' . $community->presentation_c->format('F j, Y') . ')',
+                'responsible' => null
             ];
         }
 
@@ -334,7 +361,8 @@ class AdminToDo
 
                 return [
                     'class' => 'ready',
-                    'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation D materials</a> to ICI'
+                    'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation D materials</a> to ICI',
+                    'responsible' => 'CBER'
                 ];
             }
 
@@ -344,6 +372,7 @@ class AdminToDo
                 return [
                     'class' => 'ready',
                     'msg' => 'Ready to <a href="' . $url . '">schedule Presentation D</a>',
+                    'responsible' => 'ICI',
                     'since' => $this->getWaitingPeriod($community->presentation_c)
                 ];
             }
@@ -352,13 +381,15 @@ class AdminToDo
                 return [
                     'class' => 'waiting',
                     'msg' => 'Waiting for Presentation D to complete ' .
-                        '(' . $community->presentation_d->format('F j, Y') . ')'
+                        '(' . $community->presentation_d->format('F j, Y') . ')',
+                    'responsible' => null
                 ];
             }
         } elseif (! $optedOut) {
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase or opt out of Presentation D',
+                'responsible' => 'Client',
                 'since' => $this->getWaitingPeriod($organizationsSurvey->presentation_c)
             ];
         }
@@ -366,8 +397,9 @@ class AdminToDo
         if ($this->optOutsTable->optedOut($communityId, ProductsTable::POLICY_DEVELOPMENT)) {
             return [
                 'class' => 'complete',
+                'done' => true,
                 'msg' => 'Opted out of further participation',
-                'done' => true
+                'responsible' => null
             ];
         }
 
@@ -380,6 +412,7 @@ class AdminToDo
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase ' . $policyDevProductName,
+                'responsible' => 'Client',
                 'since' => $this->getWaitingPeriod($mostRecentPresentation)
             ];
         }
@@ -389,7 +422,8 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to <a href="' . $url . '">advance to Step Four</a>'
+                'msg' => 'Ready to <a href="' . $url . '">advance to Step Four</a>',
+                'responsible' => 'ICI'
             ];
         }
 
@@ -399,14 +433,16 @@ class AdminToDo
 
             return [
                 'class' => 'ready',
-                'msg' => 'Ready to <a href="' . $url . '">deliver policy development</a>'
+                'msg' => 'Ready to <a href="' . $url . '">deliver policy development</a>',
+                'responsible' => 'CBER / ICI'
             ];
         }
 
         return [
             'class' => 'complete',
+            'done' => true,
             'msg' => 'Complete',
-            'done' => true
+            'responsible' => null
         ];
     }
 
