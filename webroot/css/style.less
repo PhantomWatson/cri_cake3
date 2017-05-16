@@ -1293,14 +1293,28 @@ section.admin-guide {
 }
 
 #admin-to-do {
+    thead {
+        th {
+            white-space: nowrap;
+        }
+    }
     .ready {
-        .text-danger;
+        .glyphicon,
+        a {
+            .text-danger;
+        }
     }
     .waiting {
-        .text-warning;
+        .glyphicon,
+        a {
+            .text-warning;
+        }
     }
     .complete {
-        .text-primary;
+        .glyphicon,
+        a {
+            .text-primary;
+        }
     }
     .details {
         color: @text-color;
@@ -1314,6 +1328,7 @@ section.admin-guide {
         .btn-xs;
         .btn-default;
 
+        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
         color: inherit;
         font-weight: bold;
         vertical-align: baseline;
