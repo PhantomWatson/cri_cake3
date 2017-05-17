@@ -39,7 +39,7 @@
             'formGroup' => '{{label}}</td><td>{{input}}',
             'inputContainer' => '<tr><td class="form-group {{type}}{{required}}">{{content}}</td></tr>',
             'inputContainerError' => '<tr><td class="form-group {{type}}{{required}}">{{content}}{{error}}</td></tr>'
-        ] + require(ROOT.DS.'config'.DS.'bootstrap_form.php');
+        ] + require(ROOT . DS . 'config' . DS . 'bootstrap_form.php');
         $this->Form->templates($tableTemplate);
         echo $this->Form->create(
             $client,
@@ -108,7 +108,7 @@
     </table>
 
     <?= $this->Form->button(
-        'Add new client for '.$communityName,
+        'Add new client for ' . $communityName,
         ['class' => 'btn btn-primary']
     ) ?>
 
