@@ -21,7 +21,39 @@
     <thead>
         <tr>
             <th>
-                Responsible Party
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Responsible Party
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <?= $this->Html->link(
+                                'All',
+                                [
+                                    'prefix' => 'admin',
+                                    'controller' => 'Communities',
+                                    'action' => 'toDo'
+                                ]
+                            ) ?>
+                        </li>
+                        <?php foreach (['CBER', 'ICI', 'Client'] as $responsibleParty): ?>
+                            <li>
+                                <?= $this->Html->link(
+                                    $responsibleParty,
+                                    [
+                                        'prefix' => 'admin',
+                                        'controller' => 'Communities',
+                                        'action' => 'toDo',
+                                        '?' => [
+                                            'responsible' => $responsibleParty
+                                        ]
+                                    ]
+                                ) ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             </th>
             <th>
                 Community
@@ -50,7 +82,26 @@
                         }
                     ?>
                     <span class="glyphicon glyphicon-<?= $icon ?>"></span>
-                    <?= $community->toDo['responsible'] ?>
+                    <?php
+                        $partyLinks = [];
+                        if ($community->toDo['responsible']) {
+                            foreach ($community->toDo['responsible'] as $responsibleParty) {
+                                $partyLinks[] = $this->Html->link(
+                                    $responsibleParty,
+                                    [
+                                        'prefix' => 'admin',
+                                        'controller' => 'Communities',
+                                        'action' => 'toDo',
+                                        '?' => [
+                                            'responsible' => $responsibleParty
+                                        ]
+                                    ],
+                                    ['title' => 'View only this party\'s tasks']
+                                );
+                            }
+                        }
+                        echo implode(' / ', $partyLinks);
+                    ?>
                 </td>
                 <td>
                     <?= $community->name ?>

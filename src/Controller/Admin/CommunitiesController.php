@@ -753,24 +753,49 @@ class CommunitiesController extends AppController
      */
     public function toDo()
     {
+        $partyFilter = $this->request->getQuery('responsible');
+        $AdminToDo = new AdminToDo();
         $communities = $this->Communities->find('all')
             ->select(['id', 'name'])
             ->where(['dummy' => false])
             ->order(['name' => 'ASC'])
             ->toArray();
-        $AdminToDo = new AdminToDo();
         foreach ($communities as $key => $community) {
             $community['toDo'] = $AdminToDo->getToDo($community['id']);
 
             // Exclude any communities that are done participating in CRI
             if (isset($community['toDo']['done'])) {
                 unset($communities[$key]);
+                continue;
             }
+
+            // Apply filters
+            if (! $partyFilter) {
+                continue;
+            }
+            if (! $community['toDo']['responsible']) {
+                unset($communities[$key]);
+                continue;
+            }
+            $matchesFilter = false;
+            foreach ($community['toDo']['responsible'] as $party) {
+                if (stripos($party, $partyFilter) !== false) {
+                    $matchesFilter = true;
+                }
+            }
+            if (! $matchesFilter) {
+                unset($communities[$key]);
+            }
+        }
+
+        $title = 'Admin To-Do';
+        if ($partyFilter) {
+            $title .= ": $partyFilter Tasks";
         }
 
         $this->set([
             'communities' => $communities,
-            'titleForLayout' => 'Admin To-Do'
+            'titleForLayout' => $title
         ]);
     }
 
@@ -815,6 +840,12 @@ class CommunitiesController extends AppController
         $this->set([
             'community' => $community,
             'currentlyActive' => $currentlyActive,
+            'parties' => [
+                'All',
+                'ICI',
+                'CBER',
+                'Client'
+            ],
             'titleForLayout' => $title,
             'warning' => $this->Communities->getDeactivationWarning($communityId)
         ]);

@@ -1295,24 +1295,25 @@ section.admin-guide {
 #admin-to-do {
     thead {
         th {
+            vertical-align: middle;
             white-space: nowrap;
         }
     }
+    button.dropdown-toggle {
+        font-weight: bold;
+    }
     .ready {
-        .glyphicon,
-        a {
+        .glyphicon {
             .text-danger;
         }
     }
     .waiting {
-        .glyphicon,
-        a {
+        .glyphicon {
             .text-warning;
         }
     }
     .complete {
-        .glyphicon,
-        a {
+        .glyphicon {
             .text-primary;
         }
     }
@@ -1323,15 +1324,32 @@ section.admin-guide {
         margin: 0;
         padding-left: 20px;
     }
-    a {
-        .btn;
-        .btn-xs;
-        .btn-default;
+    td:last-child {
+        &.ready {
+            a {
+                .text-danger;
+            }
+        }
+        &.waiting {
+            a {
+                .text-warning;
+            }
+        }
+        &.complete {
+            a {
+                .text-primary;
+            }
+        }
+        a {
+            .btn;
+            .btn-xs;
+            .btn-default;
 
-        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-        color: inherit;
-        font-weight: bold;
-        vertical-align: baseline;
+            box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+            color: inherit;
+            font-weight: bold;
+            vertical-align: baseline;
+        }
     }
     .glyphicon {
         font-size: 150%;
