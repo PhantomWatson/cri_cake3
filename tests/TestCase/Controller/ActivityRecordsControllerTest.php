@@ -42,15 +42,14 @@ class ActivityRecordsControllerTest extends ApplicationTest
      */
     public function testAdminIndex()
     {
-        $url = '/admin/activity-records/index';
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'ActivityRecords',
+            'action' => 'index'
+        ]);
 
         // Unauthenticated
-        $this->get($url);
-        $this->assertRedirectContains(Router::url([
-            'prefix' => false,
-            'controller' => 'Users',
-            'action' => 'login'
-        ]));
+        $this->assertRedirectToLogin($url);
 
         // Authenticated
         $this->session($this->adminUser);
@@ -65,15 +64,15 @@ class ActivityRecordsControllerTest extends ApplicationTest
      */
     public function testAdminCommunity()
     {
-        $url = '/admin/activity-records/community/1';
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'ActivityRecords',
+            'action' => 'community',
+            1
+        ]);
 
         // Unauthenticated
-        $this->get($url);
-        $this->assertRedirectContains(Router::url([
-            'prefix' => false,
-            'controller' => 'Users',
-            'action' => 'login'
-        ]));
+        $this->assertRedirectToLogin($url);
 
         // Authenticated
         $this->session($this->adminUser);

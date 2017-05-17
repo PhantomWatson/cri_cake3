@@ -106,15 +106,15 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminActivate()
     {
-        $url = '/admin/communities/activate/1';
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'activate',
+            1
+        ]);
 
         // Unauthenticated
-        $this->get($url);
-        $this->assertRedirectContains(Router::url([
-            'prefix' => false,
-            'controller' => 'Users',
-            'action' => 'login'
-        ]));
+        $this->assertRedirectToLogin($url);
 
         // Authenticated
         $this->session($this->adminUser);
@@ -149,15 +149,14 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminAdd()
     {
-        $url = '/admin/communities/add';
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'add'
+        ]);
 
         // Unauthenticated
-        $this->get($url);
-        $this->assertRedirectContains(Router::url([
-            'prefix' => false,
-            'controller' => 'Users',
-            'action' => 'login'
-        ]));
+        $this->assertRedirectToLogin($url);
 
         // Authenticated
         $this->session($this->adminUser);

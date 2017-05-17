@@ -19,6 +19,7 @@ use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Cake\Routing\Router;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -61,5 +62,21 @@ class ApplicationTest extends IntegrationTestCase
         $this->assertInstanceOf(ErrorHandlerMiddleware::class, $middleware->get(0));
         $this->assertInstanceOf(AssetMiddleware::class, $middleware->get(1));
         $this->assertInstanceOf(RoutingMiddleware::class, $middleware->get(2));
+    }
+
+    /**
+     * Asserts that a GET request to the provided URL results in a redirect to the login page
+     *
+     * @param string $url URL
+     * @return void
+     */
+    public function assertRedirectToLogin($url)
+    {
+        $this->get($url);
+        $this->assertRedirectContains(Router::url([
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'login'
+        ]));
     }
 }
