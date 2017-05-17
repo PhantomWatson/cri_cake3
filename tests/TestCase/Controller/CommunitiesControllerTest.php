@@ -18,7 +18,9 @@ class CommunitiesControllerTest extends ApplicationTest
      * @var array
      */
     public $fixtures = [
+        'app.activity_records',
         'app.areas',
+        'app.clients_communities',
         'app.communities',
         'app.deliverables',
         'app.deliveries',
@@ -26,6 +28,7 @@ class CommunitiesControllerTest extends ApplicationTest
         'app.purchases',
         'app.respondents',
         'app.responses',
+        'app.settings',
         'app.stat_categories',
         'app.statistics',
         'app.surveys',
@@ -146,7 +149,36 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminAdd()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = '/admin/communities/add';
+
+        // Unauthenticated
+        $this->get($url);
+        $this->assertRedirectContains(Router::url([
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'login'
+        ]));
+
+        // Authenticated
+        $this->session($this->adminUser);
+        $this->get($url);
+        $this->assertResponseOk();
+
+        // POST
+        $data = [
+            'name' => 'New Community',
+            'local_area_id' => 1,
+            'parent_area_id' => 1,
+            'score' => 1,
+            'public' => 0,
+            'intAlignmentAdjustment' => 8.98,
+            'intAlignmentThreshold' => 1
+        ];
+        $this->post($url, $data);
+        $this->assertResponseSuccess();
+        $communitiesTable = TableRegistry::get('Communities');
+        $query = $communitiesTable->find()->where(['name' => $data['name']]);
+        $this->assertEquals(1, $query->count());
     }
 
     /**
