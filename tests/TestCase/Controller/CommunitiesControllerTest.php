@@ -187,7 +187,39 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminAddClient()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'addClient',
+            1
+        ]);
+
+        // Unauthenticated
+        $this->assertRedirectToLogin($url);
+
+        // Authenticated
+        $this->session($this->adminUser);
+        $this->get($url);
+        $this->assertResponseOk();
+
+        // POST
+        $data = [
+            'salutation' => 'Mr.',
+            'name' => 'Test User',
+            'title' => 'Test Title',
+            'organization' => 'Test Organization',
+            'email' => 'test@example.com',
+            'phone' => '555-555-5555',
+            'unhashed_password' => 'password'
+        ];
+        $this->post($url, $data);
+        $this->assertResponseSuccess();
+        $usersTable = TableRegistry::get('Users');
+        $query = $usersTable->find()->where([
+            'name' => $data['name'],
+            'role' => 'client'
+        ]);
+        $this->assertEquals(1, $query->count());
     }
 
     /**
