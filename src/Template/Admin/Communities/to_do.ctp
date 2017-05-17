@@ -15,7 +15,6 @@
         ]
     ) ?>
     page, find the <em>Actions</em> menu for the correct community, open it, and then select <em>Deactivate</em>.
-
 </p>
 
 <table class="table" id="admin-to-do">
