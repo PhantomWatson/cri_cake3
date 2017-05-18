@@ -216,24 +216,6 @@ class UsersTable extends Table
     }
 
     /**
-     * Returns an array of consultant full-names, indexed by consultant user IDs
-     *
-     * @return array
-     */
-    public function getConsultantList()
-    {
-        $consultants = $this->find('list')
-            ->where(['role' => 'consultant'])
-            ->order(['name' => 'ASC']);
-        $retval = [];
-        foreach ($consultants as $consultant) {
-            $retval[$consultant->id] = $consultant->full_name;
-        }
-
-        return $retval;
-    }
-
-    /**
      * Returns a random six-character string. Ambiguous-looking alphanumeric characters are excluded.
      *
      * @return string
