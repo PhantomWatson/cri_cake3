@@ -251,7 +251,34 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminClienthome()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'clienthome',
+            1
+        ]);
+
+        // Unauthenticated
+        $this->assertRedirectToLogin($url);
+
+        // Authenticated
+        $this->session($this->adminUser);
+        $this->get($url);
+        $this->assertResponseOk();
+
+        // Invalid community ID
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'clienthome',
+            999
+        ]);
+        $this->get($url);
+        $this->assertRedirect([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'index'
+        ]);
     }
 
     /**
