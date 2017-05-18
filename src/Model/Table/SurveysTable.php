@@ -766,9 +766,11 @@ class SurveysTable extends Table
         if (! $includeDummy) {
             $communitiesTable = TableRegistry::get('Communities');
             $dummyCommunityIds = $communitiesTable->getDummyCommunityIds();
-            $query->where(function ($exp, $q) use ($dummyCommunityIds) {
-                return $exp->notIn('community_id', $dummyCommunityIds);
-            });
+            if ($dummyCommunityIds) {
+                $query->where(function ($exp, $q) use ($dummyCommunityIds) {
+                    return $exp->notIn('community_id', $dummyCommunityIds);
+                });
+            }
         }
         $surveys = $query->toArray();
 
