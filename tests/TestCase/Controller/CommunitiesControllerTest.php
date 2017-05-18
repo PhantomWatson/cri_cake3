@@ -321,7 +321,46 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminDelete()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $validUrl = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'delete',
+            1
+        ]);
+
+        // Unauthenticated
+        $this->post($validUrl);
+        $this->assertRedirectContains(Router::url([
+            'prefix' => false,
+            'controller' => 'Users',
+            'action' => 'login'
+        ]));
+
+        // Authenticated
+        $this->session($this->adminUser);
+
+        // GET
+        $this->get($validUrl);
+        $this->assertResponseError();
+
+        // POST, invalid community
+        $invalidUrl = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'delete',
+            999
+        ]);
+        $this->post($invalidUrl);
+        $this->assertResponseError();
+
+        // POST, valid community
+        $this->post($validUrl);
+        $this->assertResponseSuccess();
+
+        // Verify delete
+        $communitiesTable = TableRegistry::get('Communities');
+        $query = $communitiesTable->find()->where(['id' => 1]);
+        $this->assertEquals(0, $query->count());
     }
 
     /**
