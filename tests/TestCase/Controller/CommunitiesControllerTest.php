@@ -24,6 +24,7 @@ class CommunitiesControllerTest extends ApplicationTest
         'app.communities',
         'app.deliverables',
         'app.deliveries',
+        'app.opt_outs',
         'app.products',
         'app.purchases',
         'app.respondents',
