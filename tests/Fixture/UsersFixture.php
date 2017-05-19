@@ -64,7 +64,7 @@ class UsersFixture extends TestFixture
             'role' => 'client',
             'salutation' => '',
             'name' => 'Test Client',
-            'email' => 'testclient@example.com',
+            'email' => 'testclient1@example.com',
             'phone' => '765-285-3399',
             'title' => 'Test',
             'organization' => 'Test',
@@ -73,5 +73,19 @@ class UsersFixture extends TestFixture
             'created' => '2013-10-16 11:49:38',
             'modified' => '2016-01-26 01:06:26'
         ],
+        [
+            'id' => 3,
+            'role' => 'client',
+            'salutation' => '',
+            'name' => 'Test Client (inactive community)',
+            'email' => 'testclient2@example.com',
+            'phone' => '765-285-3399',
+            'title' => 'Test',
+            'organization' => 'Test',
+            'password' => '$2y$10$oaedH1cbAvt/wayrRJlrVeMWtoQSzgBee81iivOmw4tjMlnvfdP/a',
+            'all_communities' => false,
+            'created' => '2013-10-16 11:49:38',
+            'modified' => '2016-01-26 01:06:26'
+        ]
     ];
 }

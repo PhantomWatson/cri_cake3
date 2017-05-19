@@ -39,7 +39,12 @@ class ClientsCommunitiesFixture extends TestFixture
         [
             'id' => 1,
             'community_id' => 1,
-            'client_id' => 1
+            'client_id' => 2
         ],
+        [
+            'id' => 2,
+            'community_id' => 3,
+            'client_id' => 3
+        ]
     ];
 }
