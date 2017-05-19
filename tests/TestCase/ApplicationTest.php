@@ -15,6 +15,7 @@
 namespace App\Test\TestCase;
 
 use App\Application;
+use App\Test\Fixture\UsersFixture;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
@@ -28,43 +29,29 @@ use Cake\TestSuite\IntegrationTestCase;
 class ApplicationTest extends IntegrationTestCase
 {
 
-    public $adminUser = [
-        'Auth' => [
-            'User' => [
-                'id' => 1,
-                'role' => 'admin',
-                'salutation' => '',
-                'name' => 'Test Admin',
-                'email' => 'testadmin@example.com',
-                'phone' => '765-285-3399',
-                'title' => 'Test',
-                'organization' => 'Test',
-                'password' => '$2y$10$oaedH1cbAvt/wayrRJlrVeMWtoQSzgBee81iivOmw4tjMlnvfdP/a',
-                'all_communities' => true,
-                'created' => '2013-10-16 11:49:38',
-                'modified' => '2016-01-26 01:06:26'
-            ]
-        ]
-    ];
+    public $adminUser;
+    public $clientUser;
 
-    public $clientUser = [
-        'Auth' => [
-            'User' => [
-                'id' => 1,
-                'role' => 'admin',
-                'salutation' => '',
-                'name' => 'Test Admin',
-                'email' => 'testadmin@example.com',
-                'phone' => '765-285-3399',
-                'title' => 'Test',
-                'organization' => 'Test',
-                'password' => '$2y$10$oaedH1cbAvt/wayrRJlrVeMWtoQSzgBee81iivOmw4tjMlnvfdP/a',
-                'all_communities' => true,
-                'created' => '2013-10-16 11:49:38',
-                'modified' => '2016-01-26 01:06:26'
+    /**
+     * Sets up this set of tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $usersFixture = new UsersFixture();
+        $this->adminUser = [
+            'Auth' => [
+                'User' => $usersFixture->records[0]
             ]
-        ]
-    ];
+        ];
+        $this->clientUser = [
+            'Auth' => [
+                'User' => $usersFixture->records[1]
+            ]
+        ];
+    }
 
     /**
      * testMiddleware
