@@ -586,7 +586,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'removeClient',
-            1,
+            2,
             1
         ]);
 
@@ -597,7 +597,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 1,
-            'client_id' => 1
+            'client_id' => 2
         ]);
         $this->assertEquals(1, $query->count());
 
@@ -609,7 +609,7 @@ class CommunitiesControllerTest extends ApplicationTest
         // Confirm removed association
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 1,
-            'client_id' => 1
+            'client_id' => 2
         ]);
         $this->assertEquals(0, $query->count());
     }
@@ -640,25 +640,25 @@ class CommunitiesControllerTest extends ApplicationTest
         $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 1,
-            'client_id' => 1
+            'client_id' => 2
         ]);
         $this->assertEquals(1, $query->count());
 
         // POST
-        $data = ['client_id' => 1];
+        $data = ['client_id' => 3];
         $this->post($url, $data);
 
         // Confirm new association
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 2,
-            'client_id' => 1
+            'client_id' => 3
         ]);
         $this->assertEquals(1, $query->count());
 
         // Confirm old association was removed
         $query = $clientsCommunitiesTable->find()->where([
-            'community_id' => 1,
-            'client_id' => 1
+            'community_id' => 3,
+            'client_id' => 3
         ]);
         $this->assertEquals(0, $query->count());
     }
