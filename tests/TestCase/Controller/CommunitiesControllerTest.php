@@ -548,7 +548,31 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminProgress()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'progress',
+            1
+        ]);
+
+        // Unauthenticated
+        $this->assertRedirectToLogin($url);
+
+        // Authenticated
+        $this->session($this->adminUser);
+        $this->get($url);
+        $this->assertResponseOk();
+
+        // POST
+        $data = ['score' => 2];
+        $this->put($url, $data);
+        $this->assertResponseSuccess();
+        $communitiesTable = TableRegistry::get('Communities');
+        $query = $communitiesTable->find()->where([
+            'id' => 1,
+            'score' => $data['score']
+        ]);
+        $this->assertEquals(1, $query->count());
     }
 
     /**
