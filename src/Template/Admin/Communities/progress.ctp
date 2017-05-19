@@ -8,19 +8,13 @@
     <?php
         echo $this->Form->create($community);
 
-        function score_radio_input($step, $score, $view) {
-            $retval = $view->Form->radio(
+        $steps = [1, 2, 3, 4];
+        foreach ($steps as $step) {
+            echo $this->Form->radio(
                 'score',
                 [$step => "Step $step"],
                 ['hiddenField' => false]
             );
-            return $retval;
-        }
-
-
-        $steps = [1, 2, 3, 4];
-        foreach ($steps as $step) {
-            echo score_radio_input($step, $community->score, $this);
             if (isset($criteria[$step])) {
                 echo '<ul>';
                 foreach ($criteria[$step] as $item) {
