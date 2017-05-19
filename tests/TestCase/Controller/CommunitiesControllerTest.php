@@ -582,7 +582,37 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminRemoveClient()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'removeClient',
+            1,
+            1
+        ]);
+
+        // Unauthenticated
+        $this->assertRedirectToLogin($url);
+
+        // Confirm existing association
+        $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
+        $query = $clientsCommunitiesTable->find()->where([
+            'community_id' => 1,
+            'client_id' => 1
+        ]);
+        $this->assertEquals(1, $query->count());
+
+        // Authenticated
+        $this->session($this->adminUser);
+        $this->get($url);
+        $this->assertResponseSuccess();
+
+        // Confirm removed association
+        $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
+        $query = $clientsCommunitiesTable->find()->where([
+            'community_id' => 1,
+            'client_id' => 1
+        ]);
+        $this->assertEquals(0, $query->count());
     }
 
     /**
