@@ -695,7 +695,19 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testClientIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = Router::url([
+            'prefix' => 'client',
+            'controller' => 'Communities',
+            'action' => 'index'
+        ]);
+
+        // Unauthenticated
+        $this->assertRedirectToLogin($url);
+
+        // Authenticated
+        $this->session($this->clientUser);
+        $this->get($url);
+        $this->assertResponseOk();
     }
 
     /**
