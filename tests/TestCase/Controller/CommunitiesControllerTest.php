@@ -419,7 +419,25 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'index'
+        ]);
+
+        // Unauthenticated
+        $this->assertRedirectToLogin($url);
+
+        // Authenticated
+        $this->session($this->adminUser);
+        $this->get($url);
+        $this->assertResponseOk();
+        $this->assertResponseContains('<tr data-community-name="Test Community (public)">');
+        $this->assertResponseNotContains('<tr data-community-name="Test Community (inactive)">');
+
+        // Test filters
+        $this->get($url . '?filters%5Bstatus%5D=inactive');
+        $this->assertResponseContains('<tr data-community-name="Test Community (inactive)">');
     }
 
     /**

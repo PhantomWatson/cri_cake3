@@ -94,5 +94,26 @@ class CommunitiesFixture extends TestFixture
             'created' => '2017-04-18 23:18:27',
             'modified' => '2017-04-18 23:18:27'
         ],
+        [
+            'id' => 3,
+            'name' => 'Test Community (inactive)',
+            'local_area_id' => 2,
+            'parent_area_id' => 1,
+            'public' => 0,
+            'fast_track' => 0,
+            'score' => 1,
+            'town_meeting_date' => null,
+            'intAlignmentAdjustment' => 8.98,
+            'intAlignmentThreshold' => 1.0,
+            'presentation_a' => null,
+            'presentation_b' => null,
+            'presentation_c' => null,
+            'presentation_d' => null,
+            'dummy' => 0,
+            'notes' => 'Notes...',
+            'active' => 0,
+            'created' => '2017-04-18 23:18:27',
+            'modified' => '2017-04-18 23:18:27'
+        ],
     ];
 }
