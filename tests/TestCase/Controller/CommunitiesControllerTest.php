@@ -622,7 +622,48 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminSelectClient()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'selectClient',
+            2
+        ]);
+
+        // Unauthenticated
+        $this->assertRedirectToLogin($url);
+
+        // Authenticated
+        $this->session($this->adminUser);
+        $this->get($url);
+        $this->assertResponseOk();
+
+        // Confirm existing association
+        $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
+        $query = $clientsCommunitiesTable->find()->where([
+            'community_id' => 1,
+            'client_id' => 1
+        ]);
+        $this->assertEquals(1, $query->count());
+
+        // POST
+        $data = ['client_id' => 1];
+        $this->post($url, $data);
+
+        // Confirm new association
+        $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
+        $query = $clientsCommunitiesTable->find()->where([
+            'community_id' => 2,
+            'client_id' => 1
+        ]);
+        $this->assertEquals(1, $query->count());
+
+        // Confirm old association was removed
+        $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
+        $query = $clientsCommunitiesTable->find()->where([
+            'community_id' => 1,
+            'client_id' => 1
+        ]);
+        $this->assertEquals(0, $query->count());
     }
 
     /**
