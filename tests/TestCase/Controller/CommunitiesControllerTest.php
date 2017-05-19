@@ -371,7 +371,45 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminEdit()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'edit',
+            1
+        ]);
+
+        // Unauthenticated
+        $this->assertRedirectToLogin($url);
+
+        // Authenticated
+        $this->session($this->adminUser);
+        $this->get($url);
+        $this->assertResponseOk();
+
+        // Invalid ID
+        $this->get(Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'edit',
+            999
+        ]));
+        $this->assertResponseError();
+
+        // POST
+        $data = [
+            'name' => 'Edited Community',
+            'local_area_id' => 2,
+            'parent_area_id' => 2,
+            'score' => 1,
+            'public' => 1,
+            'intAlignmentAdjustment' => 9,
+            'intAlignmentThreshold' => 2
+        ];
+        $this->post($url, $data);
+        $this->assertResponseSuccess();
+        $communitiesTable = TableRegistry::get('Communities');
+        $query = $communitiesTable->find()->where(['name' => $data['name']]);
+        $this->assertEquals(1, $query->count());
     }
 
     /**
