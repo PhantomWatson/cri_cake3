@@ -673,7 +673,19 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminToDo()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'toDo'
+        ]);
+
+        // Unauthenticated
+        $this->assertRedirectToLogin($url);
+
+        // Authenticated
+        $this->session($this->adminUser);
+        $this->get($url);
+        $this->assertResponseOk();
     }
 
     /**
