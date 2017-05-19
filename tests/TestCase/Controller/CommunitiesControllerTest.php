@@ -1,6 +1,7 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
+use App\Model\Table\ProductsTable;
 use App\Test\TestCase\ApplicationTest;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
@@ -479,7 +480,65 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminPresentations()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'presentations',
+            1
+        ]);
+
+        // Unauthenticated
+        $this->assertRedirectToLogin($url);
+
+        // Authenticated
+        $this->session($this->adminUser);
+        $this->get($url);
+        $this->assertResponseOk();
+
+        // Schedule presentation
+        $date = [
+            'year' => 2099,
+            'month' => 1,
+            'day' => 1
+        ];
+        $data = [
+            'presentation_a_scheduled' => 1,
+            'presentation_a' => $date,
+            'presentation_b_scheduled' => 0,
+            'presentation_b' => $date,
+            'presentation_c_scheduled' => 0,
+            'presentation_c' => $date,
+            'presentation_d_scheduled' => 0,
+            'presentation_d' => $date
+        ];
+        $this->post($url, $data);
+        $this->assertResponseSuccess();
+        $communitiesTable = TableRegistry::get('Communities');
+        $query = $communitiesTable->find()->where([
+            'id' => 1,
+            'presentation_a' => implode('-', $data['presentation_a'])
+        ]);
+        $this->assertEquals(1, $query->count());
+
+        // Opt out of presentation
+        $data['presentation_b_scheduled'] = 'opted-out';
+        $this->post($url, $data);
+        $this->assertResponseSuccess();
+        $communitiesTable = TableRegistry::get('Communities');
+        $query = $communitiesTable->find()->where([
+            'id' => 1,
+            function ($exp, $q) {
+                return $exp->isNull('presentation_b');
+            }
+        ]);
+        $this->assertEquals(1, $query->count());
+        $optOutsTable = TableRegistry::get('OptOuts');
+        $query = $optOutsTable->find()->where([
+            'user_id' => $this->adminUser['Auth']['User']['id'],
+            'community_id' => 1,
+            'product_id' => ProductsTable::OFFICIALS_SUMMIT
+        ]);
+        $this->assertEquals(1, $query->count());
     }
 
     /**
