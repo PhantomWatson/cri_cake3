@@ -2,6 +2,7 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Model\Table\ProductsTable;
+use App\Test\Fixture\UsersFixture;
 use App\Test\TestCase\ApplicationTest;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
@@ -717,6 +718,43 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testClientReactivate()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = Router::url([
+            'prefix' => 'client',
+            'controller' => 'Communities',
+            'action' => 'reactivate'
+        ]);
+
+        // Unauthenticated
+        $this->assertRedirectToLogin($url);
+
+        // Authenticated
+        $usersFixture = new UsersFixture();
+        $clientSession = [
+            'Auth' => [
+                // Client account associated with inactive community
+                'User' => $usersFixture->records[2]
+            ]
+        ];
+        $this->session($clientSession);
+        $this->get($url);
+        $this->assertResponseOk();
+
+        // Confirm community is inactive
+        $communitiesTable = TableRegistry::get('Communities');
+        $query = $communitiesTable->find()->where([
+            'id' => 3,
+            'active' => 0
+        ]);
+        $this->assertEquals(1, $query->count());
+
+        // PUT
+        $this->put($url, []);
+
+        // Confirm community has been reactivated
+        $query = $communitiesTable->find()->where([
+            'id' => 3,
+            'active' => 1
+        ]);
+        $this->assertEquals(1, $query->count());
     }
 }
