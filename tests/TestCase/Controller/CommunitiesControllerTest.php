@@ -525,7 +525,6 @@ class CommunitiesControllerTest extends ApplicationTest
         $data['presentation_b_scheduled'] = 'opted-out';
         $this->post($url, $data);
         $this->assertResponseSuccess();
-        $communitiesTable = TableRegistry::get('Communities');
         $query = $communitiesTable->find()->where([
             'id' => 1,
             function ($exp, $q) {
@@ -564,7 +563,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->get($url);
         $this->assertResponseOk();
 
-        // POST
+        // PUT
         $data = ['score' => 2];
         $this->put($url, $data);
         $this->assertResponseSuccess();
@@ -608,7 +607,6 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->assertResponseSuccess();
 
         // Confirm removed association
-        $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 1,
             'client_id' => 1
@@ -651,7 +649,6 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->post($url, $data);
 
         // Confirm new association
-        $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 2,
             'client_id' => 1
@@ -659,7 +656,6 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->assertEquals(1, $query->count());
 
         // Confirm old association was removed
-        $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 1,
             'client_id' => 1
