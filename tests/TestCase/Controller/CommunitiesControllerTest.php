@@ -447,7 +447,29 @@ class CommunitiesControllerTest extends ApplicationTest
      */
     public function testAdminNotes()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'notes',
+            1
+        ]);
+
+        // Unauthenticated
+        $this->assertRedirectToLogin($url);
+
+        // Authenticated
+        $this->session($this->adminUser);
+        $this->get($url);
+        $this->assertResponseOk();
+
+        // POST
+        $data = ['notes' => 'New notes'];
+        $this->post($url, $data);
+        $this->assertResponseOk();
+        $this->assertResponseContains('Notes updated');
+        $communitiesTable = TableRegistry::get('Communities');
+        $query = $communitiesTable->find()->where(['notes' => $data['notes']]);
+        $this->assertEquals(1, $query->count());
     }
 
     /**
