@@ -382,9 +382,17 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->get($url);
         $this->assertResponseOk();
         $this->assertResponseContains('<tr data-community-name="Test Community (public)">');
-        $this->assertResponseNotContains('<tr data-community-name="Test Community (inactive)">');
+        $this->assertResponseNotContains('<tr data-community-name="Test Community (inactive)">');;
+    }
 
-        // Test filters
+    /**
+     * Test for /admin/communities/index?filters[status]=inactive
+     *
+     * @return void
+     */
+    public function testIndexFiltered()
+    {
+        $this->session($this->adminUser);
         $url = Router::url([
             'prefix' => 'admin',
             'controller' => 'Communities',
