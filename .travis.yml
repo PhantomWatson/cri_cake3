@@ -24,10 +24,9 @@ before_script:
   - phpenv rehash
 
 script:
-  - if [[ $PHPCS != 1 ]]; then vendor/bin/phpunit; fi
+  - if [[ $PHPCS != 1 ]]; then vendor/bin/phpunit --coverage-clover build/logs/clover.xml; fi
+  - if [[ $PHPCS != 1 ]]; then mkdir -p build/logs; fi
   - if [[ $PHPCS = 1 ]]; then vendor/bin/phpcs -p --extensions=php --error-severity=1 --warning-severity=0 --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./config ./webroot; fi
-  - mkdir -p build/logs
-  - phpunit --coverage-clover build/logs/clover.xml
 
 notifications:
   email: false
