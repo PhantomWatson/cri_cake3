@@ -1,5 +1,5 @@
 <?php
-namespace App\Test\TestCase\Controller;
+namespace App\Test\TestCase\Controller\Client;
 
 use App\Test\TestCase\ApplicationTest;
 
@@ -27,11 +27,11 @@ class PurchasesControllerTest extends ApplicationTest
     ];
 
     /**
-     * Test postback method
+     * Test for /client/purchases/index
      *
      * @return void
      */
-    public function testPostback()
+    public function testIndex()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

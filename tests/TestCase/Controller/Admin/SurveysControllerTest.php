@@ -1,5 +1,5 @@
 <?php
-namespace App\Test\TestCase\Controller;
+namespace App\Test\TestCase\Controller\Admin;
 
 use App\Test\TestCase\ApplicationTest;
 
@@ -27,71 +27,101 @@ class SurveysControllerTest extends ApplicationTest
     ];
 
     /**
-     * Test for /surveys/check-survey-assignment
+     * Test for /admin/surveys/activate
      *
      * @return void
      */
-    public function testCheckSurveyAssignment()
+    public function testActivate()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test for /surveys/clear-saved-invitation-data
+     * Test for /admin/surveys/clear-responses
      *
      * @return void
      */
-    public function testClearSavedInvitationData()
+    public function testClearResponses()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test for /surveys/cron-import
+     * Test for /admin/surveys/import-all
      *
      * @return void
      */
-    public function testCronImport()
+    public function testImportAll()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test for /surveys/get-qna-ids
+     * Test for /admin/surveys/invite
      *
      * @return void
      */
-    public function testGetQnaIds()
+    public function testInvite()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test for /surveys/get-survey-list
+     * Test for /admin/surveys/link
      *
      * @return void
      */
-    public function testGetSurveyList()
+    public function testLink()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test for /surveys/get-survey-url
+     * Test for /admin/surveys/populate-aware-fields
      *
      * @return void
      */
-    public function testGetSurveyUrl()
+    public function testPopulateAwareFields()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test for /surveys/import
+     * Test for /admin/surveys/remind
      *
      * @return void
      */
-    public function testImport()
+    public function testRemind()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test for /admin/surveys/resend-invitations
+     *
+     * @return void
+     */
+    public function testResendInvitations()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test for /admin/surveys/update-alignment
+     *
+     * @return void
+     */
+    public function testUpdateAlignment()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test for /admin/surveys/view
+     *
+     * @return void
+     */
+    public function testView()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

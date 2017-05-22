@@ -1,5 +1,5 @@
 <?php
-namespace App\Test\TestCase\Controller;
+namespace App\Test\TestCase\Controller\Admin;
 
 use App\Test\TestCase\ApplicationTest;
 
@@ -31,7 +31,7 @@ class RespondentsControllerTest extends ApplicationTest
      *
      * @return void
      */
-    public function testAdminUnapproved()
+    public function testUnapproved()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
@@ -41,7 +41,7 @@ class RespondentsControllerTest extends ApplicationTest
      *
      * @return void
      */
-    public function testAdminApproveUninvited()
+    public function testApproveUninvited()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
@@ -51,7 +51,7 @@ class RespondentsControllerTest extends ApplicationTest
      *
      * @return void
      */
-    public function testAdminDismissUninvited()
+    public function testDismissUninvited()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
@@ -61,47 +61,7 @@ class RespondentsControllerTest extends ApplicationTest
      *
      * @return void
      */
-    public function testAdminView()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test for /client/respondents/unapproved
-     *
-     * @return void
-     */
-    public function testClientUnapproved()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test for /client/respondents/index
-     *
-     * @return void
-     */
-    public function testClientIndex()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test for /client/respondents/approve-uninvited
-     *
-     * @return void
-     */
-    public function testClientApproveUninvited()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test for /client/respondents/dismiss-uninvited
-     *
-     * @return void
-     */
-    public function testClientDismissUninvited()
+    public function testView()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

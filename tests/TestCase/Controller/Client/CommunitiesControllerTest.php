@@ -1,14 +1,13 @@
 <?php
-namespace App\Test\TestCase\Controller;
+namespace App\Test\TestCase\Controller\Client;
 
-use App\Model\Table\ProductsTable;
 use App\Test\Fixture\UsersFixture;
 use App\Test\TestCase\ApplicationTest;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 
 /**
- * App\Controller\CommunitiesController Test Case
+ * App\Controller\Client\CommunitiesController Test Case
  */
 class CommunitiesControllerTest extends ApplicationTest
 {
@@ -51,62 +50,11 @@ class CommunitiesControllerTest extends ApplicationTest
     }
 
     /**
-     * Test for /communities/index
-     *
-     * @return void
-     */
-    public function testIndex()
-    {
-        $this->get('/communities');
-        $this->assertResponseOk();
-    }
-
-    /**
-     * Test for /communities/view
-     *
-     * @return void
-     */
-    public function testView()
-    {
-        // Publicly-viewable community
-        $this->get([
-            'controller' => 'Communities',
-            'action' => 'view',
-            1
-        ]);
-        $this->assertResponseOk();
-
-        // Not-publicly-viewable community
-        $this->get([
-            'controller' => 'Communities',
-            'action' => 'view',
-            2
-        ]);
-        $this->assertResponseError();
-        $this->assertResponseCode(403);
-    }
-
-    /**
-     * Test for /communities/autocomplete
-     *
-     * @return void
-     */
-    public function testAutocomplete()
-    {
-        $this->get('/communities/autocomplete?term=tes');
-        $this->assertResponseOk();
-        $this->assertResponseContains('Test Community (public)');
-
-        $this->get('/communities/autocomplete');
-        $this->assertResponseError();
-    }
-
-    /**
      * Test for /client/communities/index
      *
      * @return void
      */
-    public function testClientIndex()
+    public function testIndex()
     {
         $url = Router::url([
             'prefix' => 'client',
@@ -128,7 +76,7 @@ class CommunitiesControllerTest extends ApplicationTest
      *
      * @return void
      */
-    public function testClientReactivate()
+    public function testReactivate()
     {
         $url = Router::url([
             'prefix' => 'client',

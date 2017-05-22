@@ -1,12 +1,12 @@
 <?php
-namespace App\Test\TestCase\Controller;
+namespace App\Test\TestCase\Controller\Admin;
 
 use App\Test\TestCase\ApplicationTest;
 
 /**
- * App\Controller\SurveysController Test Case
+ * App\Controller\PurchasesController Test Case
  */
-class SurveysControllerTest extends ApplicationTest
+class PurchasesControllerTest extends ApplicationTest
 {
 
     /**
@@ -27,71 +27,51 @@ class SurveysControllerTest extends ApplicationTest
     ];
 
     /**
-     * Test for /surveys/check-survey-assignment
+     * Test for /admin/purchases/add
      *
      * @return void
      */
-    public function testCheckSurveyAssignment()
+    public function testAdd()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test for /surveys/clear-saved-invitation-data
+     * Test for /admin/purchases/index
      *
      * @return void
      */
-    public function testClearSavedInvitationData()
+    public function testIndex()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test for /surveys/cron-import
+     * Test for /admin/purchases/ocra
      *
      * @return void
      */
-    public function testCronImport()
+    public function testOcra()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test for /surveys/get-qna-ids
+     * Test for /admin/purchases/refund
      *
      * @return void
      */
-    public function testGetQnaIds()
+    public function testRefund()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test for /surveys/get-survey-list
+     * Test for /admin/purchases/view
      *
      * @return void
      */
-    public function testGetSurveyList()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test for /surveys/get-survey-url
-     *
-     * @return void
-     */
-    public function testGetSurveyUrl()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test for /surveys/import
-     *
-     * @return void
-     */
-    public function testImport()
+    public function testView()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

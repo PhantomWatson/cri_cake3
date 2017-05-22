@@ -120,16 +120,6 @@ class PagesControllerTest extends ApplicationTest
     }
 
     /**
-     * Test for /admin/pages/guide
-     *
-     * @return void
-     */
-    public function testAdminGuide()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
      * Test that missing template renders 404 page in production
      *
      * @return void

@@ -1,13 +1,12 @@
 <?php
-namespace App\Test\TestCase\Controller;
+namespace App\Test\TestCase\Controller\Admin;
 
-use App\Controller\StatisticsController;
 use App\Test\TestCase\ApplicationTest;
 
 /**
- * App\Controller\StatisticsController Test Case
+ * App\Controller\ResponsesController Test Case
  */
-class StatisticsControllerTest extends ApplicationTest
+class ResponsesControllerTest extends ApplicationTest
 {
 
     /**
@@ -22,28 +21,37 @@ class StatisticsControllerTest extends ApplicationTest
         'app.purchases',
         'app.respondents',
         'app.responses',
-        'app.stat_categories',
         'app.statistics',
         'app.surveys',
         'app.users'
     ];
 
     /**
-     * Test for /admin/statistics/import
+     * Test for /admin/responses/calculate-missing-alignments
      *
      * @return void
      */
-    public function testAdminImport()
+    public function testCalculateMissingAlignments()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test for /admin/statistics/import-grouped
+     * Test for /admin/responses/view
      *
      * @return void
      */
-    public function testAdminImportGrouped()
+    public function testView()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test for /admin/responses/get-full-response
+     *
+     * @return void
+     */
+    public function testGetFullResponse()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

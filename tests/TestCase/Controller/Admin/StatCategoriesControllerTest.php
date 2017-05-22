@@ -1,5 +1,5 @@
 <?php
-namespace App\Test\TestCase\Controller;
+namespace App\Test\TestCase\Controller\Admin;
 
 use App\Test\TestCase\ApplicationTest;
 
@@ -24,7 +24,7 @@ class StatCategoriesControllerTest extends ApplicationTest
      *
      * @return void
      */
-    public function testAdminImport()
+    public function testImport()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

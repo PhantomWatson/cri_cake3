@@ -1,5 +1,5 @@
 <?php
-namespace App\Test\TestCase\Controller;
+namespace App\Test\TestCase\Controller\Admin;
 
 use App\Test\TestCase\ApplicationTest;
 use Cake\Routing\Router;
@@ -40,7 +40,7 @@ class ActivityRecordsControllerTest extends ApplicationTest
      *
      * @return void
      */
-    public function testAdminIndex()
+    public function testIndex()
     {
         $url = Router::url([
             'prefix' => 'admin',
@@ -62,7 +62,7 @@ class ActivityRecordsControllerTest extends ApplicationTest
      *
      * @return void
      */
-    public function testAdminCommunity()
+    public function testCommunity()
     {
         $url = Router::url([
             'prefix' => 'admin',
