@@ -1,7 +1,6 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Model\Table\ProductsTable;
 use App\Test\Fixture\UsersFixture;
 use App\Test\TestCase\ApplicationTest;
 use Cake\ORM\TableRegistry;

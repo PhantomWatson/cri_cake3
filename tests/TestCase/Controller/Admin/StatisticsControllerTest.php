@@ -1,7 +1,6 @@
 <?php
 namespace App\Test\TestCase\Controller\Admin;
 
-use App\Controller\StatisticsController;
 use App\Test\TestCase\ApplicationTest;
 
 /**

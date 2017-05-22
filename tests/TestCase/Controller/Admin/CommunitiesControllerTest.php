@@ -2,10 +2,9 @@
 namespace App\Test\TestCase\Controller\Admin;
 
 use App\Model\Table\ProductsTable;
-use App\Test\Fixture\UsersFixture;
 use App\Test\TestCase\ApplicationTest;
 use Cake\ORM\TableRegistry;
-use Cake\Routing\Router;;
+use Cake\Routing\Router;
 
 /**
  * App\Controller\Admin\CommunitiesController Test Case
