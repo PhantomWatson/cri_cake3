@@ -382,7 +382,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->get($url);
         $this->assertResponseOk();
         $this->assertResponseContains('<tr data-community-name="Test Community (public)">');
-        $this->assertResponseNotContains('<tr data-community-name="Test Community (inactive)">');;
+        $this->assertResponseNotContains('<tr data-community-name="Test Community (inactive)">');
     }
 
     /**
