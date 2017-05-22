@@ -27,6 +27,19 @@ class PurchasesControllerTest extends ApplicationTest
     ];
 
     /**
+     * Sets up this set of tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->configRequest([
+            'environment' => ['HTTPS' => 'on']
+        ]);
+    }
+
+    /**
      * Test postback method
      *
      * @return void
