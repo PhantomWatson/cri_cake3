@@ -274,6 +274,14 @@ var adminViewResponses = {
             success: function (data, textStatus, jqXHR) {
                 var modal = $('#full-response-modal');
                 var modalBody = modal.find('.modal-body');
+
+                // Error message
+                if (data.hasOwnProperty('message')) {
+                    modalBody.html('<span class="text-danger">' + data.message + '</span>');
+                    return;
+                }
+
+                // Success
                 modalBody.html('');
                 var response = data.response;
                 for (var heading in response) {
@@ -287,6 +295,8 @@ var adminViewResponses = {
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                var modal = $('#full-response-modal');
+                var modalBody = modal.find('.modal-body');
                 var response = $.parseJSON(jqXHR.responseText);
                 var msg = '';
                 if (response.hasOwnProperty('message')) {
@@ -294,7 +304,7 @@ var adminViewResponses = {
                 } else {
                     msg = 'There was an error loading that response';
                 }
-                $('#full-response-modal .modal-body').html('<span class="text-danger">'+msg+'</span>');
+                modalBody.html('<span class="text-danger">' + msg + '</span>');
             }
         });
     },
