@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Community;
 use App\SurveyMonkey\SurveyMonkey;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\I18n\Time;
@@ -808,10 +809,10 @@ class SurveysTable extends Table
      * and the specified survey type
      *
      * @param Community $community Community entity
-     * @param string $surveyKey Either 'official' or 'organization'
+     * @param string $surveyType Either 'official' or 'organization'
      * @return string
      */
-    public function getStatusDescription($community, $surveyType)
+    public function getStatusDescription(Community $community, $surveyType)
     {
         $optOutsTable = TableRegistry::get('OptOuts');
         $productId = ($surveyType == 'official')
