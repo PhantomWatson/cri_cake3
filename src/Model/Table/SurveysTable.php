@@ -822,11 +822,16 @@ class SurveysTable extends Table
             return 'Opted out';
         }
 
+        $productsTable = TableRegistry::get('Products');
+        $hasPurchased = $productsTable->isPurchased($community->id, $productId);
+        if (! $hasPurchased) {
+            return 'Not purchased yet';
+        }
+
         $correspondingStep = ($surveyType == 'official') ? 2 : 3;
         if ($community->score < $correspondingStep) {
             return 'Not started yet';
         }
-
 
         $surveyId = $this->getSurveyId($community->id, $surveyType);
         if (! $surveyId) {
