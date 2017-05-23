@@ -543,6 +543,9 @@ var surveyLink = {
                     $('.loading_messages').html(msg);
                 };
                 var msg;
+                if (data.hasOwnProperty('community')) {
+                    data = data.community;
+                }
                 if (data === null) {
                     loadingMessages.html(' ');
                     success_callback();
