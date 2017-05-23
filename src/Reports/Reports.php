@@ -58,6 +58,7 @@ class Reports
             foreach ($surveyTypes as $surveyKey => $survey) {
                 $invitationCount = $this->getInvitationCount($survey, $respondents);
                 $approvedResponseCount = $this->getApprovedResponseCount($survey, $respondents);
+                $surveyType = str_replace('_survey', '', $surveyKey);
                 $report[$community->id][$surveyKey] = [
                     'invitations' => $invitationCount,
                     'responses' => $approvedResponseCount,
@@ -69,7 +70,7 @@ class Reports
                     'internalAlignment' => $this->getInternalAlignment($survey),
                     'awareOfPlanCount' => $responsesTable->getApprovedAwareOfPlanCount($survey['id']),
                     'unawareOfPlanCount' => $responsesTable->getApprovedUnawareOfPlanCount($survey['id']),
-                    'status' => $surveysTable->getStatusDescription($community, $surveyKey)
+                    'status' => $surveysTable->getStatusDescription($community, $surveyType)
                 ];
             }
         }

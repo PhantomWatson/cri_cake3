@@ -808,13 +808,13 @@ class SurveysTable extends Table
      * and the specified survey type
      *
      * @param Community $community Community entity
-     * @param string $surveyKey Either 'official_survey' or 'organization_survey'
+     * @param string $surveyKey Either 'official' or 'organization'
      * @return string
      */
-    public function getStatusDescription($community, $surveyKey)
+    public function getStatusDescription($community, $surveyType)
     {
         $optOutsTable = TableRegistry::get('OptOuts');
-        $productId = ($surveyKey == 'official_survey')
+        $productId = ($surveyType == 'official')
             ? ProductsTable::OFFICIALS_SURVEY
             : ProductsTable::ORGANIZATIONS_SURVEY;
         $optedOut = $optOutsTable->optedOut($community->id, $productId);
@@ -822,12 +822,12 @@ class SurveysTable extends Table
             return 'Opted out';
         }
 
-        $correspondingStep = ($surveyKey == 'official_survey') ? 2 : 3;
+        $correspondingStep = ($surveyType == 'official') ? 2 : 3;
         if ($community->score < $correspondingStep) {
             return 'Not started yet';
         }
 
-        $surveyType = str_replace('_survey', '', $surveyKey);
+
         $surveyId = $this->getSurveyId($community->id, $surveyType);
         if (! $surveyId) {
             return 'Questionnaire not linked yet';
