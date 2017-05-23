@@ -526,7 +526,6 @@ var surveyLink = {
     },
 
     checkSurveyAssignment: function (container, sm_id, success_callback) {
-        var url_field = $('#sm-url');
         var loadingMessages = $('.loading_messages');
 
         $.ajax({
