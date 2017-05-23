@@ -38,6 +38,7 @@ class Reports
         $communities = $communitiesTable->find('forReport');
         $respondents = $this->getRespondents();
         $responsesTable = TableRegistry::get('Responses');
+        $surveysTable = TableRegistry::get('Surveys');
 
         foreach ($communities as $community) {
             // Collect general information about this community
@@ -68,7 +69,7 @@ class Reports
                     'internalAlignment' => $this->getInternalAlignment($survey),
                     'awareOfPlanCount' => $responsesTable->getApprovedAwareOfPlanCount($survey['id']),
                     'unawareOfPlanCount' => $responsesTable->getApprovedUnawareOfPlanCount($survey['id']),
-                    'status' => $this->getStatus($community, $surveyKey)
+                    'status' => $surveysTable->getStatusDescription($community, $surveyKey)
                 ];
             }
         }
@@ -411,37 +412,6 @@ class Reports
         }
 
         return $internalAlignment;
-    }
-
-    /**
-     * Returns a string that sums up the status of the specified community
-     * and the specified survey type
-     *
-     * @param Community $community Community entity
-     * @param string $surveyKey Either 'official_survey' or 'organization_survey'
-     * @return string
-     */
-    private function getStatus($community, $surveyKey)
-    {
-        $optOutsTable = TableRegistry::get('OptOuts');
-        $productId = ($surveyKey == 'official_survey')
-            ? ProductsTable::OFFICIALS_SURVEY
-            : ProductsTable::ORGANIZATIONS_SURVEY;
-        $optedOut = $optOutsTable->optedOut($community->id, $productId);
-        if ($optedOut) {
-            return 'Opted out';
-        }
-
-        $correspondingStep = ($surveyKey == 'official_survey') ? 2 : 3;
-        if ($community->score < $correspondingStep) {
-            return 'Not started yet';
-        }
-
-        if ($community->score < ($correspondingStep + 1)) {
-            return 'In progress';
-        }
-
-        return 'Complete';
     }
 
     /**

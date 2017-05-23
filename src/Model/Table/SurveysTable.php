@@ -802,4 +802,53 @@ class SurveysTable extends Table
 
         return $count > 0;
     }
+
+    /**
+     * Returns a string that sums up the status of the specified community
+     * and the specified survey type
+     *
+     * @param Community $community Community entity
+     * @param string $surveyKey Either 'official_survey' or 'organization_survey'
+     * @return string
+     */
+    public function getStatusDescription($community, $surveyKey)
+    {
+        $optOutsTable = TableRegistry::get('OptOuts');
+        $productId = ($surveyKey == 'official_survey')
+            ? ProductsTable::OFFICIALS_SURVEY
+            : ProductsTable::ORGANIZATIONS_SURVEY;
+        $optedOut = $optOutsTable->optedOut($community->id, $productId);
+        if ($optedOut) {
+            return 'Opted out';
+        }
+
+        $correspondingStep = ($surveyKey == 'official_survey') ? 2 : 3;
+        if ($community->score < $correspondingStep) {
+            return 'Not started yet';
+        }
+
+        $surveyType = str_replace('_survey', '', $surveyKey);
+        $surveyId = $this->getSurveyId($community->id, $surveyType);
+        if (! $surveyId) {
+            return 'Questionnaire not linked yet';
+        }
+
+        if ($this->isComplete($surveyId)) {
+            return 'Complete';
+        }
+
+        if (! $this->isActive($surveyId)) {
+            return 'Questionnaire not activated yet';
+        }
+
+        if ($community->score >= ($correspondingStep + 1)) {
+            return 'Questionnaire should be deactivated';
+        }
+
+        if (! $this->hasSentInvitations($surveyId)) {
+            return 'No invitations sent yet';
+        }
+
+        return 'In progress';
+    }
 }
