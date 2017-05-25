@@ -13,7 +13,7 @@ class Spreadsheet
     public function __construct()
     {
         $includePath = ROOT . DS . 'vendor' . DS . 'phpoffice' . DS . 'phpexcel' . DS . 'Classes';
-        require_once  $includePath . DS . 'PHPExcel.php';
+        require_once $includePath . DS . 'PHPExcel.php';
         \PHPExcel_Cell::setValueBinder(new \PHPExcel_Cell_AdvancedValueBinder());
         $this->objPHPExcel = new \PHPExcel();
         $this->objPHPExcel->setActiveSheetIndex(0);
@@ -132,7 +132,7 @@ class Spreadsheet
     /**
      * Sets the title that's displayed on the current sheet's tab
      *
-     * @param $title
+     * @param string $title Sheet title
      * @return $this
      */
     public function setActiveSheetTitle($title)
@@ -209,7 +209,7 @@ class Spreadsheet
     /**
      * Writes a series of values to the fields in the current row
      *
-     * @param $row
+     * @param array $row Array of values to write
      * @return $this
      */
     public function writeRow($row)
@@ -250,7 +250,7 @@ class Spreadsheet
     {
         $fromCell = $this->getColumnKey($fromCol) . $this->currentRow;
         $toColLetter = ($toCol === false) ? $this->getLastColumnLetter() : $this->getColumnKey($toCol);
-        $toCell =  $toColLetter . $this->currentRow;
+        $toCell = $toColLetter . $this->currentRow;
 
         $this->objPHPExcel->getActiveSheet()
             ->getStyle("$fromCell:$toCell")
