@@ -3,6 +3,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\AppController;
 use App\Reports\Reports;
+use App\Reports\SummaryReport;
 use Cake\ORM\TableRegistry;
 
 class ReportsController extends AppController
@@ -33,16 +34,31 @@ class ReportsController extends AppController
     }
 
     /**
-     * Method for /admin/reports/ocra
+     * Method for /admin/reports/ocra-full
      *
      * @return void
      */
-    public function ocra()
+    public function ocraFull()
     {
         $reports = new Reports();
-        $filename = 'CRI Report - OCRA - ' . date('M-d-Y') . '.xlsx';
+        $filename = 'CRI Full Report - OCRA - ' . date('M-d-Y') . '.xlsx';
         $this->respondWithSpreadsheet($filename);
         $this->set('reportSpreadsheet', $reports->getReportSpreadsheet('ocra'));
+        $this->viewBuilder()->setLayout('spreadsheet');
+        $this->render('view');
+    }
+
+    /**
+     * Method for /admin/reports/ocra-summary
+     *
+     * @return void
+     */
+    public function ocraSummary()
+    {
+        $filename = 'CRI Summary Report - OCRA - ' . date('M-d-Y') . '.xlsx';
+        $this->respondWithSpreadsheet($filename);
+        $summaryReport = new SummaryReport();
+        $this->set('reportSpreadsheet', $summaryReport->getSpreadsheet());
         $this->viewBuilder()->setLayout('spreadsheet');
         $this->render('view');
     }

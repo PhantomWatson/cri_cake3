@@ -19,12 +19,21 @@
             ]
         ) ?>
         <?= $this->Html->link(
-            $icon . ' OCRA Report',
-            ['action' => 'ocra'],
+            $icon . ' OCRA Full Report',
+            ['action' => 'ocraFull'],
             [
                 'class' => 'btn btn-sm btn-default',
                 'escape' => false,
-                'title' => 'Download an OCRA version of this report as a Microsoft Excel (.xlsx) file'
+                'title' => 'Download an OCRA version of the full report as a Microsoft Excel (.xlsx) file'
+            ]
+        ) ?>
+        <?= $this->Html->link(
+            $icon . ' OCRA Summary Report',
+            ['action' => 'ocraSummary'],
+            [
+                'class' => 'btn btn-sm btn-default',
+                'escape' => false,
+                'title' => 'Download summary report as a Microsoft Excel (.xlsx) file'
             ]
         ) ?>
     </h2>
