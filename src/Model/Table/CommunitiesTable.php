@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Community;
 use Cake\Chronos\Date;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -724,5 +725,54 @@ class CommunitiesTable extends Table
         }
 
         return null;
+    }
+
+    /**
+     * Returns a string that sums up the status of the specified community
+     *
+     * @param Community $community Community entity
+     * @return string
+     */
+    public function getStatusDescription(Community $community)
+    {
+        if (! $this->getClientCount($community->id)) {
+            return 'No client assigned yet';
+        }
+
+        // Return the status of the current survey, if one is in progress
+        $surveysTable = TableRegistry::get('Surveys');
+        foreach (['official', 'organization'] as $surveyType) {
+            $surveyStatus = $surveysTable->getStatusDescription($community, $surveyType);
+
+            if ($surveyStatus == 'Complete') {
+                continue;
+            }
+
+            if ($surveyStatus == 'Opted out') {
+                return 'Opted out of further participation';
+            }
+
+            return 'Community ' . ucwords($surveyType) . 's Questionnaire: ' . $surveyStatus;
+        }
+
+        $optOutsTable = TableRegistry::get('OptOuts');
+        $productId = ProductsTable::POLICY_DEVELOPMENT;
+        $optedOut = $optOutsTable->optedOut($community->id, $productId);
+        if ($optedOut) {
+            return 'Opted out of further participation';
+        }
+
+        $productsTable = TableRegistry::get('Products');
+        $hasPurchased = $productsTable->isPurchased($community->id, $productId);
+        if ($hasPurchased) {
+            $deliveriesTable = TableRegistry::get('Deliveries');
+            $policyDevDelivered = $deliveriesTable->isRecorded($community->id, DeliverablesTable::POLICY_DEVELOPMENT);
+
+            return $policyDevDelivered
+                ? 'Completed participation'
+                : 'Waiting to receive policy development';
+        } else {
+            return 'Waiting to purchase or opt out of policy development';
+        }
     }
 }
