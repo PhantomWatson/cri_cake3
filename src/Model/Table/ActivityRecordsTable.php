@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\ActivityRecord;
 use Cake\I18n\Time;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
@@ -165,5 +166,23 @@ class ActivityRecordsTable extends Table
             ->first();
 
         return $result ? $result->created : null;
+    }
+
+    /**
+     * Returns the most recent activity record for the specified community
+     *
+     * @param int $communityId Community ID
+     * @return ActivityRecord|null
+     */
+    public function getMostRecentForCommunity($communityId)
+    {
+        return $this->find()
+            ->select([
+                'event',
+                'created'
+            ])
+            ->where(['community_id' => $communityId])
+            ->order(['ActivityRecords.created' => 'DESC'])
+            ->first();
     }
 }
