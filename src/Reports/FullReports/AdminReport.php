@@ -7,7 +7,6 @@ use App\Reports\FullReports\Sheets\OrganizationsSurveySheet;
 use App\Reports\FullReports\Sheets\RecentActivitySheet;
 use App\Reports\Reports;
 use App\Reports\Spreadsheet;
-use Cake\ORM\TableRegistry;
 
 class AdminReport
 {
@@ -49,12 +48,6 @@ class AdminReport
 
         return $phpExcelObj;
     }
-
-
-
-
-
-
 
     /**
      * Adds the 'community organizations' sheet to the spreadsheet
