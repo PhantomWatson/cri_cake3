@@ -488,7 +488,7 @@ class Spreadsheet
     /**
      * Removes the specified worksheet (defaults to first sheet if unspecified)
      *
-     * @param int $index
+     * @param int $index Index of sheet to be removed
      * @return $this
      */
     public function removeSheet($index = 0)
