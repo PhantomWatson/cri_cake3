@@ -1,6 +1,8 @@
 <?php
 namespace App\Reports;
 
+use Cake\Network\Exception\InternalErrorException;
+
 class Spreadsheet
 {
     private $columnTitles;
@@ -63,7 +65,7 @@ class Spreadsheet
      * @param int $num Column number
      * @return string
      */
-    private function getColumnKey($num)
+    public function getColumnKey($num)
     {
         $numeric = $num % 26;
         $letter = chr(65 + $numeric);
@@ -190,6 +192,31 @@ class Spreadsheet
     }
 
     /**
+     * Writes and styles a subtitle under the main title at the top of the current sheet
+     *
+     * @param string $subtitle Sheet subtitle
+     * @return $this
+     */
+    public function writeSheetSubtitle($subtitle)
+    {
+        // Write
+        $this->write(0, $this->currentRow, $subtitle);
+
+        // Style
+        $firstCell = 'A' . $this->currentRow;
+        $lastCell = $this->getLastColumnLetter() . $this->currentRow;
+        $this->objPHPExcel->getActiveSheet()->getStyle("$firstCell:$firstCell")->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 18
+            ]
+        ]);
+        $this->objPHPExcel->getActiveSheet()->mergeCells("$firstCell:$lastCell");
+
+        return $this;
+    }
+
+    /**
      * Writes a value to the spreadsheet
      *
      * @param int $colNum Column number
@@ -219,6 +246,16 @@ class Spreadsheet
                 continue;
             }
 
+            // Percentage values
+            if (strpos($value, '%') !== false) {
+                $cell = $this->getColumnKey($columnNumber) . $this->currentRow;
+                $this->objPHPExcel->getActiveSheet()->getCell($cell)->setValueExplicit(
+                    $value,
+                    \PHPExcel_Cell_DataType::TYPE_STRING
+                );
+                continue;
+            }
+
             $this->write($columnNumber, $this->currentRow, $value);
         }
 
@@ -243,18 +280,164 @@ class Spreadsheet
      *
      * @param array $styles Array of PHPExcel compatible style data
      * @param int $fromCol First column number
-     * @param int|bool $toCol Last column number
+     * @param int|null $toCol Last column number
      * @return $this
      */
-    public function styleRow($styles, $fromCol = 0, $toCol = false)
+    public function styleRow($styles, $fromCol = 0, $toCol = null)
     {
         $fromCell = $this->getColumnKey($fromCol) . $this->currentRow;
-        $toColLetter = ($toCol === false) ? $this->getLastColumnLetter() : $this->getColumnKey($toCol);
+        $toColLetter = ($toCol === null) ? $this->getLastColumnLetter() : $this->getColumnKey($toCol);
         $toCell = $toColLetter . $this->currentRow;
 
         $this->objPHPExcel->getActiveSheet()
             ->getStyle("$fromCell:$toCell")
             ->applyFromArray($styles);
+
+        return $this;
+    }
+
+    /**
+     * Styles column group headers
+     *
+     * @param array $boundarySets An array of arrays containing [first col number, last col number] column spans
+     * @return $this
+     */
+    public function styleColGroupHeaders($boundarySets)
+    {
+        foreach ($boundarySets as $boundarySet) {
+            $firstCol = $this->getColumnKey($boundarySet[0]);
+            $lastCol = $this->getColumnKey($boundarySet[1]);
+            $firstCell = $firstCol . $this->getCurrentRow();
+            $lastCell = $lastCol . $this->getCurrentRow();
+            $span = "$firstCell:$lastCell";
+
+            $this->objPHPExcel->getActiveSheet()
+                ->mergeCells($span)
+                ->getStyle($span)
+                ->applyFromArray([
+                    'alignment' => [
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                    ],
+                    'borders' => [
+                        'top' => $this->getBorder(),
+                        'left' => $this->getBorder(),
+                        'right' => $this->getBorder(),
+                        'bottom' => $this->getBorder('none')
+                    ],
+                    'font' => ['bold' => true]
+                ]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns the PHPExcel definition for this spreadsheet's border
+     *
+     * @param string $style 'thin' or 'none'
+     * @return array
+     * @throws InternalErrorException
+     */
+    private function getBorder($style = 'thin')
+    {
+        switch ($style) {
+            case 'thin':
+                return ['style' => \PHPExcel_Style_Border::BORDER_THIN];
+            case 'none':
+                return ['style' => \PHPExcel_Style_Border::BORDER_NONE];
+        }
+
+        throw new InternalErrorException('Unrecognized border style "' . $style . '""');
+    }
+
+    /**
+     * Returns the value of the currentRow property
+     *
+     * @return int
+     */
+    public function getCurrentRow()
+    {
+        return $this->currentRow;
+    }
+
+    /**
+     * Adds a default border to each specified side (left, right, outline, etc.)
+     *
+     * @param string|string[] $sides One or more sides
+     * @param int $fromCol First column number
+     * @param int|null $toCol Last column number
+     * @return $this
+     */
+    public function applyBorders($sides, $fromCol = 0, $toCol = null)
+    {
+        if (! is_array($sides)) {
+            $sides = [$sides];
+        }
+
+        foreach ($sides as $side) {
+            $styles = ['borders' => [$side => $this->getBorder()]];
+            $this->styleRow($styles, $fromCol, $toCol);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Aligns the row (or specified span in this row) horizontally
+     *
+     * @param string $direction left, right, or center
+     * @param int $fromCol First column number
+     * @param int|null $toCol Last column number
+     * @return $this
+     */
+    public function alignHorizontal($direction, $fromCol = 0, $toCol = null)
+    {
+        switch ($direction) {
+            case 'left':
+                $direction = \PHPExcel_Style_Alignment::HORIZONTAL_LEFT;
+                break;
+            case 'right':
+                $direction = \PHPExcel_Style_Alignment::HORIZONTAL_RIGHT;
+                break;
+            case 'center':
+                $direction = \PHPExcel_Style_Alignment::HORIZONTAL_CENTER;
+                break;
+            default:
+                throw new InternalErrorException('Unsupported alignment direction: ' . $direction);
+        }
+
+        $styles = ['alignment' => ['horizontal' => $direction]];
+        $this->styleRow($styles, $fromCol, $toCol);
+
+        return $this;
+    }
+
+    /**
+     * Aligns the row (or specified span in this row) vertically
+     *
+     * @param string $direction top, bottom, or center
+     * @param int $fromCol First column number
+     * @param int|null $toCol Last column number
+     * @return $this
+     */
+    public function alignVertical($direction, $fromCol = 0, $toCol = null)
+    {
+        switch ($direction) {
+            case 'top':
+                $direction = \PHPExcel_Style_Alignment::VERTICAL_TOP;
+                break;
+            case 'bottom':
+                $direction = \PHPExcel_Style_Alignment::VERTICAL_BOTTOM;
+                break;
+            case 'center':
+                $direction = \PHPExcel_Style_Alignment::VERTICAL_CENTER;
+                break;
+            default:
+                throw new InternalErrorException('Unsupported alignment direction: ' . $direction);
+        }
+
+        $styles = ['alignment' => ['vertical' => $direction]];
+        $this->styleRow($styles, $fromCol, $toCol);
 
         return $this;
     }

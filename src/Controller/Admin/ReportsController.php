@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Reports\FullReports\AdminReport;
 use App\Reports\Reports;
 use App\Reports\SummaryReport;
 use Cake\ORM\TableRegistry;
@@ -70,10 +71,10 @@ class ReportsController extends AppController
      */
     public function admin()
     {
-        $reports = new Reports();
         $filename = 'CRI Report - Admin - ' . date('M-d-Y') . '.xlsx';
         $this->respondWithSpreadsheet($filename);
-        $this->set('reportSpreadsheet', $reports->getReportSpreadsheet('admin'));
+        $adminReport = new AdminReport();
+        $this->set('reportSpreadsheet', $adminReport->getSpreadsheet());
         $this->viewBuilder()->setLayout('spreadsheet');
         $this->render('view');
     }
