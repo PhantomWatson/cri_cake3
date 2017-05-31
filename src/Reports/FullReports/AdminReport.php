@@ -2,6 +2,7 @@
 namespace App\Reports\FullReports;
 
 use App\Reports\FullReports\Sheets\OfficialsSurveySheet;
+use App\Reports\FullReports\Sheets\OrganizationsSurveySheet;
 use App\Reports\Reports;
 use App\Reports\Spreadsheet;
 use Cake\ORM\TableRegistry;
@@ -32,6 +33,10 @@ class AdminReport
         $sheet = new OfficialsSurveySheet();
         $workbook = $sheet->addSheetToWorkbook($workbook, $data);
 
+        $sheet = new OrganizationsSurveySheet();
+        $workbook = $sheet->addSheetToWorkbook($workbook, $data);
+
+        $workbook->selectFirstSheet();
         $phpExcelObj = $workbook->get();
 
         return $phpExcelObj;

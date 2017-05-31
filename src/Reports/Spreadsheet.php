@@ -497,4 +497,16 @@ class Spreadsheet
 
         return $this;
     }
+
+    /**
+     * Selects the first sheet in this workbook
+     *
+     * @return $this
+     */
+    public function selectFirstSheet()
+    {
+        $this->objPHPExcel->setActiveSheetIndex(0);
+
+        return $this;
+    }
 }
