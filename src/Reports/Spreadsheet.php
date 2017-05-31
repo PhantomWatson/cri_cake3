@@ -469,4 +469,32 @@ class Spreadsheet
 
         return $this;
     }
+
+    /**
+     * Creates a new sheet, sets it as the active sheet, and resets the currentRow property
+     *
+     * @param string $title Title of new sheet
+     * @return $this
+     */
+    public function newSheet($title)
+    {
+        $this->currentRow = 1;
+        $this->objPHPExcel->createSheet()->setTitle($title);
+        $this->objPHPExcel->setActiveSheetIndexByName($title);
+
+        return $this;
+    }
+
+    /**
+     * Removes the specified worksheet (defaults to first sheet if unspecified)
+     *
+     * @param int $index
+     * @return $this
+     */
+    public function removeSheet($index = 0)
+    {
+        $this->objPHPExcel->removeSheetByIndex($index);
+
+        return $this;
+    }
 }
