@@ -4,6 +4,7 @@ namespace App\Reports\FullReports;
 use App\Reports\FullReports\Sheets\NotesSheet;
 use App\Reports\FullReports\Sheets\OfficialsSurveySheet;
 use App\Reports\FullReports\Sheets\OrganizationsSurveySheet;
+use App\Reports\FullReports\Sheets\RecentActivitySheet;
 use App\Reports\Reports;
 use App\Reports\Spreadsheet;
 use Cake\ORM\TableRegistry;
@@ -38,6 +39,9 @@ class AdminReport
         $workbook = $sheet->addSheetToWorkbook($workbook, $data);
 
         $sheet = new NotesSheet();
+        $workbook = $sheet->addSheetToWorkbook($workbook, $data);
+
+        $sheet = new RecentActivitySheet();
         $workbook = $sheet->addSheetToWorkbook($workbook, $data);
 
         $workbook->selectFirstSheet();
