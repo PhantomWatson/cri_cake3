@@ -70,8 +70,7 @@ class OfficialsSurveySheet
                 'Recreation' => 4,
                 'Overall' => 4,
                 'Yes' => 7,
-                'No / Unknown' => 7,
-                'Notes' => 60
+                'No / Unknown' => 7
             ]);
 
         return $workbook;

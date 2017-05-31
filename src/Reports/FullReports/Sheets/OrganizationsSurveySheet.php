@@ -68,10 +68,7 @@ class OrganizationsSurveySheet
                 'Retail' => 4,
                 'Residential' => 4,
                 'Recreation' => 4,
-                'Overall' => 4,
-                'Yes' => 7,
-                'No / Unknown' => 7,
-                'Notes' => 60
+                'Overall' => 4
             ]);
 
         return $workbook;
