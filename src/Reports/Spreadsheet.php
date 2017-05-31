@@ -8,6 +8,7 @@ class Spreadsheet
     private $columnTitles;
     private $currentRow;
     private $objPHPExcel;
+    private $title;
 
     /**
      * Spreadsheet constructor
@@ -119,16 +120,43 @@ class Spreadsheet
     /**
      * Sets the title metadata for this spreadsheet
      *
-     * @param string $title Title of spreadsheet
+     * @param string|null $title Title of spreadsheet, defaults to $this->title
      * @return $this
      */
-    public function setMetadataTitle($title)
+    public function setMetadataTitle($title = null)
     {
+        if (! $title) {
+            $title = $this->title;
+        }
+
         $this->objPHPExcel->getProperties()
             ->setTitle($title)
             ->setSubject($title);
 
         return $this;
+    }
+
+    /**
+     * Sets the title property
+     *
+     * @param string $title Title
+     * @return $this
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Gets the title property
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 
     /**
