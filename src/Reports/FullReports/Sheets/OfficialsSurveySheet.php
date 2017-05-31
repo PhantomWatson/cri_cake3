@@ -4,7 +4,7 @@ namespace App\Reports\FullReports\Sheets;
 use App\Reports\Spreadsheet;
 use Cake\ORM\TableRegistry;
 
-class OfficialsSurveySheet extends Spreadsheet
+class OfficialsSurveySheet
 {
     /**
      * Adds an Officials Survey sheet to the provided workbook and returns the workbook
