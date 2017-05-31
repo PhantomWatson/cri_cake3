@@ -2,10 +2,33 @@
 namespace App\Reports\FullReports\Sheets;
 
 use App\Reports\Spreadsheet;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
 class OfficialsSurveySheet
 {
+    /**
+     * Either 'admin' or 'ocra'
+     *
+     * @var string
+     */
+    private $mode;
+
+    /**
+     * OfficialsSurveySheet constructor.
+     *
+     * @param string $mode Either 'admin' or 'ocra'
+     * @throws InternalErrorException
+     */
+    public function __construct($mode)
+    {
+        if (! in_array($mode, ['ocra', 'admin'])) {
+            throw new InternalErrorException("Invalid mode: $mode");
+        }
+
+        $this->mode = $mode;
+    }
+
     /**
      * Adds an Officials Survey sheet to the provided workbook and returns the workbook
      *
@@ -17,24 +40,31 @@ class OfficialsSurveySheet
     {
         $columnTitles = $this->getColumnTitles();
         $sheetTitle = 'Community Officials';
-        $groupingHeaders = $this->getGroupingHeaderRow($columnTitles);
-        $colGroupSpans = $this->getGroupingHeaderColspans($groupingHeaders);
         $workbook
             ->newSheet($sheetTitle)
             ->setColumnTitles($columnTitles)
             ->writeSheetTitle($workbook->getTitle())
             ->nextRow()
             ->writeSheetSubtitle($sheetTitle)
-            ->nextRow()
-            ->writeRow($groupingHeaders)
-            ->applyBorders('bottom')
-            ->styleColGroupHeaders($colGroupSpans)
-            ->nextRow()
+            ->nextRow();
+        if ($this->mode == 'admin') {
+            $groupingHeaders = $this->getGroupingHeaderRow($columnTitles);
+            $colGroupSpans = $this->getGroupingHeaderColspans($groupingHeaders);
+            $workbook
+                ->writeRow($groupingHeaders)
+                ->applyBorders('bottom')
+                ->styleColGroupHeaders($colGroupSpans)
+                ->nextRow();
+        }
+        $borders = ($this->mode == 'admin')
+            ? ['bottom', 'left', 'right']
+            : ['outline'];
+        $workbook
             ->writeRow($columnTitles)
             ->alignHorizontal('center')
             ->alignVertical('center')
             ->styleRow(['font' => ['bold' => true]])
-            ->applyBorders(['bottom', 'left', 'right'])
+            ->applyBorders($borders)
             ->styleRow([
                 'alignment' => ['rotation' => -90]
             ], 2, count($columnTitles) - 2)
@@ -89,20 +119,26 @@ class OfficialsSurveySheet
             'Area',
             'Invitations',
             'Responses',
-            'Completion Rate',
-            'vs Local Area',
-            'vs Wider Area',
+            'Completion Rate'
         ];
-
-        // Industry sectors
-        foreach ($surveysTable->getSectors() as $sector) {
-            $columnTitles[] = ucwords($sector);
+        if ($this->mode == 'ocra') {
+            $columnTitles[] = 'Alignment Calculated';
+        } elseif ($this->mode == 'admin') {
+            $columnTitles = array_merge($columnTitles, [
+                'vs Local Area',
+                'vs Wider Area'
+            ]);
+            foreach ($surveysTable->getSectors() as $sector) {
+                $columnTitles[] = ucwords($sector);
+            }
+            $columnTitles = array_merge($columnTitles, [
+                'Overall',
+                'Yes',
+                'No / Unknown'
+            ]);
         }
 
         $columnTitles = array_merge($columnTitles, [
-            'Overall',
-            'Yes',
-            'No / Unknown',
             'Presentation A',
             'Presentation B',
             'Status'
@@ -177,16 +213,27 @@ class OfficialsSurveySheet
             $survey['invitations'],
             $survey['responses'],
             $survey['responseRate'],
-            $survey['alignments']['vsLocal'],
-            $survey['alignments']['vsParent'],
         ];
-        foreach ($sectors as $sector) {
-            $row[] = $survey['internalAlignment'][$sector];
+
+        if ($this->mode == 'admin') {
+            $row = array_merge($row, [
+                $survey['alignments']['vsLocal'],
+                $survey['alignments']['vsParent'],
+            ]);
+            foreach ($sectors as $sector) {
+                $row[] = $survey['internalAlignment'][$sector];
+            }
+            $row = array_merge($row, [
+                $survey['internalAlignment']['total'],
+                $survey['awareOfPlanCount'],
+                $survey['unawareOfPlanCount']
+            ]);
+        } elseif ($this->mode == 'ocra') {
+            $alignmentCalculated = ($survey['alignments']['vsLocal'] || $survey['alignments']['vsParent']);
+            $row[] = $alignmentCalculated ? 'Yes' : 'No';
         }
+
         $row = array_merge($row, [
-            $survey['internalAlignment']['total'],
-            $survey['awareOfPlanCount'],
-            $survey['unawareOfPlanCount'],
             $community['presentationsGiven']['a'],
             $community['presentationsGiven']['b'],
             $survey['status']

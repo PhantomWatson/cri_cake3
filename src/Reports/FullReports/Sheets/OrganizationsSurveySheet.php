@@ -2,10 +2,33 @@
 namespace App\Reports\FullReports\Sheets;
 
 use App\Reports\Spreadsheet;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
 class OrganizationsSurveySheet
 {
+    /**
+     * Either 'admin' or 'ocra'
+     *
+     * @var string
+     */
+    private $mode;
+
+    /**
+     * OfficialsSurveySheet constructor.
+     *
+     * @param string $mode Either 'admin' or 'ocra'
+     * @throws InternalErrorException
+     */
+    public function __construct($mode)
+    {
+        if (! in_array($mode, ['ocra', 'admin'])) {
+            throw new InternalErrorException("Invalid mode: $mode");
+        }
+
+        $this->mode = $mode;
+    }
+
     /**
      * Adds an Officials Survey sheet to the provided workbook and returns the workbook
      *
@@ -25,16 +48,23 @@ class OrganizationsSurveySheet
             ->writeSheetTitle($workbook->getTitle())
             ->nextRow()
             ->writeSheetSubtitle($sheetTitle)
-            ->nextRow()
-            ->writeRow($groupingHeaders)
-            ->applyBorders('bottom')
-            ->styleColGroupHeaders($colGroupSpans)
-            ->nextRow()
+            ->nextRow();
+        if ($this->mode == 'admin') {
+            $workbook
+                ->writeRow($groupingHeaders)
+                ->applyBorders('bottom')
+                ->styleColGroupHeaders($colGroupSpans)
+                ->nextRow();
+        }
+        $borders = ($this->mode == 'admin')
+            ? ['bottom', 'left', 'right']
+            : ['outline'];
+        $workbook
             ->writeRow($columnTitles)
             ->alignHorizontal('center')
             ->alignVertical('center')
             ->styleRow(['font' => ['bold' => true]])
-            ->applyBorders(['bottom', 'left', 'right'])
+            ->applyBorders($borders)
             ->styleRow([
                 'alignment' => ['rotation' => -90]
             ], 2, count($columnTitles) - 2)
@@ -87,18 +117,23 @@ class OrganizationsSurveySheet
             'Area',
             'Invitations',
             'Responses',
-            'Completion Rate',
-            'vs Local Area',
-            'vs Wider Area',
+            'Completion Rate'
         ];
 
-        // Industry sectors
-        foreach ($surveysTable->getSectors() as $sector) {
-            $columnTitles[] = ucwords($sector);
+        if ($this->mode == 'ocra') {
+            $columnTitles[] = 'Alignment Calculated';
+        } elseif ($this->mode == 'admin') {
+            $columnTitles = array_merge($columnTitles, [
+                'vs Local Area',
+                'vs Wider Area'
+            ]);
+            foreach ($surveysTable->getSectors() as $sector) {
+                $columnTitles[] = ucwords($sector);
+            }
+            $columnTitles[] = 'Overall';
         }
 
         $columnTitles = array_merge($columnTitles, [
-            'Overall',
             'Presentation C',
             'Presentation D',
             'Status'
@@ -166,15 +201,24 @@ class OrganizationsSurveySheet
             $community['parentArea'],
             $survey['invitations'],
             $survey['responses'],
-            $survey['responseRate'],
-            $survey['alignments']['vsLocal'],
-            $survey['alignments']['vsParent'],
+            $survey['responseRate']
         ];
-        foreach ($sectors as $sector) {
-            $row[] = $survey['internalAlignment'][$sector];
+
+        if ($this->mode == 'admin') {
+            $row = array_merge($row, [
+                $survey['alignments']['vsLocal'],
+                $survey['alignments']['vsParent'],
+            ]);
+            foreach ($sectors as $sector) {
+                $row[] = $survey['internalAlignment'][$sector];
+            }
+            $row[] = $survey['internalAlignment']['total'];
+        } elseif ($this->mode == 'ocra') {
+            $alignmentCalculated = ($survey['alignments']['vsLocal'] || $survey['alignments']['vsParent']);
+            $row[] = $alignmentCalculated ? 'Yes' : 'No';
         }
+
         $row = array_merge($row, [
-            $survey['internalAlignment']['total'],
             $community['presentationsGiven']['c'],
             $community['presentationsGiven']['d'],
             $survey['status']

@@ -8,10 +8,10 @@ use App\Reports\FullReports\Sheets\RecentActivitySheet;
 use App\Reports\Reports;
 use App\Reports\Spreadsheet;
 
-class AdminReport
+class OcraReport
 {
     /**
-     * Returns a PHPExcel object for the admin report
+     * Returns a PHPExcel object for the OCRA full report
      *
      * @return \PHPExcel
      */
@@ -22,14 +22,14 @@ class AdminReport
 
         $workbook = new Spreadsheet();
         $workbook
-            ->setTitle('CRI Admin Report - ' . date('F j, Y'))
+            ->setTitle('CRI Report for OCRA - ' . date('F j, Y'))
             ->setMetadataTitle()
             ->setAuthor('Center for Business and Economic Research, Ball State University')
 
             // Remove default starting sheet
             ->removeSheet();
 
-        $mode = 'admin';
+        $mode = 'ocra';
         $sheet = new OfficialsSurveySheet($mode);
         $workbook = $sheet->addSheetToWorkbook($workbook, $data);
 
