@@ -509,4 +509,26 @@ class Spreadsheet
 
         return $this;
     }
+
+    /**
+     * Turns text wrapping on for the specified cell range, or whole row if unspecified
+     *
+     * @param int $fromCol Starting column index
+     * @param int|null $toCol Ending column index
+     * @return $this
+     */
+    public function setWrapText($fromCol = 0, $toCol = null)
+    {
+        $fromCell = $this->getColumnKey($fromCol) . $this->currentRow;
+        $toColLetter = ($toCol === null) ? $this->getLastColumnLetter() : $this->getColumnKey($toCol);
+        $toCell = $toColLetter . $this->currentRow;
+
+        $this->objPHPExcel
+            ->getActiveSheet()
+            ->getStyle("$fromCell:$toCell")
+            ->getAlignment()
+            ->setWrapText(true);
+
+        return $this;
+    }
 }
