@@ -56,14 +56,14 @@
                 <p>
                     Community Performance
                 </p>
-                <form method="get" id="community_select" action="/communities/view">
-                    <select name="cid" required>
+                <form method="get" id="community-select" action="/communities/view">
+                    <select name="community_slug" required>
                         <option value="">
                             Select a community...
                         </option>
-                        <?php foreach ($accessibleCommunities as $communityId => $communityName): ?>
-                            <option value="<?= $communityId ?>">
-                                <?= $communityName ?>
+                        <?php foreach ($accessibleCommunities as $community): ?>
+                            <option value="<?= $community['slug'] ?>">
+                                <?= $community['name'] ?>
                             </option>
                         <?php endforeach; ?>
                     </select>

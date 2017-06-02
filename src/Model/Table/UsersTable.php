@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Community;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -156,13 +157,15 @@ class UsersTable extends Table
             }
         }
         $communitiesTable = TableRegistry::get('Communities');
+        $query = $communitiesTable->find()
+            ->select(['id', 'name', 'slug'])
+            ->order(['name' => 'ASC']);
         if ($role == 'admin') {
-            return $communitiesTable->find('list')->order(['name' => 'ASC']);
+            return $query->toArray();
         }
 
-        return $communitiesTable->find('list')
+        return $query
             ->where(['public' => true])
-            ->order(['name' => 'ASC'])
             ->toArray();
     }
 
@@ -170,30 +173,29 @@ class UsersTable extends Table
      * Returns TRUE if the specified user is allowed to view the specified community
      *
      * @param int $userId User ID
-     * @param int $communityId Community ID
+     * @param Community $community Community entity
      * @return bool
      */
-    public function canAccessCommunity($userId, $communityId)
+    public function canAccessCommunity($userId, $community)
     {
-        $communitiesTable = TableRegistry::get('Communities');
-        $community = $communitiesTable->get($communityId);
-
+        // Everyone can view communities marked 'public'
         if ($community->public) {
             return true;
         }
 
+        // Non-public communities can't be accessed by anonymous users
         if (! $userId) {
             return false;
         }
 
+        // Users granted the 'admin' role or all-communities access can access all communities
         $user = $this->get($userId);
         if ($user->all_communities || $user->role == 'admin') {
             return true;
         }
 
-        $accessibleCommunities = $this->getAccessibleCommunities($userId);
-
-        return isset($accessibleCommunities[$communityId]);
+        // Otherwise, access is not granted
+        return false;
     }
 
     /**

@@ -47,17 +47,18 @@ class CommunitiesController extends AppController
     {
         if ($this->request->action == 'view') {
             if (isset($this->request->pass[0]) && ! empty($this->request->pass[0])) {
-                $communityId = $this->request->pass[0];
+                $communitySlug = $this->request->pass[0];
             } else {
-                $communityId = $this->request->getQuery('cid');
-                if (! $communityId) {
-                    throw new NotFoundException('Community ID not specified');
+                $communitySlug = $this->request->getQuery('community_slug');
+                if (! $communitySlug) {
+                    throw new NotFoundException('Community not specified');
                 }
             }
+            $community = $this->Communities->find('slugged', ['slug' => $communitySlug])->first();
             $userId = isset($user['id']) ? $user['id'] : null;
             $usersTable = TableRegistry::get('Users');
 
-            return $usersTable->canAccessCommunity($userId, $communityId);
+            return $usersTable->canAccessCommunity($userId, $community);
         }
 
         return parent::isAuthorized($user);
@@ -95,31 +96,31 @@ class CommunitiesController extends AppController
     /**
      * View method
      *
-     * @param string|null $communityId Community ID
+     * @param string|null $communitySlug Community slug
      * @return \Cake\Http\Response|null
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function view($communityId = null)
+    public function view($communitySlug = null)
     {
-        if ($this->request->getQuery('cid')) {
-            $communityId = $this->request->getQuery('cid');
+        if ($this->request->getQuery('community_slug')) {
+            $communitySlug = $this->request->getQuery('community_slug');
         }
-        if (empty($communityId)) {
-            throw new NotFoundException('Community ID not specified');
+        if (empty($communitySlug)) {
+            throw new NotFoundException('Community not specified');
         }
 
-        $community = $this->Communities->get($communityId, [
-            'contain' => ['LocalAreas', 'ParentAreas']
-        ]);
+        $community = $this->Communities->find('slugged', ['slug' => $communitySlug])
+            ->contain(['LocalAreas', 'ParentAreas'])
+            ->first();
+
+        if (! $community) {
+            throw new NotFoundException('Community not found');
+        }
 
         if (! ($community->public || $this->isAuthorized($this->Auth->user()))) {
             $this->Flash->error('You are not authorized to access that community.');
 
             return $this->redirect('/', 403);
-        }
-
-        if (! $this->Communities->exists(['id' => $communityId])) {
-            throw new NotFoundException('Community not found');
         }
 
         $areasTable = TableRegistry::get('Areas');

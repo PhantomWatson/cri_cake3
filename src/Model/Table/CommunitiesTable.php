@@ -595,7 +595,8 @@ class CommunitiesTable extends Table
                 'Communities.name',
                 'Communities.score',
                 'Communities.created',
-                'Communities.active'
+                'Communities.active',
+                'Communities.slug'
             ])
             ->order(['Communities.name' => 'ASC']);
 

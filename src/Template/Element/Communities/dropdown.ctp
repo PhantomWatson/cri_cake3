@@ -61,7 +61,7 @@
                 [
                     'prefix' => false,
                     'action' => 'view',
-                    $community['id']
+                    $community['slug']
                 ],
                 ['escape' => false]
             ) ?>

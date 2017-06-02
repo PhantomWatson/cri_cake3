@@ -71,7 +71,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->get([
             'controller' => 'Communities',
             'action' => 'view',
-            1
+            'test-community-1'
         ]);
         $this->assertResponseOk();
 
@@ -79,7 +79,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->get([
             'controller' => 'Communities',
             'action' => 'view',
-            2
+            'test-community-2'
         ]);
         $this->assertResponseError();
         $this->assertResponseCode(403);

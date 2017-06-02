@@ -62,7 +62,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/forgot-password', ['controller' => 'Users', 'action' => 'forgotPassword']);
     $routes->connect('/reset-password/*', ['controller' => 'Users', 'action' => 'resetPassword']);
 
-    $routes->connect('/community/:id', ['controller' => 'Communities', 'action' => 'view'], ['id' => '\d+', 'pass' => ['id']]);
+    $routes->connect('/community/:slug', ['controller' => 'Communities', 'action' => 'view'], ['pass' => ['slug']]);
 
     $routes->connect('/postback', ['controller' => 'Purchases', 'action' => 'postback']);
 

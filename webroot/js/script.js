@@ -1,6 +1,6 @@
 var sidebar = {
     init: function () {
-        var form = $('#community_select');
+        var form = $('#community-select');
         var selector = form.find('select').first();
         
         // Reset the selector to its default state
@@ -16,9 +16,9 @@ var sidebar = {
         
         form.submit(function (event) {
             event.preventDefault();
-            var community_id = selector.val();
-            if (community_id) {
-                window.location.href = '/community/'+community_id;
+            var community_slug = selector.val();
+            if (community_slug) {
+                window.location.href = '/community/'+community_slug;
             }
         });
     }
