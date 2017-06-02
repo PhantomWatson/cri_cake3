@@ -33,6 +33,7 @@ class CommunitiesTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Muffin/Slug.Slug');
         $this->belongsTo('LocalAreas', [
             'className' => 'Areas',
             'foreignKey' => 'local_area_id',

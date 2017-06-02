@@ -36,7 +36,8 @@ class Community extends Entity
         'notes' => true,
         'active' => true,
         'intAlignmentAdjustment' => true,
-        'intAlignmentThreshold' => true
+        'intAlignmentThreshold' => true,
+        'slug' => true
     ];
 
     /**

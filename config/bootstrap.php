@@ -225,3 +225,5 @@ Plugin::load('Xety/Cake3CookieAuth');
 if (Configure::read('debug')) {
     Plugin::load('DebugKit', ['bootstrap' => true]);
 }
+
+Plugin::load('Muffin/Slug');

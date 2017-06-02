@@ -70,6 +70,7 @@ class CommunitiesFixture extends TestFixture
             'dummy' => 0,
             'notes' => 'Notes...',
             'active' => 1,
+            'slug' => 'test-community-1',
             'created' => '2017-04-18 23:18:27',
             'modified' => '2017-04-18 23:18:27'
         ],
@@ -91,6 +92,7 @@ class CommunitiesFixture extends TestFixture
             'dummy' => 0,
             'notes' => 'Notes...',
             'active' => 1,
+            'slug' => 'test-community-2',
             'created' => '2017-04-18 23:18:27',
             'modified' => '2017-04-18 23:18:27'
         ],
@@ -112,6 +114,7 @@ class CommunitiesFixture extends TestFixture
             'dummy' => 0,
             'notes' => 'Notes...',
             'active' => 0,
+            'slug' => 'test-community-3',
             'created' => '2017-04-18 23:18:27',
             'modified' => '2017-04-18 23:18:27'
         ],

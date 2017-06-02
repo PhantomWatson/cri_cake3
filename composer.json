@@ -19,7 +19,8 @@
         "dereuromark/cakephp-shim": "dev-master",
         "phantomwatson/form-protector": "dev-master",
         "josegonzalez/dotenv": "dev-master",
-        "liogi/surveymonkey-api-v3": "1.*"
+        "liogi/surveymonkey-api-v3": "1.*",
+        "muffin/slug": "^1.1"
     },
     "require-dev": {
         "psy/psysh": "@stable",

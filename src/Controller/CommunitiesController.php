@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
+use Muffin\Slug\Slugger\CakeSlugger;
 
 /**
  * Communities Controller
@@ -196,5 +197,35 @@ class CommunitiesController extends AppController
 
         $this->set(['communities' => $retval]);
         $this->viewBuilder()->setLayout('json');
+    }
+
+    /**
+     * Adds any missing slugs in the communities table
+     *
+     * @return \Cake\Http\Response
+     */
+    public function slug()
+    {
+        $communities = $this->Communities->find()
+            ->select(['id', 'name'])
+            ->where([
+                function ($q) {
+                    return $q->isNull('slug');
+                }
+            ]);
+        $slugger = new CakeSlugger();
+        foreach ($communities as $community) {
+            $slug = $slugger->slug($community->name);
+            $community = $this->Communities->patchEntity($community, [
+                'slug' => $slug
+            ]);
+            if ($this->Communities->save($community)) {
+                $this->Flash->success("Slug $slug added for community $community->name");
+            } else {
+                $this->Flash->error("Couldn't add slug $slug for community $community->name");
+            }
+        }
+
+        return $this->redirect('/');
     }
 }
