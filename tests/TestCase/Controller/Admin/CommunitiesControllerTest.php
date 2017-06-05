@@ -324,7 +324,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'edit',
-            1
+            'test-community-1'
         ]);
 
         // Unauthenticated
@@ -340,7 +340,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'edit',
-            999
+            'invalid-slug'
         ]));
         $this->assertResponseError();
 
@@ -450,7 +450,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'presentations',
-            1
+            'test-community-1'
         ]);
 
         // Unauthenticated
@@ -517,7 +517,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'progress',
-            1
+            'test-community-1'
         ]);
 
         // Unauthenticated

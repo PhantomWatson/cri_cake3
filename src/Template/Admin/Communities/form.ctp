@@ -53,7 +53,7 @@
                 'prefix' => 'admin',
                 'controller' => 'Communities',
                 'action' => 'progress',
-                $communityId
+                $community->slug
             ]
         ) ?>, which provides detailed information to help advise you.
     <?php endif; ?>

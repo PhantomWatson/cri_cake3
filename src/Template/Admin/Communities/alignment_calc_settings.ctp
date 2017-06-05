@@ -76,7 +76,7 @@
                             'prefix' => 'admin',
                             'controller' => 'Communities',
                             'action' => 'edit',
-                            $community->id
+                            $community->slug
                         ],
                         ['class' => 'btn btn-default']
                     ) ?>

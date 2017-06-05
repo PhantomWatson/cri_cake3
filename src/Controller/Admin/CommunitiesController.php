@@ -284,22 +284,26 @@ class CommunitiesController extends AppController
     /**
      * Edit method
      *
-     * @param int|null $communityId Community ID
+     * @param string|null $communitySlug Community slug
      * @return \Cake\Http\Response|null
      * @throws NotFoundException
      */
-    public function edit($communityId = null)
+    public function edit($communitySlug = null)
     {
-        if (! $communityId) {
-            throw new NotFoundException('Community ID not specified');
+        if (! $communitySlug) {
+            throw new NotFoundException('Community not specified');
         }
 
-        $community = $this->Communities->get($communityId, [
-            'contain' => [
+        $community = $this->Communities->find('slugged', ['slug' => $communitySlug])
+            ->contain([
                 'OfficialSurvey',
                 'OrganizationSurvey'
-            ]
-        ]);
+            ])
+            ->first();
+        if (!$community) {
+            throw new NotFoundException('Community not found');
+        }
+
         $previousScore = $community->score;
 
         if ($this->request->is('post') || $this->request->is('put')) {
@@ -314,11 +318,11 @@ class CommunitiesController extends AppController
 
                 // Dispatch events
                 if ($previousScore != $community->score) {
-                    $this->dispatchScoreChangeEvent($previousScore, $community->score, $communityId);
+                    $this->dispatchScoreChangeEvent($previousScore, $community->score, $community->id);
                 }
                 if ($areaUpdated) {
                     $event = new Event('Model.Community.afterUpdateCommunityArea', $this, ['meta' => [
-                        'communityId' => $communityId
+                        'communityId' => $community->id
                     ]]);
                     $this->eventManager()->dispatch($event);
                 }
@@ -332,7 +336,7 @@ class CommunitiesController extends AppController
 
         $this->prepareForm($community);
         $this->set([
-            'communityId' => $communityId,
+            'communityId' => $community->id,
             'titleForLayout' => 'Edit ' . $community->name
         ]);
         $this->render('form');
@@ -402,28 +406,27 @@ class CommunitiesController extends AppController
     /**
      * Progress method
      *
-     * @param int $communityId Community ID
+     * @param string $communitySlug Community slug
      * @return void
      * @throws NotFoundException
      */
-    public function progress($communityId)
+    public function progress($communitySlug)
     {
-        if (! $this->Communities->exists(['id' => $communityId])) {
-            throw new NotFoundException('Sorry, we couldn\'t find a community with ID# ' . $communityId);
+        $community = $this->Communities->find('slugged', ['slug' => $communitySlug])->first();
+        if (!$community) {
+            throw new NotFoundException('Community not found');
         }
 
-        $community = $this->Communities->get($communityId);
         $previousScore = $community->score;
 
         if ($this->request->is('put')) {
-            $community = $this->Communities->patchEntity($community, $this->request->getData(), [
-                'fieldList' => ['score']
-            ]);
+            $options = ['fieldList' => ['score']];
+            $community = $this->Communities->patchEntity($community, $this->request->getData(), $options);
             if ($community->dirty('score')) {
                 if ($this->Communities->save($community)) {
                     $verbed = $community->score > $previousScore ? 'increased' : 'decreased';
                     $this->Flash->success('Community score ' . $verbed);
-                    $this->dispatchScoreChangeEvent($previousScore, $community->score, $communityId);
+                    $this->dispatchScoreChangeEvent($previousScore, $community->score, $community->id);
                 } else {
                     $this->Flash->error('There was an error updating this community');
                 }
@@ -435,7 +438,7 @@ class CommunitiesController extends AppController
         $this->set([
             'titleForLayout' => $community->name . ' Progress',
             'community' => $community,
-            'criteria' => $this->Communities->getProgress($communityId, true)
+            'criteria' => $this->Communities->getProgress($community->id, true)
         ]);
     }
 
@@ -612,7 +615,13 @@ class CommunitiesController extends AppController
             $conditions['dummy'] = 0;
         }
         $communities = $this->Communities->find('all')
-            ->select(['id', 'name', 'intAlignmentAdjustment', 'intAlignmentThreshold'])
+            ->select([
+                'id',
+                'name',
+                'intAlignmentAdjustment',
+                'intAlignmentThreshold',
+                'slug'
+            ])
             ->where($conditions)
             ->order(['created' => 'DESC']);
 
@@ -630,17 +639,21 @@ class CommunitiesController extends AppController
     /**
      * Method for /admin/communities/presentations
      *
-     * @param null|int $communityId Community ID
+     * @param null|string $communitySlug Community slug
      * @return \Cake\Http\Response|null
      * @throws NotFoundException
      */
-    public function presentations($communityId = null)
+    public function presentations($communitySlug = null)
     {
-        if (! $communityId) {
-            throw new NotFoundException('Community ID not specified');
+        if (! $communitySlug) {
+            throw new NotFoundException('Community not specified');
         }
 
-        $community = $this->Communities->get($communityId);
+        $community = $this->Communities->find('slugged', ['slug' => $communitySlug])->first();
+        if (! $community) {
+            throw new NotFoundException('Community not found');
+        }
+
         $community = $this->Communities->patchEntity($community, $this->request->getData());
         $optOutsTable = TableRegistry::get('OptOuts');
         if ($this->request->is('post') || $this->request->is('put')) {
@@ -649,7 +662,7 @@ class CommunitiesController extends AppController
                 if ($selection == 'opted-out') {
                     $addResult = $optOutsTable->addOptOut([
                         'user_id' => $this->Auth->user('id'),
-                        'community_id' => $communityId,
+                        'community_id' => $community->id,
                         'presentation_letter' => $letter
                     ]);
                     if (! $addResult) {
@@ -685,7 +698,7 @@ class CommunitiesController extends AppController
             $field = 'presentation_' . $letter . '_scheduled';
             $optedOut = $optOutsTable->find('all')
                 ->where([
-                    'community_id' => $communityId,
+                    'community_id' => $community->id,
                     'product_id' => $productId
                 ])
                 ->count();

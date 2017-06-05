@@ -22,7 +22,7 @@
                 [
                     'prefix' => 'admin',
                     'action' => 'presentations',
-                    $community['id']
+                    $community['slug']
                 ],
                 ['escape' => false]
             ) ?>
@@ -130,7 +130,7 @@
                 [
                     'prefix' => 'admin',
                     'action' => 'edit',
-                    $community['id']
+                    $community['slug']
                 ],
                 ['escape' => false]
             ) ?>
