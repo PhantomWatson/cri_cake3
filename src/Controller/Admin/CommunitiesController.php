@@ -377,14 +377,14 @@ class CommunitiesController extends AppController
     /**
      * Clients method
      *
-     * @param int $communityId Community ID
+     * @param string $communitySlug Community slug
      * @return void
      */
-    public function clients($communityId)
+    public function clients($communitySlug)
     {
         $community = $this->Communities->find('all')
             ->select(['id', 'name'])
-            ->where(['id' => $communityId])
+            ->where(['slug' => $communitySlug])
             ->contain([
                 'Clients' => function ($q) {
                     return $q->order(['name' => 'ASC']);
@@ -395,7 +395,7 @@ class CommunitiesController extends AppController
             ])
             ->first();
         if (! $community) {
-            throw new NotFoundException('Sorry, we couldn\'t find a community with ID# ' . $communityId);
+            throw new NotFoundException('Community not found');
         }
         $this->set([
             'community' => $community,
@@ -445,14 +445,23 @@ class CommunitiesController extends AppController
     /**
      * Client home method
      *
-     * @param int $communityId Community ID
+     * @param string $communitySlug Community slug
      * @return \Cake\Http\Response|null
+     * @throws NotFoundException
      */
-    public function clienthome($communityId)
+    public function clienthome($communitySlug)
     {
-        $this->Cookie->write('communityId', $communityId);
+        $community = $this->Communities->find('slugged', ['slug' => $communitySlug])
+            ->select(['id'])
+            ->first();
+
+        if (!$community) {
+            throw new NotFoundException('Community not found');
+        }
+
+        $this->Cookie->write('communityId', $community->id);
         $this->loadComponent('ClientHome');
-        $prepResult = $this->ClientHome->prepareClientHome($communityId);
+        $prepResult = $this->ClientHome->prepareClientHome($community->id);
         if ($prepResult) {
             return $this->render('/Client/Communities/index');
         }
@@ -716,12 +725,18 @@ class CommunitiesController extends AppController
     /**
      * Method for /admin/communities/notes
      *
-     * @param int $communityId Community ID
+     * @param string $communitySlug Community slug
      * @return void
+     * @throws NotFoundException
      */
-    public function notes($communityId)
+    public function notes($communitySlug)
     {
-        $community = $this->Communities->get($communityId);
+        $community = $this->Communities->find('slugged', ['slug' => $communitySlug])->first();
+
+        if (! $community) {
+            throw new NotFoundException('Community not found');
+        }
+
         if ($this->request->is(['post', 'put'])) {
             $community = $this->Communities->patchEntity($community, $this->request->getData());
             if ($community->getErrors()) {

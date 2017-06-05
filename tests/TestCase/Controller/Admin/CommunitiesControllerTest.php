@@ -205,7 +205,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'clienthome',
-            1
+            'test-community-1'
         ]);
 
         // Unauthenticated
@@ -216,19 +216,15 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->get($url);
         $this->assertResponseOk();
 
-        // Invalid community ID
+        // Invalid community
         $url = Router::url([
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'clienthome',
-            999
+            'invalid-slug'
         ]);
         $this->get($url);
-        $this->assertRedirect([
-            'prefix' => 'admin',
-            'controller' => 'Communities',
-            'action' => 'index'
-        ]);
+        $this->assertResponseError();
     }
 
     /**
@@ -242,7 +238,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'clients',
-            1
+            'test-community-1'
         ]);
 
         // Unauthenticated
@@ -253,12 +249,12 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->get($url);
         $this->assertResponseOk();
 
-        // Invalid community ID
+        // Invalid community slug
         $url = Router::url([
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'clients',
-            999
+            'invalid-slug'
         ]);
         $this->get($url);
         $this->assertResponseError();
@@ -418,7 +414,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'notes',
-            1
+            'test-community-1'
         ]);
 
         // Unauthenticated

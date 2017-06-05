@@ -10,7 +10,7 @@
                 [
                     'prefix' => 'admin',
                     'action' => 'progress',
-                    $community['id']
+                    $community['slug']
                 ],
                 ['escape' => false]
             ) ?>
@@ -34,7 +34,7 @@
                 [
                     'prefix' => 'admin',
                     'action' => 'clients',
-                    $community['id']
+                    $community['slug']
                 ],
                 ['escape' => false]
             ) ?>
@@ -47,7 +47,7 @@
                     [
                         'prefix' => 'admin',
                         'action' => 'clienthome',
-                        $community['id']
+                        $community['slug']
                     ],
                     ['escape' => false]
                 ) ?>
@@ -73,7 +73,7 @@
                 [
                     'prefix' => 'admin',
                     'action' => 'notes',
-                    $community['id']
+                    $community['slug']
                 ],
                 ['escape' => false]
             ) ?>
