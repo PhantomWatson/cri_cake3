@@ -846,9 +846,11 @@ var adminHeader = {
     communityId: null,
     surveyId: null,
     surveyIds: [],
+    slugs: {},
 
     init: function (params) {
         this.communityId = params.communityId;
+        this.slugs = params.slugs;
         this.surveyId = params.surveyId;
         this.surveyIds = params.surveyIds;
         this.surveyType = params.surveyType;
@@ -880,17 +882,15 @@ var adminHeader = {
             return false;
         }
 
-        var url = selectedPage.replace('{community-id}', communityId);
-
         var surveyType = selectedPageOpt.closest('optgroup').data('survey-type');
-        if (surveyType) {
-            url = url.replace('{survey-type}', surveyType);
-        }
-
         var surveyId = this.getSurveyId(communityId, surveyType);
-        if (surveyId) {
-            url = url.replace('{survey-id}', surveyId);
-        } else if (url.search('{survey-id}') != -1) {
+        var url = this.getParsedUrl(selectedPage, {
+            communityId: communityId,
+            surveyType: surveyType,
+            surveyId: surveyId
+        });
+
+        if (! surveyId && url.search('{survey-id}') !== -1) {
             var communityName = $('#admin-sidebar-community select[name=community] option:selected').text().trim();
             var msg = 'The ' + surveyType  + ' questionnaire has not yet been set up for ' + communityName + '.';
             this.displayError(msg);
@@ -961,27 +961,44 @@ var adminHeader = {
                 }
 
                 // Special case for admins viewing client home page
-                if (urlTemplate == '/admin/communities/clienthome/{community-id}') {
-                    if (currentUrl == '/client/home') {
+                if (urlTemplate === '/admin/communities/clienthome/{community-id}') {
+                    if (currentUrl === '/client/home') {
                         option.prop('selected', true);
                         return;
                     }
                 }
 
-                var optionUrl = urlTemplate.replace('{community-id}', adminHeader.communityId);
-                if (optionUrl.search('{survey-id}') != -1) {
-                    var optionSurveyId = adminHeader.getSurveyId(adminHeader.communityId, surveyType);
-                    if (! optionSurveyId) {
-                        return;
-                    }
-                    optionUrl = optionUrl.replace('{survey-id}', optionSurveyId);
-                }
-
-                if (currentUrl == optionUrl) {
+                var optionUrl = adminHeader.getParsedUrl(urlTemplate, {
+                    communityId: adminHeader.communityId,
+                    surveyType: surveyType
+                });
+                if (currentUrl === optionUrl) {
                     option.prop('selected', true);
                 }
             });
         });
+    },
+
+    getParsedUrl: function (urlTemplate, params) {
+        var url = urlTemplate;
+        var communitySlug = this.slugs[params.communityId];
+
+        url = url.replace('{survey-type}', params.surveyType);
+        url = url.replace('{community-id}', params.communityId);
+        url = url.replace('{survey-id}', params.surveyId);
+        url = url.replace('{community-slug}', communitySlug);
+
+        if (urlTemplate.search('{survey-id}') !== -1) {
+            var surveyId;
+            if (params.surveyId) {
+                surveyId = params.surveyId;
+            } else {
+                surveyId = adminHeader.getSurveyId(params.communityId, params.surveyType);
+            }
+            url = url.replace('{survey-id}', surveyId);
+        }
+
+        return url;
     }
 };
 

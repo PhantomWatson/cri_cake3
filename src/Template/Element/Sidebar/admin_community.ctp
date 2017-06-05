@@ -11,9 +11,9 @@
         <option value="">
             Select community...
         </option>
-        <?php foreach ($adminHeader['communities'] as $ahCommunityId => $ahCommunityName): ?>
-            <option value="<?= $ahCommunityId ?>">
-                <?= $ahCommunityName ?>
+        <?php foreach ($adminHeader['communities'] as $community): ?>
+            <option value="<?= $community->id ?>">
+                <?= $community->name ?>
             </option>
         <?php endforeach; ?>
     </select>
@@ -60,6 +60,7 @@
         communityId: <?= json_encode($communityId) ?>,
         currentUrl: <?= json_encode($adminHeader['currentUrl']) ?>,
         surveyId: <?= json_encode($surveyId) ?>,
-        surveyIds: surveyIds
+        surveyIds: surveyIds,
+        slugs: <?= json_encode($adminHeader['slugs']) ?>
     });
 <?php $this->end(); ?>

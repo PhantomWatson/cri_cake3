@@ -328,16 +328,18 @@ class AppController extends Controller
     public function prepareAdminHeader()
     {
         $this->loadModel('Communities');
-        $communities = $this->Communities->find('list')
-            ->order(['name' => 'ASC']);
+        $communities = $this->Communities->find()
+            ->select(['id', 'name', 'slug'])
+            ->order(['name' => 'ASC'])
+            ->all();
 
         $route = ['prefix' => 'admin', 'controller' => 'Communities'];
         $communityPages = [
-            'Edit' => Router::url($route + ['action' => 'edit']) . '/{community-id}',
-            'Progress' => Router::url($route + ['action' => 'progress']) . '/{community-id}',
+            'Edit' => Router::url($route + ['action' => 'edit']) . '/{community-slug}',
+            'Progress' => Router::url($route + ['action' => 'progress']) . '/{community-slug}',
             'Clients' => Router::url($route + ['action' => 'clients']) . '/{community-id}',
             'Client Home' => Router::url($route + ['action' => 'clienthome']) . '/{community-id}',
-            'Presentations' => Router::url($route + ['action' => 'presentations']) . '/{community-id}',
+            'Presentations' => Router::url($route + ['action' => 'presentations']) . '/{community-slug}',
             'Notes' => Router::url($route + ['action' => 'notes']) . '/{community-id}',
             'Purchases' => Router::url([
                 'prefix' => 'admin',
@@ -368,11 +370,14 @@ class AppController extends Controller
             ->toArray();
         $surveyIds = Hash::combine($results, '{n}.type', '{n}.id', '{n}.community_id');
 
+        $slugs = Hash::combine($communities->toArray(), '{n}.id', '{n}.slug');
+
         $this->set([
             'adminHeader' => [
                 'communities' => $communities,
                 'communityPages' => $communityPages,
                 'currentUrl' => '/' . $this->request->url,
+                'slugs' => $slugs,
                 'surveyIds' => $surveyIds,
                 'surveyPages' => $surveyPages
             ]
