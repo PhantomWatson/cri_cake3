@@ -34,7 +34,7 @@
                                 'prefix' => 'admin',
                                 'controller' => 'Purchases',
                                 'action' => 'view',
-                                $purchase->community['id']
+                                $purchase->community['slug']
                             ]
                         ) ?>
                     <?php else: ?>

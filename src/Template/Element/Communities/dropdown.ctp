@@ -86,7 +86,7 @@
                     'prefix' => 'admin',
                     'controller' => 'Purchases',
                     'action' => 'view',
-                    $community['id']
+                    $community['slug']
                 ],
                 ['escape' => false]
             ) ?>
@@ -117,7 +117,7 @@
                     'prefix' => 'admin',
                     'controller' => 'Communities',
                     'action' => 'activate',
-                    $community['id']
+                    $community['slug']
                 ],
                 ['escape' => false]
             );

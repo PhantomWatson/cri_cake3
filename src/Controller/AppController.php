@@ -345,13 +345,13 @@ class AppController extends Controller
                 'prefix' => 'admin',
                 'controller' => 'Purchases',
                 'action' => 'view'
-            ]) . '/{community-id}',
+            ]) . '/{community-slug}',
             'Activity' => Router::url([
                 'prefix' => 'admin',
                 'controller' => 'ActivityRecords',
                 'action' => 'community'
             ]) . '/{community-id}',
-            '(De)activate' => Router::url($route + ['action' => 'activate']) . '/{community-id}'
+            '(De)activate' => Router::url($route + ['action' => 'activate']) . '/{community-slug}'
         ];
 
         $surveyPages = [

@@ -60,7 +60,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'activate',
-            1
+            'test-community-1'
         ]);
 
         // Unauthenticated

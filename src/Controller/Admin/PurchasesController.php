@@ -3,6 +3,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -12,7 +13,7 @@ class PurchasesController extends AppController
         'conditions' => ['Communities.dummy' => false],
         'contain' => [
             'Communities' => [
-                'fields' => ['id', 'name']
+                'fields' => ['id', 'name', 'slug']
             ],
             'Products' => [
                 'fields' => ['id', 'description', 'price']
@@ -59,16 +60,22 @@ class PurchasesController extends AppController
     /**
      * View method
      *
-     * @param int $communityId Community ID
+     * @param string $communitySlug Community slug
      * @return void
+     * @throws NotFoundException
      */
-    public function view($communityId)
+    public function view($communitySlug)
     {
         $communitiesTable = TableRegistry::get('Communities');
-        $community = $communitiesTable->get($communityId);
-        $this->paginate['conditions']['community_id'] = $communityId;
+        $community = $communitiesTable->find('slugged', ['slug' => $communitySlug])->first();
+
+        if (! $community) {
+            throw new NotFoundException('Community not found');
+        }
+
+        $this->paginate['conditions']['community_id'] = $community->id;
         $this->set([
-            'communityId' => $communityId,
+            'communityId' => $community->id,
             'purchases' => $this
                 ->paginate()
                 ->toArray(),

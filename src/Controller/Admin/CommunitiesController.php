@@ -829,12 +829,18 @@ class CommunitiesController extends AppController
     /**
      * Method for /admin/communities/activate
      *
-     * @param int $communityId Community ID
+     * @param string $communitySlug Community slug
      * @return void
+     * @throws NotFoundException
      */
-    public function activate($communityId)
+    public function activate($communitySlug)
     {
-        $community = $this->Communities->get($communityId);
+        $community = $this->Communities->find('slugged', ['slug' => $communitySlug])->first();
+
+        if (! $community) {
+            throw new NotFoundException('Community not found');
+        }
+
         $currentlyActive = $community->active;
         if ($this->request->is('put')) {
             $community = $this->Communities->patchEntity($community, $this->request->getData());
@@ -849,7 +855,7 @@ class CommunitiesController extends AppController
                 // Event
                 $eventName = 'Model.Community.after' . ($currentlyActive ? 'Activate' : 'Deactivate');
                 $event = new Event($eventName, $this, ['meta' => [
-                    'communityId' => $communityId
+                    'communityId' => $community->id
                 ]]);
                 $this->eventManager()->dispatch($event);
             } else {
@@ -874,7 +880,7 @@ class CommunitiesController extends AppController
                 'Client'
             ],
             'titleForLayout' => $title,
-            'warning' => $this->Communities->getDeactivationWarning($communityId)
+            'warning' => $this->Communities->getDeactivationWarning($community->id)
         ]);
     }
 }
