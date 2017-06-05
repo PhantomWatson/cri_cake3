@@ -27,25 +27,11 @@
         ]
     );
     $scores = [1, 2, 3, 4, 5];
-    if ($this->request->prefix == 'admin' && isset($communityId)) {
-        $note = '<strong>Note:</strong> You\'re encouraged to edit this community\'s score through its ';
-        $note .= $this->Html->link(
-            'progress page',
-            [
-                'prefix' => 'admin',
-                'controller' => 'Communities',
-                'action' => 'progress',
-                $communityId
-            ]
-        );
-        $note .= ', which provides detailed information to help advise you.';
-    } else {
-        $note = '';
-    }
-    echo $this->Form->input(
+?>
+<div id="score-input-wrapper">
+    <?= $this->Form->input(
         'score',
         [
-            'after' => $note,
             'escape' => false,
             'label' => [
                 'text' => 'Stage / PWR<sup>3</sup> &trade; Score',
@@ -54,8 +40,25 @@
             'options' => array_combine($scores, $scores),
             'type' => 'select'
         ]
-    );
-?>
+    ) ?>
+</div>
+
+<p id="score-editing-note">
+    <?php if ($this->request->prefix == 'admin' && $community->slug): ?>
+        <strong>Note:</strong>
+        You're encouraged to edit this community's score through its
+        <?= $this->Html->link(
+            'progress page',
+            [
+                'prefix' => 'admin',
+                'controller' => 'Communities',
+                'action' => 'progress',
+                $communityId
+            ]
+        ) ?>, which provides detailed information to help advise you.
+    <?php endif; ?>
+</p>
+
 <div class="custom_radio">
     <?= $this->Form->input(
         'public',
