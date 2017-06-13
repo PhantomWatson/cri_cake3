@@ -6,7 +6,7 @@
             'prefix' => 'admin',
             'controller' => 'Surveys',
             'action' => 'view',
-            $communityId,
+            $community['slug'],
             $surveyType
         ],
         [

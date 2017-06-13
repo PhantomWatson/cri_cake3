@@ -40,7 +40,7 @@
                         'prefix' => 'admin',
                         'controller' => 'Surveys',
                         'action' => $community[$surveyType]['sm_id'] ? 'view' : 'link',
-                        $community['id'],
+                        $community['slug'],
                         str_replace('_survey', '', $surveyType)
                     ],
                     ['escape' => false]
@@ -53,7 +53,7 @@
                         'prefix' => 'admin',
                         'controller' => 'Surveys',
                         'action' => 'link',
-                        $community['id'],
+                        $community['slug'],
                         str_replace('_survey', '', $surveyType)
                     ],
                     ['escape' => false]
@@ -138,7 +138,7 @@
                         'prefix' => 'admin',
                         'controller' => 'Surveys',
                         'action' => 'link',
-                        $community['id'],
+                        $community['slug'],
                         str_replace('_survey', '', $surveyType)
                     ],
                     ['escape' => false]

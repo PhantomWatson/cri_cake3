@@ -30,35 +30,34 @@ class SurveysController extends AppController
     /**
      * View method
      *
-     * @param int|null $communityId Community ID
+     * @param string|null $communitySlug Community slug
      * @param int|null $surveyType Survey type
      * @return \Cake\Http\Response|null
+     * @throws NotFoundException
      */
-    public function view($communityId = null, $surveyType = null)
+    public function view($communitySlug = null, $surveyType = null)
     {
         if (! in_array($surveyType, ['official', 'organization'])) {
             throw new NotFoundException("Unknown questionnaire type: $surveyType");
         }
 
         $communitiesTable = TableRegistry::get('Communities');
-        if (! $communitiesTable->exists(['id' => $communityId])) {
-            throw new NotFoundException("Community with ID $communityId not found");
+        $community = $communitiesTable->find('slugged', ['slug' => $communitySlug])->first();
+        if (! $community) {
+            throw new NotFoundException("Community not found");
         }
 
-        $surveyId = $this->Surveys->getSurveyId($communityId, $surveyType);
+        $surveyId = $this->Surveys->getSurveyId($community->id, $surveyType);
 
         if ($surveyId) {
             $survey = $this->Surveys->get($surveyId);
         } else {
             return $this->redirect([
                 'action' => 'link',
-                $communityId,
+                $communitySlug,
                 $surveyType
             ]);
         }
-
-        $communitiesTable = TableRegistry::get('Communities');
-        $community = $communitiesTable->get($communityId);
 
         if ($survey->get('id')) {
             $this->prepareSurveyStatus($survey, $community);
@@ -75,28 +74,30 @@ class SurveysController extends AppController
     /**
      * Link method
      *
-     * @param int|null $communityId Community ID
+     * @param string|null $communitySlug Community slug
      * @param int|null $surveyType Survey type
      * @return void
+     * @throws NotFoundException
      */
-    public function link($communityId = null, $surveyType = null)
+    public function link($communitySlug = null, $surveyType = null)
     {
         if (! in_array($surveyType, ['official', 'organization'])) {
             throw new NotFoundException("Unknown questionnaire type: $surveyType");
         }
 
         $communitiesTable = TableRegistry::get('Communities');
-        if (! $communitiesTable->exists(['id' => $communityId])) {
-            throw new NotFoundException("Community with ID $communityId not found");
+        $community = $communitiesTable->find('slugged', ['slug' => $communitySlug])->first();
+        if (! $community) {
+            throw new NotFoundException("Community not found");
         }
 
-        $surveyId = $this->Surveys->getSurveyId($communityId, $surveyType);
+        $surveyId = $this->Surveys->getSurveyId($community->id, $surveyType);
 
         if ($surveyId) {
             $survey = $this->Surveys->get($surveyId);
         } else {
             $survey = $this->Surveys->newEntity();
-            $survey->community_id = $communityId;
+            $survey->community_id = $community->id;
             $survey->type = $surveyType;
         }
 
@@ -116,14 +117,14 @@ class SurveysController extends AppController
                 // Events
                 $eventName = $isNew ? 'Model.Survey.afterLinked' : 'Model.Survey.afterLinkUpdated';
                 $event = new Event($eventName, $this, ['meta' => [
-                    'communityId' => $communityId,
+                    'communityId' => $community->id,
                     'surveyId' => $survey->id,
                     'surveyType' => $surveyType
                 ]]);
                 $this->eventManager()->dispatch($event);
                 if ($isNew && $survey->active) {
                     $event = new Event('Model.Survey.afterActivate', $this, ['meta' => [
-                        'communityId' => $communityId,
+                        'communityId' => $community->id,
                         'surveyId' => $survey->id,
                         'surveyType' => $survey->type
                     ]]);
@@ -132,7 +133,7 @@ class SurveysController extends AppController
 
                 $this->redirect([
                     'action' => 'view',
-                    $communityId,
+                    $communitySlug,
                     $surveyType
                 ]);
             } else {
@@ -145,16 +146,13 @@ class SurveysController extends AppController
             }
         }
 
-        $communitiesTable = TableRegistry::get('Communities');
-        $community = $communitiesTable->get($communityId);
-
         // Display warning about activating an org survey before deactivating an officials survey
         $warning = null;
         if ($surveyType == 'organization') {
             $officialsSurvey = $this->Surveys->find('all')
                 ->select(['id', 'active'])
                 ->where([
-                    'community_id' => $communityId,
+                    'community_id' => $community->id,
                     'type' => 'official'
                 ])
                 ->first();

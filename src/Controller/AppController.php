@@ -355,8 +355,8 @@ class AppController extends Controller
         ];
 
         $surveyPages = [
-            'Overview' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'view']) . '/{community-id}/{survey-type}',
-            'Link' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'link']) . '/{community-id}/{survey-type}',
+            'Overview' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'view']) . '/{community-slug}/{survey-type}',
+            'Link' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'link']) . '/{community-slug}/{survey-type}',
             'Activate' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'activate']) . '/{survey-id}',
             'Invitations' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'invite']) . '/{survey-id}',
             'Reminders' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'remind']) . '/{survey-id}',

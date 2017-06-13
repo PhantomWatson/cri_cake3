@@ -249,7 +249,7 @@ class CommunitiesController extends AppController
                     'prefix' => 'admin',
                     'controller' => 'Surveys',
                     'action' => 'link',
-                    $community->id,
+                    $community->slug,
                     'official'
                 ]);
                 $message =

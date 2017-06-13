@@ -100,7 +100,7 @@ class AdminToDo
         }
 
         if ($this->readyToCreateOfficialsSurvey($communityId)) {
-            $url = $this->getLinkUrl($communityId, 'official');
+            $url = $this->getLinkUrl($community->slug, 'official');
 
             return [
                 'class' => 'ready',
@@ -265,7 +265,7 @@ class AdminToDo
         }
 
         if ($this->readyToCreateOrganizationsSurvey($communityId)) {
-            $url = $this->getLinkUrl($communityId, 'organization');
+            $url = $this->getLinkUrl($community->slug, 'organization');
 
             return [
                 'class' => 'ready',
@@ -703,17 +703,17 @@ class AdminToDo
     /**
      * Returns the URL for this community / survey's 'link survey' page
      *
-     * @param int $communityId Community ID
+     * @param string $communitySlug Community slug
      * @param string $surveyType Survey type
      * @return string
      */
-    private function getLinkUrl($communityId, $surveyType)
+    private function getLinkUrl($communitySlug, $surveyType)
     {
         return Router::url([
             'prefix' => 'admin',
             'controller' => 'Surveys',
             'action' => 'link',
-            $communityId,
+            $communitySlug,
             $surveyType
         ]);
     }
