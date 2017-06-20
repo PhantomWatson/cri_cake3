@@ -8,34 +8,44 @@
     <?= $this->Form->create($community) ?>
     <?php foreach ($presentations as $productId => $letter): ?>
         <?php
-            $class = 'well';
-            if ($community->{'presentation_' . $letter . '_scheduled'} == 1) {
-                $class .= ' show-date';
-            }
+            $status = $community->{'presentation_' . $letter . '_scheduled'};
+            $class = ($status == 1) ? 'well show-date' : 'well';
         ?>
         <section class="<?= $class ?>">
             <h2>
                 Presentation <?= strtoupper($letter) ?>
             </h2>
-            <?php if ($community->{'presentation_' . $letter . '_scheduled'} === 'opted-out'): ?>
+            <?php if ($status === 'opted-out'): ?>
                 <span class="label label-success">
                     Opted out of <?= $products[$productId] ?>
                 </span>
             <?php else: ?>
+                <?php
+                    $purchased = in_array($productId, $purchasedProductIds);
+                    $options = [
+                        0 => 'Not scheduled yet',
+                        'opted-out' => 'Opted out of ' . $products[$productId]
+                    ];
+                    if ($purchased) {
+                        $options[1] = 'Scheduled';
+                    }
+                ?>
                 <div class="checkbox">
                     <?= $this->Form->radio(
                         'presentation_' . $letter . '_scheduled',
-                        [
-                            0 => 'Not scheduled yet',
-                            'opted-out' => 'Opted out of ' . $products[$productId],
-                            1 => 'Scheduled'
-                        ]
+                        $options
                     ) ?>
                 </div>
-                <?= $this->Form->input(
-                    'presentation_' . $letter,
-                    ['label' => false]
-                ) ?>
+                <?php if ($purchased): ?>
+                    <?= $this->Form->input(
+                        'presentation_' . $letter,
+                        ['label' => false]
+                    ) ?>
+                <?php else: ?>
+                    <span class="label label-warning">
+                        Not yet purchased
+                    </span>
+                <?php endif; ?>
             <?php endif; ?>
         </section>
     <?php endforeach; ?>

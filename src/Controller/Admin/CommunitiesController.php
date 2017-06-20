@@ -696,7 +696,7 @@ class CommunitiesController extends AppController
             }
         }
 
-        $optOutsTable = TableRegistry::get('OptOuts');
+        // Populate $community->presentation_[a, b, c, d]_scheduled with true, false, or 'opted-out'
         $presentations = [
             ProductsTable::OFFICIALS_SURVEY => 'a',
             ProductsTable::OFFICIALS_SUMMIT => 'b',
@@ -713,12 +713,18 @@ class CommunitiesController extends AppController
                 ->count();
             $community->$field = $optedOut ? 'opted-out' : isset($community->{'presentation_' . $letter});
         }
+
+        $purchasesTable = TableRegistry::get('Purchases');
+        $purchases = $purchasesTable->getAllForCommunity($community->id);
+        $purchasedProductIds = Hash::extract($purchases, '{n}.product_id');
+
         $productsTable = TableRegistry::get('Products');
         $this->set([
             'community' => $community,
             'titleForLayout' => $community->name . ' Presentations',
             'presentations' => $presentations,
-            'products' => $productsTable->find('list')->toArray()
+            'products' => $productsTable->find('list')->toArray(),
+            'purchasedProductIds' => $purchasedProductIds
         ]);
     }
 
