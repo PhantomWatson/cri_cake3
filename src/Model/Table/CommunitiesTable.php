@@ -144,6 +144,32 @@ class CommunitiesTable extends Table
         $rules->add($rules->existsIn('local_area_id', 'LocalAreas'));
         $rules->add($rules->existsIn('parent_area_id', 'ParentAreas'));
 
+        // Ensure that every scheduled presentation has actually been purchased
+        foreach (['a', 'b', 'c', 'd'] as $letter) {
+            $isPurchased = function ($entity, $options) use ($letter) {
+                $scheduled = $entity->{'presentation_' . $letter} !== null;
+                if (! $scheduled) {
+                    return true;
+                }
+
+                $productsTable = TableRegistry::get('Products');
+                $productId = $productsTable->getProductIdForPresentation($letter);
+                if ($productsTable->isPurchased($entity->id, $productId)) {
+                    return true;
+                }
+
+                return false;
+            };
+            $rules->add(
+                $isPurchased,
+                'presentation' . strtoupper($letter) . 'Purchased',
+                [
+                    'errorField' => 'presentation_' . $letter,
+                    'message' => 'Presentation ' . strtoupper($letter) . ' has not been purchased yet'
+                ]
+            );
+        };
+
         return $rules;
     }
 
