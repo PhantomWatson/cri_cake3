@@ -173,10 +173,9 @@ class ProductsTable extends Table
         $result = $this->find('all')
             ->select(['id'])
             ->where(['item_code' => $itemCode])
-            ->first()
-            ->toArray();
+            ->first();
 
-        return isset($result['id']) ? $result['id'] : null;
+        return $result ? $result->id : null;
     }
 
     /**
