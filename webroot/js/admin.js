@@ -970,7 +970,8 @@ var adminHeader = {
 
                 var optionUrl = adminHeader.getParsedUrl(urlTemplate, {
                     communityId: adminHeader.communityId,
-                    surveyType: surveyType
+                    surveyType: surveyType,
+                    surveyId: adminHeader.surveyId
                 });
                 if (currentUrl === optionUrl) {
                     option.prop('selected', true);
