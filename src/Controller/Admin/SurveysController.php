@@ -276,6 +276,7 @@ class SurveysController extends AppController
         $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($survey->community_id);
         $this->set([
+            'community' => $community,
             'communityId' => $community->id,
             'surveyType' => $survey->type,
             'titleForLayout' => $community->name . ': Invite Community ' . ucwords($respondentTypePlural),
