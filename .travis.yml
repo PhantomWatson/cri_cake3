@@ -16,6 +16,7 @@ services:
   - mysql
 
 before_script:
+  - if [[ $PHPCS = 1 ]]; then composer require cakephp/cakephp-codesniffer:*; fi
   - if [[ $PHPCS != 1 ]]; then composer install; fi
   - if [[ $PHPCS != 1 ]]; then composer run-script post-install-cmd --no-interaction; fi
   - sh -c "mysql -e 'CREATE DATABASE IF NOT EXISTS dc_cri_testing;'"
