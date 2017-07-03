@@ -588,6 +588,7 @@
     </ul>
 </section>
 
+<?php $this->element('script', ['script' => 'admin/admin-guide']); ?>
 <?php $this->append('buffered'); ?>
     adminGuide.init();
 <?php $this->end(); ?>
