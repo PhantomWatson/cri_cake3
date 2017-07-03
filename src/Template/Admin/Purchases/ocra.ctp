@@ -66,6 +66,7 @@
     </div>
 </div>
 
+<?php $this->element('script', ['script' => 'admin/ocra-payments']); ?>
 <?php $this->append('buffered'); ?>
     ocraPayments.init();
 <?php $this->end(); ?>
