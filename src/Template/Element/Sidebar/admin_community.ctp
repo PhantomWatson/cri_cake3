@@ -54,6 +54,7 @@
     </button>
 </form>
 
+<?php $this->element('script', ['script' => 'admin/community-nav']); ?>
 <?php $this->append('buffered'); ?>
     var surveyIds = <?= json_encode($adminHeader['surveyIds']) ?>;
     adminHeader.init({
