@@ -5,9 +5,6 @@
     use Cake\Core\Configure;
     $script = Configure::read('debug') ? 'script.js' : 'script.min.js';
     $this->Html->script($script, ['block' => 'scriptBottom']);
-    if ($authUser['role'] == 'admin') {
-        $this->element('script', ['script' => 'admin']);
-    }
 ?>
 
 <?php $this->start('subsite_title'); ?>
