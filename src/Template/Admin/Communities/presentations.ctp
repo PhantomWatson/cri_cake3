@@ -56,6 +56,7 @@
     <?= $this->Form->end() ?>
 </div>
 
+<?php $this->element('script', ['script' => 'admin/presentations-form']); ?>
 <?php $this->append('buffered'); ?>
     presentationsForm.init();
 <?php $this->end();
