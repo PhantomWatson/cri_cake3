@@ -49,6 +49,7 @@
 
 <?= $this->element('pagination') ?>
 
+<?php $this->element('script', ['script' => 'admin/activity-records']); ?>
 <?php $this->append('buffered'); ?>
     activityRecords.init();
 <?php $this->end(); ?>
