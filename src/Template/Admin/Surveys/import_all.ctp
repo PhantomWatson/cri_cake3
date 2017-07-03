@@ -66,6 +66,7 @@
     </tbody>
 </table>
 
+<?php $this->element('script', ['script' => 'admin/import-responses']); ?>
 <?php $this->element('script', ['script' => 'admin/import-all-surveys']); ?>
 <?php $this->append('buffered'); ?>
     importAllSurveys.init();
