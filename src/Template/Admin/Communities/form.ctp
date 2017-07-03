@@ -98,6 +98,7 @@
     echo $this->Form->end();
 
     $this->element('script', ['script' => 'form-protector']);
+    $this->element('script', ['script' => 'admin/community-form']);
 ?>
 
 <?php $this->append('buffered'); ?>
