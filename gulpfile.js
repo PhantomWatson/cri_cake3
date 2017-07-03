@@ -84,7 +84,7 @@ gulp.task('php_unit', function() {
  **************/
 var srcJsFiles = [ 
     'webroot/js/script.js',
-    'webroot/js/admin.js',
+    'webroot/js/admin/*.js',
     'webroot/js/client.js',
     'webroot/js/report.js',
 ];
