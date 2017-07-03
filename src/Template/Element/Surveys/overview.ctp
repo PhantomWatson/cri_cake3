@@ -160,6 +160,7 @@
                 <?php endif; ?>
             </p>
             <?php if ($survey->active): ?>
+                <?php $this->element('script', ['script' => 'admin/import-responses']); ?>
                 <button class="btn btn-default import_button" data-survey-id="<?= $survey['id'] ?>">
                     Import Responses
                 </button>
