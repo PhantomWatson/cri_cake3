@@ -42,9 +42,10 @@
 
 
 <?php if ($survey['id']): ?>
-    <?= $this->element('Surveys'.DS.'overview') ?>
+    <?= $this->element('Surveys' . DS . 'overview') ?>
 <?php endif; ?>
 
+<?php $this->element('script', ['script' => 'admin/survey-overview']); ?>
 <?php $this->append('buffered'); ?>
     surveyOverview.init({
         community_id: <?= $community->id ?>
