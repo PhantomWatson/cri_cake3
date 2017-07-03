@@ -132,6 +132,7 @@
 </div>
 
 <?= $this->element('DataCenter.jquery_ui') ?>
+<?php $this->element('script', ['script' => 'admin/communities-index']); ?>
 
 <?php $this->append('buffered'); ?>
     adminCommunitiesIndex.init();
