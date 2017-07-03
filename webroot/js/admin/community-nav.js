@@ -1,5 +1,6 @@
 var adminHeader = {
     communityId: null,
+    errors: [],
     surveyId: null,
     surveyIds: [],
     slugs: {},
@@ -16,25 +17,34 @@ var adminHeader = {
 
         $('#admin-sidebar-community').submit(function (event) {
             event.preventDefault();
+            adminHeader.clearErrors();
             var url = adminHeader.getUrl();
+            if (adminHeader.errors.length) {
+                adminHeader.displayErrorMsgs();
+                return;
+            }
             if (url) {
-                adminHeader.removeError();
+                adminHeader.removeErrorMsgs();
                 window.location.href = url;
             }
         });
     },
 
+    addErrorMsg: function (msg) {
+        this.errors.push(msg);
+    },
+
     getUrl: function () {
         var communityId =  $('#admin-sidebar-community select[name=community]').val();
         if (! communityId) {
-            this.displayError('Please select a community');
+            this.addErrorMsg('Please select a community');
             return false;
         }
 
         var selectedPageOpt = $('#admin-sidebar-community select[name=page] option:selected');
         var selectedPage = selectedPageOpt.val();
         if (! selectedPage) {
-            this.displayError('Please select a page');
+            this.addErrorMsg('Please select a page');
             return false;
         }
 
@@ -49,7 +59,7 @@ var adminHeader = {
         if (! surveyId && url.search('{survey-id}') !== -1) {
             var communityName = $('#admin-sidebar-community select[name=community] option:selected').text().trim();
             var msg = 'The ' + surveyType  + ' questionnaire has not yet been set up for ' + communityName + '.';
-            this.displayError(msg);
+            this.addErrorMsg(msg);
             return false;
         }
 
@@ -60,18 +70,17 @@ var adminHeader = {
         if (! communityId || ! surveyType) {
             return false;
         }
-
         if (this.surveyIds.hasOwnProperty(communityId)) {
-            var community = adminHeader.surveyIds[communityId];
+            var community = this.surveyIds[communityId];
             if (community.hasOwnProperty(surveyType)) {
                 return this.surveyIds[communityId][surveyType];
             }
         }
-
         return false;
     },
 
-    displayError: function (msg) {
+    displayErrorMsgs: function () {
+        var msg = this.errors.join('<br />');
         var alert = $('<p class="admin-header-error alert alert-info">' + msg + '</p>');
         alert.hide();
         var header = $('#admin-sidebar-community');
@@ -87,11 +96,15 @@ var adminHeader = {
             alert.fadeIn(300);
         }
         setTimeout(function () {
-            adminHeader.removeError();
+            adminHeader.removeErrorMsgs();
         }, 5000);
     },
 
-    removeError: function () {
+    clearErrors: function () {
+        this.errors = [];
+    },
+
+    removeErrorMsgs: function () {
         var alert = $('#admin-sidebar-community .admin-header-error');
         if (! alert.length) {
             return;
@@ -124,10 +137,11 @@ var adminHeader = {
                     }
                 }
 
+                var optionSurveyId = adminHeader.getSurveyId(adminHeader.communityId, surveyType);
                 var optionUrl = adminHeader.getParsedUrl(urlTemplate, {
                     communityId: adminHeader.communityId,
                     surveyType: surveyType,
-                    surveyId: adminHeader.surveyId
+                    surveyId: optionSurveyId
                 });
                 if (currentUrl === optionUrl) {
                     option.prop('selected', true);
@@ -142,7 +156,15 @@ var adminHeader = {
 
         url = url.replace('{survey-type}', params.surveyType);
         url = url.replace('{community-id}', params.communityId);
-        url = url.replace('{survey-id}', params.surveyId);
+
+        if (url.search('{survey-id}') !== -1) {
+            if (params.surveyId) {
+                url = url.replace('{survey-id}', params.surveyId);
+            } else {
+                this.errors.push('That survey could not be found. It may not be set up yet.');
+            }
+        }
+
         url = url.replace('{community-slug}', communitySlug);
 
         if (urlTemplate.search('{survey-id}') !== -1) {
