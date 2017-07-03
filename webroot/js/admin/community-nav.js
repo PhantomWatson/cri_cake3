@@ -121,7 +121,7 @@ var adminHeader = {
     selectPage: function (currentUrl) {
         $('#admin-sidebar-community select[name=page] optgroup').each(function () {
             var optgroup = $(this);
-            var surveyType = optgroup.data('survey-type');
+            var optionSurveyType = optgroup.data('survey-type');
             optgroup.find('option').each(function () {
                 var option = $(this);
                 var urlTemplate = option.val();
@@ -129,18 +129,10 @@ var adminHeader = {
                     return;
                 }
 
-                // Special case for admins viewing client home page
-                if (urlTemplate === '/admin/communities/clienthome/{community-id}') {
-                    if (currentUrl === '/client/home') {
-                        option.prop('selected', true);
-                        return;
-                    }
-                }
-
-                var optionSurveyId = adminHeader.getSurveyId(adminHeader.communityId, surveyType);
+                var optionSurveyId = adminHeader.getSurveyId(adminHeader.communityId, optionSurveyType);
                 var optionUrl = adminHeader.getParsedUrl(urlTemplate, {
                     communityId: adminHeader.communityId,
-                    surveyType: surveyType,
+                    surveyType: optionSurveyType,
                     surveyId: optionSurveyId
                 });
                 if (currentUrl === optionUrl) {
@@ -156,25 +148,17 @@ var adminHeader = {
 
         url = url.replace('{survey-type}', params.surveyType);
         url = url.replace('{community-id}', params.communityId);
+        url = url.replace('{community-slug}', communitySlug);
 
         if (url.search('{survey-id}') !== -1) {
-            if (params.surveyId) {
+            var surveyId = params.surveyId ?
+                params.surveyId :
+                adminHeader.getSurveyId(params.communityId, params.surveyType);
+            if (surveyId) {
                 url = url.replace('{survey-id}', params.surveyId);
             } else {
                 this.errors.push('That survey could not be found. It may not be set up yet.');
             }
-        }
-
-        url = url.replace('{community-slug}', communitySlug);
-
-        if (urlTemplate.search('{survey-id}') !== -1) {
-            var surveyId;
-            if (params.surveyId) {
-                surveyId = params.surveyId;
-            } else {
-                surveyId = adminHeader.getSurveyId(params.communityId, params.surveyType);
-            }
-            url = url.replace('{survey-id}', surveyId);
         }
 
         return url;
