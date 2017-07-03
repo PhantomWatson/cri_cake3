@@ -100,6 +100,7 @@
     <?php endif; ?>
 </p>
 
+<?php $this->element('script', ['script' => 'admin/alignment-calc-settings']); ?>
 <?php $this->append('buffered'); ?>
     alignmentCalculationSettings.init();
 <?php $this->end(); ?>
