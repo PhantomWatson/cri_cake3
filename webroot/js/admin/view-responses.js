@@ -13,7 +13,7 @@ var adminViewResponses = {
             event.preventDefault();
             var container = $(this).closest('.responses');
             var mode = $(this).val();
-            container.find('td.selected, th.selected').toggle(mode == 'selected');
+            container.find('td.selected, th.selected').toggle(mode === 'selected');
             adminViewResponses.updateRespondentCount(container);
             adminViewResponses.updateAlignment(container);
         });
@@ -27,7 +27,7 @@ var adminViewResponses = {
             .click(function (event) {
                 event.preventDefault();
                 var button = $(this);
-                if (button.data('label') == 'show') {
+                if (button.data('label') === 'show') {
                     $('tr.respondent').show();
                     button.data('label', 'hide');
                     button.html(showRespondentsLabel.hide);
@@ -52,7 +52,7 @@ var adminViewResponses = {
                 event.preventDefault();
                 var link = $(this);
                 var containers = $('#admin-responses-view .tab-pane > .responses > div');
-                if (link.data('mode') == 'scrolling') {
+                if (link.data('mode') === 'scrolling') {
                     containers.removeClass('scrollable_table');
                     link.html(toggleFullscreenLabel.window);
                     link.data('mode', 'fullscreen');
@@ -70,7 +70,7 @@ var adminViewResponses = {
     },
     showFullResponse: function (respondentId) {
         $.ajax({
-            url: '/admin/responses/get-full-response/'+respondentId,
+            url: '/admin/responses/get-full-response/' + respondentId,
             dataType: 'json',
             beforeSend: function (xhr) {
                 var modal = $('#full-response-modal');
@@ -92,11 +92,11 @@ var adminViewResponses = {
                 modalBody.html('');
                 var response = data.response;
                 for (var heading in response) {
-                    modalBody.append('<h3>'+heading+'</h3>');
+                    modalBody.append('<h3>' + heading + '</h3>');
                     var answerList = $('<ul></ul>');
                     var answers = response[heading];
                     for (var i = 0; i < answers.length; i++) {
-                        answerList.append('<li>'+answers[i]+'</li>');
+                        answerList.append('<li>' + answers[i] + '</li>');
                     }
                     modalBody.append(answerList);
                 }
@@ -132,7 +132,7 @@ var adminViewResponses = {
         var count = respondents.length;
         var average = count ? Math.round(sum / count) : 0;
         var resultContainer = container.find('span.total_alignment');
-        resultContainer.html(average+'%');
+        resultContainer.html(average + '%');
     },
     getRespondentCount: function (container) {
         if (this.getCalcMode(container) == 'selected') {

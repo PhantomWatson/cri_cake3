@@ -71,7 +71,8 @@ var surveyLink = {
                     var sm_id = data[i].sm_id;
                     var url = data[i].url;
                     var title = data[i].title;
-                    var link = $('<a href="#" data-survey-id="'+sm_id+'" data-survey-url="'+url+'">'+title+'</a>');
+                    var link = $('<a href="#" data-survey-id="' + sm_id + '" data-survey-url="' + url + '"></a>');
+                    link.html(title);
                     link.click(clickCallback());
                     var li = $('<li></li>').append(link);
                     list.append(li);
@@ -102,7 +103,7 @@ var surveyLink = {
         var loadingMessages = $('.loading_messages');
 
         $.ajax({
-            url: '/surveys/check_survey_assignment/'+sm_id,
+            url: '/surveys/check_survey_assignment/' + sm_id,
             dataType: 'json',
             beforeSend: function () {
                 var msg = '<img src="/data_center/img/loading_small.gif" /> Checking questionnaire uniqueness...';
@@ -121,11 +122,11 @@ var surveyLink = {
                 if (data === null) {
                     loadingMessages.html(' ');
                     success_callback();
-                } else if (data.id != surveyLink.community_id) {
+                } else if (data.id !== surveyLink.community_id) {
                     msg = 'That questionnaire is already assigned to another community: ';
                     msg += '<a href="/admin/communities/edit/' + data.id + '">' + data.name + '</a>';
                     displayError(msg);
-                } else if (data.type != surveyLink.survey_type) {
+                } else if (data.type !== surveyLink.survey_type) {
                     msg = 'That questionnaire is already linked as this community\'s community ';
                     msg += data.type + 's questionnaire.';
                     displayError(msg);
@@ -163,7 +164,7 @@ var surveyLink = {
         };
 
         $.ajax({
-            url: '/surveys/get_qna_ids/'+sm_id,
+            url: '/surveys/get_qna_ids/' + sm_id,
             beforeSend: function () {
                 var msg = 'Extracting PWR<sup>3</sup> question info...';
                 msg = '<span class="loading"><img src="/data_center/img/loading_small.gif" /> ' + msg + '</span>';
@@ -185,11 +186,14 @@ var surveyLink = {
                     ];
                     var surveyType = surveyLink.getSurveyType();
                     for (var fieldname in fields) {
-                        var hidden_field = container.find("input[data-fieldname='"+fieldname+"']");
+                        if (fieldname.search('_aid') === -1 && fieldname.search('_qid') === -1) {
+                            continue;
+                        }
+                        var hidden_field = container.find("input[data-fieldname='" + fieldname + "']");
                         var id = fields[fieldname];
 
                         // Skip over inapplicable fields
-                        if (surveyType != 'official' && officialsExclusiveFields.indexOf(fieldname) != -1) {
+                        if (surveyType !== 'official' && officialsExclusiveFields.indexOf(fieldname) !== -1) {
                             continue;
                         }
 
@@ -244,7 +248,7 @@ var surveyLink = {
         if (url) {
             url_field.val(url);
             linkStatus.html(readyStatusMsg);
-            surveyUrl.html('<a href="'+url+'">'+url+'</a>');
+            surveyUrl.html('<a href="' + url + '">' + url + '</a>');
             return;
         }
 
@@ -252,7 +256,7 @@ var surveyLink = {
         url_field.val('');
         var loadingMessages = $('.loading_messages');
         $.ajax({
-            url: '/surveys/get_survey_url/'+sm_id,
+            url: '/surveys/get_survey_url/' + sm_id,
             beforeSend: function () {
                 url_field.prop('disabled', true);
                 var loadingIndicator = '<img src="/data_center/img/loading_small.gif" /> Retrieving URL...';
@@ -262,7 +266,7 @@ var surveyLink = {
             success: function (data) {
                 url_field.val(data);
                 linkStatus.html(readyStatusMsg);
-                surveyUrl.html('<a href="'+data+'">'+data+'</a>');
+                surveyUrl.html('<a href="' + data + '">' + data + '</a>');
             },
             error: function (jqXHR, errorType, exception) {
                 var msg = 'No URL found for this questionnaire. Web link collector may not be configured yet.';
