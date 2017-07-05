@@ -196,7 +196,7 @@
     </div>
 <?php endif; ?>
 
-<?php $this->element('script', ['script' => 'client']); ?>
+<?php $this->element('script', ['script' => 'client/unapproved-respondents']); ?>
 <?php $this->append('buffered'); ?>
     unapprovedRespondents.init();
 <?php $this->end(); ?>

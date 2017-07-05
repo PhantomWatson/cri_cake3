@@ -6,7 +6,7 @@ var surveyInvitationForm = {
     cookieExpiration: 365, // in days
     rowLimit: 20,
     surveyId: null,
-    
+
     init: function (params) {
         this.counter = params.counter;
         this.already_invited = params.already_invited;
@@ -103,7 +103,7 @@ var surveyInvitationForm = {
                 }
             });
         });
-        
+
         // Set up form protection
         formProtector.protect('UserClientInviteForm', {});
 
@@ -119,14 +119,14 @@ var surveyInvitationForm = {
             surveyInvitationForm.checkEmail(field);
         });
     },
-    
+
     uploadDone: function () {
         $('#upload-progress').slideUp(200);
         var uploadToggle = $('#toggle-upload');
         uploadToggle.removeClass('disabled');
         uploadToggle.find('img').remove();
     },
-    
+
     displayUploadResult: function (msg, className) {
         var container = $('#upload-result');
         var showMsg = function () {
@@ -208,7 +208,7 @@ var surveyInvitationForm = {
             $('button.remove').show();
         }
     },
-    
+
     checkEmail: function (field) {
         var email = field.val();
         if (email === '') {
@@ -228,15 +228,15 @@ var surveyInvitationForm = {
             });
         }
     },
-    
+
     isInvitedRespondent: function (email) {
         return this.already_invited.indexOf(email) != -1;
     },
-    
+
     isUninvitedRespondent: function (email) {
         return this.uninvited_respondents.indexOf(email) != -1;
     },
-    
+
     lastRowIsBlank: function () {
         var row = $('#UserClientInviteForm tbody tr:last-child');
         if (row.find('input[name*="[name]"]').val() !== '') {
@@ -249,206 +249,5 @@ var surveyInvitationForm = {
             return false;
         }
         return true;
-    }
-};
-
-var clientHome = {
-    init: function () {
-        this.setupImport();
-        this.setupToggledContainers();
-        this.setupConfirmationButtons();
-        
-        $('.importing_note_toggler').click(function (event) {
-            event.preventDefault();
-            var note = $(this).closest('td').find('.importing_note');
-            note.slideToggle();
-        });
-    },
-    setupImport: function () {
-        $('.import-results').each(function () {
-            var resultsContainer = $(this);
-            if (resultsContainer.is(':empty')) {
-                resultsContainer.hide();
-            } else {
-                var errorList = resultsContainer.find('ul');
-                var errorToggler = $('<button class="btn btn-default btn-sm">Show</button>');
-                errorToggler.click(function (event) {
-                    event.preventDefault();
-                    errorList.slideToggle();
-                });
-                errorList.before(errorToggler);
-                errorList.hide();
-            }
-        });
-        
-        $('.import_button').click(function (event) {
-            event.preventDefault();
-            var link = $(this);
-            
-            if (link.hasClass('disabled')) {
-                return;
-            }
-            
-            var survey_id = link.data('survey-id');
-            var row = link.closest('tr');
-            var resultsContainer = row.find('.import-results');
-
-            $.ajax({
-                url: '/surveys/import/'+survey_id,
-                beforeSend: function () {
-                    link.addClass('disabled');
-                    var loading_indicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
-                    link.append(loading_indicator);
-                    if (resultsContainer.is(':visible')) {
-                        resultsContainer.slideUp(200);
-                    }
-                },
-                success: function (data) {
-                    resultsContainer.attr('class', 'import-results alert alert-success');
-                    resultsContainer.html(data);
-                    resultsContainer.slideDown();
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    resultsContainer.attr('class', 'import-results alert alert-danger');
-                    resultsContainer.html(jqXHR.responseText);
-                    resultsContainer.slideDown();
-                },
-                complete: function () {
-                    link.removeClass('disabled');
-                    link.find('.loading').remove();
-                }
-            });
-        });
-    },
-    setupToggledContainers: function () {
-        var steps = $('#client_home > table > tbody');
-        steps.each(function () {
-            var step = $(this);
-            var button = step.find('button.step-header');
-            var details = step.find('tr').not(':first-child');
-            if (details.length > 0) {
-                button.attr('title', 'Click for details');
-                if (! step.hasClass('current')) {
-                    details.hide();
-                    button.addClass('closed');
-                }
-            }
-            button.click(function (event) {
-                event.preventDefault();
-
-                if (details.length === 0) {
-                    return;
-                }
-                details.toggle();
-                button.toggleClass('closed');
-            });
-        });
-    },
-    setupConfirmationButtons: function () {
-        $('.opt-out').click(function (event) {
-            var msg = 'Are you sure you want to permanently opt out of this part ' +
-                'of the Community Readiness Initiative?';
-            if (! confirm(msg)) {
-                event.preventDefault();
-            }
-        });
-    }
-};
-
-var unapprovedRespondents = {
-    currentBulkAction: null,
-
-    init: function () {
-        $('#toggle_dismissed').click(function (event) {
-            event.preventDefault();
-            $('#dismissed_respondents > div').slideToggle();
-        });
-        $('a.approve, a.dismiss').click(function (event) {
-            event.preventDefault();
-            var link = $(this);
-            unapprovedRespondents.updateRespondent(link);
-        });
-        this.setupBulkAction();
-    },
-    setupBulkAction: function () {
-        $('#bulk-actions button').click(function (event) {
-            event.preventDefault();
-            var button = $(this);
-            var loadingIndicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
-            button.append(loadingIndicator);
-            unapprovedRespondents.currentBulkAction = button.data('action');
-            button.addClass('disabled');
-            button.siblings('button').addClass('disabled');
-            $('a.' + button.data('action')).each(function () {
-                var link = $(this);
-
-                // Skip over action links that are hidden because they were recently clicked on
-                if (link.is(':visible')) {
-                    unapprovedRespondents.updateRespondent(link);
-                }
-            });
-        });
-    },
-
-    /**
-     * If the current bulk action appears to be complete, removes bulk action buttons
-     */
-    checkBulkActionsComplete: function () {
-        if (! this.currentBulkAction) {
-            return;
-        }
-
-        var isComplete = $('a.' + this.currentBulkAction + '.disabled').length === 0;
-        if (! isComplete) {
-            return;
-        }
-
-        $('#bulk-actions').slideUp(1000, function () {
-            $('#bulk-actions').remove();
-        });
-        this.currentBulkAction = null;
-    },
-
-    updateRespondent: function (link) {
-        $.ajax({
-            url: link.attr('href'),
-            beforeSend: function () {
-                link.addClass('disabled');
-                var loading_indicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
-                link.append(loading_indicator);
-                link.closest('td').find('p.text-danger, p.text-success, p.text-warning').slideUp();
-            },
-            success: function (data) {
-                var result = null;
-                if (data == 'success') {
-                    if (link.hasClass('dismiss')) {
-                        result = $('<p class="text-warning">Dismissed</p>');
-                        link.closest('tr').addClass('bg-warning');
-                    } else {
-                        result = $('<p class="text-success">Approved</p>');
-                        link.closest('tr').addClass('bg-success');
-                    }
-                    result.hide();
-                    link.closest('td').append(result);
-                    link.closest('span.actions').slideUp(300, function () {
-                        result.slideDown();
-                    });
-                } else {
-                    result = $('<p class="text-danger">Error</p>');
-                    link.closest('td').append(result);
-                }                
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR);
-                console.log(textStatus);
-                console.log(errorThrown);
-                alert('There was an error updating this respondent\'s status. Please try again or contact us for assistance.');
-            },
-            complete: function () {
-                link.find('.loading').remove();
-                link.parent().children('a').removeClass('disabled');
-                unapprovedRespondents.checkBulkActionsComplete();
-            }
-        });
     }
 };

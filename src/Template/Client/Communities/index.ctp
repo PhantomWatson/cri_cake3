@@ -43,7 +43,7 @@
     <?php endif; ?>
 </div>
 
-<?php $this->element('script', ['script' => 'client']); ?>
+<?php $this->element('script', ['script' => 'client/client-home']); ?>
 <?php $this->append('buffered'); ?>
     clientHome.init();
 <?php $this->end();

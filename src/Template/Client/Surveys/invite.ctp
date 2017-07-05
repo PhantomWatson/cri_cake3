@@ -244,7 +244,7 @@
 <?php $this->Form->templates($bootstrapFormTemplate); ?>
 
 <?php
-    $this->element('script', ['script' => 'client']);
+    $this->element('script', ['script' => 'client/survey-invitation-form']);
     $this->element('script', ['script' => 'form-protector']);
     $this->element('script', ['script' => 'jquery.ui.widget']);
     $this->element('script', ['script' => 'jquery.fileupload']);
