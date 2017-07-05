@@ -4,7 +4,7 @@ var unapprovedRespondents = {
     init: function () {
         $('#toggle_dismissed').click(function (event) {
             event.preventDefault();
-            $('#dismissed_respondents > div').slideToggle();
+            $('#dismissed_respondents').find('> div').slideToggle();
         });
         $('a.approve, a.dismiss').click(function (event) {
             event.preventDefault();
@@ -14,7 +14,7 @@ var unapprovedRespondents = {
         this.setupBulkAction();
     },
     setupBulkAction: function () {
-        $('#bulk-actions button').click(function (event) {
+        $('#bulk-actions').find('button').click(function (event) {
             event.preventDefault();
             var button = $(this);
             var loadingIndicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
@@ -63,7 +63,7 @@ var unapprovedRespondents = {
             },
             success: function (data) {
                 var result = null;
-                if (data == 'success') {
+                if (data === 'success') {
                     if (link.hasClass('dismiss')) {
                         result = $('<p class="text-warning">Dismissed</p>');
                         link.closest('tr').addClass('bg-warning');
@@ -85,7 +85,9 @@ var unapprovedRespondents = {
                 console.log(jqXHR);
                 console.log(textStatus);
                 console.log(errorThrown);
-                alert('There was an error updating this respondent\'s status. Please try again or contact us for assistance.');
+                var msg = 'There was an error updating this respondent\'s status. ';
+                msg += 'Please try again or contact us for assistance.';
+                alert(msg);
             },
             complete: function () {
                 link.find('.loading').remove();
