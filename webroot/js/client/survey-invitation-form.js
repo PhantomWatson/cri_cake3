@@ -14,7 +14,8 @@ var surveyInvitationForm = {
         this.surveyId = params.surveyId;
 
         // Show first row and all rows with values, hide others
-        $('#UserClientInviteForm tbody tr').each(function () {
+        var form = $('#UserClientInviteForm');
+        form.find('tbody tr').each(function () {
             var row = $(this);
 
             if (row.is(':first-child')) {
@@ -47,7 +48,7 @@ var surveyInvitationForm = {
             event.preventDefault();
             $('#invitation_suggestions').slideToggle();
         });
-        $('#UserClientInviteForm').submit(function (event) {
+        form.submit(function (event) {
             var form = $(this);
 
             // Note redundant emails
@@ -69,7 +70,7 @@ var surveyInvitationForm = {
 
             return true;
         });
-        $('#UserClientInviteForm button.remove').click(function () {
+        form.find('button.remove').click(function () {
             surveyInvitationForm.removeRow($(this).parents('tr'));
         });
         $('#clear-data').click(function (event) {
@@ -77,12 +78,12 @@ var surveyInvitationForm = {
             var link = $(this);
             var resultsContainer = $('#clear-data-results');
             $.ajax({
-                url: '/surveys/clear-saved-invitation-data/'+surveyInvitationForm.surveyId,
+                url: '/surveys/clear-saved-invitation-data/' + surveyInvitationForm.surveyId,
                 dataType: 'json',
                 beforeSend: function () {
                     link.addClass('disabled');
-                    var loading_indicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
-                    link.append(loading_indicator);
+                    var loadingIndicator = $('<img src="/data_center/img/loading_small.gif" class="loading" />');
+                    link.append(loadingIndicator);
                     if (resultsContainer.is(':visible')) {
                         resultsContainer.hide();
                     }
@@ -108,7 +109,7 @@ var surveyInvitationForm = {
         formProtector.protect('UserClientInviteForm', {});
 
         // Set up email trimming / checking
-        $('#UserClientInviteForm input[type=email]').change(function () {
+        form.find('input[type=email]').change(function () {
             var field = $(this);
 
             // Trim whitespace
@@ -147,23 +148,20 @@ var surveyInvitationForm = {
      * @param row
      */
     showRow: function (row) {
-        if (row) {
-            row = $(row);
-        } else {
-            row = $('#UserClientInviteForm tbody tr').not(':visible').first();
-        }
+        var form = $('#UserClientInviteForm');
+        row = row ? $(row) : form.find('tbody tr').not(':visible').first();
 
         row.css('display', 'table-row');
         row.find('input').prop('required', true);
 
-        var visibleCount = $('#UserClientInviteForm tbody tr:visible').length;
+        var visibleCount = form.find('tbody tr:visible').length;
 
         if (visibleCount >= this.rowLimit) {
             if ($('#limit-warning').length === 0) {
                 var warning = $('<p id="limit-warning" class="alert alert-info"></p>');
-                warning.html("Sorry, at the moment only "+this.rowLimit+" invitations can be sent out at a time.");
+                warning.html('Sorry, at the moment only ' + this.rowLimit + ' invitations can be sent out at a time.');
                 warning.hide();
-                $('#UserClientInviteForm table').after(warning);
+                form.find('table').after(warning);
                 warning.slideDown(500);
             }
             $('#add_another').hide();
@@ -182,13 +180,16 @@ var surveyInvitationForm = {
         row.hide();
         row.find('input').val('');
         row.find('input').prop('required', false);
-        $('#UserClientInviteForm tbody').append(row.detach());
 
-        if (! $('#add_another').is(':visible')) {
-            $('#add_another').show();
+        var form = $('#UserClientInviteForm');
+        form.find('tbody').append(row.detach());
+
+        var addAnother = $('#add_another');
+        if (! addAnother.is(':visible')) {
+            addAnother.show();
         }
 
-        var visibleRowCount = $('#UserClientInviteForm tbody tr:visible').length;
+        var visibleRowCount = form.find('tbody tr:visible').length;
         if (visibleRowCount < this.rowLimit) {
             $('#limit-warning').slideUp(function () {
                 $(this).remove();
@@ -202,10 +203,11 @@ var surveyInvitationForm = {
      * Hides all 'remove' buttons if only one row is visible
      */
     toggleRemoveButtons: function () {
-        if ($('#UserClientInviteForm tbody tr:visible').length == 1) {
-            $('button.remove').hide();
+        var button = $('button.remove');
+        if ($('#UserClientInviteForm').find('tbody tr:visible').length === 1) {
+            button.hide();
         } else {
-            $('button.remove').show();
+            button.show();
         }
     },
 
@@ -216,38 +218,39 @@ var surveyInvitationForm = {
         }
         var container = field.closest('td');
         container.children('.error-message').remove();
-        var error_msg = null;
+        var errorMsg = null;
         if (this.isInvitedRespondent(email)) {
-            error_msg = $('<div class="error-message already_invited">An invitation has already been sent to '+email+'</div>');
-            container.append(error_msg);
+            errorMsg = $('<div class="error-message already_invited"></div>');
+            errorMsg.html('An invitation has already been sent to ' + email);
+            container.append(errorMsg);
         } else {
-            error_msg = field.parent('td').children('.error-message');
-            error_msg.removeClass('already_invited');
-            error_msg.slideUp(function () {
+            errorMsg = field.parent('td').children('.error-message');
+            errorMsg.removeClass('already_invited');
+            errorMsg.slideUp(function () {
                 $(this).remove();
             });
         }
     },
 
     isInvitedRespondent: function (email) {
-        return this.already_invited.indexOf(email) != -1;
+        return this.already_invited.indexOf(email) !== -1;
     },
 
     isUninvitedRespondent: function (email) {
-        return this.uninvited_respondents.indexOf(email) != -1;
+        return this.uninvited_respondents.indexOf(email) !== -1;
     },
 
     lastRowIsBlank: function () {
-        var row = $('#UserClientInviteForm tbody tr:last-child');
+        var row = $('#UserClientInviteForm').find('tbody tr:last-child');
+
         if (row.find('input[name*="[name]"]').val() !== '') {
             return false;
         }
+
         if (row.find('input[name*="[email]"]').val() !== '') {
             return false;
         }
-        if (row.find('input[name*="[title]"]').val() !== '') {
-            return false;
-        }
-        return true;
+
+        return row.find('input[name*="[title]"]').val() === '';
     }
 };
