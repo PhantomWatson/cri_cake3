@@ -121,27 +121,6 @@ var surveyInvitationForm = {
         });
     },
 
-    uploadDone: function () {
-        $('#upload-progress').slideUp(200);
-        var uploadToggle = $('#toggle-upload');
-        uploadToggle.removeClass('disabled');
-        uploadToggle.find('img').remove();
-    },
-
-    displayUploadResult: function (msg, className) {
-        var container = $('#upload-result');
-        var showMsg = function () {
-            container.attr('class', className);
-            container.html(msg);
-            container.slideDown(300);
-        };
-        if (container.is(':visible')) {
-            container.slideUp(300, showMsg);
-        } else {
-            showMsg();
-        }
-    },
-
     /**
      * If a row is provided, shows that row. Otherwise, shows next hidden row
      *
@@ -234,23 +213,5 @@ var surveyInvitationForm = {
 
     isInvitedRespondent: function (email) {
         return this.already_invited.indexOf(email) !== -1;
-    },
-
-    isUninvitedRespondent: function (email) {
-        return this.uninvited_respondents.indexOf(email) !== -1;
-    },
-
-    lastRowIsBlank: function () {
-        var row = $('#UserClientInviteForm').find('tbody tr:last-child');
-
-        if (row.find('input[name*="[name]"]').val() !== '') {
-            return false;
-        }
-
-        if (row.find('input[name*="[email]"]').val() !== '') {
-            return false;
-        }
-
-        return row.find('input[name*="[title]"]').val() === '';
     }
 };
