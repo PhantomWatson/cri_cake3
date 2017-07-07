@@ -21,11 +21,11 @@ var adminCommunitiesIndex = {
             } else {
                 form.slideDown(200);
                 form.children('input').focus();
-                var existingValue = $('#admin_community_search_form input[type="text"]').val();
+                var existingValue = form.find('input[type="text"]').val();
                 adminCommunitiesIndex.filter(existingValue);
             }
         });
-        $('#admin_community_search_form input[type="text"]').bind("change paste keyup", function() {
+        $('#admin_community_search_form').find('input[type="text"]').bind("change paste keyup", function() {
             var matching = $(this).val();
             adminCommunitiesIndex.filter(matching);
         });
@@ -89,19 +89,16 @@ var adminCommunitiesIndex = {
     },
 
     filter: function (matching) {
+        var rows = $('table.communities tbody tr');
         if (matching === '') {
-            $('table.communities tbody tr').show();
+            rows.show();
             return;
         }
-        $('table.communities tbody tr').each(function () {
+        rows.each(function () {
             var row = $(this);
             var communityName = row.data('community-name').toLowerCase();
             matching = matching.toLowerCase();
-            if (communityName.search(matching) == -1) {
-                row.hide();
-            } else {
-                row.show();
-            }
+            row.toggle(communityName.search(matching) === -1);
         });
     }
 };
