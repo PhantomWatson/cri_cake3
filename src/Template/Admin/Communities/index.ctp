@@ -67,7 +67,26 @@
         </p>
     <?php endif; ?>
 
-    <?= $this->element('pagination') ?>
+    <?php $this->append('community-index-pagination'); ?>
+        <nav aria-label="Communities index navigation" class="communities-index-pagination input-group">
+            <div class="pagination input-group-btn">
+                <button aria-label="Previous" class="btn btn-default">
+                    <span aria-hidden="true">&laquo;</span>
+                </button>
+
+                <?php for ($n = 1; $n <= ceil(count($communities) / $perPage); $n++): ?>
+                    <button class="btn btn-default" data-page-num="<?= $n ?>">
+                        <?= $n ?>
+                    </button>
+                <?php endfor; ?>
+
+                <button aria-label="Next" class="btn btn-default">
+                    <span aria-hidden="true">&raquo;</span>
+                </button>
+            </div>
+        </nav>
+    <?php $this->end(); ?>
+    <?= $this->fetch('community-index-pagination') ?>
 
     <table class="table communities">
         <thead>
@@ -128,12 +147,14 @@
         </tbody>
     </table>
 
-    <?= $this->element('pagination') ?>
+    <?= $this->fetch('community-index-pagination') ?>
 </div>
 
 <?= $this->element('DataCenter.jquery_ui') ?>
 <?php $this->element('script', ['script' => 'admin/communities-index']); ?>
 
 <?php $this->append('buffered'); ?>
-    adminCommunitiesIndex.init();
+    adminCommunitiesIndex.init({
+        perPage: <?= $perPage ?>
+    });
 <?php $this->end();
