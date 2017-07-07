@@ -8,10 +8,6 @@ var adminCommunitiesIndex = {
     init: function (options) {
         this.perPage = options.perPage;
 
-        $('a.survey_link_toggler').click(function (event) {
-            event.preventDefault();
-            $(this).siblings('.survey_links').slideToggle(200);
-        });
         $('#search_toggler').click(function (event) {
             event.preventDefault();
             var form = $('#admin_community_search_form');
