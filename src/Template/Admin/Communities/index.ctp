@@ -9,26 +9,22 @@
     </div>
 
     <p>
-        <?php foreach ($buttons as $groupLabel => $buttonGroup): ?>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <?php
-                        echo "Filter by $groupLabel";
-                        if (isset($filters['status'])) {
-                            echo ': <strong>' . ucwords($filters['status']) . '</strong>';
-                        }
-                    ?>
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <?php foreach ($buttonGroup as $label => $filters): ?>
-                        <li>
-                            <?= $this->Html->link($label, compact('filters')) ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endforeach; ?>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Filter by status:
+                <strong>Active</strong>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <?php foreach (['active', 'inactive', 'all'] as $filter): ?>
+                    <li>
+                        <button data-filter="<?= $filter ?>" class="btn btn-link btn-block">
+                            <?= ucwords($filter) ?>
+                        </button>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
 
         <button class="btn btn-default" id="search_toggler">
             <span class="glyphicon glyphicon-search"></span>
@@ -109,14 +105,6 @@
             </tr>
         </thead>
         <tbody>
-            <?php if (empty($communities)): ?>
-                <tr>
-                    <td colspan="4" class="no_results">
-                        No communities found matching the specified parameters
-                    </td>
-                </tr>
-            <?php endif; ?>
-
             <?php foreach ($communities as $community): ?>
                 <tr data-community-name="<?= $community['name'] ?>">
                     <td>

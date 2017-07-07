@@ -15,111 +15,6 @@ use Cake\Utility\Hash;
 
 class CommunitiesController extends AppController
 {
-
-    public $paginate = [
-        'order' => ['Communities.name' => 'ASC'],
-        'contain' => ['OptOuts']
-    ];
-    public $filters = [];
-
-    /**
-     * Alters $this->paginate settings according to $_GET and Cookie data,
-     * and remembers $_GET data with a cookie.
-     *
-     * @return void
-     */
-    private function adminIndexFilter()
-    {
-        $cookieParentKey = 'AdminCommunityIndex';
-
-        // Remember selected filters
-        $this->filters = $this->request->getQuery('filters');
-        if (is_array($this->filters)) {
-            foreach ($this->filters as $group => $filter) {
-                $this->Cookie->write("$cookieParentKey.filters.$group", $filter);
-            }
-        } else {
-            $this->filters = [];
-        }
-
-        // Use remembered filters when no filters manually specified
-        $filterTypes = ['status']; // More may be added later
-        foreach ($filterTypes as $group) {
-            if (! isset($this->filters[$group])) {
-                $key = "$cookieParentKey.filters.$group";
-                if ($this->Cookie->check($key)) {
-                    $this->filters[$group] = $this->Cookie->read($key);
-                }
-            }
-        }
-
-        // Default filters if completely unspecified
-        if (! isset($this->filters['status'])) {
-            $this->filters['status'] = 'active';
-        }
-
-        // Apply filters
-        foreach ($this->filters as $group => $filter) {
-            switch ($filter) {
-                case 'inactive':
-                    $this->paginate['conditions']['Communities.active'] = false;
-                    break;
-                case 'all':
-                    unset($this->paginate['conditions']['Communities.active']);
-                    break;
-                case 'active':
-                default:
-                    $this->paginate['conditions']['Communities.active'] = true;
-                    break;
-            }
-        }
-
-        // Pass to view
-        $this->set('filters', $this->filters);
-    }
-
-    /**
-     * Sets the $buttons variable for the view
-     *
-     * @return void
-     */
-    private function adminIndexSetupFilterButtons()
-    {
-        $allFilters = [
-            'status' => [
-                'active' => 'Active',
-                'inactive' => 'Inactive',
-                'all' => 'All',
-            ]
-        ];
-
-        $passedFilters = $this->request->getQuery('filters');
-        if ($passedFilters) {
-            $this->filters = array_merge($this->filters, $passedFilters);
-        }
-
-        if (! is_array($this->filters)) {
-            $this->filters = [];
-        }
-        foreach ($this->filters as $group => $filter) {
-            if ($filter == 'all') {
-                unset($this->filters[$group]);
-            }
-        }
-        $buttons = [];
-        foreach ($allFilters as $group => $filters) {
-            $links = [];
-            foreach ($filters as $filter => $label) {
-                $linkFilters = [$group => $filter];
-                $linkFilters = array_merge($this->filters, $linkFilters);
-                $links[$label] = $linkFilters;
-            }
-
-            $buttons[$group] = $links;
-        }
-        $this->set('buttons', $buttons);
-    }
-
     /**
      * Passes necessary variables the view to be used by the adding/editing form
      *
@@ -146,21 +41,12 @@ class CommunitiesController extends AppController
      */
     public function index()
     {
-        $search = $this->request->getQuery('search');
-        if ($search !== null) {
-            $this->paginate['conditions']['Communities.name LIKE'] = "%$search%";
-        } else {
-            $this->adminIndexFilter();
-        }
-        $this->paginate['finder'] = 'adminIndex';
-        $this->paginate['sortWhitelist'] = ['Communities.name', 'ParentAreas.name'];
         $communities = $this->Communities->find()
             ->contain(['OptOuts'])
             ->order(['Communities.name' => 'ASC'])
             ->toArray();
         $communities = $this->addSurveyStatuses($communities);
 
-        $this->adminIndexSetupFilterButtons();
         $this->set([
             'communities' => $communities,
             'perPage' => 20,
