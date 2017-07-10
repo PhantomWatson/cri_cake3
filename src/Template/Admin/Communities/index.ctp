@@ -28,7 +28,7 @@
 
         <button class="btn btn-default" id="search_toggler">
             <span class="glyphicon glyphicon-search"></span>
-            Search on this page
+            Filter by community name
         </button>
 
         <?= $this->Html->link(
