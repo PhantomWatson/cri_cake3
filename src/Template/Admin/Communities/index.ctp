@@ -9,17 +9,17 @@
     </div>
 
     <p>
-        <div class="btn-group">
+        <div class="btn-group" id="community-index-categories">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 Filter by status:
                 <strong>Active</strong>
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-                <?php foreach (['active', 'inactive', 'all'] as $filter): ?>
+                <?php foreach (['active', 'inactive', 'all'] as $category): ?>
                     <li>
-                        <button data-filter="<?= $filter ?>" class="btn btn-link btn-block">
-                            <?= ucwords($filter) ?>
+                        <button data-category="<?= $category ?>" class="btn btn-link btn-block">
+                            <?= ucwords($category) ?>
                         </button>
                     </li>
                 <?php endforeach; ?>
@@ -70,11 +70,11 @@
                     <span aria-hidden="true">&laquo;</span>
                 </button>
 
-                <?php for ($n = 1; $n <= ceil(count($communities) / $perPage); $n++): ?>
+                <?php /* for ($n = 1; $n <= ceil(count($communities) / $perPage); $n++): ?>
                     <button class="btn btn-default" data-page-num="<?= $n ?>">
                         <?= $n ?>
                     </button>
-                <?php endfor; ?>
+                <?php endfor; */ ?>
 
                 <button aria-label="Next" class="btn btn-default">
                     <span aria-hidden="true">&raquo;</span>
@@ -106,7 +106,7 @@
         </thead>
         <tbody>
             <?php foreach ($communities as $community): ?>
-                <tr data-community-name="<?= $community['name'] ?>">
+                <tr data-community-name="<?= $community['name'] ?>" data-active="<?= $community['active'] ? 1 : 0 ?>">
                     <td>
                         <?= $community['name'] ?>
                         <br />
