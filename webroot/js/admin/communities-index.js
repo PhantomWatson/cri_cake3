@@ -9,15 +9,16 @@ var adminCommunitiesIndex = {
         this.perPage = options.perPage;
         this.rows = $('#communities_admin_index').find('table.communities tbody tr');
 
+        this.setupCategories();
+        this.setupSearchForm();
         var firstCategory = $('#community-index-categories').find('ul button').first().data('category');
         this.selectCategory(firstCategory);
-        this.setupCategories();
-        this.setupPagination();
-        this.setupSearchForm();
     },
 
     setupSearchForm: function () {
         var form = $('#admin_community_search_form');
+
+        this.rows.attr('data-matches-search', 1);
 
         $('#search_toggler').click(function (event) {
             event.preventDefault();
@@ -45,9 +46,19 @@ var adminCommunitiesIndex = {
         });
     },
 
+    /**
+     * Returns the number of rows that can be viewed
+     * (not filtered out by category or search term)
+     */
+    countViewableRows: function () {
+        return this.rows
+            .filter('[data-matches-category=1]')
+            .filter('[data-matches-search=1]')
+            .length;
+    },
+
     setupPagination: function () {
-        var rowsNotFiltered = this.rows.not('.filtered-out');
-        this.lastPage = Math.ceil(rowsNotFiltered.length / this.perPage);
+        this.lastPage = Math.ceil(this.countViewableRows() / this.perPage);
 
         // Generate pagination buttons
         var hasButton;
@@ -63,6 +74,7 @@ var adminCommunitiesIndex = {
             if (hasButton) {
                 continue;
             }
+
             // Generate new button
             $('<button></button>')
                 .html(page)
@@ -98,8 +110,6 @@ var adminCommunitiesIndex = {
             event.preventDefault();
             adminCommunitiesIndex.showPage(adminCommunitiesIndex.currentPage + 1);
         });
-
-        this.showPage(1);
     },
 
     setupCategories: function () {
@@ -111,23 +121,19 @@ var adminCommunitiesIndex = {
     },
 
     selectCategory: function (category) {
-        // Display current category
+        // Display label for current category
         var categoryCapitalized = category.charAt(0).toUpperCase() + category.slice(1);
         var categoryLabel = $('#community-index-categories').find('button.dropdown-toggle strong');
         categoryLabel.html(categoryCapitalized);
 
-        if (category === 'all') {
-            this.rows.filter('.filtered-out')
-                .css('display', '')
-                .removeClass('filtered-out');
-        } else {
-            this.rows.each(function () {
-                var row = $(this);
-                var isActive = row.data('active') === 1;
-                var isFilteredOut = (category === 'active' && ! isActive) || (category === 'inactive' && isActive);
-                row.toggleClass('filtered-out', isFilteredOut);
-            });
-        }
+        this.rows.each(function () {
+            var row = $(this);
+            var isActive = row.data('active') === 1;
+            var matchesCategory = (category === 'all') ||
+                (category === 'active' && isActive) ||
+                (category === 'inactive' && ! isActive);
+            row.attr('data-matches-category', matchesCategory ? '1' : '0');
+        });
 
         // Re-generate pagination links in case the number of pages has just changed
         this.setupPagination();
@@ -146,7 +152,7 @@ var adminCommunitiesIndex = {
         var rowsToShow = this.perPage;
         this.rows.each(function () {
             var row = $(this);
-            if (row.hasClass('filtered-out')) {
+            if (row.attr('data-matches-category') === '0' || row.attr('data-matches-search') === '0') {
                 row.hide();
                 return;
             }
@@ -177,16 +183,19 @@ var adminCommunitiesIndex = {
         this.paginationButtons.filter(':last-child').prop('disabled', onLastPage);
     },
 
-    filter: function (matching) {
-        if (matching === '') {
-            this.rows.show();
-            return;
+    filter: function (searchTerm) {
+        if (searchTerm === '') {
+            this.rows.attr('data-matches-search', 1);
+        } else {
+            this.rows.each(function () {
+                var row = $(this);
+                var communityName = row.data('community-name').toLowerCase();
+                searchTerm = searchTerm.toLowerCase();
+                var matches = communityName.search(searchTerm) === -1 ? 0 : 1;
+                row.attr('data-matches-search', matches);
+            });
         }
-        rows.each(function () {
-            var row = $(this);
-            var communityName = row.data('community-name').toLowerCase();
-            matching = matching.toLowerCase();
-            row.toggle(communityName.search(matching) === -1);
-        });
+        this.setupPagination();
+        this.showPage(1);
     }
 };
