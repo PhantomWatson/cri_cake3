@@ -9,28 +9,40 @@ var adminCommunitiesIndex = {
         this.perPage = options.perPage;
         this.rows = $('#communities_admin_index').find('table.communities tbody tr');
 
-        $('#search_toggler').click(function (event) {
-            event.preventDefault();
-            var form = $('#admin_community_search_form');
-            if (form.is(':visible')) {
-                form.slideUp(200);
-                adminCommunitiesIndex.filter('');
-            } else {
-                form.slideDown(200);
-                form.children('input').focus();
-                var existingValue = form.find('input[type="text"]').val();
-                adminCommunitiesIndex.filter(existingValue);
-            }
-        });
-        $('#admin_community_search_form').find('input[type="text"]').bind("change paste keyup", function() {
-            var matching = $(this).val();
-            adminCommunitiesIndex.filter(matching);
-        });
-
         var firstCategory = $('#community-index-categories').find('ul button').first().data('category');
         this.selectCategory(firstCategory);
         this.setupCategories();
         this.setupPagination();
+        this.setupSearchForm();
+    },
+
+    setupSearchForm: function () {
+        var form = $('#admin_community_search_form');
+
+        $('#search_toggler').click(function (event) {
+            event.preventDefault();
+
+            // Disable filter if toggling the input off
+            if (form.is(':visible')) {
+                form.slideUp(200);
+                adminCommunitiesIndex.filter('');
+                return;
+            }
+
+            form.slideDown(200);
+            form.children('input').focus();
+
+            // Re-apply filter when re-displaying input field
+            var existingValue = form.find('input[type="text"]').val();
+            adminCommunitiesIndex.filter(existingValue);
+        });
+
+        // Apply filter upon any character being entered
+        var searchInput = form.find('input[type="text"]');
+        searchInput.bind('change paste keyup', function () {
+            var matching = $(this).val();
+            adminCommunitiesIndex.filter(matching);
+        });
     },
 
     setupPagination: function () {
@@ -38,7 +50,7 @@ var adminCommunitiesIndex = {
         this.lastPage = Math.ceil(rowsNotFiltered.length / this.perPage);
 
         // Generate pagination buttons
-        var hasButton, newButton;
+        var hasButton;
         var prevButton = $('.communities-index-pagination button:last-child');
         var onClick = function (event) {
             event.preventDefault();
@@ -51,11 +63,13 @@ var adminCommunitiesIndex = {
             if (hasButton) {
                 continue;
             }
-
             // Generate new button
-            newButton = $('<button class="btn btn-default" data-page-num="' + page + '">' + page + '</button>');
-            newButton.click(onClick);
-            newButton.insertBefore(prevButton);
+            $('<button></button>')
+                .html(page)
+                .addClass('btn btn-default')
+                .attr('data-page-num', page)
+                .click(onClick)
+                .insertBefore(prevButton);
         }
 
         // Remove extraneous pagination buttons
@@ -99,7 +113,8 @@ var adminCommunitiesIndex = {
     selectCategory: function (category) {
         // Display current category
         var categoryCapitalized = category.charAt(0).toUpperCase() + category.slice(1);
-        $('#community-index-categories').find('button.dropdown-toggle strong').html(categoryCapitalized);
+        var categoryLabel = $('#community-index-categories').find('button.dropdown-toggle strong');
+        categoryLabel.html(categoryCapitalized);
 
         if (category === 'all') {
             this.rows.filter('.filtered-out')
@@ -122,12 +137,8 @@ var adminCommunitiesIndex = {
     },
 
     showPage: function (pageNum) {
-        if (pageNum > this.lastPage) {
-            pageNum = this.lastPage;
-        }
-        if (pageNum < 1) {
-            pageNum = 1;
-        }
+        pageNum = Math.min(pageNum, this.lastPage);
+        pageNum = Math.max(pageNum, 1);
         this.currentPage = pageNum;
 
         // Show only appropriate rows
@@ -167,9 +178,8 @@ var adminCommunitiesIndex = {
     },
 
     filter: function (matching) {
-        var rows = $('table.communities tbody tr');
         if (matching === '') {
-            rows.show();
+            this.rows.show();
             return;
         }
         rows.each(function () {
