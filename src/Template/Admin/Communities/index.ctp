@@ -69,13 +69,6 @@
                 <button aria-label="Previous" class="btn btn-default">
                     <span aria-hidden="true">&laquo;</span>
                 </button>
-
-                <?php /* for ($n = 1; $n <= ceil(count($communities) / $perPage); $n++): ?>
-                    <button class="btn btn-default" data-page-num="<?= $n ?>">
-                        <?= $n ?>
-                    </button>
-                <?php endfor; */ ?>
-
                 <button aria-label="Next" class="btn btn-default">
                     <span aria-hidden="true">&raquo;</span>
                 </button>
