@@ -49,7 +49,7 @@ var surveyInvitationForm = {
             $('#invitation_suggestions').slideToggle();
         });
         form.submit(function (event) {
-            return this.onSubmit(event);
+            return surveyInvitationForm.onSubmit(event);
         });
         form.find('button.remove').click(function () {
             surveyInvitationForm.removeRow($(this).parents('tr'));
