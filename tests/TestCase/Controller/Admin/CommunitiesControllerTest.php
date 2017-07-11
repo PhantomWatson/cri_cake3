@@ -377,7 +377,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->session($this->adminUser);
         $this->get($url);
         $this->assertResponseOk();
-        $this->assertResponseContains('<tr data-community-name="Test Community (public)">');
+        $this->assertResponseContains('data-community-name="Test Community (public)"');
     }
 
     /**
