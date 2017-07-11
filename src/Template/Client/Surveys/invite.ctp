@@ -30,13 +30,15 @@
     $formTemplate = $bootstrapFormTemplate;
     $formTemplate['inputContainer'] = '<td>'.$formTemplate['inputContainer'].'</td>';
     $formTemplate['inputContainerError'] = '<td>{{error}}'.$formTemplate['inputContainerError'].'</td>';
-    echo $this->Form->create(
-        null,
-        [
-            'id' => 'UserClientInviteForm',
-            'enctype' => 'multipart/form-data'
-        ]
-    );
+    echo $this->Form
+        ->setValueSources('query')
+        ->create(
+            null,
+            [
+                'id' => 'UserClientInviteForm',
+                'enctype' => 'multipart/form-data'
+            ]
+        );
     $this->Form->templates($formTemplate);
 ?>
 
