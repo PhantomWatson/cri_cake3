@@ -69,6 +69,9 @@
                 <button aria-label="Previous" class="btn btn-default">
                     <span aria-hidden="true">&laquo;</span>
                 </button>
+                <button class="btn btn-link pagination-loading" disabled="disabled">
+                    <img src="/data_center/img/loading_small.gif" alt="Loading..." />
+                </button>
                 <button aria-label="Next" class="btn btn-default">
                     <span aria-hidden="true">&raquo;</span>
                 </button>
@@ -97,7 +100,15 @@
                 </th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="communities-index-loading">
+            <tr>
+                <td colspan="5">
+                    Loading...
+                    <img src="/data_center/img/loading_small.gif" alt="Loading..." />
+                </td>
+            </tr>
+        </tbody>
+        <tbody id="communities-index-results">
             <?php foreach ($communities as $community): ?>
                 <tr data-community-name="<?= $community['name'] ?>" data-active="<?= $community['active'] ? 1 : 0 ?>">
                     <td>

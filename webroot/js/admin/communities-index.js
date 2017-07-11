@@ -7,12 +7,14 @@ var adminCommunitiesIndex = {
 
     init: function (options) {
         this.perPage = options.perPage;
-        this.rows = $('#communities_admin_index').find('table.communities tbody tr');
+        this.rows = $('#communities-index-results').find('tr');
 
         this.setupCategories();
         this.setupSearchForm();
         var firstCategory = $('#community-index-categories').find('ul button').first().data('category');
         this.selectCategory(firstCategory);
+        $('#communities-index-loading').hide();
+        $('#communities-index-results').css('display', 'table-row-group');
     },
 
     setupSearchForm: function () {
@@ -59,6 +61,8 @@ var adminCommunitiesIndex = {
 
     setupPagination: function () {
         this.lastPage = Math.ceil(this.countViewableRows() / this.perPage);
+
+        $('.pagination-loading').remove();
 
         // Generate pagination buttons
         var hasButton;
