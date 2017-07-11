@@ -42,7 +42,13 @@ class CommunitiesController extends AppController
     public function index()
     {
         $communities = $this->Communities->find()
-            ->contain(['OptOuts'])
+            ->contain([
+                'Clients',
+                'OfficialSurvey',
+                'OptOuts',
+                'OrganizationSurvey',
+                'ParentAreas'
+            ])
             ->order(['Communities.name' => 'ASC'])
             ->toArray();
         $communities = $this->addSurveyStatuses($communities);
