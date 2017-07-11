@@ -49,6 +49,7 @@ var adminHeader = {
         }
 
         var surveyType = selectedPageOpt.closest('optgroup').data('survey-type');
+        var surveyId = this.getSurveyId(communityId, surveyType);
         if (! surveyId && selectedPage.search('{survey-id}') !== -1) {
             var communityName = $('#admin-sidebar-community select[name=community] option:selected').text().trim();
             var msg = 'The ' + surveyType  + ' questionnaire has not yet been set up for ' + communityName + '.';
@@ -56,7 +57,6 @@ var adminHeader = {
             return false;
         }
 
-        var surveyId = this.getSurveyId(communityId, surveyType);
         var url = this.getParsedUrl(selectedPage, {
             communityId: communityId,
             surveyType: surveyType,
