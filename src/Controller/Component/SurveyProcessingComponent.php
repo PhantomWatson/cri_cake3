@@ -156,6 +156,7 @@ class SurveyProcessingComponent extends Component
         ]);
         if ($success) {
             $this->successEmails = array_merge($this->successEmails, $this->recipients);
+            $this->removeFromPending($this->recipients);
 
             // Dispatch event
             $surveysTable = TableRegistry::get('Surveys');
@@ -307,6 +308,25 @@ class SurveyProcessingComponent extends Component
             $respondent->email = $invitee['email'];
 
             $this->pendingInvitees[] = $respondent;
+        }
+    }
+
+    /**
+     * Removes the matching invitee from $this->pendingInvitees
+     *
+     * @param array|string $email Array of emails addresses or a single email address
+     * @return void
+     */
+    private function removeFromPending($emails)
+    {
+        $emails = is_array($emails) ? $emails : [$emails];
+        foreach ($emails as $email) {
+            foreach ($this->pendingInvitees as $k => $invitee) {
+                if ($invitee->email == $email) {
+                    unset($this->pendingInvitees[$k]);
+                    break;
+                }
+            }
         }
     }
 
