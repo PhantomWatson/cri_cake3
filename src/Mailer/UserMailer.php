@@ -23,9 +23,10 @@ class UserMailer extends Mailer
             ->setViewVars([
                 'homeUrl' => Router::url('/', true),
                 'loginUrl' => Router::url([
+                    'plugin' => false,
                     'prefix' => false,
                     'controller' => 'Users',
-                    'action' => 'login'
+                    'action' => 'login',
                 ], true),
                 'password' => $password,
                 'role' => $user->role,
@@ -55,6 +56,7 @@ class UserMailer extends Mailer
             ->setViewVars([
                 'user' => $user,
                 'resetUrl' => Router::url([
+                    'plugin' => false,
                     'prefix' => false,
                     'controller' => 'Users',
                     'action' => 'resetPassword',
