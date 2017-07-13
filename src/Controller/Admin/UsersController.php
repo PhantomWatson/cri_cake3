@@ -2,15 +2,17 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
-use App\Mailer\Mailer;
 use App\Model\Entity\User;
 use Cake\Event\Event;
 use Cake\Http\Response;
+use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\ORM\TableRegistry;
 
 class UsersController extends AppController
 {
+    use MailerAwareTrait;
+
     /**
      * Index method
      *
@@ -132,22 +134,24 @@ class UsersController extends AppController
                 ]]);
                 $this->eventManager()->dispatch($event);
 
-                $Mailer = new Mailer();
-                $result = $Mailer->sendNewAccountEmail(
-                    $user,
-                    $this->request->getData('new_password')
-                );
-                if ($result) {
+                try {
+                    $this->getMailer('User')->send('newAccount', [
+                        $user,
+                        $this->request->getData('new_password')
+                    ]);
+
                     $this->Flash->success('User account created and login credentials emailed');
 
                     return $this->redirect([
                         'prefix' => 'admin',
                         'action' => 'index'
                     ]);
-                } else {
+                } catch (\Exception $e) {
                     $this->Users->delete($user);
-                    $msg = 'There was an error emailing this user with their login info. No new account was created.';
-                    $msg .= ' Please try again or contact an administrator for assistance.';
+
+                    $msg =
+                        'There was an error emailing this user with their login info. No new account was created. ' .
+                        'Please try again or contact an administrator for assistance.';
                     $this->Flash->error($msg);
                 }
             } else {

@@ -19,7 +19,8 @@ class SurveysListener implements EventListenerInterface
         return [
             'Model.Response.afterImport' => 'updateAlignment',
             'Model.Respondent.afterUninvitedApprove' => 'updateAlignment',
-            'Model.Community.afterUpdateCommunityArea' => 'updateAlignment'
+            'Model.Community.afterUpdateCommunityArea' => 'updateAlignment',
+            'Model.Survey.afterRemindersSent' => 'updateReminderSentDate',
         ];
     }
 
@@ -46,5 +47,20 @@ class SurveysListener implements EventListenerInterface
             $msg = 'Cannot update alignment: Questionnaire ID not specified';
             throw new InternalErrorException($msg);
         }
+    }
+
+    /**
+     * Updates the reminder_sent field for the specified survey
+     *
+     * @param Event $event
+     * @param array $meta
+     */
+    public function updateReminderSentDate(Event $event, array $meta = [])
+    {
+        $surveyId = $meta['surveyId'];
+        $surveysTable = TableRegistry::get('Surveys');
+        $survey = $surveysTable->get($surveyId);
+        $survey->reminder_sent = date('Y-m-d H:i:s');
+        $surveysTable->save($survey);
     }
 }

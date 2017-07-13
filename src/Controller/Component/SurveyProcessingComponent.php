@@ -1,14 +1,15 @@
 <?php
 namespace App\Controller\Component;
 
-use App\Mailer\Mailer;
 use Cake\Controller\Component;
-use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\TableRegistry;
 
 class SurveyProcessingComponent extends Component
 {
+    use MailerAwareTrait;
+
     public $components = ['Flash', 'Auth'];
 
     public $approvedRespondents = [];
@@ -146,15 +147,15 @@ class SurveyProcessingComponent extends Component
             $this->createRespondent($invitee);
         }
 
-        $Mailer = new Mailer();
-        $success = $Mailer->sendInvitations([
-            'surveyId' => $this->surveyId,
-            'communityId' => $this->communityId,
-            'senderEmail' => $this->Auth->user('email'),
-            'senderName' => $this->Auth->user('name'),
-            'recipients' => $this->recipients
-        ]);
-        if ($success) {
+        try {
+            $this->getMailer('Survey')->send('invitations', [[
+                'surveyId' => $this->surveyId,
+                'communityId' => $this->communityId,
+                'senderEmail' => $this->Auth->user('email'),
+                'senderName' => $this->Auth->user('name'),
+                'recipients' => $this->recipients
+            ]]);
+
             $this->successEmails = array_merge($this->successEmails, $this->recipients);
             $this->removeFromPending($this->recipients);
 
@@ -168,10 +169,12 @@ class SurveyProcessingComponent extends Component
                 'invitedCount' => count($this->successEmails)
             ]]);
             $this->_registry->getController()->eventManager()->dispatch($event);
-        } else {
+        } catch (\Exception $e) {
             $this->errorEmails = array_merge($this->errorEmails, $this->recipients);
+            $class = get_class($e);
+            $exceptionMsg = $e->getMessage();
+            $this->Flash->error("$class: $exceptionMsg");
         }
-
         $this->setInvitationFlashMessages();
     }
 

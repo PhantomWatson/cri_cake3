@@ -15,6 +15,7 @@
 namespace App\Controller;
 
 use App\Mailer\Mailer;
+use Cake\Mailer\MailerAwareTrait;
 
 /**
  * Static content controller
@@ -25,6 +26,8 @@ use App\Mailer\Mailer;
  */
 class PagesController extends AppController
 {
+    use MailerAwareTrait;
+
     /**
      * initialize method
      *
@@ -104,8 +107,13 @@ class PagesController extends AppController
      */
     public function sendTestEmail($recipient)
     {
-        $Mailer = new Mailer();
-        $result = $Mailer->sendTest($recipient);
-        $this->Flash->set('send() results: <pre>' . print_r($result, true) . '</pre>');
+        try {
+            $this->getMailer('Test')->send('test', [$recipient]);
+            $this->Flash->success('Email successfully sent');
+        } catch(\Exception $e) {
+            $class = get_class($e);
+            $exceptionMsg = $e->getMessage();
+            $this->Flash->error("Error sending email. $class: $exceptionMsg");
+        }
     }
 }

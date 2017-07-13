@@ -1,8 +1,8 @@
 <?php
 namespace App\Controller;
 
-use App\Mailer\Mailer;
 use Cake\Core\Configure;
+use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 
@@ -13,6 +13,7 @@ use Cake\Network\Exception\NotFoundException;
  */
 class UsersController extends AppController
 {
+    use MailerAwareTrait;
 
     /**
      * initialize method
@@ -164,12 +165,12 @@ class UsersController extends AppController
             } else {
                 $userId = $this->Users->getIdWithEmail($email);
                 if ($userId) {
-                    $Mailer = new Mailer();
-                    if ($Mailer->sendPasswordResetEmail($userId)) {
+                    try {
+                        $this->getMailer('User')->send('resetPassword', [$userId]);
                         $msg = 'Success! You should be shortly receiving an email with a link to reset your password.';
                         $this->Flash->success($msg);
                         $this->set('success', true);
-                    } else {
+                    } catch(\Exception $e) {
                         $msg =
                             'There was an error sending your password-resetting email. ' .
                             "Please try again, or email <a href=\"mailto:$adminEmail\">$adminEmail</a> for assistance.";

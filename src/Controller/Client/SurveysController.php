@@ -2,7 +2,9 @@
 namespace App\Controller\Client;
 
 use App\Controller\AppController;
-use App\Mailer\Mailer;
+use Cake\Core\Configure;
+use Cake\Event\Event;
+use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
@@ -15,6 +17,7 @@ use Cake\ORM\TableRegistry;
  */
 class SurveysController extends AppController
 {
+    use MailerAwareTrait;
 
     /**
      * Initialize method
@@ -144,29 +147,45 @@ class SurveysController extends AppController
         }
 
         if ($this->request->is('post')) {
-            $Mailer = new Mailer();
             $sender = $this->Auth->user();
-            if ($Mailer->sendReminders($surveyId, $sender)) {
-                $this->Flash->success('Reminder email successfully sent');
+            try {
+                $this->getMailer('Survey')->send('reminders', [$surveyId, $sender]);
+            } catch (\Exception $e) {
+                $adminEmail = Configure::read('admin_email');
+                $class = get_class($e);
+                $exceptionMsg = $e->getMessage();
+                $emailLink = '<a href="mailto:' . $adminEmail . '">' . $adminEmail . '</a>';
+                $msg =
+                    "There was an error sending reminder emails ($class: $exceptionMsg). " .
+                    "Email $emailLink for assistance.";
+                $this->Flash->error($msg);
 
+                // Redirect so that hitting refresh won't re-send POST request
                 return $this->redirect([
                     'prefix' => 'client',
-                    'controller' => 'Communities',
-                    'action' => 'index'
+                    'controller' => 'Surveys',
+                    'action' => 'remind',
+                    $survey->type
                 ]);
             }
 
-            $msg = 'There was an error sending reminder emails.';
-            $adminEmail = Configure::read('admin_email');
-            $msg .= ' Email <a href="mailto:' . $adminEmail . '">' . $adminEmail . '</a> for assistance.';
-            $this->Flash->error($msg);
+            $this->Flash->success('Reminder email successfully sent');
 
-            // Redirect so that hitting refresh won't re-send POST request
+            // Dispatch event
+            $respondentsTable = TableRegistry::get('Respondents');
+            $recipients = $respondentsTable->getUnresponsive($surveyId);
+            $event = new Event('Model.Survey.afterRemindersSent', $this, ['meta' => [
+                'communityId' => $survey->community_id,
+                'surveyId' => $surveyId,
+                'surveyType' => $survey->type,
+                'remindedCount' => count($recipients)
+            ]]);
+            $this->eventManager()->dispatch($event);
+
             return $this->redirect([
                 'prefix' => 'client',
-                'controller' => 'Surveys',
-                'action' => 'remind',
-                $survey->type
+                'controller' => 'Communities',
+                'action' => 'index'
             ]);
         }
 

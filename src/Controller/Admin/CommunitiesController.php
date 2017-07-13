@@ -3,10 +3,10 @@ namespace App\Controller\Admin;
 
 use App\AdminToDo\AdminToDo;
 use App\Controller\AppController;
-use App\Mailer\Mailer;
 use App\Model\Entity\Community;
 use App\Model\Table\ProductsTable;
 use Cake\Event\Event;
+use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
@@ -15,6 +15,8 @@ use Cake\Utility\Hash;
 
 class CommunitiesController extends AppController
 {
+    use MailerAwareTrait;
+
     /**
      * Passes necessary variables the view to be used by the adding/editing form
      *
@@ -385,24 +387,28 @@ class CommunitiesController extends AppController
         if ($this->request->is('post')) {
             $client = $usersTable->newEntity($this->request->getData());
             $client->role = 'client';
-            $client->client_communities = [$this->Communities->get($communityId)];
+            $community = $this->Communities->get($communityId);
+            $client->client_communities = [$community];
             $client->password = $this->request->getData('unhashed_password');
             $errors = $client->getErrors();
             if (empty($errors) && $usersTable->save($client)) {
-                $Mailer = new Mailer();
-                $result = $Mailer->sendNewAccountEmail(
-                    $client,
-                    $this->request->getData('unhashed_password')
-                );
-                if ($result) {
+                try {
+                    $this->getMailer('User')->send('newAccount', [
+                        $client,
+                        $this->request->getData('unhashed_password')
+                    ]);
+
                     $msg = 'Client account created for ' . $client->name . ' and login instructions emailed';
                     $this->Flash->success($msg);
 
-                    return $this->redirect(['action' => 'clients', $communityId]);
-                } else {
+                    return $this->redirect([
+                        'action' => 'clients',
+                        $community->slug
+                    ]);
+                } catch(\Exception $e) {
                     $msg = 'There was an error emailing account login info to ' . $client->name . '.';
                     $msg .= ' No new account was created. Please contact an administrator for assistance.';
-                    $retval[] = $msg;
+                    $this->Flash->error($msg);
                     $usersTable->delete($client);
                 }
             } else {
