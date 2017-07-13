@@ -33,7 +33,6 @@ class UserMailer extends Mailer
                 'user' => $user
             ])
             ->setTemplate('new_account');
-
     }
 
     /**

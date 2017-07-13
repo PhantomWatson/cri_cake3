@@ -52,8 +52,8 @@ class SurveysListener implements EventListenerInterface
     /**
      * Updates the reminder_sent field for the specified survey
      *
-     * @param Event $event
-     * @param array $meta
+     * @param Event $event Event entity
+     * @param array $meta Array of metadata
      */
     public function updateReminderSentDate(Event $event, array $meta = [])
     {

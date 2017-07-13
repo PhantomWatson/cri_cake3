@@ -405,7 +405,7 @@ class CommunitiesController extends AppController
                         'action' => 'clients',
                         $community->slug
                     ]);
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $msg = 'There was an error emailing account login info to ' . $client->name . '.';
                     $msg .= ' No new account was created. Please contact an administrator for assistance.';
                     $this->Flash->error($msg);

@@ -110,7 +110,7 @@ class PagesController extends AppController
         try {
             $this->getMailer('Test')->send('test', [$recipient]);
             $this->Flash->success('Email successfully sent');
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $class = get_class($e);
             $exceptionMsg = $e->getMessage();
             $this->Flash->error("Error sending email. $class: $exceptionMsg");

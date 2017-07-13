@@ -170,7 +170,7 @@ class UsersController extends AppController
                         $msg = 'Success! You should be shortly receiving an email with a link to reset your password.';
                         $this->Flash->success($msg);
                         $this->set('success', true);
-                    } catch(\Exception $e) {
+                    } catch (\Exception $e) {
                         $msg =
                             'There was an error sending your password-resetting email. ' .
                             "Please try again, or email <a href=\"mailto:$adminEmail\">$adminEmail</a> for assistance.";
