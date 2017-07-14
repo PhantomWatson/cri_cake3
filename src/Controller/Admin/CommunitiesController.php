@@ -4,11 +4,20 @@ namespace App\Controller\Admin;
 use App\AdminToDo\AdminToDo;
 use App\Controller\AppController;
 use App\Model\Entity\Community;
+use App\Model\Table\AreasTable;
+use App\Model\Table\OptOutsTable;
 use App\Model\Table\ProductsTable;
+use App\Model\Table\PurchasesTable;
+use App\Model\Table\SettingsTable;
+use App\Model\Table\SurveysTable;
+use App\Model\Table\UsersTable;
+use Cake\Database\Expression\QueryExpression;
 use Cake\Event\Event;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\Network\Exception\NotFoundException;
+use Cake\ORM\Entity;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
@@ -29,7 +38,7 @@ class CommunitiesController extends AppController
             $community->public = false;
             $community->score = 0;
         }
-
+        /** @var AreasTable $areasTable */
         $areasTable = TableRegistry::get('Areas');
         $areas = $areasTable->getGroupedList();
         $areaTypes = array_keys($areas);
@@ -130,6 +139,7 @@ class CommunitiesController extends AppController
         $community = $this->Communities->newEntity();
 
         if ($this->request->is('post')) {
+            /** @var $community Community */
             $community = $this->Communities->patchEntity($community, $this->request->getData(), [
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
@@ -169,6 +179,7 @@ class CommunitiesController extends AppController
             }
         } else {
             $community->score = 1;
+            /** @var $settingsTable SettingsTable */
             $settingsTable = TableRegistry::get('Settings');
             $community->intAlignmentAdjustment = $settingsTable->getIntAlignmentAdjustment();
             $community->intAlignmentThreshold = $settingsTable->getIntAlignmentThreshold();
@@ -177,6 +188,8 @@ class CommunitiesController extends AppController
         $this->prepareForm($community);
         $this->set('titleForLayout', 'Add Community');
         $this->render('form');
+
+        return null;
     }
 
     /**
@@ -205,10 +218,11 @@ class CommunitiesController extends AppController
         $previousScore = $community->score;
 
         if ($this->request->is('post') || $this->request->is('put')) {
+            /** @var $community Community */
             $community = $this->Communities->patchEntity($community, $this->request->getData(), [
                 'associated' => ['OfficialSurvey', 'OrganizationSurvey']
             ]);
-            $areaUpdated = $community->dirty('local_area_id') || $community->dirty('parent_area_id');
+            $areaUpdated = $community->isDirty('local_area_id') || $community->isDirty('parent_area_id');
             $errors = $community->getErrors();
 
             if (empty($errors) && $this->Communities->save($community)) {
@@ -238,6 +252,8 @@ class CommunitiesController extends AppController
             'titleForLayout' => 'Edit ' . $community->name
         ]);
         $this->render('form');
+
+        return null;
     }
 
     /**
@@ -285,9 +301,13 @@ class CommunitiesController extends AppController
             ->where(['slug' => $communitySlug])
             ->contain([
                 'Clients' => function ($q) {
+                    /** @var $q Query */
+
                     return $q->order(['name' => 'ASC']);
                 },
                 'Surveys' => function ($q) {
+                    /** @var $q Query */
+
                     return $q->where(['type' => 'official']);
                 }
             ])
@@ -319,8 +339,10 @@ class CommunitiesController extends AppController
 
         if ($this->request->is('put')) {
             $options = ['fieldList' => ['score']];
+
+            /** @var $community Community */
             $community = $this->Communities->patchEntity($community, $this->request->getData(), $options);
-            if ($community->dirty('score')) {
+            if ($community->isDirty('score')) {
                 if ($this->Communities->save($community)) {
                     $verbed = $community->score > $previousScore ? 'increased' : 'decreased';
                     $this->Flash->success('Community score ' . $verbed);
@@ -382,6 +404,8 @@ class CommunitiesController extends AppController
     public function addClient($communityId)
     {
         $community = $this->Communities->get($communityId);
+
+        /** @var $usersTable UsersTable */
         $usersTable = TableRegistry::get('Users');
 
         if ($this->request->is('post')) {
@@ -429,6 +453,8 @@ class CommunitiesController extends AppController
             'role' => 'client',
             'titleForLayout' => 'Add a New Client for ' . $community->name,
         ]);
+
+        return null;
     }
 
     /**
@@ -459,6 +485,8 @@ class CommunitiesController extends AppController
     public function selectClient($communityId)
     {
         $community = $this->Communities->get($communityId);
+
+        /** @var $usersTable UsersTable */
         $usersTable = TableRegistry::get('Users');
 
         if ($this->request->is('post')) {
@@ -503,6 +531,8 @@ class CommunitiesController extends AppController
             'communityName' => $community->name,
             'titleForLayout' => 'Add a New Client for ' . $community->name
         ]);
+
+        return null;
     }
 
     /**
@@ -515,7 +545,9 @@ class CommunitiesController extends AppController
         $settingsTable = TableRegistry::get('Settings');
         $settings = $settingsTable->find('all')
             ->select(['name', 'value'])
-            ->where(function ($exp, $q) {
+            ->where(function ($exp) {
+                /** @var $exp QueryExpression */
+
                 return $exp->in('name', ['intAlignmentAdjustment', 'intAlignmentThreshold']);
             })
             ->toArray();
@@ -536,6 +568,7 @@ class CommunitiesController extends AppController
             ->where($conditions)
             ->order(['created' => 'DESC']);
 
+        /** @var $surveysTable SurveysTable */
         $surveysTable = TableRegistry::get('Surveys');
         $avgIntAlignment = $surveysTable->getAvgIntAlignment($includeDummy);
 
@@ -560,12 +593,14 @@ class CommunitiesController extends AppController
             throw new NotFoundException('Community not specified');
         }
 
+        /** @var $community Community */
         $community = $this->Communities->find('slugged', ['slug' => $communitySlug])->first();
         if (! $community) {
             throw new NotFoundException('Community not found');
         }
 
         $community = $this->Communities->patchEntity($community, $this->request->getData());
+        /** @var $optOutsTable OptOutsTable */
         $optOutsTable = TableRegistry::get('OptOuts');
         if ($this->request->is('post') || $this->request->is('put')) {
             foreach (['a', 'b', 'c', 'd'] as $letter) {
@@ -616,6 +651,7 @@ class CommunitiesController extends AppController
             $community->$field = $optedOut ? 'opted-out' : isset($community->{'presentation_' . $letter});
         }
 
+        /** @var $purchasesTable PurchasesTable */
         $purchasesTable = TableRegistry::get('Purchases');
         $purchases = $purchasesTable->getAllForCommunity($community->id);
         $purchasedProductIds = Hash::extract($purchases, '{n}.product_id');
@@ -628,6 +664,8 @@ class CommunitiesController extends AppController
             'products' => $productsTable->find('list')->toArray(),
             'purchasedProductIds' => $purchasedProductIds
         ]);
+
+        return null;
     }
 
     /**
@@ -639,6 +677,7 @@ class CommunitiesController extends AppController
      */
     public function notes($communitySlug)
     {
+        /** @var $community Community */
         $community = $this->Communities->find('slugged', ['slug' => $communitySlug])->first();
 
         if (! $community) {
@@ -743,6 +782,7 @@ class CommunitiesController extends AppController
      */
     public function activate($communitySlug)
     {
+        /** @var $community Community */
         $community = $this->Communities->find('slugged', ['slug' => $communitySlug])->first();
 
         if (! $community) {
