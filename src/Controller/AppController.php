@@ -32,6 +32,7 @@ use Cake\Utility\Hash;
  * will inherit them.
  *
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
+ * @property \DataCenter\Controller\Component\FlashComponent $Flash
  */
 class AppController extends Controller
 {
