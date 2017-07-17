@@ -150,22 +150,25 @@ class PurchasesController extends AppController
      */
     public function add()
     {
+        /** @var Purchase $purchase */
         $purchase = $this->Purchases->newEntity();
         $productsTable = TableRegistry::get('Products');
         if ($this->request->is('post')) {
-            $data = $this->request->getData();
-            $data['admin_added'] = true;
-            $data['user_id'] = $this->Auth->user('id');
-            $data['postback'] = '';
-            /** @var Purchase $purchase */
+            $productId = $this->request->getData('product_id');
+            $product = $productsTable->get($productId);
+            $data = array_merge($this->request->getData(), [
+                'admin_added' => true,
+                'user_id' => $this->Auth->user('id'),
+                'postback' => '',
+                'amount' => $product->price
+            ]);
             $purchase = $this->Purchases->patchEntity($purchase, $data);
+
             $errors = $purchase->getErrors();
             if (empty($errors) && $this->Purchases->save($purchase)) {
                 $this->Flash->success('Purchase record added');
 
                 // Dispatch event
-                $productId = $purchase->product_id;
-                $product = $productsTable->get($productId);
                 $event = new Event('Model.Purchase.afterAdminAdd', $this, ['meta' => [
                     'communityId' => $purchase->community_id,
                     'productName' => $product->description
