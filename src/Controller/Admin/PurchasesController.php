@@ -2,7 +2,9 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Model\Entity\Community;
 use App\Model\Entity\Purchase;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
@@ -69,6 +71,7 @@ class PurchasesController extends AppController
     public function view($communitySlug)
     {
         $communitiesTable = TableRegistry::get('Communities');
+        /** @var Community $community */
         $community = $communitiesTable->find('slugged', ['slug' => $communitySlug])->first();
 
         if (! $community) {
@@ -154,6 +157,7 @@ class PurchasesController extends AppController
             $data['admin_added'] = true;
             $data['user_id'] = $this->Auth->user('id');
             $data['postback'] = '';
+            /** @var Purchase $purchase */
             $purchase = $this->Purchases->patchEntity($purchase, $data);
             $errors = $purchase->getErrors();
             if (empty($errors) && $this->Purchases->save($purchase)) {
@@ -190,6 +194,8 @@ class PurchasesController extends AppController
             'titleForLayout' => 'Add a New Payment Record',
             'sources' => $this->Purchases->getSourceOptions()
         ]);
+
+        return null;
     }
 
     /**
