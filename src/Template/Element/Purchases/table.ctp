@@ -53,7 +53,13 @@
                     <?php endif; ?>
 
                     <?php if ($purchase->amount): ?>
-                        ($<?= number_format($purchase->product['price']) ?>)
+                        ($<?= number_format($purchase->amount) ?>)
+                        <?php if ($purchase->amount != $purchase->product['price']): ?>
+                            <br />
+                            <span class="label label-warning">
+                                Amount paid differs from current price
+                            </span>
+                        <?php endif; ?>
                     <?php else: ?>
                         <span class="text-danger">
                             Unknown amount
