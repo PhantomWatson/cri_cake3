@@ -36,10 +36,12 @@ class PurchasesController extends AppController
             $itemCode = explode('-', $this->request->getData('itemcode1'));
             $productsTable = TableRegistry::get('Products');
             $productId = $productsTable->getIdFromItemCode($itemCode[1]);
+            $amount = (float)$this->request->getData('amount1') * 100; // Stored as cents
             $purchase = $this->Purchases->newEntity([
                 'user_id' => $this->request->getData('custcode'),
                 'community_id' => $this->request->getData('ref1val1'),
                 'product_id' => $productId,
+                'amount' => $amount,
                 'source' => 'self',
                 'postback' => base64_encode(serialize($this->request->getData()))
             ]);
