@@ -92,17 +92,17 @@ class PurchasesTable extends Table
         $validator
             ->add('product_id', 'valid', ['rule' => 'numeric'])
             ->notEmpty('product_id')
-            ->requirePresence('product_id');
+            ->requirePresence('product_id', 'create');
 
         $validator
             ->add('community_id', 'valid', ['rule' => 'numeric'])
             ->notEmpty('community_id')
-            ->requirePresence('community_id');
+            ->requirePresence('community_id', 'create');
 
         $validator
             ->add('user_id', 'valid', ['rule' => 'numeric'])
             ->notEmpty('user_id')
-            ->requirePresence('user_id');
+            ->requirePresence('user_id', 'create');
 
         $validator
             ->add('refunder_id', 'valid', ['rule' => 'numeric'])

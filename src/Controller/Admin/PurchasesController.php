@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Model\Entity\Purchase;
 use Cake\Event\Event;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
@@ -257,5 +258,51 @@ class PurchasesController extends AppController
             'titleForLayout' => 'Manage OCRA Funding',
             'totals' => $totals
         ]);
+    }
+
+    /**
+     * Sets the 'amount' value for any purchase record with amount == 0
+     *
+     * Intended to be run once, immediately after the Purchases.amount field is added to the database
+     *
+     * @return void
+     */
+    public function populateEmptyAmounts()
+    {
+        $this->set('titleForLayout', 'Populate Empty Purchase Amounts');
+
+        if (! $this->request->is('post')) {
+            return;
+        }
+
+        $changedCount = 0;
+        $purchases = $this->Purchases->find()
+            ->where(['amount' => 0])
+            ->contain(['Products']);
+
+        foreach ($purchases as $purchase) {
+            /** @var Purchase $purchase */
+            $purchase = $this->Purchases->patchEntity($purchase, [
+                'amount' => $purchase->product->price
+            ]);
+
+            if (! $this->Purchases->save($purchase)) {
+                $msg = 'Error: <pre>' . print_r($purchase->getErrors(), true) . '</pre>';
+                $this->Flash->error($msg);
+
+                return;
+            }
+
+            $changedCount++;
+        }
+
+        if ($changedCount) {
+            $msg = 'Updated ' . $changedCount . ' purchase ' . __n('record', 'records', $changedCount);
+            $this->Flash->success($msg);
+
+            return;
+        }
+
+        $this->Flash->set('No purchase records need updated');
     }
 }

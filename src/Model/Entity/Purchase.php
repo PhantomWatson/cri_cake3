@@ -28,5 +28,6 @@ class Purchase extends Entity
         'community' => true,
         'product' => true,
         'refunder' => true,
+        'amount' => true
     ];
 }
