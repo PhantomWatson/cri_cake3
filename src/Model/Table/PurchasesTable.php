@@ -1,6 +1,8 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Database\Expression\QueryExpression;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -157,9 +159,13 @@ class PurchasesTable extends Table
             ->order(['Purchases.created' => 'ASC'])
             ->contain([
                 'Products' => function ($q) {
+                    /** @var Query $q */
+
                     return $q->select(['description', 'price']);
                 },
                 'Users' => function ($q) {
+                    /** @var Query $q */
+
                     return $q->select(['name', 'email']);
                 }
             ])
@@ -184,15 +190,16 @@ class PurchasesTable extends Table
      * Finds valid OCRA-funded purchases
      *
      * @param \Cake\ORM\Query $query Query
-     * @param array $options Options array
      * @return \Cake\ORM\Query
      */
-    public function findOcra(\Cake\ORM\Query $query, array $options)
+    public function findOcra(Query $query)
     {
         return $query
             ->where([
                 'Purchases.source' => 'ocra',
-                function ($exp, $q) {
+                function ($exp) {
+                    /** @var QueryExpression $exp */
+
                     return $exp->in('Purchases.product_id', [
                         ProductsTable::OFFICIALS_SURVEY,
                         ProductsTable::OFFICIALS_SUMMIT
@@ -207,14 +214,15 @@ class PurchasesTable extends Table
      * Finds purchases corresponding to products that have been delivered
      *
      * @param \Cake\ORM\Query $query Query
-     * @param array $options Options array
      * @return \Cake\ORM\Query
      */
-    public function findBillable(\Cake\ORM\Query $query, array $options)
+    public function findBillable(Query $query)
     {
         return $query
             ->where(['OR' => [
                 function ($exp) {
+                    /** @var QueryExpression $exp */
+
                     return $exp
                         ->eq('Products.id', ProductsTable::OFFICIALS_SURVEY)
 
@@ -222,6 +230,8 @@ class PurchasesTable extends Table
                         ->lt('Communities.presentation_a', date('Y-m-d'));
                 },
                 function ($exp) {
+                    /** @var QueryExpression $exp */
+
                     return $exp
                         ->eq('Products.id', ProductsTable::OFFICIALS_SUMMIT)
 
@@ -229,6 +239,8 @@ class PurchasesTable extends Table
                         ->lt('Communities.presentation_b', date('Y-m-d'));
                 },
                 function ($exp) {
+                    /** @var QueryExpression $exp */
+
                     return $exp
                         ->eq('Products.id', ProductsTable::ORGANIZATIONS_SURVEY)
 
@@ -236,6 +248,8 @@ class PurchasesTable extends Table
                         ->lt('Communities.presentation_c', date('Y-m-d'));
                 },
                 function ($exp) {
+                    /** @var QueryExpression $exp */
+
                     return $exp
                         ->eq('Products.id', ProductsTable::ORGANIZATIONS_SUMMIT)
 
@@ -243,6 +257,8 @@ class PurchasesTable extends Table
                         ->lt('Communities.presentation_d', date('Y-m-d'));
                 },
                 function ($exp) {
+                    /** @var QueryExpression $exp */
+
                     return $exp
                         ->eq('Products.id', ProductsTable::POLICY_DEVELOPMENT)
 
@@ -250,7 +266,9 @@ class PurchasesTable extends Table
                         ->gte('Communities.score', 4);
                 },
             ]])
-            ->where(function ($exp, $q) {
+            ->where(function ($exp) {
+                /** @var QueryExpression $exp */
+
                 return $exp->isNull('refunded');
             })
             ->notMatching('Invoices');
@@ -260,10 +278,9 @@ class PurchasesTable extends Table
      * Finds purchases corresponding to products that have not yet been delivered
      *
      * @param \Cake\ORM\Query $query Query
-     * @param array $options Options array
      * @return \Cake\ORM\Query
      */
-    public function findNotBillable(\Cake\ORM\Query $query, array $options)
+    public function findNotBillable(Query $query)
     {
         return $query
             ->where(['OR' => [
@@ -271,9 +288,13 @@ class PurchasesTable extends Table
                     'Products.id' => ProductsTable::OFFICIALS_SURVEY,
                     'OR' => [
                         function ($exp) {
+                            /** @var QueryExpression $exp */
+
                             return $exp->gte('Communities.presentation_a', date('Y-m-d'));
                         },
                         function ($exp) {
+                            /** @var QueryExpression $exp */
+
                             return $exp->isNull('Communities.presentation_a');
                         }
                     ]
@@ -282,9 +303,13 @@ class PurchasesTable extends Table
                     'Products.id' => ProductsTable::OFFICIALS_SUMMIT,
                     'OR' => [
                         function ($exp) {
+                            /** @var QueryExpression $exp */
+
                             return $exp->gte('Communities.presentation_b', date('Y-m-d'));
                         },
                         function ($exp) {
+                            /** @var QueryExpression $exp */
+
                             return $exp->isNull('Communities.presentation_b');
                         }
                     ]
@@ -293,9 +318,13 @@ class PurchasesTable extends Table
                     'Products.id' => ProductsTable::ORGANIZATIONS_SURVEY,
                     'OR' => [
                         function ($exp) {
+                            /** @var QueryExpression $exp */
+
                             return $exp->gte('Communities.presentation_c', date('Y-m-d'));
                         },
                         function ($exp) {
+                            /** @var QueryExpression $exp */
+
                             return $exp->isNull('Communities.presentation_c');
                         }
                     ]
@@ -304,9 +333,13 @@ class PurchasesTable extends Table
                     'Products.id' => ProductsTable::ORGANIZATIONS_SUMMIT,
                     'OR' => [
                         function ($exp) {
+                            /** @var QueryExpression $exp */
+
                             return $exp->gte('Communities.presentation_d', date('Y-m-d'));
                         },
                         function ($exp) {
+                            /** @var QueryExpression $exp */
+
                             return $exp->isNull('Communities.presentation_d');
                         }
                     ]
@@ -314,11 +347,15 @@ class PurchasesTable extends Table
                 [
                     'Products.id' => ProductsTable::POLICY_DEVELOPMENT,
                     function ($exp) {
+                        /** @var QueryExpression $exp */
+
                         return $exp->lt('Communities.score', 4);
                     }
                 ]
             ]])
-            ->where(function ($exp, $q) {
+            ->where(function ($exp) {
+                /** @var QueryExpression $exp */
+
                 return $exp->isNull('refunded');
             })
             ->notMatching('Invoices');
@@ -328,16 +365,19 @@ class PurchasesTable extends Table
      * Finds purchases that have associated unpaid invoices
      *
      * @param \Cake\ORM\Query $query Query
-     * @param array $options Options array
      * @return \Cake\ORM\Query
      */
-    public function findBilledUnpaid(\Cake\ORM\Query $query, array $options)
+    public function findBilledUnpaid(Query $query)
     {
         return $query
-            ->where(function ($exp, $q) {
+            ->where(function ($exp) {
+                /** @var QueryExpression $exp */
+
                 return $exp->isNull('refunded');
             })
             ->matching('Invoices', function ($q) {
+                /** @var Query $q */
+
                 return $q->where(['paid' => false]);
             });
     }
@@ -346,16 +386,19 @@ class PurchasesTable extends Table
      * Finds purchases that have associated paid invoices
      *
      * @param \Cake\ORM\Query $query Query
-     * @param array $options Options array
      * @return \Cake\ORM\Query
      */
-    public function findPaid(\Cake\ORM\Query $query, array $options)
+    public function findPaid(Query $query)
     {
         return $query
-            ->where(function ($exp, $q) {
+            ->where(function ($exp) {
+                /** @var QueryExpression $exp */
+
                 return $exp->isNull('refunded');
             })
             ->matching('Invoices', function ($q) {
+                /** @var Query $q */
+
                 return $q->where(['paid' => true]);
             });
     }
