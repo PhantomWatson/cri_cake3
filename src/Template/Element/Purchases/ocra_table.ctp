@@ -42,12 +42,18 @@
             </td>
             <td>
                 <?= $purchase->product->description ?>
-                ($<?= number_format($purchase->product['price']) ?>)
+                ($<?= number_format($purchase->amount) ?>)
+                <?php if ($purchase->amount != $purchase->product['price']): ?>
+                    <br />
+                    <span class="label label-warning">
+                        Amount paid differs from current price
+                    </span>
+                <?php endif; ?>
 
                 <?php if ($purchase->redunded): ?>
                     <span class="label label-warning">
-                                        Refunded
-                                    </span>
+                        Refunded
+                    </span>
                 <?php endif; ?>
             </td>
             <?php if ($group['form']): ?>
