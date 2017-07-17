@@ -52,8 +52,13 @@
                         </span>
                     <?php endif; ?>
 
-                    <?php if ($purchase->product['price']): ?>
+                    <?php if ($purchase->amount): ?>
                         ($<?= number_format($purchase->product['price']) ?>)
+                    <?php else: ?>
+                        <span class="text-danger">
+                            Unknown amount
+                            (Expected to be $<?= number_format($purchase->product['price']) ?>)
+                        </span>
                     <?php endif; ?>
                 </td>
                 <td>

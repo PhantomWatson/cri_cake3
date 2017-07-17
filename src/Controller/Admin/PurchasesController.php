@@ -35,7 +35,8 @@ class PurchasesController extends AppController
             'refunded',
             'refunder_id',
             'source',
-            'user_id'
+            'user_id',
+            'amount'
         ],
         'limit' => 50,
         'order' => [
