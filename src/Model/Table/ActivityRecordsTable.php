@@ -17,13 +17,13 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsTo $Communities
  * @property \Cake\ORM\Association\BelongsTo $Surveys
  *
- * @method \App\Model\Entity\ActivityRecord get($primaryKey, $options = [])
- * @method \App\Model\Entity\ActivityRecord newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\ActivityRecord[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\ActivityRecord|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ActivityRecord patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\ActivityRecord[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\ActivityRecord findOrCreate($search, callable $callback = null)
+ * @method ActivityRecord get($primaryKey, $options = [])
+ * @method ActivityRecord newEntity($data = null, array $options = [])
+ * @method ActivityRecord[] newEntities(array $data, array $options = [])
+ * @method ActivityRecord|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method ActivityRecord patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method ActivityRecord[] patchEntities($entities, array $data, array $options = [])
+ * @method ActivityRecord findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
@@ -156,6 +156,7 @@ class ActivityRecordsTable extends Table
      */
     public function getSurveyActivationDate($surveyId)
     {
+        /** @var ActivityRecord $result */
         $result = $this->find('all')
             ->select(['created'])
             ->where([
@@ -176,7 +177,8 @@ class ActivityRecordsTable extends Table
      */
     public function getMostRecentForCommunity($communityId)
     {
-        return $this->find()
+        /** @var ActivityRecord $result */
+        $result = $this->find()
             ->select([
                 'event',
                 'created'
@@ -184,5 +186,7 @@ class ActivityRecordsTable extends Table
             ->where(['community_id' => $communityId])
             ->order(['ActivityRecords.created' => 'DESC'])
             ->first();
+
+        return $result;
     }
 }

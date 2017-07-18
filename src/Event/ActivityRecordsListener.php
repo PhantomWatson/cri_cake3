@@ -2,6 +2,7 @@
 
 namespace App\Event;
 
+use App\Model\Table\ActivityRecordsTable;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\TableRegistry;
@@ -42,7 +43,8 @@ class ActivityRecordsListener implements EventListenerInterface
             'Model.Respondent.afterUninvitedDismiss',
             'Model.Survey.afterInvitationsSent',
             'Model.Survey.afterRemindersSent',
-            'Model.Delivery.afterAdd'
+            'Model.Delivery.afterAdd',
+            'Model.Community.afterAddClient'
         ];
 
         return array_fill_keys($events, 'recordActivity');
@@ -60,6 +62,8 @@ class ActivityRecordsListener implements EventListenerInterface
             return $this->userId;
         }
         $this->userId = $userId;
+
+        return null;
     }
 
     /**
@@ -74,6 +78,8 @@ class ActivityRecordsListener implements EventListenerInterface
         if (! isset($meta['userId']) && $this->userId()) {
             $meta['userId'] = $this->userId();
         }
+
+        /** @var ActivityRecordsTable $activityRecordsTable */
         $activityRecordsTable = TableRegistry::get('ActivityRecords');
         $activityRecordsTable->add($event->getName(), $meta);
     }

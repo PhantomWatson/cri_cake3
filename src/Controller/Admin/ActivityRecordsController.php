@@ -52,7 +52,8 @@ class ActivityRecordsController extends AppController
             'Uninvited respondents approved or dismissed',
             'Invitations sent',
             'Reminders sent',
-            'Delivery recorded'
+            'Delivery recorded',
+            'Client added to community'
         ];
         $this->set([
             'activityRecords' => $this->paginate($this->ActivityRecords),

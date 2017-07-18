@@ -425,6 +425,13 @@ class CommunitiesController extends AppController
                     $msg = 'Client account created for ' . $client->name . ' and login instructions emailed';
                     $this->Flash->success($msg);
 
+                    $event = new Event('Model.Community.afterAddClient', $this, ['meta' => [
+                        'communityId' => $communityId,
+                        'clientName' => $client->name,
+                        'clientEmail' => $client->email
+                    ]]);
+                    $this->eventManager()->dispatch($event);
+
                     return $this->redirect([
                         'action' => 'clients',
                         $community->slug
@@ -532,6 +539,13 @@ class CommunitiesController extends AppController
         // Link client with this community
         if ($this->Communities->Clients->link($community, [$client])) {
             $this->Flash->success($client->name . ' is now assigned to ' . $community->name);
+
+            $event = new Event('Model.Community.afterAddClient', $this, ['meta' => [
+                'communityId' => $communityId,
+                'clientName' => $client->name,
+                'clientEmail' => $client->email
+            ]]);
+            $this->eventManager()->dispatch($event);
 
             return $this->redirect([
                 'action' => 'clients',
