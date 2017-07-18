@@ -512,11 +512,17 @@ class CommunitiesController extends AppController
             if ($alreadyLinked) {
                 $this->Flash->notification($client->name . ' is already assigned to ' . $community->name);
 
-                return $this->redirect(['action' => 'clients', $communityId]);
+                return $this->redirect([
+                    'action' => 'clients',
+                    $community->slug
+                ]);
             } elseif ($this->Communities->Clients->link($community, [$client])) {
                 $this->Flash->success($client->name . ' is now assigned to ' . $community->name);
 
-                return $this->redirect(['action' => 'clients', $communityId]);
+                return $this->redirect([
+                    'action' => 'clients',
+                    $community->slug
+                ]);
             } else {
                 $this->Flash->error('There was an error assigning ' . $client->name . ' to ' . $community->name);
             }
