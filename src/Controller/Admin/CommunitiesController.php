@@ -403,63 +403,70 @@ class CommunitiesController extends AppController
      */
     public function addClient($communityId)
     {
-        $community = $this->Communities->get($communityId);
-
         /** @var $usersTable UsersTable */
         $usersTable = TableRegistry::get('Users');
-
-        if ($this->request->is('post')) {
-            $client = $usersTable->newEntity($this->request->getData());
-            $client->role = 'client';
-            $community = $this->Communities->get($communityId);
-            $client->client_communities = [$community];
-            $client->password = $this->request->getData('unhashed_password');
-            $errors = $client->getErrors();
-            if (empty($errors) && $usersTable->save($client)) {
-                try {
-                    $this->getMailer('User')->send('newAccount', [
-                        $client,
-                        $this->request->getData('unhashed_password')
-                    ]);
-
-                    $msg = 'Client account created for ' . $client->name . ' and login instructions emailed';
-                    $this->Flash->success($msg);
-
-                    $event = new Event('Model.Community.afterAddClient', $this, ['meta' => [
-                        'communityId' => $communityId,
-                        'clientName' => $client->name,
-                        'clientEmail' => $client->email
-                    ]]);
-                    $this->eventManager()->dispatch($event);
-
-                    return $this->redirect([
-                        'action' => 'clients',
-                        $community->slug
-                    ]);
-                } catch (\Exception $e) {
-                    $msg = 'There was an error emailing account login info to ' . $client->name . '.';
-                    $msg .= ' No new account was created. Please contact an administrator for assistance.';
-                    $this->Flash->error($msg);
-                    $usersTable->delete($client);
-                }
-            } else {
-                $msg = 'There was an error saving that client.';
-                $msg .= ' Please try again or contact an administrator for assistance.';
-                $this->Flash->error($msg);
-            }
-        } else {
-            $client = $usersTable->newEntity();
-            $client->unhashed_password = $usersTable->generatePassword();
-        }
+        $community = $this->Communities->get($communityId);
 
         $this->set([
-            'client' => $client,
             'communityId' => $communityId,
             'communityName' => $community->name,
             'salutations' => $usersTable->getSalutations(),
             'role' => 'client',
             'titleForLayout' => 'Add a New Client for ' . $community->name,
         ]);
+
+        if (! $this->request->is('post')) {
+            $client = $usersTable->newEntity();
+            $client->unhashed_password = $usersTable->generatePassword();
+            $this->set('client', $client);
+
+            return null;
+        }
+
+        $client = $usersTable->newEntity($this->request->getData());
+        $client->role = 'client';
+        $community = $this->Communities->get($communityId);
+        $client->client_communities = [$community];
+        $client->password = $this->request->getData('unhashed_password');
+        $errors = $client->getErrors();
+        if (! empty($errors) || ! $usersTable->save($client)) {
+            $msg = 'There was an error saving that client.';
+            $msg .= ' Please try again or contact an administrator for assistance.';
+            $this->Flash->error($msg);
+
+            $client = $usersTable->newEntity();
+            $client->unhashed_password = $usersTable->generatePassword();
+            $this->set('client', $client);
+
+            return null;
+        }
+
+        try {
+            $this->getMailer('User')->send('newAccount', [
+                $client,
+                $this->request->getData('unhashed_password')
+            ]);
+
+            $msg = 'Client account created for ' . $client->name . ' and login instructions emailed';
+            $this->Flash->success($msg);
+
+            $event = new Event('Model.Community.afterAddClient', $this, ['meta' => [
+                'communityId' => $communityId,
+                'clientName' => $client->name,
+                'clientEmail' => $client->email
+            ]]);
+            $this->eventManager()->dispatch($event);
+
+            return $this->redirect([
+                'action' => 'clients',
+                $community->slug
+            ]);
+        } catch (\Exception $e) {
+            $msg = 'There was an error emailing account login info to ' . $client->name . '.';
+            $msg .= ' No new account was created. Please contact an administrator for assistance.';
+            $this->Flash->error($msg);
+            $usersTable->delete($client);
+        }
 
         return null;
     }
