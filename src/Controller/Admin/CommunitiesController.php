@@ -484,8 +484,16 @@ class CommunitiesController extends AppController
         $client = $usersTable->get($clientId);
         $community = $this->Communities->get($communityId);
         $this->Communities->Clients->unlink($community, [$client]);
+
         $msg = 'Removed ' . $client->name . ' from ' . $community->name;
         $this->Flash->success($msg);
+
+        $event = new Event('Model.Community.afterRemoveClient', $this, ['meta' => [
+            'communityId' => $communityId,
+            'clientName' => $client->name,
+            'clientEmail' => $client->email
+        ]]);
+        $this->eventManager()->dispatch($event);
 
         return $this->redirect($this->referer());
     }
@@ -530,6 +538,13 @@ class CommunitiesController extends AppController
                 $usersTable->ClientCommunities->unlink($client, [$linkedCommunityEntity]);
                 $msg = $client->name . '\'s association with ' . $linkedCommunity['name'] . ' has been removed';
                 $this->Flash->notification($msg);
+
+                $event = new Event('Model.Community.afterRemoveClient', $this, ['meta' => [
+                    'communityId' => $linkedCommunity['id'],
+                    'clientName' => $client->name,
+                    'clientEmail' => $client->email
+                ]]);
+                $this->eventManager()->dispatch($event);
             }
         }
 

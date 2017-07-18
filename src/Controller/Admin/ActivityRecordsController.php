@@ -53,7 +53,7 @@ class ActivityRecordsController extends AppController
             'Invitations sent',
             'Reminders sent',
             'Delivery recorded',
-            'Client added to community'
+            'Client added to or removed from community'
         ];
         $this->set([
             'activityRecords' => $this->paginate($this->ActivityRecords),
