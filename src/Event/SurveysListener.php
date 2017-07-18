@@ -25,7 +25,7 @@ class SurveysListener implements EventListenerInterface
     }
 
     /**
-     * Calls SurveyTable::updateAlignment()
+     * Calls SurveysTable::updateAlignment()
      *
      * @param \Cake\Event\Event $event Event
      * @param array $meta Array of metadata (surveyId, etc.)
