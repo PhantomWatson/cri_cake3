@@ -484,59 +484,62 @@ class CommunitiesController extends AppController
      */
     public function selectClient($communityId)
     {
-        $community = $this->Communities->get($communityId);
-
         /** @var $usersTable UsersTable */
         $usersTable = TableRegistry::get('Users');
-
-        if ($this->request->is('post')) {
-            $clientId = $this->request->getData('client_id');
-            $client = $usersTable->get($clientId, ['contain' => ['ClientCommunities']]);
-            $alreadyLinked = false;
-
-            // Unlink client from any other community
-            if (! empty($client['client_communities'])) {
-                foreach ($client['client_communities'] as $linkedCommunity) {
-                    if ($linkedCommunity['id'] == $communityId) {
-                        $alreadyLinked = true;
-                        continue;
-                    }
-                    $communityEntity = $this->Communities->get($linkedCommunity['id']);
-                    $usersTable->ClientCommunities->unlink($client, [$communityEntity]);
-                    $msg = $client->name . '\'s association with ' . $linkedCommunity['name'] . ' has been removed';
-                    $this->Flash->notification($msg);
-                }
-            }
-
-            // Link client with this community
-            if ($alreadyLinked) {
-                $this->Flash->notification($client->name . ' is already assigned to ' . $community->name);
-
-                return $this->redirect([
-                    'action' => 'clients',
-                    $community->slug
-                ]);
-            } elseif ($this->Communities->Clients->link($community, [$client])) {
-                $this->Flash->success($client->name . ' is now assigned to ' . $community->name);
-
-                return $this->redirect([
-                    'action' => 'clients',
-                    $community->slug
-                ]);
-            } else {
-                $this->Flash->error('There was an error assigning ' . $client->name . ' to ' . $community->name);
-            }
-        } else {
-            $client = $usersTable->newEntity();
-        }
+        $community = $this->Communities->get($communityId);
 
         $this->set([
-            'client' => $client,
             'clients' => $usersTable->getClientList(),
             'communityId' => $communityId,
             'communityName' => $community->name,
             'titleForLayout' => 'Add a New Client for ' . $community->name
         ]);
+
+        if (! $this->request->is('post')) {
+            $this->set('client', $usersTable->newEntity());
+
+            return null;
+        }
+
+        $clientId = $this->request->getData('client_id');
+        $client = $usersTable->get($clientId, ['contain' => ['ClientCommunities']]);
+        $alreadyLinked = false;
+
+        // Unlink client from any other community
+        if (! empty($client['client_communities'])) {
+            foreach ($client['client_communities'] as $linkedCommunity) {
+                if ($linkedCommunity['id'] == $communityId) {
+                    $alreadyLinked = true;
+                    continue;
+                }
+                $linkedCommunityEntity = $this->Communities->get($linkedCommunity['id']);
+                $usersTable->ClientCommunities->unlink($client, [$linkedCommunityEntity]);
+                $msg = $client->name . '\'s association with ' . $linkedCommunity['name'] . ' has been removed';
+                $this->Flash->notification($msg);
+            }
+        }
+
+        // Client is already linked
+        if ($alreadyLinked) {
+            $this->Flash->notification($client->name . ' is already assigned to ' . $community->name);
+
+            return $this->redirect([
+                'action' => 'clients',
+                $community->slug
+            ]);
+        }
+
+        // Link client with this community
+        if ($this->Communities->Clients->link($community, [$client])) {
+            $this->Flash->success($client->name . ' is now assigned to ' . $community->name);
+
+            return $this->redirect([
+                'action' => 'clients',
+                $community->slug
+            ]);
+        }
+
+        $this->Flash->error('There was an error assigning ' . $client->name . ' to ' . $community->name);
 
         return null;
     }
