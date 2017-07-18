@@ -26,11 +26,7 @@
                 <ul>
                     <?php foreach ($errors as $errMsg): ?>
                         <li>
-                            <?php if (is_array($errMsg)): ?>
-                                <?= implode('<br />', array_values($errMsg)) ?>
-                            <?php else: ?>
-                                <?= $errMsg ?>
-                            <?php endif; ?>
+                            <?= implode('<br />', array_values((array)$errMsg)) ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>

@@ -398,11 +398,7 @@ class Spreadsheet
      */
     public function applyBorders($sides, $fromCol = 0, $toCol = null)
     {
-        if (! is_array($sides)) {
-            $sides = [$sides];
-        }
-
-        foreach ($sides as $side) {
+        foreach ((array)$sides as $side) {
             $styles = ['borders' => [$side => $this->getBorder()]];
             $this->styleRow($styles, $fromCol, $toCol);
         }

@@ -185,8 +185,7 @@ class SurveyProcessingComponent extends Component
      */
     private function setInvitees()
     {
-        $invitees = $this->getController()->request->getData('invitees');
-        $invitees = is_array($invitees) ? $invitees : [];
+        $invitees = (array)$this->getController()->request->getData('invitees');
         $this->invitees = $invitees;
     }
 
@@ -317,13 +316,12 @@ class SurveyProcessingComponent extends Component
     /**
      * Removes the matching invitee from $this->pendingInvitees
      *
-     * @param array|string $email Array of emails addresses or a single email address
+     * @param array|string $emails Array of emails addresses or a single email address
      * @return void
      */
     private function removeFromPending($emails)
     {
-        $emails = is_array($emails) ? $emails : [$emails];
-        foreach ($emails as $email) {
+        foreach ((array)$emails as $email) {
             foreach ($this->pendingInvitees as $k => $invitee) {
                 if ($invitee->email == $email) {
                     unset($this->pendingInvitees[$k]);
