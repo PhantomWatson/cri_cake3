@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Model\Table\ProductsTable;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
@@ -18,7 +19,7 @@ class PurchasesController extends AppController
      * @param \Cake\Event\Event $event Event
      * @return void
      */
-    public function beforeFilter(\Cake\Event\Event $event)
+    public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
         $this->Auth->allow('postback');
@@ -33,8 +34,9 @@ class PurchasesController extends AppController
     public function postback()
     {
         if ($this->request->getData('respmessage') == 'SUCCESS') {
-            $itemCode = explode('-', $this->request->getData('itemcode1'));
+            /** @var ProductsTable $productsTable */
             $productsTable = TableRegistry::get('Products');
+            $itemCode = explode('-', $this->request->getData('itemcode1'));
             $productId = $productsTable->getIdFromItemCode($itemCode[1]);
             $amount = (float)$this->request->getData('amount1') * 100; // Stored as cents
             $purchase = $this->Purchases->newEntity([

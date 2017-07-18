@@ -1,8 +1,18 @@
 <?php
 namespace App\AdminToDo;
 
+use App\Model\Entity\Response;
+use App\Model\Table\ActivityRecordsTable;
+use App\Model\Table\CommunitiesTable;
 use App\Model\Table\DeliverablesTable;
+use App\Model\Table\DeliveriesTable;
+use App\Model\Table\OptOutsTable;
 use App\Model\Table\ProductsTable;
+use App\Model\Table\RespondentsTable;
+use App\Model\Table\ResponsesTable;
+use App\Model\Table\SurveysTable;
+use Cake\Chronos\Date;
+use Cake\Database\Expression\QueryExpression;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
@@ -20,18 +30,29 @@ use NumberFormatter;
  */
 class AdminToDo
 {
+    /** @var CommunitiesTable $communitiesTable */
     public $communitiesTable;
+
+    /** @var OptOutsTable $optOutsTable  */
     public $optOutsTable;
+
+    /** @var ProductsTable $productsTable */
     public $productsTable;
+
+    /** @var RespondentsTable $respondentsTable */
     public $respondentsTable;
+
+    /** @var ResponsesTable $responsesTable */
     public $responsesTable;
-    public $surveyTable;
+
+    /** @var SurveysTable $surveysTable */
+    public $surveysTable;
+
+    /** @var DeliveriesTable $deliveriesTable */
     public $deliveriesTable;
 
     /**
      * AdminToDo constructor
-     *
-     * @return AdminToDo
      */
     public function __construct()
     {
@@ -122,6 +143,8 @@ class AdminToDo
         }
 
         $officialsSurvey = $this->surveysTable->get($officialsSurveyId);
+
+        /** @var ActivityRecordsTable $activityRecordsTable */
         $activityRecordsTable = TableRegistry::get('ActivityRecords');
 
         if ($this->waitingForSurveyInvitations($officialsSurveyId)) {
@@ -137,10 +160,8 @@ class AdminToDo
             ];
         }
 
-        $respondentsTable = TableRegistry::get('Respondents');
-
         if ($this->waitingForSurveyResponses($officialsSurveyId)) {
-            $invitationDate = $respondentsTable->getFirstInvitationDate($officialsSurveyId);
+            $invitationDate = $this->respondentsTable->getFirstInvitationDate($officialsSurveyId);
             $since = $invitationDate ?: $officialsSurvey->created;
 
             return [
@@ -303,7 +324,7 @@ class AdminToDo
         }
 
         if ($this->waitingForSurveyResponses($organizationsSurveyId)) {
-            $invitationDate = $respondentsTable->getFirstInvitationDate($organizationsSurveyId);
+            $invitationDate = $this->respondentsTable->getFirstInvitationDate($organizationsSurveyId);
             $since = $invitationDate ?: $organizationsSurvey->created;
 
             return [
@@ -557,6 +578,8 @@ class AdminToDo
         $url = $this->getActivateUrl($surveyId);
         $approvedResponseCount = $this->responsesTable->getApprovedCount($surveyId);
         $invitationCount = $this->respondentsTable->getInvitedCount($surveyId);
+
+        /** @var Response $mostRecentResponse */
         $mostRecentResponse = $this->responsesTable->find('all')
             ->select(['response_date'])
             ->where(['survey_id' => $surveyId])
@@ -590,7 +613,9 @@ class AdminToDo
         $count = $this->communitiesTable->find('all')
             ->where([
                 'id' => $communityId,
-                function ($exp, $q) use ($presentationLetter) {
+                function ($exp) use ($presentationLetter) {
+                    /** @var QueryExpression $exp */
+
                     return $exp->isNotNull("presentation_$presentationLetter");
                 }
             ])
@@ -613,6 +638,8 @@ class AdminToDo
         if ($presentationLetter == 'd') {
             return $this->productsTable->isPurchased($communityId, ProductsTable::ORGANIZATIONS_SUMMIT);
         }
+
+        return null;
     }
 
     /**
@@ -768,6 +795,8 @@ class AdminToDo
     private function waitingToCompletePresentation($communityId, $presentationLetter)
     {
         $community = $this->communitiesTable->get($communityId);
+
+        /** @var Date $presentationDate */
         $presentationDate = $community->{"presentation_$presentationLetter"};
         $today = date('Y-m-d');
 
