@@ -33,40 +33,45 @@ class UsersController extends AppController
      */
     public function login()
     {
-        if ($this->request->is('post')) {
-            $user = $this->Auth->identify();
-            if ($user) {
-                $this->Auth->setUser($user);
-                if ($this->Auth->authenticationProvider()->needsPasswordRehash()) {
-                    $user = $this->Users->get($this->Auth->user('id'));
-                    $user = $this->Users->patchEntity($user, ['password' => $this->request->getData('password')]);
-                    $this->Users->save($user);
-                }
-
-                // Remember login information
-                if ($this->request->getData('auto_login')) {
-                    $this->Cookie->configKey('CookieAuth', [
-                        'expires' => '+1 year',
-                        'httpOnly' => true
-                    ]);
-                    $this->Cookie->write('CookieAuth', [
-                        'email' => $this->request->getData('email'),
-                        'password' => $this->request->getData('password')
-                    ]);
-                }
-
-                return $this->redirect($this->Auth->redirectUrl());
-            } else {
-                $this->Flash->error('Email or password is incorrect');
-            }
-        } else {
+        $this->set('titleForLayout', 'Log in');
+        if (! $this->request->is('post')) {
             $user = $this->Users->newEntity();
             $user->auto_login = true;
+            $this->set('user', $user);
+
+            return null;
         }
-        $this->set([
-            'titleForLayout' => 'Log in',
-            'user' => $user
-        ]);
+
+        $user = $this->Auth->identify();
+        if (! $user) {
+            $this->Flash->error('Email or password is incorrect');
+            $this->set('user', $user);
+
+            return null;
+        }
+
+        $this->Auth->setUser($user);
+        if ($this->Auth->authenticationProvider()->needsPasswordRehash()) {
+            $user = $this->Users->get($this->Auth->user('id'));
+            $user = $this->Users->patchEntity($user, [
+                'password' => $this->request->getData('password')
+            ]);
+            $this->Users->save($user);
+        }
+
+        // Remember login information
+        if ($this->request->getData('auto_login')) {
+            $this->Cookie->configKey('CookieAuth', [
+                'expires' => '+1 year',
+                'httpOnly' => true
+            ]);
+            $this->Cookie->write('CookieAuth', [
+                'email' => $this->request->getData('email'),
+                'password' => $this->request->getData('password')
+            ]);
+        }
+
+        return $this->redirect($this->Auth->redirectUrl());
     }
 
     /**
@@ -129,14 +134,11 @@ class UsersController extends AppController
         $id = $this->Auth->user('id');
         $user = $this->Users->get($id);
         if ($this->request->is('post') || $this->request->is('put')) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if (! $user->getErrors()) {
-                $saveResult = $this->Users->save($user, $this->request->getData(), [
-                    'fieldList' => ['name', 'email']
-                ]);
-                if ($saveResult) {
-                    $this->Flash->success('Your account information has been updated');
-                }
+            $user = $this->Users->patchEntity($user, $this->request->getData(), [
+                'fieldList' => ['name', 'email']
+            ]);
+            if ($this->Users->save($user)) {
+                $this->Flash->success('Your account information has been updated');
             }
         }
         $this->set([
@@ -152,43 +154,49 @@ class UsersController extends AppController
      */
     public function forgotPassword()
     {
-        $user = $this->Users->newEntity();
-        if ($this->request->is('post')) {
-            $email = $this->request->getData('email');
-            $email = strtolower(trim($email));
-            $adminEmail = Configure::read('admin_email');
-            if (empty($email)) {
-                $msg =
-                    'Please enter the email address you registered with to have your password reset. ' .
-                    "Email <a href=\"mailto:$adminEmail\">$adminEmail</a> for assistance.";
-                $this->Flash->error($msg);
-            } else {
-                $userId = $this->Users->getIdWithEmail($email);
-                if ($userId) {
-                    try {
-                        $this->getMailer('User')->send('resetPassword', [$userId]);
-                        $msg = 'Success! You should be shortly receiving an email with a link to reset your password.';
-                        $this->Flash->success($msg);
-                        $this->set('success', true);
-                    } catch (\Exception $e) {
-                        $msg =
-                            'There was an error sending your password-resetting email. ' .
-                            "Please try again, or email <a href=\"mailto:$adminEmail\">$adminEmail</a> for assistance.";
-                        $this->Flash->error($msg);
-                    }
-                } else {
-                    $msg =
-                        "We couldn't find an account registered with the email address <strong>$email</strong>. " .
-                        'Please make sure you spelled it correctly, and email ' .
-                        "<a href=\"mailto:$adminEmail\">$adminEmail</a> if you need assistance.";
-                    $this->Flash->error($msg);
-                }
-            }
-        }
         $this->set([
             'titleForLayout' => 'Forgot Password',
-            'user' => $user
+            'user' => $this->Users->newEntity()
         ]);
+
+        if (! $this->request->is('post')) {
+            return;
+        }
+
+        $email = $this->request->getData('email');
+        $email = strtolower(trim($email));
+        $adminEmail = Configure::read('admin_email');
+        if (empty($email)) {
+            $msg =
+                'Please enter the email address you registered with to have your password reset. ' .
+                "Email <a href=\"mailto:$adminEmail\">$adminEmail</a> for assistance.";
+            $this->Flash->error($msg);
+
+            return;
+        }
+
+        $userId = $this->Users->getIdWithEmail($email);
+        if ($userId) {
+            try {
+                $this->getMailer('User')->send('resetPassword', [$userId]);
+                $msg = 'Success! You should be shortly receiving an email with a link to reset your password.';
+                $this->Flash->success($msg);
+                $this->set('success', true);
+            } catch (\Exception $e) {
+                $msg =
+                    'There was an error sending your password-resetting email. ' .
+                    "Please try again, or email <a href=\"mailto:$adminEmail\">$adminEmail</a> for assistance.";
+                $this->Flash->error($msg);
+            }
+
+            return;
+        }
+
+        $msg =
+            "We couldn't find an account registered with the email address <strong>$email</strong>. " .
+            'Please make sure you spelled it correctly, and email ' .
+            "<a href=\"mailto:$adminEmail\">$adminEmail</a> if you need assistance.";
+        $this->Flash->error($msg);
     }
 
     /**
