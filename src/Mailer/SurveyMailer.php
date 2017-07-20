@@ -32,6 +32,7 @@ class SurveyMailer extends Mailer
         $email = $this
             ->setTo(Configure::read('noreply_email'))
             ->setTemplate('survey_invitation')
+            ->setSubject('Invitation to participate in Community Readiness Initiative questionnaire')
             ->setViewVars([
                 'clients' => $clients,
                 'criUrl' => Router::url('/', true),
@@ -71,6 +72,7 @@ class SurveyMailer extends Mailer
         $email = $this
             ->setTemplate('survey_invitation')
             ->setTo(Configure::read('noreply_email'))
+            ->setSubject('Invitation to participate in Community Readiness Initiative questionnaire')
             ->setViewVars([
                 'clients' => $clients,
                 'criUrl' => Router::url('/', true),

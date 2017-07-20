@@ -20,6 +20,7 @@ class UserMailer extends Mailer
     {
         return $this
             ->setTo($user->email)
+            ->setSubject('Your new Community Readiness Initiative account has been created')
             ->setViewVars([
                 'homeUrl' => Router::url('/', true),
                 'loginUrl' => Router::url([
@@ -52,6 +53,7 @@ class UserMailer extends Mailer
         return $this
             ->setTo($user->email)
             ->setTemplate('reset_password')
+            ->setSubject('CRI Account Password Reset')
             ->setViewVars([
                 'user' => $user,
                 'resetUrl' => Router::url([
