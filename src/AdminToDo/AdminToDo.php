@@ -33,7 +33,7 @@ class AdminToDo
     /** @var CommunitiesTable $communitiesTable */
     public $communitiesTable;
 
-    /** @var OptOutsTable $optOutsTable  */
+    /** @var OptOutsTable $optOutsTable */
     public $optOutsTable;
 
     /** @var ProductsTable $productsTable */
