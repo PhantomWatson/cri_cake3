@@ -89,6 +89,7 @@ class SurveyResultsComponent extends Component
         $this->_registry->getController()->set([
             'approvedResponseCount' => $approvedResponseCount,
             'communityId' => $community->id,
+            'community' => $community,
             'invitationCount' => $invitationCount,
             'mostRecentResponseDate' => $mostRecentResponseDate,
             'respondents' => $paginatedRespondents,
