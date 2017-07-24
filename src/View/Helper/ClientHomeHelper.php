@@ -184,7 +184,7 @@ class ClientHomeHelper extends Helper
                     'prefix' => 'client',
                     'controller' => 'Surveys',
                     'action' => 'invite',
-                    'officials'
+                    $params['respondentType']
                 ];
             }
             $actions = $this->Html->link(
