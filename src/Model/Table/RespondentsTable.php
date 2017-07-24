@@ -3,6 +3,7 @@ namespace App\Model\Table;
 
 use App\Model\Entity\Respondent;
 use Cake\I18n\Time;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -15,6 +16,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsTo $Surveys
  * @property \Cake\ORM\Association\BelongsTo $SmRespondents
  * @property \Cake\ORM\Association\HasMany $Responses
+ * @method Query findBySurveyIdAndEmail($surveyId, $email)
  */
 class RespondentsTable extends Table
 {

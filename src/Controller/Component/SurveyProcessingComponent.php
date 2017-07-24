@@ -1,9 +1,13 @@
 <?php
 namespace App\Controller\Component;
 
+use App\Model\Entity\InvitationFormData;
+use App\Model\Entity\Respondent;
+use App\Model\Table\RespondentsTable;
 use Cake\Controller\Component;
 use Cake\Event\Event;
 use Cake\Mailer\MailerAwareTrait;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
 class SurveyProcessingComponent extends Component
@@ -106,6 +110,8 @@ class SurveyProcessingComponent extends Component
     public function getSavedInvitations($surveyId, $userId)
     {
         $formDataTable = TableRegistry::get('InvitationFormData');
+
+        /** @var InvitationFormData $savedData */
         $savedData = $formDataTable->find('all')
             ->select(['data'])
             ->where([
@@ -127,6 +133,7 @@ class SurveyProcessingComponent extends Component
      */
     public function sendInvitations($communityId, $respondentType, $surveyId)
     {
+        /** @var RespondentsTable $respondentsTable */
         $respondentsTable = TableRegistry::get('Respondents');
         $this->approvedRespondents = $respondentsTable->getApprovedList($surveyId);
         $this->unaddressedUnapprovedRespondents = $respondentsTable->getUnaddressedUnapprovedList($surveyId);
@@ -234,7 +241,11 @@ class SurveyProcessingComponent extends Component
     private function approveInvitee($invitee)
     {
         $this->uninvApprovedEmails[] = $invitee['email'];
+
+        /** @var RespondentsTable $respondentsTable */
         $respondentsTable = TableRegistry::get('Respondents');
+
+        /** @var Respondent $respondent */
         $respondent = $respondentsTable->findBySurveyIdAndEmail($this->surveyId, $invitee['email'])->first();
 
         // Approve
@@ -419,6 +430,8 @@ class SurveyProcessingComponent extends Component
             ->where(['Responses.survey_id' => $surveyId])
             ->contain([
                 'Respondents' => function ($q) {
+                    /** @var Query $q */
+
                     return $q->select(['id', 'email', 'name', 'title', 'approved']);
                 }
             ])

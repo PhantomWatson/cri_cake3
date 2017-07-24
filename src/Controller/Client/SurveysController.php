@@ -2,6 +2,10 @@
 namespace App\Controller\Client;
 
 use App\Controller\AppController;
+use App\Controller\Component\SurveyProcessingComponent;
+use App\Model\Table\CommunitiesTable;
+use App\Model\Table\RespondentsTable;
+use App\Model\Table\SurveysTable;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Mailer\MailerAwareTrait;
@@ -14,6 +18,7 @@ use Cake\ORM\TableRegistry;
  * Surveys Controller
  *
  * @property \App\Model\Table\SurveysTable $Surveys
+ * @property SurveyProcessingComponent $SurveyProcessing
  */
 class SurveysController extends AppController
 {
@@ -45,6 +50,7 @@ class SurveysController extends AppController
         if (! $clientId) {
             return $this->chooseClientToImpersonate();
         }
+        /** @var CommunitiesTable $communitiesTable */
         $communitiesTable = TableRegistry::get('Communities');
         $communityId = $communitiesTable->getClientCommunityId($clientId);
         if (! $communityId || ! $communitiesTable->exists(['id' => $communityId])) {
@@ -96,6 +102,7 @@ class SurveysController extends AppController
             $invitees = $this->SurveyProcessing->getSavedInvitations($surveyId, $userId);
         }
 
+        /** @var RespondentsTable $respondentsTable */
         $respondentsTable = TableRegistry::get('Respondents');
         $approvedRespondents = $respondentsTable->getApprovedList($surveyId);
         $unaddressedUnapprovedRespondents = $respondentsTable->getUnaddressedUnapprovedList($surveyId);
@@ -116,13 +123,15 @@ class SurveysController extends AppController
             'titleForLayout',
             'unaddressedUnapprovedRespondents'
         ));
+
+        return null;
     }
 
     /**
      * Remind function
      *
      * @param string $surveyType Survey type
-     * @return \App\Controller\Response|\Cake\Http\Response|null
+     * @return \Cake\Http\Response|null
      * @throws NotFoundException
      * @throws ForbiddenException
      */
@@ -133,12 +142,14 @@ class SurveysController extends AppController
             return $this->chooseClientToImpersonate();
         }
 
+        /** @var CommunitiesTable $communitiesTable */
         $communitiesTable = TableRegistry::get('Communities');
         $communityId = $communitiesTable->getClientCommunityId($clientId);
         if (! $communityId) {
             throw new NotFoundException('Your account is not currently assigned to a community');
         }
 
+        /** @var SurveysTable $surveysTable */
         $surveysTable = TableRegistry::get('Surveys');
         $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
         $survey = $surveysTable->get($surveyId);
@@ -146,6 +157,8 @@ class SurveysController extends AppController
             throw new ForbiddenException('Reminders cannot currently be sent out: Questionnaire is inactive');
         }
 
+        /** @var RespondentsTable $respondentsTable */
+        $respondentsTable = TableRegistry::get('Respondents');
         if ($this->request->is('post')) {
             $sender = $this->Auth->user();
             try {
@@ -172,7 +185,6 @@ class SurveysController extends AppController
             $this->Flash->success('Reminder email successfully sent');
 
             // Dispatch event
-            $respondentsTable = TableRegistry::get('Respondents');
             $recipients = $respondentsTable->getUnresponsive($surveyId);
             $event = new Event('Model.Survey.afterRemindersSent', $this, ['meta' => [
                 'communityId' => $survey->community_id,
@@ -189,7 +201,6 @@ class SurveysController extends AppController
             ]);
         }
 
-        $respondentsTable = TableRegistry::get('Respondents');
         $unresponsive = $respondentsTable->getUnresponsive($surveyId);
         $this->set([
             'community' => $communitiesTable->get($communityId),
@@ -198,5 +209,7 @@ class SurveysController extends AppController
             'unresponsive' => $unresponsive,
             'unresponsiveCount' => count($unresponsive),
         ]);
+
+        return null;
     }
 }
