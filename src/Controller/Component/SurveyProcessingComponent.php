@@ -400,21 +400,25 @@ class SurveyProcessingComponent extends Component
     public function arrayToList($array, $conjunction = 'and')
     {
         $count = count($array);
-        if (! $count) {
+
+        if ($count === 0) {
             return '';
-        } elseif ($count == 1) {
-            return $array[0];
-        } elseif ($count > 1) {
-            if ($conjunction) {
-                $lastElement = array_pop($array);
-                array_push($array, $conjunction . ' ' . $lastElement);
-            }
-            if ($count == 2) {
-                return implode(' ', $array);
-            } else {
-                return implode(', ', $array);
-            }
         }
+
+        if ($count === 1) {
+            return $array[0];
+        }
+
+        if ($conjunction) {
+            $lastElement = array_pop($array);
+            array_push($array, $conjunction . ' ' . $lastElement);
+        }
+
+        if ($count === 2) {
+            return implode(' ', $array);
+        }
+
+        return implode(', ', $array);
     }
 
     /**
