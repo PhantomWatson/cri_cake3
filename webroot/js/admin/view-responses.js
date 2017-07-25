@@ -28,7 +28,7 @@ var adminViewResponses = {
                 event.preventDefault();
                 var button = $(this);
                 if (button.data('label') === 'show') {
-                    $('tr.respondent').show();
+                    $('tr.respondent').css('display', 'table-row');
                     button.data('label', 'hide');
                     button.html(showRespondentsLabel.hide);
                 } else {
