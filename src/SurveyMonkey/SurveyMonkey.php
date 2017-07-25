@@ -1,6 +1,10 @@
 <?php
 namespace App\SurveyMonkey;
 
+use App\Model\Entity\Respondent;
+use App\Model\Entity\Response;
+use App\Model\Entity\Survey;
+use App\Model\Table\SurveysTable;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -130,6 +134,7 @@ class SurveyMonkey
     public function getSmRespondentId($respondentId)
     {
         $respondentsTable = TableRegistry::get('Respondents');
+        /** @var Respondent $respondent */
         $respondent = $respondentsTable->find('all')
             ->select(['email', 'survey_id'])
             ->where(['id' => $respondentId])
@@ -138,6 +143,7 @@ class SurveyMonkey
         $surveyId = $respondent->survey_id;
 
         $responsesTable = TableRegistry::get('Responses');
+        /** @var Response $response */
         $response = $responsesTable->find('all')
             ->select(['response_date'])
             ->where(['respondent_id' => $respondentId])
@@ -146,6 +152,7 @@ class SurveyMonkey
         $responseDate = $response->response_date->i18nFormat('yyyy-MM-dd HH:mm:ss');
 
         $surveysTable = TableRegistry::get('Surveys');
+        /** @var Survey $survey */
         $survey = $surveysTable->find('all')
             ->select(['sm_id'])
             ->where(['id' => $surveyId])
@@ -401,6 +408,7 @@ class SurveyMonkey
         }
 
         // Create an array to save this data with
+        /** @var SurveysTable $surveysTable */
         $surveysTable = TableRegistry::get('Surveys');
         $sectors = $surveysTable->getSectors();
         $qnaIdFields = $surveysTable->getQnaIdFieldNames();
