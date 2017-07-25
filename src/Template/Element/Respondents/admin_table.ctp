@@ -80,7 +80,7 @@
                     </tr>
                     <tr class="response" data-alignment="<?= $response[$alignmentField] ?>">
                         <td>
-                            <button class="full-response-button btn btn-default" data-respondent-id="<?= $response['respondent_id'] ?>">
+                            <button class="full-response-button btn btn-default" data-respondent-id="<?= $response['respondent_id'] ?>" title="Show full response">
                                 <span class="glyphicon glyphicon-search"></span>
                             </button>
                         </td>
