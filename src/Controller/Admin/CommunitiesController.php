@@ -450,6 +450,14 @@ class CommunitiesController extends AppController
             $msg = 'Client account created for ' . $client->name . ' and login instructions emailed';
             $this->Flash->success($msg);
 
+            // Dispatch events
+            $event = new Event('Model.User.afterAdd', $this, ['meta' => [
+                'newUserId' => $client->id,
+                'userName' => $client->name,
+                'userRole' => $client->role,
+                'communityId' => $communityId
+            ]]);
+            $this->eventManager()->dispatch($event);
             $event = new Event('Model.Community.afterAddClient', $this, ['meta' => [
                 'communityId' => $communityId,
                 'clientName' => $client->name,
