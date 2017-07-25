@@ -51,7 +51,7 @@ var adminViewResponses = {
             .click(function (event) {
                 event.preventDefault();
                 var link = $(this);
-                var containers = $('#admin-responses-view .tab-pane > .responses > div');
+                var containers = $('#admin-responses-view').find('.tab-pane > .responses > div');
                 if (link.data('mode') === 'scrolling') {
                     containers.removeClass('scrollable_table');
                     link.html(toggleFullscreenLabel.window);
@@ -63,6 +63,7 @@ var adminViewResponses = {
                 }
             });
         $('.full-response-button').click(function (event) {
+            event.preventDefault();
             var button = $(this);
             var respondentId = button.data('respondent-id');
             adminViewResponses.showFullResponse(respondentId);
@@ -72,13 +73,13 @@ var adminViewResponses = {
         $.ajax({
             url: '/admin/responses/get-full-response/' + respondentId,
             dataType: 'json',
-            beforeSend: function (xhr) {
+            beforeSend: function () {
                 var modal = $('#full-response-modal');
                 var loadingIcon = '<img src="/data_center/img/loading_small.gif" />';
                 modal.find('.modal-body').html('Loading... ' + loadingIcon);
                 modal.modal();
             },
-            success: function (data, textStatus, jqXHR) {
+            success: function (data) {
                 var modal = $('#full-response-modal');
                 var modalBody = modal.find('.modal-body');
 
@@ -92,6 +93,10 @@ var adminViewResponses = {
                 modalBody.html('');
                 var response = data.response;
                 for (var heading in response) {
+                    if (! response.hasOwnProperty(heading)) {
+                        continue;
+                    }
+
                     modalBody.append('<h3>' + heading + '</h3>');
                     var answerList = $('<ul></ul>');
                     var answers = response[heading];
@@ -101,7 +106,7 @@ var adminViewResponses = {
                     modalBody.append(answerList);
                 }
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR) {
                 var modal = $('#full-response-modal');
                 var modalBody = modal.find('.modal-body');
                 var response = $.parseJSON(jqXHR.responseText);
@@ -117,7 +122,7 @@ var adminViewResponses = {
     },
     updateAlignment: function (container) {
         var respondents = [];
-        if (this.getCalcMode(container) == 'selected') {
+        if (this.getCalcMode(container) === 'selected') {
             respondents = container.find('.custom_alignment_calc:checked');
         } else {
             respondents = container.find('td.approved .glyphicon-ok');
@@ -135,7 +140,7 @@ var adminViewResponses = {
         resultContainer.html(average + '%');
     },
     getRespondentCount: function (container) {
-        if (this.getCalcMode(container) == 'selected') {
+        if (this.getCalcMode(container) === 'selected') {
             return container.find('input.custom_alignment_calc:checked').length;
         }
         return container.find('td.approved .glyphicon-ok').length;
@@ -145,7 +150,7 @@ var adminViewResponses = {
         container.find('.respondent_count').html(respondentCount);
         var respondentPlurality = container.find('.respondent_plurality');
         respondentPlurality.html('respondent');
-        if (respondentCount != 1) {
+        if (respondentCount !== 1) {
             respondentPlurality.append('s');
         }
     },
