@@ -3,11 +3,15 @@ namespace App\Controller\Admin;
 
 use App\Controller\AppController;
 use App\Model\Entity\Community;
+use App\Model\Entity\Survey;
+use App\Model\Table\RespondentsTable;
 use App\SurveyMonkey\SurveyMonkey;
 use Cake\Core\Configure;
+use Cake\Database\Expression\QueryExpression;
 use Cake\Event\Event;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\NotFoundException;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
@@ -43,6 +47,8 @@ class SurveysController extends AppController
         }
 
         $communitiesTable = TableRegistry::get('Communities');
+
+        /** @var Community $community */
         $community = $communitiesTable->find('slugged', ['slug' => $communitySlug])->first();
         if (! $community) {
             throw new NotFoundException("Community not found");
@@ -50,9 +56,7 @@ class SurveysController extends AppController
 
         $surveyId = $this->Surveys->getSurveyId($community->id, $surveyType);
 
-        if ($surveyId) {
-            $survey = $this->Surveys->get($surveyId);
-        } else {
+        if (!$surveyId) {
             return $this->redirect([
                 'action' => 'link',
                 $communitySlug,
@@ -60,6 +64,8 @@ class SurveysController extends AppController
             ]);
         }
 
+        /** @var Survey $survey */
+        $survey = $this->Surveys->get($surveyId);
         if ($survey->get('id')) {
             $this->prepareSurveyStatus($survey, $community);
         }
@@ -70,6 +76,8 @@ class SurveysController extends AppController
             'survey' => $survey,
             'titleForLayout' => $community->name . ': ' . ucwords($surveyType) . 's Questionnaire Overview'
         ]);
+
+        return null;
     }
 
     /**
@@ -87,6 +95,8 @@ class SurveysController extends AppController
         }
 
         $communitiesTable = TableRegistry::get('Communities');
+
+        /** @var Community $community */
         $community = $communitiesTable->find('slugged', ['slug' => $communitySlug])->first();
         if (! $community) {
             throw new NotFoundException("Community not found");
@@ -94,6 +104,7 @@ class SurveysController extends AppController
 
         $surveyId = $this->Surveys->getSurveyId($community->id, $surveyType);
 
+        /** @var Survey $survey */
         if ($surveyId) {
             $survey = $this->Surveys->get($surveyId);
         } else {
@@ -197,6 +208,7 @@ class SurveysController extends AppController
 
         $autoImportFrequency = $isAutomaticallyImported ? $this->Surveys->getPerSurveyAutoImportFrequency() : '';
 
+        /** @var RespondentsTable $respondentsTable */
         $respondentsTable = TableRegistry::get('Respondents');
         $this->set([
             'autoImportFrequency' => $autoImportFrequency,
@@ -266,6 +278,7 @@ class SurveysController extends AppController
             $invitees = $this->SurveyProcessing->getSavedInvitations($surveyId, $userId);
         }
 
+        /** @var RespondentsTable $respondentsTable */
         $respondentsTable = TableRegistry::get('Respondents');
         $approvedRespondents = $respondentsTable->getApprovedList($surveyId);
         $unaddressedUnapprovedRespondents = $respondentsTable->getUnaddressedUnapprovedList($surveyId);
@@ -291,6 +304,8 @@ class SurveysController extends AppController
             'surveyId',
             'unaddressedUnapprovedRespondents'
         ));
+
+        return null;
     }
 
     /**
@@ -313,6 +328,8 @@ class SurveysController extends AppController
         $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($survey->community_id);
 
+        /** @var RespondentsTable $respondentsTable */
+        $respondentsTable = TableRegistry::get('Respondents');
         if ($this->request->is('post')) {
             $sender = $this->Auth->user();
             try {
@@ -339,7 +356,6 @@ class SurveysController extends AppController
             $this->Flash->success('Reminder email successfully sent');
 
             // Dispatch event
-            $respondentsTable = TableRegistry::get('Respondents');
             $recipients = $respondentsTable->getUnresponsive($surveyId);
             $event = new Event('Model.Survey.afterRemindersSent', $this, ['meta' => [
                 'communityId' => $survey->community_id,
@@ -358,7 +374,6 @@ class SurveysController extends AppController
             ]);
         }
 
-        $respondentsTable = TableRegistry::get('Respondents');
         $unresponsive = $respondentsTable->getUnresponsive($surveyId);
         $this->set([
             'community' => $community,
@@ -368,6 +383,8 @@ class SurveysController extends AppController
             'unresponsiveCount' => count($unresponsive)
         ]);
         $this->render('..' . DS . '..' . DS . 'Client' . DS . 'Surveys' . DS . 'remind');
+
+        return null;
     }
 
     /**
@@ -378,9 +395,10 @@ class SurveysController extends AppController
      */
     public function activate($surveyId)
     {
-        $communitiesTable = TableRegistry::get('Communities');
+        /** @var Survey $survey */
         $survey = $this->Surveys->get($surveyId);
         $currentlyActive = $survey->active;
+        $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($survey->community_id);
         $warning = null;
         if ($this->request->is('put')) {
@@ -519,10 +537,14 @@ class SurveysController extends AppController
             ->select(['id', 'sm_id'])
             ->where([
                 'type' => 'official',
-                function ($exp, $q) {
+                function ($exp) {
+                    /** @var QueryExpression $exp */
+
                     return $exp->isNotNull('sm_id');
                 },
-                function ($exp, $q) {
+                function ($exp) {
+                    /** @var QueryExpression $exp */
+
                     return $exp->isNull('aware_of_plan_qid');
                 }
             ])
@@ -575,9 +597,13 @@ class SurveysController extends AppController
             ->select(['id', 'name'])
             ->contain([
                 'OfficialSurvey' => function ($q) {
+                    /** @var Query $q */
+
                     return $q->select(['id', 'aware_of_plan_qid', 'pwrrr_qid', 'active']);
                 },
                 'OrganizationSurvey' => function ($q) {
+                    /** @var Query $q */
+
                     return $q->select(['id', 'pwrrr_qid', 'active']);
                 }
             ])
@@ -611,6 +637,8 @@ class SurveysController extends AppController
             'import_errors' => null
         ];
         $this->Surveys->patchEntity($survey, $data);
+
+        /** @var Survey|bool $result */
         $result = $this->Surveys->save($survey);
         if (! $result) {
             $this->set([

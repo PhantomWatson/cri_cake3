@@ -120,5 +120,7 @@ class DeliveriesController extends AppController
             'communities' => $communitiesTable->find('list')->order(['name' => 'ASC']),
             'titleForLayout' => 'Report Delivery',
         ]);
+
+        return null;
     }
 }

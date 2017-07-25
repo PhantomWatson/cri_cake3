@@ -2,8 +2,6 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
 /**

@@ -2,6 +2,8 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Model\Entity\Setting;
+use Cake\Database\Expression\QueryExpression;
 
 class SettingsController extends AppController
 {
@@ -15,6 +17,7 @@ class SettingsController extends AppController
         if ($this->request->is(['post', 'put'])) {
             $settings = [];
             foreach ($this->request->getData('settings') as $settingId => $settingValue) {
+                /** @var Setting $setting */
                 $setting = $this->Settings->get($settingId);
                 $setting = $this->Settings->patchEntity($setting, ['value' => $settingValue]);
                 $errors = $setting->getErrors();
@@ -29,7 +32,9 @@ class SettingsController extends AppController
         } else {
             $settingNames = ['intAlignmentAdjustment', 'intAlignmentThreshold'];
             $settings = $this->Settings->find('all')
-                ->where(function ($exp, $q) use ($settingNames) {
+                ->where(function ($exp) use ($settingNames) {
+                    /** @var QueryExpression $exp */
+
                     return $exp->in('name', $settingNames);
                 })
                 ->toArray();

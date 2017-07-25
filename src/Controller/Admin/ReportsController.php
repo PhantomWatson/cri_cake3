@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use App\Model\Table\SurveysTable;
 use App\Reports\FullReports\AdminReport;
 use App\Reports\FullReports\OcraReport;
 use App\Reports\Reports;
@@ -17,6 +18,7 @@ class ReportsController extends AppController
      */
     public function index()
     {
+        /** @var SurveysTable $surveysTable */
         $surveysTable = TableRegistry::get('Surveys');
         $reports = new Reports();
         $report = $reports->getReport();
