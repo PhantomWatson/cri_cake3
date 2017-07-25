@@ -64,11 +64,8 @@ class SurveysController extends AppController
             ]);
         }
 
-        /** @var Survey $survey */
         $survey = $this->Surveys->get($surveyId);
-        if ($survey->get('id')) {
-            $this->prepareSurveyStatus($survey, $community);
-        }
+        $this->prepareSurveyStatus($survey, $community);
 
         $this->set([
             'community' => $community,
