@@ -5,6 +5,9 @@ use App\Model\Entity\ActivityRecord;
 use Cake\Utility\Hash;
 use Cake\View\Helper;
 
+/**
+ * @property \Cake\View\Helper\HtmlHelper $Html
+ */
 class ActivityRecordsHelper extends Helper
 {
     public $helpers = ['Html'];

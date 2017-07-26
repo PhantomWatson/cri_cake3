@@ -6,6 +6,10 @@ use Cake\Network\Exception\InternalErrorException;
 use Cake\Routing\Router;
 use Cake\View\Helper;
 
+/**
+ * @property \Cake\View\Helper\HtmlHelper $Html
+ * @property \Cake\View\Helper\TimeHelper $Time
+ */
 class ClientHomeHelper extends Helper
 {
     public $helpers = ['Html', 'Time'];
