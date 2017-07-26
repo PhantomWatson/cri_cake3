@@ -10,6 +10,10 @@ use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @property \Cake\Controller\Component\FlashComponent $Flash
+ * @property \Cake\Controller\Component\AuthComponent $Auth
+ */
 class SurveyProcessingComponent extends Component
 {
     use MailerAwareTrait;

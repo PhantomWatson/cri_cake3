@@ -5,6 +5,10 @@ use Cake\Controller\Component;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @property \Cake\Controller\Component\FlashComponent $Flash
+ * @property \Cake\Controller\Component\AuthComponent $Auth
+ */
 class ClientHomeComponent extends Component
 {
     public $components = ['Flash', 'Auth'];

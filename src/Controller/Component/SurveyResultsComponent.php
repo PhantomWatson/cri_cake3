@@ -5,6 +5,10 @@ use Cake\Controller\Component;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @property \Cake\Controller\Component\FlashComponent $Flash
+ * @property \Cake\Controller\Component\AuthComponent $Auth
+ */
 class SurveyResultsComponent extends Component
 {
     public $components = ['Flash', 'Auth'];
