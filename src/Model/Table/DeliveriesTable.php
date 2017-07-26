@@ -9,9 +9,9 @@ use Cake\Validation\Validator;
 /**
  * Deliveries Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Deliverables
- * @property \Cake\ORM\Association\BelongsTo $Users
- * @property \Cake\ORM\Association\BelongsTo $Communities
+ * @property \App\Model\Table\DeliverablesTable|\Cake\ORM\Association\BelongsTo $Deliverables
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\CommunitiesTable|\Cake\ORM\Association\BelongsTo $Communities
  *
  * @method \App\Model\Entity\Delivery get($primaryKey, $options = [])
  * @method \App\Model\Entity\Delivery newEntity($data = null, array $options = [])

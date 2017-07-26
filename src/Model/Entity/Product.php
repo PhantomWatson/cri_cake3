@@ -5,6 +5,13 @@ use Cake\ORM\Entity;
 
 /**
  * Product Entity.
+ *
+ * @property int $id
+ * @property string $description
+ * @property string $item_code
+ * @property int $price
+ * @property int $step
+ * @property int $prerequisite
  */
 class Product extends Entity
 {

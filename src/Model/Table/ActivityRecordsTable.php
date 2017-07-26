@@ -13,17 +13,17 @@ use Cake\Validation\Validator;
 /**
  * ActivityRecords Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Users
- * @property \Cake\ORM\Association\BelongsTo $Communities
- * @property \Cake\ORM\Association\BelongsTo $Surveys
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\CommunitiesTable|\Cake\ORM\Association\BelongsTo $Communities
+ * @property \App\Model\Table\SurveysTable|\Cake\ORM\Association\BelongsTo $Surveys
  *
- * @method ActivityRecord get($primaryKey, $options = [])
- * @method ActivityRecord newEntity($data = null, array $options = [])
- * @method ActivityRecord[] newEntities(array $data, array $options = [])
- * @method ActivityRecord|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method ActivityRecord patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method ActivityRecord[] patchEntities($entities, array $data, array $options = [])
- * @method ActivityRecord findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\ActivityRecord get($primaryKey, $options = [])
+ * @method \App\Model\Entity\ActivityRecord newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\ActivityRecord[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\ActivityRecord|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\ActivityRecord patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\ActivityRecord[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\ActivityRecord findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */

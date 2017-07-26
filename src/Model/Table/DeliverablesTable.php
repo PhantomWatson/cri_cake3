@@ -9,7 +9,7 @@ use Cake\Validation\Validator;
 /**
  * Deliverables Model
  *
- * @property \Cake\ORM\Association\HasMany $Deliveries
+ * @property \App\Model\Table\DeliveriesTable|\Cake\ORM\Association\HasMany $Deliveries
  *
  * @method \App\Model\Entity\Deliverable get($primaryKey, $options = [])
  * @method \App\Model\Entity\Deliverable newEntity($data = null, array $options = [])

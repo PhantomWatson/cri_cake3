@@ -12,11 +12,24 @@ use Cake\Validation\Validator;
 /**
  * Communities Model
  *
- * @property \Cake\ORM\Association\BelongsTo $LocalAreas
- * @property \Cake\ORM\Association\BelongsTo $ParentAreas
- * @property \Cake\ORM\Association\HasMany $Purchases
- * @property \Cake\ORM\Association\HasMany $Surveys
+ * @property \App\Model\Table\AreasTable|\Cake\ORM\Association\BelongsTo $LocalAreas
+ * @property \App\Model\Table\AreasTable|\Cake\ORM\Association\BelongsTo $ParentAreas
+ * @property \App\Model\Table\PurchasesTable|\Cake\ORM\Association\HasMany $Purchases
+ * @property \App\Model\Table\SurveysTable|\Cake\ORM\Association\HasMany $Surveys
  * @property \Cake\ORM\Association\HasMany $SurveysBackup
+ * @property \App\Model\Table\OptOutsTable|\Cake\ORM\Association\HasMany $OptOuts
+ * @property \App\Model\Table\ActivityRecordsTable|\Cake\ORM\Association\HasMany $ActivityRecords
+ * @property \App\Model\Table\SurveysTable|\Cake\ORM\Association\HasOne $OfficialSurvey
+ * @property \App\Model\Table\SurveysTable|\Cake\ORM\Association\HasOne $OrganizationSurvey
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsToMany $Clients
+ * @method \App\Model\Entity\Community get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Community newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\Community[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Community|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Community patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Community[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Community findOrCreate($search, callable $callback = null, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class CommunitiesTable extends Table
 {

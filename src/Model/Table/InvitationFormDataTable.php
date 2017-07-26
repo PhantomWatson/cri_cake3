@@ -8,8 +8,8 @@ use Cake\Validation\Validator;
 /**
  * InvitationFormData Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Users
- * @property \Cake\ORM\Association\BelongsTo $Surveys
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\SurveysTable|\Cake\ORM\Association\BelongsTo $Surveys
  *
  * @method \App\Model\Entity\InvitationFormData get($primaryKey, $options = [])
  * @method \App\Model\Entity\InvitationFormData newEntity($data = null, array $options = [])
@@ -17,7 +17,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\InvitationFormData|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\InvitationFormData patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\InvitationFormData[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\InvitationFormData findOrCreate($search, callable $callback = null)
+ * @method \App\Model\Entity\InvitationFormData findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */

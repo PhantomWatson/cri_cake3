@@ -5,6 +5,19 @@ use Cake\ORM\Entity;
 
 /**
  * Purchase Entity.
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $community_id
+ * @property int $product_id
+ * @property int $amount
+ * @property string $postback
+ * @property bool $admin_added
+ * @property string $source
+ * @property string $notes
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $refunded
+ * @property int $refunder_id
  */
 class Purchase extends Entity
 {

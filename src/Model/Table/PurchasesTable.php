@@ -10,10 +10,19 @@ use Cake\Validation\Validator;
 /**
  * Purchases Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Users
- * @property \Cake\ORM\Association\BelongsTo $Communities
- * @property \Cake\ORM\Association\BelongsTo $Products
- * @property \Cake\ORM\Association\BelongsTo $Refunders
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\CommunitiesTable|\Cake\ORM\Association\BelongsTo $Communities
+ * @property \App\Model\Table\ProductsTable|\Cake\ORM\Association\BelongsTo $Products
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Refunders
+ * @property \App\Model\Table\InvoicesTable|\Cake\ORM\Association\HasOne $Invoices
+ * @method \App\Model\Entity\Purchase get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Purchase newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\Purchase[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Purchase|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Purchase patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Purchase[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Purchase findOrCreate($search, callable $callback = null, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class PurchasesTable extends Table
 {

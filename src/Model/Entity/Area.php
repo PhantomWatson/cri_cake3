@@ -5,6 +5,19 @@ use Cake\ORM\Entity;
 
 /**
  * Area Entity.
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $type
+ * @property int $fips
+ * @property int $production_rank
+ * @property int $wholesale_rank
+ * @property int $retail_rank
+ * @property int $residential_rank
+ * @property int $recreation_rank
+ * @property int $parent_id
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
  */
 class Area extends Entity
 {

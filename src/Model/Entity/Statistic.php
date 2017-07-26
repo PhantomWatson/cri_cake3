@@ -5,6 +5,14 @@ use Cake\ORM\Entity;
 
 /**
  * Statistic Entity.
+ *
+ * @property int $id
+ * @property int $area_id
+ * @property int $stat_category_id
+ * @property float $value
+ * @property int $year
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
  */
 class Statistic extends Entity
 {

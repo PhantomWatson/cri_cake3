@@ -12,7 +12,7 @@ use Cake\ORM\Entity;
  * @property int $community_id
  * @property int $survey_id
  * @property string $meta
- * @property \Cake\I18n\Time $created
+ * @property \Cake\I18n\FrozenTime $created
  *
  * @property \App\Model\Entity\User $user
  * @property \App\Model\Entity\Community $community

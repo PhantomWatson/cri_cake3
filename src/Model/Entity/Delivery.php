@@ -10,7 +10,7 @@ use Cake\ORM\Entity;
  * @property int $deliverable_id
  * @property int $user_id
  * @property int $community_id
- * @property \Cake\I18n\Time $created
+ * @property \Cake\I18n\FrozenTime $created
  *
  * @property \App\Model\Entity\Deliverable $deliverable
  * @property \App\Model\Entity\User $user

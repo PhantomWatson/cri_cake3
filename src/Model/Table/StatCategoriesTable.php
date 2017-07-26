@@ -8,6 +8,14 @@ use Cake\Validation\Validator;
  * StatCategories Model
  *
  * @property \Cake\ORM\Association\HasMany $Statistic
+ * @method \App\Model\Entity\StatCategory get($primaryKey, $options = [])
+ * @method \App\Model\Entity\StatCategory newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\StatCategory[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\StatCategory|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\StatCategory patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\StatCategory[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\StatCategory findOrCreate($search, callable $callback = null, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class StatCategoriesTable extends Table
 {

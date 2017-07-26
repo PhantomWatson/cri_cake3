@@ -5,6 +5,27 @@ use Cake\ORM\Entity;
 
 /**
  * Community Entity.
+ *
+ * @property int $id
+ * @property string $name
+ * @property int $local_area_id
+ * @property int $parent_area_id
+ * @property bool $public
+ * @property bool $fast_track
+ * @property float $score
+ * @property \Cake\I18n\FrozenDate $town_meeting_date
+ * @property float $intAlignmentAdjustment
+ * @property float $intAlignmentThreshold
+ * @property \Cake\I18n\FrozenDate $presentation_a
+ * @property \Cake\I18n\FrozenDate $presentation_b
+ * @property \Cake\I18n\FrozenDate $presentation_c
+ * @property \Cake\I18n\FrozenDate $presentation_d
+ * @property bool $dummy
+ * @property string $notes
+ * @property bool $active
+ * @property string $slug
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
  */
 class Community extends Entity
 {

@@ -5,6 +5,18 @@ use Cake\ORM\Entity;
 
 /**
  * Respondent Entity.
+ *
+ * @property int $id
+ * @property string $email
+ * @property string $name
+ * @property string $title
+ * @property int $survey_id
+ * @property string $sm_respondent_id
+ * @property bool $invited
+ * @property int $approved
+ * @property \Cake\I18n\FrozenTime $response_date
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
  */
 class Respondent extends Entity
 {

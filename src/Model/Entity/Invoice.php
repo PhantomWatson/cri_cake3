@@ -9,8 +9,8 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $purchase_id
  * @property bool $paid
- * @property \Cake\I18n\Time $created
- * @property \Cake\I18n\Time $modified
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
  *
  * @property \App\Model\Entity\Purchase $purchase
  */

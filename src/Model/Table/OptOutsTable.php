@@ -12,9 +12,9 @@ use Cake\Validation\Validator;
 /**
  * OptOuts Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Users
- * @property \Cake\ORM\Association\BelongsTo $Communities
- * @property \Cake\ORM\Association\BelongsTo $Products
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\CommunitiesTable|\Cake\ORM\Association\BelongsTo $Communities
+ * @property \App\Model\Table\ProductsTable|\Cake\ORM\Association\BelongsTo $Products
  *
  * @method \App\Model\Entity\OptOut get($primaryKey, $options = [])
  * @method \App\Model\Entity\OptOut newEntity($data = null, array $options = [])

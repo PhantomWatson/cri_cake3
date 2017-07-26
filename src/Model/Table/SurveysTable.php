@@ -17,10 +17,18 @@ use Cake\Validation\Validator;
 /**
  * Surveys Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Communities
+ * @property \App\Model\Table\CommunitiesTable|\Cake\ORM\Association\BelongsTo $Communities
  * @property \Cake\ORM\Association\BelongsTo $Sms
- * @property \Cake\ORM\Association\HasMany $Respondents
- * @property \Cake\ORM\Association\HasMany $Responses
+ * @property \App\Model\Table\RespondentsTable|\Cake\ORM\Association\HasMany $Respondents
+ * @property \App\Model\Table\ResponsesTable|\Cake\ORM\Association\HasMany $Responses
+ * @method \App\Model\Entity\Survey get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Survey newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\Survey[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Survey|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Survey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Survey[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Survey findOrCreate($search, callable $callback = null, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class SurveysTable extends Table
 {

@@ -13,10 +13,18 @@ use Cake\Validation\Validator;
 /**
  * Respondents Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Surveys
+ * @property \App\Model\Table\SurveysTable|\Cake\ORM\Association\BelongsTo $Surveys
  * @property \Cake\ORM\Association\BelongsTo $SmRespondents
- * @property \Cake\ORM\Association\HasMany $Responses
+ * @property \App\Model\Table\ResponsesTable|\Cake\ORM\Association\HasMany $Responses
  * @method Query findBySurveyIdAndEmail($surveyId, $email)
+ * @method \App\Model\Entity\Respondent get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Respondent newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\Respondent[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Respondent|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Respondent patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Respondent[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Respondent findOrCreate($search, callable $callback = null, $options = [])
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class RespondentsTable extends Table
 {
