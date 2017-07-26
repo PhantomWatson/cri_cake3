@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Community $community
+ * @var \App\Model\Entity\Survey $survey
+ */
+?>
 <?php use Cake\Validation\Validation; ?>
 
 <div class="page-header">

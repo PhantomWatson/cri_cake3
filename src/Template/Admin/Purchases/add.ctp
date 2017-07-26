@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Purchase $purchase
+ */
+?>
 <div class="page-header">
     <h1>
         <?= $titleForLayout ?>

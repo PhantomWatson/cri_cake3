@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <?= $this->ClientHome->tbodyForStep(4, $score) ?>
     <tr>
         <th colspan="3">

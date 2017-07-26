@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Setting[]|\Cake\Collection\CollectionInterface $settings
+ */
+?>
 <div class="page-header">
     <h1>
         <?= $titleForLayout ?>

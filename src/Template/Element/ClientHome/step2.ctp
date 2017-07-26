@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Community $community
+ */
+?>
 <?= $this->ClientHome->tbodyForStep(2, $score) ?>
     <tr>
         <th colspan="3">

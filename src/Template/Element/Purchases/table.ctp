@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Purchase[]|\Cake\Collection\CollectionInterface $purchases
+ */
+?>
 <?= $this->element('pagination') ?>
 
 <table class="table" id="purchases_index">

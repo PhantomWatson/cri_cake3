@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\Model\Entity\User $user
+ */
+?>
 <p>
     <?= $user->name ?>,
 </p>

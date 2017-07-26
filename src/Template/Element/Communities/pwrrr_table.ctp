@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <?php $this->append('buffered'); ?>
     $('#<?= $areaScope ?>_pwr_table_toggler').click(function (event) {
         event.preventDefault();

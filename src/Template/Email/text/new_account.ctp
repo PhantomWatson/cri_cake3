@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\Model\Entity\User $user
+ */
+?>
 <?= $user->name ?>,
 
 <?php if ($role == 'client'): ?>

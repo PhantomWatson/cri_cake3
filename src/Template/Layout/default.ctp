@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ */
     $this->extend('DataCenter.default');
     $this->assign('sidebar', $this->element('Sidebar/sidebar'));
 

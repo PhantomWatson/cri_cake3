@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ */
     if ($this->Paginator->hasPrev() || $this->Paginator->hasNext()) {
         echo '<ul class="pagination">';
     }

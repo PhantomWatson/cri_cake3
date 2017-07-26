@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <ul>
     <li class="link">
         <?= $this->Html->link(

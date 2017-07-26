@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <p>
     <?= $this->Html->link(
         '<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> ' .

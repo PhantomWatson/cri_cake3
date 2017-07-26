@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Response[]|\Cake\Collection\CollectionInterface $responses
+ */
     use Cake\Validation\Validation;
     use App\Controller\Component\SurveyProcessingComponent;
 

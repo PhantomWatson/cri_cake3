@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Respondent[]|\Cake\Collection\CollectionInterface $respondents
+ */
     use Cake\Validation\Validation;
 ?>
 

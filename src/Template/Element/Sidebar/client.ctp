@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <?php /*
     <h2> deliberately omitted so the admin block can insert a <select> between it and <ul>
 */ ?>

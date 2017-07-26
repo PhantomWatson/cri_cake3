@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <div class="dropdown">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
         <?= $community[$surveyType]['status'] ?> <span class="caret"></span>

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Community[]|\Cake\Collection\CollectionInterface $communities
+ */
     $Report = new \App\Reports\Reports();
 ?>
 <div id="communities_admin_index">

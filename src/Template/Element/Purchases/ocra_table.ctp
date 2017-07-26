@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Purchase $purchase
+ */
+?>
 <?php if ($group['form']): ?>
     <?= $this->Form->create(null, [
         'url' => $group['form']['action']

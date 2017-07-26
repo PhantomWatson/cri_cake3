@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\Model\Entity\Product[]|\Cake\Collection\CollectionInterface $products
+ */
+?>
 <div class="page-header">
     <h1>
         <?= $titleForLayout; ?>

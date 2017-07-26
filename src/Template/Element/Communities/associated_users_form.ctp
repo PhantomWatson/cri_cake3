@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <div class="panel panel-default" id="<?= $role ?>_interface">
     <div class="panel-heading">
         <h2 class="panel-title">

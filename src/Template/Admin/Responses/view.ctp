@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Survey $survey
+ * @var \App\Model\Entity\Community $community
+ * @var \App\Model\Entity\Area $area
+ */
+?>
 <div class="page-header">
     <h1>
         <?= $titleForLayout ?>

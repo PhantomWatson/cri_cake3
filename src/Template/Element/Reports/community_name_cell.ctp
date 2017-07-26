@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <?= $community['name'] ?>
 
 <?php if ($community['notes']): ?>

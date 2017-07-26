@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\ActivityRecord[]|\Cake\Collection\CollectionInterface $activityRecords
+ */
+?>
 <?= $this->element('pagination') ?>
 
 <table class="table" id="activity-records">

@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Delivery[]|\Cake\Collection\CollectionInterface $deliveries
+ */
+?>
 <?= $this->element('pagination') ?>
 
 <table class="table">
