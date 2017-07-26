@@ -21,6 +21,10 @@ use Cake\View\View;
  * Your application’s default view class
  *
  * @link http://book.cakephp.org/3.0/en/views.html#the-app-view
+ * @property \App\View\Helper\ReportsHelper $Reports
+ * @property \App\View\Helper\ClientHomeHelper $ClientHome
+ * @property \GoogleCharts\View\Helper\GoogleChartsHelper $GoogleCharts
+ * @property \App\View\Helper\ActivityRecordsHelper $ActivityRecords
  */
 class AppView extends View
 {
