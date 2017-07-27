@@ -15,6 +15,7 @@ use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
+use Queue\Model\Table\QueuedJobsTable;
 
 class SurveysController extends AppController
 {
@@ -472,13 +473,16 @@ class SurveysController extends AppController
 
             if ($this->request->getData('confirmed')) {
                 $step = 'results';
-                $this->getMailer('Survey')->send('invitations', [[
+
+                /** @var QueuedJobsTable $queuedJobs */
+                $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+                $queuedJobs->createJob('Invitation', [
                     'surveyId' => $surveyId,
                     'communityId' => $survey->community_id,
                     'senderEmail' => $user->email,
                     'senderName' => $user->name,
                     'recipients' => $recipients
-                ]]);
+                ]);
 
                 // Dispatch event
                 $surveysTable = TableRegistry::get('Surveys');

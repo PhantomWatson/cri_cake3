@@ -9,6 +9,7 @@ use Cake\Event\Event;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
+use Queue\Model\Table\QueuedJobsTable;
 
 /**
  * @property \Cake\Controller\Component\FlashComponent $Flash
@@ -159,13 +160,15 @@ class SurveyProcessingComponent extends Component
         }
 
         try {
-            $this->getMailer('Survey')->send('invitations', [[
+            /** @var QueuedJobsTable $queuedJobs */
+            $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+            $queuedJobs->createJob('Invitation', [
                 'surveyId' => $this->surveyId,
                 'communityId' => $this->communityId,
                 'senderEmail' => $this->Auth->user('email'),
                 'senderName' => $this->Auth->user('name'),
                 'recipients' => $this->recipients
-            ]]);
+            ]);
 
             $this->successEmails = array_merge($this->successEmails, $this->recipients);
             $this->removeFromPending($this->recipients);
