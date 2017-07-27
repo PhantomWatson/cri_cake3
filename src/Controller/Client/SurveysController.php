@@ -13,6 +13,7 @@ use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
+use Queue\Model\Table\QueuedJobsTable;
 
 /**
  * Surveys Controller
@@ -162,7 +163,9 @@ class SurveysController extends AppController
         if ($this->request->is('post')) {
             $sender = $this->Auth->user();
             try {
-                $this->getMailer('Survey')->send('reminders', [$surveyId, $sender]);
+                /** @var QueuedJobsTable $queuedJobs */
+                $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+                $queuedJobs->createJob('Reminder', compact('surveyId', 'sender'));
             } catch (\Exception $e) {
                 $adminEmail = Configure::read('admin_email');
                 $class = get_class($e);
