@@ -1,11 +1,10 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\User $user
  */
 ?>
 <p>
-    <?= $user->name ?>,
+    <?= $name ?>,
 </p>
 
 <p>
@@ -24,7 +23,7 @@
 
 <ul>
     <li>
-        Email: <?= $user->email ?>
+        Email: <?= $email ?>
     </li>
     <li>
         Password: <?= $password ?>

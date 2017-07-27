@@ -3,7 +3,7 @@
  * @var \App\Model\Entity\User $user
  */
 ?>
-<?= $user->name ?>,
+<?= $name ?>,
 
 <?php if ($role == 'client'): ?>
     Thank you for enrolling your community in the Community Readiness Initiative. A new account has been created so that you can log in and manage your community's participation in the CRI process.
@@ -12,7 +12,7 @@
 <?php endif; ?>
 
 Log in to the CRI website at <?= $loginUrl ?> using the following information:
-- Email: <?= $user->email."\n" ?>
+- Email: <?= $email."\n" ?>
 - Password: <?= $password."\n" ?>
 
 It is recommended that you change your password after logging in.

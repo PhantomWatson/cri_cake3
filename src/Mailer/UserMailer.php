@@ -12,14 +12,14 @@ class UserMailer extends Mailer
     /**
      * Defines an email informing a user that their account has been created
      *
-     * @param User $user User
+     * @param array $user User data
      * @param string $password Unhashed password
      * @return Email
      */
     public function newAccount($user, $password)
     {
         return $this
-            ->setTo($user->email)
+            ->setTo($user['email'])
             ->setSubject('Your new Community Readiness Initiative account has been created')
             ->setViewVars([
                 'homeUrl' => Router::url('/', true),
@@ -30,8 +30,9 @@ class UserMailer extends Mailer
                     'action' => 'login',
                 ], true),
                 'password' => $password,
-                'role' => $user->role,
-                'user' => $user
+                'role' => $user['role'],
+                'name' => $user['name'],
+                'email' => $user['email']
             ])
             ->setTemplate('new_account');
     }
