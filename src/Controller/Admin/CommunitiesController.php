@@ -21,6 +21,7 @@ use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
+use Queue\Model\Table\QueuedJobsTable;
 
 class CommunitiesController extends AppController
 {
@@ -442,9 +443,15 @@ class CommunitiesController extends AppController
         }
 
         try {
-            $this->getMailer('User')->send('newAccount', [
-                $client,
-                $this->request->getData('unhashed_password')
+            /** @var QueuedJobsTable $queuedJobs */
+            $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+            $queuedJobs->createJob('NewAccountEmail', [
+                'user' => [
+                    'name' => $client->name,
+                    'email' => $client->email,
+                    'role' => $client->role
+                ],
+                'unhashedPassword' => $this->request->getData('unhashed_password')
             ]);
 
             $msg = 'Client account created for ' . $client->name . ' and login instructions emailed';

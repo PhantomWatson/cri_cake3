@@ -8,6 +8,7 @@ use Cake\Http\Response;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\ORM\TableRegistry;
+use Queue\Model\Table\QueuedJobsTable;
 
 class UsersController extends AppController
 {
@@ -135,9 +136,15 @@ class UsersController extends AppController
                 $this->eventManager()->dispatch($event);
 
                 try {
-                    $this->getMailer('User')->send('newAccount', [
-                        $user,
-                        $this->request->getData('new_password')
+                    /** @var QueuedJobsTable $queuedJobs */
+                    $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+                    $queuedJobs->createJob('NewAccountEmail', [
+                        'user' => [
+                            'name' => $user->name,
+                            'email' => $user->email,
+                            'role' => $user->role
+                        ],
+                        'unhashedPassword' => $this->request->getData('new_password')
                     ]);
 
                     $this->Flash->success('User account created and login credentials emailed');
