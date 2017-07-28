@@ -5,6 +5,8 @@ use Cake\Core\Configure;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
+use Cake\ORM\TableRegistry;
+use Queue\Model\Table\QueuedJobsTable;
 
 /**
  * Users Controller
@@ -178,7 +180,9 @@ class UsersController extends AppController
         $userId = $this->Users->getIdWithEmail($email);
         if ($userId) {
             try {
-                $this->getMailer('User')->send('resetPassword', [$userId]);
+                /** @var QueuedJobsTable $queuedJobs */
+                $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+                $queuedJobs->createJob('ResetPasswordEmail', ['userId' => $userId]);
                 $msg = 'Success! You should be shortly receiving an email with a link to reset your password.';
                 $this->Flash->success($msg);
                 $this->set('success', true);
