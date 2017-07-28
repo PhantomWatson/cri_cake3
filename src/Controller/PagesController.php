@@ -15,7 +15,10 @@
 namespace App\Controller;
 
 use App\Mailer\Mailer;
+use Cake\Core\Configure;
 use Cake\Mailer\MailerAwareTrait;
+use Cake\ORM\TableRegistry;
+use Queue\Model\Table\QueuedJobsTable;
 
 /**
  * Static content controller
@@ -107,13 +110,11 @@ class PagesController extends AppController
      */
     public function sendTestEmail($recipient)
     {
-        try {
-            $this->getMailer('Test')->send('test', [$recipient]);
-            $this->Flash->success('Email successfully sent');
-        } catch (\Exception $e) {
-            $class = get_class($e);
-            $exceptionMsg = $e->getMessage();
-            $this->Flash->error("Error sending email. $class: $exceptionMsg");
-        }
+        /** @var QueuedJobsTable $queuedJobs */
+        $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+        $queuedJobs->createJob('EmailTest', [
+            'email' => $recipient,
+        ]);
+        $this->Flash->success('Email added to queue');
     }
 }
