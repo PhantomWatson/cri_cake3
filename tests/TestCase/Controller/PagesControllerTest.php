@@ -15,7 +15,9 @@ class PagesControllerTest extends ApplicationTest
      *
      * @var array
      */
-    public $fixtures = [];
+    public $fixtures = [
+        'app.queued_jobs'
+    ];
 
     /**
      * Sets up this set of tests

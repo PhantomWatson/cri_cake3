@@ -19,6 +19,7 @@ class UsersControllerTest extends ApplicationTest
         'app.communities',
         'app.products',
         'app.purchases',
+        'app.queued_jobs',
         'app.respondents',
         'app.responses',
         'app.statistics',
