@@ -14,8 +14,6 @@
  */
 namespace App\Controller;
 
-use App\Mailer\Mailer;
-use Cake\Core\Configure;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\TableRegistry;
 use Queue\Model\Table\QueuedJobsTable;
