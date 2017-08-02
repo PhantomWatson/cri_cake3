@@ -93,11 +93,13 @@ class AppController extends Controller
         $this->loadComponent('Auth', [
             'loginAction' => [
                 'prefix' => false,
+                'plugin' => false,
                 'controller' => 'Users',
                 'action' => 'login'
             ],
             'logoutRedirect' => [
                 'prefix' => false,
+                'plugin' => false,
                 'controller' => 'Pages',
                 'action' => 'home'
             ],
