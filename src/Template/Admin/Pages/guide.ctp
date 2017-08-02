@@ -588,6 +588,20 @@
                 ) ?>
             </strong>
         </li>
+        <li>
+            <strong>
+                <?= $this->Html->link(
+                    'Job queue status',
+                    [
+                        'prefix' => 'admin',
+                        'plugin' => 'Queue',
+                        'controller' => 'Queue',
+                        'action' => 'index'
+                    ],
+                    ['escape' => false]
+                ) ?>
+            </strong>
+        </li>
     </ul>
 </section>
 
