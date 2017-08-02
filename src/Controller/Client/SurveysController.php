@@ -162,10 +162,17 @@ class SurveysController extends AppController
         $respondentsTable = TableRegistry::get('Respondents');
         if ($this->request->is('post')) {
             $sender = $this->Auth->user();
+            $recipients = $respondentsTable->getUnresponsive($surveyId);
+            $recipients = Hash::extract($recipients, '{n}.email');
             try {
                 /** @var QueuedJobsTable $queuedJobs */
                 $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
-                $queuedJobs->createJob('Reminder', compact('surveyId', 'sender'));
+                foreach ($recipients as $recipient) {
+                    $queuedJobs->createJob(
+                        'Reminder',
+                        compact('surveyId', 'sender', 'recipient')
+                    );
+                }
             } catch (\Exception $e) {
                 $adminEmail = Configure::read('admin_email');
                 $class = get_class($e);

@@ -32,7 +32,8 @@ class QueueReminderTask extends QueueTask
         try {
             $this->getMailer('Survey')->send('reminders', [
                 $data['surveyId'],
-                $data['sender']
+                $data['sender'],
+                $data['recipient']
             ]);
         } catch (\Exception $e) {
             return false;

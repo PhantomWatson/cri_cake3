@@ -15,9 +15,10 @@ class SurveyMailer extends Mailer
      *
      * @param int $surveyId Survey ID
      * @param array $sender User who is sending the email
+     * @param string $recipient Recipient email address
      * @return Email
      */
-    public function reminders($surveyId, $sender)
+    public function reminders($surveyId, $sender, $recipient)
     {
         $surveysTable = TableRegistry::get('Surveys');
         $survey = $surveysTable->get($surveyId);
@@ -25,12 +26,8 @@ class SurveyMailer extends Mailer
         $communitiesTable = TableRegistry::get('Communities');
         $clients = $communitiesTable->getClients($survey->community_id);
 
-        $respondentsTable = TableRegistry::get('Respondents');
-        $recipients = $respondentsTable->getUnresponsive($surveyId);
-        $recipients = Hash::extract($recipients, '{n}.email');
-
         $email = $this
-            ->setTo(Configure::read('noreply_email'))
+            ->setTo($recipient)
             ->setTemplate('survey_invitation')
             ->setSubject('Invitation to participate in Community Readiness Initiative questionnaire')
             ->setViewVars([
@@ -41,9 +38,6 @@ class SurveyMailer extends Mailer
             ]);
         if ($sender['email']) {
             $email->setReplyTo($sender['email'], $sender['name']);
-        }
-        foreach ($recipients as $recipient) {
-            $email->addBcc($recipient);
         }
 
         return $email;
