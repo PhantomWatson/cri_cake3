@@ -217,7 +217,8 @@ Plugin::load('Migrations');
 Plugin::load('GoogleCharts');
 Plugin::load('DataCenter', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('Xety/Cake3CookieAuth');
-Plugin::load('Queue', ['bootstrap' => true]);
+Plugin::load('Queue', ['bootstrap' => true, 'routes' => true]);
+Plugin::load('Tools', ['bootstrap' => true]);
 
 /*
  * Only try to load DebugKit in development mode

@@ -37,6 +37,8 @@ use Cake\Utility\Hash;
 class AppController extends Controller
 {
 
+    public $helpers = ['Tools.Time'];
+
     /**
      * Initialization hook method.
      *
