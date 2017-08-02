@@ -338,7 +338,11 @@ class AppController extends Controller
             ->order(['name' => 'ASC'])
             ->all();
 
-        $route = ['prefix' => 'admin', 'controller' => 'Communities'];
+        $route = [
+            'prefix' => 'admin',
+            'plugin' => false,
+            'controller' => 'Communities'
+        ];
         $communityPages = [
             'Edit' => Router::url($route + ['action' => 'edit']) . '/{community-slug}',
             'Progress' => Router::url($route + ['action' => 'progress']) . '/{community-slug}',
@@ -348,25 +352,31 @@ class AppController extends Controller
             'Notes' => Router::url($route + ['action' => 'notes']) . '/{community-slug}',
             'Purchases' => Router::url([
                 'prefix' => 'admin',
+                'plugin' => false,
                 'controller' => 'Purchases',
                 'action' => 'view'
             ]) . '/{community-slug}',
             'Activity' => Router::url([
                 'prefix' => 'admin',
+                'plugin' => false,
                 'controller' => 'ActivityRecords',
                 'action' => 'community'
             ]) . '/{community-id}',
             '(De)activate' => Router::url($route + ['action' => 'activate']) . '/{community-slug}'
         ];
 
+        $route = [
+            'prefix' => 'admin',
+            'plugin' => false,
+        ];
         $surveyPages = [
-            'Overview' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'view']) . '/{community-slug}/{survey-type}',
-            'Link' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'link']) . '/{community-slug}/{survey-type}',
-            'Activate' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'activate']) . '/{survey-id}',
-            'Invitations' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'invite']) . '/{survey-id}',
-            'Reminders' => Router::url(['prefix' => 'admin', 'controller' => 'Surveys', 'action' => 'remind']) . '/{survey-id}',
-            'Respondents' => Router::url(['prefix' => 'admin', 'controller' => 'Respondents', 'action' => 'view']) . '/{survey-id}',
-            'Alignment' => Router::url(['prefix' => 'admin', 'controller' => 'Responses', 'action' => 'view']) . '/{survey-id}'
+            'Overview' => Router::url($route + ['controller' => 'Surveys', 'action' => 'view']) . '/{community-slug}/{survey-type}',
+            'Link' => Router::url($route + ['controller' => 'Surveys', 'action' => 'link']) . '/{community-slug}/{survey-type}',
+            'Activate' => Router::url($route + ['controller' => 'Surveys', 'action' => 'activate']) . '/{survey-id}',
+            'Invitations' => Router::url($route + ['controller' => 'Surveys', 'action' => 'invite']) . '/{survey-id}',
+            'Reminders' => Router::url($route + ['controller' => 'Surveys', 'action' => 'remind']) . '/{survey-id}',
+            'Respondents' => Router::url($route + ['controller' => 'Respondents', 'action' => 'view']) . '/{survey-id}',
+            'Alignment' => Router::url($route + ['controller' => 'Responses', 'action' => 'view']) . '/{survey-id}'
         ];
 
         $this->loadModel('Surveys');
