@@ -12,6 +12,7 @@
             'Client Home',
             [
                 'prefix' => 'client',
+                'plugin' => false,
                 'controller' => 'Communities',
                 'action' => 'index'
             ]
@@ -23,6 +24,7 @@
                 'Purchases',
                 [
                     'prefix' => 'client',
+                    'plugin' => false,
                     'controller' => 'Purchases',
                     'action' => 'index'
                 ]
@@ -33,6 +35,7 @@
                 'Update Contact Info',
                 [
                     'prefix' => false,
+                    'plugin' => false,
                     'controller' => 'Users',
                     'action' => 'updateContact'
                 ]
@@ -43,6 +46,7 @@
                 'Change Password',
                 [
                     'prefix' => false,
+                    'plugin' => false,
                     'controller' => 'Users',
                     'action' => 'changePassword'
                 ]
@@ -53,6 +57,7 @@
                 'Logout',
                 [
                     'prefix' => false,
+                    'plugin' => false,
                     'controller' => 'Users',
                     'action' => 'logout'
                 ]

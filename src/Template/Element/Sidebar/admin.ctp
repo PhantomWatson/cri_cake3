@@ -9,6 +9,7 @@
             'Admin To-Do',
             [
                 'prefix' => 'admin',
+                'plugin' => false,
                 'controller' => 'Communities',
                 'action' => 'toDo'
             ]
@@ -19,6 +20,7 @@
             'Reports',
             [
                 'prefix' => 'admin',
+                'plugin' => false,
                 'controller' => 'Reports',
                 'action' => 'index'
             ]
@@ -29,6 +31,7 @@
             'Manage Users',
             [
                 'prefix' => 'admin',
+                'plugin' => false,
                 'controller' => 'Users',
                 'action' => 'index'
             ]
@@ -39,6 +42,7 @@
             'Manage Communities',
             [
                 'prefix' => 'admin',
+                'plugin' => false,
                 'controller' => 'Communities',
                 'action' => 'index'
             ]
@@ -50,6 +54,7 @@
             'Payment Records',
             [
                 'prefix' => 'admin',
+                'plugin' => false,
                 'controller' => 'Purchases',
                 'action' => 'index'
             ]
@@ -60,6 +65,7 @@
             'Deliverables',
             [
                 'prefix' => 'admin',
+                'plugin' => false,
                 'controller' => 'Deliveries',
                 'action' => 'index'
             ]
@@ -70,6 +76,7 @@
             'Alignment Calculation Settings',
             [
                 'prefix' => 'admin',
+                'plugin' => false,
                 'controller' => 'Communities',
                 'action' => 'alignmentCalcSettings'
             ]
@@ -80,6 +87,7 @@
             'Activity Log',
             [
                 'prefix' => 'admin',
+                'plugin' => false,
                 'controller' => 'ActivityRecords',
                 'action' => 'index'
             ]
@@ -90,6 +98,7 @@
             'Admin Guide',
             [
                 'prefix' => 'admin',
+                'plugin' => false,
                 'controller' => 'Pages',
                 'action' => 'guide'
             ]
@@ -100,6 +109,7 @@
             'Change Password',
             [
                 'prefix' => false,
+                'plugin' => false,
                 'controller' => 'Users',
                 'action' => 'changePassword'
             ]
@@ -110,6 +120,7 @@
             'Logout',
             [
                 'prefix' => false,
+                'plugin' => false,
                 'controller' => 'Users',
                 'action' => 'logout'
             ]

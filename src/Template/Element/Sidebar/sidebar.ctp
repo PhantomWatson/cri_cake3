@@ -49,6 +49,7 @@
                 'Enroll',
                 [
                     'prefix' => false,
+                    'plugin' => false,
                     'controller' => 'Pages',
                     'action' => 'enroll'
                 ]
@@ -79,6 +80,7 @@
                 'FAQs for Communities',
                 [
                     'prefix' => false,
+                    'plugin' => false,
                     'controller' => 'Pages',
                     'action' => 'faqCommunity'
                 ]
@@ -89,6 +91,7 @@
                 'Credits and Sources',
                 [
                     'prefix' => false,
+                    'plugin' => false,
                     'controller' => 'Pages',
                     'action' => 'credits'
                 ]
@@ -100,6 +103,7 @@
                     'Login',
                     [
                         'prefix' => false,
+                        'plugin' => false,
                         'controller' => 'Users',
                         'action' => 'login'
                     ]
