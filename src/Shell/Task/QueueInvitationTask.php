@@ -35,7 +35,7 @@ class QueueInvitationTask extends QueueTask
                 'communityId' => $data['communityId'],
                 'senderEmail' => $data['senderEmail'],
                 'senderName' => $data['senderName'],
-                'recipients' => $data['recipients']
+                'recipient' => $data['recipient']
             ]]);
         } catch (\Exception $e) {
             return false;

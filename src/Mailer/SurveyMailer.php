@@ -61,7 +61,7 @@ class SurveyMailer extends Mailer
         $communityId = $params['communityId'];
         $senderEmail = $params['senderEmail'];
         $senderName = $params['senderName'];
-        $recipients = $params['recipients'];
+        $recipient = $params['recipient'];
 
         $surveysTable = TableRegistry::get('Surveys');
         $survey = $surveysTable->get($surveyId);
@@ -71,7 +71,7 @@ class SurveyMailer extends Mailer
 
         $email = $this
             ->setTemplate('survey_invitation')
-            ->setTo(Configure::read('noreply_email'))
+            ->setTo($recipient)
             ->setSubject('Invitation to participate in Community Readiness Initiative questionnaire')
             ->setViewVars([
                 'clients' => $clients,
@@ -81,9 +81,6 @@ class SurveyMailer extends Mailer
             ]);
         if ($senderEmail) {
             $email->setReplyTo($senderEmail, $senderName);
-        }
-        foreach ($recipients as $recipient) {
-            $email->addBcc($recipient);
         }
 
         return $email;
