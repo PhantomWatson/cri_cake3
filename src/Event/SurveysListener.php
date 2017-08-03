@@ -54,6 +54,7 @@ class SurveysListener implements EventListenerInterface
      *
      * @param Event $event Event entity
      * @param array $meta Array of metadata
+     * @return void
      */
     public function updateReminderSentDate(Event $event, array $meta = [])
     {
