@@ -33,9 +33,9 @@ var flashMessage = {
     },
     insert: function (message, classname) {
         var bootstrap_class = 'alert-info';
-        if (classname == 'error') {
+        if (classname === 'error') {
             bootstrap_class = 'alert-danger';
-        } else if (classname == 'success') {
+        } else if (classname === 'success') {
             bootstrap_class = 'alert-success';
         }
         
@@ -50,7 +50,7 @@ var flashMessage = {
             alert.slideDown();
         } else {
             container.append(alert);
-            showBootstrapFlashMessages();
+            container.slideDown();
         }
     } 
 };
