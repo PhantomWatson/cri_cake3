@@ -486,13 +486,20 @@ class SurveysController extends AppController
 
                 /** @var QueuedJobsTable $queuedJobs */
                 $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
-                $queuedJobs->createJob('Invitation', [
-                    'surveyId' => $surveyId,
-                    'communityId' => $survey->community_id,
-                    'senderEmail' => $user->email,
-                    'senderName' => $user->name,
-                    'recipients' => $recipients
-                ]);
+
+                foreach ($recipients as $recipient) {
+                    $queuedJobs->createJob(
+                        'Invitation',
+                        [
+                            'surveyId' => $surveyId,
+                            'communityId' => $survey->community_id,
+                            'senderEmail' => $user->email,
+                            'senderName' => $user->name,
+                            'recipient' => $recipient
+                        ],
+                        ['reference' => $recipient]
+                    );
+                }
 
                 // Dispatch event
                 $surveysTable = TableRegistry::get('Surveys');
