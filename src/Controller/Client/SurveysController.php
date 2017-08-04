@@ -170,7 +170,8 @@ class SurveysController extends AppController
                 foreach ($recipients as $recipient) {
                     $queuedJobs->createJob(
                         'Reminder',
-                        compact('surveyId', 'sender', 'recipient')
+                        compact('surveyId', 'sender', 'recipient'),
+                        ['reference' => $recipient]
                     );
                 }
             } catch (\Exception $e) {

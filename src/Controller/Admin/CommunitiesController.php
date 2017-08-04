@@ -445,14 +445,18 @@ class CommunitiesController extends AppController
         try {
             /** @var QueuedJobsTable $queuedJobs */
             $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
-            $queuedJobs->createJob('NewAccountEmail', [
-                'user' => [
-                    'name' => $client->name,
-                    'email' => $client->email,
-                    'role' => $client->role
+            $queuedJobs->createJob(
+                'NewAccountEmail',
+                [
+                    'user' => [
+                        'name' => $client->name,
+                        'email' => $client->email,
+                        'role' => $client->role
+                    ],
+                    'unhashedPassword' => $this->request->getData('unhashed_password')
                 ],
-                'unhashedPassword' => $this->request->getData('unhashed_password')
-            ]);
+                ['reference' => $client->email]
+            );
 
             $msg = 'Client account created for ' . $client->name . ' and login instructions emailed';
             $this->Flash->success($msg);

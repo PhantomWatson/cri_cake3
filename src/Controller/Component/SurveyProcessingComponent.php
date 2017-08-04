@@ -163,13 +163,17 @@ class SurveyProcessingComponent extends Component
             /** @var QueuedJobsTable $queuedJobs */
             $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
             foreach ($this->recipients as $recipient) {
-                $queuedJobs->createJob('Invitation', [
-                    'surveyId' => $this->surveyId,
-                    'communityId' => $this->communityId,
-                    'senderEmail' => $this->Auth->user('email'),
-                    'senderName' => $this->Auth->user('name'),
-                    'recipient' => $recipient
-                ]);
+                $queuedJobs->createJob(
+                    'Invitation',
+                    [
+                        'surveyId' => $this->surveyId,
+                        'communityId' => $this->communityId,
+                        'senderEmail' => $this->Auth->user('email'),
+                        'senderName' => $this->Auth->user('name'),
+                        'recipient' => $recipient
+                    ],
+                    ['reference' => $recipient]
+                );
             }
 
             $this->successEmails = array_merge($this->successEmails, $this->recipients);

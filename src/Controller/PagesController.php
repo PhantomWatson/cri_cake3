@@ -110,9 +110,11 @@ class PagesController extends AppController
     {
         /** @var QueuedJobsTable $queuedJobs */
         $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
-        $queuedJobs->createJob('EmailTest', [
-            'email' => $recipient,
-        ]);
+        $queuedJobs->createJob(
+            'EmailTest',
+            ['email' => $recipient],
+            ['reference' => $recipient]
+        );
         $this->Flash->success('Email added to queue');
     }
 }

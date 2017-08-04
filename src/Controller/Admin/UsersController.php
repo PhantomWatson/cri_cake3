@@ -138,14 +138,18 @@ class UsersController extends AppController
                 try {
                     /** @var QueuedJobsTable $queuedJobs */
                     $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
-                    $queuedJobs->createJob('NewAccountEmail', [
-                        'user' => [
-                            'name' => $user->name,
-                            'email' => $user->email,
-                            'role' => $user->role
+                    $queuedJobs->createJob(
+                        'NewAccountEmail',
+                        [
+                            'user' => [
+                                'name' => $user->name,
+                                'email' => $user->email,
+                                'role' => $user->role
+                            ],
+                            'unhashedPassword' => $this->request->getData('new_password')
                         ],
-                        'unhashedPassword' => $this->request->getData('new_password')
-                    ]);
+                        ['reference' => $user->email]
+                    );
 
                     $this->Flash->success('User account created and login credentials emailed');
 

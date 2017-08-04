@@ -182,7 +182,11 @@ class UsersController extends AppController
             try {
                 /** @var QueuedJobsTable $queuedJobs */
                 $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
-                $queuedJobs->createJob('ResetPasswordEmail', ['userId' => $userId]);
+                $queuedJobs->createJob(
+                    'ResetPasswordEmail',
+                    ['userId' => $userId],
+                    ['reference' => $email]
+                );
                 $msg = 'Success! You should be shortly receiving an email with a link to reset your password.';
                 $this->Flash->success($msg);
                 $this->set('success', true);

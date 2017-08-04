@@ -20,7 +20,11 @@ class QueueEmailTestTask extends QueueTask
         $this->hr();
         $default = Configure::read('admin_email');
         $email = $this->in('What address should the test email be sent to?', null, $default);
-        $result = $this->QueuedJobs->createJob('EmailTest', compact('email'));
+        $result = $this->QueuedJobs->createJob(
+            'EmailTest',
+            compact('email'),
+            ['reference' => $email]
+        );
 
         if ($result) {
             $this->out('Job created');
