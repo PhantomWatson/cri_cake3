@@ -37,6 +37,8 @@ if (Configure::read('debug')):
     endif;
 
     $this->end();
+else:
+    $this->layout = 'default';
 endif;
 ?>
 <h2><?= __d('cake', 'An Internal Error Has Occurred') ?></h2>

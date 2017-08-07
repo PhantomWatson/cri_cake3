@@ -32,6 +32,8 @@ if (Configure::read('debug')):
     endif;
 
     $this->end();
+else:
+    $this->layout = 'default';
 endif;
 ?>
 <h2><?= h($message) ?></h2>
