@@ -38,7 +38,7 @@ class AutoAdvanceShell extends Shell
         $this->loadModel('Communities');
 
         $communities = $this->Communities->find()
-            ->select(['id', 'name', 'score'])
+            ->select(['id', 'name', 'score', 'active'])
             ->contain([
                 'OptOuts',
                 'OfficialSurvey' => function ($q) {
@@ -116,6 +116,10 @@ class AutoAdvanceShell extends Shell
      */
     private function isAdvanceable($community)
     {
+        if (!$community->active) {
+            return 'Community is inactive';
+        }
+
         switch ($community->score) {
             case 1:
                 return $this->qualifiedForStepTwo($community);
