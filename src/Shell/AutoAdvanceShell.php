@@ -113,110 +113,145 @@ class AutoAdvanceShell extends Shell
      */
     private function isAdvanceable($community)
     {
+        switch ($community->score) {
+            case 1:
+                return $this->qualifiedForStepTwo($community);
+            case 2:
+                return $this->qualifiedForStepThree($community);
+            case 3:
+                return $this->qualifiedForStepFour($community);
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Returns whether or not the community meets the requirements for advancement to Step Two
+     *
+     * @param Community $community Community Entity
+     * @return bool
+     */
+    private function qualifiedForStepTwo($community)
+    {
+        $productsPurchased = Hash::extract($community->purchases, '{n}.product_id');
+
+        // Required purchase not made
+        if (!in_array(ProductsTable::OFFICIALS_SURVEY, $productsPurchased)) {
+            return false;
+        }
+
+        // Survey has not been created / activated
+        if (!$community->official_survey || !$community->official_survey->active) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns whether or not the community meets the requirements for advancement to Step Three
+     *
+     * @param Community $community Community entity
+     * @return bool
+     */
+    private function qualifiedForStepThree($community)
+    {
         $productsPurchased = Hash::extract($community->purchases, '{n}.product_id');
         $optOuts = Hash::extract($community->opt_outs, '{n}.product_id');
 
-        if ($community->score == 1) {
-            // Required purchase not made
-            if (!in_array(ProductsTable::OFFICIALS_SURVEY, $productsPurchased)) {
-                return false;
-            }
-
-            // Survey has not been created / activated
-            if (!$community->official_survey || !$community->official_survey->active) {
-                return false;
-            }
-
-            return true;
+        // Survey hasn't received responses yet
+        if (!$community->official_survey->responses) {
+            return false;
         }
 
-        if ($community->score == 2) {
-            // Survey hasn't received responses yet
-            if (! $community->official_survey->responses) {
-                return false;
-            }
-
-            // Survey is still active
-            if ($community->official_survey->active) {
-                return false;
-            }
-
-            // Presentation A has not been scheduled
-            if (! $community->presentation_a) {
-                return false;
-            }
-
-            // Presentation A has not concluded
-            if ($community->presentation_a->format('Y-m-d') <= date('Y-m-d')) {
-                return false;
-            }
-
-            if (!in_array(ProductsTable::OFFICIALS_SUMMIT, $optOuts)) {
-                // Presentation B has not been scheduled
-                if (!$community->presentation_b) {
-                    return false;
-                }
-
-                // Presentation B has not concluded
-                if ($community->presentation_b->format('Y-m-d') <= date('Y-m-d')) {
-                    return false;
-                }
-            }
-
-            // Step Three has not been paid for
-            if (! in_array(ProductsTable::ORGANIZATIONS_SURVEY, $productsPurchased)) {
-                return false;
-            }
-
-            // Survey has not been created / activated
-            if (!$community->organization_survey || !$community->organization_survey->active) {
-                return false;
-            }
-
-            return true;
+        // Survey is still active
+        if ($community->official_survey->active) {
+            return false;
         }
 
-        if ($community->score == 3) {
-            // Survey hasn't received responses yet
-            if (! $community->organization_survey->responses) {
-                return false;
-            }
-
-            // Survey is still active
-            if ($community->organization_survey->active) {
-                return false;
-            }
-
-            // Presentation A has not been scheduled
-            if (! $community->presentation_c) {
-                return false;
-            }
-
-            // Presentation A has not concluded
-            if ($community->presentation_c->format('Y-m-d') <= date('Y-m-d')) {
-                return false;
-            }
-
-            if (!in_array(ProductsTable::ORGANIZATIONS_SUMMIT, $optOuts)) {
-                // Presentation D has not been scheduled
-                if (!$community->presentation_d) {
-                    return false;
-                }
-
-                // Presentation D has not concluded
-                if ($community->presentation_d->format('Y-m-d') <= date('Y-m-d')) {
-                    return false;
-                }
-            }
-
-            // Step Four has not been paid for
-            if (! in_array(ProductsTable::POLICY_DEVELOPMENT, $productsPurchased)) {
-                return false;
-            }
-
-            return true;
+        // Presentation A has not been scheduled
+        if (!$community->presentation_a) {
+            return false;
         }
 
-        return false;
+        // Presentation A has not concluded
+        if ($community->presentation_a->format('Y-m-d') <= date('Y-m-d')) {
+            return false;
+        }
+
+        if (!in_array(ProductsTable::OFFICIALS_SUMMIT, $optOuts)) {
+            // Presentation B has not been scheduled
+            if (!$community->presentation_b) {
+                return false;
+            }
+
+            // Presentation B has not concluded
+            if ($community->presentation_b->format('Y-m-d') <= date('Y-m-d')) {
+                return false;
+            }
+        }
+
+        // Step Three has not been paid for
+        if (!in_array(ProductsTable::ORGANIZATIONS_SURVEY, $productsPurchased)) {
+            return false;
+        }
+
+        // Survey has not been created / activated
+        if (!$community->organization_survey || !$community->organization_survey->active) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns whether or not the community meets the requirements for advancement to Step Four
+     *
+     * @param Community $community Community entity
+     * @return bool
+     */
+    private function qualifiedForStepFour($community)
+    {
+        $productsPurchased = Hash::extract($community->purchases, '{n}.product_id');
+        $optOuts = Hash::extract($community->opt_outs, '{n}.product_id');
+
+        // Survey hasn't received responses yet
+        if (! $community->organization_survey->responses) {
+            return false;
+        }
+
+        // Survey is still active
+        if ($community->organization_survey->active) {
+            return false;
+        }
+
+        // Presentation A has not been scheduled
+        if (! $community->presentation_c) {
+            return false;
+        }
+
+        // Presentation A has not concluded
+        if ($community->presentation_c->format('Y-m-d') <= date('Y-m-d')) {
+            return false;
+        }
+
+        if (!in_array(ProductsTable::ORGANIZATIONS_SUMMIT, $optOuts)) {
+            // Presentation D has not been scheduled
+            if (!$community->presentation_d) {
+                return false;
+            }
+
+            // Presentation D has not concluded
+            if ($community->presentation_d->format('Y-m-d') <= date('Y-m-d')) {
+                return false;
+            }
+        }
+
+        // Step Four has not been paid for
+        if (! in_array(ProductsTable::POLICY_DEVELOPMENT, $productsPurchased)) {
+            return false;
+        }
+
+        return true;
     }
 }
