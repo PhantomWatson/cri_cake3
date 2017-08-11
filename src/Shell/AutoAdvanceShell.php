@@ -85,10 +85,11 @@ class AutoAdvanceShell extends Shell
             ['Community', 'Step', 'Advanceable']
         ];
         foreach ($communities as $community) {
+            $advanceable = $this->isAdvanceable($community);
             $statuses[] = [
                 $community->name,
                 $community->score,
-                $this->isAdvanceable($community) ? 'Yes' : 'No'
+                $advanceable === true ? 'Yes' : "No ($advanceable)"
             ];
         }
 
@@ -108,8 +109,10 @@ class AutoAdvanceShell extends Shell
     /**
      * Returns whether or not the provided community qualifies for automatic advancement
      *
+     * Returns boolean TRUE if it does, or a string explaining why it doesn't
+     *
      * @param Community $community Community entity
-     * @return bool
+     * @return bool|string
      */
     private function isAdvanceable($community)
     {
@@ -120,29 +123,31 @@ class AutoAdvanceShell extends Shell
                 return $this->qualifiedForStepThree($community);
             case 3:
                 return $this->qualifiedForStepFour($community);
+            case 4:
+                return 'Community is at final step';
             default:
-                return false;
+                return 'Community is at an unrecognized step';
         }
     }
 
     /**
      * Returns whether or not the community meets the requirements for advancement to Step Two
      *
+     * Returns boolean TRUE if it does, or a string explaining why it doesn't
+     *
      * @param Community $community Community Entity
-     * @return bool
+     * @return bool|string
      */
     private function qualifiedForStepTwo($community)
     {
         $productsPurchased = Hash::extract($community->purchases, '{n}.product_id');
 
-        // Required purchase not made
         if (!in_array(ProductsTable::OFFICIALS_SURVEY, $productsPurchased)) {
-            return false;
+            return 'Required purchase not made';
         }
 
-        // Survey has not been created / activated
         if (!$community->official_survey || !$community->official_survey->active) {
-            return false;
+            return 'Survey has not been created / activated';
         }
 
         return true;
@@ -151,54 +156,48 @@ class AutoAdvanceShell extends Shell
     /**
      * Returns whether or not the community meets the requirements for advancement to Step Three
      *
+     * Returns boolean TRUE if it does, or a string explaining why it doesn't
+     *
      * @param Community $community Community entity
-     * @return bool
+     * @return bool|string
      */
     private function qualifiedForStepThree($community)
     {
         $productsPurchased = Hash::extract($community->purchases, '{n}.product_id');
         $optOuts = Hash::extract($community->opt_outs, '{n}.product_id');
 
-        // Survey hasn't received responses yet
         if (!$community->official_survey->responses) {
-            return false;
+            return 'Survey hasn\'t received responses yet';
         }
 
-        // Survey is still active
         if ($community->official_survey->active) {
-            return false;
+            return 'Survey is still active';
         }
 
-        // Presentation A has not been scheduled
         if (!$community->presentation_a) {
-            return false;
+            return 'Presentation A has not been scheduled';
         }
 
-        // Presentation A has not concluded
         if ($community->presentation_a->format('Y-m-d') <= date('Y-m-d')) {
-            return false;
+            return 'Presentation A has not concluded';
         }
 
         if (!in_array(ProductsTable::OFFICIALS_SUMMIT, $optOuts)) {
-            // Presentation B has not been scheduled
             if (!$community->presentation_b) {
-                return false;
+                return 'Presentation B has not been scheduled';
             }
 
-            // Presentation B has not concluded
             if ($community->presentation_b->format('Y-m-d') <= date('Y-m-d')) {
-                return false;
+                return 'Presentation B has not concluded';
             }
         }
 
-        // Step Three has not been paid for
         if (!in_array(ProductsTable::ORGANIZATIONS_SURVEY, $productsPurchased)) {
-            return false;
+            return 'Step Three has not been paid for';
         }
 
-        // Survey has not been created / activated
         if (!$community->organization_survey || !$community->organization_survey->active) {
-            return false;
+            return 'Survey has not been created / activated';
         }
 
         return true;
@@ -207,49 +206,44 @@ class AutoAdvanceShell extends Shell
     /**
      * Returns whether or not the community meets the requirements for advancement to Step Four
      *
+     * Returns boolean TRUE if it does, or a string explaining why it doesn't
+     *
      * @param Community $community Community entity
-     * @return bool
+     * @return bool|string
      */
     private function qualifiedForStepFour($community)
     {
         $productsPurchased = Hash::extract($community->purchases, '{n}.product_id');
         $optOuts = Hash::extract($community->opt_outs, '{n}.product_id');
 
-        // Survey hasn't received responses yet
         if (! $community->organization_survey->responses) {
-            return false;
+            return 'Survey hasn\'t received responses yet';
         }
 
-        // Survey is still active
         if ($community->organization_survey->active) {
-            return false;
+            return 'Survey is still active';
         }
 
-        // Presentation A has not been scheduled
         if (! $community->presentation_c) {
-            return false;
+            return 'Presentation C has not been scheduled';
         }
 
-        // Presentation A has not concluded
         if ($community->presentation_c->format('Y-m-d') <= date('Y-m-d')) {
-            return false;
+            return 'Presentation C has not concluded';
         }
 
         if (!in_array(ProductsTable::ORGANIZATIONS_SUMMIT, $optOuts)) {
-            // Presentation D has not been scheduled
             if (!$community->presentation_d) {
-                return false;
+                return 'Presentation D has not been scheduled';
             }
 
-            // Presentation D has not concluded
             if ($community->presentation_d->format('Y-m-d') <= date('Y-m-d')) {
-                return false;
+                return 'Presentation D has not concluded';
             }
         }
 
-        // Step Four has not been paid for
         if (! in_array(ProductsTable::POLICY_DEVELOPMENT, $productsPurchased)) {
-            return false;
+            return 'Step Four has not been paid for';
         }
 
         return true;
