@@ -146,8 +146,12 @@ class AutoAdvanceShell extends Shell
             return 'Required purchase not made';
         }
 
-        if (!$community->official_survey || !$community->official_survey->active) {
-            return 'Survey has not been created / activated';
+        if (!$community->official_survey) {
+            return 'Survey has not been created';
+        }
+
+        if (!$community->official_survey->active) {
+            return 'Survey has not been activated';
         }
 
         return true;
@@ -196,8 +200,12 @@ class AutoAdvanceShell extends Shell
             return 'Step Three has not been paid for';
         }
 
-        if (!$community->organization_survey || !$community->organization_survey->active) {
-            return 'Survey has not been created / activated';
+        if (!$community->organization_survey) {
+            return 'Survey has not been created';
+        }
+
+        if (!$community->organization_survey->active) {
+            return 'Survey has not been activated';
         }
 
         return true;
