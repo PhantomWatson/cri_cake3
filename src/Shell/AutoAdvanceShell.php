@@ -5,6 +5,7 @@ use App\Model\Entity\Community;
 use App\Model\Table\ProductsTable;
 use Cake\Console\Shell;
 use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\ResultSetInterface;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
 
@@ -35,9 +36,33 @@ class AutoAdvanceShell extends Shell
      */
     public function status()
     {
+        $communities = $this->getCommunities();
+
+        $statuses = [
+            ['Community', 'Step', 'Advanceable']
+        ];
+        foreach ($communities as $community) {
+            $advanceable = $this->isAdvanceable($community);
+            $statuses[] = [
+                $community->name,
+                $community->score,
+                $advanceable === true ? 'Yes' : "No ($advanceable)"
+            ];
+        }
+
+        $this->helper('Table')->output($statuses);
+    }
+
+    /**
+     * Returns a set of communities with
+     *
+     * @return ResultSetInterface
+     */
+    private function getCommunities()
+    {
         $this->loadModel('Communities');
 
-        $communities = $this->Communities->find()
+        return $this->Communities->find()
             ->select(['id', 'name', 'score', 'active'])
             ->contain([
                 'OptOuts',
@@ -79,21 +104,8 @@ class AutoAdvanceShell extends Shell
                         });
                 },
             ])
-            ->orderAsc('name');
-
-        $statuses = [
-            ['Community', 'Step', 'Advanceable']
-        ];
-        foreach ($communities as $community) {
-            $advanceable = $this->isAdvanceable($community);
-            $statuses[] = [
-                $community->name,
-                $community->score,
-                $advanceable === true ? 'Yes' : "No ($advanceable)"
-            ];
-        }
-
-        $this->helper('Table')->output($statuses);
+            ->orderAsc('name')
+            ->all();
     }
 
     /**
