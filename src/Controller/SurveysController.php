@@ -311,7 +311,6 @@ class SurveysController extends AppController
     {
         $surveyId = $this->Surveys->getNextAutoImportCandidate();
         if ($surveyId) {
-            echo 'Importing survey #' . $surveyId . '<br />';
             $this->import($surveyId);
             $this->Surveys->setChecked($surveyId);
         } else {
