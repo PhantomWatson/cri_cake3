@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Survey;
+use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;

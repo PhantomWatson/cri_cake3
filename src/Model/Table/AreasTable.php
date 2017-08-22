@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -88,7 +89,7 @@ class AreasTable extends Table
      * Returns a GoogleCharts object for a PWRRR bar chart for an area, or false if data or area is unavailable
      *
      * @param int|null $areaId Area ID
-     * @return GoogleCharts|bool
+     * @return \GoogleCharts|bool
      */
     public function getPwrBarChart($areaId)
     {
@@ -346,7 +347,7 @@ class AreasTable extends Table
      * Returns a GoogleCharts object for an employment line chart for an area, or false if data or area is unavailable
      *
      * @param int|null $areaId Area ID
-     * @return GoogleCharts|bool
+     * @return \GoogleCharts|bool
      */
     public function getEmploymentLineChart($areaId)
     {
@@ -542,7 +543,7 @@ class AreasTable extends Table
     /**
      * Returns a GoogleCharts object
      *
-     * @return GoogleCharts
+     * @return \GoogleCharts
      */
     public function getGoogleChartsObject()
     {

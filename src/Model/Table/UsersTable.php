@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Community;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;

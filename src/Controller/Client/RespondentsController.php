@@ -6,6 +6,7 @@ use App\Model\Entity\Respondent;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
 class RespondentsController extends AppController
@@ -15,7 +16,7 @@ class RespondentsController extends AppController
      *
      * @param int $respondentId Respondent ID
      * @param int $clientId Client ID
-     * @throws \App\Controller\Client\NotFoundException
+     * @throws NotFoundException
      * @return void
      */
     private function checkClientAuthorization($respondentId, $clientId)
@@ -61,8 +62,8 @@ class RespondentsController extends AppController
      * Unapproved method
      *
      * @param string|null $surveyType Survey type
-     * @return \App\Controller\Response
-     * @throws \App\Controller\Client\NotFoundException
+     * @return \Cake\Http\Response
+     * @throws NotFoundException
      */
     public function unapproved($surveyType = null)
     {
@@ -100,8 +101,8 @@ class RespondentsController extends AppController
      * ApproveUninvited method
      *
      * @param int $respondentId Respondent ID
-     * @return \App\Controller\Response
-     * @throws \App\Controller\Client\NotFoundException
+     * @return \Cake\Http\Response
+     * @throws NotFoundException
      */
     public function approveUninvited($respondentId)
     {
@@ -126,8 +127,8 @@ class RespondentsController extends AppController
      * DismissUninvited method
      *
      * @param int $respondentId Respondent ID
-     * @return \App\Controller\Response
-     * @throws \App\Controller\Client\NotFoundException
+     * @return \Cake\Http\Response
+     * @throws NotFoundException
      */
     public function dismissUninvited($respondentId)
     {

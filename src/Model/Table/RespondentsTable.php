@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Respondent;
+use App\Model\Entity\Survey;
 use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;

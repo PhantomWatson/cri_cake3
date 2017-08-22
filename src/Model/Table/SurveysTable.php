@@ -4,6 +4,7 @@ namespace App\Model\Table;
 use App\Model\Entity\Community;
 use App\SurveyMonkey\SurveyMonkey;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
@@ -273,7 +274,7 @@ class SurveysTable extends Table
      * Returns the responses_checked date or null
      *
      * @param int $surveyId Survey ID
-     * @return DateTime|null
+     * @return FrozenTime|null
      */
     public function getChecked($surveyId)
     {

@@ -9,7 +9,7 @@ class PurchasesController extends AppController
     /**
      * Index method
      *
-     * @return \App\Controller\Response
+     * @return \Cake\Http\Response
      */
     public function index()
     {
