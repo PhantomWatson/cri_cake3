@@ -313,11 +313,18 @@ class ClientHomeHelper extends Helper
                     $params['surveyId']
                 ];
             } else {
+                if ($params['step'] == 2) {
+                    $surveyType = 'official';
+                } elseif ($params['step'] == 3) {
+                    $surveyType = 'organization';
+                } else {
+                    throw new InternalErrorException('"' . $params['step'] . '" is not a valid step.');
+                }
                 $path = [
                     'prefix' => 'client',
                     'controller' => 'Surveys',
                     'action' => 'remind',
-                    'official'
+                    $surveyType
                 ];
             }
             $actions = $this->Html->link(

@@ -44,6 +44,7 @@
     <?= $this->ClientHome->responseRateRow([
         'description' => $criteria[2]['response_threshold_reached'][0],
         'responsesReceived' => $criteria[2]['responses_received'][1],
+        'step' => 2,
         'surveyActive' => $surveyIsActive['official'],
         'surveyId' => $officialSurveyId,
         'thresholdReached' => $criteria[2]['response_threshold_reached'][1]
