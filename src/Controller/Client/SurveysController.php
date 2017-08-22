@@ -13,6 +13,7 @@ use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Queue\Model\Table\QueuedJobsTable;
 
 /**
