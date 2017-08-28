@@ -4,11 +4,8 @@ namespace App\Shell;
 use App\Model\Entity\Community;
 use App\Model\Table\ProductsTable;
 use Cake\Console\Shell;
-use Cake\Database\Expression\QueryExpression;
-use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
-use Cake\ORM\Query;
 use Cake\Utility\Hash;
 
 class AutoAdvanceShell extends Shell
