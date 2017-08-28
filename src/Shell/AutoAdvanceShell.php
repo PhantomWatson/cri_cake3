@@ -39,14 +39,15 @@ class AutoAdvanceShell extends Shell
         $communities = $this->getCommunities();
 
         $statuses = [
-            ['Community', 'Step', 'Advanceable']
+            ['Community', 'Step', 'Advanceable', 'Reason']
         ];
         foreach ($communities as $community) {
             $advanceable = $this->isAdvanceable($community);
             $statuses[] = [
                 $community->name,
                 $community->score,
-                $advanceable === true ? 'Yes' : "No ($advanceable)"
+                $advanceable === true ? 'Yes' : 'No',
+                $advanceable === true ? null : $advanceable
             ];
         }
 
