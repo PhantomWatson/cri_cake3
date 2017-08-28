@@ -66,11 +66,17 @@ class AutoAdvanceShell extends Shell
     {
         $this->loadModel('Communities');
         $communities = $this->Communities->find('forAutoAdvancement')->all();
+        $communitiesAdvanceable = false;
         foreach ($communities as $community) {
             $advanceable = $this->isAdvanceable($community);
             if ($advanceable === true) {
+                $communitiesAdvanceable = true;
                 $this->advance($community);
             }
+        }
+
+        if (!$communitiesAdvanceable) {
+            $this->out('<info>No advanceable communities found</info>');
         }
     }
 
