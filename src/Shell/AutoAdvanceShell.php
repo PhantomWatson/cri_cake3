@@ -64,7 +64,16 @@ class AutoAdvanceShell extends Shell
         $this->loadModel('Communities');
 
         return $this->Communities->find()
-            ->select(['id', 'name', 'score', 'active'])
+            ->select([
+                'id',
+                'name',
+                'score',
+                'active',
+                'presentation_a',
+                'presentation_b',
+                'presentation_c',
+                'presentation_d'
+            ])
             ->contain([
                 'OptOuts',
                 'OfficialSurvey' => function ($q) {
