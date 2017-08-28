@@ -77,6 +77,11 @@ class AutoAdvanceShell extends Shell
 
                                 return $q
                                     ->select(['id', 'survey_id'])
+                                    ->matching('Respondents', function ($q) {
+                                        /** @var Query $q */
+
+                                        return $q->where(['approved' => true]);
+                                    })
                                     ->limit(1);
                             }
                         ]);
@@ -191,7 +196,7 @@ class AutoAdvanceShell extends Shell
         $optOuts = Hash::extract($community->opt_outs, '{n}.product_id');
 
         if (!$community->official_survey->responses) {
-            return 'Survey hasn\'t received responses yet';
+            return 'Survey hasn\'t received any approved responses yet';
         }
 
         if ($community->official_survey->active) {
