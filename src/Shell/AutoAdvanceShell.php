@@ -36,7 +36,8 @@ class AutoAdvanceShell extends Shell
      */
     public function status()
     {
-        $communities = $this->getCommunities();
+        $this->loadModel('Communities');
+        $communities = $this->Communities->find('forAutoAdvancement')->all();
 
         $statuses = [
             ['Community', 'Step', 'Advanceable', 'Reason']
@@ -52,76 +53,6 @@ class AutoAdvanceShell extends Shell
         }
 
         $this->helper('Table')->output($statuses);
-    }
-
-    /**
-     * Returns a set of communities with
-     *
-     * @return ResultSetInterface
-     */
-    private function getCommunities()
-    {
-        $this->loadModel('Communities');
-
-        return $this->Communities->find()
-            ->select([
-                'id',
-                'name',
-                'score',
-                'active',
-                'presentation_a',
-                'presentation_b',
-                'presentation_c',
-                'presentation_d'
-            ])
-            ->contain([
-                'OptOuts',
-                'OfficialSurvey' => function ($q) {
-                    /** @var Query $q */
-
-                    return $q
-                        ->select(['id', 'community_id', 'active'])
-                        ->contain([
-                            'Responses' => function ($q) {
-                                /** @var Query $q */
-
-                                return $q
-                                    ->select(['id', 'survey_id'])
-                                    ->matching('Respondents', function ($q) {
-                                        /** @var Query $q */
-
-                                        return $q->where(['approved' => true]);
-                                    });
-                            }
-                        ]);
-                },
-                'OrganizationSurvey' => function ($q) {
-                    /** @var Query $q */
-
-                    return $q
-                        ->select(['id', 'community_id', 'active'])
-                        ->contain([
-                            'Responses' => function ($q) {
-                                /** @var Query $q */
-
-                                return $q->select(['id', 'survey_id']);
-                            }
-                        ]);
-                },
-                'Purchases' => function ($q) {
-                    /** @var Query $q */
-
-                    return $q
-                        ->select(['id', 'product_id', 'community_id'])
-                        ->where(function ($exp) {
-                            /** @var QueryExpression $exp */
-
-                            return $exp->isNull('refunded');
-                        });
-                },
-            ])
-            ->orderAsc('name')
-            ->all();
     }
 
     /**
