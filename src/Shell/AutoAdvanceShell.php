@@ -6,6 +6,8 @@ use App\Model\Table\ProductsTable;
 use Cake\Console\Shell;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\ResultSetInterface;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
 
@@ -62,7 +64,48 @@ class AutoAdvanceShell extends Shell
      */
     public function run()
     {
-        $this->out('Not written yet');
+        $this->loadModel('Communities');
+        $communities = $this->Communities->find('forAutoAdvancement')->all();
+        foreach ($communities as $community) {
+            $advanceable = $this->isAdvanceable($community);
+            if ($advanceable === true) {
+                $this->advance($community);
+            }
+        }
+    }
+
+    /**
+     * Advances the provided community
+     *
+     * @param Community $community Community entity
+     * @return bool
+     */
+    private function advance($community)
+    {
+        $this->loadModel('Communities');
+        $oldStep = $community->score;
+        $newStep = $oldStep + 1;
+        $data = [
+            'score' => $newStep
+        ];
+        $community = $this->Communities->patchEntity($community, $data);
+        if ($this->Communities->save($community)) {
+            $this->out('<success>Advanced ' . $community->name . ' to Step ' . $newStep . '</success>');
+
+            // Dispatch event
+            $eventName = 'Model.Community.afterScoreIncrease';
+            $metadata = [
+                'meta' => [
+                    'previousScore' => $oldStep,
+                    'newScore' => $newStep,
+                    'communityId' => $community->id
+                ]
+            ];
+            $event = new Event($eventName, $this, $metadata);
+            EventManager::instance()->dispatch($event);
+        } else {
+            $this->out('<error>Error advancing ' . $community->name . ' to Step ' . $newStep . '</error>');
+        }
     }
 
     /**
