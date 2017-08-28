@@ -82,8 +82,7 @@ class AutoAdvanceShell extends Shell
                                         /** @var Query $q */
 
                                         return $q->where(['approved' => true]);
-                                    })
-                                    ->limit(1);
+                                    });
                             }
                         ]);
                 },
@@ -96,9 +95,7 @@ class AutoAdvanceShell extends Shell
                             'Responses' => function ($q) {
                                 /** @var Query $q */
 
-                                return $q
-                                    ->select(['id', 'survey_id'])
-                                    ->limit(1);
+                                return $q->select(['id', 'survey_id']);
                             }
                         ]);
                 },
