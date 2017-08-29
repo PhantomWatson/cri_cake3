@@ -2,6 +2,7 @@
 namespace App\Shell;
 
 use App\Event\ActivityRecordsListener;
+use App\Event\EmailListener;
 use App\Model\Entity\Community;
 use App\Model\Table\ProductsTable;
 use Cake\Console\Shell;
@@ -19,6 +20,8 @@ class AutoAdvanceShell extends Shell
         // Set up listeners
         $activityRecordsListener = new ActivityRecordsListener();
         EventManager::instance()->on($activityRecordsListener);
+        $emailListener = new EmailListener();
+        EventManager::instance()->on($emailListener);
     }
 
     /**
