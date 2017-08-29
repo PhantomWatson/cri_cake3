@@ -107,11 +107,10 @@ class AutoAdvanceShell extends Shell
             $this->out('<success>Advanced ' . $community->name . ' to Step ' . $newStep . '</success>');
 
             // Dispatch event
-            $eventName = 'Model.Community.afterScoreIncrease';
+            $eventName = 'Model.Community.afterAutomaticAdvancement';
             $metadata = [
                 'meta' => [
-                    'previousScore' => $oldStep,
-                    'newScore' => $newStep,
+                    'toStep' => $newStep,
                     'communityId' => $community->id
                 ]
             ];
