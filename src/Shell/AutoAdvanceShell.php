@@ -1,6 +1,7 @@
 <?php
 namespace App\Shell;
 
+use App\Event\ActivityRecordsListener;
 use App\Model\Entity\Community;
 use App\Model\Table\ProductsTable;
 use Cake\Console\Shell;
@@ -10,6 +11,16 @@ use Cake\Utility\Hash;
 
 class AutoAdvanceShell extends Shell
 {
+
+    public function initialize()
+    {
+        parent::initialize();
+
+        // Set up listeners
+        $activityRecordsListener = new ActivityRecordsListener();
+        EventManager::instance()->on($activityRecordsListener);
+    }
+
     /**
      * Display help for this console.
      *
