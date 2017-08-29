@@ -13,6 +13,11 @@ use Cake\Utility\Hash;
 class AutoAdvanceShell extends Shell
 {
 
+    /**
+     * Initialize method
+     *
+     * @return void
+     */
     public function initialize()
     {
         parent::initialize();
