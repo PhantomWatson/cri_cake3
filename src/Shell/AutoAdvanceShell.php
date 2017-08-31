@@ -124,9 +124,13 @@ class AutoAdvanceShell extends Shell
             ];
             $event = new Event($eventName, $this, $metadata);
             EventManager::instance()->dispatch($event);
-        } else {
-            $this->out('<error>Error advancing ' . $community->name . ' to Step ' . $newStep . '</error>');
+
+            return true;
         }
+
+        $this->out('<error>Error advancing ' . $community->name . ' to Step ' . $newStep . '</error>');
+
+        return false;
     }
 
     /**
