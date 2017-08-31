@@ -213,7 +213,7 @@ class AutoAdvanceShell extends Shell
             return 'Presentation A has not been scheduled';
         }
 
-        if ($community->presentation_a->format('Y-m-d') <= date('Y-m-d')) {
+        if ($community->presentation_a->format('Y-m-d') >= date('Y-m-d')) {
             return 'Presentation A has not concluded';
         }
 
@@ -222,7 +222,7 @@ class AutoAdvanceShell extends Shell
                 return 'Presentation B has not been scheduled';
             }
 
-            if ($community->presentation_b->format('Y-m-d') <= date('Y-m-d')) {
+            if ($community->presentation_b->format('Y-m-d') >= date('Y-m-d')) {
                 return 'Presentation B has not concluded';
             }
         }
@@ -267,7 +267,7 @@ class AutoAdvanceShell extends Shell
             return 'Presentation C has not been scheduled';
         }
 
-        if ($community->presentation_c->format('Y-m-d') <= date('Y-m-d')) {
+        if ($community->presentation_c->format('Y-m-d') >= date('Y-m-d')) {
             return 'Presentation C has not concluded';
         }
 
@@ -276,7 +276,7 @@ class AutoAdvanceShell extends Shell
                 return 'Presentation D has not been scheduled';
             }
 
-            if ($community->presentation_d->format('Y-m-d') <= date('Y-m-d')) {
+            if ($community->presentation_d->format('Y-m-d') >= date('Y-m-d')) {
                 return 'Presentation D has not concluded';
             }
         }
