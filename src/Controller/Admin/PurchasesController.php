@@ -79,6 +79,7 @@ class PurchasesController extends AppController
         }
 
         $this->paginate['conditions']['community_id'] = $community->id;
+        unset($this->paginate['conditions']['Communities.dummy']);
         $this->set([
             'communityId' => $community->id,
             'purchases' => $this

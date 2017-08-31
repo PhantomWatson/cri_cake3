@@ -30,7 +30,8 @@ class ActivityRecordsHelper extends Helper
                     'afterActivate' => 'Community reactivated',
                     'afterDeactivate' => 'Community marked inactive',
                     'afterAddClient' => 'Client added to community',
-                    'afterRemoveClient' => 'Client removed from community'
+                    'afterRemoveClient' => 'Client removed from community',
+                    'afterAutomaticAdvancement' => 'Community automatically promoted'
                 ],
                 'Delivery' => [
                     'afterAdd' => 'Delivery recorded'
@@ -114,7 +115,8 @@ class ActivityRecordsHelper extends Helper
                     'afterScoreDecrease' => 'From Step [previousScore] to Step [newScore]',
                     'afterScoreIncrease' => 'From Step [previousScore] to Step [newScore]',
                     'afterAddClient' => '[clientName] ([clientEmail])',
-                    'afterRemoveClient' => '[clientName] ([clientEmail])'
+                    'afterRemoveClient' => '[clientName] ([clientEmail])',
+                    'afterAutomaticAdvancement' => 'To Step [toStep]'
                 ],
                 'Delivery' => [
                     'afterAdd' => '[deliverableName] delivered',

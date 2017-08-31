@@ -3,6 +3,8 @@ namespace App\Model\Table;
 
 use App\Model\Entity\Community;
 use Cake\Chronos\Date;
+use Cake\Database\Expression\QueryExpression;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -684,6 +686,74 @@ class CommunitiesTable extends Table
             ->order(['Communities.name' => 'ASC']);
 
         return $query;
+    }
+
+    /**
+     * A finder for the AutoAdvanceShell
+     *
+     * @param \Cake\ORM\Query $query Query
+     * @return \Cake\ORM\Query
+     */
+    public function findForAutoAdvancement(Query $query)
+    {
+        return $query
+            ->select([
+                'id',
+                'name',
+                'score',
+                'active',
+                'presentation_a',
+                'presentation_b',
+                'presentation_c',
+                'presentation_d'
+            ])
+            ->contain([
+                'OptOuts',
+                'OfficialSurvey' => function ($q) {
+                    /** @var Query $q */
+
+                    return $q
+                        ->select(['id', 'community_id', 'active'])
+                        ->contain([
+                            'Responses' => function ($q) {
+                                /** @var Query $q */
+
+                                return $q
+                                    ->select(['id', 'survey_id'])
+                                    ->matching('Respondents', function ($q) {
+                                        /** @var Query $q */
+
+                                        return $q->where(['approved' => true]);
+                                    });
+                            }
+                        ]);
+                },
+                'OrganizationSurvey' => function ($q) {
+                    /** @var Query $q */
+
+                    return $q
+                        ->select(['id', 'community_id', 'active'])
+                        ->contain([
+                            'Responses' => function ($q) {
+                                /** @var Query $q */
+
+                                return $q->select(['id', 'survey_id']);
+                            }
+                        ]);
+                },
+                'Purchases' => function ($q) {
+                    /** @var Query $q */
+
+                    return $q
+                        ->select(['id', 'product_id', 'community_id'])
+                        ->where(function ($exp) {
+                            /** @var QueryExpression $exp */
+
+                            return $exp->isNull('refunded');
+                        });
+                },
+            ])
+            ->orderAsc('name');
     }
 
     /**
