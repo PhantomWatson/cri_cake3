@@ -4,6 +4,7 @@ namespace App\Event;
 use App\Model\Entity\Community;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Queue\Model\Table\QueuedJobsTable;
@@ -18,7 +19,8 @@ class EmailListener implements EventListenerInterface
     public function implementedEvents()
     {
         return [
-            'Model.Community.afterAutomaticAdvancement' => 'sendCommunityPromotedEmail'
+            'Model.Community.afterAutomaticAdvancement' => 'sendCommunityPromotedEmail',
+            'Model.Community.afterScoreIncrease' => 'sendCommunityPromotedEmail'
         ];
     }
 
@@ -32,6 +34,13 @@ class EmailListener implements EventListenerInterface
     public function sendCommunityPromotedEmail(Event $event, array $meta = [])
     {
         $communitiesTable = TableRegistry::get('Communities');
+        if (isset($meta['toStep'])) {
+            $toStep = $meta['toStep'];
+        } elseif (isset($meta['newScore'])) {
+            $toStep = $meta['newScore'];
+        } else {
+            throw new InternalErrorException('Step community was promoted to not specified');
+        }
 
         /** @var Community $community */
         $community = $communitiesTable->find()
@@ -60,7 +69,7 @@ class EmailListener implements EventListenerInterface
                     'community' => [
                         'name' => $community->name
                     ],
-                    'toStep' => $meta['toStep']
+                    'toStep' => $toStep
                 ],
                 ['reference' => $client->email]
             );
