@@ -211,4 +211,28 @@ class ActivityRecordsTable extends Table
 
         return $result;
     }
+
+    /**
+     * Returns the most recent date of this community getting promoted to its next step
+     *
+     * @param int $communityId Community ID
+     * @return FrozenTime|null
+     */
+    public function getCommunityPromotionDate($communityId)
+    {
+        /** @var ActivityRecord $result */
+        $result = $this->find('all')
+            ->select(['created'])
+            ->where([
+                'community_id' => $communityId,
+                'OR' => [
+                    ['event' => 'Model.Community.afterAutomaticAdvancement'],
+                    ['event' => 'Model.Community.afterScoreIncrease']
+                ]
+            ])
+            ->orderDesc('created')
+            ->first();
+
+        return $result ? $result->created : null;
+    }
 }
