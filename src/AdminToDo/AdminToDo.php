@@ -1,7 +1,6 @@
 <?php
 namespace App\AdminToDo;
 
-use App\Model\Entity\Response;
 use App\Model\Table\ActivityRecordsTable;
 use App\Model\Table\CommunitiesTable;
 use App\Model\Table\DeliverablesTable;
@@ -13,6 +12,7 @@ use App\Model\Table\ResponsesTable;
 use App\Model\Table\SurveysTable;
 use Cake\Chronos\Date;
 use Cake\Database\Expression\QueryExpression;
+use Cake\I18n\FrozenDate;
 use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
@@ -52,6 +52,9 @@ class AdminToDo
     /** @var DeliveriesTable $deliveriesTable */
     public $deliveriesTable;
 
+    /** @var ActivityRecordsTable $activityRecordsTable */
+    public $activityRecordsTable;
+
     /**
      * AdminToDo constructor
      */
@@ -64,6 +67,7 @@ class AdminToDo
         $this->responsesTable = TableRegistry::get('Responses');
         $this->surveysTable = TableRegistry::get('Surveys');
         $this->deliveriesTable = TableRegistry::get('Deliveries');
+        $this->activityRecordsTable = TableRegistry::get('ActivityRecords');
     }
 
     /**
@@ -154,11 +158,8 @@ class AdminToDo
 
         $officialsSurvey = $this->surveysTable->get($officialsSurveyId);
 
-        /** @var ActivityRecordsTable $activityRecordsTable */
-        $activityRecordsTable = TableRegistry::get('ActivityRecords');
-
         if ($this->waitingForSurveyInvitations($officialsSurveyId)) {
-            $activationDate = $activityRecordsTable->getSurveyActivationDate($officialsSurveyId);
+            $activationDate = $this->activityRecordsTable->getSurveyActivationDate($officialsSurveyId);
             $since = $activationDate ?: $officialsSurvey->created;
             $url = $this->getInvitationUrl($officialsSurveyId);
 
@@ -205,7 +206,7 @@ class AdminToDo
         $deliverableId = DeliverablesTable::PRESENTATION_A_MATERIALS;
         if ($this->deliveryNotMade($communityId, $deliverableId)) {
             $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
-            $deactivationDate = $activityRecordsTable->getSurveyDeactivationDate($officialsSurveyId);
+            $deactivationDate = $this->activityRecordsTable->getSurveyDeactivationDate($officialsSurveyId);
 
             return [
                 'class' => 'ready',
@@ -343,7 +344,7 @@ class AdminToDo
         $organizationsSurvey = $this->surveysTable->get($organizationsSurveyId);
 
         if ($this->waitingForSurveyInvitations($organizationsSurveyId)) {
-            $activationDate = $activityRecordsTable->getSurveyActivationDate($organizationsSurveyId);
+            $activationDate = $this->activityRecordsTable->getSurveyActivationDate($organizationsSurveyId);
             $since = $activationDate ?: $organizationsSurvey->created;
             $url = $this->getInvitationUrl($organizationsSurveyId);
 
@@ -391,7 +392,7 @@ class AdminToDo
         $deliverableId = DeliverablesTable::PRESENTATION_C_MATERIALS;
         if ($this->deliveryNotMade($communityId, $deliverableId)) {
             $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
-            $deactivationDate = $activityRecordsTable->getSurveyDeactivationDate($organizationsSurveyId);
+            $deactivationDate = $this->activityRecordsTable->getSurveyDeactivationDate($organizationsSurveyId);
 
             return [
                 'class' => 'ready',
@@ -853,7 +854,7 @@ class AdminToDo
      * Returns a string like "more than a year", "five months", "12 days", or "less than a minute", depending
      * on how much time has passed since $time
      *
-     * @param Time|FrozenTime $time Time object
+     * @param Time|FrozenTime|FrozenDate $time Time object
      * @return string
      */
     private function getWaitingPeriod($time)
