@@ -171,6 +171,27 @@ class ActivityRecordsTable extends Table
     }
 
     /**
+     * Returns the most recent date of this survey getting deactivated, or NULL if no record is found
+     *
+     * @param int $surveyId Survey ID
+     * @return FrozenTime|null
+     */
+    public function getSurveyDeactivationDate($surveyId)
+    {
+        /** @var ActivityRecord $result */
+        $result = $this->find('all')
+            ->select(['created'])
+            ->where([
+                'survey_id' => $surveyId,
+                'event' => 'Model.Survey.afterDeactivate'
+            ])
+            ->order(['created' => 'ASC'])
+            ->first();
+
+        return $result ? $result->created : null;
+    }
+
+    /**
      * Returns the most recent activity record for the specified community
      *
      * @param int $communityId Community ID
