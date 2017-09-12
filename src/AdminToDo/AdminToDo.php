@@ -332,9 +332,10 @@ class AdminToDo
             ];
         }
 
+        $mostRecentPresentation = $community->presentation_b ?: $community->presentation_a;
         if ($this->waitingForOrganizationsSurveyPurchase($communityId)) {
             $product = $this->productsTable->get(ProductsTable::ORGANIZATIONS_SURVEY);
-            $mostRecentPresentation = $community->presentation_b ?: $community->presentation_a;
+
 
             return [
                 'class' => 'waiting',
@@ -349,11 +350,24 @@ class AdminToDo
 
         if ($this->readyToAdvanceToStepThree($communityId)) {
             $url = $this->getProgressUrl($communityId);
+            $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::ORGANIZATIONS_SURVEY, $communityId);
+            if ($purchaseDate > $mostRecentPresentation) {
+                $elapsed = [
+                    'time' => $this->getWaitingPeriod($purchaseDate),
+                    'since' => 'organizations questionnaire purchased'
+                ];
+            } else {
+                $elapsed = [
+                    'time' => $this->getWaitingPeriod($mostRecentPresentation),
+                    'since' => $community->presentation_b ? 'Presentation B concluded' : 'Presentation A concluded'
+                ];
+            }
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">advance to Step Three</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => $elapsed
             ];
         }
 
