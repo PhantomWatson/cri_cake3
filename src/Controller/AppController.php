@@ -15,6 +15,7 @@
 namespace App\Controller;
 
 use App\Event\ActivityRecordsListener;
+use App\Event\EmailListener;
 use App\Event\SurveysListener;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
@@ -77,6 +78,8 @@ class AppController extends Controller
         EventManager::instance()->on($activityRecordsListener);
         $surveysListener = new SurveysListener();
         EventManager::instance()->on($surveysListener);
+        $emailListener = new EmailListener();
+        EventManager::instance()->on($emailListener);
 
         /*
          * Enable the following components for recommended CakePHP security settings.

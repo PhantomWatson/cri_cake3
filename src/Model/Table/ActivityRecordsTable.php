@@ -2,7 +2,8 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\ActivityRecord;
-use Cake\I18n\Time;
+use Cake\Datasource\EntityInterface;
+use Cake\I18n\FrozenTime;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -17,13 +18,13 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\CommunitiesTable|\Cake\ORM\Association\BelongsTo $Communities
  * @property \App\Model\Table\SurveysTable|\Cake\ORM\Association\BelongsTo $Surveys
  *
- * @method \App\Model\Entity\ActivityRecord get($primaryKey, $options = [])
- * @method \App\Model\Entity\ActivityRecord newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\ActivityRecord[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\ActivityRecord|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ActivityRecord patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\ActivityRecord[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\ActivityRecord findOrCreate($search, callable $callback = null, $options = [])
+ * @method ActivityRecord get($primaryKey, $options = [])
+ * @method ActivityRecord newEntity($data = null, array $options = [])
+ * @method ActivityRecord[] newEntities(array $data, array $options = [])
+ * @method ActivityRecord|bool save(EntityInterface $entity, $options = [])
+ * @method ActivityRecord patchEntity(EntityInterface $entity, array $data, array $options = [])
+ * @method ActivityRecord[] patchEntities($entities, array $data, array $options = [])
+ * @method ActivityRecord findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
@@ -152,7 +153,7 @@ class ActivityRecordsTable extends Table
      * Returns the first date of this survey getting activated, or NULL if no record is found
      *
      * @param int $surveyId Survey ID
-     * @return Time|null
+     * @return FrozenTime|null
      */
     public function getSurveyActivationDate($surveyId)
     {
@@ -164,6 +165,27 @@ class ActivityRecordsTable extends Table
                 'event' => 'Model.Survey.afterActivate'
             ])
             ->order(['created' => 'ASC'])
+            ->first();
+
+        return $result ? $result->created : null;
+    }
+
+    /**
+     * Returns the most recent date of this survey getting deactivated, or NULL if no record is found
+     *
+     * @param int $surveyId Survey ID
+     * @return FrozenTime|null
+     */
+    public function getSurveyDeactivationDate($surveyId)
+    {
+        /** @var ActivityRecord $result */
+        $result = $this->find('all')
+            ->select(['created'])
+            ->where([
+                'survey_id' => $surveyId,
+                'event' => 'Model.Survey.afterDeactivate'
+            ])
+            ->order(['created' => 'DESC'])
             ->first();
 
         return $result ? $result->created : null;
@@ -188,5 +210,29 @@ class ActivityRecordsTable extends Table
             ->first();
 
         return $result;
+    }
+
+    /**
+     * Returns the most recent date of this community getting promoted to its next step
+     *
+     * @param int $communityId Community ID
+     * @return FrozenTime|null
+     */
+    public function getCommunityPromotionDate($communityId)
+    {
+        /** @var ActivityRecord $result */
+        $result = $this->find('all')
+            ->select(['created'])
+            ->where([
+                'community_id' => $communityId,
+                'OR' => [
+                    ['event' => 'Model.Community.afterAutomaticAdvancement'],
+                    ['event' => 'Model.Community.afterScoreIncrease']
+                ]
+            ])
+            ->orderDesc('created')
+            ->first();
+
+        return $result ? $result->created : null;
     }
 }

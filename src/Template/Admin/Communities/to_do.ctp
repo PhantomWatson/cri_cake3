@@ -67,6 +67,9 @@
             <th>
                 To Do
             </th>
+            <th>
+                Elapsed
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -114,8 +117,15 @@
                 </td>
                 <td class="<?= $community->toDo['class'] ?>">
                     <?= $community->toDo['msg'] ?>
-                    <?php if (isset($community->toDo['since'])): ?>
-                        for <?= $community->toDo['since'] ?>
+                </td>
+                <td>
+                    <?php if (isset($community->toDo['elapsed'])): ?>
+                        <span class="time">
+                            <?= $community->toDo['elapsed']['time'] ?>
+                        </span>
+                        <span class="since">
+                            since <?= $community->toDo['elapsed']['since'] ?>
+                        </span>
                     <?php endif; ?>
                 </td>
             </tr>

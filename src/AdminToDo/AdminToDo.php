@@ -1,18 +1,20 @@
 <?php
 namespace App\AdminToDo;
 
-use App\Model\Entity\Response;
 use App\Model\Table\ActivityRecordsTable;
 use App\Model\Table\CommunitiesTable;
 use App\Model\Table\DeliverablesTable;
 use App\Model\Table\DeliveriesTable;
 use App\Model\Table\OptOutsTable;
 use App\Model\Table\ProductsTable;
+use App\Model\Table\PurchasesTable;
 use App\Model\Table\RespondentsTable;
 use App\Model\Table\ResponsesTable;
 use App\Model\Table\SurveysTable;
 use Cake\Chronos\Date;
 use Cake\Database\Expression\QueryExpression;
+use Cake\I18n\FrozenDate;
+use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
@@ -51,6 +53,12 @@ class AdminToDo
     /** @var DeliveriesTable $deliveriesTable */
     public $deliveriesTable;
 
+    /** @var ActivityRecordsTable $activityRecordsTable */
+    public $activityRecordsTable;
+
+    /** @var PurchasesTable $purchasesTable */
+    public $purchasesTable;
+
     /**
      * AdminToDo constructor
      */
@@ -63,6 +71,8 @@ class AdminToDo
         $this->responsesTable = TableRegistry::get('Responses');
         $this->surveysTable = TableRegistry::get('Surveys');
         $this->deliveriesTable = TableRegistry::get('Deliveries');
+        $this->activityRecordsTable = TableRegistry::get('ActivityRecords');
+        $this->purchasesTable = TableRegistry::get('Purchases');
     }
 
     /**
@@ -82,10 +92,16 @@ class AdminToDo
                 $communityId
             ]);
 
+            $community = $this->communitiesTable->get($communityId);
+
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">assign a client</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($community->created),
+                    'since' => 'community added'
+                ]
             ];
         }
 
@@ -106,27 +122,40 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase ' . $product->description,
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($community->created)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($community->created),
+                    'since' => 'purchase'
+                ]
             ];
         }
 
         if ($this->readyToAdvanceToStepTwo($communityId)) {
             $url = $this->getProgressUrl($communityId);
+            $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::OFFICIALS_SURVEY, $communityId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">advance to Step Two</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($purchaseDate),
+                    'since' => 'officials questionnaire purchased'
+                ]
             ];
         }
 
         if ($this->readyToCreateOfficialsSurvey($communityId)) {
             $url = $this->getLinkUrl($community->slug, 'official');
+            $promotionDate = $this->activityRecordsTable->getCommunityPromotionDate($communityId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to create and <a href="' . $url . '">link officials questionnaire</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($promotionDate),
+                    'since' => 'community advanced to Step Two'
+                ]
             ];
         }
 
@@ -134,21 +163,23 @@ class AdminToDo
 
         if ($this->readyToActivateSurvey($officialsSurveyId)) {
             $url = $this->getActivateUrl($officialsSurveyId);
+            $createdDate = $this->surveysTable->getCreatedDate($officialsSurveyId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">activate officials questionnaire</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($createdDate),
+                    'since' => 'questionnaire created'
+                ]
             ];
         }
 
         $officialsSurvey = $this->surveysTable->get($officialsSurveyId);
 
-        /** @var ActivityRecordsTable $activityRecordsTable */
-        $activityRecordsTable = TableRegistry::get('ActivityRecords');
-
         if ($this->waitingForSurveyInvitations($officialsSurveyId)) {
-            $activationDate = $activityRecordsTable->getSurveyActivationDate($officialsSurveyId);
+            $activationDate = $this->activityRecordsTable->getSurveyActivationDate($officialsSurveyId);
             $since = $activationDate ?: $officialsSurvey->created;
             $url = $this->getInvitationUrl($officialsSurveyId);
 
@@ -156,7 +187,10 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to <a href="' . $url . '">send officials questionnaire invitations</a>',
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($since)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($since),
+                    'since' => 'questionnaire activated'
+                ]
             ];
         }
 
@@ -168,26 +202,40 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for responses to officials questionnaire',
                 'responsible' => null,
-                'since' => $this->getWaitingPeriod($since)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($since),
+                    'since' => $invitationDate ? 'first invitation sent' : 'questionnaire created'
+                ]
             ];
         }
 
         if ($this->readyToConsiderDeactivating($officialsSurveyId)) {
+            $lastResponseDate = $this->responsesTable->getMostRecentResponseDate($officialsSurveyId);
+
             return [
                 'class' => 'ready',
                 'msg' => $this->getDeactivationMsg($officialsSurveyId),
-                'responsible' => ['CBER']
+                'responsible' => ['CBER'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($lastResponseDate),
+                    'since' => 'last response'
+                ]
             ];
         }
 
         $deliverableId = DeliverablesTable::PRESENTATION_A_MATERIALS;
+        $deactivationDate = $this->activityRecordsTable->getSurveyDeactivationDate($officialsSurveyId);
         if ($this->deliveryNotMade($communityId, $deliverableId)) {
             $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation A materials</a> to ICI',
-                'responsible' => ['CBER']
+                'responsible' => ['CBER'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($deactivationDate),
+                    'since' => 'questionnaire deactivated'
+                ]
             ];
         }
 
@@ -197,7 +245,11 @@ class AdminToDo
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">schedule Presentation A</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($deactivationDate),
+                    'since' => 'questionnaire deactivated'
+                ]
             ];
         }
 
@@ -216,21 +268,40 @@ class AdminToDo
             $deliverableId = DeliverablesTable::PRESENTATION_B_MATERIALS;
             if ($this->deliveryNotMade($communityId, $deliverableId)) {
                 $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
+                $deactivationDate = $this->activityRecordsTable->getSurveyDeactivationDate($officialsSurveyId);
+                $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::OFFICIALS_SUMMIT, $communityId);
+                if ($deactivationDate > $purchaseDate) {
+                    $elapsed = [
+                        'time' => $this->getWaitingPeriod($deactivationDate),
+                        'since' => 'questionnaire deactivated'
+                    ];
+                } else {
+                    $elapsed = [
+                        'time' => $this->getWaitingPeriod($purchaseDate),
+                        'since' => 'summit purchased'
+                    ];
+                }
 
                 return [
                     'class' => 'ready',
                     'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation B materials</a> to ICI',
-                    'responsible' => ['CBER']
+                    'responsible' => ['CBER'],
+                    'elapsed' => $elapsed
                 ];
             }
 
             if ($this->readyToSchedulePresentation($communityId, 'b')) {
                 $url = $this->getPresentationsUrl($communityId);
+                $deliveryDate = $this->deliveriesTable->getDate(DeliverablesTable::PRESENTATION_B_MATERIALS, $communityId);
 
                 return [
                     'class' => 'ready',
                     'msg' => 'Ready to <a href="' . $url . '">schedule Presentation B</a>',
-                    'responsible' => ['ICI']
+                    'responsible' => ['ICI'],
+                    'elapsed' => [
+                        'time' => $this->getWaitingPeriod($deliveryDate),
+                        'since' => 'presentation materials delivered'
+                    ]
                 ];
             }
 
@@ -249,7 +320,10 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase or <a href="' . $url . '">opt out of</a> Presentation B',
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($community->presentation_a)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($community->presentation_a),
+                    'since' => 'Presentation A concluded'
+                ]
             ];
         }
 
@@ -263,35 +337,56 @@ class AdminToDo
             ];
         }
 
+        $mostRecentPresentation = $community->presentation_b ?: $community->presentation_a;
         if ($this->waitingForOrganizationsSurveyPurchase($communityId)) {
             $product = $this->productsTable->get(ProductsTable::ORGANIZATIONS_SURVEY);
-            $mostRecentPresentation = $community->presentation_b ?: $community->presentation_a;
 
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase or opt out of ' . $product->description,
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($mostRecentPresentation)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($mostRecentPresentation),
+                    'since' => $community->presentation_b ? 'Presentation B concluded' : 'Presentation A concluded'
+                ]
             ];
         }
 
         if ($this->readyToAdvanceToStepThree($communityId)) {
             $url = $this->getProgressUrl($communityId);
+            $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::ORGANIZATIONS_SURVEY, $communityId);
+            if ($purchaseDate > $mostRecentPresentation) {
+                $elapsed = [
+                    'time' => $this->getWaitingPeriod($purchaseDate),
+                    'since' => 'organizations questionnaire purchased'
+                ];
+            } else {
+                $elapsed = [
+                    'time' => $this->getWaitingPeriod($mostRecentPresentation),
+                    'since' => $community->presentation_b ? 'Presentation B concluded' : 'Presentation A concluded'
+                ];
+            }
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">advance to Step Three</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => $elapsed
             ];
         }
 
         if ($this->readyToCreateOrganizationsSurvey($communityId)) {
             $url = $this->getLinkUrl($community->slug, 'organization');
+            $promotionDate = $this->activityRecordsTable->getCommunityPromotionDate($communityId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to create and <a href="' . $url . '">link organizations questionnaire</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($promotionDate),
+                    'since' => 'community advanced to Step Three'
+                ]
             ];
         }
 
@@ -299,18 +394,23 @@ class AdminToDo
 
         if ($this->readyToActivateSurvey($organizationsSurveyId)) {
             $url = $this->getActivateUrl($organizationsSurveyId);
+            $createdDate = $this->surveysTable->getCreatedDate($officialsSurveyId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">activate organizations questionnaire</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($createdDate),
+                    'since' => 'questionnaire created'
+                ]
             ];
         }
 
         $organizationsSurvey = $this->surveysTable->get($organizationsSurveyId);
 
         if ($this->waitingForSurveyInvitations($organizationsSurveyId)) {
-            $activationDate = $activityRecordsTable->getSurveyActivationDate($organizationsSurveyId);
+            $activationDate = $this->activityRecordsTable->getSurveyActivationDate($organizationsSurveyId);
             $since = $activationDate ?: $organizationsSurvey->created;
             $url = $this->getInvitationUrl($organizationsSurveyId);
 
@@ -319,7 +419,10 @@ class AdminToDo
                 'msg' => 'Waiting for client to ' .
                     '<a href="' . $url . '">send organizations questionnaire invitations</a>',
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($since)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($since),
+                    'since' => 'questionnaire activated'
+                ]
             ];
         }
 
@@ -331,26 +434,40 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for responses to organizations questionnaire',
                 'responsible' => null,
-                'since' => $since
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($since),
+                    'since' => $invitationDate ? 'first invitation sent' : 'questionnaire created'
+                ]
             ];
         }
 
         if ($this->readyToConsiderDeactivating($organizationsSurveyId)) {
+            $lastResponseDate = $this->responsesTable->getMostRecentResponseDate($organizationsSurveyId);
+
             return [
                 'class' => 'ready',
                 'msg' => $this->getDeactivationMsg($organizationsSurveyId),
-                'responsible' => ['CBER']
+                'responsible' => ['CBER'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($lastResponseDate),
+                    'since' => 'last response'
+                ]
             ];
         }
 
         $deliverableId = DeliverablesTable::PRESENTATION_C_MATERIALS;
+        $deactivationDate = $this->activityRecordsTable->getSurveyDeactivationDate($organizationsSurveyId);
         if ($this->deliveryNotMade($communityId, $deliverableId)) {
             $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation C materials</a> to ICI',
-                'responsible' => ['CBER']
+                'responsible' => ['CBER'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($deactivationDate),
+                    'since' => 'questionnaire deactivated'
+                ]
             ];
         }
 
@@ -360,7 +477,11 @@ class AdminToDo
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">schedule Presentation C</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($deactivationDate),
+                    'since' => 'questionnaire deactivated'
+                ]
             ];
         }
 
@@ -379,22 +500,40 @@ class AdminToDo
             $deliverableId = DeliverablesTable::PRESENTATION_D_MATERIALS;
             if ($this->deliveryNotMade($communityId, $deliverableId)) {
                 $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
+                $deactivationDate = $this->activityRecordsTable->getSurveyDeactivationDate($organizationsSurveyId);
+                $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::ORGANIZATIONS_SUMMIT, $communityId);
+                if ($deactivationDate > $purchaseDate) {
+                    $elapsed = [
+                        'time' => $this->getWaitingPeriod($deactivationDate),
+                        'since' => 'questionnaire deactivated'
+                    ];
+                } else {
+                    $elapsed = [
+                        'time' => $this->getWaitingPeriod($purchaseDate),
+                        'since' => 'summit purchased'
+                    ];
+                }
 
                 return [
                     'class' => 'ready',
                     'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation D materials</a> to ICI',
-                    'responsible' => ['CBER']
+                    'responsible' => ['CBER'],
+                    $elapsed
                 ];
             }
 
             if ($this->readyToSchedulePresentation($communityId, 'd')) {
                 $url = $this->getPresentationsUrl($communityId);
+                $deliveryDate = $this->deliveriesTable->getDate(DeliverablesTable::PRESENTATION_D_MATERIALS, $communityId);
 
                 return [
                     'class' => 'ready',
                     'msg' => 'Ready to <a href="' . $url . '">schedule Presentation D</a>',
                     'responsible' => ['ICI'],
-                    'since' => $this->getWaitingPeriod($community->presentation_c)
+                    'elapsed' => [
+                        'time' => $this->getWaitingPeriod($deliveryDate),
+                        'since' => 'presentation materials delivered'
+                    ]
                 ];
             }
 
@@ -411,7 +550,10 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase or opt out of Presentation D',
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($organizationsSurvey->presentation_c)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($community->presentation_c),
+                    'since' => 'Presentation C concluded'
+                ]
             ];
         }
 
@@ -426,25 +568,39 @@ class AdminToDo
 
         $policyDev = $this->productsTable->get(ProductsTable::POLICY_DEVELOPMENT);
         $policyDevProductName = str_replace('PWRRR', 'PWR<sup>3</sup>', $policyDev->description);
-
+        $mostRecentPresentation = $community->presentation_d ?: $community->presentation_c;
         if ($this->waitingForPolicyDevPurchase($communityId)) {
-            $mostRecentPresentation = $community->presentation_d ?: $community->presentation_c;
-
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase ' . $policyDevProductName,
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($mostRecentPresentation)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($mostRecentPresentation),
+                    'since' => $community->presentation_d ? 'Presentation D concluded' : 'Presentation C concluded'
+                ]
             ];
         }
 
+        $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::POLICY_DEVELOPMENT, $communityId);
         if ($this->readyToAdvanceToStepFour($communityId)) {
             $url = $this->getProgressUrl($communityId);
+            if ($purchaseDate > $mostRecentPresentation) {
+                $elapsed = [
+                    'time' => $this->getWaitingPeriod($purchaseDate),
+                    'since' => 'policy development purchased'
+                ];
+            } else {
+                $elapsed = [
+                    'time' => $this->getWaitingPeriod($mostRecentPresentation),
+                    'since' => $community->presentation_d ? 'Presentation D concluded' : 'Presentation C concluded'
+                ];
+            }
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">advance to Step Four</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => $elapsed
             ];
         }
 
@@ -458,6 +614,10 @@ class AdminToDo
                 'responsible' => [
                     'CBER',
                     'ICI'
+                ],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($purchaseDate),
+                    'since' => 'policy development purchased'
                 ]
             ];
         }
@@ -578,23 +738,10 @@ class AdminToDo
         $url = $this->getActivateUrl($surveyId);
         $approvedResponseCount = $this->responsesTable->getApprovedCount($surveyId);
         $invitationCount = $this->respondentsTable->getInvitedCount($surveyId);
-
-        /** @var Response $mostRecentResponse */
-        $mostRecentResponse = $this->responsesTable->find('all')
-            ->select(['response_date'])
-            ->where(['survey_id' => $surveyId])
-            ->order(['response_date' => 'DESC'])
-            ->first();
-        $lastResponseDate = $mostRecentResponse->response_date->timeAgoInWords([
-            'format' => 'MMM d, YYY',
-            'end' => '+1 year'
-        ]);
-
         $msg = 'Ready to consider <a href="' . $url . '">deactivating officials questionnaire</a>';
         $details = [
             '<li>Invitations: ' . $invitationCount . '</li>',
             '<li>Approved responses: ' . $approvedResponseCount . '</li>',
-            '<li>Last response ' . $lastResponseDate . '</li>'
         ];
         $msg .= '<ul class="details">' . implode('', $details) . '</ul>';
 
@@ -807,11 +954,15 @@ class AdminToDo
      * Returns a string like "more than a year", "five months", "12 days", or "less than a minute", depending
      * on how much time has passed since $time
      *
-     * @param Time $time Time object
+     * @param Time|FrozenTime|FrozenDate|null $time Time object
      * @return string
      */
     private function getWaitingPeriod($time)
     {
+        if (! $time) {
+            return 'unknown time';
+        }
+
         $now = time();
         $waitingSince = $time->toUnixString();
         $waitingFor = $now - $waitingSince;
