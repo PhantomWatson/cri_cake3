@@ -7,6 +7,7 @@ use App\Model\Table\DeliverablesTable;
 use App\Model\Table\DeliveriesTable;
 use App\Model\Table\OptOutsTable;
 use App\Model\Table\ProductsTable;
+use App\Model\Table\PurchasesTable;
 use App\Model\Table\RespondentsTable;
 use App\Model\Table\ResponsesTable;
 use App\Model\Table\SurveysTable;
@@ -55,6 +56,9 @@ class AdminToDo
     /** @var ActivityRecordsTable $activityRecordsTable */
     public $activityRecordsTable;
 
+    /** @var PurchasesTable $purchasesTable */
+    public $purchasesTable;
+
     /**
      * AdminToDo constructor
      */
@@ -68,6 +72,7 @@ class AdminToDo
         $this->surveysTable = TableRegistry::get('Surveys');
         $this->deliveriesTable = TableRegistry::get('Deliveries');
         $this->activityRecordsTable = TableRegistry::get('ActivityRecords');
+        $this->purchasesTable = TableRegistry::get('Purchases');
     }
 
     /**
@@ -244,11 +249,25 @@ class AdminToDo
             $deliverableId = DeliverablesTable::PRESENTATION_B_MATERIALS;
             if ($this->deliveryNotMade($communityId, $deliverableId)) {
                 $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
+                $deactivationDate = $this->activityRecordsTable->getSurveyDeactivationDate($officialsSurveyId);
+                $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::OFFICIALS_SUMMIT, $communityId);
+                if ($deactivationDate > $purchaseDate) {
+                    $elapsed = [
+                        'time' => $deactivationDate ? $this->getWaitingPeriod($deactivationDate) : 'unknown time',
+                        'since' => 'questionnaire deactivated'
+                    ];
+                } else {
+                    $elapsed = [
+                        'time' => $purchaseDate ? $this->getWaitingPeriod($purchaseDate) : 'unknown time',
+                        'since' => 'summit purchased'
+                    ];
+                }
 
                 return [
                     'class' => 'ready',
                     'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation B materials</a> to ICI',
-                    'responsible' => ['CBER']
+                    'responsible' => ['CBER'],
+                    'elapsed' => $elapsed
                 ];
             }
 
@@ -430,11 +449,25 @@ class AdminToDo
             $deliverableId = DeliverablesTable::PRESENTATION_D_MATERIALS;
             if ($this->deliveryNotMade($communityId, $deliverableId)) {
                 $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
+                $deactivationDate = $this->activityRecordsTable->getSurveyDeactivationDate($organizationsSurveyId);
+                $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::ORGANIZATIONS_SUMMIT, $communityId);
+                if ($deactivationDate > $purchaseDate) {
+                    $elapsed = [
+                        'time' => $deactivationDate ? $this->getWaitingPeriod($deactivationDate) : 'unknown time',
+                        'since' => 'questionnaire deactivated'
+                    ];
+                } else {
+                    $elapsed = [
+                        'time' => $purchaseDate ? $this->getWaitingPeriod($purchaseDate) : 'unknown time',
+                        'since' => 'summit purchased'
+                    ];
+                }
 
                 return [
                     'class' => 'ready',
                     'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation D materials</a> to ICI',
-                    'responsible' => ['CBER']
+                    'responsible' => ['CBER'],
+                    $elapsed
                 ];
             }
 
