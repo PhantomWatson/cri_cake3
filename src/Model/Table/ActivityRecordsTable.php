@@ -2,8 +2,8 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\ActivityRecord;
+use Cake\Datasource\EntityInterface;
 use Cake\I18n\FrozenTime;
-use Cake\I18n\Time;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -18,13 +18,13 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\CommunitiesTable|\Cake\ORM\Association\BelongsTo $Communities
  * @property \App\Model\Table\SurveysTable|\Cake\ORM\Association\BelongsTo $Surveys
  *
- * @method \App\Model\Entity\ActivityRecord get($primaryKey, $options = [])
- * @method \App\Model\Entity\ActivityRecord newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\ActivityRecord[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\ActivityRecord|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ActivityRecord patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\ActivityRecord[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\ActivityRecord findOrCreate($search, callable $callback = null, $options = [])
+ * @method ActivityRecord get($primaryKey, $options = [])
+ * @method ActivityRecord newEntity($data = null, array $options = [])
+ * @method ActivityRecord[] newEntities(array $data, array $options = [])
+ * @method ActivityRecord|bool save(EntityInterface $entity, $options = [])
+ * @method ActivityRecord patchEntity(EntityInterface $entity, array $data, array $options = [])
+ * @method ActivityRecord[] patchEntities($entities, array $data, array $options = [])
+ * @method ActivityRecord findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
