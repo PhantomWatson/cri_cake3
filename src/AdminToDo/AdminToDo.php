@@ -182,10 +182,16 @@ class AdminToDo
         }
 
         if ($this->readyToConsiderDeactivating($officialsSurveyId)) {
+            $lastResponseDate = $this->responsesTable->getMostRecentResponseDate($officialsSurveyId);
+
             return [
                 'class' => 'ready',
                 'msg' => $this->getDeactivationMsg($officialsSurveyId),
-                'responsible' => ['CBER']
+                'responsible' => ['CBER'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($lastResponseDate),
+                    'since' => 'last response'
+                ]
             ];
         }
 
@@ -357,10 +363,16 @@ class AdminToDo
         }
 
         if ($this->readyToConsiderDeactivating($organizationsSurveyId)) {
+            $lastResponseDate = $this->responsesTable->getMostRecentResponseDate($organizationsSurveyId);
+
             return [
                 'class' => 'ready',
                 'msg' => $this->getDeactivationMsg($organizationsSurveyId),
-                'responsible' => ['CBER']
+                'responsible' => ['CBER'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($lastResponseDate),
+                    'since' => 'last response'
+                ]
             ];
         }
 
@@ -608,23 +620,10 @@ class AdminToDo
         $url = $this->getActivateUrl($surveyId);
         $approvedResponseCount = $this->responsesTable->getApprovedCount($surveyId);
         $invitationCount = $this->respondentsTable->getInvitedCount($surveyId);
-
-        /** @var Response $mostRecentResponse */
-        $mostRecentResponse = $this->responsesTable->find('all')
-            ->select(['response_date'])
-            ->where(['survey_id' => $surveyId])
-            ->order(['response_date' => 'DESC'])
-            ->first();
-        $lastResponseDate = $mostRecentResponse->response_date->timeAgoInWords([
-            'format' => 'MMM d, YYY',
-            'end' => '+1 year'
-        ]);
-
         $msg = 'Ready to consider <a href="' . $url . '">deactivating officials questionnaire</a>';
         $details = [
             '<li>Invitations: ' . $invitationCount . '</li>',
             '<li>Approved responses: ' . $approvedResponseCount . '</li>',
-            '<li>Last response ' . $lastResponseDate . '</li>'
         ];
         $msg .= '<ul class="details">' . implode('', $details) . '</ul>';
 

@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Response;
 use App\Model\Entity\Survey;
 use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
@@ -662,5 +663,24 @@ class ResponsesTable extends Table
     public function getApprovedUnawareOfPlanCount($surveyId)
     {
         return $this->getApprovedAwareOfPlanCount($surveyId, false);
+    }
+
+    /**
+     * Returns a datetime object for the most recent response,
+     * or null if no responses have been collected
+     *
+     * @param int $surveyId Survey ID
+     * @return \Cake\I18n\FrozenTime|null
+     */
+    public function getMostRecentResponseDate($surveyId)
+    {
+        /** @var Response $mostRecentResponse */
+        $mostRecentResponse = $this->find('all')
+            ->select(['response_date'])
+            ->where(['survey_id' => $surveyId])
+            ->order(['response_date' => 'DESC'])
+            ->first();
+
+        return $mostRecentResponse ? $mostRecentResponse->response_date : null;
     }
 }
