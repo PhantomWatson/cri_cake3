@@ -228,7 +228,7 @@ class AdminToDo
                 'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation A materials</a> to ICI',
                 'responsible' => ['CBER'],
                 'elapsed' => [
-                    'time' => $deactivationDate ? $this->getWaitingPeriod($deactivationDate) : 'unknown time',
+                    'time' => $this->getWaitingPeriod($deactivationDate),
                     'since' => 'questionnaire deactivated'
                 ]
             ];
@@ -263,12 +263,12 @@ class AdminToDo
                 $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::OFFICIALS_SUMMIT, $communityId);
                 if ($deactivationDate > $purchaseDate) {
                     $elapsed = [
-                        'time' => $deactivationDate ? $this->getWaitingPeriod($deactivationDate) : 'unknown time',
+                        'time' => $this->getWaitingPeriod($deactivationDate),
                         'since' => 'questionnaire deactivated'
                     ];
                 } else {
                     $elapsed = [
-                        'time' => $purchaseDate ? $this->getWaitingPeriod($purchaseDate) : 'unknown time',
+                        'time' => $this->getWaitingPeriod($purchaseDate),
                         'since' => 'summit purchased'
                     ];
                 }
@@ -433,7 +433,7 @@ class AdminToDo
                 'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation C materials</a> to ICI',
                 'responsible' => ['CBER'],
                 'elapsed' => [
-                    'time' => $deactivationDate ? $this->getWaitingPeriod($deactivationDate) : 'unknown time',
+                    'time' => $this->getWaitingPeriod($deactivationDate),
                     'since' => 'questionnaire deactivated'
                 ]
             ];
@@ -468,12 +468,12 @@ class AdminToDo
                 $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::ORGANIZATIONS_SUMMIT, $communityId);
                 if ($deactivationDate > $purchaseDate) {
                     $elapsed = [
-                        'time' => $deactivationDate ? $this->getWaitingPeriod($deactivationDate) : 'unknown time',
+                        'time' => $this->getWaitingPeriod($deactivationDate),
                         'since' => 'questionnaire deactivated'
                     ];
                 } else {
                     $elapsed = [
-                        'time' => $purchaseDate ? $this->getWaitingPeriod($purchaseDate) : 'unknown time',
+                        'time' => $this->getWaitingPeriod($purchaseDate),
                         'since' => 'summit purchased'
                     ];
                 }
@@ -902,11 +902,15 @@ class AdminToDo
      * Returns a string like "more than a year", "five months", "12 days", or "less than a minute", depending
      * on how much time has passed since $time
      *
-     * @param Time|FrozenTime|FrozenDate $time Time object
+     * @param Time|FrozenTime|FrozenDate|null $time Time object
      * @return string
      */
     private function getWaitingPeriod($time)
     {
+        if (! $time) {
+            return 'unknown time';
+        }
+
         $now = time();
         $waitingSince = $time->toUnixString();
         $waitingFor = $now - $waitingSince;
