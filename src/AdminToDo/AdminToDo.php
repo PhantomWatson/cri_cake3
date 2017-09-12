@@ -131,11 +131,16 @@ class AdminToDo
 
         if ($this->readyToAdvanceToStepTwo($communityId)) {
             $url = $this->getProgressUrl($communityId);
+            $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::OFFICIALS_SURVEY, $communityId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">advance to Step Two</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($purchaseDate),
+                    'since' => 'officials questionnaire purchased'
+                ]
             ];
         }
 
