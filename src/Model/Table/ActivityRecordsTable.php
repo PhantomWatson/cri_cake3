@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\ActivityRecord;
+use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
@@ -152,7 +153,7 @@ class ActivityRecordsTable extends Table
      * Returns the first date of this survey getting activated, or NULL if no record is found
      *
      * @param int $surveyId Survey ID
-     * @return Time|null
+     * @return FrozenTime|null
      */
     public function getSurveyActivationDate($surveyId)
     {
