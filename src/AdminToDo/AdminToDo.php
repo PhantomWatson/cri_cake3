@@ -106,7 +106,10 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase ' . $product->description,
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($community->created)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($community->created),
+                    'since' => 'purchase'
+                ]
             ];
         }
 
@@ -156,7 +159,10 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to <a href="' . $url . '">send officials questionnaire invitations</a>',
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($since)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($since),
+                    'since' => 'questionnaire activated'
+                ]
             ];
         }
 
@@ -168,7 +174,10 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for responses to officials questionnaire',
                 'responsible' => null,
-                'since' => $this->getWaitingPeriod($since)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($since),
+                    'since' => $invitationDate ? 'first invitation sent' : 'questionnaire created'
+                ]
             ];
         }
 
@@ -249,7 +258,10 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase or <a href="' . $url . '">opt out of</a> Presentation B',
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($community->presentation_a)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($community->presentation_a),
+                    'since' => 'Presentation A concluded'
+                ]
             ];
         }
 
@@ -271,7 +283,10 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase or opt out of ' . $product->description,
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($mostRecentPresentation)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($mostRecentPresentation),
+                    'since' => $community->presentation_b ? 'Presentation B concluded' : 'Presentation A concluded'
+                ]
             ];
         }
 
@@ -319,7 +334,10 @@ class AdminToDo
                 'msg' => 'Waiting for client to ' .
                     '<a href="' . $url . '">send organizations questionnaire invitations</a>',
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($since)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($since),
+                    'since' => 'questionnaire activated'
+                ]
             ];
         }
 
@@ -331,7 +349,10 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for responses to organizations questionnaire',
                 'responsible' => null,
-                'since' => $since
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($since),
+                    'since' => $invitationDate ? 'first invitation sent' : 'questionnaire created'
+                ]
             ];
         }
 
@@ -394,7 +415,10 @@ class AdminToDo
                     'class' => 'ready',
                     'msg' => 'Ready to <a href="' . $url . '">schedule Presentation D</a>',
                     'responsible' => ['ICI'],
-                    'since' => $this->getWaitingPeriod($community->presentation_c)
+                    'elapsed' => [
+                        'time' => $this->getWaitingPeriod($community->presentation_c),
+                        'since' => 'Presentation C concluded'
+                    ]
                 ];
             }
 
@@ -411,7 +435,10 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase or opt out of Presentation D',
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($organizationsSurvey->presentation_c)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($community->presentation_c),
+                    'since' => 'Presentation C concluded'
+                ]
             ];
         }
 
@@ -434,7 +461,10 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase ' . $policyDevProductName,
                 'responsible' => ['Client'],
-                'since' => $this->getWaitingPeriod($mostRecentPresentation)
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($mostRecentPresentation),
+                    'since' => $community->presentation_d ? 'Presentation D concluded' : 'Presentation C concluded'
+                ]
             ];
         }
 
