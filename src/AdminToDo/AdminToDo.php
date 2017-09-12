@@ -146,11 +146,16 @@ class AdminToDo
 
         if ($this->readyToCreateOfficialsSurvey($communityId)) {
             $url = $this->getLinkUrl($community->slug, 'official');
+            $promotionDate = $this->activityRecordsTable->getCommunityPromotionDate($communityId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to create and <a href="' . $url . '">link officials questionnaire</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($promotionDate),
+                    'since' => 'community advanced to Step Two'
+                ]
             ];
         }
 
@@ -345,11 +350,16 @@ class AdminToDo
 
         if ($this->readyToCreateOrganizationsSurvey($communityId)) {
             $url = $this->getLinkUrl($community->slug, 'organization');
+            $promotionDate = $this->activityRecordsTable->getCommunityPromotionDate($communityId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to create and <a href="' . $url . '">link organizations questionnaire</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($promotionDate),
+                    'since' => 'community advanced to Step Three'
+                ]
             ];
         }
 
