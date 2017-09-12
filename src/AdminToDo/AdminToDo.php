@@ -205,11 +205,16 @@ class AdminToDo
         $deliverableId = DeliverablesTable::PRESENTATION_A_MATERIALS;
         if ($this->deliveryNotMade($communityId, $deliverableId)) {
             $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
+            $deactivationDate = $activityRecordsTable->getSurveyDeactivationDate($officialsSurveyId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation A materials</a> to ICI',
-                'responsible' => ['CBER']
+                'responsible' => ['CBER'],
+                'elapsed' => [
+                    'time' => $deactivationDate ? $this->getWaitingPeriod($deactivationDate) : 'unknown time',
+                    'since' => 'questionnaire deactivated'
+                ]
             ];
         }
 
@@ -386,11 +391,16 @@ class AdminToDo
         $deliverableId = DeliverablesTable::PRESENTATION_C_MATERIALS;
         if ($this->deliveryNotMade($communityId, $deliverableId)) {
             $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
+            $deactivationDate = $activityRecordsTable->getSurveyDeactivationDate($organizationsSurveyId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation C materials</a> to ICI',
-                'responsible' => ['CBER']
+                'responsible' => ['CBER'],
+                'elapsed' => [
+                    'time' => $deactivationDate ? $this->getWaitingPeriod($deactivationDate) : 'unknown time',
+                    'since' => 'questionnaire deactivated'
+                ]
             ];
         }
 
