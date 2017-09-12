@@ -219,9 +219,9 @@ class AdminToDo
         }
 
         $deliverableId = DeliverablesTable::PRESENTATION_A_MATERIALS;
+        $deactivationDate = $this->activityRecordsTable->getSurveyDeactivationDate($officialsSurveyId);
         if ($this->deliveryNotMade($communityId, $deliverableId)) {
             $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
-            $deactivationDate = $this->activityRecordsTable->getSurveyDeactivationDate($officialsSurveyId);
 
             return [
                 'class' => 'ready',
@@ -240,7 +240,11 @@ class AdminToDo
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">schedule Presentation A</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($deactivationDate),
+                    'since' => 'questionnaire deactivated'
+                ]
             ];
         }
 
@@ -424,9 +428,9 @@ class AdminToDo
         }
 
         $deliverableId = DeliverablesTable::PRESENTATION_C_MATERIALS;
+        $deactivationDate = $this->activityRecordsTable->getSurveyDeactivationDate($organizationsSurveyId);
         if ($this->deliveryNotMade($communityId, $deliverableId)) {
             $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
-            $deactivationDate = $this->activityRecordsTable->getSurveyDeactivationDate($organizationsSurveyId);
 
             return [
                 'class' => 'ready',
@@ -445,7 +449,11 @@ class AdminToDo
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">schedule Presentation C</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($deactivationDate),
+                    'since' => 'questionnaire deactivated'
+                ]
             ];
         }
 
