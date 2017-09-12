@@ -569,10 +569,8 @@ class AdminToDo
 
         $policyDev = $this->productsTable->get(ProductsTable::POLICY_DEVELOPMENT);
         $policyDevProductName = str_replace('PWRRR', 'PWR<sup>3</sup>', $policyDev->description);
-
+        $mostRecentPresentation = $community->presentation_d ?: $community->presentation_c;
         if ($this->waitingForPolicyDevPurchase($communityId)) {
-            $mostRecentPresentation = $community->presentation_d ?: $community->presentation_c;
-
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase ' . $policyDevProductName,
@@ -586,11 +584,24 @@ class AdminToDo
 
         if ($this->readyToAdvanceToStepFour($communityId)) {
             $url = $this->getProgressUrl($communityId);
+            $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::POLICY_DEVELOPMENT, $communityId);
+            if ($purchaseDate > $mostRecentPresentation) {
+                $elapsed = [
+                    'time' => $this->getWaitingPeriod($purchaseDate),
+                    'since' => 'policy development purchased'
+                ];
+            } else {
+                $elapsed = [
+                    'time' => $this->getWaitingPeriod($mostRecentPresentation),
+                    'since' => $community->presentation_d ? 'Presentation D concluded' : 'Presentation C concluded'
+                ];
+            }
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">advance to Step Four</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => $elapsed
             ];
         }
 
