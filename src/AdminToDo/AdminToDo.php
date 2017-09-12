@@ -13,6 +13,7 @@ use App\Model\Table\ResponsesTable;
 use App\Model\Table\SurveysTable;
 use Cake\Chronos\Date;
 use Cake\Database\Expression\QueryExpression;
+use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
@@ -842,7 +843,7 @@ class AdminToDo
      * Returns a string like "more than a year", "five months", "12 days", or "less than a minute", depending
      * on how much time has passed since $time
      *
-     * @param Time $time Time object
+     * @param Time|FrozenTime $time Time object
      * @return string
      */
     private function getWaitingPeriod($time)
