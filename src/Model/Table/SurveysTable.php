@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Community;
+use App\Model\Entity\Survey;
 use App\SurveyMonkey\SurveyMonkey;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\I18n\FrozenTime;
@@ -181,6 +182,23 @@ class SurveysTable extends Table
             ->limit(1);
 
         return $results->isEmpty() ? null : $results->first()->community_id;
+    }
+
+    /**
+     * Returns the value for 'created' for the selected survey
+     *
+     * @param $surveyId
+     * @return FrozenTime|null
+     */
+    public function getCreatedDate($surveyId)
+    {
+        /** @var Survey $result Survey entity */
+        $result = $this->find('all')
+            ->select(['created'])
+            ->where(['id' => $surveyId])
+            ->first();
+
+        return $result ? $result->created : null;
     }
 
     /**
