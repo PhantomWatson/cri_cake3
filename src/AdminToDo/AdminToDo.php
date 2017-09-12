@@ -163,11 +163,16 @@ class AdminToDo
 
         if ($this->readyToActivateSurvey($officialsSurveyId)) {
             $url = $this->getActivateUrl($officialsSurveyId);
+            $createdDate = $this->surveysTable->getCreatedDate($officialsSurveyId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">activate officials questionnaire</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($createdDate),
+                    'since' => 'questionnaire created'
+                ]
             ];
         }
 
@@ -390,11 +395,16 @@ class AdminToDo
 
         if ($this->readyToActivateSurvey($organizationsSurveyId)) {
             $url = $this->getActivateUrl($organizationsSurveyId);
+            $createdDate = $this->surveysTable->getCreatedDate($officialsSurveyId);
 
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">activate organizations questionnaire</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($createdDate),
+                    'since' => 'questionnaire created'
+                ]
             ];
         }
 
