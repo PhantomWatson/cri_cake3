@@ -187,7 +187,7 @@ class SurveysTable extends Table
     /**
      * Returns the value for 'created' for the selected survey
      *
-     * @param $surveyId
+     * @param int $surveyId Survey ID
      * @return FrozenTime|null
      */
     public function getCreatedDate($surveyId)

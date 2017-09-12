@@ -341,7 +341,6 @@ class AdminToDo
         if ($this->waitingForOrganizationsSurveyPurchase($communityId)) {
             $product = $this->productsTable->get(ProductsTable::ORGANIZATIONS_SURVEY);
 
-
             return [
                 'class' => 'waiting',
                 'msg' => 'Waiting for client to purchase or opt out of ' . $product->description,
