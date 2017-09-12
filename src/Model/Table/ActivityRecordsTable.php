@@ -185,7 +185,7 @@ class ActivityRecordsTable extends Table
                 'survey_id' => $surveyId,
                 'event' => 'Model.Survey.afterDeactivate'
             ])
-            ->order(['created' => 'ASC'])
+            ->order(['created' => 'DESC'])
             ->first();
 
         return $result ? $result->created : null;
