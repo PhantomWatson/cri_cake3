@@ -82,10 +82,16 @@ class AdminToDo
                 $communityId
             ]);
 
+            $community = $this->communitiesTable->get($communityId);
+
             return [
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">assign a client</a>',
-                'responsible' => ['ICI']
+                'responsible' => ['ICI'],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($community->created),
+                    'since' => 'community added'
+                ]
             ];
         }
 
