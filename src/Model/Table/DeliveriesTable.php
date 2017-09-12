@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Delivery;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -105,5 +106,27 @@ class DeliveriesTable extends Table
             ->count();
 
         return $count > 0;
+    }
+
+    /**
+     * Returns the most recent date of the specified delivery
+     *
+     * @param int $deliverableId Deliverable ID
+     * @param int $communityId Community ID
+     * @return \Cake\I18n\FrozenTime|null
+     */
+    public function getDate($deliverableId, $communityId)
+    {
+        /** @var Delivery $result Delivery entity */
+        $result = $this->find('all')
+            ->select(['created'])
+            ->where([
+                'community_id' => $communityId,
+                'deliverable_id' => $deliverableId
+            ])
+            ->orderDesc('created')
+            ->first();
+
+        return $result ? $result->created : null;
     }
 }
