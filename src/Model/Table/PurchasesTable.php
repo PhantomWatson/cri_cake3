@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Purchase;
 use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -410,5 +411,27 @@ class PurchasesTable extends Table
 
                 return $q->where(['paid' => true]);
             });
+    }
+
+    /**
+     * Returns the most recent date of a given purchase
+     *
+     * @param int $productId Product ID
+     * @param int $communityId Community ID
+     * @return \Cake\I18n\FrozenTime|null
+     */
+    public function getPurchaseDate($productId, $communityId)
+    {
+        /** @var Purchase $result */
+        $result = $this->find()
+            ->select('created')
+            ->where([
+                'product_id' => $productId,
+                'community_id' => $communityId
+            ])
+            ->orderDesc('created')
+            ->first();
+
+        return $result ? $result->created : null;
     }
 }
