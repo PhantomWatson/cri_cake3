@@ -582,9 +582,9 @@ class AdminToDo
             ];
         }
 
+        $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::POLICY_DEVELOPMENT, $communityId);
         if ($this->readyToAdvanceToStepFour($communityId)) {
             $url = $this->getProgressUrl($communityId);
-            $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::POLICY_DEVELOPMENT, $communityId);
             if ($purchaseDate > $mostRecentPresentation) {
                 $elapsed = [
                     'time' => $this->getWaitingPeriod($purchaseDate),
@@ -615,6 +615,10 @@ class AdminToDo
                 'responsible' => [
                     'CBER',
                     'ICI'
+                ],
+                'elapsed' => [
+                    'time' => $this->getWaitingPeriod($purchaseDate),
+                    'since' => 'policy development purchased'
                 ]
             ];
         }
