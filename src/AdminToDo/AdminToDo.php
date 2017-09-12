@@ -287,11 +287,16 @@ class AdminToDo
 
             if ($this->readyToSchedulePresentation($communityId, 'b')) {
                 $url = $this->getPresentationsUrl($communityId);
+                $deliveryDate = $this->deliveriesTable->getDate(DeliverablesTable::PRESENTATION_B_MATERIALS, $communityId);
 
                 return [
                     'class' => 'ready',
                     'msg' => 'Ready to <a href="' . $url . '">schedule Presentation B</a>',
-                    'responsible' => ['ICI']
+                    'responsible' => ['ICI'],
+                    'elapsed' => [
+                        'time' => $this->getWaitingPeriod($deliveryDate),
+                        'since' => 'presentation materials delivered'
+                    ]
                 ];
             }
 
@@ -496,14 +501,15 @@ class AdminToDo
 
             if ($this->readyToSchedulePresentation($communityId, 'd')) {
                 $url = $this->getPresentationsUrl($communityId);
+                $deliveryDate = $this->deliveriesTable->getDate(DeliverablesTable::PRESENTATION_D_MATERIALS, $communityId);
 
                 return [
                     'class' => 'ready',
                     'msg' => 'Ready to <a href="' . $url . '">schedule Presentation D</a>',
                     'responsible' => ['ICI'],
                     'elapsed' => [
-                        'time' => $this->getWaitingPeriod($community->presentation_c),
-                        'since' => 'Presentation C concluded'
+                        'time' => $this->getWaitingPeriod($deliveryDate),
+                        'since' => 'presentation materials delivered'
                     ]
                 ];
             }
