@@ -34,7 +34,8 @@ class UserMailer extends Mailer
                 'name' => $user['name'],
                 'email' => $user['email']
             ])
-            ->setTemplate('new_account');
+            ->setTemplate('new_account')
+            ->setDomain('cri.cberdata.org');
     }
 
     /**
@@ -66,6 +67,7 @@ class UserMailer extends Mailer
                     $timestamp,
                     $hash
                 ], true)
-            ]);
+            ])
+            ->setDomain('cri.cberdata.org');
     }
 }

@@ -17,6 +17,7 @@ class TestMailer extends Mailer
         return $this
             ->setTo($recipient)
             ->setSubject('CRI: Test email')
-            ->setTemplate('test');
+            ->setTemplate('test')
+            ->setDomain('cri.cberdata.org');
     }
 }

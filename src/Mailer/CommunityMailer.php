@@ -26,6 +26,7 @@ class CommunityMailer extends Mailer
                 'toStep' => $toStep,
                 'userName' => $user['name']
             ])
-            ->setTemplate('community_promoted');
+            ->setTemplate('community_promoted')
+            ->setDomain('cri.cberdata.org');
     }
 }
