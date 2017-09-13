@@ -46,7 +46,8 @@ class DelayedJobsShell extends Shell
 
         $count = $results->count();
         $msg = $count . __n(' job has', ' jobs have', $count) .
-            ' been created more than ' . $this->threshold . ' and haven\'t been processed yet';
+            ' been created more than ' . $this->threshold . ' and haven\'t been processed yet.' . "\n" .
+            'Visit https://cri.cberdata.org/admin/queue for details.';
         $data = 'payload=' . json_encode([
             'channel' => '#cri',
             'text' => $msg,
@@ -110,8 +111,8 @@ class DelayedJobsShell extends Shell
                 /** @var QueryExpression $exp */
 
                 return $exp
-                    ->lt('created', $createdEarlierThan)
-                    ->isNull('completed');
+                    ->lt('created', $createdEarlierThan);
+                    //->isNull('completed');
             })
             ->orderAsc('created')
             ->all();
