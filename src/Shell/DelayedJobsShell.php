@@ -111,8 +111,8 @@ class DelayedJobsShell extends Shell
                 /** @var QueryExpression $exp */
 
                 return $exp
-                    ->lt('created', $createdEarlierThan);
-                    //->isNull('completed');
+                    ->lt('created', $createdEarlierThan)
+                    ->isNull('completed');
             })
             ->orderAsc('created')
             ->all();
