@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2c68888d7c1ccbd44bd05f6ac223ecc",
+    "content-hash": "d7cb0e9cadcd4035212b7cc8b764a786",
     "packages": [
         {
             "name": "aura/intl",
@@ -58,16 +58,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BallStateCBER/datacenter-plugin-cakephp3.git",
-                "reference": "eb41e764959899297580abd88075fd5222c864f6"
+                "reference": "293f107e76901d2641849c7d89a495ee5cace776"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BallStateCBER/datacenter-plugin-cakephp3/zipball/eb41e764959899297580abd88075fd5222c864f6",
-                "reference": "eb41e764959899297580abd88075fd5222c864f6",
+                "url": "https://api.github.com/repos/BallStateCBER/datacenter-plugin-cakephp3/zipball/293f107e76901d2641849c7d89a495ee5cace776",
+                "reference": "293f107e76901d2641849c7d89a495ee5cace776",
                 "shasum": ""
             },
             "require": {
                 "cakephp/cakephp": "~3.0",
+                "cakephp/cakephp-codesniffer": "*",
                 "php": ">=5.4.16",
                 "twbs/bootstrap": "~3.0"
             },
@@ -82,20 +83,20 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "description": "Ball State CBER DataCenter plugin for CakePHP 3",
-            "time": "2017-08-01 17:12:52"
+            "time": "2017-09-19T19:49:47+00:00"
         },
         {
             "name": "cakephp/cakephp",
-            "version": "3.4.12",
+            "version": "3.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "e5be62241953ee90f3ec121fce3bf8074518d4be"
+                "reference": "6829ddd2bcc48fc29dc98dccd23b8f746ec4ebec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/e5be62241953ee90f3ec121fce3bf8074518d4be",
-                "reference": "e5be62241953ee90f3ec121fce3bf8074518d4be",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/6829ddd2bcc48fc29dc98dccd23b8f746ec4ebec",
+                "reference": "6829ddd2bcc48fc29dc98dccd23b8f746ec4ebec",
                 "shasum": ""
             },
             "require": {
@@ -168,7 +169,7 @@
                 "rapid-development",
                 "validation"
             ],
-            "time": "2017-08-02T01:15:12+00:00"
+            "time": "2017-09-12T01:49:28+00:00"
         },
         {
             "name": "cakephp/cakephp-codesniffer",
@@ -637,7 +638,7 @@
                 "dotenv",
                 "php"
             ],
-            "time": "2017-07-14 04:43:57"
+            "time": "2017-07-14T04:43:57+00:00"
         },
         {
             "name": "liogi/surveymonkey-api-v3",
@@ -911,7 +912,7 @@
                 "form",
                 "jquery"
             ],
-            "time": "2016-02-04 17:44:19"
+            "time": "2016-02-04T17:44:19+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -3208,7 +3209,7 @@
                 "codeclimate",
                 "coverage"
             ],
-            "time": "2017-06-01 13:19:55"
+            "time": "2017-06-01T13:19:55+00:00"
         },
         {
             "name": "composer/ca-bundle",
