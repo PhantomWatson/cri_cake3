@@ -795,7 +795,10 @@ class CommunitiesController extends AppController
         $AdminToDo = new AdminToDo();
         $communities = $this->Communities->find('all')
             ->select(['id', 'name'])
-            ->where(['dummy' => false])
+            ->where([
+                'active' => true,
+                'dummy' => false
+            ])
             ->order(['name' => 'ASC'])
             ->toArray();
         foreach ($communities as $key => $community) {
