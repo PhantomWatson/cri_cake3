@@ -52,8 +52,10 @@
         }
     },
     "scripts": {
-        "post-install-cmd": "App\\Console\\Installer::postInstall",
-        "post-create-project-cmd": "App\\Console\\Installer::postInstall",
+        "post-package-install": "DataCenter\\Console\\Installer::postUpdate",
+        "post-package-update": "DataCenter\\Console\\Installer::postUpdate",
+        "post-create-project-cmd": "DataCenter\\Console\\Installer::postInstall",
+        "copy-vendor-files": "DataCenter\\Console\\Installer::copyVendorFiles",
         "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
         "check": [
             "@test",
