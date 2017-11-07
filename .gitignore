@@ -45,9 +45,6 @@ local.properties
 # Composer
 composer.phar
 
-# Compiled CSS
-/webroot/css/style.css
-
 # Environment variable definitions
 /config/.env
 /config/.env.production
