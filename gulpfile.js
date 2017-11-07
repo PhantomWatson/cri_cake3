@@ -96,8 +96,7 @@ gulp.task('js', function(callback) {
 gulp.task('js_lint', function () {
     return gulp.src(srcJsFiles)
         .pipe(jshint())
-        .pipe(jshint.reporter(stylish))
-        .pipe(customNotify('JS linted'));
+        .pipe(jshint.reporter(stylish));
 });
 
 gulp.task('js_minify', function () {
@@ -106,8 +105,7 @@ gulp.task('js_minify', function () {
         .pipe(rename({
             extname: '.min.js'
         }))
-        .pipe(gulp.dest('webroot/js'))
-        .pipe(customNotify('JS minified'));
+        .pipe(gulp.dest('webroot/js'));
 });
 
 

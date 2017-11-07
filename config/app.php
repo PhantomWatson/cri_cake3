@@ -469,7 +469,8 @@ $config = [
     'noreply_email' => 'noreply@cberdata.org',
     'cookie_key' => env('COOKIE_ENCRYPTION_KEY'),
     'maintenance_mode' => false,
-    'cashNetId' => env('CASHNET_ID')
+    'cashNetId' => env('CASHNET_ID'),
+    'slack_webhook_url' => env('SLACK_WEBHOOK_URL')
 ];
 
 /**

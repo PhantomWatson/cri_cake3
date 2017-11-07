@@ -35,7 +35,8 @@ class SurveyMailer extends Mailer
                 'criUrl' => Router::url('/', true),
                 'surveyType' => $survey->type,
                 'surveyUrl' => $survey->sm_url
-            ]);
+            ])
+            ->setDomain('cri.cberdata.org');
         if ($sender['email']) {
             $email->setReplyTo($sender['email'], $sender['name']);
         }
@@ -72,7 +73,8 @@ class SurveyMailer extends Mailer
                 'criUrl' => Router::url('/', true),
                 'surveyType' => $survey->type,
                 'surveyUrl' => $survey->sm_url
-            ]);
+            ])
+            ->setDomain('cri.cberdata.org');
         if ($senderEmail) {
             $email->setReplyTo($senderEmail, $senderName);
         }

@@ -44,14 +44,9 @@ local.properties
 
 # Composer
 composer.phar
-composer.lock
 
 # Compiled CSS
 /webroot/css/style.css
-
-# Concatenated / minified JS files
-/webroot/js/script.concat.js
-/webroot/js/*.min.js
 
 # Environment variable definitions
 /config/.env

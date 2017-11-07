@@ -20,7 +20,7 @@
 <?php $this->end(); ?>
 
 <div id="content">
-    <?= $this->element('flash_messages_bootstrap') ?>
+    <?= $this->element('DataCenter.flash_messages_bootstrap') ?>
     <div id="cri_main">
         <?= $this->fetch('content') ?>
     </div>

@@ -322,10 +322,8 @@ class AppController extends Controller
         }
 
         $this->set([
-            'authUser' => $this->Auth->user(),
-            'flashMessages' => $this->Flash->messages
+            'authUser' => $this->Auth->user()
         ]);
-        $this->request->session()->delete('FlashMessage');
     }
 
     /**
