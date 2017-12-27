@@ -98,55 +98,9 @@ class UsersController extends AppController
             return true;
         }
 
-        $accessible = ['changePassword', 'updateContact'];
+        $accessible = ['myAccount'];
 
         return in_array($this->request->action, $accessible);
-    }
-
-    /**
-     * Method for /users/change-password
-     *
-     * @return void
-     */
-    public function changePassword()
-    {
-        $userId = $this->Auth->user('id');
-        $user = $this->Users->get($userId);
-        if ($this->request->is('post') || $this->request->is('put')) {
-            $data = $this->request->getData();
-            $data['password'] = $this->request->getData('new_password');
-            $user = $this->Users->patchEntity($user, $data);
-            if ($this->Users->save($user)) {
-                $this->Flash->success('Your password has been updated');
-            }
-        }
-        $this->set([
-            'titleForLayout' => 'Change Password',
-            'user' => $this->Users->newEntity()
-        ]);
-    }
-
-    /**
-     * Method for /users/update-contact
-     *
-     * @return void
-     */
-    public function updateContact()
-    {
-        $id = $this->Auth->user('id');
-        $user = $this->Users->get($id);
-        if ($this->request->is('post') || $this->request->is('put')) {
-            $user = $this->Users->patchEntity($user, $this->request->getData(), [
-                'fieldList' => ['name', 'email']
-            ]);
-            if ($this->Users->save($user)) {
-                $this->Flash->success('Your account information has been updated');
-            }
-        }
-        $this->set([
-            'titleForLayout' => 'Update Account Contact Info',
-            'user' => $user
-        ]);
     }
 
     /**
@@ -250,6 +204,38 @@ class UsersController extends AppController
             'email' => $email,
             'titleForLayout' => 'Reset Password',
             'user' => $this->Users->newEntity()
+        ]);
+    }
+
+    /**
+     * Method for /users/my-account
+     *
+     * @return void
+     */
+    public function myAccount()
+    {
+        $userId = $this->Auth->user('id');
+        $user = $this->Users->get($userId);
+
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $data = $this->request->getData();
+            if ($this->request->getData('new_password')) {
+                $data['password'] = $this->request->getData('new_password');
+            }
+            $user = $this->Users->patchEntity($user, $data, [
+                'fieldList' => ['name', 'email', 'password', 'new_password', 'confirm_password']
+            ]);
+            if ($this->Users->save($user)) {
+                $this->Flash->success('Your account information has been updated');
+            }
+        }
+
+        $this->set([
+            'hasPasswordErrors' =>
+                !empty($user->getError('new_password')) ||
+                !empty($user->getError('confirm_password')),
+            'titleForLayout' => 'My Account',
+            'user' => $user
         ]);
     }
 }

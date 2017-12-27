@@ -32,12 +32,12 @@
             <?php endif; ?>
             <li class="link">
                 <?= $this->Html->link(
-                    'Change Password',
+                    'My Account',
                     [
                         'prefix' => false,
                         'plugin' => false,
                         'controller' => 'Users',
-                        'action' => 'changePassword'
+                        'action' => 'myAccount'
                     ]
                 ) ?>
             </li>
