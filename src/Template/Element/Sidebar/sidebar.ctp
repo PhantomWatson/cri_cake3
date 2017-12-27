@@ -24,15 +24,13 @@
             <?= $authUser['name'] ?>
         </h2>
 
-        <?php if ($authUser['role'] == 'admin'): ?>
-
-            <?= $this->element('Sidebar/admin') ?>
-
-        <?php elseif ($authUser['role'] == 'client'): ?>
-
-            <?= $this->element('Sidebar/client') ?>
-
-        <?php endif; ?>
+        <ul>
+            <?php if ($authUser['role'] == 'admin'): ?>
+                <?= $this->element('Sidebar/admin') ?>
+            <?php elseif ($authUser['role'] == 'client'): ?>
+                <?= $this->element('Sidebar/client') ?>
+            <?php endif; ?>
+        </ul>
     </nav>
 <?php endif; ?>
 
