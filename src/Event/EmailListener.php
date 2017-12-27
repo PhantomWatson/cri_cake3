@@ -30,6 +30,8 @@ class EmailListener implements EventListenerInterface
      * @param \Cake\Event\Event $event Event
      * @param array $meta Array of metadata (communityId, etc.)
      * @return void
+     * @throws InternalErrorException
+     * @throws \Exception
      */
     public function sendCommunityPromotedEmail(Event $event, array $meta = [])
     {
