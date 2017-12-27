@@ -223,7 +223,15 @@ class UsersController extends AppController
                 $data['password'] = $this->request->getData('new_password');
             }
             $user = $this->Users->patchEntity($user, $data, [
-                'fieldList' => ['name', 'email', 'password', 'new_password', 'confirm_password']
+                'fieldList' => [
+                    'cber_email_optin',
+                    'confirm_password',
+                    'email',
+                    'ici_email_optin',
+                    'name',
+                    'new_password',
+                    'password'
+                ]
             ]);
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your account information has been updated');

@@ -35,6 +35,24 @@
     ?>
 </section>
 
+<?php if ($user['role'] == 'admin'): ?>
+    <section>
+        <h2>
+            Admin Email Opt-in
+        </h2>
+        <p>
+            Here, you can opt in or out of receiving emails about admin tasks that need to be addressed by ICI and/or
+            CBER.
+        </p>
+        <?= $this->Form->control('ici_email_optin', [
+            'label' => 'Indiana Communities Institute tasks'
+        ]) ?>
+        <?= $this->Form->control('cber_email_optin', [
+            'label' => 'Center for Business and Economic Research tasks'
+        ]) ?>
+    </section>
+<?php endif; ?>
+
 <section class="password <?= $hasPasswordErrors ? 'active' : null ?>">
     <h2>
         <button class="btn btn-link">
