@@ -30,6 +30,28 @@
             <?php elseif ($authUser['role'] == 'client'): ?>
                 <?= $this->element('Sidebar/client') ?>
             <?php endif; ?>
+            <li class="link">
+                <?= $this->Html->link(
+                    'Change Password',
+                    [
+                        'prefix' => false,
+                        'plugin' => false,
+                        'controller' => 'Users',
+                        'action' => 'changePassword'
+                    ]
+                ) ?>
+            </li>
+            <li class="link">
+                <?= $this->Html->link(
+                    'Logout',
+                    [
+                        'prefix' => false,
+                        'plugin' => false,
+                        'controller' => 'Users',
+                        'action' => 'logout'
+                    ]
+                ) ?>
+            </li>
         </ul>
     </nav>
 <?php endif; ?>

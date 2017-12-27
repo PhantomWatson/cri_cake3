@@ -42,26 +42,4 @@
             ]
         ) ?>
     </li>
-    <li class="link">
-        <?= $this->Html->link(
-            'Change Password',
-            [
-                'prefix' => false,
-                'plugin' => false,
-                'controller' => 'Users',
-                'action' => 'changePassword'
-            ]
-        ) ?>
-    </li>
-    <li class="link">
-        <?= $this->Html->link(
-            'Logout',
-            [
-                'prefix' => false,
-                'plugin' => false,
-                'controller' => 'Users',
-                'action' => 'logout'
-            ]
-        ) ?>
-    </li>
 <?php endif; ?>
