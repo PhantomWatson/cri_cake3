@@ -21,19 +21,23 @@ class AdminTaskMailer extends Mailer
         $community = $data['community'];
         $presentationLetter = $this->getDeliverablePresentationLetter($data['meta']['surveyType']);
 
+        // Workaround for this bug: https://github.com/cakephp/cakephp/issues/11582
+        $actionUrl = Router::url([
+            'plugin' => false,
+            'prefix' => 'admin',
+            'controller' => 'Deliveries',
+            'action' => 'add',
+            '_full' => true
+        ]);
+        $actionUrl = str_replace('http://', 'https://', $actionUrl);
+
         return $this
             ->setTo($user['email'])
             ->setSubject('Community Readiness Initiative - Action required')
             ->setDomain('cri.cberdata.org')
             ->setTemplate('task_deliver_presentation')
             ->setViewVars([
-                'actionUrl' => Router::url([
-                    'plugin' => false,
-                    'prefix' => 'admin',
-                    'controller' => 'Deliveries',
-                    'action' => 'add',
-                    '_full' => true
-                ], true),
+                'actionUrl' => $actionUrl,
                 'communityName' => $community['name'],
                 'homeUrl' => Router::url('/', true),
                 'presentationLetter' => $presentationLetter,
