@@ -1,9 +1,11 @@
 <?php
 namespace App\Mailer;
 
+use App\Model\Table\ProductsTable;
 use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 
 class AdminTaskMailer extends Mailer
@@ -41,6 +43,46 @@ class AdminTaskMailer extends Mailer
                 'communityName' => $community['name'],
                 'homeUrl' => Router::url('/', true),
                 'presentationLetter' => $presentationLetter,
+                'surveyType' => $data['surveyType'],
+                'userName' => $user['name']
+            ]);
+    }
+
+    /**
+     * Defines an email informing an administrator that presentation B or D needs to be delivered
+     *
+     * @param array $data Metadata
+     * @return Email
+     * @throws InternalErrorException
+     */
+    public function deliverOptionalPresentation($data)
+    {
+        $user = $data['user'];
+        $community = $data['community'];
+        /** @var ProductsTable $productsTable */
+        $productsTable = TableRegistry::get('Products');
+        $presentationLetter = $productsTable->getPresentationLetter($data['productId']);
+
+        // Workaround for this bug: https://github.com/cakephp/cakephp/issues/11582
+        $actionUrl = Router::url([
+            'plugin' => false,
+            'prefix' => 'admin',
+            'controller' => 'Deliveries',
+            'action' => 'add',
+            '_full' => true
+        ]);
+        $actionUrl = str_replace('http://', 'https://', $actionUrl);
+
+        return $this
+            ->setTo($user['email'])
+            ->setSubject('Community Readiness Initiative - Action required')
+            ->setDomain('cri.cberdata.org')
+            ->setTemplate('task_deliver_optional_presentation')
+            ->setViewVars([
+                'actionUrl' => $actionUrl,
+                'communityName' => $community['name'],
+                'homeUrl' => Router::url('/', true),
+                'presentationLetter' => ucwords($presentationLetter),
                 'surveyType' => $data['surveyType'],
                 'userName' => $user['name']
             ]);
