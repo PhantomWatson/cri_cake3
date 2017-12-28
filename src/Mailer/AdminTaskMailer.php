@@ -1,0 +1,82 @@
+<?php
+namespace App\Mailer;
+
+use Cake\Mailer\Email;
+use Cake\Mailer\Mailer;
+use Cake\Network\Exception\InternalErrorException;
+use Cake\Routing\Router;
+
+class AdminTaskMailer extends Mailer
+{
+    /**
+     * Defines an email informing an administrator that a presentation needs to be delivered
+     *
+     * @param array $data Metadata
+     * @return Email
+     * @throws InternalErrorException
+     */
+    public function deliverPresentation($data)
+    {
+        $user = $data['user'];
+        $community = $data['community'];
+        $presentationLetter = $this->getDeliverablePresentationLetter($data['meta']['surveyType']);
+
+        return $this
+            ->setTo($user['email'])
+            ->setSubject('Community Readiness Initiative - Action required')
+            ->setDomain('cri.cberdata.org')
+            ->setTemplate('task_deliver_presentation')
+            ->setViewVars([
+                'actionUrl' => Router::url([
+                    'plugin' => false,
+                    'prefix' => 'admin',
+                    'controller' => 'Deliveries',
+                    'action' => 'add',
+                    '_full' => true
+                ], true),
+                'communityName' => $community['name'],
+                'homeUrl' => Router::url('/', true),
+                'presentationLetter' => $presentationLetter,
+                'surveyType' => $data['surveyType'],
+                'userName' => $user['name']
+            ]);
+    }
+
+    /**
+     * Returns the name of the email template corresponding to the specified event name
+     *
+     * @param string $eventName Event name
+     * @return string
+     * @throws InternalErrorException
+     */
+    private function getTemplateName($eventName)
+    {
+        $mailTemplates = [
+            'Model.Survey.afterDeactivate' => 'task_deliver_presentation'
+        ];
+
+        if (array_key_exists($eventName, $mailTemplates)) {
+            return $mailTemplates[$eventName];
+        }
+
+        throw new InternalErrorException('Unrecognized event name: ' . $eventName);
+    }
+
+    /**
+     * Returns the mandatory presentation letter associated with the specified survey type
+     *
+     * @param string $surveyType Survey type
+     * @return string
+     */
+    private function getDeliverablePresentationLetter($surveyType)
+    {
+        switch ($surveyType) {
+            case 'official':
+                return 'A';
+            case 'organization':
+                return 'C';
+            default:
+                throw new InternalErrorException('Unrecognized survey type: ' . $surveyType);
+        }
+    }
+}
