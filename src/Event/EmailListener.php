@@ -85,7 +85,7 @@ class EmailListener implements EventListenerInterface
     }
 
     /**
-     * Sends emails about admin tasks to users who have opted in
+     * Enqueues emails about admin tasks to users who have opted in
      *
      * @param \Cake\Event\Event $event Event
      * @param array $meta Array of metadata (communityId, etc.)
@@ -128,7 +128,7 @@ class EmailListener implements EventListenerInterface
     }
 
     /**
-     * Sends emails about admin tasks to users who have opted in
+     * Enqueues emails that alert admins to the need to deliver optional presentation materials
      *
      * @param \Cake\Event\Event $event Event
      * @param array $meta Array of metadata (communityId, etc.)
@@ -137,44 +137,11 @@ class EmailListener implements EventListenerInterface
      */
     public function sendDeliverOptPresentationEmail(Event $event, array $meta = [])
     {
-        /**
-         * @var UsersTable $usersTable
-         * @var CommunitiesTable $communitiesTable
-         * @var ProductsTable $productsTable
-         */
+        /** @var ProductsTable $productsTable */
         $productsTable = TableRegistry::get('Products');
-        $usersTable = TableRegistry::get('Users');
-        $communitiesTable = TableRegistry::get('Communities');
-
         $presentationLetter = $productsTable->getPresentationLetter($meta['productId']);
-        if (!in_array($presentationLetter, ['a', 'b'])) {
-            return;
-        }
-
-        $community = $communitiesTable->get($meta['communityId']);
-        $eventName = $event->getName();
-        $adminGroup = $this->getAdminGroup($eventName);
-        $recipients = $usersTable->getAdminEmailRecipients($adminGroup);
-
-        /** @var QueuedJobsTable $queuedJobs */
-        $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
-        foreach ($recipients as $recipient) {
-            $queuedJobs->createJob(
-                'AdminTaskEmail',
-                [
-                    'user' => [
-                        'email' => $recipient->email,
-                        'name' => $recipient->name
-                    ],
-                    'eventName' => $eventName,
-                    'community' => [
-                        'id' => $community->id,
-                        'name' => $community->name,
-                    ],
-                    'meta' => $meta
-                ],
-                ['reference' => $recipient->email]
-            );
+        if (in_array($presentationLetter, ['a', 'b'])) {
+            $this->sendAdminTaskEmail($event, $meta);
         }
     }
 
