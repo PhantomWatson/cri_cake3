@@ -172,7 +172,8 @@ class PurchasesController extends AppController
                 // Dispatch event
                 $event = new Event('Model.Purchase.afterAdminAdd', $this, ['meta' => [
                     'communityId' => $purchase->community_id,
-                    'productName' => $product->description
+                    'productName' => $product->description,
+                    'productId' => $product->id
                 ]]);
                 $this->eventManager()->dispatch($event);
 

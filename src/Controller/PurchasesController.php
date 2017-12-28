@@ -53,7 +53,8 @@ class PurchasesController extends AppController
                 $event = new Event('Model.Product.afterPurchase', $this, ['meta' => [
                     'userId' => $this->request->getData('custcode'),
                     'communityId' => $this->request->getData('ref1val1'),
-                    'productName' => $product->name
+                    'productName' => $product->name,
+                    'productId' => $product->id
                 ]]);
                 $this->eventManager()->dispatch($event);
             }
