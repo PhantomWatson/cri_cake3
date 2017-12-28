@@ -414,13 +414,7 @@ $config = [
             'path' => LOGS,
             'file' => 'email',
             'levels' => ['info'],
-        ],
-        'queue' => [
-            'className' => 'Cake\Log\Engine\FileLog',
-            'type' => 'queue',
-            'levels' => ['info'],
-            'scopes' => ['queue'],
-        ],
+        ]
     ],
 
     /**
@@ -494,6 +488,17 @@ foreach (array_keys($config['Email']) as $configuration) {
     if ($configuration != 'default') {
         $config['Email'][$configuration] = array_merge($config['Email']['default'], $config['Email'][$configuration]);
     }
+}
+
+// Log job queue processing in debug mode
+if ($config['debug']) {
+    $config['Log']['queue'] = [
+        'className' => 'Cake\Log\Engine\FileLog',
+        'path' => LOGS,
+        'type' => 'queue',
+        'levels' => ['info'],
+        'scopes' => ['queue'],
+    ];
 }
 
 return $config;
