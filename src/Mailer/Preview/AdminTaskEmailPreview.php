@@ -8,11 +8,11 @@ use DebugKit\Mailer\MailPreview;
 class AdminTaskEmailPreview extends MailPreview
 {
     /**
-     * Preview method for CommunityMailer::communityPromoted()
+     * Preview method for CommunityMailer::deliverMandatoryPresentation()
      *
      * @return Email
      */
-    public function deliverPresentation()
+    public function deliverMandatoryPresentation()
     {
         $data = [
             'user' => [
@@ -28,6 +28,6 @@ class AdminTaskEmailPreview extends MailPreview
         /** @var AdminTaskMailer $mailer */
         $mailer = $this->getMailer('AdminTask');
 
-        return $mailer->deliverPresentation($data);
+        return $mailer->deliverMandatoryPresentation($data);
     }
 }

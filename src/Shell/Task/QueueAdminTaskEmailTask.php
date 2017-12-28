@@ -50,7 +50,7 @@ class QueueAdminTaskEmailTask extends QueueTask
     private function getMailerMethodName($eventName)
     {
         $mailTemplates = [
-            'Model.Survey.afterDeactivate' => 'deliverPresentation',
+            'Model.Survey.afterDeactivate' => 'deliverMandatoryPresentation',
             'Model.Product.afterPurchase' => 'deliverOptionalPresentation',
             'Model.Purchase.afterAdminAdd' => 'deliverOptionalPresentation'
         ];

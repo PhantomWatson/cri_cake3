@@ -17,7 +17,7 @@ class AdminTaskMailer extends Mailer
      * @return Email
      * @throws InternalErrorException
      */
-    public function deliverPresentation($data)
+    public function deliverMandatoryPresentation($data)
     {
         $user = $data['user'];
         $community = $data['community'];
