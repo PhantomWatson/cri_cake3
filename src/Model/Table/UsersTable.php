@@ -3,6 +3,7 @@ namespace App\Model\Table;
 
 use App\Model\Entity\Community;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -303,5 +304,33 @@ class UsersTable extends Table
         $salutations = ['', 'Mr.', 'Ms.', 'Dr.', 'Rev.', 'Prof.'];
 
         return array_combine($salutations, $salutations);
+    }
+
+    /**
+     * Returns all users who have opted in to receive admin task emails for the specified admin group
+     *
+     * @param string $group Either 'ICI', 'CBER', or 'both'
+     * @return \Cake\Datasource\ResultSetInterface
+     */
+    public function getAdminEmailRecipients($group)
+    {
+        if ($group == 'ICI') {
+            return $this->find()->where(['ici_email_optin' => true])->all();
+        }
+
+        if ($group == 'CBER') {
+            return $this->find()->where(['cber_email_optin' => true])->all();
+        }
+
+        if ($group == 'both') {
+            return $this->find()->where([
+                'OR' => [
+                    'cber_email_optin' => true,
+                    'ici_email_optin' => true
+                ]
+            ])->all();
+        }
+
+        throw new InternalErrorException('Unrecognized admin group: ' . $group);
     }
 }
