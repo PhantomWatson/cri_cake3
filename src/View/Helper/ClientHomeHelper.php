@@ -536,10 +536,7 @@ class ClientHomeHelper extends Helper
             ]);
         }
 
-        return
-            '<a href="' . $optOutUrl . '" class="btn btn-default opt-out">' .
-                'Opt Out' .
-            '</a>';
+        return '<a href="' . $optOutUrl . '" class="btn btn-default opt-out">Opt Out</a>';
     }
 
     /**
