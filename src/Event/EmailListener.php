@@ -3,6 +3,7 @@ namespace App\Event;
 
 use App\Model\Entity\Community;
 use App\Model\Table\CommunitiesTable;
+use App\Model\Table\ProductsTable;
 use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
@@ -24,6 +25,8 @@ class EmailListener implements EventListenerInterface
             'Model.Community.afterAutomaticAdvancement' => 'sendCommunityPromotedEmail',
             'Model.Community.afterScoreIncrease' => 'sendCommunityPromotedEmail',
             'Model.Survey.afterDeactivate' => 'sendAdminTaskEmail',
+            'Model.Product.afterPurchase' => 'sendDeliverOptPresentationEmail',
+            'Model.Purchase.afterAdminAdd' => 'sendDeliverOptPresentationEmail'
         ];
     }
 
@@ -125,6 +128,57 @@ class EmailListener implements EventListenerInterface
     }
 
     /**
+     * Sends emails about admin tasks to users who have opted in
+     *
+     * @param \Cake\Event\Event $event Event
+     * @param array $meta Array of metadata (communityId, etc.)
+     * @return void
+     * @throws \Exception
+     */
+    public function sendDeliverOptPresentationEmail(Event $event, array $meta = [])
+    {
+        /**
+         * @var UsersTable $usersTable
+         * @var CommunitiesTable $communitiesTable
+         * @var ProductsTable $productsTable
+         */
+        $productsTable = TableRegistry::get('Products');
+        $usersTable = TableRegistry::get('Users');
+        $communitiesTable = TableRegistry::get('Communities');
+
+        $presentationLetter = $productsTable->getPresentationLetter($meta['productId']);
+        if (!in_array($presentationLetter, ['a', 'b'])) {
+            return;
+        }
+
+        $community = $communitiesTable->get($meta['communityId']);
+        $eventName = $event->getName();
+        $adminGroup = $this->getAdminGroup($eventName);
+        $recipients = $usersTable->getAdminEmailRecipients($adminGroup);
+
+        /** @var QueuedJobsTable $queuedJobs */
+        $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+        foreach ($recipients as $recipient) {
+            $queuedJobs->createJob(
+                'AdminTaskEmail',
+                [
+                    'user' => [
+                        'email' => $recipient->email,
+                        'name' => $recipient->name
+                    ],
+                    'eventName' => $eventName,
+                    'community' => [
+                        'id' => $community->id,
+                        'name' => $community->name,
+                    ],
+                    'meta' => $meta
+                ],
+                ['reference' => $recipient->email]
+            );
+        }
+    }
+
+    /**
      * Returns the name of the admin group that should receive an admin task email in response to the specified event
      *
      * @param string $eventName Event name
@@ -133,7 +187,9 @@ class EmailListener implements EventListenerInterface
     private function getAdminGroup($eventName)
     {
         $adminGroups = [
-            'Model.Survey.afterDeactivate' => 'CBER'
+            'Model.Survey.afterDeactivate' => 'CBER',
+            'Model.Product.afterPurchase' => 'CBER',
+            'Model.Purchase.afterAdminAdd' => 'CBER'
         ];
 
         if (array_key_exists($eventName, $adminGroups)) {
