@@ -2,6 +2,8 @@
 namespace App\Event;
 
 use App\Model\Entity\Community;
+use App\Model\Table\CommunitiesTable;
+use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Network\Exception\InternalErrorException;
@@ -20,7 +22,8 @@ class EmailListener implements EventListenerInterface
     {
         return [
             'Model.Community.afterAutomaticAdvancement' => 'sendCommunityPromotedEmail',
-            'Model.Community.afterScoreIncrease' => 'sendCommunityPromotedEmail'
+            'Model.Community.afterScoreIncrease' => 'sendCommunityPromotedEmail',
+            'Model.Survey.afterDeactivate' => 'sendAdminTaskEmail',
         ];
     }
 
@@ -76,5 +79,67 @@ class EmailListener implements EventListenerInterface
                 ['reference' => $client->email]
             );
         }
+    }
+
+    /**
+     * Sends emails about admin tasks to users who have opted in
+     *
+     * @param \Cake\Event\Event $event Event
+     * @param array $meta Array of metadata (communityId, etc.)
+     * @return void
+     * @throws \Exception
+     */
+    public function sendAdminTaskEmail(Event $event, array $meta = [])
+    {
+        /**
+         * @var UsersTable $usersTable
+         * @var CommunitiesTable $communitiesTable
+         */
+        $usersTable = TableRegistry::get('Users');
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->get($meta['communityId']);
+        $eventName = $event->getName();
+        $adminGroup = $this->getAdminGroup($eventName);
+        $recipients = $usersTable->getAdminEmailRecipients($adminGroup);
+
+        /** @var QueuedJobsTable $queuedJobs */
+        $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+        foreach ($recipients as $recipient) {
+            $queuedJobs->createJob(
+                'AdminTaskEmail',
+                [
+                    'user' => [
+                        'email' => $recipient->email,
+                        'name' => $recipient->name
+                    ],
+                    'eventName' => $eventName,
+                    'community' => [
+                        'id' => $community->id,
+                        'name' => $community->name,
+                    ],
+                    'meta' => $meta
+                ],
+                ['reference' => $recipient->email]
+            );
+        }
+    }
+
+    /**
+     * Returns the name of the admin group that should receive an admin task email in response to the specified event
+     *
+     * @param string $eventName Event name
+     * @return string
+     */
+    private function getAdminGroup($eventName)
+    {
+        $adminGroups = [
+            'Model.Survey.afterDeactivate' => 'CBER'
+        ];
+
+        if (array_key_exists($eventName, $adminGroups)) {
+            return $adminGroups[$eventName];
+        }
+
+        throw new InternalErrorException('Unrecognized event name: ' . $eventName);
     }
 }
