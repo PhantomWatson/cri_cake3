@@ -47,26 +47,6 @@ class AdminTaskMailer extends Mailer
     }
 
     /**
-     * Returns the name of the email template corresponding to the specified event name
-     *
-     * @param string $eventName Event name
-     * @return string
-     * @throws InternalErrorException
-     */
-    private function getTemplateName($eventName)
-    {
-        $mailTemplates = [
-            'Model.Survey.afterDeactivate' => 'task_deliver_presentation'
-        ];
-
-        if (array_key_exists($eventName, $mailTemplates)) {
-            return $mailTemplates[$eventName];
-        }
-
-        throw new InternalErrorException('Unrecognized event name: ' . $eventName);
-    }
-
-    /**
      * Returns the mandatory presentation letter associated with the specified survey type
      *
      * @param string $surveyType Survey type
