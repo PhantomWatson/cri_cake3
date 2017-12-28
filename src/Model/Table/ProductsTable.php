@@ -209,4 +209,26 @@ class ProductsTable extends Table
         $msg = 'No product found for presentation "' . $presentationLetter . '"';
         throw new InternalErrorException($msg);
     }
+
+    /**
+     * Returns the lowercase presentation letter for a specified product ID, or null if not applicable
+     *
+     * @param int $productId Product ID
+     * @return null|string
+     */
+    public function getPresentationLetter($productId)
+    {
+        switch ($productId) {
+            case $this::OFFICIALS_SURVEY:
+                return 'a';
+            case $this::OFFICIALS_SUMMIT:
+                return 'b';
+            case $this::ORGANIZATIONS_SURVEY:
+                return 'c';
+            case $this::ORGANIZATIONS_SUMMIT:
+                return 'd';
+        }
+
+        return null;
+    }
 }
