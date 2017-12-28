@@ -61,7 +61,7 @@ class AdminTaskMailer extends Mailer
         $community = $data['community'];
         /** @var ProductsTable $productsTable */
         $productsTable = TableRegistry::get('Products');
-        $presentationLetter = $productsTable->getPresentationLetter($data['productId']);
+        $presentationLetter = $productsTable->getPresentationLetter($data['meta']['productId']);
 
         // Workaround for this bug: https://github.com/cakephp/cakephp/issues/11582
         $actionUrl = Router::url([
