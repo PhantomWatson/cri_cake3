@@ -46,7 +46,7 @@ class EmailListener implements EventListenerInterface
 
         /** @var Community $community */
         $community = $communitiesTable->find()
-            ->select(['id', 'name'])
+            ->select(['id', 'name', 'slug'])
             ->where(['id' => $meta['communityId']])
             ->contain([
                 'Clients' => function ($q) {
@@ -73,6 +73,37 @@ class EmailListener implements EventListenerInterface
                 ],
                 ['reference' => $client->email]
             );
+        }
+
+        // Send "time to create a survey" email to admins
+        if (in_array($toStep, [2, 3])) {
+            /**
+             * @var UsersTable $usersTable
+             * @var QueuedJobsTable $queuedJobs
+             */
+            $usersTable = TableRegistry::get('Users');
+            $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+            $recipients = $usersTable->getAdminEmailRecipients('ICI');
+            foreach ($recipients as $recipient) {
+                $queuedJobs->createJob(
+                    'AdminTaskEmail',
+                    [
+                        'user' => [
+                            'email' => $recipient->email,
+                            'name' => $recipient->name
+                        ],
+                        'eventName' => $event->getName(),
+                        'community' => [
+                            'id' => $community->id,
+                            'name' => $community->name,
+                            'slug' => $community->slug
+                        ],
+                        'newSurveyType' => $toStep == 2 ? 'official' : 'organization',
+                        'toStep' => $toStep
+                    ],
+                    ['reference' => $recipient->email]
+                );
+            }
         }
     }
 

@@ -52,7 +52,9 @@ class QueueAdminTaskEmailTask extends QueueTask
         $mailTemplates = [
             'Model.Survey.afterDeactivate' => 'deliverMandatoryPresentation',
             'Model.Product.afterPurchase' => 'deliverOptionalPresentation',
-            'Model.Purchase.afterAdminAdd' => 'deliverOptionalPresentation'
+            'Model.Purchase.afterAdminAdd' => 'deliverOptionalPresentation',
+            'Model.Community.afterAutomaticAdvancement' => 'createSurvey',
+            'Model.Community.afterScoreIncrease' => 'createSurvey'
         ];
 
         if (array_key_exists($eventName, $mailTemplates)) {
