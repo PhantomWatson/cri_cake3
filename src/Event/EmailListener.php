@@ -4,6 +4,7 @@ namespace App\Event;
 use App\Model\Entity\Community;
 use App\Model\Table\CommunitiesTable;
 use App\Model\Table\ProductsTable;
+use App\Model\Table\SurveysTable;
 use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
@@ -80,10 +81,19 @@ class EmailListener implements EventListenerInterface
             /**
              * @var UsersTable $usersTable
              * @var QueuedJobsTable $queuedJobs
+             * @var SurveysTable $surveysTable
              */
             $usersTable = TableRegistry::get('Users');
             $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+            $surveysTable = TableRegistry::get('Surveys');
             $recipients = $usersTable->getAdminEmailRecipients('ICI');
+            $newSurveyType = $toStep == 2 ? 'official' : 'organization';
+
+            // Skip sending email if the new survey has already been created
+            if ($surveysTable->hasBeenCreated($community->id, $newSurveyType)) {
+                return;
+            }
+
             foreach ($recipients as $recipient) {
                 $queuedJobs->createJob(
                     'AdminTaskEmail',
@@ -98,7 +108,7 @@ class EmailListener implements EventListenerInterface
                             'name' => $community->name,
                             'slug' => $community->slug
                         ],
-                        'newSurveyType' => $toStep == 2 ? 'official' : 'organization',
+                        'newSurveyType' => $newSurveyType,
                         'toStep' => $toStep
                     ],
                     ['reference' => $recipient->email]
