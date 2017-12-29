@@ -42,13 +42,7 @@ class EmailListener implements EventListenerInterface
     public function sendCommunityPromotedEmail(Event $event, array $meta = [])
     {
         $communitiesTable = TableRegistry::get('Communities');
-        if (isset($meta['toStep'])) {
-            $toStep = $meta['toStep'];
-        } elseif (isset($meta['newScore'])) {
-            $toStep = $meta['newScore'];
-        } else {
-            throw new InternalErrorException('Step community was promoted to not specified');
-        }
+        $toStep = $this->getToStep($meta);
 
         /** @var Community $community */
         $community = $communitiesTable->find()
@@ -74,9 +68,7 @@ class EmailListener implements EventListenerInterface
                         'name' => $client->name,
                         'email' => $client->email
                     ],
-                    'community' => [
-                        'name' => $community->name
-                    ],
+                    'community' => ['name' => $community->name],
                     'toStep' => $toStep
                 ],
                 ['reference' => $client->email]
@@ -164,5 +156,25 @@ class EmailListener implements EventListenerInterface
         }
 
         throw new InternalErrorException('Unrecognized event name: ' . $eventName);
+    }
+
+    /**
+     * Reads $meta and returns the step that a community was just promoted to
+     *
+     * @param array $meta Event metadata
+     * @return int
+     * @throws InternalErrorException
+     */
+    private function getToStep($meta)
+    {
+        if (isset($meta['toStep'])) {
+            return $meta['toStep'];
+        }
+
+        if (isset($meta['newScore'])) {
+            return $meta['newScore'];
+        }
+
+        throw new InternalErrorException('Step community was promoted to not specified');
     }
 }
