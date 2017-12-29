@@ -80,42 +80,57 @@ class EmailListener implements EventListenerInterface
 
         // Send "time to create a survey" email to admins
         if (in_array($toStep, [2, 3])) {
-            /**
-             * @var UsersTable $usersTable
-             * @var QueuedJobsTable $queuedJobs
-             * @var SurveysTable $surveysTable
-             */
-            $usersTable = TableRegistry::get('Users');
-            $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
-            $surveysTable = TableRegistry::get('Surveys');
-            $recipients = $usersTable->getAdminEmailRecipients('ICI');
-            $newSurveyType = $toStep == 2 ? 'official' : 'organization';
+            $this->sendCreateSurveyEmail($event, $meta, $community);
+        }
+    }
 
-            // Skip sending email if the new survey has already been created
-            if ($surveysTable->hasBeenCreated($community->id, $newSurveyType)) {
-                return;
-            }
+    /**
+     * Enqueues emails that prompt admins to create surveys
+     *
+     * @param Event $event Event
+     * @param array $meta Metadata
+     * @param Community $community Community entity
+     * @return void
+     * @throws \Exception
+     */
+    public function sendCreateSurveyEmail(Event $event, array $meta, Community $community)
+    {
+        /**
+         * @var UsersTable $usersTable
+         * @var QueuedJobsTable $queuedJobs
+         * @var SurveysTable $surveysTable
+         */
+        $usersTable = TableRegistry::get('Users');
+        $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+        $surveysTable = TableRegistry::get('Surveys');
+        $recipients = $usersTable->getAdminEmailRecipients('ICI');
+        $toStep = $this->getToStep($meta);
+        $newSurveyType = $toStep == 2 ? 'official' : 'organization';
 
-            foreach ($recipients as $recipient) {
-                $queuedJobs->createJob(
-                    'AdminTaskEmail',
-                    [
-                        'user' => [
-                            'email' => $recipient->email,
-                            'name' => $recipient->name
-                        ],
-                        'eventName' => $event->getName(),
-                        'community' => [
-                            'id' => $community->id,
-                            'name' => $community->name,
-                            'slug' => $community->slug
-                        ],
-                        'newSurveyType' => $newSurveyType,
-                        'toStep' => $toStep
+        // Skip sending email if the new survey has already been created
+        if ($surveysTable->hasBeenCreated($community->id, $newSurveyType)) {
+            return;
+        }
+
+        foreach ($recipients as $recipient) {
+            $queuedJobs->createJob(
+                'AdminTaskEmail',
+                [
+                    'user' => [
+                        'email' => $recipient->email,
+                        'name' => $recipient->name
                     ],
-                    ['reference' => $recipient->email]
-                );
-            }
+                    'eventName' => $event->getName(),
+                    'community' => [
+                        'id' => $community->id,
+                        'name' => $community->name,
+                        'slug' => $community->slug
+                    ],
+                    'newSurveyType' => $newSurveyType,
+                    'toStep' => $toStep
+                ],
+                ['reference' => $recipient->email]
+            );
         }
     }
 
