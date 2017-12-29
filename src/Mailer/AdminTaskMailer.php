@@ -125,4 +125,27 @@ class AdminTaskMailer extends Mailer
 
         throw new InternalErrorException('No valid param provided to getDeliverablePresentationLetter()');
     }
+
+    /**
+     * Defines an email informing an administrator that it's time to create a survey
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function createSurvey($data)
+    {
+        return $this
+            ->setStandardConfig($data)
+            ->setTemplate('task_create_survey')
+            ->setViewVars([
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Surveys',
+                    'action' => 'link',
+                    $data['community']['slug'],
+                    $data['newSurveyType']
+                ]),
+                'newSurveyType' => $data['newSurveyType'],
+                'toStep' => $data['toStep']
+            ]);
+    }
 }
