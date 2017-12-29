@@ -98,6 +98,7 @@ class DeliveriesController extends AppController
                 $deliverable = $deliverablesTable->get($delivery->deliverable_id);
                 $event = new Event('Model.Delivery.afterAdd', $this, ['meta' => [
                     'communityId' => $delivery->community_id,
+                    'deliverableId' => $delivery->deliverable_id,
                     'deliverableName' => $deliverable->name
                 ]]);
                 $this->eventManager()->dispatch($event);

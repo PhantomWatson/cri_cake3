@@ -3,6 +3,7 @@ namespace App\Event;
 
 use App\Model\Entity\Community;
 use App\Model\Table\CommunitiesTable;
+use App\Model\Table\DeliverablesTable;
 use App\Model\Table\ProductsTable;
 use App\Model\Table\SurveysTable;
 use App\Model\Table\UsersTable;
@@ -27,7 +28,8 @@ class EmailListener implements EventListenerInterface
             'Model.Community.afterScoreIncrease' => 'sendCommunityPromotedEmail',
             'Model.Survey.afterDeactivate' => 'sendAdminTaskEmail',
             'Model.Product.afterPurchase' => 'sendDeliverOptPresentationEmail',
-            'Model.Purchase.afterAdminAdd' => 'sendDeliverOptPresentationEmail'
+            'Model.Purchase.afterAdminAdd' => 'sendDeliverOptPresentationEmail',
+            'Model.Delivery.afterAdd' => 'sendSchedulePresentationEmail'
         ];
     }
 
@@ -189,7 +191,10 @@ class EmailListener implements EventListenerInterface
         $adminGroups = [
             'Model.Survey.afterDeactivate' => 'CBER',
             'Model.Product.afterPurchase' => 'CBER',
-            'Model.Purchase.afterAdminAdd' => 'CBER'
+            'Model.Purchase.afterAdminAdd' => 'CBER',
+            'Model.Community.afterAutomaticAdvancement' => 'ICI',
+            'Model.Community.afterScoreIncrease' => 'ICI',
+            'Model.Delivery.afterAdd' => 'ICI'
         ];
 
         if (array_key_exists($eventName, $adminGroups)) {
@@ -217,5 +222,33 @@ class EmailListener implements EventListenerInterface
         }
 
         throw new InternalErrorException('Step community was promoted to not specified');
+    }
+
+    /**
+     * Enqueues emails that alert admins to the need to schedule a presentation for a community
+     *
+     * @param \Cake\Event\Event $event Event
+     * @param array $meta Array of metadata (communityId, etc.)
+     * @return void
+     * @throws \Exception
+     */
+    public function sendSchedulePresentationEmail(Event $event, array $meta = [])
+    {
+        // Skip if it's not a presentation that was delivered
+        /** @var DeliverablesTable $deliverablesTable */
+        $deliverablesTable = TableRegistry::get('Deliverables');
+        if (!$deliverablesTable->isPresentation($meta['deliverableId'])) {
+            return;
+        }
+
+        // Skip if this presentation has already been scheduled
+        /** @var CommunitiesTable $communitiesTable */
+        $communitiesTable = TableRegistry::get('Communities');
+        $presentationLetter = $deliverablesTable->getPresentationLetter($meta['deliverableId']);
+        if ($communitiesTable->presentationIsScheduled($meta['communityId'], $presentationLetter)) {
+            return;
+        }
+
+        $this->sendAdminTaskEmail($event, $meta);
     }
 }

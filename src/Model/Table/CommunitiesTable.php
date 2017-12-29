@@ -886,4 +886,27 @@ class CommunitiesTable extends Table
             return 'Waiting to purchase or opt out of policy development';
         }
     }
+
+    /**
+     * Returns whether or not the specified community has scheduled the specified presentation
+     *
+     * @param int $communityId Community ID
+     * @param string $presentationLetter Presentation letter
+     * @return bool
+     */
+    public function presentationIsScheduled($communityId, $presentationLetter)
+    {
+        $result = $this->find()
+            ->select(['id'])
+            ->where([
+                'id' => $communityId,
+                function ($exp, $q) use ($presentationLetter) {
+                    /** @var QueryExpression $exp */
+
+                    return $exp->isNotNull('presentation_' . strtolower($presentationLetter));
+                }
+            ]);
+
+        return !$result->isEmpty();
+    }
 }

@@ -165,6 +165,9 @@ class AdminTaskMailer extends Mailer
      */
     public function schedulePresentation($data)
     {
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->get($data['community']['id']);
+
         return $this
             ->setStandardConfig($data)
             ->setTemplate('task_schedule_presentation')
@@ -172,11 +175,13 @@ class AdminTaskMailer extends Mailer
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Communities',
                     'action' => 'presentations',
-                    $data['community']['slug']
+                    $community->slug
                 ]),
-                'presentationLetter' => $this->getDeliverablePresentationLetter([
-                    'deliverableId' => $data['meta']['deliverableId']
-                ])
+                'presentationLetter' => strtoupper(
+                    $this->getDeliverablePresentationLetter([
+                        'deliverableId' => $data['meta']['deliverableId']
+                    ])
+                )
             ]);
     }
 }

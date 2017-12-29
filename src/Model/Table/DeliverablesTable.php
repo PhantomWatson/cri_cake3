@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -71,5 +72,46 @@ class DeliverablesTable extends Table
             ->notEmpty('delivered_to');
 
         return $validator;
+    }
+
+    /**
+     * Returns whether or not the deliverable ID corresponds to a presentation
+     *
+     * @param int $deliverableId Deliverable ID
+     * @return bool
+     */
+    public function isPresentation($deliverableId)
+    {
+        $presentations = [
+            self::PRESENTATION_A_MATERIALS,
+            self::PRESENTATION_B_MATERIALS,
+            self::PRESENTATION_C_MATERIALS,
+            self::PRESENTATION_D_MATERIALS
+        ];
+
+        return in_array($deliverableId, $presentations);
+    }
+
+    /**
+     * Returns the presentation letter associated with the specified deliverable ID
+     *
+     * @param int $deliverableId Deliverable ID
+     * @return string
+     * @throws InternalErrorException
+     */
+    public function getPresentationLetter($deliverableId)
+    {
+        $presentations = [
+            self::PRESENTATION_A_MATERIALS => 'a',
+            self::PRESENTATION_B_MATERIALS => 'b',
+            self::PRESENTATION_C_MATERIALS => 'c',
+            self::PRESENTATION_D_MATERIALS => 'd'
+        ];
+
+        if (array_key_exists($deliverableId, $presentations)) {
+            return $presentations[$deliverableId];
+        }
+
+        throw new InternalErrorException('No presentation is associated with deliverable #' . $deliverableId);
     }
 }
