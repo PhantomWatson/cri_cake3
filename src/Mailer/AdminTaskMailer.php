@@ -5,6 +5,7 @@ use App\Model\Table\ProductsTable;
 use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 
 class AdminTaskMailer extends Mailer
@@ -115,18 +116,11 @@ class AdminTaskMailer extends Mailer
         }
 
         if (isset($params['productId'])) {
-            switch ($params['productId']) {
-                case ProductsTable::OFFICIALS_SURVEY:
-                    return 'A';
-                case ProductsTable::OFFICIALS_SUMMIT:
-                    return 'B';
-                case ProductsTable::ORGANIZATIONS_SURVEY:
-                    return 'C';
-                case ProductsTable::ORGANIZATIONS_SUMMIT:
-                    return 'D';
-                default:
-                    return null;
-            }
+            /** @var ProductsTable $productsTable */
+            $productsTable = TableRegistry::get('Products');
+            $letter = $productsTable->getPresentationLetter($params['productId']);
+
+            return $letter ? strtoupper($letter) : null;
         }
 
         throw new InternalErrorException('No valid param provided to getDeliverablePresentationLetter()');
