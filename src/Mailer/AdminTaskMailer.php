@@ -1,6 +1,7 @@
 <?php
 namespace App\Mailer;
 
+use App\Model\Table\DeliverablesTable;
 use App\Model\Table\ProductsTable;
 use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
@@ -123,6 +124,13 @@ class AdminTaskMailer extends Mailer
             return $letter ? strtoupper($letter) : null;
         }
 
+        if (isset($params['deliverableId'])) {
+            /** @var DeliverablesTable $deliverablesTable */
+            $deliverablesTable = TableRegistry::get('Deliverables');
+
+            return $deliverablesTable->getPresentationLetter($params['deliverableId']);
+        }
+
         throw new InternalErrorException('No valid param provided to getDeliverablePresentationLetter()');
     }
 
@@ -146,6 +154,29 @@ class AdminTaskMailer extends Mailer
                 ]),
                 'newSurveyType' => $data['newSurveyType'],
                 'toStep' => $data['toStep']
+            ]);
+    }
+
+    /**
+     * Defines an email informing an administrator that it's time to schedule a presentation
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function schedulePresentation($data)
+    {
+        return $this
+            ->setStandardConfig($data)
+            ->setTemplate('task_schedule_presentation')
+            ->setViewVars([
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Communities',
+                    'action' => 'presentations',
+                    $data['community']['slug']
+                ]),
+                'presentationLetter' => $this->getDeliverablePresentationLetter([
+                    'deliverableId' => $data['meta']['deliverableId']
+                ])
             ]);
     }
 }
