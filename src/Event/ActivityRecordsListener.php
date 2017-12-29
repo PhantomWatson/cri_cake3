@@ -23,30 +23,30 @@ class ActivityRecordsListener implements EventListenerInterface
     public function implementedEvents()
     {
         $events = [
-            'Model.Community.afterAdd',
-            'Model.Community.afterDelete',
             'Model.Community.afterActivate',
+            'Model.Community.afterAdd',
+            'Model.Community.afterAddClient',
+            'Model.Community.afterAutomaticAdvancement',
             'Model.Community.afterDeactivate',
-            'Model.User.afterAdd',
-            'Model.User.afterDelete',
-            'Model.Survey.afterLinked',
-            'Model.Survey.afterLinkUpdated',
-            'Model.Survey.afterActivate',
-            'Model.Survey.afterDeactivate',
+            'Model.Community.afterDelete',
+            'Model.Community.afterRemoveClient',
+            'Model.Community.afterScoreDecrease',
+            'Model.Community.afterScoreIncrease',
+            'Model.Delivery.afterAdd',
             'Model.Product.afterPurchase',
             'Model.Purchase.afterAdminAdd',
             'Model.Purchase.afterRefund',
-            'Model.Response.afterImport',
-            'Model.Community.afterScoreIncrease',
-            'Model.Community.afterScoreDecrease',
             'Model.Respondent.afterUninvitedApprove',
             'Model.Respondent.afterUninvitedDismiss',
+            'Model.Response.afterImport',
+            'Model.Survey.afterActivate',
+            'Model.Survey.afterDeactivate',
             'Model.Survey.afterInvitationsSent',
+            'Model.Survey.afterLinked',
+            'Model.Survey.afterLinkUpdated',
             'Model.Survey.afterRemindersSent',
-            'Model.Delivery.afterAdd',
-            'Model.Community.afterAddClient',
-            'Model.Community.afterRemoveClient',
-            'Model.Community.afterAutomaticAdvancement'
+            'Model.User.afterAdd',
+            'Model.User.afterDelete'
         ];
 
         return array_fill_keys($events, 'recordActivity');
