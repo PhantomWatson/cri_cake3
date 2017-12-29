@@ -5,7 +5,6 @@ use App\Model\Table\ProductsTable;
 use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
 use Cake\Network\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 
 class AdminTaskMailer extends Mailer
@@ -19,32 +18,18 @@ class AdminTaskMailer extends Mailer
      */
     public function deliverMandatoryPresentation($data)
     {
-        $user = $data['user'];
-        $community = $data['community'];
-        $presentationLetter = $this->getDeliverablePresentationLetter($data['meta']['surveyType']);
-
-        // Workaround for this bug: https://github.com/cakephp/cakephp/issues/11582
-        $actionUrl = Router::url([
-            'plugin' => false,
-            'prefix' => 'admin',
-            'controller' => 'Deliveries',
-            'action' => 'add',
-            '_full' => true
-        ]);
-        $actionUrl = str_replace('http://', 'https://', $actionUrl);
-
         return $this
-            ->setTo($user['email'])
-            ->setSubject('Community Readiness Initiative - Action required')
-            ->setDomain('cri.cberdata.org')
+            ->setStandardConfig($data)
             ->setTemplate('task_deliver_presentation')
             ->setViewVars([
-                'actionUrl' => $actionUrl,
-                'communityName' => $community['name'],
-                'homeUrl' => Router::url('/', true),
-                'presentationLetter' => $presentationLetter,
-                'surveyType' => $data['surveyType'],
-                'userName' => $user['name']
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Deliveries',
+                    'action' => 'add'
+                ]),
+                'presentationLetter' => $this->getDeliverablePresentationLetter([
+                    'surveyType' => $data['meta']['surveyType']
+                ]),
+                'surveyType' => $data['surveyType']
             ]);
     }
 
@@ -57,52 +42,93 @@ class AdminTaskMailer extends Mailer
      */
     public function deliverOptionalPresentation($data)
     {
-        $user = $data['user'];
-        $community = $data['community'];
-        /** @var ProductsTable $productsTable */
-        $productsTable = TableRegistry::get('Products');
-        $presentationLetter = $productsTable->getPresentationLetter($data['meta']['productId']);
-
-        // Workaround for this bug: https://github.com/cakephp/cakephp/issues/11582
-        $actionUrl = Router::url([
-            'plugin' => false,
-            'prefix' => 'admin',
-            'controller' => 'Deliveries',
-            'action' => 'add',
-            '_full' => true
-        ]);
-        $actionUrl = str_replace('http://', 'https://', $actionUrl);
-
         return $this
-            ->setTo($user['email'])
-            ->setSubject('Community Readiness Initiative - Action required')
-            ->setDomain('cri.cberdata.org')
+            ->setStandardConfig($data)
             ->setTemplate('task_deliver_optional_presentation')
             ->setViewVars([
-                'actionUrl' => $actionUrl,
-                'communityName' => $community['name'],
-                'homeUrl' => Router::url('/', true),
-                'presentationLetter' => ucwords($presentationLetter),
-                'surveyType' => $data['surveyType'],
-                'userName' => $user['name']
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Deliveries',
+                    'action' => 'add'
+                ]),
+                'presentationLetter' => $this->getDeliverablePresentationLetter([
+                    'productId' => $data['meta']['productId']
+                ])
             ]);
+    }
+
+    /**
+     * Sets mailer configuration shared by multiple methods in this class
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    private function setStandardConfig($data)
+    {
+        return $this
+            ->setTo($data['user']['email'])
+            ->setSubject('Community Readiness Initiative - Action required')
+            ->setDomain('cri.cberdata.org')
+            ->setViewVars([
+                'communityName' => $data['community']['name'],
+                'userName' => $data['user']['name']
+            ]);
+    }
+
+    /**
+     * Returns a URL corresponding to an admin task
+     *
+     * In addition to being shorthand for a full call to Router::url(), this implements a workaround for this bug:
+     * https://github.com/cakephp/cakephp/issues/11582
+     *
+     * @param array $url URL array
+     * @return string
+     */
+    private function getTaskUrl($url)
+    {
+        $url = $url + [
+            'plugin' => false,
+            'prefix' => 'admin',
+            '_full' => true
+        ];
+
+        return str_replace('http://', 'https://', Router::url($url));
     }
 
     /**
      * Returns the mandatory presentation letter associated with the specified survey type
      *
-     * @param string $surveyType Survey type
+     * @param array $params An array containing either the key 'surveyType' or 'productId'
      * @return string
+     * @throws InternalErrorException
      */
-    private function getDeliverablePresentationLetter($surveyType)
+    private function getDeliverablePresentationLetter($params)
     {
-        switch ($surveyType) {
-            case 'official':
-                return 'A';
-            case 'organization':
-                return 'C';
-            default:
-                throw new InternalErrorException('Unrecognized survey type: ' . $surveyType);
+        if (isset($params['surveyType'])) {
+            switch ($params['surveyType']) {
+                case 'official':
+                    return 'A';
+                case 'organization':
+                    return 'C';
+                default:
+                    throw new InternalErrorException('Unrecognized survey type: ' . $params['surveyType']);
+            }
         }
+
+        if (isset($params['productId'])) {
+            switch ($params['productId']) {
+                case ProductsTable::OFFICIALS_SURVEY:
+                    return 'A';
+                case ProductsTable::OFFICIALS_SUMMIT:
+                    return 'B';
+                case ProductsTable::ORGANIZATIONS_SURVEY:
+                    return 'C';
+                case ProductsTable::ORGANIZATIONS_SUMMIT:
+                    return 'D';
+                default:
+                    return null;
+            }
+        }
+
+        throw new InternalErrorException('No valid param provided to getDeliverablePresentationLetter()');
     }
 }
