@@ -4,6 +4,7 @@ namespace App\Event;
 use App\Model\Entity\Community;
 use App\Model\Table\CommunitiesTable;
 use App\Model\Table\DeliverablesTable;
+use App\Model\Table\DeliveriesTable;
 use App\Model\Table\ProductsTable;
 use App\Model\Table\SurveysTable;
 use App\Model\Table\UsersTable;
@@ -81,6 +82,10 @@ class EmailListener implements EventListenerInterface
         // Send "time to create a survey" email to admins
         if (in_array($toStep, [2, 3])) {
             $this->sendCreateSurveyEmail($event, $meta, $community);
+        }
+
+        if ($toStep == 4) {
+            $this->sendDeliverPolicyDevEmail($event, $meta, $community);
         }
     }
 
@@ -265,5 +270,54 @@ class EmailListener implements EventListenerInterface
         }
 
         $this->sendAdminTaskEmail($event, $meta);
+    }
+
+    /**
+     * Enqueues emails that prompt admins to deliver policy development materials
+     *
+     * @param Event $event Event
+     * @param array $meta Metadata
+     * @param Community $community Community entity
+     * @return void
+     * @throws \Exception
+     */
+    public function sendDeliverPolicyDevEmail(Event $event, array $meta, Community $community)
+    {
+        // Skip if already delivered
+        /** @var DeliveriesTable $deliveriesTable */
+        $deliveriesTable = TableRegistry::get('Deliveries');
+        $isRecorded = $deliveriesTable->isRecorded($community->id, DeliverablesTable::POLICY_DEVELOPMENT);
+        if ($isRecorded) {
+            return;
+        }
+
+        // Send to both CBER and ICI
+        /**
+         * @var UsersTable $usersTable
+         * @var QueuedJobsTable $queuedJobs
+         * @var SurveysTable $surveysTable
+         */
+        $usersTable = TableRegistry::get('Users');
+        $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+        $recipients = $usersTable->getAdminEmailRecipients('both');
+        foreach ($recipients as $recipient) {
+            $queuedJobs->createJob(
+                'AdminTaskEmail',
+                [
+                    'user' => [
+                        'email' => $recipient->email,
+                        'name' => $recipient->name
+                    ],
+                    'eventName' => $event->getName(),
+                    'community' => [
+                        'id' => $community->id,
+                        'name' => $community->name,
+                        'slug' => $community->slug
+                    ],
+                    'mailerMethod' => 'deliverPolicyDev'
+                ],
+                ['reference' => $recipient->email]
+            );
+        }
     }
 }

@@ -184,4 +184,27 @@ class AdminTaskMailer extends Mailer
                 )
             ]);
     }
+
+    /**
+     * Defines an email informing an administrator that it's time to deliver policy development to the CRI client
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function deliverPolicyDev($data)
+    {
+        $communitiesTable = TableRegistry::get('Communities');
+        $clients = $communitiesTable->getClients($data['community']['id']);
+
+        return $this
+            ->setStandardConfig($data)
+            ->setTemplate('task_deliver_policy_dev')
+            ->setViewVars([
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Deliveries',
+                    'action' => 'add'
+                ]),
+                'clients' => $clients
+            ]);
+    }
 }
