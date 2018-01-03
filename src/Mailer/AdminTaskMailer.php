@@ -207,4 +207,24 @@ class AdminTaskMailer extends Mailer
                 'clients' => $clients
             ]);
     }
+
+    /**
+     * Defines an email informing an administrator that it's time to deliver policy development to the CRI client
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function assignClient($data)
+    {
+        return $this
+            ->setStandardConfig($data)
+            ->setTemplate('task_assign_client')
+            ->setViewVars([
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Communities',
+                    'action' => 'addClient',
+                    $data['Community']['id']
+                ])
+            ]);
+    }
 }
