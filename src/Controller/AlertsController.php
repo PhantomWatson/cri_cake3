@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-use App\Alerts\Alerts;
+use App\Alerts\Alert;
 use App\Model\Table\CommunitiesTable;
 use App\Model\Table\UsersTable;
 use Cake\Mailer\MailerAwareTrait;
@@ -51,16 +51,16 @@ class AlertsController extends AppController
             $recipients = $usersTable->getAdminEmailRecipients('ICI');
             foreach ($communities as $community) {
                 foreach ($recipients as $recipient) {
-                    $ifRecentlySent = Alerts::isRecentlySent(
+                    $wasRecentlySent = Alert::isRecentlySent(
                         $recipient->email,
                         $community->id,
                         'assignClient'
                     );
-                    if ($ifRecentlySent) {
+                    if ($wasRecentlySent) {
                         $skippedEmails[] = $recipient->email;
                         continue;
                     }
-                    Alerts::enqueueEmail($recipient, $community, 'assignClient');
+                    Alert::enqueueEmail($recipient, $community, 'assignClient');
                     $sentEmails[] = $recipient->email;
                 }
             }
