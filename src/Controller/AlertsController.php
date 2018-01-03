@@ -3,7 +3,6 @@ namespace App\Controller;
 
 use App\Model\Table\CommunitiesTable;
 use App\Model\Table\UsersTable;
-use Cake\Database\Expression\QueryExpression;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -64,11 +63,39 @@ class AlertsController extends AppController
             $message = 'These communities with officials surveys have been added more than two hours ago ' .
                 'and lack clients: ';
             $message .= implode(', ', $communityNames) . '.';
+
             $usersTable = TableRegistry::get('Users');
             $recipients = $usersTable->getAdminEmailRecipients('ICI');
             $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+            $sentEmails = [];
+            $skippedEmails = [];
             foreach ($communities as $community) {
                 foreach ($recipients as $recipient) {
+                    // Avoid sending an email if one was sent < 2 days ago
+                    $skipSending = false;
+                    $recentEmails = $queuedJobs->find()
+                        ->select(['data'])
+                        ->where([
+                            'job_type' => 'AdminTaskEmail',
+                            'reference' => $recipient->email,
+                            'created >=' => new DateTime('- 2 days')
+                        ])
+                        ->all();
+                    if (!$recentEmails->isEmpty()) {
+                        foreach ($recentEmails as $recentEmail) {
+                            $data = unserialize($recentEmail['data']);
+                            if ($data['community']['id'] == $community->id && $data['mailerMethod'] == 'assignClient') {
+                                $skipSending = true;
+                                $skippedEmails[] = $recipient->email;
+                                break;
+                            }
+                        }
+                    }
+
+                    if ($skipSending) {
+                        continue;
+                    }
+
                     $queuedJobs->createJob(
                         'AdminTaskEmail',
                         [
@@ -84,12 +111,26 @@ class AlertsController extends AppController
                         ],
                         ['reference' => $recipient->email]
                     );
+                    $sentEmails[] = $recipient->email;
                 }
             }
-            $emailAddresses = Hash::extract($recipients->toArray(), '{n}.email');
-            $noun = __n('email', 'emails', count($recipients));
-            $recipientList = implode($emailAddresses);
-            $message .= " Alert $noun sent to $recipientList.";
+
+            if ($sentEmails) {
+                $message .= sprintf(
+                    ' Alert %s sent to %s.',
+                    __n('email', 'emails', count($sentEmails)),
+                    implode($sentEmails)
+                );
+            }
+
+            if ($skippedEmails) {
+                $message .= sprintf(
+                    ' Skipping sending %s to %s (%s alerted < 2 hours ago).',
+                    __n('email', 'emails', count($skippedEmails)),
+                    implode(', ', $skippedEmails),
+                    __n('was', 'were', count($skippedEmails))
+                );
+            }
         }
 
         $this->set('message', $message);
