@@ -10,6 +10,7 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use DateTime;
 
 /**
  * Communities Model
@@ -908,5 +909,22 @@ class CommunitiesTable extends Table
             ]);
 
         return !$result->isEmpty();
+    }
+
+    /**
+     * A finder for /admin/communities/index
+     *
+     * @param Query $query Query
+     * @return Query
+     */
+    public function findNoClientAssignedAlertable(Query $query)
+    {
+        return $query->select(['id', 'name'])
+            ->where([
+                'Communities.active' => true,
+                'Communities.created <=' => new DateTime('-2 hours')
+            ])
+            ->matching('OfficialSurvey')
+            ->notMatching('Clients');
     }
 }
