@@ -30,7 +30,11 @@ class QueueAdminTaskEmailTask extends QueueTask
      */
     public function run(array $data, $id)
     {
-        $mailerMethodName = $this->getMailerMethodName($data['eventName']);
+        if (isset($data['mailerMethod'])) {
+            $mailerMethodName = $data['mailerMethod'];
+        } else {
+            $mailerMethodName = $this->getMailerMethodName($data['eventName']);
+        }
         try {
             $this->getMailer('AdminTask')->send($mailerMethodName, [$data]);
         } catch (\Exception $e) {
