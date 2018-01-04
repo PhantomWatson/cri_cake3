@@ -46,12 +46,11 @@ class Alert
     /**
      * @param User $recipient Alert recipients
      * @param Community $community Community entity
-     * @param string $mailerMethod Name of mailer method for alert
      * @param array|null $data Metadata to include in queued job in addition to default data
      * @throws \Exception
      * @return \Cake\ORM\Entity Saved job entity
      */
-    public static function enqueueEmail($recipient, $community, $mailerMethod, $data = null)
+    public static function enqueueEmail($recipient, $community, $data = null)
     {
         $data = $data + [
             'user' => [
@@ -61,8 +60,7 @@ class Alert
             'community' => [
                 'id' => $community->id,
                 'name' => $community->name
-            ],
-            'mailerMethod' => $mailerMethod
+            ]
         ];
 
         /** @var QueuedJobsTable $queuedJobs */

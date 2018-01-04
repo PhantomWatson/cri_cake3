@@ -60,7 +60,7 @@ class AlertsController extends AppController
                         $skippedEmails[] = $recipient->email;
                         continue;
                     }
-                    Alert::enqueueEmail($recipient, $community, 'assignClient');
+                    Alert::enqueueEmail($recipient, $community, ['mailerMethod' => 'assignClient']);
                     $sentEmails[] = $recipient->email;
                 }
             }
