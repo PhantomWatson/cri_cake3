@@ -158,6 +158,30 @@ class AdminTaskMailer extends Mailer
     }
 
     /**
+     * Defines an email informing an administrator that it's time to create a survey
+     *
+     * Triggered by "new community has no survey" condition, rather than the
+     * "community was promoted but has no corresponding survey" condition
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function createSurveyNewCommunity($data)
+    {
+        return $this
+            ->setStandardConfig($data)
+            ->setTemplate('task_create_survey_new_community')
+            ->setViewVars([
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Surveys',
+                    'action' => 'link',
+                    $data['community']['slug'],
+                    'official'
+                ])
+            ]);
+    }
+
+    /**
      * Defines an email informing an administrator that it's time to schedule a presentation
      *
      * @param array $data Metadata
@@ -215,6 +239,26 @@ class AdminTaskMailer extends Mailer
      * @return Email
      */
     public function assignClient($data)
+    {
+        return $this
+            ->setStandardConfig($data)
+            ->setTemplate('task_assign_client')
+            ->setViewVars([
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Communities',
+                    'action' => 'addClient',
+                    $data['Community']['id']
+                ])
+            ]);
+    }
+
+    /**
+     * Defines an email informing an administrator that it's time to deliver policy development to the CRI client
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function createOfficialsSurvey($data)
     {
         return $this
             ->setStandardConfig($data)
