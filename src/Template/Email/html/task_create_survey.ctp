@@ -5,8 +5,8 @@
 <p>
     <?= $communityName ?> has been promoted to Step <?= $toStep ?> of CRI. The next step in the CRI
     process for that community is for ICI to
-    <a href="https://www.surveymonkey.com/">create an <?= $newSurveyType ?> questionnaire in SurveyMonkey</a> for
-    <?= $communityName ?>.
+    <a href="https://www.surveymonkey.com/">create a community <?= $newSurveyType ?> questionnaire in SurveyMonkey</a>
+    for <?= $communityName ?>.
 </p>
 
 <p>
