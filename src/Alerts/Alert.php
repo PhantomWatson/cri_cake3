@@ -26,7 +26,7 @@ class Alert
             ->where([
                 'job_type' => 'AdminTaskEmail',
                 'reference' => $email,
-                'created >=' => new DateTime('- 2 days')
+                'created >=' => new DateTime('-2 days')
             ])
             ->all();
 
