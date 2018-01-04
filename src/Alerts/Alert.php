@@ -53,16 +53,10 @@ class Alert
      */
     public static function enqueueEmail($recipient, $community, $data = null)
     {
-        $data = $data + [
-            'user' => [
-                'email' => $recipient->email,
-                'name' => $recipient->name
-            ],
-            'community' => [
-                'id' => $community->id,
-                'name' => $community->name
-            ]
-        ];
+        $data['user']['email'] = $recipient->email;
+        $data['user']['name'] = $recipient->name;
+        $data['community']['id'] = $community->id;
+        $data['community']['name'] = $community->name;
 
         /** @var QueuedJobsTable $queuedJobs */
         $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
