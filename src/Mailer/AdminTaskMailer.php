@@ -271,4 +271,25 @@ class AdminTaskMailer extends Mailer
                 ])
             ]);
     }
+
+    /**
+     * Defines an email informing an administrator that it's time to activate a survey
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function activateSurvey($data)
+    {
+        return $this
+            ->setStandardConfig($data)
+            ->setTemplate('task_activate_survey')
+            ->setViewVars([
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Surveys',
+                    'action' => 'activate',
+                    $data['Survey']['id']
+                ]),
+                'surveyType' => $data['Survey']['type']
+            ]);
+    }
 }
