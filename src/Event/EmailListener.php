@@ -28,7 +28,7 @@ class EmailListener implements EventListenerInterface
         return [
             'Model.Community.afterAutomaticAdvancement' => 'sendCommunityPromotedEmail',
             'Model.Community.afterScoreIncrease' => 'sendCommunityPromotedEmail',
-            'Model.Survey.afterDeactivate' => 'sendAdminTaskEmail',
+            'Model.Survey.afterDeactivate' => 'sendDeliverMandatoryPresentationEmail',
             'Model.Product.afterPurchase' => 'sendDeliverOptPresentationEmail',
             'Model.Purchase.afterAdminAdd' => 'sendDeliverOptPresentationEmail',
             'Model.Delivery.afterAdd' => 'sendSchedulePresentationEmail'
@@ -120,36 +120,8 @@ class EmailListener implements EventListenerInterface
             'eventName' => $event->getName(),
             'community' => ['slug' => $community->slug],
             'newSurveyType' => $newSurveyType,
-            'toStep' => $toStep
-        ];
-        foreach ($recipients as $recipient) {
-            Alert::enqueueEmail($recipient, $community, $jobData);
-        }
-    }
-
-    /**
-     * Enqueues emails about admin tasks to users who have opted in
-     *
-     * @param \Cake\Event\Event $event Event
-     * @param array $meta Array of metadata (communityId, etc.)
-     * @return void
-     * @throws \Exception
-     */
-    public function sendAdminTaskEmail(Event $event, array $meta = [])
-    {
-        /**
-         * @var UsersTable $usersTable
-         * @var CommunitiesTable $communitiesTable
-         */
-        $usersTable = TableRegistry::get('Users');
-        $communitiesTable = TableRegistry::get('Communities');
-        $community = $communitiesTable->get($meta['communityId']);
-        $eventName = $event->getName();
-        $adminGroup = $this->getAdminGroup($eventName);
-        $recipients = $usersTable->getAdminEmailRecipients($adminGroup);
-        $jobData = [
-            'eventName' => $eventName,
-            'meta' => $meta
+            'toStep' => $toStep,
+            'mailerMethod' => 'createSurvey'
         ];
         foreach ($recipients as $recipient) {
             Alert::enqueueEmail($recipient, $community, $jobData);
@@ -166,36 +138,25 @@ class EmailListener implements EventListenerInterface
      */
     public function sendDeliverOptPresentationEmail(Event $event, array $meta = [])
     {
-        /** @var ProductsTable $productsTable */
+        /**
+         * @var UsersTable $usersTable
+         * @var CommunitiesTable $communitiesTable
+         * @var ProductsTable $productsTable
+         */
         $productsTable = TableRegistry::get('Products');
         $presentationLetter = $productsTable->getPresentationLetter($meta['productId']);
         if (in_array($presentationLetter, ['a', 'b'])) {
-            $this->sendAdminTaskEmail($event, $meta);
+            $usersTable = TableRegistry::get('Users');
+            $recipients = $usersTable->getAdminEmailRecipients('CBER');
+            $communitiesTable = TableRegistry::get('Communities');
+            $community = $communitiesTable->get($meta['communityId']);
+            $jobData = [
+                'meta' => $meta + ['mailerMethod' => 'deliverOptionalPresentation']
+            ];
+            foreach ($recipients as $recipient) {
+                Alert::enqueueEmail($recipient, $community, $jobData);
+            }
         }
-    }
-
-    /**
-     * Returns the name of the admin group that should receive an admin task email in response to the specified event
-     *
-     * @param string $eventName Event name
-     * @return string
-     */
-    private function getAdminGroup($eventName)
-    {
-        $adminGroups = [
-            'Model.Survey.afterDeactivate' => 'CBER',
-            'Model.Product.afterPurchase' => 'CBER',
-            'Model.Purchase.afterAdminAdd' => 'CBER',
-            'Model.Community.afterAutomaticAdvancement' => 'ICI',
-            'Model.Community.afterScoreIncrease' => 'ICI',
-            'Model.Delivery.afterAdd' => 'ICI'
-        ];
-
-        if (array_key_exists($eventName, $adminGroups)) {
-            return $adminGroups[$eventName];
-        }
-
-        throw new InternalErrorException('Unrecognized event name: ' . $eventName);
     }
 
     /**
@@ -228,22 +189,34 @@ class EmailListener implements EventListenerInterface
      */
     public function sendSchedulePresentationEmail(Event $event, array $meta = [])
     {
+        /**
+         * @var CommunitiesTable $communitiesTable
+         * @var DeliverablesTable $deliverablesTable
+         * @var UsersTable $usersTable
+         */
         // Skip if it's not a presentation that was delivered
-        /** @var DeliverablesTable $deliverablesTable */
         $deliverablesTable = TableRegistry::get('Deliverables');
         if (!$deliverablesTable->isPresentation($meta['deliverableId'])) {
             return;
         }
 
         // Skip if this presentation has already been scheduled
-        /** @var CommunitiesTable $communitiesTable */
         $communitiesTable = TableRegistry::get('Communities');
         $presentationLetter = $deliverablesTable->getPresentationLetter($meta['deliverableId']);
         if ($communitiesTable->presentationIsScheduled($meta['communityId'], $presentationLetter)) {
             return;
         }
 
-        $this->sendAdminTaskEmail($event, $meta);
+        $usersTable = TableRegistry::get('Users');
+        $recipients = $usersTable->getAdminEmailRecipients('ICI');
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->get($meta['communityId']);
+        $jobData = [
+            'meta' => $meta + ['mailerMethod' => 'schedulePresentation']
+        ];
+        foreach ($recipients as $recipient) {
+            Alert::enqueueEmail($recipient, $community, $jobData);
+        }
     }
 
     /**
@@ -257,8 +230,11 @@ class EmailListener implements EventListenerInterface
      */
     public function sendDeliverPolicyDevEmail(Event $event, array $meta, Community $community)
     {
+        /**
+         * @var DeliveriesTable $deliveriesTable
+         * @var UsersTable $usersTable
+         */
         // Skip if already delivered
-        /** @var DeliveriesTable $deliveriesTable */
         $deliveriesTable = TableRegistry::get('Deliveries');
         $isRecorded = $deliveriesTable->isRecorded($community->id, DeliverablesTable::POLICY_DEVELOPMENT);
         if ($isRecorded) {
@@ -266,15 +242,37 @@ class EmailListener implements EventListenerInterface
         }
 
         // Send to both CBER and ICI
-        /**
-         * @var UsersTable $usersTable
-         */
         $usersTable = TableRegistry::get('Users');
         $recipients = $usersTable->getAdminEmailRecipients('both');
         $jobData = [
-            'eventName' => $event->getName(),
             'community' => ['slug' => $community->slug],
             'mailerMethod' => 'deliverPolicyDev'
+        ];
+        foreach ($recipients as $recipient) {
+            Alert::enqueueEmail($recipient, $community, $jobData);
+        }
+    }
+
+    /**
+     * Enqueues emails that alert admins to the need to deliver mandatory presentation materials
+     *
+     * @param \Cake\Event\Event $event Event
+     * @param array $meta Array of metadata (communityId, etc.)
+     * @return void
+     * @throws \Exception
+     */
+    public function sendDeliverMandatoryPresentationEmail(Event $event, array $meta = [])
+    {
+        /**
+         * @var UsersTable $usersTable
+         * @var CommunitiesTable $communitiesTable
+         */
+        $usersTable = TableRegistry::get('Users');
+        $recipients = $usersTable->getAdminEmailRecipients('ICI');
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->get($meta['communityId']);
+        $jobData = [
+            'meta' => $meta + ['mailerMethod' => 'deliverMandatoryPresentation']
         ];
         foreach ($recipients as $recipient) {
             Alert::enqueueEmail($recipient, $community, $jobData);

@@ -30,42 +30,15 @@ class QueueAdminTaskEmailTask extends QueueTask
      */
     public function run(array $data, $id)
     {
-        if (isset($data['mailerMethod'])) {
-            $mailerMethodName = $data['mailerMethod'];
-        } else {
-            $mailerMethodName = $this->getMailerMethodName($data['eventName']);
+        if (!isset($data['mailerMethod'])) {
+            throw new InternalErrorException('Mailer method not specified');
         }
         try {
-            $this->getMailer('AdminTask')->send($mailerMethodName, [$data]);
+            $this->getMailer('AdminTask')->send($data['mailerMethod'], [$data]);
         } catch (\Exception $e) {
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * Returns the name of the email template corresponding to the specified event name
-     *
-     * @param string $eventName Event name
-     * @return string
-     * @throws InternalErrorException
-     */
-    private function getMailerMethodName($eventName)
-    {
-        $mailTemplates = [
-            'Model.Survey.afterDeactivate' => 'deliverMandatoryPresentation',
-            'Model.Product.afterPurchase' => 'deliverOptionalPresentation',
-            'Model.Purchase.afterAdminAdd' => 'deliverOptionalPresentation',
-            'Model.Community.afterAutomaticAdvancement' => 'createSurvey',
-            'Model.Community.afterScoreIncrease' => 'createSurvey',
-            'Model.Delivery.afterAdd' => 'schedulePresentation'
-        ];
-
-        if (array_key_exists($eventName, $mailTemplates)) {
-            return $mailTemplates[$eventName];
-        }
-
-        throw new InternalErrorException('Unrecognized event name: ' . $eventName);
     }
 }
