@@ -9,7 +9,7 @@
     <?= sprintf(
         ' Alert %s sent to %s.',
         __n('email', 'emails', count($sentEmails)),
-        implode($sentEmails)
+        implode(', ', $sentEmails)
     ) ?>
 <?php endif; ?>
 
