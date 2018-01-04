@@ -3,6 +3,7 @@ namespace App\Alerts;
 
 use App\Model\Entity\Community;
 use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use Cake\ORM\TableRegistry;
 use DateTime;
 use Queue\Model\Table\QueuedJobsTable;
@@ -71,5 +72,28 @@ class Alert
             $data,
             ['reference' => $recipient->email]
         );
+    }
+
+    /**
+     * Sends alerts to all members of the CBER group, ICI group, or both
+     *
+     * @param string $adminGroupName 'CBER', 'ICI', or 'both'
+     * @param array $meta Queued job metadata
+     * @return void
+     * @throws \Exception
+     */
+    public static function sendToGroup($adminGroupName, $meta)
+    {
+        /**
+         * @var Community $community
+         * @var UsersTable $usersTable
+         */
+        $communitiesTable = TableRegistry::get('Communities');
+        $community = $communitiesTable->get($meta['communityId']);
+        $usersTable = TableRegistry::get('Users');
+        $recipients = $usersTable->getAdminEmailRecipients($adminGroupName);
+        foreach ($recipients as $recipient) {
+            self::enqueueEmail($recipient, $community, $meta);
+        }
     }
 }

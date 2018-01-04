@@ -8,7 +8,6 @@ use App\Model\Table\DeliverablesTable;
 use App\Model\Table\DeliveriesTable;
 use App\Model\Table\ProductsTable;
 use App\Model\Table\SurveysTable;
-use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Network\Exception\InternalErrorException;
@@ -101,13 +100,8 @@ class EmailListener implements EventListenerInterface
      */
     public function sendCreateSurveyEmail(Event $event, array $meta, Community $community)
     {
-        /**
-         * @var UsersTable $usersTable
-         * @var SurveysTable $surveysTable
-         */
-        $usersTable = TableRegistry::get('Users');
+        /** @var SurveysTable $surveysTable */
         $surveysTable = TableRegistry::get('Surveys');
-        $recipients = $usersTable->getAdminEmailRecipients('ICI');
         $toStep = $this->getToStep($meta);
         $newSurveyType = $toStep == 2 ? 'official' : 'organization';
 
@@ -116,16 +110,13 @@ class EmailListener implements EventListenerInterface
             return;
         }
 
-        $jobData = [
-            'eventName' => $event->getName(),
-            'community' => ['slug' => $community->slug],
+        $meta['community']['slug'] = $community->slug;
+        $meta += [
             'newSurveyType' => $newSurveyType,
             'toStep' => $toStep,
             'mailerMethod' => 'createSurvey'
         ];
-        foreach ($recipients as $recipient) {
-            Alert::enqueueEmail($recipient, $community, $jobData);
-        }
+        Alert::sendToGroup('ICI', $meta);
     }
 
     /**
@@ -138,25 +129,15 @@ class EmailListener implements EventListenerInterface
      */
     public function sendDeliverOptPresentationEmail(Event $event, array $meta = [])
     {
-        /**
-         * @var UsersTable $usersTable
-         * @var CommunitiesTable $communitiesTable
-         * @var ProductsTable $productsTable
-         */
+        /** @var ProductsTable $productsTable */
         $productsTable = TableRegistry::get('Products');
         $presentationLetter = $productsTable->getPresentationLetter($meta['productId']);
-        if (in_array($presentationLetter, ['a', 'b'])) {
-            $usersTable = TableRegistry::get('Users');
-            $recipients = $usersTable->getAdminEmailRecipients('CBER');
-            $communitiesTable = TableRegistry::get('Communities');
-            $community = $communitiesTable->get($meta['communityId']);
-            $jobData = [
-                'meta' => $meta + ['mailerMethod' => 'deliverOptionalPresentation']
-            ];
-            foreach ($recipients as $recipient) {
-                Alert::enqueueEmail($recipient, $community, $jobData);
-            }
+        if (! in_array($presentationLetter, ['a', 'b'])) {
+            return;
         }
+
+        $meta['mailerMethod'] = 'deliverOptionalPresentation';
+        Alert::sendToGroup('CBER', $meta);
     }
 
     /**
@@ -192,7 +173,6 @@ class EmailListener implements EventListenerInterface
         /**
          * @var CommunitiesTable $communitiesTable
          * @var DeliverablesTable $deliverablesTable
-         * @var UsersTable $usersTable
          */
         // Skip if it's not a presentation that was delivered
         $deliverablesTable = TableRegistry::get('Deliverables');
@@ -207,16 +187,8 @@ class EmailListener implements EventListenerInterface
             return;
         }
 
-        $usersTable = TableRegistry::get('Users');
-        $recipients = $usersTable->getAdminEmailRecipients('ICI');
-        $communitiesTable = TableRegistry::get('Communities');
-        $community = $communitiesTable->get($meta['communityId']);
-        $jobData = [
-            'meta' => $meta + ['mailerMethod' => 'schedulePresentation']
-        ];
-        foreach ($recipients as $recipient) {
-            Alert::enqueueEmail($recipient, $community, $jobData);
-        }
+        $meta['mailerMethod'] = 'schedulePresentation';
+        Alert::sendToGroup('ICI', $meta);
     }
 
     /**
@@ -230,10 +202,7 @@ class EmailListener implements EventListenerInterface
      */
     public function sendDeliverPolicyDevEmail(Event $event, array $meta, Community $community)
     {
-        /**
-         * @var DeliveriesTable $deliveriesTable
-         * @var UsersTable $usersTable
-         */
+        /** @var DeliveriesTable $deliveriesTable */
         // Skip if already delivered
         $deliveriesTable = TableRegistry::get('Deliveries');
         $isRecorded = $deliveriesTable->isRecorded($community->id, DeliverablesTable::POLICY_DEVELOPMENT);
@@ -241,16 +210,9 @@ class EmailListener implements EventListenerInterface
             return;
         }
 
-        // Send to both CBER and ICI
-        $usersTable = TableRegistry::get('Users');
-        $recipients = $usersTable->getAdminEmailRecipients('both');
-        $jobData = [
-            'community' => ['slug' => $community->slug],
-            'mailerMethod' => 'deliverPolicyDev'
-        ];
-        foreach ($recipients as $recipient) {
-            Alert::enqueueEmail($recipient, $community, $jobData);
-        }
+        $meta['community']['slug'] = $community->slug;
+        $meta['mailerMethod'] = 'deliverPolicyDev';
+        Alert::sendToGroup('both', $meta);
     }
 
     /**
@@ -263,19 +225,7 @@ class EmailListener implements EventListenerInterface
      */
     public function sendDeliverMandatoryPresentationEmail(Event $event, array $meta = [])
     {
-        /**
-         * @var UsersTable $usersTable
-         * @var CommunitiesTable $communitiesTable
-         */
-        $usersTable = TableRegistry::get('Users');
-        $recipients = $usersTable->getAdminEmailRecipients('ICI');
-        $communitiesTable = TableRegistry::get('Communities');
-        $community = $communitiesTable->get($meta['communityId']);
-        $jobData = [
-            'meta' => $meta + ['mailerMethod' => 'deliverMandatoryPresentation']
-        ];
-        foreach ($recipients as $recipient) {
-            Alert::enqueueEmail($recipient, $community, $jobData);
-        }
+        $meta['mailerMethod'] = 'deliverMandatoryPresentation';
+        Alert::sendToGroup('ICI', $meta);
     }
 }
