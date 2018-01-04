@@ -912,7 +912,10 @@ class CommunitiesTable extends Table
     }
 
     /**
-     * A finder for /admin/communities/index
+     * Finds communities that qualify for the "time to assign a client" alert
+     *
+     * Skips over recently-created communities (within last two hours) to avoid sending unnecessary alerts to
+     * administrators who are in the process of adding clients
      *
      * @param Query $query Query
      * @return Query
@@ -926,5 +929,24 @@ class CommunitiesTable extends Table
             ])
             ->matching('OfficialSurvey')
             ->notMatching('Clients');
+    }
+
+    /**
+     * Finds communities that qualify for the "time to create an officials survey" alert
+     *
+     * Skips over recently-created communities (within last two hours) to avoid sending unnecessary alerts to
+     * administrators who are in the process of adding clients
+     *
+     * @param Query $query Query
+     * @return Query
+     */
+    public function findNoOfficialsSurveyAlertable(Query $query)
+    {
+        return $query->select(['id', 'name', 'slug'])
+            ->where([
+                'Communities.active' => true,
+                'Communities.created <=' => new DateTime('-2 hours')
+            ])
+            ->notMatching('OfficialSurvey');
     }
 }

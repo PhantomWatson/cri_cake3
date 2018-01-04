@@ -38,6 +38,17 @@ class AlertsController extends AppController
     }
 
     /**
+     * Checks to see if any communities lack officials surveys and sends alerts to administrators
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function checkNoOfficialsSurvey()
+    {
+        $this->sendAlerts('noOfficialsSurveyAlertable', 'ICI', 'createSurveyNewCommunity');
+    }
+
+    /**
      * Searches for alertable communities and sends alerts, avoiding sending alerts too frequently
      *
      * @param string $communityFinder Parameter for find()
@@ -71,7 +82,10 @@ class AlertsController extends AppController
                         $skippedEmails[] = $recipient->email;
                         continue;
                     }
-                    Alert::enqueueEmail($recipient, $community, ['mailerMethod' => $mailerMethod]);
+                    Alert::enqueueEmail($recipient, $community, [
+                        'mailerMethod' => $mailerMethod,
+                        'community' => ['slug' => $community->slug]
+                    ]);
                     $sentEmails[] = $recipient->email;
                 }
             }
