@@ -1,6 +1,7 @@
 <?php
 namespace App\Event;
 
+use App\Alerts\Alert;
 use App\Model\Entity\Community;
 use App\Model\Table\CommunitiesTable;
 use App\Model\Table\DeliverablesTable;
@@ -102,11 +103,9 @@ class EmailListener implements EventListenerInterface
     {
         /**
          * @var UsersTable $usersTable
-         * @var QueuedJobsTable $queuedJobs
          * @var SurveysTable $surveysTable
          */
         $usersTable = TableRegistry::get('Users');
-        $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
         $surveysTable = TableRegistry::get('Surveys');
         $recipients = $usersTable->getAdminEmailRecipients('ICI');
         $toStep = $this->getToStep($meta);
@@ -117,25 +116,14 @@ class EmailListener implements EventListenerInterface
             return;
         }
 
+        $jobData = [
+            'eventName' => $event->getName(),
+            'community' => ['slug' => $community->slug],
+            'newSurveyType' => $newSurveyType,
+            'toStep' => $toStep
+        ];
         foreach ($recipients as $recipient) {
-            $queuedJobs->createJob(
-                'AdminTaskEmail',
-                [
-                    'user' => [
-                        'email' => $recipient->email,
-                        'name' => $recipient->name
-                    ],
-                    'eventName' => $event->getName(),
-                    'community' => [
-                        'id' => $community->id,
-                        'name' => $community->name,
-                        'slug' => $community->slug
-                    ],
-                    'newSurveyType' => $newSurveyType,
-                    'toStep' => $toStep
-                ],
-                ['reference' => $recipient->email]
-            );
+            Alert::enqueueEmail($recipient, $community, $jobData);
         }
     }
 
@@ -159,26 +147,12 @@ class EmailListener implements EventListenerInterface
         $eventName = $event->getName();
         $adminGroup = $this->getAdminGroup($eventName);
         $recipients = $usersTable->getAdminEmailRecipients($adminGroup);
-
-        /** @var QueuedJobsTable $queuedJobs */
-        $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+        $jobData = [
+            'eventName' => $eventName,
+            'meta' => $meta
+        ];
         foreach ($recipients as $recipient) {
-            $queuedJobs->createJob(
-                'AdminTaskEmail',
-                [
-                    'user' => [
-                        'email' => $recipient->email,
-                        'name' => $recipient->name
-                    ],
-                    'eventName' => $eventName,
-                    'community' => [
-                        'id' => $community->id,
-                        'name' => $community->name,
-                    ],
-                    'meta' => $meta
-                ],
-                ['reference' => $recipient->email]
-            );
+            Alert::enqueueEmail($recipient, $community, $jobData);
         }
     }
 
@@ -294,30 +268,16 @@ class EmailListener implements EventListenerInterface
         // Send to both CBER and ICI
         /**
          * @var UsersTable $usersTable
-         * @var QueuedJobsTable $queuedJobs
-         * @var SurveysTable $surveysTable
          */
         $usersTable = TableRegistry::get('Users');
-        $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
         $recipients = $usersTable->getAdminEmailRecipients('both');
+        $jobData = [
+            'eventName' => $event->getName(),
+            'community' => ['slug' => $community->slug],
+            'mailerMethod' => 'deliverPolicyDev'
+        ];
         foreach ($recipients as $recipient) {
-            $queuedJobs->createJob(
-                'AdminTaskEmail',
-                [
-                    'user' => [
-                        'email' => $recipient->email,
-                        'name' => $recipient->name
-                    ],
-                    'eventName' => $event->getName(),
-                    'community' => [
-                        'id' => $community->id,
-                        'name' => $community->name,
-                        'slug' => $community->slug
-                    ],
-                    'mailerMethod' => 'deliverPolicyDev'
-                ],
-                ['reference' => $recipient->email]
-            );
+            Alert::enqueueEmail($recipient, $community, $jobData);
         }
     }
 }
