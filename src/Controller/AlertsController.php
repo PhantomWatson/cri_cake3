@@ -91,6 +91,9 @@ class AlertsController extends AppController
             }
         }
 
+        $skippedEmails = array_unique($skippedEmails);
+        $sentEmails = array_unique($sentEmails);
+
         $this->set(compact(
             'communities',
             'sentEmails',
