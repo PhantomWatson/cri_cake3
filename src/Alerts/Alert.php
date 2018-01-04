@@ -36,7 +36,11 @@ class Alert
 
         foreach ($recentEmails as $recentEmail) {
             $data = unserialize($recentEmail['data']);
-            if ($data['community']['id'] == $communityId && $data['mailerMethod'] == $mailerMethod) {
+            $isMatch = isset($data['community']['id']) &&
+                $data['community']['id'] == $communityId &&
+                isset($data['mailerMethod']) &&
+                $data['mailerMethod'] == $mailerMethod;
+            if ($isMatch) {
                 return true;
             }
         }
