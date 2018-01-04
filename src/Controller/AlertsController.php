@@ -29,38 +29,49 @@ class AlertsController extends AppController
     /**
      * Checks to see if any communities with officials surveys lack clients and sends alerts to administrators
      *
-     * Skips over recently-created communities (within last two hours) to avoid sending unnecessary alerts to
-     * administrators who are in the process of adding clients
-     *
      * @return void
      * @throws \Exception
      */
     public function checkNoClientAssigned()
+    {
+        $this->sendAlerts('noClientAssignedAlertable', 'ICI', 'assignClient');
+    }
+
+    /**
+     * Searches for alertable communities and sends alerts, avoiding sending alerts too frequently
+     *
+     * @param string $communityFinder Parameter for find()
+     * @param string $adminGroup 'CBER', 'ICI', or 'both'
+     * @param string $mailerMethod Name of AdminTaskMailer method
+     * @return void
+     * @throws \Exception
+     */
+    private function sendAlerts($communityFinder, $adminGroup, $mailerMethod)
     {
         /**
          * @var CommunitiesTable $communitiesTable
          * @var UsersTable $usersTable
          */
         $communitiesTable = TableRegistry::get('Communities');
-        $communities = $communitiesTable->find('noClientAssignedAlertable')->all();
+        $communities = $communitiesTable->find($communityFinder)->all();
         $sentEmails = [];
         $skippedEmails = [];
 
         if (!$communities->isEmpty()) {
             $usersTable = TableRegistry::get('Users');
-            $recipients = $usersTable->getAdminEmailRecipients('ICI');
+            $recipients = $usersTable->getAdminEmailRecipients($adminGroup);
             foreach ($communities as $community) {
                 foreach ($recipients as $recipient) {
                     $wasRecentlySent = Alert::isRecentlySent(
                         $recipient->email,
                         $community->id,
-                        'assignClient'
+                        $mailerMethod
                     );
                     if ($wasRecentlySent) {
                         $skippedEmails[] = $recipient->email;
                         continue;
                     }
-                    Alert::enqueueEmail($recipient, $community, ['mailerMethod' => 'assignClient']);
+                    Alert::enqueueEmail($recipient, $community, ['mailerMethod' => $mailerMethod]);
                     $sentEmails[] = $recipient->email;
                 }
             }
