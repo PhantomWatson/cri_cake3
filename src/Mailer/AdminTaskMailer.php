@@ -247,7 +247,7 @@ class AdminTaskMailer extends Mailer
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Communities',
                     'action' => 'addClient',
-                    $data['Community']['id']
+                    $data['community']['id']
                 ])
             ]);
     }
