@@ -233,7 +233,7 @@ class AdminTaskMailer extends Mailer
     }
 
     /**
-     * Defines an email informing an administrator that it's time to deliver policy development to the CRI client
+     * Defines an email informing an administrator that it's time to assign a client to a community
      *
      * @param array $data Metadata
      * @return Email
