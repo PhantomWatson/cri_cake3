@@ -269,7 +269,7 @@ class AdminTaskMailer extends Mailer
                     'action' => 'activate',
                     $data['Survey']['id']
                 ]),
-                'surveyType' => $data['Survey']['type']
+                'surveyType' => $data['surveyType']
             ]);
     }
 }
