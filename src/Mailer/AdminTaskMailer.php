@@ -29,7 +29,7 @@ class AdminTaskMailer extends Mailer
                     'action' => 'add'
                 ]),
                 'presentationLetter' => $this->getDeliverablePresentationLetter([
-                    'surveyType' => $data['meta']['surveyType']
+                    'surveyType' => $data['surveyType']
                 ]),
                 'surveyType' => $data['surveyType']
             ]);
