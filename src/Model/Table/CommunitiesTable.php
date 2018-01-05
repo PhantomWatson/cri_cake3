@@ -4,6 +4,7 @@ namespace App\Model\Table;
 use App\Model\Entity\Community;
 use Cake\Chronos\Date;
 use Cake\Database\Expression\QueryExpression;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -948,5 +949,49 @@ class CommunitiesTable extends Table
                 'Communities.created <=' => new DateTime('-2 hours')
             ])
             ->notMatching('OfficialSurvey');
+    }
+
+    /**
+     * Finds communities that qualify for the "time to activate this survey" alert
+     *
+     * Skips over recently-created communities and surveys (within last two hours) to avoid sending unnecessary alerts
+     * to administrators who are in the process of adding clients
+     *
+     * @param Query $query Query
+     * @param array $options Query options
+     * @return Query
+     * @throws InternalErrorException
+     */
+    public function findSurveyInactiveAlertable(Query $query, array $options = [])
+    {
+        if (!isset($options['surveyType'])) {
+            throw new InternalErrorException('No survey type specified');
+        }
+
+        $associationName = ucfirst($options['surveyType']) . 'Survey';
+
+        return $query
+            ->select(['id', 'name'])
+            ->contain([
+                $associationName => function ($q) {
+                    /** @var Query $q */
+
+                    return $q->select(['id', 'type', 'community_id']);
+                }
+            ])
+            ->where([
+                'Communities.active' => true,
+                'Communities.created <=' => new DateTime('-2 hours')
+            ])
+            ->matching($associationName, function ($q) use ($associationName) {
+                /** @var Query $q */
+
+                return $q
+                    ->where([
+                        $associationName . '.active' => false,
+                        $associationName . '.created <=' => new DateTime('-2 hours')
+                    ])
+                    ->notMatching('Responses');
+            });
     }
 }
