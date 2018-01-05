@@ -79,7 +79,8 @@ class AlertsController extends AppController
                         $wasRecentlySent = Alert::isRecentlySent(
                             $recipient->email,
                             $community->id,
-                            $mailerMethod
+                            $mailerMethod,
+                            $surveyType
                         );
                         if ($wasRecentlySent) {
                             $skippedEmails[] = $recipient->email;

@@ -16,9 +16,10 @@ class Alert
      * @param string $email Recipient email address
      * @param int $communityId Community ID
      * @param string $mailerMethod Name of mailer method for alert
+     * @param string $surveyType Either 'official' or 'organization' (or null)
      * @return bool
      */
-    public static function isRecentlySent($email, $communityId, $mailerMethod)
+    public static function isRecentlySent($email, $communityId, $mailerMethod, $surveyType = null)
     {
         $queuedJobsTable = TableRegistry::get('Queue.QueuedJobs');
         $recentEmails = $queuedJobsTable->find()
@@ -40,6 +41,11 @@ class Alert
                 $data['community']['id'] == $communityId &&
                 isset($data['mailerMethod']) &&
                 $data['mailerMethod'] == $mailerMethod;
+            if ($surveyType) {
+                $isMatch = $isMatch &&
+                    isset($data['surveyType']) &&
+                    $data['surveyType'] == $surveyType;
+            }
             if ($isMatch) {
                 return true;
             }
