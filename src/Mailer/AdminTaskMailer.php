@@ -267,7 +267,7 @@ class AdminTaskMailer extends Mailer
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Surveys',
                     'action' => 'activate',
-                    $data['Survey']['id']
+                    $data['surveyType']
                 ]),
                 'surveyType' => $data['surveyType']
             ]);
