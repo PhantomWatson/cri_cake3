@@ -253,26 +253,6 @@ class AdminTaskMailer extends Mailer
     }
 
     /**
-     * Defines an email informing an administrator that it's time to deliver policy development to the CRI client
-     *
-     * @param array $data Metadata
-     * @return Email
-     */
-    public function createOfficialsSurvey($data)
-    {
-        return $this
-            ->setStandardConfig($data)
-            ->setTemplate('task_assign_client')
-            ->setViewVars([
-                'actionUrl' => $this->getTaskUrl([
-                    'controller' => 'Communities',
-                    'action' => 'addClient',
-                    $data['Community']['id']
-                ])
-            ]);
-    }
-
-    /**
      * Defines an email informing an administrator that it's time to activate a survey
      *
      * @param array $data Metadata
