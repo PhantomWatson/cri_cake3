@@ -105,7 +105,7 @@ class AlertsController extends AppController
             'sentEmails',
             'skippedEmails'
         ));
-        $this->viewBuilder()->setLayout('ajax');
+        $this->viewBuilder()->setLayout('DataCenter.simple');
     }
 
     /**
@@ -159,6 +159,6 @@ class AlertsController extends AppController
             'sentEmails',
             'skippedEmails'
         ));
-        $this->viewBuilder()->setLayout('ajax');
+        $this->viewBuilder()->setLayout('DataCenter.simple');
     }
 }
