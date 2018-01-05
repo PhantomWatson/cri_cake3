@@ -53,7 +53,7 @@ class AdminTaskMailer extends Mailer
                     'action' => 'add'
                 ]),
                 'presentationLetter' => $this->getDeliverablePresentationLetter([
-                    'productId' => $data['meta']['productId']
+                    'productId' => $data['productId']
                 ])
             ]);
     }
@@ -203,7 +203,7 @@ class AdminTaskMailer extends Mailer
                 ]),
                 'presentationLetter' => strtoupper(
                     $this->getDeliverablePresentationLetter([
-                        'deliverableId' => $data['meta']['deliverableId']
+                        'deliverableId' => $data['deliverableId']
                     ])
                 )
             ]);
