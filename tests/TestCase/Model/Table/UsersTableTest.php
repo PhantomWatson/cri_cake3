@@ -103,5 +103,4 @@ class UsersTableTest extends TestCase
         $actual = $results->first()->id;
         $this->assertEquals($expected, $actual);
     }
-
 }
