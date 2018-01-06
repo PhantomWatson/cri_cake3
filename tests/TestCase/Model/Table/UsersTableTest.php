@@ -7,6 +7,7 @@ use Cake\TestSuite\TestCase;
 
 /**
  * App\Model\Table\UsersTable Test Case
+ * @property UsersTable $Users
  */
 class UsersTableTest extends TestCase
 {
@@ -81,4 +82,26 @@ class UsersTableTest extends TestCase
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
+
+    /**
+     * Tests UsersTable::getAdminEmailRecipients
+     *
+     * @return void
+     */
+    public function testGetAlertRecipients()
+    {
+        $results = $this->Users->getAdminEmailRecipients('ICI');
+        $expected = 1;
+        $actual = $results->first()->id;
+        $this->assertEquals($expected, $actual);
+
+        $results = $this->Users->getAdminEmailRecipients('CBER');
+        $actual = $results->first()->id;
+        $this->assertEquals($expected, $actual);
+
+        $results = $this->Users->getAdminEmailRecipients('both');
+        $actual = $results->first()->id;
+        $this->assertEquals($expected, $actual);
+    }
+
 }
