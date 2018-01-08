@@ -70,8 +70,7 @@ class AlertsControllerTest extends ApplicationTest
         $surveysTable = TableRegistry::get('Surveys');
         $surveys = $surveysTable->find()->where(['community_id' => 1])->all();
         foreach ($surveys as $survey) {
-            $survey->community_id = 2;
-            $surveysTable->save($survey);
+            $surveysTable->delete($survey);
         }
         $this->get([
             'controller' => 'Alerts',
