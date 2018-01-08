@@ -19,8 +19,9 @@ class AlertsControllerTest extends ApplicationTest
         'app.clients_communities',
         'app.communities',
         'app.queued_jobs',
+        'app.responses',
         'app.surveys',
-        'app.users',
+        'app.users'
     ];
 
     /**
@@ -77,5 +78,39 @@ class AlertsControllerTest extends ApplicationTest
             'action' => 'checkNoOfficialsSurvey'
         ]);
         $this->assertAdminTaskEmailEnqueued('createSurveyNewCommunity');
+    }
+
+    /**
+     * Tests /alerts/check-survey-not-activated
+     *
+     * @return void
+     */
+    public function testActivateSurveyAlert()
+    {
+        $url = [
+            'controller' => 'Alerts',
+            'action' => 'checkSurveyNotActivated'
+        ];
+
+        // Test condition where no alerts are needed
+        $this->get($url);
+        $this->assertAdminTaskEmailNotEnqueued('activateSurvey');
+
+        // Test condition where alerts are needed
+        $surveysTable = TableRegistry::get('Surveys');
+        $responsesTable = TableRegistry::get('Responses');
+        $surveys = $surveysTable->find()->where(['community_id' => 1])->all();
+        foreach ($surveys as $survey) {
+            $survey->active = false;
+            $surveysTable->save($survey);
+            $responses = $responsesTable->find()
+                ->where(['survey_id' => $survey->id])
+                ->all();
+            foreach ($responses as $response) {
+                $responsesTable->delete($response);
+            }
+        }
+        $this->get($url);
+        $this->assertAdminTaskEmailEnqueued('activateSurvey');
     }
 }
