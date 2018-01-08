@@ -16,8 +16,10 @@ namespace App\Test\TestCase;
 
 use App\Application;
 use App\Test\Fixture\UsersFixture;
+use Cake\Database\Expression\QueryExpression;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\MiddlewareQueue;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
@@ -84,5 +86,48 @@ class ApplicationTest extends IntegrationTestCase
             'controller' => 'Users',
             'action' => 'login'
         ]));
+    }
+
+    /**
+     * Asserts that an admin task email with $mailerMethod is enqueued
+     *
+     * @param string $mailerMethod Mailer method name
+     * @return void
+     */
+    protected function assertAdminTaskEmailEnqueued($mailerMethod)
+    {
+        $this->assertGreaterThan(0, $this->getAdminTaskEmailCount($mailerMethod));
+    }
+
+    /**
+     * Asserts that an admin task email with $mailerMethod is not enqueued
+     *
+     * @param string $mailerMethod Mailer method name
+     * @return void
+     */
+    protected function assertAdminTaskEmailNotEnqueued($mailerMethod)
+    {
+        $this->assertEquals(0, $this->getAdminTaskEmailCount($mailerMethod));
+    }
+
+    /**
+     * Returns the count of enqueued email jobs containing $mailerMethod in their `data` fields
+     *
+     * @param string $mailerMethod Mailer method name
+     * @return int
+     */
+    private function getAdminTaskEmailCount($mailerMethod)
+    {
+        $queuedJobsTable = TableRegistry::get('Queue.QueuedJobs');
+
+        return $queuedJobsTable
+            ->find()
+            ->select(['id'])
+            ->where(function ($exp) use ($mailerMethod) {
+                /** @var QueryExpression $exp */
+
+                return $exp->like('data', '%' . $mailerMethod . '%');
+            })
+            ->count();
     }
 }

@@ -48,9 +48,7 @@ class AlertsControllerTest extends ApplicationTest
             'action' => 'checkNoClientAssigned'
         ]);
 
-        $queuedJobsTable = TableRegistry::get('Queue.QueuedJobs');
-        $queuedJob = $queuedJobsTable->find()->first();
-        $this->assertNotEmpty($queuedJob);
+        $this->assertAdminTaskEmailEnqueued('assignClient');
     }
 
     /**
@@ -60,14 +58,12 @@ class AlertsControllerTest extends ApplicationTest
      */
     public function testCreateOfficialsSurveyAlert()
     {
-        $queuedJobsTable = TableRegistry::get('Queue.QueuedJobs');
-
         // Test condition where no alerts are needed
         $this->get([
             'controller' => 'Alerts',
             'action' => 'checkNoOfficialsSurvey'
         ]);
-        $this->assertEmpty($queuedJobsTable->find()->first());
+        $this->assertAdminTaskEmailNotEnqueued('createSurveyNewCommunity');
 
         // Test condition where alerts are needed
         $surveysTable = TableRegistry::get('Surveys');
@@ -80,6 +76,6 @@ class AlertsControllerTest extends ApplicationTest
             'controller' => 'Alerts',
             'action' => 'checkNoOfficialsSurvey'
         ]);
-        $this->assertNotEmpty($queuedJobsTable->find()->first());
+        $this->assertAdminTaskEmailEnqueued('createSurveyNewCommunity');
     }
 }
