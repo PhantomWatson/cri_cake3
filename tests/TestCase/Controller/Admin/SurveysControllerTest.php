@@ -1,20 +1,25 @@
 <?php
 namespace App\Test\TestCase\Controller\Admin;
 
+use App\Model\Table\SurveysTable;
 use App\Test\TestCase\ApplicationTest;
+use Cake\Event\EventList;
+use Cake\ORM\TableRegistry;
 
 /**
  * App\Controller\SurveysController Test Case
+ *
+ * @property SurveysTable $Surveys
  */
 class SurveysControllerTest extends ApplicationTest
 {
-
     /**
      * Fixtures
      *
      * @var array
      */
     public $fixtures = [
+        'app.activity_records',
         'app.areas',
         'app.communities',
         'app.products',
@@ -24,8 +29,25 @@ class SurveysControllerTest extends ApplicationTest
         'app.responses',
         'app.statistics',
         'app.surveys',
-        'app.users'
+        'app.users',
     ];
+
+    /**
+     * SetUp method
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->configRequest([
+            'environment' => ['HTTPS' => 'on']
+        ]);
+
+        $this->Surveys = TableRegistry::get('Surveys');
+        $this->Surveys->getEventManager()->setEventList(new EventList());
+    }
 
     /**
      * Test for /admin/surveys/activate
@@ -125,5 +147,25 @@ class SurveysControllerTest extends ApplicationTest
     public function testView()
     {
         $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Tests that the correct event is fired after deactivating a survey
+     *
+     * @return void
+     */
+    public function testDeactivateEvent()
+    {
+        $this->session($this->adminUser);
+        $surveyId = 1;
+        $url = [
+            'prefix' => 'admin',
+            'controller' => 'Surveys',
+            'action' => 'activate',
+            $surveyId
+        ];
+        $data = ['active' => false];
+        $this->put($url, $data);
+        $this->assertEventFired('Model.Survey.afterDeactivate', $this->_controller->getEventManager());
     }
 }

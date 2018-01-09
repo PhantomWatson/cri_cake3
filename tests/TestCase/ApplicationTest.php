@@ -18,6 +18,7 @@ use App\Application;
 use App\Test\Fixture\UsersFixture;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
+use Cake\Event\EventList;
 use Cake\Http\MiddlewareQueue;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Middleware\AssetMiddleware;
@@ -136,5 +137,22 @@ class ApplicationTest extends IntegrationTestCase
                 return $exp->like('data', '%' . $mailerMethod . '%');
             })
             ->count();
+    }
+
+    /**
+     * Overload controllerSpy() method in order to turn on event tracking
+     *
+     * @param \Cake\Event\Event $event A dispatcher event.
+     * @param \Cake\Controller\Controller|null $controller Controller instance.
+     * @return void
+     */
+    public function controllerSpy($event, $controller = null)
+    {
+        parent::controllerSpy($event, $controller);
+
+        if (isset($this->_controller)) {
+            $eventList = new EventList();
+            $this->_controller->getEventManager()->setEventList($eventList);
+        }
     }
 }
