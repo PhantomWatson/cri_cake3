@@ -56,4 +56,27 @@ class EmailListenerTest extends ApplicationTest
         $listener->sendDeliverOptPresentationEmail($event, $meta);
         $this->assertAdminTaskEmailEnqueued('deliverOptionalPresentation');
     }
+
+    /**
+     * Tests that EmailListener::implementedEvents() contains all required triggers
+     *
+     * @return void
+     */
+    public function testImplementedEvents()
+    {
+        $required = [
+            'Model.Community.afterAutomaticAdvancement' => 'sendCommunityPromotedEmail',
+            'Model.Community.afterScoreIncrease' => 'sendCommunityPromotedEmail',
+            'Model.Survey.afterDeactivate' => 'sendDeliverMandatoryPresentationEmail',
+            'Model.Product.afterPurchase' => 'sendDeliverOptPresentationEmail',
+            'Model.Purchase.afterAdminAdd' => 'sendDeliverOptPresentationEmail',
+            'Model.Delivery.afterAdd' => 'sendSchedulePresentationEmail'
+        ];
+        $listener = new EmailListener();
+        $actual = $listener->implementedEvents();
+        foreach ($required as $event => $method) {
+            $this->assertArrayHasKey($event, $actual);
+            $this->assertEquals($method, $actual[$event]);
+        }
+    }
 }
