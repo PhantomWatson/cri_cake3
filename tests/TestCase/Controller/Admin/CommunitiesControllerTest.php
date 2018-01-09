@@ -623,4 +623,56 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->get($url);
         $this->assertResponseOk();
     }
+
+    /**
+     * Tests correct event dispatching when score changes via /admin/communities/edit
+     *
+     * @return void
+     */
+    public function testEditScoreChangeEvent()
+    {
+        $this->session($this->adminUser);
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'edit',
+            'test-community-1'
+        ]);
+
+        // Test event for score increase
+        $data = ['score' => 2];
+        $this->post($url, $data);
+        $this->assertEventFired('Model.Community.afterScoreIncrease', $this->_controller->getEventManager());
+
+        // Test event for score decrease
+        $data = ['score' => 1];
+        $this->post($url, $data);
+        $this->assertEventFired('Model.Community.afterScoreDecrease', $this->_controller->getEventManager());
+    }
+
+    /**
+     * Tests correct event dispatching when score changes via /admin/communities/progress
+     *
+     * @return void
+     */
+    public function testProgressScoreChangeEvent()
+    {
+        $this->session($this->adminUser);
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'Communities',
+            'action' => 'progress',
+            'test-community-1'
+        ]);
+
+        // Test event for score increase
+        $data = ['score' => 2];
+        $this->put($url, $data);
+        $this->assertEventFired('Model.Community.afterScoreIncrease', $this->_controller->getEventManager());
+
+        // Test event for score decrease
+        $data = ['score' => 1];
+        $this->put($url, $data);
+        $this->assertEventFired('Model.Community.afterScoreDecrease', $this->_controller->getEventManager());
+    }
 }
