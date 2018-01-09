@@ -5,13 +5,16 @@ use App\Event\EmailListener;
 use App\Model\Table\ProductsTable;
 use App\Test\TestCase\ApplicationTest;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
 
 class EmailListenerTest extends ApplicationTest
 {
     public $fixtures = [
+        'app.clients_communities',
         'app.communities',
-        'app.users',
         'app.queued_jobs',
+        'app.surveys',
+        'app.users',
     ];
 
     /**
@@ -78,5 +81,35 @@ class EmailListenerTest extends ApplicationTest
             $this->assertArrayHasKey($event, $actual);
             $this->assertEquals($method, $actual[$event]);
         }
+    }
+
+    /**
+     * Tests EmailListener::sendDeliverOptPresentationEmail()
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function testSendCreateSurveyEmail()
+    {
+        // Create necessary condition
+        $surveysTable = TableRegistry::get('Surveys');
+        $communityId = 1;
+        $surveys = $surveysTable->find()
+            ->where([
+                'community_id' => $communityId
+            ]);
+        foreach ($surveys as $survey) {
+            $surveysTable->delete($survey);
+        }
+
+        // Test if email was enqueued
+        $listener = new EmailListener();
+        $event = new Event('Model.Community.afterScoreIncrease');
+        $meta = [
+            'communityId' => $communityId,
+            'toStep' => 2
+        ];
+        $listener->sendCommunityPromotedEmail($event, $meta);
+        $this->assertAdminTaskEmailEnqueued('createSurvey');
     }
 }
