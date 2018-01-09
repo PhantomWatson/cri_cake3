@@ -20,6 +20,7 @@ class PurchasesControllerTest extends ApplicationTest
         'app.communities',
         'app.products',
         'app.purchases',
+        'app.queued_jobs',
         'app.users'
     ];
 
@@ -78,5 +79,6 @@ class PurchasesControllerTest extends ApplicationTest
         // Confirm that purchase has been successfully made
         $this->assertResponseOk();
         $this->assertTrue($isPurchased());
+        $this->assertEventFired('Model.Product.afterPurchase', $this->_controller->getEventManager());
     }
 }
