@@ -2,6 +2,7 @@
 namespace App\Test\TestCase\Event;
 
 use App\Event\EmailListener;
+use App\Model\Table\DeliverablesTable;
 use App\Model\Table\ProductsTable;
 use App\Test\TestCase\ApplicationTest;
 use Cake\Event\Event;
@@ -111,5 +112,24 @@ class EmailListenerTest extends ApplicationTest
         ];
         $listener->sendCommunityPromotedEmail($event, $meta);
         $this->assertAdminTaskEmailEnqueued('createSurvey');
+    }
+
+    /**
+     * Tests EmailListener::sendSchedulePresentationEmail()
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function testSendSchedulePresentationEmail()
+    {
+        // Test if email was enqueued
+        $listener = new EmailListener();
+        $event = new Event('Model.Delivery.afterAdd');
+        $meta = [
+            'communityId' => 1,
+            'deliverableId' => DeliverablesTable::PRESENTATION_A_MATERIALS
+        ];
+        $listener->sendSchedulePresentationEmail($event, $meta);
+        $this->assertAdminTaskEmailEnqueued('schedulePresentation');
     }
 }
