@@ -96,7 +96,9 @@ class ApplicationTest extends IntegrationTestCase
      */
     protected function assertAdminTaskEmailEnqueued($mailerMethod)
     {
-        $this->assertGreaterThan(0, $this->getAdminTaskEmailCount($mailerMethod));
+        $count = $this->getAdminTaskEmailCount($mailerMethod);
+        $msg = "At least one admin task email for the mailer method $mailerMethod() was expected, but none were found.";
+        $this->assertGreaterThan(0, $this->getAdminTaskEmailCount($mailerMethod), $msg);
     }
 
     /**
@@ -107,7 +109,12 @@ class ApplicationTest extends IntegrationTestCase
      */
     protected function assertAdminTaskEmailNotEnqueued($mailerMethod)
     {
-        $this->assertEquals(0, $this->getAdminTaskEmailCount($mailerMethod));
+        $count = $this->getAdminTaskEmailCount($mailerMethod);
+        $msg = "No enqueued admin task emails for the mailer method $mailerMethod() were expected, but " .
+            $count .
+            __n(' was ', ' were ', $count) .
+            'found.';
+        $this->assertEquals(0, $count, $msg);
     }
 
     /**
