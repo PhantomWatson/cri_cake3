@@ -13,9 +13,11 @@ class EmailListenerTest extends ApplicationTest
     public $fixtures = [
         'app.clients_communities',
         'app.communities',
+        'app.deliverables',
+        'app.deliveries',
         'app.queued_jobs',
         'app.surveys',
-        'app.users',
+        'app.users'
     ];
 
     /**
@@ -131,5 +133,24 @@ class EmailListenerTest extends ApplicationTest
         ];
         $listener->sendSchedulePresentationEmail($event, $meta);
         $this->assertAdminTaskEmailEnqueued('schedulePresentation');
+    }
+
+    /**
+     * Tests EmailListener::sendCommunityPromotedEmail() sends deliverPolicyDev email
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function testSendDeliverPolicyDevEmail()
+    {
+        // Test if email was enqueued
+        $listener = new EmailListener();
+        $event = new Event('Model.Community.afterScoreIncrease');
+        $meta = [
+            'communityId' => 1,
+            'toStep' => 4
+        ];
+        $listener->sendCommunityPromotedEmail($event, $meta);
+        $this->assertAdminTaskEmailEnqueued('deliverPolicyDev');
     }
 }
