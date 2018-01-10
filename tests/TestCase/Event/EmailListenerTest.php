@@ -29,7 +29,7 @@ class EmailListenerTest extends ApplicationTest
     }
 
     /**
-     * Tests EmailListener::sendDeliverMandatoryPresentationEmail()
+     * Tests EmailListener::sendDeliverMandatoryPresentationEmail() sends deliverMandatoryPresentation email
      *
      * @return void
      * @throws \Exception
@@ -44,7 +44,7 @@ class EmailListenerTest extends ApplicationTest
     }
 
     /**
-     * Tests EmailListener::sendDeliverOptPresentationEmail()
+     * Tests EmailListener::sendDeliverOptPresentationEmail() sends deliverOptionalPresentation email
      *
      * @return void
      * @throws \Exception
@@ -85,7 +85,7 @@ class EmailListenerTest extends ApplicationTest
     }
 
     /**
-     * Tests EmailListener::sendDeliverOptPresentationEmail()
+     * Tests that EmailListener::sendCommunityPromotedEmail() sends createSurvey email
      *
      * @return void
      * @throws \Exception
@@ -115,7 +115,7 @@ class EmailListenerTest extends ApplicationTest
     }
 
     /**
-     * Tests EmailListener::sendSchedulePresentationEmail()
+     * Tests EmailListener::sendSchedulePresentationEmail() sends schedulePresentation email
      *
      * @return void
      * @throws \Exception
