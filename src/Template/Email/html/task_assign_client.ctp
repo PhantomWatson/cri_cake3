@@ -7,3 +7,5 @@
     Once it is known who will be representing this community, please
     <a href="<?= $actionUrl ?>">create their client accounts</a>.
 </p>
+
+<?= $this->element('Email/html/admin_email_settings_link') ?>

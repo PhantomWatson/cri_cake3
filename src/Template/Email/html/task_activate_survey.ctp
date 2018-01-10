@@ -7,3 +7,5 @@
     CRI account, but has not yet been activated. Please <a href="<?= $actionUrl ?>">activate this questionnaire</a> so
     that invitations can be sent out and responses collected through the CRI website.
 </p>
+
+<?= $this->element('Email/html/admin_email_settings_link') ?>

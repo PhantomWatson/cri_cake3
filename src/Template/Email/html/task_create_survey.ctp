@@ -12,3 +12,5 @@
 <p>
     Once this is done, <a href="<?= $actionUrl ?>">link the community's CRI account to the new questionnaire</a>.
 </p>
+
+<?= $this->element('Email/html/admin_email_settings_link') ?>

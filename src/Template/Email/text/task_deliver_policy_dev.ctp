@@ -11,3 +11,5 @@
 ?>
 
 Once this is done, please report those materials delivered by visiting <?= $actionUrl ?>.
+
+<?= $this->element('Email/text/admin_email_settings_link') ?>
