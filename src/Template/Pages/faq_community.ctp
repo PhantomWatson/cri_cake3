@@ -17,10 +17,10 @@
         </span>
     </a>
     <br />
-    <a href="/files/CRI-GuideForCommunties-2016-09-21.pdf" class="with_.pdficon">
+    <a href="/files/CRI-GuideForCommunties-2018-01-16.pdf" class="with_.pdficon">
         <img src="/data_center/img/icons/drive-download.png" />
         <span>
-            Printable user guide for communities (September 2016 version)
+            Printable user guide for communities (January 2018)
         </span>
     </a>
 </p>
