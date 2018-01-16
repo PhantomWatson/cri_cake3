@@ -17,7 +17,7 @@
         </span>
     </a>
     <br />
-    <a href="/files/CRI-GuideForCommunties-2018-01-16.pdf" class="with_.pdficon">
+    <a href="/files/CRI-GuideForCommunties-2018-01-16.pdf" class="with_icon">
         <img src="/data_center/img/icons/drive-download.png" />
         <span>
             Printable user guide for communities (January 2018)
