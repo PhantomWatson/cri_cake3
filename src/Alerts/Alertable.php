@@ -195,4 +195,56 @@ class Alertable
 
         return true;
     }
+
+    /**
+     * Checks if the community is eligible to receive a "create officials survey" alert
+     *
+     * Checks if
+     * - Survey does not exist
+     * - The corresponding product has been purchased
+     *
+     * @return bool
+     */
+    public function createOfficialsSurvey()
+    {
+        return $this->createSurvey('official');
+    }
+
+    /**
+     * Checks if the community is eligible to receive a "create officials survey" alert
+     *
+     * Checks if
+     * - Survey does not exist
+     * - The corresponding product has been purchased
+     *
+     * @return bool
+     */
+    public function createOrganizationsSurvey()
+    {
+        return $this->createSurvey('organization');
+    }
+
+    /**
+     * Checks if the community is eligible to receive a "create survey" alert
+     *
+     * Checks if
+     * - Survey does not exist
+     * - The corresponding product has been purchased
+     *
+     * @param string $type Survey type (official or organization)
+     * @return bool
+     */
+    private function createSurvey($type)
+    {
+        if ($this->surveys->hasBeenCreated($this->community->id, $type)) {
+            return false;
+        }
+
+        $productId = $type == 'official' ? ProductsTable::OFFICIALS_SURVEY : ProductsTable::ORGANIZATIONS_SURVEY;
+        if (!$this->products->isPurchased($this->community->id, $productId)) {
+            return false;
+        }
+
+        return true;
+    }
 }
