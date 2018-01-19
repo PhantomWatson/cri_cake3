@@ -2,8 +2,10 @@
 namespace App\Shell;
 
 use App\Alerts\Alertable;
+use App\Alerts\AlertRecipients;
 use Cake\Console\Shell;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Inflector;
 use ReflectionClass;
 
 class AdminAlertsShell extends Shell
@@ -46,20 +48,41 @@ class AdminAlertsShell extends Shell
         // Remove __construct() from list of methods
         array_shift($alertableMethods);
 
+        $alertableCommunities = [];
         foreach ($communities as $communityId => $communityName) {
             $alertable = new Alertable($communityId);
-            $positiveAlertables = [];
             foreach ($alertableMethods as $alertableMethod) {
                 if ($alertable->{$alertableMethod->name}()) {
-                    $positiveAlertables[] = $alertableMethod->name;
+                    $alertableCommunities[$communityName][] = $alertableMethod->name;
                 }
             }
-            if (empty($positiveAlertables)) {
-                $this->out("$communityName: none");
-            } else {
+        }
+
+        if (empty($alertableCommunities)) {
+            $this->out('No alert conditions met for any communities');
+        } else {
+            $msg = 'Alert conditions met by ' .
+                count($alertableCommunities) .
+                __n(' community', ' communities', count($alertableCommunities)) .
+                "\n";
+            $this->out($msg);
+
+            $alertRecipientCounts = [];
+            $alertRecipients = new AlertRecipients();
+
+            foreach ($alertableCommunities as $communityName => $alertables) {
                 $this->success("$communityName:");
-                foreach ($positiveAlertables as $positiveAlertable) {
-                    $this->success(" - $positiveAlertable");
+                foreach ($alertables as $alertable) {
+                    if (array_key_exists($alertable, $alertRecipientCounts)) {
+                        $recipientCount = $alertRecipientCounts[$alertable];
+                    } else {
+                        $recipientCount = $alertRecipients->getRecipientCount($alertable);
+                        $recipientCount .= __n(' recipient', ' recipients', $recipientCount);
+                        $alertRecipientCounts[$alertable] = $recipientCount;
+                    }
+
+                    $alertableNice = Inflector::humanize(Inflector::underscore($alertable));
+                    $this->success(" - $alertableNice ($recipientCount)");
                 }
             }
         }

@@ -1,0 +1,89 @@
+<?php
+namespace App\Alerts;
+
+use App\Model\Entity\User;
+use Cake\Network\Exception\InternalErrorException;
+use Cake\ORM\Query;
+use Cake\ORM\TableRegistry;
+
+class AlertRecipients
+{
+    public function getUserGroup($alertMethodName)
+    {
+        $adminGroupsMap = [
+            'deliverPresentationA' => 'CBER',
+            'deliverPresentationB' => 'CBER',
+            'deliverPresentationC' => 'CBER',
+            'deliverPresentationD' => 'CBER',
+            'createOfficialsSurvey' => 'ICI',
+            'createOrganizationsSurvey' => 'ICI',
+            'createClients' => 'ICI',
+            'activateSurvey' => 'ICI',
+            'schedulePresentation' => 'ICI',
+            'deliverPolicyDev' => 'both',
+        ];
+
+        if (!array_key_exists($alertMethodName, $adminGroupsMap)) {
+            throw new InternalErrorException("Alert method $alertMethodName not recognized");
+        }
+
+        return $adminGroupsMap[$alertMethodName];
+    }
+
+    /**
+     * Returns the count of users who would receive an alert of the specified type
+     *
+     * @param string $alertMethodName Alert method name (e.g. deliverPresentationA)
+     * @return int
+     */
+    public function getRecipientCount($alertMethodName)
+    {
+        $adminGroup = $this->getUserGroup($alertMethodName);
+
+        return $this->findRecipients($adminGroup)->count();
+    }
+
+    /**
+     * Returns an array of users who should receive an alert of the specified type
+     *
+     * @param string $alertMethodName Alert method name (e.g. deliverPresentationA)
+     * @return User[]
+     */
+    public function getRecipients($alertMethodName)
+    {
+        $adminGroup = $this->getUserGroup($alertMethodName);
+
+        return $this->findRecipients($adminGroup)->all();
+    }
+
+    /**
+     * Returns a Query for finding users subscribed to the specified mailing list
+     *
+     * @param string $adminGroup Either 'CBER', 'ICI', or 'both'
+     * @return Query
+     * @throws InternalErrorException
+     */
+    public function findRecipients($adminGroup)
+    {
+        $usersTable = TableRegistry::get('Users');
+
+        if ($adminGroup == 'ICI') {
+            return $usersTable->find()->where(['ici_email_optin' => true]);
+        }
+
+        if ($adminGroup == 'CBER') {
+            return $usersTable->find()->where(['cber_email_optin' => true]);
+        }
+
+        if ($adminGroup == 'both') {
+            return $usersTable->find()->where([
+                'OR' => [
+                    'cber_email_optin' => true,
+                    'ici_email_optin' => true
+                ]
+            ]);
+        }
+
+        throw new InternalErrorException("Admin group $adminGroup not recognized");
+    }
+}
