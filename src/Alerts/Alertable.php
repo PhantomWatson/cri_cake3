@@ -127,4 +127,72 @@ class Alertable
 
         return true;
     }
+
+    /**
+     * Checks if the community is eligible to receive "deliver presentation B materials" alert
+     *
+     * Checks if
+     * - Community is active
+     * - Presentation has not been delivered
+     * - The corresponding product has been purchased
+     *
+     * @return bool
+     */
+    public function deliverPresentationB()
+    {
+        if (!$this->community->active) {
+            return false;
+        }
+
+        $productId = ProductsTable::OFFICIALS_SUMMIT;
+        $deliverableId = DeliverablesTable::PRESENTATION_B_MATERIALS;
+
+        return $this->deliverOptionalPresentation($deliverableId, $productId);
+    }
+
+    /**
+     * Checks if the community is eligible to receive "deliver presentation D materials" alert
+     *
+     * Checks if
+     * - Community is active
+     * - Presentation has not been delivered
+     * - The corresponding product has been purchased
+     *
+     * @return bool
+     */
+    public function deliverPresentationD()
+    {
+        if (!$this->community->active) {
+            return false;
+        }
+
+        $productId = ProductsTable::ORGANIZATIONS_SUMMIT;
+        $deliverableId = DeliverablesTable::PRESENTATION_D_MATERIALS;
+
+        return $this->deliverOptionalPresentation($deliverableId, $productId);
+    }
+
+    /**
+     * Checks if the community is eligible to receive "deliver optional presentation materials" alert
+     *
+     * Checks if
+     * - Presentation has not been delivered
+     * - The corresponding product has been purchased
+     *
+     * @param int $deliverableId Deliverable ID
+     * @param int $productId Product ID
+     * @return bool
+     */
+    private function deliverOptionalPresentation($deliverableId, $productId)
+    {
+        if ($this->deliveries->isRecorded($this->community->id, $deliverableId)) {
+            return false;
+        }
+
+        if (!$this->products->isPurchased($this->community->id, $productId)) {
+            return false;
+        }
+
+        return true;
+    }
 }
