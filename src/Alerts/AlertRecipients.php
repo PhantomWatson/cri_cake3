@@ -8,6 +8,12 @@ use Cake\ORM\TableRegistry;
 
 class AlertRecipients
 {
+    /**
+     * Returns the name of the user group (CBER, ICI, or both) that receives alerts of the specified type
+     *
+     * @param string $alertMethodName Alert method name
+     * @return string
+     */
     public function getUserGroup($alertMethodName)
     {
         $adminGroupsMap = [
