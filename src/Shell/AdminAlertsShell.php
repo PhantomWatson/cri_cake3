@@ -73,6 +73,7 @@ class AdminAlertsShell extends Shell
             foreach ($alertableCommunities as $communityName => $alertables) {
                 $this->success("$communityName:");
                 foreach ($alertables as $alertable) {
+                    // Remember recipient count for each alert type
                     if (array_key_exists($alertable, $alertRecipientCounts)) {
                         $recipientCount = $alertRecipientCounts[$alertable];
                     } else {
@@ -82,7 +83,7 @@ class AdminAlertsShell extends Shell
                     }
 
                     $alertableNice = Inflector::humanize(Inflector::underscore($alertable));
-                    $this->success(" - $alertableNice ($recipientCount)");
+                    $this->out(" - $alertableNice ($recipientCount)");
                 }
             }
         }
