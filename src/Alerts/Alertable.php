@@ -13,7 +13,7 @@ use Cake\ORM\TableRegistry;
  * Class Alertable
  *
  * Methods return a boolean values representing whether or not the selected communities qualify to receive the
- * specified alerts
+ * specified alerts. Only active communities qualify for alerts.
  *
  * @package App\Alerts
  * @property CommunitiesTable $communities
@@ -286,7 +286,7 @@ class Alertable
     }
 
     /**
-     * Checks if the community is eligible to receive a "activate officials survey" alert
+     * Checks if the community is eligible to receive an "activate officials survey" alert
      *
      * Checks if
      * - Survey is inactive
@@ -305,7 +305,7 @@ class Alertable
     }
 
     /**
-     * Checks if the community is eligible to receive a "activate organizations survey" alert
+     * Checks if the community is eligible to receive an "activate organizations survey" alert
      *
      * Checks if
      * - Survey is inactive
@@ -324,7 +324,7 @@ class Alertable
     }
 
     /**
-     * Checks if the community is eligible to receive a "activate survey" alert
+     * Checks if the community is eligible to receive an "activate survey" alert
      *
      * Checks if
      * - Survey is inactive
@@ -346,6 +346,116 @@ class Alertable
         }
 
         if ($this->surveys->hasResponses($surveyId)) {
+            return false;
+        }
+
+        if (!$this->products->isPurchased($this->community->id, $productId)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if the community is eligible to receive a "schedule presentation a" alert
+     *
+     * Checks if
+     * - Presentation materials have been delivered
+     * - Presentation has not been scheduled
+     * - The corresponding product has been purchased
+     *
+     * @return bool
+     */
+    public function schedulePresentationA()
+    {
+        $presentationLetter = 'a';
+        $productId = ProductsTable::OFFICIALS_SURVEY;
+        $deliverableId = DeliverablesTable::PRESENTATION_A_MATERIALS;
+
+        return $this->schedulePresentation($presentationLetter, $productId, $deliverableId);
+    }
+
+    /**
+     * Checks if the community is eligible to receive a "schedule presentation b" alert
+     *
+     * Checks if
+     * - Presentation materials have been delivered
+     * - Presentation has not been scheduled
+     * - The corresponding product has been purchased
+     *
+     * @return bool
+     */
+    public function schedulePresentationB()
+    {
+        $presentationLetter = 'b';
+        $productId = ProductsTable::OFFICIALS_SUMMIT;
+        $deliverableId = DeliverablesTable::PRESENTATION_B_MATERIALS;
+
+        return $this->schedulePresentation($presentationLetter, $productId, $deliverableId);
+    }
+
+    /**
+     * Checks if the community is eligible to receive a "schedule presentation c" alert
+     *
+     * Checks if
+     * - Presentation materials have been delivered
+     * - Presentation has not been scheduled
+     * - The corresponding product has been purchased
+     *
+     * @return bool
+     */
+    public function schedulePresentationC()
+    {
+        $presentationLetter = 'c';
+        $productId = ProductsTable::ORGANIZATIONS_SURVEY;
+        $deliverableId = DeliverablesTable::PRESENTATION_C_MATERIALS;
+
+        return $this->schedulePresentation($presentationLetter, $productId, $deliverableId);
+    }
+
+    /**
+     * Checks if the community is eligible to receive a "schedule presentation d" alert
+     *
+     * Checks if
+     * - Presentation materials have been delivered
+     * - Presentation has not been scheduled
+     * - The corresponding product has been purchased
+     *
+     * @return bool
+     */
+    public function schedulePresentationD()
+    {
+        $presentationLetter = 'd';
+        $productId = ProductsTable::ORGANIZATIONS_SUMMIT;
+        $deliverableId = DeliverablesTable::PRESENTATION_D_MATERIALS;
+
+        return $this->schedulePresentation($presentationLetter, $productId, $deliverableId);
+    }
+
+    /**
+     * Checks if the community is eligible to receive a "schedule presentation" alert
+     *
+     * Checks if
+     * - Presentation materials have been delivered
+     * - Presentation has not been scheduled
+     * - The corresponding product has been purchased
+     *
+     * @param string $presentationLetter a, b, c, or d
+     * @param int $productId Product ID
+     * @param int $deliverableId Deliverable ID
+     * @return bool
+     */
+    private function schedulePresentation($presentationLetter, $productId, $deliverableId)
+    {
+        if (!$this->community->active) {
+            return false;
+        }
+
+        if (!$this->deliveries->isRecorded($this->community->id, $deliverableId)) {
+            return false;
+        }
+
+        if ($this->community->{$presentationLetter} != null) {
             return false;
         }
 
