@@ -109,6 +109,10 @@ class Alertable
      */
     private function deliverMandatoryPresentation($surveyId, $deliverableId, $productId)
     {
+        if (!$this->community->active) {
+            return false;
+        }
+
         if ($this->surveys->isActive($surveyId)) {
             return false;
         }
@@ -185,6 +189,10 @@ class Alertable
      */
     private function deliverOptionalPresentation($deliverableId, $productId)
     {
+        if (!$this->community->active) {
+            return false;
+        }
+
         if ($this->deliveries->isRecorded($this->community->id, $deliverableId)) {
             return false;
         }
@@ -207,6 +215,10 @@ class Alertable
      */
     public function createOfficialsSurvey()
     {
+        if (!$this->community->active) {
+            return false;
+        }
+
         return $this->createSurvey('official');
     }
 
@@ -221,6 +233,10 @@ class Alertable
      */
     public function createOrganizationsSurvey()
     {
+        if (!$this->community->active) {
+            return false;
+        }
+
         return $this->createSurvey('organization');
     }
 
@@ -236,6 +252,10 @@ class Alertable
      */
     private function createSurvey($type)
     {
+        if (!$this->community->active) {
+            return false;
+        }
+
         if ($this->surveys->hasBeenCreated($this->community->id, $type)) {
             return false;
         }
@@ -258,6 +278,10 @@ class Alertable
      */
     public function createClients()
     {
+        if (!$this->community->active) {
+            return false;
+        }
+
         return $this->communities->getClientCount($this->community->id) === 0;
     }
 }
