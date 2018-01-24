@@ -247,4 +247,17 @@ class Alertable
 
         return true;
     }
+
+    /**
+     * Checks if the community is eligible to receive a "create clients" alert
+     *
+     * Checks if
+     * - Community has no clients
+     *
+     * @return bool
+     */
+    public function createClients()
+    {
+        return $this->communities->getClientCount($this->community->id) === 0;
+    }
 }
