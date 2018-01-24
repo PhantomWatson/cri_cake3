@@ -1,15 +1,15 @@
 <?php
 namespace App\Shell;
 
-use App\Alerts\Alertable;
+use App\Alerts\Alert;
 use App\Alerts\AlertRecipients;
 use Cake\Console\Shell;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
-use ReflectionClass;
 
 class AdminAlertsShell extends Shell
 {
+    private $alertRecipientCounts = [];
+
     /**
      * Display help for this console.
      *
@@ -35,28 +35,7 @@ class AdminAlertsShell extends Shell
      */
     public function status()
     {
-        $communitiesTable = TableRegistry::get('Communities');
-        $communities = $communitiesTable
-            ->find('list')
-            ->where(['active' => true])
-            ->orderAsc('name');
-
-        // Get list of Alertable methods
-        $class = new ReflectionClass('App\Alerts\Alertable');
-        $alertableMethods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
-
-        // Remove __construct() from list of methods
-        array_shift($alertableMethods);
-
-        $alertableCommunities = [];
-        foreach ($communities as $communityId => $communityName) {
-            $alertable = new Alertable($communityId);
-            foreach ($alertableMethods as $alertableMethod) {
-                if ($alertable->{$alertableMethod->name}()) {
-                    $alertableCommunities[$communityName][] = $alertableMethod->name;
-                }
-            }
-        }
+        $alertableCommunities = Alert::getAlertableCommunities();
 
         if (empty($alertableCommunities)) {
             $this->out('No alert conditions met for any communities');
@@ -67,25 +46,34 @@ class AdminAlertsShell extends Shell
                 "\n";
             $this->out($msg);
 
-            $alertRecipientCounts = [];
-            $alertRecipients = new AlertRecipients();
-
-            foreach ($alertableCommunities as $communityName => $alertables) {
-                $this->success("$communityName:");
-                foreach ($alertables as $alertable) {
-                    // Remember recipient count for each alert type
-                    if (array_key_exists($alertable, $alertRecipientCounts)) {
-                        $recipientCount = $alertRecipientCounts[$alertable];
-                    } else {
-                        $recipientCount = $alertRecipients->getRecipientCount($alertable);
-                        $recipientCount .= __n(' recipient', ' recipients', $recipientCount);
-                        $alertRecipientCounts[$alertable] = $recipientCount;
-                    }
-
+            foreach ($alertableCommunities as $community) {
+                $this->success($community['name'] . ':');
+                foreach ($community['alerts'] as $alertable) {
+                    $recipientCount = $this->getRecipientCount($alertable);
                     $alertableNice = Inflector::humanize(Inflector::underscore($alertable));
                     $this->out(" - $alertableNice ($recipientCount)");
                 }
             }
         }
+    }
+
+    /**
+     * Returns the number of recipients who would receive the specified alert
+     *
+     * @param string $alertMethodName Such as createClients or deliverPolicyDev
+     * @return int
+     */
+    private function getRecipientCount($alertMethodName)
+    {
+        $alertRecipients = new AlertRecipients();
+        if (array_key_exists($alertMethodName, $this->alertRecipientCounts)) {
+            return $this->alertRecipientCounts[$alertMethodName];
+        }
+
+        $recipientCount = $alertRecipients->getRecipientCount($alertMethodName);
+        $recipientCount .= __n(' recipient', ' recipients', $recipientCount);
+        $this->alertRecipientCounts[$alertMethodName] = $recipientCount;
+
+        return $recipientCount;
     }
 }
