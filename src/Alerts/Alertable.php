@@ -284,4 +284,75 @@ class Alertable
 
         return $this->communities->getClientCount($this->community->id) === 0;
     }
+
+    /**
+     * Checks if the community is eligible to receive a "activate officials survey" alert
+     *
+     * Checks if
+     * - Survey is inactive
+     * - Survey has no responses
+     * - The corresponding product has been purchased
+     *
+     * @return bool
+     */
+    public function activateOfficialsSurvey()
+    {
+        $surveyType = 'official';
+        $surveyId = $this->surveys->getSurveyId($this->community->id, $surveyType);
+        $productId = ProductsTable::OFFICIALS_SURVEY;
+
+        return $this->activateSurvey($surveyId, $productId);
+    }
+
+    /**
+     * Checks if the community is eligible to receive a "activate organizations survey" alert
+     *
+     * Checks if
+     * - Survey is inactive
+     * - Survey has no responses
+     * - The corresponding product has been purchased
+     *
+     * @return bool
+     */
+    public function activateOrgsSurvey()
+    {
+        $surveyType = 'organization';
+        $surveyId = $this->surveys->getSurveyId($this->community->id, $surveyType);
+        $productId = ProductsTable::ORGANIZATIONS_SURVEY;
+
+        return $this->activateSurvey($surveyId, $productId);
+    }
+
+    /**
+     * Checks if the community is eligible to receive a "activate survey" alert
+     *
+     * Checks if
+     * - Survey is inactive
+     * - Survey has no responses
+     * - The corresponding product has been purchased
+     *
+     * @param int $surveyId Survey ID
+     * @param int $productId Product ID
+     * @return bool
+     */
+    private function activateSurvey($surveyId, $productId)
+    {
+        if (!$this->community->active) {
+            return false;
+        }
+
+        if ($this->surveys->isActive($surveyId)) {
+            return false;
+        }
+
+        if ($this->surveys->hasResponses($surveyId)) {
+            return false;
+        }
+
+        if (!$this->products->isPurchased($this->community->id, $productId)) {
+            return false;
+        }
+
+        return true;
+    }
 }
