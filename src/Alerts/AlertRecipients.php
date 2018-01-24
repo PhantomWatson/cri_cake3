@@ -24,8 +24,12 @@ class AlertRecipients
             'createOfficialsSurvey' => 'ICI',
             'createOrganizationsSurvey' => 'ICI',
             'createClients' => 'ICI',
-            'activateSurvey' => 'ICI',
-            'schedulePresentation' => 'ICI',
+            'activateOfficialsSurvey' => 'ICI',
+            'activateOrgsSurvey' => 'ICI',
+            'schedulePresentationA' => 'ICI',
+            'schedulePresentationB' => 'ICI',
+            'schedulePresentationC' => 'ICI',
+            'schedulePresentationD' => 'ICI',
             'deliverPolicyDev' => 'both',
         ];
 
