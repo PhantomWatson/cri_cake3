@@ -465,4 +465,31 @@ class Alertable
 
         return true;
     }
+
+    /**
+     * Checks if the community is eligible to receive a "deliver policy development materials" alert
+     *
+     * Checks if
+     * - Community is on Step Four
+     * - Policy dev has not yet been delivered
+     *
+     * @return bool
+     */
+    public function deliverPolicyDev()
+    {
+        if (!$this->community->active) {
+            return false;
+        }
+
+        if ($this->community->score != 4) {
+            return false;
+        }
+
+        $deliverableId = DeliverablesTable::POLICY_DEVELOPMENT;
+        if ($this->deliveries->isRecorded($this->community->id, $deliverableId)) {
+            return false;
+        }
+
+        return true;
+    }
 }
