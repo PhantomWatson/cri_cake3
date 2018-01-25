@@ -75,11 +75,10 @@ class AlertSender
      * @return void
      * @throws \Exception
      */
-    public function sendToGroup($alertName, $data)
+    public function sendToGroup($alertName, $data = [])
     {
         $data['alert'] = $alertName;
-        $adminGroupName = $this->alertRecipients->getUserGroup($alertName);
-        $recipients = $this->alertRecipients->getRecipients($adminGroupName);
+        $recipients = $this->alertRecipients->getRecipients($alertName);
         foreach ($recipients as $recipient) {
             $this->enqueueEmail($recipient, $data);
         }
