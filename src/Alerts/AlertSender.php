@@ -9,6 +9,7 @@ use App\Model\Table\ProductsTable;
 use App\Model\Table\SurveysTable;
 use App\Model\Table\UsersTable;
 use Cake\ORM\TableRegistry;
+use DateTime;
 use Queue\Model\Table\QueuedJobsTable;
 
 /**
@@ -99,5 +100,45 @@ class AlertSender
         if ($alertable->{$alertName}()) {
             $this->sendToGroup($alertName, $data);
         }
+    }
+
+    /**
+     * Returns the DateTime of the most recent time the specified alert was sent within a given threshold, or FALSE
+     * if no such alert was sent within that threshold
+     *
+     * @param string $email Recipient email address
+     * @param string $alertName Name of mailer method for alert
+     * @return DateTime|bool
+     */
+    public function isRecentlySent($email, $alertName)
+    {
+        $threshold = '-7 days';
+        $queuedJobsTable = TableRegistry::get('Queue.QueuedJobs');
+        $recentEmails = $queuedJobsTable->find()
+            ->select(['created', 'data'])
+            ->where([
+                'job_type' => 'AdminTaskEmail',
+                'reference' => $email,
+                'created >=' => new DateTime($threshold)
+            ])
+            ->orderDesc('created')
+            ->all();
+
+        if ($recentEmails->isEmpty()) {
+            return false;
+        }
+
+        foreach ($recentEmails as $recentEmail) {
+            $data = unserialize($recentEmail['data']);
+            $isMatch = isset($data['community']['id']) &&
+                $data['community']['id'] == $this->community->id &&
+                isset($data['alert']) &&
+                $data['alert'] == $alertName;
+            if ($isMatch) {
+                return $recentEmail['created'];
+            }
+        }
+
+        return false;
     }
 }
