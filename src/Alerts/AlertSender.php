@@ -49,18 +49,20 @@ class AlertSender
      * Enqueues an alert email
      *
      * @param User $recipient Alert recipients
+     * @param string $alertName Such as createClients or deliverPolicyDev
      * @param array|null $data Metadata to include in queued job in addition to default data
      * @throws \Exception
-     * @return \Cake\ORM\Entity Saved job entity
+     * @return bool
      */
-    public function enqueueEmail($recipient, $data = null)
+    public function enqueueEmail($recipient, $alertName, $data = null)
     {
         $data['user']['email'] = $recipient->email;
         $data['user']['name'] = $recipient->name;
         $data['community']['id'] = $this->community->id;
         $data['community']['name'] = $this->community->name;
+        $data['alert'] = $alertName;
 
-        return $this->queuedJobs->createJob(
+        return (bool)$this->queuedJobs->createJob(
             'AdminTaskEmail',
             $data,
             ['reference' => $recipient->email]
@@ -77,10 +79,9 @@ class AlertSender
      */
     public function sendToGroup($alertName, $data = [])
     {
-        $data['alert'] = $alertName;
         $recipients = $this->alertRecipients->getRecipients($alertName);
         foreach ($recipients as $recipient) {
-            $this->enqueueEmail($recipient, $data);
+            $this->enqueueEmail($recipient, $alertName, $data);
         }
     }
 
