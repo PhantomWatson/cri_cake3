@@ -1,13 +1,33 @@
 <?php
 namespace App\Mailer;
 
+use App\Model\Table\CommunitiesTable;
 use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 
+/**
+ * Class AdminAlertMailer
+ * @package App\Mailer
+ * @property CommunitiesTable $communities
+ */
 class AdminAlertMailer extends Mailer
 {
+    private $communities;
+
+    /**
+     * AdminAlertMailer constructor
+     *
+     * @param Email|null $email Email object or null
+     */
+    public function __construct(Email $email = null)
+    {
+        parent::__construct($email);
+        $this->communities = TableRegistry::get('Communities');
+    }
+
     /**
      * Defines a "deliver presentation A" email
      *
@@ -141,5 +161,54 @@ class AdminAlertMailer extends Mailer
         ];
 
         return str_replace('http://', 'https://', Router::url($url));
+    }
+
+    /**
+     * Defines a "create officials survey" email
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function createOfficialsSurvey($data)
+    {
+        $data['community']['slug'] = $this->communities->get($data['community']['id'])->slug;
+        $data['surveyType'] = 'official';
+
+        return $this->createSurvey($data);
+    }
+
+    /**
+     * Defines a "create organizations survey" email
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function createOrgsSurvey($data)
+    {
+        $data['community']['slug'] = $this->communities->get($data['community']['id'])->slug;
+        $data['surveyType'] = 'organization';
+
+        return $this->createSurvey($data);
+    }
+
+    /**
+     * Defines an email informing an administrator that it's time to create a survey
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    private function createSurvey($data)
+    {
+        return $this
+            ->setStandardConfig($data)
+            ->setTemplate('task_create_survey')
+            ->setViewVars([
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Surveys',
+                    'action' => 'link',
+                    $data['community']['slug'],
+                    $data['surveyType']
+                ])
+            ]);
     }
 }
