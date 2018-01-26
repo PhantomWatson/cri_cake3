@@ -211,4 +211,25 @@ class AdminAlertMailer extends Mailer
                 ])
             ]);
     }
+
+    /**
+     * Defines a "create clients" email
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function createClients($data)
+    {
+        return $this
+            ->setStandardConfig($data)
+            ->setTemplate('task_assign_client')
+            ->setViewVars([
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Communities',
+                    'action' => 'addClient',
+                    $data['community']['id']
+                ])
+            ]);
+    }
+
 }
