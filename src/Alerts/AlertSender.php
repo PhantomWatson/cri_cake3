@@ -87,7 +87,8 @@ class AlertSender
     }
 
     /**
-     * Sends the specified alert only if it's valid for the current community
+     * Sends the specified alert only if it's valid for the current community and if each recipient has not received
+     * the alert too recently.
      *
      * @param string $alertName Such as createClients or deliverPolicyDev
      * @param array $data Queued job metadata
@@ -97,8 +98,16 @@ class AlertSender
     public function sendIfValid($alertName, $data = [])
     {
         $alertable = new Alertable($this->community->id);
-        if ($alertable->{$alertName}()) {
-            $this->sendToGroup($alertName, $data);
+        if (!$alertable->{$alertName}()) {
+            return;
+        }
+
+        $recipients = $this->alertRecipients->getRecipients($alertName);
+        foreach ($recipients as $recipient) {
+            if ($this->isRecentlySent($recipient->email, $alertName)) {
+                continue;
+            }
+            $this->enqueueEmail($recipient, $alertName, $data);
         }
     }
 
