@@ -51,12 +51,17 @@ class AdminAlertsShell extends Shell
                 "\n";
             $this->out($msg);
 
+            $adminTaskMailer = new AdminAlertMailer();
             foreach ($alertableCommunities as $community) {
                 $this->success($community['name'] . ':');
-                foreach ($community['alerts'] as $alertable) {
-                    $recipientCount = $this->getRecipientCount($alertable);
-                    $alertableNice = Inflector::humanize(Inflector::underscore($alertable));
-                    $this->out(" - $alertableNice ($recipientCount)");
+                foreach ($community['alerts'] as $alertName) {
+                    $alertableNice = Inflector::humanize(Inflector::underscore($alertName));
+                    if (method_exists($adminTaskMailer, $alertName)) {
+                        $recipientCount = $this->getRecipientCount($alertName);
+                        $this->out("  - $alertableNice ($recipientCount)");
+                    } else {
+                        $this->err("  - $alertableNice alert not available");
+                    }
                 }
             }
         }
