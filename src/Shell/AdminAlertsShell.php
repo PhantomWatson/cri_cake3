@@ -126,36 +126,49 @@ class AdminAlertsShell extends Shell
                 "\n";
             $this->out($msg);
 
-            $adminTaskMailer = new AdminAlertMailer();
             foreach ($alertableCommunities as $community) {
                 $this->out($community['name'] . ':');
                 $alertSender = new AlertSender($community['id']);
                 foreach ($community['alerts'] as $alertName) {
-                    $alertableNice = Inflector::humanize(Inflector::underscore($alertName));
-                    if (method_exists($adminTaskMailer, $alertName)) {
-                        $this->out("  - Sending $alertableNice alert...");
-                        $recipients = $this->getRecipients($alertName);
-                        foreach ($recipients as $recipient) {
-                            $recentlySent = $alertSender->isRecentlySent($recipient->email, $alertName);
-                            if ($recentlySent) {
-                                $time = new Time($recentlySent);
-                                $timeAgo = $time->timeAgoInWords();
-                                $msg = "    - {$recipient->email} skipped (sent $timeAgo)";
-                                $this->out($msg);
-                            } else {
-                                $result = $alertSender->enqueueEmail($recipient, $alertName);
-                                if ($result) {
-                                    $this->out("    - Alert to {$recipient->email} enqueued");
-                                } else {
-                                    $this->err("    - Alert to {$recipient->email} could not be enqueued");
-                                }
-                            }
-                        }
-                    } else {
-                        $this->err("  - $alertableNice alert not available");
-                    }
+                    $this->sendAlert($alertSender, $alertName);
                 }
             }
+        }
+    }
+
+    /**
+     * Attempts to send an alert, outputting the results
+     *
+     * @param AlertSender $alertSender AlertSender object
+     * @param string $alertName Such as createClients or deliverPolicyDev
+     * @return void
+     * @throws \Exception
+     */
+    private function sendAlert($alertSender, $alertName)
+    {
+        $alertableNice = Inflector::humanize(Inflector::underscore($alertName));
+        if (!method_exists(new AdminAlertMailer(), $alertName)) {
+            $this->err("  - $alertableNice alert not available");
+
+            return;
+        }
+
+        $this->out("  - Sending $alertableNice alert...");
+        $recipients = $this->getRecipients($alertName);
+        foreach ($recipients as $recipient) {
+            $recentlySent = $alertSender->isRecentlySent($recipient->email, $alertName);
+            if ($recentlySent) {
+                $timeAgo = (new Time($recentlySent))->timeAgoInWords();
+                $this->out("    - {$recipient->email} skipped (sent $timeAgo)");
+                continue;
+            }
+
+            if ($alertSender->enqueueEmail($recipient, $alertName)) {
+                $this->out("    - Alert to {$recipient->email} enqueued");
+                continue;
+            }
+
+            $this->err("    - Alert to {$recipient->email} could not be enqueued");
         }
     }
 }
