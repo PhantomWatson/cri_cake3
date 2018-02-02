@@ -231,5 +231,4 @@ class AdminAlertMailer extends Mailer
                 ])
             ]);
     }
-
 }
