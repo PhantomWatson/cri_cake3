@@ -53,7 +53,7 @@ class AdminAlertsShell extends Shell
 
             $adminTaskMailer = new AdminAlertMailer();
             foreach ($alertableCommunities as $community) {
-                $this->success($community['name'] . ':');
+                $this->info($community['name'] . ':');
                 foreach ($community['alerts'] as $alertName) {
                     $alertableNice = Inflector::humanize(Inflector::underscore($alertName));
                     if (method_exists($adminTaskMailer, $alertName)) {
@@ -127,7 +127,7 @@ class AdminAlertsShell extends Shell
             $this->out($msg);
 
             foreach ($alertableCommunities as $community) {
-                $this->out($community['name'] . ':');
+                $this->info($community['name'] . ':');
                 $alertSender = new AlertSender($community['id']);
                 foreach ($community['alerts'] as $alertName) {
                     $this->sendAlert($alertSender, $alertName);
