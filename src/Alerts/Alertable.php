@@ -314,7 +314,7 @@ class Alertable
      *
      * @return bool
      */
-    public function activateOrgsSurvey()
+    public function activateOrganizationsSurvey()
     {
         $surveyType = 'organization';
         $surveyId = $this->surveys->getSurveyId($this->community->id, $surveyType);

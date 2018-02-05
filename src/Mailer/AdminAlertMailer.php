@@ -182,7 +182,7 @@ class AdminAlertMailer extends Mailer
      * @param array $data Metadata
      * @return Email
      */
-    public function createOrgsSurvey($data)
+    public function createOrganizationsSurvey($data)
     {
         $data['surveyType'] = 'organization';
 
@@ -251,7 +251,7 @@ class AdminAlertMailer extends Mailer
      * @param array $data Metadata
      * @return Email
      */
-    public function activateOrgsSurvey($data)
+    public function activateOrganizationsSurvey($data)
     {
         $data['surveyType'] = 'organization';
 
