@@ -231,4 +231,51 @@ class AdminAlertMailer extends Mailer
                 ])
             ]);
     }
+
+    /**
+     * Defines an "activate officials survey" email
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function activateOfficialsSurvey($data)
+    {
+        $data['surveyType'] = 'official';
+
+        return $this->activateSurvey($data);
+    }
+
+    /**
+     * Defines an "activate organizations survey" email
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function activateOrgsSurvey($data)
+    {
+        $data['surveyType'] = 'organization';
+
+        return $this->activateSurvey($data);
+    }
+
+    /**
+     * Defines an "activate survey" email
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    private function activateSurvey($data)
+    {
+        return $this
+            ->setStandardConfig($data)
+            ->setTemplate('task_activate_survey')
+            ->setViewVars([
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Surveys',
+                    'action' => 'activate',
+                    $data['surveyType']
+                ]),
+                'surveyType' => $data['surveyType']
+            ]);
+    }
 }
