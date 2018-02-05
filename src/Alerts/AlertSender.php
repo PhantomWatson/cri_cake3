@@ -64,7 +64,7 @@ class AlertSender
         $data['alert'] = $alertName;
 
         return (bool)$this->queuedJobs->createJob(
-            'AdminTaskEmail',
+            'AdminAlertEmail',
             $data,
             ['reference' => $recipient->email]
         );
