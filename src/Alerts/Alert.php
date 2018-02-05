@@ -26,7 +26,7 @@ class Alert
         $recentEmails = $queuedJobsTable->find()
             ->select(['data'])
             ->where([
-                'job_type' => 'AdminTaskEmail',
+                'job_type' => 'AdminAlertEmail',
                 'reference' => $email,
                 'created >=' => new DateTime('-2 days')
             ])
@@ -73,7 +73,7 @@ class Alert
         $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
 
         return $queuedJobs->createJob(
-            'AdminTaskEmail',
+            'AdminAlertEmail',
             $data,
             ['reference' => $recipient->email]
         );

@@ -126,7 +126,7 @@ class AlertSender
         $recentEmails = $queuedJobsTable->find()
             ->select(['created', 'data'])
             ->where([
-                'job_type' => 'AdminTaskEmail',
+                'job_type' => 'AdminAlertEmail',
                 'reference' => $email,
                 'created >=' => new DateTime($threshold)
             ])
