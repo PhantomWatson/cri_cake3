@@ -353,4 +353,26 @@ class AdminAlertMailer extends Mailer
                 'presentationLetter' => $data['presentationLetter']
             ]);
     }
+
+    /**
+     * Defines a "delivery policy development materials" email
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function deliverPolicyDev($data)
+    {
+        $clients = $this->communities->getClients($data['community']['id']);
+
+        return $this
+            ->setStandardConfig($data)
+            ->setTemplate('task_deliver_policy_dev')
+            ->setViewVars([
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Deliveries',
+                    'action' => 'add'
+                ]),
+                'clients' => $clients
+            ]);
+    }
 }
