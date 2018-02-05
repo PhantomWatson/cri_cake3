@@ -171,7 +171,6 @@ class AdminAlertMailer extends Mailer
      */
     public function createOfficialsSurvey($data)
     {
-        $data['community']['slug'] = $this->communities->get($data['community']['id'])->slug;
         $data['surveyType'] = 'official';
 
         return $this->createSurvey($data);
@@ -185,7 +184,6 @@ class AdminAlertMailer extends Mailer
      */
     public function createOrgsSurvey($data)
     {
-        $data['community']['slug'] = $this->communities->get($data['community']['id'])->slug;
         $data['surveyType'] = 'organization';
 
         return $this->createSurvey($data);
@@ -199,6 +197,8 @@ class AdminAlertMailer extends Mailer
      */
     private function createSurvey($data)
     {
+        $slug = $this->communities->get($data['community']['id'])->slug;
+
         return $this
             ->setStandardConfig($data)
             ->setTemplate('task_create_survey')
@@ -206,7 +206,7 @@ class AdminAlertMailer extends Mailer
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Surveys',
                     'action' => 'link',
-                    $data['community']['slug'],
+                    $slug,
                     $data['surveyType']
                 ])
             ]);
