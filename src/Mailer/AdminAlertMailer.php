@@ -278,4 +278,79 @@ class AdminAlertMailer extends Mailer
                 'surveyType' => $data['surveyType']
             ]);
     }
+
+    /**
+     * Defines a "schedule presentation A" email
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function schedulePresentationA($data)
+    {
+        $data['presentationLetter'] = 'a';
+
+        return $this->schedulePresentation($data);
+    }
+
+    /**
+     * Defines a "schedule presentation B" email
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function schedulePresentationB($data)
+    {
+        $data['presentationLetter'] = 'b';
+
+        return $this->schedulePresentation($data);
+    }
+
+    /**
+     * Defines a "schedule presentation C" email
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function schedulePresentationC($data)
+    {
+        $data['presentationLetter'] = 'c';
+
+        return $this->schedulePresentation($data);
+    }
+
+    /**
+     * Defines a "schedule presentation D" email
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    public function schedulePresentationD($data)
+    {
+        $data['presentationLetter'] = 'd';
+
+        return $this->schedulePresentation($data);
+    }
+
+    /**
+     * Defines a "schedule presentation" email
+     *
+     * @param array $data Metadata
+     * @return Email
+     */
+    private function schedulePresentation($data)
+    {
+        $slug = $this->communities->get($data['community']['id'])->slug;
+
+        return $this
+            ->setStandardConfig($data)
+            ->setTemplate('task_schedule_presentation')
+            ->setViewVars([
+                'actionUrl' => $this->getTaskUrl([
+                    'controller' => 'Communities',
+                    'action' => 'presentations',
+                    $slug
+                ]),
+                'presentationLetter' => $data['presentationLetter']
+            ]);
+    }
 }
