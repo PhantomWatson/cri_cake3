@@ -5,7 +5,8 @@
         [
             'controller' => 'Users',
             'action' => 'myAccount',
-            '_full' => true
+            '_full' => true,
+            'plugin' => null
         ]
     ) ?>.
 </p>

@@ -2,6 +2,7 @@ You can edit your subscription to administrator task emails by visiting <?= \Cak
     [
         'controller' => 'Users',
         'action' => 'myAccount',
-        '_full' => true
+        '_full' => true,
+        'plugin' => null
     ]
 ) ?>.
