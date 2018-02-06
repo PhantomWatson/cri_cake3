@@ -30,6 +30,7 @@ class AlertSender
     private $queuedJobs;
     private $users;
     private $alertRecipients;
+    private $recentThreshold = '-7 days';
 
     /**
      * Alertable constructor.
@@ -105,14 +106,13 @@ class AlertSender
      */
     public function isRecentlySent($email, $alertName)
     {
-        $threshold = '-7 days';
         $queuedJobsTable = TableRegistry::get('Queue.QueuedJobs');
         $recentEmails = $queuedJobsTable->find()
             ->select(['created', 'data'])
             ->where([
                 'job_type' => 'AdminAlertEmail',
                 'reference' => $email,
-                'created >=' => new DateTime($threshold)
+                'created >=' => new DateTime($this->recentThreshold)
             ])
             ->orderDesc('created')
             ->all();
