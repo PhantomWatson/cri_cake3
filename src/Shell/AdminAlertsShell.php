@@ -16,6 +16,7 @@ class AdminAlertsShell extends Shell
 {
     private $alertRecipientCounts = [];
     private $alertRecipients = [];
+    private $includeDummy = false;
 
     /**
      * Display help for this console.
@@ -31,6 +32,12 @@ class AdminAlertsShell extends Shell
         $parser->addSubcommand('run', [
             'help' => 'Sends any currently valid alerts',
         ]);
+        $parser->addOption('dummy', [
+            'short' => 'd',
+            'boolean' => true,
+            'help' => 'Include dummy communities',
+            'default' => false
+        ]);
 
         return $parser;
     }
@@ -43,6 +50,7 @@ class AdminAlertsShell extends Shell
      */
     public function status()
     {
+        $this->includeDummy = $this->params['dummy'];
         $alertableCommunities = $this->getAlertableCommunities();
 
         if (empty($alertableCommunities)) {
@@ -118,6 +126,7 @@ class AdminAlertsShell extends Shell
      */
     public function run()
     {
+        $this->includeDummy = $this->params['dummy'];
         $alertableCommunities = $this->getAlertableCommunities();
 
         if (empty($alertableCommunities)) {
@@ -182,13 +191,17 @@ class AdminAlertsShell extends Shell
      * @return array
      * @throws \ReflectionException
      */
-    private static function getAlertableCommunities()
+    private function getAlertableCommunities()
     {
         // Get active communities
         $communitiesTable = TableRegistry::get('Communities');
+        $conditions = ['active' => true];
+        if (!$this->includeDummy) {
+            $conditions['dummy'] = false;
+        }
         $communities = $communitiesTable
             ->find('list')
-            ->where(['active' => true])
+            ->where($conditions)
             ->orderAsc('name');
 
         // Get list of Alertable methods
