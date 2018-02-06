@@ -1,13 +1,7 @@
 <?php
 namespace App\Event;
 
-use App\Alerts\Alert;
 use App\Model\Entity\Community;
-use App\Model\Table\CommunitiesTable;
-use App\Model\Table\DeliverablesTable;
-use App\Model\Table\DeliveriesTable;
-use App\Model\Table\ProductsTable;
-use App\Model\Table\SurveysTable;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Network\Exception\InternalErrorException;
@@ -26,11 +20,7 @@ class EmailListener implements EventListenerInterface
     {
         return [
             'Model.Community.afterAutomaticAdvancement' => 'sendCommunityPromotedEmail',
-            'Model.Community.afterScoreIncrease' => 'sendCommunityPromotedEmail',
-            'Model.Survey.afterDeactivate' => 'sendDeliverMandatoryPresentationEmail',
-            'Model.Product.afterPurchase' => 'sendDeliverOptPresentationEmail',
-            'Model.Purchase.afterAdminAdd' => 'sendDeliverOptPresentationEmail',
-            'Model.Delivery.afterAdd' => 'sendSchedulePresentationEmail'
+            'Model.Community.afterScoreIncrease' => 'sendCommunityPromotedEmail'
         ];
     }
 
@@ -78,66 +68,6 @@ class EmailListener implements EventListenerInterface
                 ['reference' => $client->email]
             );
         }
-
-        // Send "time to create a survey" email to admins
-        if (in_array($toStep, [2, 3])) {
-            $this->sendCreateSurveyEmail($event, $meta, $community);
-        }
-
-        if ($toStep == 4) {
-            $this->sendDeliverPolicyDevEmail($event, $meta, $community);
-        }
-    }
-
-    /**
-     * Enqueues emails that prompt admins to create surveys
-     *
-     * @param Event $event Event
-     * @param array $meta Metadata
-     * @param Community $community Community entity
-     * @return void
-     * @throws \Exception
-     */
-    public function sendCreateSurveyEmail(Event $event, array $meta, Community $community)
-    {
-        /** @var SurveysTable $surveysTable */
-        $surveysTable = TableRegistry::get('Surveys');
-        $toStep = $this->getToStep($meta);
-        $newSurveyType = $toStep == 2 ? 'official' : 'organization';
-
-        // Skip sending email if the new survey has already been created
-        if ($surveysTable->hasBeenCreated($community->id, $newSurveyType)) {
-            return;
-        }
-
-        $meta['community']['slug'] = $community->slug;
-        $meta += [
-            'newSurveyType' => $newSurveyType,
-            'toStep' => $toStep,
-            'mailerMethod' => 'createSurvey'
-        ];
-        Alert::sendToGroup('ICI', $meta);
-    }
-
-    /**
-     * Enqueues emails that alert admins to the need to deliver optional presentation materials
-     *
-     * @param \Cake\Event\Event $event Event
-     * @param array $meta Array of metadata (communityId, etc.)
-     * @return void
-     * @throws \Exception
-     */
-    public function sendDeliverOptPresentationEmail(Event $event, array $meta = [])
-    {
-        /** @var ProductsTable $productsTable */
-        $productsTable = TableRegistry::get('Products');
-        $presentationLetter = $productsTable->getPresentationLetter($meta['productId']);
-        if (! in_array($presentationLetter, ['a', 'b'])) {
-            return;
-        }
-
-        $meta['mailerMethod'] = 'deliverOptionalPresentation';
-        Alert::sendToGroup('CBER', $meta);
     }
 
     /**
@@ -158,74 +88,5 @@ class EmailListener implements EventListenerInterface
         }
 
         throw new InternalErrorException('Step community was promoted to not specified');
-    }
-
-    /**
-     * Enqueues emails that alert admins to the need to schedule a presentation for a community
-     *
-     * @param \Cake\Event\Event $event Event
-     * @param array $meta Array of metadata (communityId, etc.)
-     * @return void
-     * @throws \Exception
-     */
-    public function sendSchedulePresentationEmail(Event $event, array $meta = [])
-    {
-        /**
-         * @var CommunitiesTable $communitiesTable
-         * @var DeliverablesTable $deliverablesTable
-         */
-        // Skip if it's not a presentation that was delivered
-        $deliverablesTable = TableRegistry::get('Deliverables');
-        if (!$deliverablesTable->isPresentation($meta['deliverableId'])) {
-            return;
-        }
-
-        // Skip if this presentation has already been scheduled
-        $communitiesTable = TableRegistry::get('Communities');
-        $presentationLetter = $deliverablesTable->getPresentationLetter($meta['deliverableId']);
-        if ($communitiesTable->presentationIsScheduled($meta['communityId'], $presentationLetter)) {
-            return;
-        }
-
-        $meta['mailerMethod'] = 'schedulePresentation';
-        Alert::sendToGroup('ICI', $meta);
-    }
-
-    /**
-     * Enqueues emails that prompt admins to deliver policy development materials
-     *
-     * @param Event $event Event
-     * @param array $meta Metadata
-     * @param Community $community Community entity
-     * @return void
-     * @throws \Exception
-     */
-    public function sendDeliverPolicyDevEmail(Event $event, array $meta, Community $community)
-    {
-        /** @var DeliveriesTable $deliveriesTable */
-        // Skip if already delivered
-        $deliveriesTable = TableRegistry::get('Deliveries');
-        $isRecorded = $deliveriesTable->isRecorded($community->id, DeliverablesTable::POLICY_DEVELOPMENT);
-        if ($isRecorded) {
-            return;
-        }
-
-        $meta['community']['slug'] = $community->slug;
-        $meta['mailerMethod'] = 'deliverPolicyDev';
-        Alert::sendToGroup('both', $meta);
-    }
-
-    /**
-     * Enqueues emails that alert admins to the need to deliver mandatory presentation materials
-     *
-     * @param \Cake\Event\Event $event Event
-     * @param array $meta Array of metadata (communityId, etc.)
-     * @return void
-     * @throws \Exception
-     */
-    public function sendDeliverMandatoryPresentationEmail(Event $event, array $meta = [])
-    {
-        $meta['mailerMethod'] = 'deliverMandatoryPresentation';
-        Alert::sendToGroup('ICI', $meta);
     }
 }
