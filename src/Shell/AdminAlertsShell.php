@@ -1,14 +1,16 @@
 <?php
 namespace App\Shell;
 
-use App\Alerts\Alert;
+use App\Alerts\Alertable;
 use App\Alerts\AlertRecipients;
 use App\Alerts\AlertSender;
 use App\Mailer\AdminAlertMailer;
 use App\Model\Entity\User;
 use Cake\Console\Shell;
 use Cake\I18n\Time;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
+use ReflectionClass;
 
 class AdminAlertsShell extends Shell
 {
@@ -37,10 +39,11 @@ class AdminAlertsShell extends Shell
      * Shows what alerts are currently valid and who would receive those alerts
      *
      * @return void
+     * @throws \ReflectionException
      */
     public function status()
     {
-        $alertableCommunities = Alert::getAlertableCommunities();
+        $alertableCommunities = $this->getAlertableCommunities();
 
         if (empty($alertableCommunities)) {
             $this->out('No alert conditions met for any communities');
@@ -115,7 +118,7 @@ class AdminAlertsShell extends Shell
      */
     public function run()
     {
-        $alertableCommunities = Alert::getAlertableCommunities();
+        $alertableCommunities = $this->getAlertableCommunities();
 
         if (empty($alertableCommunities)) {
             $this->out('No alert conditions met for any communities');
@@ -170,5 +173,49 @@ class AdminAlertsShell extends Shell
 
             $this->err("    - Alert to {$recipient->email} could not be enqueued");
         }
+    }
+
+    /**
+     * Returns an array with each key being an alertable community name and each value being an array of applicable
+     * alert method names
+     *
+     * @return array
+     * @throws \ReflectionException
+     */
+    private static function getAlertableCommunities()
+    {
+        // Get active communities
+        $communitiesTable = TableRegistry::get('Communities');
+        $communities = $communitiesTable
+            ->find('list')
+            ->where(['active' => true])
+            ->orderAsc('name');
+
+        // Get list of Alertable methods
+        $class = new ReflectionClass('App\Alerts\Alertable');
+        $alertableMethods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
+
+        // Remove __construct() from list of methods
+        array_shift($alertableMethods);
+
+        $alertableCommunities = [];
+        foreach ($communities as $communityId => $communityName) {
+            $alertable = new Alertable($communityId);
+            $applicableAlerts = [];
+            foreach ($alertableMethods as $alertableMethod) {
+                if ($alertable->{$alertableMethod->name}()) {
+                    $applicableAlerts[] = $alertableMethod->name;
+                }
+            }
+            if ($applicableAlerts) {
+                $alertableCommunities[] = [
+                    'id' => $communityId,
+                    'name' => $communityName,
+                    'alerts' => $applicableAlerts
+                ];
+            }
+        }
+
+        return $alertableCommunities;
     }
 }
