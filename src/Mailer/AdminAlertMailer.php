@@ -91,7 +91,7 @@ class AdminAlertMailer extends Mailer
     {
         return $this
             ->setStandardConfig($data)
-            ->setTemplate('task_deliver_presentation')
+            ->setTemplate('admin_alert/deliver_presentation')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Deliveries',
@@ -177,7 +177,7 @@ class AdminAlertMailer extends Mailer
 
         return $this
             ->setStandardConfig($data)
-            ->setTemplate('task_create_survey')
+            ->setTemplate('admin_alert/create_survey')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Surveys',
@@ -199,7 +199,7 @@ class AdminAlertMailer extends Mailer
     {
         return $this
             ->setStandardConfig($data)
-            ->setTemplate('task_create_clients')
+            ->setTemplate('admin_alert/create_clients')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Communities',
@@ -245,7 +245,7 @@ class AdminAlertMailer extends Mailer
     {
         return $this
             ->setStandardConfig($data)
-            ->setTemplate('task_activate_survey')
+            ->setTemplate('admin_alert/activate_survey')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Surveys',
@@ -320,7 +320,7 @@ class AdminAlertMailer extends Mailer
 
         return $this
             ->setStandardConfig($data)
-            ->setTemplate('task_schedule_presentation')
+            ->setTemplate('admin_alert/schedule_presentation')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Communities',
@@ -343,7 +343,7 @@ class AdminAlertMailer extends Mailer
 
         return $this
             ->setStandardConfig($data)
-            ->setTemplate('task_deliver_policy_dev')
+            ->setTemplate('admin_alert/deliver_policy_dev')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Deliveries',
