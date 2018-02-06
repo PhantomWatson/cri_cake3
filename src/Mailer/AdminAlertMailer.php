@@ -199,7 +199,7 @@ class AdminAlertMailer extends Mailer
     {
         return $this
             ->setStandardConfig($data)
-            ->setTemplate('task_assign_client')
+            ->setTemplate('task_create_clients')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Communities',
