@@ -4,7 +4,7 @@
 
 <p>
     <?= $communityName ?> is now ready for ICI to
-    <a href="https://www.surveymonkey.com/">create a community <?= $newSurveyType ?> questionnaire in SurveyMonkey</a>
+    <a href="https://www.surveymonkey.com/">create a community <?= $surveyType ?>s questionnaire in SurveyMonkey</a>
     for <?= $communityName ?>.
 </p>
 

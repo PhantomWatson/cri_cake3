@@ -208,7 +208,8 @@ class AdminAlertMailer extends Mailer
                     'action' => 'link',
                     $slug,
                     $data['surveyType']
-                ])
+                ]),
+                'surveyType' => $data['surveyType']
             ]);
     }
 
