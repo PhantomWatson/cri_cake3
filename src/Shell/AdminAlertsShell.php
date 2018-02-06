@@ -7,6 +7,7 @@ use App\Alerts\AlertSender;
 use App\Mailer\AdminAlertMailer;
 use App\Model\Entity\User;
 use Cake\Console\Shell;
+use Cake\Datasource\ResultSetInterface;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
@@ -31,6 +32,9 @@ class AdminAlertsShell extends Shell
         ]);
         $parser->addSubcommand('run', [
             'help' => 'Sends any currently valid alerts',
+        ]);
+        $parser->addSubcommand('subscribers', [
+            'help' => 'Shows subscribers to administrator alerts',
         ]);
         $parser->addOption('dummy', [
             'short' => 'd',
@@ -230,5 +234,51 @@ class AdminAlertsShell extends Shell
         }
 
         return $alertableCommunities;
+    }
+
+    /**
+     * Shows subscribers to administrator alerts
+     *
+     * @return void
+     */
+    public function subscribers()
+    {
+        $subscribers = [];
+        $subscribers['only ICI'] = $this->getSubscribers(true, false);
+        $subscribers['only CBER'] = $this->getSubscribers(false, true);
+        $subscribers['both'] = $this->getSubscribers(true, true);
+        $subscribers['neither'] = $this->getSubscribers(false, false);
+
+        $this->out("\nListing all CRI administrators...");
+        foreach ($subscribers as $group => $groupedSubscribers) {
+            $this->info("\nSubscribed to $group alerts:");
+            if ($groupedSubscribers->isEmpty()) {
+                $this->out(' - (none)');
+                continue;
+            }
+            foreach ($groupedSubscribers as $subscriber) {
+                $this->out(" - $subscriber->name ($subscriber->email)");
+            }
+        }
+    }
+
+    /**
+     * @param bool $ici True if selecting users subscribed to ICI alert emails
+     * @param bool $cber True if selecting users subscribed to CBER alert emails
+     *
+     * @return ResultSetInterface
+     */
+    private function getSubscribers($ici, $cber)
+    {
+        $usersTable = TableRegistry::get('Users');
+
+        return $usersTable->find()
+            ->select(['name', 'email'])
+            ->where([
+                'role' => 'admin',
+                'ici_email_optin' => $ici,
+                'cber_email_optin' => $cber
+            ])
+            ->all();
     }
 }
