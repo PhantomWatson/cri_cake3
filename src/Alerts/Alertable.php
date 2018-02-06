@@ -115,10 +115,6 @@ class Alertable
      */
     private function deliverMandatoryPresentation($surveyId, $deliverableId, $productId)
     {
-        if (!$this->community->active) {
-            return false;
-        }
-
         if ($this->surveys->isActive($surveyId)) {
             return false;
         }
@@ -127,19 +123,7 @@ class Alertable
             return false;
         }
 
-        if ($this->deliveries->isRecorded($this->community->id, $deliverableId)) {
-            return false;
-        }
-
-        if (!$this->products->isPurchased($this->community->id, $productId)) {
-            return false;
-        }
-
-        if ($this->optOuts->optedOut($this->community->id, $productId)) {
-            return false;
-        }
-
-        return true;
+        return $this->deliverOptionalPresentation($deliverableId, $productId);
     }
 
     /**
