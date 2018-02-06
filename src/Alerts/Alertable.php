@@ -5,6 +5,7 @@ use App\Model\Entity\Community;
 use App\Model\Table\CommunitiesTable;
 use App\Model\Table\DeliverablesTable;
 use App\Model\Table\DeliveriesTable;
+use App\Model\Table\OptOutsTable;
 use App\Model\Table\ProductsTable;
 use App\Model\Table\SurveysTable;
 use Cake\ORM\TableRegistry;
@@ -21,6 +22,7 @@ use Cake\ORM\TableRegistry;
  * @property DeliveriesTable $deliveries
  * @property ProductsTable $products
  * @property SurveysTable $surveys
+ * @property OptOutsTable $optOuts
  */
 class Alertable
 {
@@ -38,9 +40,10 @@ class Alertable
     public function __construct($communityId)
     {
         $this->communities = TableRegistry::get('Communities');
-        $this->surveys = TableRegistry::get('Surveys');
         $this->deliveries = TableRegistry::get('Deliveries');
+        $this->optOuts = TableRegistry::get('OptOuts');
         $this->products = TableRegistry::get('Products');
+        $this->surveys = TableRegistry::get('Surveys');
         $this->community = $this->communities->get($communityId);
     }
 
@@ -52,6 +55,7 @@ class Alertable
      * - Survey is inactive and has responses
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
      *
      * @return bool
      */
@@ -77,6 +81,7 @@ class Alertable
      * - Survey is inactive and has responses
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
      *
      * @return bool
      */
@@ -101,6 +106,7 @@ class Alertable
      * - Survey is inactive and has responses
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
      *
      * @param int $surveyId Survey ID
      * @param int $deliverableId Deliverable ID
@@ -129,6 +135,10 @@ class Alertable
             return false;
         }
 
+        if ($this->optOuts->optedOut($this->community->id, $productId)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -139,6 +149,7 @@ class Alertable
      * - Community is active
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
      *
      * @return bool
      */
@@ -161,6 +172,7 @@ class Alertable
      * - Community is active
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
      *
      * @return bool
      */
@@ -182,6 +194,7 @@ class Alertable
      * Checks if
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
      *
      * @param int $deliverableId Deliverable ID
      * @param int $productId Product ID
@@ -198,6 +211,10 @@ class Alertable
         }
 
         if (!$this->products->isPurchased($this->community->id, $productId)) {
+            return false;
+        }
+
+        if ($this->optOuts->optedOut($this->community->id, $productId)) {
             return false;
         }
 
@@ -363,6 +380,7 @@ class Alertable
      * - Presentation materials have been delivered
      * - Presentation has not been scheduled
      * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
      *
      * @return bool
      */
@@ -382,6 +400,7 @@ class Alertable
      * - Presentation materials have been delivered
      * - Presentation has not been scheduled
      * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
      *
      * @return bool
      */
@@ -401,6 +420,7 @@ class Alertable
      * - Presentation materials have been delivered
      * - Presentation has not been scheduled
      * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
      *
      * @return bool
      */
@@ -420,6 +440,7 @@ class Alertable
      * - Presentation materials have been delivered
      * - Presentation has not been scheduled
      * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
      *
      * @return bool
      */
@@ -439,6 +460,7 @@ class Alertable
      * - Presentation materials have been delivered
      * - Presentation has not been scheduled
      * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
      *
      * @param string $presentationLetter a, b, c, or d
      * @param int $productId Product ID
@@ -460,6 +482,10 @@ class Alertable
         }
 
         if (!$this->products->isPurchased($this->community->id, $productId)) {
+            return false;
+        }
+
+        if ($this->optOuts->optedOut($this->community->id, $productId)) {
             return false;
         }
 
