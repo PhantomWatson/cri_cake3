@@ -455,7 +455,7 @@ class Alertable
             return false;
         }
 
-        if ($this->community->{$presentationLetter} != null) {
+        if ($this->community->{"presentation_$presentationLetter"} != null) {
             return false;
         }
 
