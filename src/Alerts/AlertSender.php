@@ -71,22 +71,6 @@ class AlertSender
     }
 
     /**
-     * Sends alerts to all members of the CBER group, ICI group, or both
-     *
-     * @param string $alertName Such as createClients or deliverPolicyDev
-     * @param array $data Queued job metadata
-     * @return void
-     * @throws \Exception
-     */
-    public function sendToGroup($alertName, $data = [])
-    {
-        $recipients = $this->alertRecipients->getRecipients($alertName);
-        foreach ($recipients as $recipient) {
-            $this->enqueueEmail($recipient, $alertName, $data);
-        }
-    }
-
-    /**
      * Sends the specified alert only if it's valid for the current community and if each recipient has not received
      * the alert too recently.
      *
