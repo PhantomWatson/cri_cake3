@@ -37,9 +37,8 @@ class AdminAlertMailer extends Mailer
     public function deliverPresentationA($data)
     {
         $data['presentationLetter'] = 'a';
-        $data['surveyType'] = 'official';
 
-        return $this->deliverMandatoryPresentation($data);
+        return $this->deliverPresentation($data);
     }
 
     /**
@@ -51,31 +50,8 @@ class AdminAlertMailer extends Mailer
     public function deliverPresentationC($data)
     {
         $data['presentationLetter'] = 'c';
-        $data['surveyType'] = 'organization';
 
-        return $this->deliverMandatoryPresentation($data);
-    }
-
-    /**
-     * Defines a "deliver mandatory presentation" email
-     *
-     * @param array $data Metadata
-     * @return Email
-     * @throws InternalErrorException
-     */
-    private function deliverMandatoryPresentation($data)
-    {
-        return $this
-            ->setStandardConfig($data)
-            ->setTemplate('task_deliver_presentation')
-            ->setViewVars([
-                'actionUrl' => $this->getTaskUrl([
-                    'controller' => 'Deliveries',
-                    'action' => 'add'
-                ]),
-                'presentationLetter' => $data['presentationLetter'],
-                'surveyType' => $data['surveyType']
-            ]);
+        return $this->deliverPresentation($data);
     }
 
     /**
@@ -88,7 +64,7 @@ class AdminAlertMailer extends Mailer
     {
         $data['presentationLetter'] = 'b';
 
-        return $this->deliverOptionalPresentation($data);
+        return $this->deliverPresentation($data);
     }
 
     /**
@@ -101,21 +77,21 @@ class AdminAlertMailer extends Mailer
     {
         $data['presentationLetter'] = 'd';
 
-        return $this->deliverOptionalPresentation($data);
+        return $this->deliverPresentation($data);
     }
 
     /**
-     * Defines an email informing an administrator that presentation B or D needs to be delivered
+     * Defines a "deliver mandatory presentation" email
      *
      * @param array $data Metadata
      * @return Email
      * @throws InternalErrorException
      */
-    private function deliverOptionalPresentation($data)
+    private function deliverPresentation($data)
     {
         return $this
             ->setStandardConfig($data)
-            ->setTemplate('task_deliver_optional_presentation')
+            ->setTemplate('task_deliver_presentation')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Deliveries',
