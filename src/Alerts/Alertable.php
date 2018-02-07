@@ -61,10 +61,6 @@ class Alertable
      */
     public function deliverPresentationA()
     {
-        if (!$this->community->active) {
-            return false;
-        }
-
         $surveyType = 'official';
         $surveyId = $this->surveys->getSurveyId($this->community->id, $surveyType);
         $productId = ProductsTable::OFFICIALS_SURVEY;
@@ -87,10 +83,6 @@ class Alertable
      */
     public function deliverPresentationC()
     {
-        if (!$this->community->active) {
-            return false;
-        }
-
         $surveyType = 'organization';
         $surveyId = $this->surveys->getSurveyId($this->community->id, $surveyType);
         $productId = ProductsTable::ORGANIZATIONS_SURVEY;
@@ -115,6 +107,10 @@ class Alertable
      */
     private function deliverMandatoryPresentation($surveyId, $deliverableId, $productId)
     {
+        if (!$this->community->active) {
+            return false;
+        }
+
         if ($this->surveys->isActive($surveyId)) {
             return false;
         }
@@ -139,10 +135,6 @@ class Alertable
      */
     public function deliverPresentationB()
     {
-        if (!$this->community->active) {
-            return false;
-        }
-
         $productId = ProductsTable::OFFICIALS_SUMMIT;
         $deliverableId = DeliverablesTable::PRESENTATION_B_MATERIALS;
 
@@ -162,10 +154,6 @@ class Alertable
      */
     public function deliverPresentationD()
     {
-        if (!$this->community->active) {
-            return false;
-        }
-
         $productId = ProductsTable::ORGANIZATIONS_SUMMIT;
         $deliverableId = DeliverablesTable::PRESENTATION_D_MATERIALS;
 
@@ -216,10 +204,6 @@ class Alertable
      */
     public function createOfficialsSurvey()
     {
-        if (!$this->community->active) {
-            return false;
-        }
-
         return $this->createSurvey('official');
     }
 
@@ -234,10 +218,6 @@ class Alertable
      */
     public function createOrganizationsSurvey()
     {
-        if (!$this->community->active) {
-            return false;
-        }
-
         return $this->createSurvey('organization');
     }
 
