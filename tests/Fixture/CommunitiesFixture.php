@@ -56,53 +56,33 @@ class CommunitiesFixture extends TestFixture
         [
             'id' => 1,
             'name' => 'Test Community (public)',
-            'local_area_id' => 2,
-            'parent_area_id' => 1,
-            'public' => 1,
-            'fast_track' => 0,
-            'score' => 1,
-            'town_meeting_date' => null,
-            'intAlignmentAdjustment' => 8.98,
-            'intAlignmentThreshold' => 1.0,
-            'presentation_a' => null,
-            'presentation_b' => null,
-            'presentation_c' => null,
-            'presentation_d' => null,
-            'dummy' => 0,
-            'notes' => 'Notes...',
-            'active' => 1,
-            'slug' => 'test-community-1',
-            'created' => '2017-04-18 23:18:27',
-            'modified' => '2017-04-18 23:18:27'
+            'public' => true
         ],
         [
             'id' => 2,
             'name' => 'Test Community (non-public)',
-            'local_area_id' => 2,
-            'parent_area_id' => 1,
-            'public' => 0,
-            'fast_track' => 0,
-            'score' => 1,
-            'town_meeting_date' => null,
-            'intAlignmentAdjustment' => 8.98,
-            'intAlignmentThreshold' => 1.0,
-            'presentation_a' => null,
-            'presentation_b' => null,
-            'presentation_c' => null,
-            'presentation_d' => null,
-            'dummy' => 0,
-            'notes' => 'Notes...',
-            'active' => 1,
-            'slug' => 'test-community-2',
-            'created' => '2017-04-18 23:18:27',
-            'modified' => '2017-04-18 23:18:27'
+            'public' => false
         ],
         [
             'id' => 3,
             'name' => 'Test Community (inactive)',
+            'active' => false
+        ],
+    ];
+
+    /**
+     * Initialization method
+     *
+     * @return void
+     */
+    public function init()
+    {
+        parent::init();
+        $defaultData = [
+            'name' => 'Test Community (default data)',
             'local_area_id' => 2,
             'parent_area_id' => 1,
-            'public' => 0,
+            'public' => false,
             'fast_track' => 0,
             'score' => 1,
             'town_meeting_date' => null,
@@ -112,12 +92,17 @@ class CommunitiesFixture extends TestFixture
             'presentation_b' => null,
             'presentation_c' => null,
             'presentation_d' => null,
-            'dummy' => 0,
+            'dummy' => false,
             'notes' => 'Notes...',
-            'active' => 0,
-            'slug' => 'test-community-3',
+            'active' => true,
+            'slug' => 'test-community',
             'created' => '2017-04-18 23:18:27',
             'modified' => '2017-04-18 23:18:27'
-        ],
-    ];
+        ];
+
+        foreach ($this->records as &$record) {
+            $record += $defaultData;
+            $record['slug'] = 'test-community-' . $record['id'];
+        }
+    }
 }
