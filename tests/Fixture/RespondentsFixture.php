@@ -46,16 +46,32 @@ class RespondentsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'email' => 'test_respondent@example.com',
-            'name' => 'Test Respondent',
+            'survey_id' => 1
+        ]
+    ];
+
+    /**
+     * Initialization method
+     *
+     * @return void
+     */
+    public function init()
+    {
+        parent::init();
+        $defaultData = [
             'title' => 'Title',
-            'survey_id' => 1,
             'sm_respondent_id' => '3374290102',
             'invited' => true,
             'approved' => 1,
             'response_date' => null,
             'created' => '2014-07-24 16:38:14',
             'modified' => '2014-07-24 16:38:15'
-        ],
-    ];
+        ];
+
+        foreach ($this->records as &$record) {
+            $record += $defaultData;
+            $record['email'] = 'test_respondent' . $record['id'] . '@example.com';
+            $record['name'] = 'Test Respondent ' . $record['id'];
+        }
+    }
 }
