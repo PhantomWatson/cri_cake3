@@ -69,40 +69,25 @@ class SurveysFixture extends TestFixture
             'id' => 1,
             'type' => 'official',
             'community_id' => 1,
-            'sm_url' => 'https://www.surveymonkey.com/r/F6D36VH',
-            'sm_id' => 74406334,
-            'pwrrr_qid' => '905927593',
-            'production_aid' => '9817804633',
-            'wholesale_aid' => '9817804634',
-            'recreation_aid' => '9817804635',
-            'retail_aid' => '9817804636',
-            'residential_aid' => '9817804637',
-            '1_aid' => '9817804638',
-            '2_aid' => '9817804639',
-            '3_aid' => '9817804640',
-            '4_aid' => '9817804641',
-            '5_aid' => '9817804642',
-            'aware_of_plan_qid' => '905927584',
-            'aware_of_city_plan_aid' => '9817804571',
-            'aware_of_county_plan_aid' => '9817804572',
-            'aware_of_regional_plan_aid' => '9817804573',
-            'unaware_of_plan_aid' => '10872942158',
-            'respondents_last_modified_date' => '2016-03-10 20:43:52',
-            'responses_checked' => '2017-02-14 19:39:03',
-            'alignment_vs_local' => 51,
-            'alignment_vs_parent' => 64,
-            'internal_alignment' => 10.52,
-            'alignment_calculated_date' => '2017-01-23 23:27:27',
-            'reminder_sent' => null,
-            'import_errors' => null,
-            'active' => true,
-            'created' => '2016-01-25 16:40:38',
-            'modified' => '2017-02-14 19:48:55'
+            'active' => true
         ],
         [
             'id' => 2,
             'type' => 'official',
             'community_id' => 2,
+            'active' => true
+        ]
+    ];
+
+    /**
+     * Initialization function
+     *
+     * @return void
+     */
+    public function init()
+    {
+        parent::init();
+        $defaultData = [
             'sm_url' => 'https://www.surveymonkey.com/r/F6D36VH',
             'sm_id' => 74406334,
             'pwrrr_qid' => '905927593',
@@ -129,9 +114,12 @@ class SurveysFixture extends TestFixture
             'alignment_calculated_date' => '2017-01-23 23:27:27',
             'reminder_sent' => null,
             'import_errors' => null,
-            'active' => true,
             'created' => '2016-01-25 16:40:38',
             'modified' => '2017-02-14 19:48:55'
-        ]
-    ];
+        ];
+
+        foreach ($this->records as &$record) {
+            $record += $defaultData;
+        }
+    }
 }
