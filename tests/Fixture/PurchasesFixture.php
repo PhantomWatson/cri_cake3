@@ -1,6 +1,7 @@
 <?php
 namespace App\Test\Fixture;
 
+use App\Model\Table\ProductsTable;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
@@ -46,15 +47,15 @@ class PurchasesFixture extends TestFixture
     public $records = [
         [
             'community_id' => 1,
-            'product_id' => 1
+            'product_id' => ProductsTable::OFFICIALS_SURVEY
         ],
         [
             'community_id' => 4,
-            'product_id' => 1
+            'product_id' => ProductsTable::OFFICIALS_SURVEY
         ],
         [
             'community_id' => 4,
-            'product_id' => 3
+            'product_id' => ProductsTable::ORGANIZATIONS_SURVEY
         ],
     ];
 
