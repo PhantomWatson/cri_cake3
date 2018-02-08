@@ -47,6 +47,10 @@ class RespondentsFixture extends TestFixture
         [
             'id' => 1,
             'survey_id' => 1
+        ],
+        [
+            'id' => 2,
+            'survey_id' => 4
         ]
     ];
 

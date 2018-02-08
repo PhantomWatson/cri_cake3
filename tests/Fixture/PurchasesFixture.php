@@ -47,7 +47,11 @@ class PurchasesFixture extends TestFixture
         [
             'community_id' => 1,
             'product_id' => 1
-        ]
+        ],
+        [
+            'community_id' => 4,
+            'product_id' => 1
+        ],
     ];
 
     /**
