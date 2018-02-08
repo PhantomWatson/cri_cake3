@@ -39,9 +39,33 @@ class DeliverablesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'name' => 'Lorem ipsum dolor sit amet',
-            'delivered_by' => 'Lorem ipsum dolor sit amet',
-            'delivered_to' => 'Lorem ipsum dolor sit amet'
+            'name' => 'Presentation A materials',
+            'delivered_by' => 'CBER',
+            'delivered_to' => 'ICI'
         ],
+        [
+            'id' => 2,
+            'name' => 'Presentation B materials',
+            'delivered_by' => 'CBER',
+            'delivered_to' => 'ICI'
+        ],
+        [
+            'id' => 3,
+            'name' => 'Presentation C materials',
+            'delivered_by' => 'CBER',
+            'delivered_to' => 'ICI'
+        ],
+        [
+            'id' => 4,
+            'name' => 'Presentation D materials',
+            'delivered_by' => 'CBER',
+            'delivered_to' => 'ICI'
+        ],
+        [
+            'id' => 5,
+            'name' => 'policy development',
+            'delivered_by' => 'CBER / ICI',
+            'delivered_to' => 'client community'
+        ]
     ];
 }
