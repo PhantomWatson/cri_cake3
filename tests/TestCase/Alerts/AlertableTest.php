@@ -107,7 +107,7 @@ class AlertableTest extends TestCase
      * @param string $presentationLetter A or C
      * @return void
      */
-    private function _testDeliverMandPresFailInactiveCommunity($communityId, $presentationLetter)
+    private function _testDeliverPresFailInactiveCommunity($communityId, $presentationLetter)
     {
         $community = $this->communities->get($communityId);
         $community->active = false;
@@ -123,7 +123,7 @@ class AlertableTest extends TestCase
      * @param string $presentationLetter A or C
      * @return void
      */
-    private function _testDeliverMandPresFailActiveSurvey($communityId, $surveyId, $presentationLetter)
+    private function _testDeliverPresFailActiveSurvey($communityId, $surveyId, $presentationLetter)
     {
         $survey = $this->surveys->get($surveyId);
         $survey->active = true;
@@ -139,7 +139,7 @@ class AlertableTest extends TestCase
      * @param string $presentationLetter A or C
      * @return void
      */
-    private function _testDeliverMandPresFailNoResponses($communityId, $surveyId, $presentationLetter)
+    private function _testDeliverPresFailNoResponses($communityId, $surveyId, $presentationLetter)
     {
         // Survey with no responses
         $this->responses->deleteAll(['survey_id' => $surveyId]);
@@ -154,7 +154,7 @@ class AlertableTest extends TestCase
      * @param string $presentationLetter A or C
      * @return void
      */
-    private function _testDeliverMandPresFailDelivered($communityId, $deliverableId, $presentationLetter)
+    private function _testDeliverPresFailDelivered($communityId, $deliverableId, $presentationLetter)
     {
         $delivery = $this->deliveries->newEntity([
             'deliverable_id' => $deliverableId,
@@ -172,7 +172,7 @@ class AlertableTest extends TestCase
      * @param string $presentationLetter A or C
      * @return void
      */
-    private function _testDeliverMandPresFailNotPurchased($communityId, $presentationLetter)
+    private function _testDeliverPresFailNotPurchased($communityId, $presentationLetter)
     {
         $this->purchases->deleteAll(['community_id' => $communityId]);
         $this->assertUnalertable($communityId, "deliverPresentation$presentationLetter");
@@ -186,7 +186,7 @@ class AlertableTest extends TestCase
      * @param string $presentationLetter A or C
      * @return void
      */
-    private function _testDeliverMandPresFailOptedOut($communityId, $productId, $presentationLetter)
+    private function _testDeliverPresFailOptedOut($communityId, $productId, $presentationLetter)
     {
         $this->optOuts->addOptOut([
             'community_id' => $communityId,
@@ -205,7 +205,7 @@ class AlertableTest extends TestCase
     {
         $communityId = 4;
         $presentationLetter = 'A';
-        $this->_testDeliverMandPresFailInactiveCommunity($communityId, $presentationLetter);
+        $this->_testDeliverPresFailInactiveCommunity($communityId, $presentationLetter);
     }
 
     /**
@@ -218,7 +218,7 @@ class AlertableTest extends TestCase
         $communityId = 4;
         $surveyId = 4;
         $presentationLetter = 'A';
-        $this->_testDeliverMandPresFailActiveSurvey($communityId, $surveyId, $presentationLetter);
+        $this->_testDeliverPresFailActiveSurvey($communityId, $surveyId, $presentationLetter);
     }
 
     /**
@@ -231,7 +231,7 @@ class AlertableTest extends TestCase
         $communityId = 4;
         $surveyId = 4;
         $presentationLetter = 'A';
-        $this->_testDeliverMandPresFailNoResponses($communityId, $surveyId, $presentationLetter);
+        $this->_testDeliverPresFailNoResponses($communityId, $surveyId, $presentationLetter);
     }
 
     /**
@@ -244,7 +244,7 @@ class AlertableTest extends TestCase
         $communityId = 4;
         $deliverableId = DeliverablesTable::PRESENTATION_A_MATERIALS;
         $presentationLetter = 'A';
-        $this->_testDeliverMandPresFailDelivered($communityId, $deliverableId, $presentationLetter);
+        $this->_testDeliverPresFailDelivered($communityId, $deliverableId, $presentationLetter);
     }
 
     /**
@@ -256,7 +256,7 @@ class AlertableTest extends TestCase
     {
         $communityId = 4;
         $presentationLetter = 'A';
-        $this->_testDeliverMandPresFailNotPurchased($communityId, $presentationLetter);
+        $this->_testDeliverPresFailNotPurchased($communityId, $presentationLetter);
     }
 
     /**
@@ -269,7 +269,7 @@ class AlertableTest extends TestCase
         $communityId = 4;
         $productId = ProductsTable::OFFICIALS_SURVEY;
         $presentationLetter = 'A';
-        $this->_testDeliverMandPresFailOptedOut($communityId, $productId, $presentationLetter);
+        $this->_testDeliverPresFailOptedOut($communityId, $productId, $presentationLetter);
     }
 
     /**
@@ -298,7 +298,7 @@ class AlertableTest extends TestCase
     {
         $communityId = 4;
         $presentationLetter = 'C';
-        $this->_testDeliverMandPresFailInactiveCommunity($communityId, $presentationLetter);
+        $this->_testDeliverPresFailInactiveCommunity($communityId, $presentationLetter);
     }
 
     /**
@@ -311,7 +311,7 @@ class AlertableTest extends TestCase
         $communityId = 4;
         $surveyId = 5;
         $presentationLetter = 'C';
-        $this->_testDeliverMandPresFailActiveSurvey($communityId, $surveyId, $presentationLetter);
+        $this->_testDeliverPresFailActiveSurvey($communityId, $surveyId, $presentationLetter);
     }
 
     /**
@@ -324,7 +324,7 @@ class AlertableTest extends TestCase
         $communityId = 4;
         $surveyId = 5;
         $presentationLetter = 'C';
-        $this->_testDeliverMandPresFailNoResponses($communityId, $surveyId, $presentationLetter);
+        $this->_testDeliverPresFailNoResponses($communityId, $surveyId, $presentationLetter);
     }
 
     /**
@@ -337,7 +337,7 @@ class AlertableTest extends TestCase
         $communityId = 4;
         $deliverableId = DeliverablesTable::PRESENTATION_C_MATERIALS;
         $presentationLetter = 'C';
-        $this->_testDeliverMandPresFailDelivered($communityId, $deliverableId, $presentationLetter);
+        $this->_testDeliverPresFailDelivered($communityId, $deliverableId, $presentationLetter);
     }
 
     /**
@@ -349,7 +349,7 @@ class AlertableTest extends TestCase
     {
         $communityId = 4;
         $presentationLetter = 'C';
-        $this->_testDeliverMandPresFailNotPurchased($communityId, $presentationLetter);
+        $this->_testDeliverPresFailNotPurchased($communityId, $presentationLetter);
     }
 
     /**
@@ -362,7 +362,7 @@ class AlertableTest extends TestCase
         $communityId = 4;
         $productId = ProductsTable::ORGANIZATIONS_SURVEY;
         $presentationLetter = 'C';
-        $this->_testDeliverMandPresFailOptedOut($communityId, $productId, $presentationLetter);
+        $this->_testDeliverPresFailOptedOut($communityId, $productId, $presentationLetter);
     }
 
     /**
@@ -380,5 +380,139 @@ class AlertableTest extends TestCase
     {
         $communityId = 4;
         $this->assertAlertable($communityId, 'deliverPresentationC');
+    }
+
+    /**
+     * Tests Alertable::deliverPresentationB()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPresentationBFailInactiveCommunity()
+    {
+        $communityId = 4;
+        $presentationLetter = 'B';
+        $this->_testDeliverPresFailInactiveCommunity($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::deliverPresentationB()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPresentationBFailDelivered()
+    {
+        $communityId = 4;
+        $deliverableId = DeliverablesTable::PRESENTATION_B_MATERIALS;
+        $presentationLetter = 'B';
+        $this->_testDeliverPresFailDelivered($communityId, $deliverableId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::deliverPresentationB()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPresentationBFailNotPurchased()
+    {
+        $communityId = 4;
+        $presentationLetter = 'B';
+        $this->_testDeliverPresFailNotPurchased($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::deliverPresentationB()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPresentationBFailOptedOut()
+    {
+        $communityId = 4;
+        $productId = ProductsTable::OFFICIALS_SUMMIT;
+        $presentationLetter = 'B';
+        $this->_testDeliverPresFailOptedOut($communityId, $productId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::deliverPresentationB()'s pass conditions:
+     *
+     * - Active community
+     * - Survey is inactive and has responses
+     * - Presentation has not been delivered
+     * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
+     *
+     * @return void
+     */
+    public function testDeliverPresentationBPass()
+    {
+        $communityId = 4;
+        $this->assertAlertable($communityId, 'deliverPresentationB');
+    }
+
+    /**
+     * Tests Alertable::deliverPresentationD()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPresentationDFailInactiveCommunity()
+    {
+        $communityId = 4;
+        $presentationLetter = 'D';
+        $this->_testDeliverPresFailInactiveCommunity($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::deliverPresentationD()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPresentationDFailDelivered()
+    {
+        $communityId = 4;
+        $deliverableId = DeliverablesTable::PRESENTATION_D_MATERIALS;
+        $presentationLetter = 'D';
+        $this->_testDeliverPresFailDelivered($communityId, $deliverableId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::deliverPresentationD()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPresentationDFailNotPurchased()
+    {
+        $communityId = 4;
+        $presentationLetter = 'D';
+        $this->_testDeliverPresFailNotPurchased($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::deliverPresentationD()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPresentationDFailOptedOut()
+    {
+        $communityId = 4;
+        $productId = ProductsTable::ORGANIZATIONS_SUMMIT;
+        $presentationLetter = 'D';
+        $this->_testDeliverPresFailOptedOut($communityId, $productId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::deliverPresentationD()'s pass conditions:
+     *
+     * - Active community
+     * - Survey is inactive and has responses
+     * - Presentation has not been delivered
+     * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
+     *
+     * @return void
+     */
+    public function testDeliverPresentationDPass()
+    {
+        $communityId = 4;
+        $this->assertAlertable($communityId, 'deliverPresentationD');
     }
 }

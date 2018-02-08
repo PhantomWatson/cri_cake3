@@ -57,6 +57,14 @@ class PurchasesFixture extends TestFixture
             'community_id' => 4,
             'product_id' => ProductsTable::ORGANIZATIONS_SURVEY
         ],
+        [
+            'community_id' => 4,
+            'product_id' => ProductsTable::OFFICIALS_SUMMIT
+        ],
+        [
+            'community_id' => 4,
+            'product_id' => ProductsTable::ORGANIZATIONS_SUMMIT
+        ],
     ];
 
     /**
