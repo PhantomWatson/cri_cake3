@@ -111,7 +111,7 @@ class AdminAlertMailer extends Mailer
     {
         return $this
             ->setTo($data['user']['email'])
-            ->setSubject('Community Readiness Initiative - Action required')
+            ->setSubject('Community Readiness Initiative - Action required for ' . $data['community']['name'])
             ->setDomain('cri.cberdata.org')
             ->setViewVars([
                 'communityName' => $data['community']['name'],
