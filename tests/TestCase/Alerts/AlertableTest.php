@@ -515,4 +515,114 @@ class AlertableTest extends TestCase
         $communityId = 4;
         $this->assertAlertable($communityId, 'deliverPresentationD');
     }
+
+    /**
+     * Tests Alertable::createOfficialsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testCreateOfficialsSurveyFailInactiveCommunity()
+    {
+        $communityId = 5;
+        $community = $this->communities->get($communityId);
+        $community->active = false;
+        $this->communities->save($community);
+        $this->assertUnalertable($communityId, "createOfficialsSurvey");
+    }
+
+    /**
+     * Tests Alertable::createOfficialsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testCreateOfficialsSurveyFailSurveyExists()
+    {
+        $communityId = 5;
+        $survey = $this->surveys->get(1);
+        $survey->community_id = $communityId;
+        $this->surveys->save($survey);
+        $this->assertUnalertable($communityId, "createOfficialsSurvey");
+    }
+
+    /**
+     * Tests Alertable::createOfficialsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testCreateOfficialsSurveyFailNotPurchased()
+    {
+        $communityId = 5;
+        $this->purchases->deleteAll(['community_id' => $communityId]);
+        $this->assertUnalertable($communityId, "createOfficialsSurvey");
+    }
+
+    /**
+     * Tests Alertable::createOfficialsSurvey()'s pass conditions:
+     *
+     * - Active community
+     * - Survey does not exist
+     * - The corresponding product has been purchased
+     *
+     * @return void
+     */
+    public function testCreateOfficialsSurveyPass()
+    {
+        $communityId = 5;
+        $this->assertAlertable($communityId, 'createOfficialsSurvey');
+    }
+
+    /**
+     * Tests Alertable::createOrganizationsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testCreateOrganizationsSurveyFailInactiveCommunity()
+    {
+        $communityId = 5;
+        $community = $this->communities->get($communityId);
+        $community->active = false;
+        $this->communities->save($community);
+        $this->assertUnalertable($communityId, "createOrganizationsSurvey");
+    }
+
+    /**
+     * Tests Alertable::createOrganizationsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testCreateOrganizationsSurveyFailSurveyExists()
+    {
+        $communityId = 5;
+        $survey = $this->surveys->get(1);
+        $survey->community_id = $communityId;
+        $this->surveys->save($survey);
+        $this->assertUnalertable($communityId, "createOrganizationsSurvey");
+    }
+
+    /**
+     * Tests Alertable::createOrganizationsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testCreateOrganizationsSurveyFailNotPurchased()
+    {
+        $communityId = 5;
+        $this->purchases->deleteAll(['community_id' => $communityId]);
+        $this->assertUnalertable($communityId, "createOrganizationsSurvey");
+    }
+
+    /**
+     * Tests Alertable::createOrganizationsSurvey()'s pass conditions:
+     *
+     * - Active community
+     * - Survey does not exist
+     * - The corresponding product has been purchased
+     *
+     * @return void
+     */
+    public function testCreateOrganizationsSurveyPass()
+    {
+        $communityId = 5;
+        $this->assertAlertable($communityId, 'createOrganizationsSurvey');
+    }
 }
