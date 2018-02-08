@@ -70,7 +70,7 @@ class CommunitiesFixture extends TestFixture
         ],
         [
             'id' => 4,
-            'name' => 'Test Community (alertable: deliver presentation A)',
+            'name' => 'Test Community (alertable: deliver presentation A, C)',
         ],
     ];
 

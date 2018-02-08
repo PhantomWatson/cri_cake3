@@ -88,6 +88,12 @@ class SurveysFixture extends TestFixture
             'type' => 'official',
             'community_id' => 4,
             'active' => false
+        ],
+        [
+            'id' => 5,
+            'type' => 'organization',
+            'community_id' => 4,
+            'active' => false
         ]
     ];
 

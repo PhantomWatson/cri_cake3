@@ -56,6 +56,10 @@ class ResponsesFixture extends TestFixture
             'respondent_id' => 2,
             'survey_id' => 4
         ],
+        [
+            'respondent_id' => 3,
+            'survey_id' => 5
+        ],
     ];
 
     // @codingStandardsIgnoreStart
