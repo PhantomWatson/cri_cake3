@@ -1,5 +1,5 @@
 <p>
-    You can edit your subscription to administrator task emails by visiting
+    You can edit your subscription to administrator alert emails by visiting
     <?= $this->Html->link(
         'My Account',
         [
