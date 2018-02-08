@@ -45,10 +45,21 @@ class PurchasesFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => 1,
-            'user_id' => 1,
             'community_id' => 1,
-            'product_id' => 1,
+            'product_id' => 1
+        ]
+    ];
+
+    /**
+     * Initialization method
+     *
+     * @return void
+     */
+    public function init()
+    {
+        parent::init();
+        $defaultData = [
+            'user_id' => 1,
             'postback' => '',
             'admin_added' => true,
             'source' => 'ocra',
@@ -56,6 +67,11 @@ class PurchasesFixture extends TestFixture
             'created' => '2016-01-22 16:55:26',
             'refunded' => null,
             'refunder_id' => null
-        ],
-    ];
+        ];
+
+        foreach ($this->records as $n => &$record) {
+            $record += $defaultData;
+            $record['id'] = $n + 1;
+        }
+    }
 }
