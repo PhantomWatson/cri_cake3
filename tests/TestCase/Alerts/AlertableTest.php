@@ -75,6 +75,128 @@ class AlertableTest extends TestCase
     }
 
     /**
+     * Tests that the community does not qualify for the specified alert
+     *
+     * @param int $communityId Community ID to be checked
+     * @param string $alertName An alert name, such as 'deliverPresentationA'
+     * @return void
+     */
+    private function assertUnalertable($communityId, $alertName)
+    {
+        $alertable = new Alertable($communityId);
+        $this->assertFalse($alertable->{$alertName}());
+    }
+
+    /**
+     * Tests that the community qualifies for the specified alert
+     *
+     * @param int $communityId Community ID to be checked
+     * @param string $alertName An alert name, such as 'deliverPresentationA'
+     * @return void
+     */
+    private function assertAlertable($communityId, $alertName)
+    {
+        $alertable = new Alertable($communityId);
+        $this->assertTrue($alertable->{$alertName}());
+    }
+
+    /**
+     * Tests the "community is inactive" fail condition
+     *
+     * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
+     * @param string $presentationLetter A or C
+     * @return void
+     */
+    private function _testDeliverMandPresFailInactiveCommunity($communityId, $presentationLetter)
+    {
+        $community = $this->communities->get($communityId);
+        $community->active = false;
+        $this->communities->save($community);
+        $this->assertUnalertable($communityId, "deliverPresentation$presentationLetter");
+    }
+
+    /**
+     * Tests the "survey is active" fail condition
+     *
+     * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
+     * @param int $surveyId Survey ID
+     * @param string $presentationLetter A or C
+     * @return void
+     */
+    private function _testDeliverMandPresFailActiveSurvey($communityId, $surveyId, $presentationLetter)
+    {
+        $survey = $this->surveys->get($surveyId);
+        $survey->active = true;
+        $this->surveys->save($survey);
+        $this->assertUnalertable($communityId, "deliverPresentation$presentationLetter");
+    }
+
+    /**
+     * Tests the "survey is active" fail condition
+     *
+     * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
+     * @param int $surveyId Survey ID
+     * @param string $presentationLetter A or C
+     * @return void
+     */
+    private function _testDeliverMandPresFailNoResponses($communityId, $surveyId, $presentationLetter)
+    {
+        // Survey with no responses
+        $this->responses->deleteAll(['survey_id' => $surveyId]);
+        $this->assertUnalertable($communityId, "deliverPresentation$presentationLetter");
+    }
+
+    /**
+     * Tests "presentation has been delivered" fail condition
+     *
+     * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
+     * @param int $deliverableId Deliverable ID
+     * @param string $presentationLetter A or C
+     * @return void
+     */
+    private function _testDeliverMandPresFailDelivered($communityId, $deliverableId, $presentationLetter)
+    {
+        $delivery = $this->deliveries->newEntity([
+            'deliverable_id' => $deliverableId,
+            'user_id' => 1,
+            'community_id' => $communityId,
+        ]);
+        $this->deliveries->save($delivery);
+        $this->assertUnalertable($communityId, "deliverPresentation$presentationLetter");
+    }
+
+    /**
+     * Tests "product has not been purchased" fail condition
+     *
+     * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
+     * @param string $presentationLetter A or C
+     * @return void
+     */
+    private function _testDeliverMandPresFailNotPurchased($communityId, $presentationLetter)
+    {
+        $this->purchases->deleteAll(['community_id' => $communityId]);
+        $this->assertUnalertable($communityId, "deliverPresentation$presentationLetter");
+    }
+
+    /**
+     * Tests "presentation has been opted out of" fail condition
+     *
+     * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
+     * @param int $productId Product ID
+     * @param string $presentationLetter A or C
+     * @return void
+     */
+    private function _testDeliverMandPresFailOptedOut($communityId, $productId, $presentationLetter)
+    {
+        $this->optOuts->addOptOut([
+            'community_id' => $communityId,
+            'product_id' => $productId,
+            'user_id' => 1
+        ]);
+        $this->assertUnalertable($communityId, "deliverPresentation$presentationLetter");
+    }
+
+    /**
      * Tests Alertable::deliverPresentationA()'s fail conditions
      *
      * @return void
@@ -82,13 +204,8 @@ class AlertableTest extends TestCase
     public function testDeliverPresentationAFailInactiveCommunity()
     {
         $communityId = 4;
-        $community = $this->communities->get($communityId);
-
-        // Inactive community
-        $community->active = false;
-        $this->communities->save($community);
-        $alertable = new Alertable($communityId);
-        $this->assertFalse($alertable->deliverPresentationA());
+        $presentationLetter = 'A';
+        $this->_testDeliverMandPresFailInactiveCommunity($communityId, $presentationLetter);
     }
 
     /**
@@ -100,13 +217,8 @@ class AlertableTest extends TestCase
     {
         $communityId = 4;
         $surveyId = 4;
-        $survey = $this->surveys->get($surveyId);
-
-        // Active survey
-        $survey->active = true;
-        $this->surveys->save($survey);
-        $alertable = new Alertable($communityId);
-        $this->assertFalse($alertable->deliverPresentationA());
+        $presentationLetter = 'A';
+        $this->_testDeliverMandPresFailActiveSurvey($communityId, $surveyId, $presentationLetter);
     }
 
     /**
@@ -118,11 +230,8 @@ class AlertableTest extends TestCase
     {
         $communityId = 4;
         $surveyId = 4;
-
-        // Survey with no responses
-        $this->responses->deleteAll(['survey_id' => $surveyId]);
-        $alertable = new Alertable($communityId);
-        $this->assertFalse($alertable->deliverPresentationA());
+        $presentationLetter = 'A';
+        $this->_testDeliverMandPresFailNoResponses($communityId, $surveyId, $presentationLetter);
     }
 
     /**
@@ -134,16 +243,8 @@ class AlertableTest extends TestCase
     {
         $communityId = 4;
         $deliverableId = DeliverablesTable::PRESENTATION_A_MATERIALS;
-
-        // Presentation has been delivered
-        $delivery = $this->deliveries->newEntity([
-            'deliverable_id' => $deliverableId,
-            'user_id' => 1,
-            'community_id' => $communityId,
-        ]);
-        $this->deliveries->save($delivery);
-        $alertable = new Alertable($communityId);
-        $this->assertFalse($alertable->deliverPresentationA());
+        $presentationLetter = 'A';
+        $this->_testDeliverMandPresFailDelivered($communityId, $deliverableId, $presentationLetter);
     }
 
     /**
@@ -154,11 +255,8 @@ class AlertableTest extends TestCase
     public function testDeliverPresentationAFailNotPurchased()
     {
         $communityId = 4;
-
-        // Product has not been purchased
-        $this->purchases->deleteAll(['community_id' => $communityId]);
-        $alertable = new Alertable($communityId);
-        $this->assertFalse($alertable->deliverPresentationA());
+        $presentationLetter = 'A';
+        $this->_testDeliverMandPresFailNotPurchased($communityId, $presentationLetter);
     }
 
     /**
@@ -170,34 +268,24 @@ class AlertableTest extends TestCase
     {
         $communityId = 4;
         $productId = ProductsTable::OFFICIALS_SURVEY;
-
-        // Presentation has been opted out of
-        $this->optOuts->addOptOut([
-            'community_id' => $communityId,
-            'product_id' => $productId,
-            'user_id' => 1
-        ]);
-        $alertable = new Alertable($communityId);
-        $this->assertFalse($alertable->deliverPresentationA());
+        $presentationLetter = 'A';
+        $this->_testDeliverMandPresFailOptedOut($communityId, $productId, $presentationLetter);
     }
 
     /**
-     * Tests Alertable::deliverPresentationA()'s pass condition
+     * Tests Alertable::deliverPresentationA()'s pass conditions:
+     *
+     * - Active community
+     * - Survey is inactive and has responses
+     * - Presentation has not been delivered
+     * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
      *
      * @return void
      */
     public function testDeliverPresentationAPass()
     {
-        /*
-         * - Active community
-         * - Survey is inactive and has responses
-         * - Presentation has not been delivered
-         * - The corresponding product has been purchased
-         * - The presentation has not been opted out of
-         */
-
         $communityId = 4;
-        $alertable = new Alertable($communityId);
-        $this->assertTrue($alertable->deliverPresentationA());
+        $this->assertAlertable($communityId, 'deliverPresentationA');
     }
 }
