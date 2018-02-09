@@ -1208,4 +1208,63 @@ class AlertableTest extends TestCase
         $communityId = 7;
         $this->assertAlertable($communityId, 'schedulePresentationD');
     }
+
+    /**
+     * Tests Alertable::deliverPolicyDev()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPolicyDevFailInactiveCommunity()
+    {
+        $communityId = 8;
+        $this->deactivateCommunity($communityId);
+        $this->assertUnalertable($communityId, 'deliverPolicyDev');
+    }
+
+    /**
+     * Tests Alertable::deliverPolicyDev()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPolicyDevFailNotStepFour()
+    {
+        $communityId = 8;
+        $community = $this->communities->get($communityId);
+        $community->score = 1;
+        $this->communities->save($community);
+        $this->assertUnalertable($communityId, 'deliverPolicyDev');
+    }
+
+    /**
+     * Tests Alertable::deliverPolicyDev()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPolicyDevFailDelivered()
+    {
+        $communityId = 8;
+        $deliverableId = DeliverablesTable::POLICY_DEVELOPMENT;
+        $delivery = $this->deliveries->newEntity([
+            'deliverable_id' => $deliverableId,
+            'user_id' => 1,
+            'community_id' => $communityId,
+        ]);
+        $this->deliveries->save($delivery);
+        $this->assertUnalertable($communityId, 'deliverPolicyDev');
+    }
+
+    /**
+     * Tests Alertable::deliverPolicyDev()'s pass conditions:
+     *
+     * - Active community
+     * - Community is on Step Four
+     * - Policy dev has not yet been delivered
+     *
+     * @return void
+     */
+    public function testDeliverPolicyDevPass()
+    {
+        $communityId = 8;
+        $this->assertAlertable($communityId, 'deliverPolicyDev');
+    }
 }
