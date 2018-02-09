@@ -110,7 +110,7 @@ class AlertableTest extends TestCase
      * Tests the "community is inactive" fail condition
      *
      * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
-     * @param string $presentationLetter A or C
+     * @param string $presentationLetter A, B, C, or D
      * @return void
      */
     private function _testDeliverPresFailInactiveCommunity($communityId, $presentationLetter)
@@ -124,7 +124,7 @@ class AlertableTest extends TestCase
      *
      * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
      * @param int $surveyId Survey ID
-     * @param string $presentationLetter A or C
+     * @param string $presentationLetter A, B, C, or D
      * @return void
      */
     private function _testDeliverPresFailActiveSurvey($communityId, $surveyId, $presentationLetter)
@@ -140,7 +140,7 @@ class AlertableTest extends TestCase
      *
      * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
      * @param int $surveyId Survey ID
-     * @param string $presentationLetter A or C
+     * @param string $presentationLetter A, B, C, or D
      * @return void
      */
     private function _testDeliverPresFailNoResponses($communityId, $surveyId, $presentationLetter)
@@ -155,7 +155,7 @@ class AlertableTest extends TestCase
      *
      * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
      * @param int $deliverableId Deliverable ID
-     * @param string $presentationLetter A or C
+     * @param string $presentationLetter A, B, C, or D
      * @return void
      */
     private function _testDeliverPresFailDelivered($communityId, $deliverableId, $presentationLetter)
@@ -173,7 +173,7 @@ class AlertableTest extends TestCase
      * Tests "product has not been purchased" fail condition
      *
      * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
-     * @param string $presentationLetter A or C
+     * @param string $presentationLetter A, B, C, or D
      * @return void
      */
     private function _testDeliverPresFailNotPurchased($communityId, $presentationLetter)
@@ -187,7 +187,7 @@ class AlertableTest extends TestCase
      *
      * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
      * @param int $productId Product ID
-     * @param string $presentationLetter A or C
+     * @param string $presentationLetter A, B, C, or D
      * @return void
      */
     private function _testDeliverPresFailOptedOut($communityId, $productId, $presentationLetter)
@@ -243,6 +243,60 @@ class AlertableTest extends TestCase
         $response = $this->responses->find()->first();
         $response->survey_id = $survey->id;
         $this->responses->save($response);
+    }
+
+    /**
+     * Tests "community is inactive" fail condition
+     *
+     * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
+     * @param string $presentationLetter A, B, C, or D
+     * @return void
+     */
+    private function _testSchedulePresFailInactiveCommunity($communityId, $presentationLetter)
+    {
+        $this->deactivateCommunity($communityId);
+        $this->assertUnalertable($communityId, "schedulePresentation$presentationLetter");
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationA()'s fail conditions
+     *
+     * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
+     * @param string $presentationLetter A, B, C, or D
+     * @return void
+     */
+    private function _testSchedulePresFailNotDelivered($communityId, $presentationLetter)
+    {
+        $this->deliveries->deleteAll(['community_id' => $communityId]);
+        $this->assertUnalertable($communityId, "schedulePresentation$presentationLetter");
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationA()'s fail conditions
+     *
+     * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
+     * @param string $presentationLetter A, B, C, or D
+     * @return void
+     */
+    private function _testSchedulePresFailScheduled($communityId, $presentationLetter)
+    {
+        $community = $this->communities->get($communityId);
+        $community->{'presentation_' . strtolower($presentationLetter)} = '2000-01-01';
+        $this->communities->save($community);
+        $this->assertUnalertable($communityId, "schedulePresentation$presentationLetter");
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationA()'s fail conditions
+     *
+     * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
+     * @param string $presentationLetter A, B, C, or D
+     * @return void
+     */
+    private function _testSchedulePresFailNotPurchased($communityId, $presentationLetter)
+    {
+        $this->purchases->deleteAll(['community_id' => $communityId]);
+        $this->assertUnalertable($communityId, "schedulePresentation$presentationLetter");
     }
 
     /**
@@ -841,5 +895,317 @@ class AlertableTest extends TestCase
     {
         $communityId = 6;
         $this->assertAlertable($communityId, 'activateOrganizationsSurvey');
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationA()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationAFailInactiveCommunity()
+    {
+        $communityId = 7;
+        $presentationLetter = 'A';
+        $this->_testSchedulePresFailInactiveCommunity($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationA()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationAFailNotDelivered()
+    {
+        $communityId = 7;
+        $presentationLetter = 'A';
+        $this->_testSchedulePresFailNotDelivered($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationA()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationAFailScheduled()
+    {
+        $communityId = 7;
+        $presentationLetter = 'A';
+        $this->_testSchedulePresFailScheduled($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationA()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationAFailNotPurchased()
+    {
+        $communityId = 7;
+        $presentationLetter = 'A';
+        $this->_testSchedulePresFailNotPurchased($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationA()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationAFailOptedOut()
+    {
+        $communityId = 7;
+        $presentationLetter = 'A';
+        $productId = ProductsTable::OFFICIALS_SURVEY;
+        $this->_testDeliverPresFailOptedOut($communityId, $productId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationA()'s pass conditions:
+     *
+     * - Active community
+     * - Presentation materials have been delivered
+     * - Presentation has not been scheduled
+     * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
+     *
+     * @return void
+     */
+    public function testSchedulePresentationAPass()
+    {
+        $communityId = 7;
+        $this->assertAlertable($communityId, 'schedulePresentationA');
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationB()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationBFailInactiveCommunity()
+    {
+        $communityId = 7;
+        $presentationLetter = 'B';
+        $this->_testSchedulePresFailInactiveCommunity($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationB()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationBFailNotDelivered()
+    {
+        $communityId = 7;
+        $presentationLetter = 'B';
+        $this->_testSchedulePresFailNotDelivered($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationB()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationBFailScheduled()
+    {
+        $communityId = 7;
+        $presentationLetter = 'B';
+        $this->_testSchedulePresFailScheduled($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationB()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationBFailNotPurchased()
+    {
+        $communityId = 7;
+        $presentationLetter = 'B';
+        $this->_testSchedulePresFailNotPurchased($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationB()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationBFailOptedOut()
+    {
+        $communityId = 7;
+        $presentationLetter = 'B';
+        $productId = ProductsTable::OFFICIALS_SUMMIT;
+        $this->_testDeliverPresFailOptedOut($communityId, $productId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationB()'s pass conditions:
+     *
+     * - Active community
+     * - Presentation materials have been delivered
+     * - Presentation has not been scheduled
+     * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
+     *
+     * @return void
+     */
+    public function testSchedulePresentationBPass()
+    {
+        $communityId = 7;
+        $this->assertAlertable($communityId, 'schedulePresentationB');
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationC()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationCFailInactiveCommunity()
+    {
+        $communityId = 7;
+        $presentationLetter = 'C';
+        $this->_testSchedulePresFailInactiveCommunity($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationC()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationCFailNotDelivered()
+    {
+        $communityId = 7;
+        $presentationLetter = 'C';
+        $this->_testSchedulePresFailNotDelivered($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationC()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationCFailScheduled()
+    {
+        $communityId = 7;
+        $presentationLetter = 'C';
+        $this->_testSchedulePresFailScheduled($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationC()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationCFailNotPurchased()
+    {
+        $communityId = 7;
+        $presentationLetter = 'C';
+        $this->_testSchedulePresFailNotPurchased($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationC()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationCFailOptedOut()
+    {
+        $communityId = 7;
+        $presentationLetter = 'C';
+        $productId = ProductsTable::ORGANIZATIONS_SURVEY;
+        $this->_testDeliverPresFailOptedOut($communityId, $productId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationC()'s pass conditions:
+     *
+     * - Active community
+     * - Presentation materials have been delivered
+     * - Presentation has not been scheduled
+     * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
+     *
+     * @return void
+     */
+    public function testSchedulePresentationCPass()
+    {
+        $communityId = 7;
+        $this->assertAlertable($communityId, 'schedulePresentationC');
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationD()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationDFailInactiveCommunity()
+    {
+        $communityId = 7;
+        $presentationLetter = 'D';
+        $this->_testSchedulePresFailInactiveCommunity($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationD()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationDFailNotDelivered()
+    {
+        $communityId = 7;
+        $presentationLetter = 'D';
+        $this->_testSchedulePresFailNotDelivered($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationD()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationDFailScheduled()
+    {
+        $communityId = 7;
+        $presentationLetter = 'D';
+        $this->_testSchedulePresFailScheduled($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationD()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationDFailNotPurchased()
+    {
+        $communityId = 7;
+        $presentationLetter = 'D';
+        $this->_testSchedulePresFailNotPurchased($communityId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationD()'s fail conditions
+     *
+     * @return void
+     */
+    public function testSchedulePresentationDFailOptedOut()
+    {
+        $communityId = 7;
+        $presentationLetter = 'D';
+        $productId = ProductsTable::ORGANIZATIONS_SUMMIT;
+        $this->_testDeliverPresFailOptedOut($communityId, $productId, $presentationLetter);
+    }
+
+    /**
+     * Tests Alertable::schedulePresentationD()'s pass conditions:
+     *
+     * - Active community
+     * - Presentation materials have been delivered
+     * - Presentation has not been scheduled
+     * - The corresponding product has been purchased
+     * - The presentation has not been opted out of
+     *
+     * @return void
+     */
+    public function testSchedulePresentationDPass()
+    {
+        $communityId = 7;
+        $this->assertAlertable($communityId, 'schedulePresentationD');
     }
 }

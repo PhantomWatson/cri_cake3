@@ -80,6 +80,10 @@ class CommunitiesFixture extends TestFixture
             'id' => 6,
             'name' => 'Test Community (alertable: activate surveys)',
         ],
+        [
+            'id' => 7,
+            'name' => 'Test Community (alertable: schedule presentations)',
+        ],
     ];
 
     /**
