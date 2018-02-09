@@ -2,6 +2,8 @@
 namespace App\Test\TestCase\Alerts;
 
 use App\Alerts\Alertable;
+use App\Model\Entity\Response;
+use App\Model\Entity\Survey;
 use App\Model\Table\CommunitiesTable;
 use App\Model\Table\DeliverablesTable;
 use App\Model\Table\DeliveriesTable;
@@ -209,6 +211,38 @@ class AlertableTest extends TestCase
         $community = $this->communities->get($communityId);
         $community->active = false;
         $this->communities->save($community);
+    }
+
+    /**
+     * Activates the specified survey
+     *
+     * @param int $communityId Community ID
+     * @param string $surveyType 'official' or 'organization'
+     * @return void
+     */
+    private function activateSurvey($communityId, $surveyType)
+    {
+        /** @var Survey $survey */
+        $survey = $this->surveys->find()->where(['community_id' => $communityId, 'type' => $surveyType])->first();
+        $survey->active = true;
+        $this->surveys->save($survey);
+    }
+
+    /**
+     * Adds a response to the specified community (by reassigning an arbitrary existing response)
+     *
+     * @param int $communityId Community ID
+     * @param string $surveyType 'official' or 'organization'
+     * @return void
+     */
+    private function addResponse($communityId, $surveyType)
+    {
+        /** @var Survey $survey */
+        $survey = $this->surveys->find()->where(['community_id' => $communityId, 'type' => $surveyType])->first();
+        /** @var Response $response */
+        $response = $this->responses->find()->first();
+        $response->survey_id = $survey->id;
+        $this->responses->save($response);
     }
 
     /**
@@ -675,5 +709,137 @@ class AlertableTest extends TestCase
     {
         $communityId = 5;
         $this->assertAlertable($communityId, 'createClients');
+    }
+
+    /**
+     * Tests Alertable::activateOfficialsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testActivateOfficialsSurveyFailInactiveCommunity()
+    {
+        $communityId = 6;
+        $this->deactivateCommunity($communityId);
+        $this->assertUnalertable($communityId, 'activateOfficialsSurvey');
+    }
+
+    /**
+     * Tests Alertable::activateOfficialsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testActivateOfficialsSurveyFailActiveSurvey()
+    {
+        $communityId = 6;
+        $surveyType = 'official';
+        $this->activateSurvey($communityId, $surveyType);
+        $this->assertUnalertable($communityId, 'activateOfficialsSurvey');
+    }
+
+    /**
+     * Tests Alertable::activateOfficialsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testActivateOfficialsSurveyFailHasResponses()
+    {
+        $communityId = 6;
+        $surveyType = 'official';
+        $this->addResponse($communityId, $surveyType);
+        $this->assertUnalertable($communityId, 'activateOfficialsSurvey');
+    }
+
+    /**
+     * Tests Alertable::activateOfficialsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testActivateOfficialsSurveyFailNotPurchased()
+    {
+        $communityId = 6;
+        $this->purchases->deleteAll(['community_id' => $communityId]);
+        $this->assertUnalertable($communityId, 'activateOfficialsSurvey');
+    }
+
+    /**
+     * Tests Alertable::activateOfficialsSurvey()'s pass conditions:
+     *
+     * - Active community
+     * - Survey is inactive
+     * - Survey has no responses
+     * - The corresponding product has been purchased
+     *
+     * @return void
+     */
+    public function testActivateOfficialsSurveyPass()
+    {
+        $communityId = 6;
+        $this->assertAlertable($communityId, 'activateOfficialsSurvey');
+    }
+
+    /**
+     * Tests Alertable::activateOrganizationsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testActivateOrgSurveyFailInactiveCommunity()
+    {
+        $communityId = 6;
+        $this->deactivateCommunity($communityId);
+        $this->assertUnalertable($communityId, 'activateOrganizationsSurvey');
+    }
+
+    /**
+     * Tests Alertable::activateOrganizationsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testActivateOrgSurveyFailActiveSurvey()
+    {
+        $communityId = 6;
+        $surveyType = 'organization';
+        $this->activateSurvey($communityId, $surveyType);
+        $this->assertUnalertable($communityId, 'activateOrganizationsSurvey');
+    }
+
+    /**
+     * Tests Alertable::activateOrganizationsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testActivateOrgSurveyFailHasResponses()
+    {
+        $communityId = 6;
+        $surveyType = 'organization';
+        $this->addResponse($communityId, $surveyType);
+        $this->assertUnalertable($communityId, 'activateOrganizationsSurvey');
+    }
+
+    /**
+     * Tests Alertable::activateOrganizationsSurvey()'s fail conditions
+     *
+     * @return void
+     */
+    public function testActivateOrgSurveyFailNotPurchased()
+    {
+        $communityId = 6;
+        $this->purchases->deleteAll(['community_id' => $communityId]);
+        $this->assertUnalertable($communityId, 'activateOrganizationsSurvey');
+    }
+
+    /**
+     * Tests Alertable::activateOrganizationsSurvey()'s pass conditions:
+     *
+     * - Active community
+     * - Survey is inactive
+     * - Survey has no responses
+     * - The corresponding product has been purchased
+     *
+     * @return void
+     */
+    public function testActivateOrgSurveyPass()
+    {
+        $communityId = 6;
+        $this->assertAlertable($communityId, 'activateOrganizationsSurvey');
     }
 }
