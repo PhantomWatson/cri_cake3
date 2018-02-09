@@ -551,7 +551,7 @@ class AlertableTest extends TestCase
     public function testCreateOfficialsSurveyFailSurveyExists()
     {
         $communityId = 5;
-        $survey = $this->surveys->get(1);
+        $survey = $this->surveys->find()->where(['type' => 'official'])->first();
         $survey->community_id = $communityId;
         $this->surveys->save($survey);
         $this->assertUnalertable($communityId, "createOfficialsSurvey");
@@ -604,7 +604,7 @@ class AlertableTest extends TestCase
     public function testCreateOrganizationsSurveyFailSurveyExists()
     {
         $communityId = 5;
-        $survey = $this->surveys->get(1);
+        $survey = $this->surveys->find()->where(['type' => 'organization'])->first();
         $survey->community_id = $communityId;
         $this->surveys->save($survey);
         $this->assertUnalertable($communityId, "createOrganizationsSurvey");
