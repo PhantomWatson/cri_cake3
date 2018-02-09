@@ -664,7 +664,7 @@ class AlertableTest extends TestCase
     }
 
     /**
-     * Tests Alertable::createOrganizationsSurvey()'s pass conditions:
+     * Tests Alertable::createClients()'s pass conditions:
      *
      * - Active community
      * - Community has no clients
