@@ -10,6 +10,7 @@ use App\Model\Table\ProductsTable;
 use App\Model\Table\PurchasesTable;
 use App\Model\Table\ResponsesTable;
 use App\Model\Table\SurveysTable;
+use App\Model\Table\UsersTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -23,6 +24,7 @@ use Cake\TestSuite\TestCase;
  * @property PurchasesTable $purchases
  * @property ResponsesTable $responses
  * @property SurveysTable $surveys
+ * @property UsersTable $users
  */
 class AlertableTest extends TestCase
 {
@@ -32,6 +34,7 @@ class AlertableTest extends TestCase
      * @var array
      */
     public $fixtures = [
+        'app.clients_communities',
         'app.communities',
         'app.deliverables',
         'app.deliveries',
@@ -62,6 +65,7 @@ class AlertableTest extends TestCase
         $this->purchases = TableRegistry::get('Purchases');
         $this->responses = TableRegistry::get('Responses');
         $this->surveys = TableRegistry::get('Surveys');
+        $this->users = TableRegistry::get('Users');
     }
 
     /**
@@ -109,9 +113,7 @@ class AlertableTest extends TestCase
      */
     private function _testDeliverPresFailInactiveCommunity($communityId, $presentationLetter)
     {
-        $community = $this->communities->get($communityId);
-        $community->active = false;
-        $this->communities->save($community);
+        $this->deactivateCommunity($communityId);
         $this->assertUnalertable($communityId, "deliverPresentation$presentationLetter");
     }
 
@@ -194,6 +196,19 @@ class AlertableTest extends TestCase
             'user_id' => 1
         ]);
         $this->assertUnalertable($communityId, "deliverPresentation$presentationLetter");
+    }
+
+    /**
+     * Marks the specified community as inactive
+     *
+     * @param int $communityId Community ID
+     * @return void
+     */
+    private function deactivateCommunity($communityId)
+    {
+        $community = $this->communities->get($communityId);
+        $community->active = false;
+        $this->communities->save($community);
     }
 
     /**
@@ -524,9 +539,7 @@ class AlertableTest extends TestCase
     public function testCreateOfficialsSurveyFailInactiveCommunity()
     {
         $communityId = 5;
-        $community = $this->communities->get($communityId);
-        $community->active = false;
-        $this->communities->save($community);
+        $this->deactivateCommunity($communityId);
         $this->assertUnalertable($communityId, "createOfficialsSurvey");
     }
 
@@ -579,9 +592,7 @@ class AlertableTest extends TestCase
     public function testCreateOrganizationsSurveyFailInactiveCommunity()
     {
         $communityId = 5;
-        $community = $this->communities->get($communityId);
-        $community->active = false;
-        $this->communities->save($community);
+        $this->deactivateCommunity($communityId);
         $this->assertUnalertable($communityId, "createOrganizationsSurvey");
     }
 
@@ -624,5 +635,45 @@ class AlertableTest extends TestCase
     {
         $communityId = 5;
         $this->assertAlertable($communityId, 'createOrganizationsSurvey');
+    }
+
+    /**
+     * Tests Alertable::createClients()'s fail conditions
+     *
+     * @return void
+     */
+    public function testCreateClientsFailInactiveCommunity()
+    {
+        $communityId = 5;
+        $this->deactivateCommunity($communityId);
+        $this->assertUnalertable($communityId, "createClients");
+    }
+
+    /**
+     * Tests Alertable::createClients()'s fail conditions
+     *
+     * @return void
+     */
+    public function testCreateClientsFailHasClient()
+    {
+        $communityId = 5;
+        $community = $this->communities->get($communityId);
+        $client = $this->users->find()->first();
+        $this->communities->Clients->link($community, [$client]);
+        $this->assertUnalertable($communityId, "createClients");
+    }
+
+    /**
+     * Tests Alertable::createOrganizationsSurvey()'s pass conditions:
+     *
+     * - Active community
+     * - Community has no clients
+     *
+     * @return void
+     */
+    public function testCreateClientsPass()
+    {
+        $communityId = 5;
+        $this->assertAlertable($communityId, 'createClients');
     }
 }
