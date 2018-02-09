@@ -1,6 +1,7 @@
 <?php
 namespace App\Test\Fixture;
 
+use App\Model\Table\DeliverablesTable;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
@@ -39,11 +40,27 @@ class DeliveriesFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => 1,
-            'deliverable_id' => 1,
-            'user_id' => 1,
-            'community_id' => 1,
-            'created' => '2017-05-10 19:10:17'
+            'deliverable_id' => DeliverablesTable::PRESENTATION_A_MATERIALS,
+            'community_id' => 1
         ],
     ];
+
+    /**
+     * Initialization method
+     *
+     * @return void
+     */
+    public function init()
+    {
+        parent::init();
+        $defaultData = [
+            'user_id' => 1,
+            'created' => '2017-05-10 19:10:17'
+        ];
+
+        foreach ($this->records as $n => &$record) {
+            $record += $defaultData;
+            $record['id'] = $n + 1;
+        }
+    }
 }
