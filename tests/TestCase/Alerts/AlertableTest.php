@@ -49,9 +49,11 @@ class AlertableTest extends TestCase
     ];
     private $communities;
     private $deliveries;
+    private $optOuts;
     private $purchases;
     private $responses;
     private $surveys;
+    private $users;
 
     /**
      * setUp method
