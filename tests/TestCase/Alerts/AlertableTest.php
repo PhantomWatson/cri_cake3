@@ -13,6 +13,7 @@ use App\Model\Table\PurchasesTable;
 use App\Model\Table\ResponsesTable;
 use App\Model\Table\SurveysTable;
 use App\Model\Table\UsersTable;
+use Cake\I18n\Date;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -193,6 +194,21 @@ class AlertableTest extends TestCase
     }
 
     /**
+     * Tests "presentation date has passed" fail condition
+     *
+     * @param int $communityId ID of an alertable community that will be manipulated to make un-alertable
+     * @param string $presentationLetter A, B, C, or D
+     * @return void
+     */
+    private function _testDeliverPresFailDatePassed($communityId, $presentationLetter)
+    {
+        $community = $this->communities->get($communityId);
+        $community->{'presentation_' . strtolower($presentationLetter)} = new Date('yesterday');
+        $this->communities->save($community);
+        $this->assertUnalertable($communityId, "deliverPresentation$presentationLetter");
+    }
+
+    /**
      * Marks the specified community as inactive
      *
      * @param int $communityId Community ID
@@ -368,6 +384,18 @@ class AlertableTest extends TestCase
     }
 
     /**
+     * Tests Alertable::deliverPresentationA()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPresentationAFailDatePassed()
+    {
+        $communityId = 4;
+        $presentationLetter = 'A';
+        $this->_testDeliverPresFailDatePassed($communityId, $presentationLetter);
+    }
+
+    /**
      * Tests Alertable::deliverPresentationA()'s pass conditions:
      *
      * - Active community
@@ -375,6 +403,7 @@ class AlertableTest extends TestCase
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
      * - The presentation has not been opted out of
+     * - The date of the presentation has not passed
      *
      * @return void
      */
@@ -461,6 +490,18 @@ class AlertableTest extends TestCase
     }
 
     /**
+     * Tests Alertable::deliverPresentationC()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPresentationCFailDatePassed()
+    {
+        $communityId = 4;
+        $presentationLetter = 'C';
+        $this->_testDeliverPresFailDatePassed($communityId, $presentationLetter);
+    }
+
+    /**
      * Tests Alertable::deliverPresentationC()'s pass conditions:
      *
      * - Active community
@@ -468,6 +509,7 @@ class AlertableTest extends TestCase
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
      * - The presentation has not been opted out of
+     * - The date of the presentation has not passed
      *
      * @return void
      */
@@ -528,6 +570,18 @@ class AlertableTest extends TestCase
     }
 
     /**
+     * Tests Alertable::deliverPresentationB()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPresentationBFailDatePassed()
+    {
+        $communityId = 4;
+        $presentationLetter = 'B';
+        $this->_testDeliverPresFailDatePassed($communityId, $presentationLetter);
+    }
+
+    /**
      * Tests Alertable::deliverPresentationB()'s pass conditions:
      *
      * - Active community
@@ -535,6 +589,7 @@ class AlertableTest extends TestCase
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
      * - The presentation has not been opted out of
+     * - The date of the presentation has not passed
      *
      * @return void
      */
@@ -595,6 +650,18 @@ class AlertableTest extends TestCase
     }
 
     /**
+     * Tests Alertable::deliverPresentationD()'s fail conditions
+     *
+     * @return void
+     */
+    public function testDeliverPresentationDFailDatePassed()
+    {
+        $communityId = 4;
+        $presentationLetter = 'D';
+        $this->_testDeliverPresFailDatePassed($communityId, $presentationLetter);
+    }
+
+    /**
      * Tests Alertable::deliverPresentationD()'s pass conditions:
      *
      * - Active community
@@ -602,6 +669,7 @@ class AlertableTest extends TestCase
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
      * - The presentation has not been opted out of
+     * - The date of the presentation has not passed
      *
      * @return void
      */
