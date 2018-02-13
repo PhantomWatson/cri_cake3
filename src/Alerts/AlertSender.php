@@ -50,7 +50,7 @@ class AlertSender
     /**
      * Enqueues an alert email
      *
-     * @param User $recipient Alert recipients
+     * @param User $recipient Alert recipient
      * @param string $alertName Such as createClients or deliverPolicyDev
      * @param array|null $data Metadata to include in queued job in addition to default data
      * @throws \Exception
