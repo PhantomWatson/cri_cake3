@@ -56,6 +56,7 @@ class Alertable
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
      * - The presentation has not been opted out of
+     * - The date of the presentation has not passed
      *
      * @return bool
      */
@@ -65,8 +66,9 @@ class Alertable
         $surveyId = $this->surveys->getSurveyId($this->community->id, $surveyType);
         $productId = ProductsTable::OFFICIALS_SURVEY;
         $deliverableId = DeliverablesTable::PRESENTATION_A_MATERIALS;
+        $presentationLetter = 'a';
 
-        return $this->deliverMandatoryPresentation($surveyId, $deliverableId, $productId);
+        return $this->deliverMandatoryPresentation($surveyId, $deliverableId, $productId, $presentationLetter);
     }
 
     /**
@@ -78,6 +80,7 @@ class Alertable
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
      * - The presentation has not been opted out of
+     * - The date of the presentation has not passed
      *
      * @return bool
      */
@@ -87,8 +90,9 @@ class Alertable
         $surveyId = $this->surveys->getSurveyId($this->community->id, $surveyType);
         $productId = ProductsTable::ORGANIZATIONS_SURVEY;
         $deliverableId = DeliverablesTable::PRESENTATION_C_MATERIALS;
+        $presentationLetter = 'c';
 
-        return $this->deliverMandatoryPresentation($surveyId, $deliverableId, $productId);
+        return $this->deliverMandatoryPresentation($surveyId, $deliverableId, $productId, $presentationLetter);
     }
 
     /**
@@ -99,13 +103,15 @@ class Alertable
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
      * - The presentation has not been opted out of
+     * - The date of the presentation has not passed
      *
      * @param int $surveyId Survey ID
      * @param int $deliverableId Deliverable ID
      * @param int $productId Product ID
+     * @param string $presentationLetter a, b, c, or d
      * @return bool
      */
-    private function deliverMandatoryPresentation($surveyId, $deliverableId, $productId)
+    private function deliverMandatoryPresentation($surveyId, $deliverableId, $productId, $presentationLetter)
     {
         if (!$this->community->active) {
             return false;
@@ -119,7 +125,27 @@ class Alertable
             return false;
         }
 
-        return $this->deliverOptionalPresentation($deliverableId, $productId);
+        return $this->deliverOptionalPresentation($deliverableId, $productId, $presentationLetter);
+    }
+
+    /**
+     * Returns true if the presentation date is non-null and in the past
+     *
+     * @param string $presentationLetter a, b, c, or d
+     * @return bool
+     */
+    private function presentationHasPassed($presentationLetter)
+    {
+        $presentationLetter = strtolower($presentationLetter);
+        if ($this->community->{"presentation_$presentationLetter"} == null) {
+            return false;
+        }
+
+        if ($this->community->presentation_a->timestamp >= time()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -130,6 +156,7 @@ class Alertable
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
      * - The presentation has not been opted out of
+     * - The date of the presentation has not passed
      *
      * @return bool
      */
@@ -137,8 +164,9 @@ class Alertable
     {
         $productId = ProductsTable::OFFICIALS_SUMMIT;
         $deliverableId = DeliverablesTable::PRESENTATION_B_MATERIALS;
+        $presentationLetter = 'c';
 
-        return $this->deliverOptionalPresentation($deliverableId, $productId);
+        return $this->deliverOptionalPresentation($deliverableId, $productId, $presentationLetter);
     }
 
     /**
@@ -149,6 +177,7 @@ class Alertable
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
      * - The presentation has not been opted out of
+     * - The date of the presentation has not passed
      *
      * @return bool
      */
@@ -156,8 +185,9 @@ class Alertable
     {
         $productId = ProductsTable::ORGANIZATIONS_SUMMIT;
         $deliverableId = DeliverablesTable::PRESENTATION_D_MATERIALS;
+        $presentationLetter = 'c';
 
-        return $this->deliverOptionalPresentation($deliverableId, $productId);
+        return $this->deliverOptionalPresentation($deliverableId, $productId, $presentationLetter);
     }
 
     /**
@@ -167,12 +197,14 @@ class Alertable
      * - Presentation has not been delivered
      * - The corresponding product has been purchased
      * - The presentation has not been opted out of
+     * - The date of the presentation has not passed
      *
      * @param int $deliverableId Deliverable ID
      * @param int $productId Product ID
+     * @param string $presentationLetter a, b, c, or d
      * @return bool
      */
-    private function deliverOptionalPresentation($deliverableId, $productId)
+    private function deliverOptionalPresentation($deliverableId, $productId, $presentationLetter)
     {
         if (!$this->community->active) {
             return false;
@@ -187,6 +219,10 @@ class Alertable
         }
 
         if ($this->optOuts->optedOut($this->community->id, $productId)) {
+            return false;
+        }
+
+        if ($this->presentationHasPassed($presentationLetter)) {
             return false;
         }
 
