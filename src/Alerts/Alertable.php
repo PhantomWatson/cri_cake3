@@ -164,7 +164,7 @@ class Alertable
     {
         $productId = ProductsTable::OFFICIALS_SUMMIT;
         $deliverableId = DeliverablesTable::PRESENTATION_B_MATERIALS;
-        $presentationLetter = 'c';
+        $presentationLetter = 'b';
 
         return $this->deliverOptionalPresentation($deliverableId, $productId, $presentationLetter);
     }
@@ -185,7 +185,7 @@ class Alertable
     {
         $productId = ProductsTable::ORGANIZATIONS_SUMMIT;
         $deliverableId = DeliverablesTable::PRESENTATION_D_MATERIALS;
-        $presentationLetter = 'c';
+        $presentationLetter = 'd';
 
         return $this->deliverOptionalPresentation($deliverableId, $productId, $presentationLetter);
     }
