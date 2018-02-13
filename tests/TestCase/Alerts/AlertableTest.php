@@ -71,16 +71,6 @@ class AlertableTest extends TestCase
     }
 
     /**
-     * tearDown method
-     *
-     * @return void
-     */
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
-
-    /**
      * Tests that the community does not qualify for the specified alert
      *
      * @param int $communityId Community ID to be checked
