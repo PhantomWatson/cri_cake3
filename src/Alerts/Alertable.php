@@ -141,7 +141,7 @@ class Alertable
             return false;
         }
 
-        if ($this->community->presentation_a->timestamp >= time()) {
+        if ($this->community->{"presentation_$presentationLetter"}->timestamp >= time()) {
             return false;
         }
 
