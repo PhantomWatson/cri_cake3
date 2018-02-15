@@ -7,8 +7,12 @@ use App\Model\Table\DeliveriesTable;
 use App\Model\Table\ProductsTable;
 use App\Model\Table\PurchasesTable;
 use App\Model\Table\SurveysTable;
+use Cake\Cache\Cache;
+use Cake\Core\Configure;
+use Cake\Log\Log;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Text;
 
 /**
  * Class Map
@@ -269,7 +273,18 @@ class Map
             ->all();
 
         $phases = Map::getPhases();
-        $mapData = [['City', 'Phase']];
+        $mapData = [
+            [
+                '',
+                '',
+                'Community Name',
+                'Phase',
+                [
+                    'type' => 'string',
+                    'role' => 'tooltip'
+                ]
+            ]
+        ];
         foreach ($communities as $i => $community) {
             $map = new Map($community);
             $phase = $map->getCommunityPhase();
@@ -277,9 +292,47 @@ class Map
                 continue;
             }
             $phaseNum = array_search($phase, $phases);
-            $mapData[] = [$community->name, $phaseNum + 1];
+            $coordinates = self::getCoordinates($community->name);
+            if ($coordinates) {
+                $mapData[] = [
+                    $coordinates['lat'],
+                    $coordinates['lng'],
+                    $community->name,
+                    $phaseNum + 1,
+                    $phase
+                ];
+            }
         }
 
         return $mapData;
+    }
+
+    /**
+     * Returns an array of latitude and longitude coordinates for the provided location, or false if not resolvable
+     *
+     * @param string $locationName A location name resolvable by Google Maps Geocoding API
+     * @return array|bool
+     */
+    public static function getCoordinates($locationName)
+    {
+        return Cache::remember('coordinates-' . Text::slug($locationName), function () use ($locationName) {
+            $locationName .= ', Indiana, USA';
+            $url = 'https://maps.googleapis.com/maps/api/geocode/json?';
+            $url .= 'address=' . urlencode($locationName);
+            $url .= '&key=' . Configure::read('google_maps_api_key');
+            $response = file_get_contents($url);
+            $geocode = json_decode($response);
+
+            if ($geocode->status == 'OK') {
+                return [
+                    'lat' => $geocode->results[0]->geometry->location->lat,
+                    'lng' => $geocode->results[0]->geometry->location->lng
+                ];
+            }
+
+            Log::write('error', 'Location name not resolvable to GPS coordinates: ' . $locationName);
+
+            return false;
+        });
     }
 }
