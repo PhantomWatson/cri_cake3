@@ -14,6 +14,7 @@
  */
 namespace App\Controller;
 
+use App\Maps\Map;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\TableRegistry;
 use Queue\Model\Table\QueuedJobsTable;
@@ -47,7 +48,13 @@ class PagesController extends AppController
      */
     public function home()
     {
-        $this->set('titleForLayout', '');
+        $this->set([
+            'map' => [
+                'colors' => Map::getColors(),
+                'data' => Map::getMapData()
+            ],
+            'titleForLayout' => ''
+        ]);
     }
 
     /**

@@ -470,7 +470,8 @@ $config = [
     'cookie_key' => env('COOKIE_ENCRYPTION_KEY'),
     'maintenance_mode' => false,
     'cashNetId' => env('CASHNET_ID'),
-    'slack_webhook_url' => env('SLACK_WEBHOOK_URL')
+    'slack_webhook_url' => env('SLACK_WEBHOOK_URL'),
+    'google_maps_api_key' => 'AIzaSyAv_1WWbcrZO6NVRI1Uz9IO6kJlmNBrTQk'
 ];
 
 /**

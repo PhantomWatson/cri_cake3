@@ -97,3 +97,54 @@
         </ol>
     </section>
 </div>
+
+<h2>
+    Map of Participating Communities
+</h2>
+<p>
+    This map displays the communities that are currently taking part in the Community Readiness Initiative. See below
+    for a legend that details the progress that each community has made, from enrollment to economic policy development.
+</p>
+
+<?php $this->Html->script('https://www.gstatic.com/charts/loader.js', ['block' => 'scriptBottom']); ?>
+<?php $this->append('buffered'); ?>
+    google.charts.load('current', {
+        'packages':['geochart'],
+        'mapsApiKey': '<?= \Cake\Core\Configure::read('google_maps_api_key') ?>'
+    });
+    google.charts.setOnLoadCallback(drawMarkersMap);
+
+    function drawMarkersMap() {
+        var data = google.visualization.arrayToDataTable(<?= json_encode($map['data']) ?>);
+
+        var options = {
+            region: 'US-IN',
+            displayMode: 'markers',
+            colorAxis: {
+                colors: <?= json_encode(array_values($map['colors'])) ?>,
+                minValue: 1,
+                maxValue: <?= count($map['colors']) ?>
+            },
+            resolution: 'provinces',
+            legend: 'none',
+            sizeAxis: {minSize: 10, maxSize: 10},
+        };
+
+        var chart = new google.visualization.GeoChart(document.getElementById('cri-map'));
+        chart.draw(data, options);
+    }
+<?php $this->end(); ?>
+
+<div id="cri-map"></div>
+
+<h2>
+    CRI Phases
+</h2>
+<ol class="map-legend">
+    <?php foreach ($map['colors'] as $phase => $color): ?>
+        <li>
+            <span class="map-legend-color" style="background-color: <?= $color ?>;"></span> <?= $phase ?>
+        </li>
+    <?php endforeach; ?>
+</ol>
+
