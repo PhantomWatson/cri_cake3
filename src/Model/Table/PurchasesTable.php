@@ -157,7 +157,7 @@ class PurchasesTable extends Table
     }
 
     /**
-     * Returns an array of all purchases associated with a community
+     * Returns an array of all non-refunded purchases associated with a community
      *
      * @param int $communityId Community ID
      * @return array
@@ -165,7 +165,14 @@ class PurchasesTable extends Table
     public function getAllForCommunity($communityId)
     {
         return $this->find('all')
-            ->where(['community_id' => $communityId])
+            ->where([
+                'community_id' => $communityId,
+                function ($exp) {
+                    /** @var QueryExpression $exp */
+
+                    return $exp->isNull('refunded');
+                }
+            ])
             ->order(['Purchases.created' => 'ASC'])
             ->contain([
                 'Products' => function ($q) {
@@ -433,5 +440,30 @@ class PurchasesTable extends Table
             ->first();
 
         return $result ? $result->created : null;
+    }
+
+    /**
+     * Returns whether or not the specified community has purchased the specified product
+     *
+     * (and it hasn't been refunded)
+     *
+     * @param int $productId Product ID
+     * @param int $communityId Community ID
+     * @return bool
+     */
+    public function isPurchased($productId, $communityId)
+    {
+        $result = $this->find()
+            ->where([
+                'product_id' => $productId,
+                'community_id' => $communityId,
+                function ($exp) {
+                    /** @var QueryExpression $exp */
+                    return $exp->isNull('refunded');
+                }
+            ])
+        ->count();
+
+        return $result > 0;
     }
 }
