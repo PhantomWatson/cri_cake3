@@ -264,7 +264,7 @@ class Map
     {
         $communitiesTable = TableRegistry::get('Communities');
         $communities = $communitiesTable->find()
-            ->where(['active' => true])
+            ->where()
             ->orderAsc('name')
             ->all();
 
