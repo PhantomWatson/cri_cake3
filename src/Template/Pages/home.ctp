@@ -98,12 +98,18 @@
     </section>
 </div>
 
-<h2>
-    Map of Participating Communities
-</h2>
-<p>
-    This map displays the communities that are currently taking part in the Community Readiness Initiative. See below
-    for a legend that details the progress that each community has made, from enrollment to economic policy development.
+<section>
+    <h2>
+        Map of Participating Communities
+    </h2>
+    <p>
+        This map displays the communities that are currently taking part in the Community Readiness Initiative. See below
+        for a legend that details the progress that each community has made, from enrollment to economic policy development.
+    </p>
+</section>
+
+<p id="map-loading">
+    Loading... <img src="/data_center/img/loading_small.gif" alt="Loading..." />
 </p>
 
 <?php $this->Html->script('https://www.gstatic.com/charts/loader.js', ['block' => 'scriptBottom']); ?>
@@ -132,19 +138,22 @@
 
         var chart = new google.visualization.GeoChart(document.getElementById('cri-map'));
         chart.draw(data, options);
+        document.getElementById('map-legend').style.display = 'block';
+        document.getElementById('map-loading').style.display = 'none';
     }
 <?php $this->end(); ?>
 
 <div id="cri-map"></div>
 
-<h2>
-    CRI Phases
-</h2>
-<ol class="map-legend">
-    <?php foreach ($map['colors'] as $phase => $color): ?>
-        <li>
-            <span class="map-legend-color" style="background-color: <?= $color ?>;"></span> <?= $phase ?>
-        </li>
-    <?php endforeach; ?>
-</ol>
-
+<section id="map-legend">
+    <h2>
+        CRI Phases
+    </h2>
+    <ol>
+        <?php foreach ($map['colors'] as $phase => $color): ?>
+            <li>
+                <span class="map-legend-color" style="background-color: <?= $color ?>;"></span> <?= $phase ?>
+            </li>
+        <?php endforeach; ?>
+    </ol>
+</section>
