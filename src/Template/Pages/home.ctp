@@ -133,7 +133,7 @@
             },
             resolution: 'provinces',
             legend: 'none',
-            sizeAxis: {minSize: 10, maxSize: 10},
+            sizeAxis: {minSize: 7, maxSize: 10},
         };
 
         var chart = new google.visualization.GeoChart(document.getElementById('cri-map'));

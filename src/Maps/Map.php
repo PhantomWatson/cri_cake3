@@ -279,6 +279,7 @@ class Map
                 '',
                 'Community Name',
                 'Phase',
+                'Is County',
                 [
                     'type' => 'string',
                     'role' => 'tooltip'
@@ -299,6 +300,7 @@ class Map
                     $coordinates['lng'],
                     $community->name,
                     $phaseNum + 1,
+                    (stripos($community->name, ' county') === false) ? 0 : 1,
                     $phase
                 ];
             }
