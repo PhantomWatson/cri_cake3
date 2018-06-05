@@ -414,7 +414,13 @@ $config = [
             'path' => LOGS,
             'file' => 'email',
             'levels' => ['info'],
-        ]
+        ],
+        'queue' => [
+            'className' => 'Cake\Log\Engine\FileLog',
+            'type' => 'queue',
+            'levels' => ['info'],
+            'scopes' => ['queue'],
+        ],
     ],
 
     /**
