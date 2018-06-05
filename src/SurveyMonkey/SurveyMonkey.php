@@ -149,7 +149,7 @@ class SurveyMonkey
             ->where(['respondent_id' => $respondentId])
             ->order(['response_date' => 'DESC'])
             ->first();
-        $responseDate = $response->response_date->i18nFormat('yyyy-MM-dd HH:mm:ss');
+        $responseDate = $response->response_date->i18nFormat('yyyy-MM-ddTHH:mm:ss');
 
         $surveysTable = TableRegistry::get('Surveys');
         /** @var Survey $survey */
@@ -376,7 +376,7 @@ class SurveyMonkey
         if ($survey->respondents_last_modified_date) {
             $lastResponseDate = $survey->respondents_last_modified_date->format('Y-m-d H:i:s');
             $timestamp = strtotime($lastResponseDate);
-            $params['start_modified_at'] = date('Y-m-d H:i:s', $timestamp + 1);
+            $params['start_modified_at'] = date('Y-m-d\TH:i:s', $timestamp + 1);
         }
 
         $result = $this->getResponses((string)$survey->sm_id, $params);
