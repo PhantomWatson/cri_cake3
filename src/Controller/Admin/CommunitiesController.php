@@ -298,7 +298,7 @@ class CommunitiesController extends AppController
     public function clients($communitySlug)
     {
         $community = $this->Communities->find('all')
-            ->select(['id', 'name'])
+            ->select(['id', 'name', 'slug'])
             ->where(['slug' => $communitySlug])
             ->contain([
                 'Clients' => function ($q) {

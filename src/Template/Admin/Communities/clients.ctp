@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Community $community
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">
@@ -17,7 +18,7 @@
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'addClient',
-            $community['id']
+            $community->id
         ],
         [
             'class' => 'btn btn-default',
@@ -30,7 +31,7 @@
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'selectClient',
-            $community['id']
+            $community->id
         ],
         [
             'class' => 'btn btn-default',
@@ -39,7 +40,7 @@
     ) ?>
 </p>
 
-<?php if (empty($community['surveys'])): ?>
+<?php if (empty($community->surveys)): ?>
     <p class="alert alert-danger">
         This community does not have its
         <?= $this->Html->link(
@@ -57,7 +58,7 @@
     </p>
 <?php endif; ?>
 
-<?php if (empty($community['clients'])): ?>
+<?php if (empty($community->clients)): ?>
     <p class="alert alert-info">
         This community does not have any client accounts associated with it.
     </p>
@@ -76,31 +77,31 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($community['clients'] as $client): ?>
+            <?php foreach ($community->clients as $client): ?>
                 <tr>
                     <td>
-                        <?= $client['salutation'] ?>
-                        <?= $client['name'] ?>
+                        <?= $client->salutation ?>
+                        <?= $client->name ?>
 
                         <span class="title">
-                            <?php if ($client['title']): ?>
+                            <?php if ($client->title): ?>
                                 <br />
-                                <?= $client['title'] ?>
+                                <?= $client->title ?>
                             <?php endif; ?>
-                            <?php if ($client['organization']): ?>
+                            <?php if ($client->organization): ?>
                                 <br />
-                                <?= $client['organization'] ?>
+                                <?= $client->organization ?>
                             <?php endif; ?>
                         </span>
                     </td>
                     <td>
-                        <a href="mailto:<?= $client['email'] ?>">
-                            <?= $client['email'] ?>
+                        <a href="mailto:<?= $client->email ?>">
+                            <?= $client->email ?>
                         </a>
 
-                        <?php if ($client['phone']): ?>
+                        <?php if ($client->phone): ?>
                             <br />
-                            <?= $client['phone'] ?>
+                            <?= $client->phone ?>
                         <?php endif; ?>
                     </td>
                     <td>
@@ -110,7 +111,7 @@
                                 'prefix' => 'admin',
                                 'controller' => 'Users',
                                 'action' => 'edit',
-                                $client['id']
+                                $client->id
                             ],
                             ['class' => 'btn btn-default']
                         ) ?>
@@ -120,12 +121,12 @@
                                 'prefix' => 'admin',
                                 'controller' => 'Communities',
                                 'action' => 'removeClient',
-                                $client['id'],
-                                $community['id']
+                                $client->id,
+                                $community->id
                             ],
                             [
                                 'class' => 'btn btn-default',
-                                'confirm' => "Are you sure you want to remove {$client['name']} from this community?"
+                                'confirm' => "Are you sure you want to remove {$client->name} from this community?"
                             ]
                         ) ?>
                     </td>
