@@ -29,6 +29,28 @@ use Cake\Routing\Middleware\RoutingMiddleware;
 class Application extends BaseApplication
 {
     /**
+     * Application bootstrap method
+     *
+     * @return void
+     */
+    public function bootstrap()
+    {
+        parent::bootstrap();
+
+        $this->addPlugin('Muffin/Slug');
+        $this->addPlugin('Queue', ['bootstrap' => true, 'routes' => true]);
+        $this->addPlugin('Tools', ['bootstrap' => true]);
+        $this->addPlugin('DataCenter', ['bootstrap' => false, 'routes' => true]);
+        $this->addPlugin('Migrations');
+        $this->addPlugin('GoogleCharts');
+        $this->addPlugin('Xety/Cake3CookieAuth');
+
+        if (Configure::read('debug')) {
+            $this->addPlugin('DebugKit');
+        }
+    }
+
+    /**
      * Setup the middleware your application will use.
      *
      * @param \Cake\Http\MiddlewareQueue $middleware The middleware queue to setup.
