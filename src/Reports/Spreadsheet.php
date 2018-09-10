@@ -174,11 +174,21 @@ class Spreadsheet
      * Sets the title that's displayed on the current sheet's tab
      *
      * @param string $title Sheet title
+     * @param bool $useEllipsis Set to FALSE to cut off long titles at the limit instead of appending an ellipsis
      * @return $this
      * @throws \PHPExcel_Exception
      */
-    public function setActiveSheetTitle($title)
+    public function setActiveSheetTitle($title, $useEllipsis = true)
     {
+        // Keep title within 31-character limit
+        if (strlen($title) > 31) {
+            if ($useEllipsis) {
+                $title = substr($title, 0, 28) . '...';
+            } else {
+                $title = substr($title, 0, 31);
+            }
+        }
+
         $this->objPHPExcel->getActiveSheet()->setTitle($title);
 
         return $this;
