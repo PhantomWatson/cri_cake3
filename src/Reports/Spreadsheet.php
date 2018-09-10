@@ -3,6 +3,14 @@ namespace App\Reports;
 
 use Cake\Network\Exception\InternalErrorException;
 
+/**
+ * Class Spreadsheet
+ * @package App\Spreadsheet
+ * @property \PHPExcel $objPHPExcel
+ * @property array $columnTitles
+ * @property int $currentRow
+ * @property string $title
+ */
 class Spreadsheet
 {
     private $columnTitles;
@@ -12,6 +20,7 @@ class Spreadsheet
 
     /**
      * Spreadsheet constructor
+     * @throws \PHPExcel_Exception
      */
     public function __construct()
     {
@@ -29,6 +38,7 @@ class Spreadsheet
      *
      * @param array $widthsByColTitle array of column title => width, e.g. ['vs Local Area' => 9, ...]
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function setCellWidth($widthsByColTitle = [])
     {
@@ -94,6 +104,7 @@ class Spreadsheet
      * Sets the default text styling for the spreadsheet
      *
      * @return void
+     * @throws \PHPExcel_Exception
      */
     private function setDefaultStyles()
     {
@@ -164,6 +175,7 @@ class Spreadsheet
      *
      * @param string $title Sheet title
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function setActiveSheetTitle($title)
     {
@@ -200,6 +212,7 @@ class Spreadsheet
      *
      * @param string $title Sheet title
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function writeSheetTitle($title)
     {
@@ -224,6 +237,7 @@ class Spreadsheet
      *
      * @param string $subtitle Sheet subtitle
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function writeSheetSubtitle($subtitle)
     {
@@ -251,6 +265,7 @@ class Spreadsheet
      * @param int $rowNum Row number
      * @param string $value Value
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     private function write($colNum, $rowNum, $value)
     {
@@ -266,6 +281,7 @@ class Spreadsheet
      *
      * @param array $row Array of values to write
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function writeRow($row)
     {
@@ -310,6 +326,7 @@ class Spreadsheet
      * @param int $fromCol First column number
      * @param int|null $toCol Last column number
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function styleRow($styles, $fromCol = 0, $toCol = null)
     {
@@ -329,6 +346,7 @@ class Spreadsheet
      *
      * @param array $boundarySets An array of arrays containing [first col number, last col number] column spans
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function styleColGroupHeaders($boundarySets)
     {
@@ -395,6 +413,7 @@ class Spreadsheet
      * @param int $fromCol First column number
      * @param int|null $toCol Last column number
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function applyBorders($sides, $fromCol = 0, $toCol = null)
     {
@@ -413,6 +432,7 @@ class Spreadsheet
      * @param int $fromCol First column number
      * @param int|null $toCol Last column number
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function alignHorizontal($direction, $fromCol = 0, $toCol = null)
     {
@@ -443,6 +463,7 @@ class Spreadsheet
      * @param int $fromCol First column number
      * @param int|null $toCol Last column number
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function alignVertical($direction, $fromCol = 0, $toCol = null)
     {
@@ -471,6 +492,7 @@ class Spreadsheet
      *
      * @param string $title Title of new sheet
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function newSheet($title)
     {
@@ -486,6 +508,7 @@ class Spreadsheet
      *
      * @param int $index Index of sheet to be removed
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function removeSheet($index = 0)
     {
@@ -498,6 +521,7 @@ class Spreadsheet
      * Selects the first sheet in this workbook
      *
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function selectFirstSheet()
     {
@@ -512,6 +536,7 @@ class Spreadsheet
      * @param int $fromCol Starting column index
      * @param int|null $toCol Ending column index
      * @return $this
+     * @throws \PHPExcel_Exception
      */
     public function setWrapText($fromCol = 0, $toCol = null)
     {
