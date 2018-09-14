@@ -36,12 +36,12 @@ class ActivityRecordsControllerTest extends ApplicationTest
     }
 
     /**
-     * Test /admin/activity-records/index
+     * Tests that /admin/activity-records/index cannot be accessed when not logged in
      *
      * @return void
      * @throws \PHPUnit\Exception
      */
-    public function testIndex()
+    public function testIndexFailNotLoggedIn()
     {
         $url = Router::url([
             'prefix' => 'admin',
@@ -51,6 +51,21 @@ class ActivityRecordsControllerTest extends ApplicationTest
 
         // Unauthenticated
         $this->assertRedirectToLogin($url);
+    }
+
+    /**
+     * Tests successfully accessing /admin/activity-records/index
+     *
+     * @return void
+     * @throws \PHPUnit\Exception
+     */
+    public function testIndexSuccess()
+    {
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'ActivityRecords',
+            'action' => 'index'
+        ]);
 
         // Authenticated
         $this->session($this->adminUser);
@@ -59,12 +74,12 @@ class ActivityRecordsControllerTest extends ApplicationTest
     }
 
     /**
-     * Test /admin/activity-records/community
+     * Tests that /admin/activity-records/community cannot be accessed when not logged in
      *
      * @return void
      * @throws \PHPUnit\Exception
      */
-    public function testCommunity()
+    public function testCommunityFailNotLoggedIn()
     {
         $url = Router::url([
             'prefix' => 'admin',
@@ -75,6 +90,22 @@ class ActivityRecordsControllerTest extends ApplicationTest
 
         // Unauthenticated
         $this->assertRedirectToLogin($url);
+    }
+
+    /**
+     * Tests successfully accessing /admin/activity-records/community
+     *
+     * @return void
+     * @throws \PHPUnit\Exception
+     */
+    public function testCommunitySuccess()
+    {
+        $url = Router::url([
+            'prefix' => 'admin',
+            'controller' => 'ActivityRecords',
+            'action' => 'community',
+            1
+        ]);
 
         // Authenticated
         $this->session($this->adminUser);
