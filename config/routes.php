@@ -18,7 +18,6 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-use Cake\Core\Plugin;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 use Cake\Routing\Route\DashedRoute;
@@ -105,8 +104,8 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->fallbacks(DashedRoute::class);
 });
 
-Router::prefix('admin', function ($routes) {
-    $routes->extensions(['json']);
+Router::prefix('admin', function (RouteBuilder $routes) {
+    $routes->setExtensions(['json']);
 
     $routes->connect('/guide', ['controller' => 'Pages', 'action' => 'guide']);
     $routes->connect('/clear-cache', ['controller' => 'Pages', 'action' => 'clearCache']);
@@ -115,16 +114,10 @@ Router::prefix('admin', function ($routes) {
     $routes->fallbacks('DashedRoute');
 });
 
-Router::prefix('client', function ($routes) {
+Router::prefix('client', function (RouteBuilder $routes) {
     $routes->connect('/home', ['controller' => 'Communities', 'action' => 'index']);
     $routes->connect('/reactivate', ['controller' => 'Communities', 'action' => 'reactivate']);
     $routes->redirect('/', ['controller' => 'Communities', 'action' => 'index']);
 
     $routes->fallbacks('DashedRoute');
 });
-
-/**
- * Load all plugin routes.  See the Plugin documentation on
- * how to customize the loading of plugin routes.
- */
-Plugin::routes();
