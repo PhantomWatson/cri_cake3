@@ -20,7 +20,6 @@ use Cake\Database\Expression\QueryExpression;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\EventList;
 use Cake\Http\MiddlewareQueue;
-use Cake\Http\Middleware\CsrfProtectionMiddleware;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
@@ -30,9 +29,15 @@ use InvalidArgumentException;
 
 /**
  * ApplicationTest class
+ *
+ * @property array $adminUser
+ * @property array $clientUser
  */
 class ApplicationTest extends IntegrationTestCase
 {
+    public $adminUser;
+    public $clientUser;
+
     /**
      * Sets up this set of tests
      *
