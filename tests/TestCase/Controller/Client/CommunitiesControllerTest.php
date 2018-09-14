@@ -53,6 +53,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /client/communities/index
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testIndex()
     {
@@ -75,6 +76,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /client/communities/reactivate
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testReactivate()
     {

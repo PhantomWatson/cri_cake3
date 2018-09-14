@@ -50,6 +50,7 @@ class PurchasesControllerTest extends ApplicationTest
      * Test for /admin/purchases/add
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testAdd()
     {

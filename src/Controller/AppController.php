@@ -48,6 +48,7 @@ class AppController extends Controller
      * e.g. `$this->loadComponent('Security');`
      *
      * @return void
+     * @throws \Exception
      */
     public function initialize()
     {
@@ -92,6 +93,7 @@ class AppController extends Controller
      * Loads and configures the Auth component
      *
      * @return void
+     * @throws \Exception
      */
     public function loadAuthComponent()
     {

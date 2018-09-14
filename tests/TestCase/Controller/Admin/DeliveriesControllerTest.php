@@ -49,6 +49,7 @@ class DeliveriesControllerTest extends ApplicationTest
      * Tests that the correct event is fired after adding a delivery
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testAddEvent()
     {

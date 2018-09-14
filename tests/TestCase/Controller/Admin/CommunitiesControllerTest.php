@@ -54,6 +54,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/activate
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testActivate()
     {
@@ -97,6 +98,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/add
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testAdd()
     {
@@ -135,6 +137,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/add-client
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testAddClient()
     {
@@ -177,6 +180,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/alignment-calc-settings
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testAlignmentCalcSettings()
     {
@@ -199,6 +203,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/clienthome
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testClienthome()
     {
@@ -232,6 +237,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/clients
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testClients()
     {
@@ -265,6 +271,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/delete
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testDelete()
     {
@@ -314,6 +321,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/edit
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testEdit()
     {
@@ -362,6 +370,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/index
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testIndex()
     {
@@ -385,6 +394,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/notes
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testNotes()
     {
@@ -417,6 +427,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/presentations
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testPresentations()
     {
@@ -484,6 +495,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/progress
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testProgress()
     {
@@ -518,6 +530,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/remove-client
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testRemoveClient()
     {
@@ -557,6 +570,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/select-client
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testSelectClient()
     {
@@ -606,6 +620,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /admin/communities/to-do
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testToDo()
     {
@@ -628,6 +643,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Tests correct event dispatching when score changes via /admin/communities/edit
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testEditScoreChangeEvent()
     {
@@ -654,6 +670,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Tests correct event dispatching when score changes via /admin/communities/progress
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testProgressScoreChangeEvent()
     {

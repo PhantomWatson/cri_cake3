@@ -53,6 +53,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /communities/index
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testIndex()
     {
@@ -64,6 +65,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /communities/view
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testView()
     {
@@ -89,6 +91,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /communities/autocomplete
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testAutocomplete()
     {
@@ -104,6 +107,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /client/communities/index
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testClientIndex()
     {
@@ -126,6 +130,7 @@ class CommunitiesControllerTest extends ApplicationTest
      * Test for /client/communities/reactivate
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testClientReactivate()
     {

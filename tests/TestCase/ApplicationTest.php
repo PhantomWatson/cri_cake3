@@ -78,6 +78,7 @@ class ApplicationTest extends IntegrationTestCase
      *
      * @param string $url URL
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function assertRedirectToLogin($url)
     {

@@ -39,6 +39,7 @@ class ActivityRecordsControllerTest extends ApplicationTest
      * Test /admin/activity-records/index
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testIndex()
     {
@@ -61,6 +62,7 @@ class ActivityRecordsControllerTest extends ApplicationTest
      * Test /admin/activity-records/community
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testCommunity()
     {

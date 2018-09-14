@@ -41,6 +41,7 @@ class PurchasesControllerTest extends ApplicationTest
      * Test postback method
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testPostback()
     {

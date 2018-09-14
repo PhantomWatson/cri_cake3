@@ -153,6 +153,7 @@ class SurveysControllerTest extends ApplicationTest
      * Tests that the correct event is fired after deactivating a survey
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testDeactivateEvent()
     {

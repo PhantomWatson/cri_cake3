@@ -36,6 +36,7 @@ class PagesControllerTest extends ApplicationTest
      * testMultipleGet method
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testMultipleGet()
     {
@@ -49,6 +50,7 @@ class PagesControllerTest extends ApplicationTest
      * Test for /pages/home
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testHome()
     {
@@ -61,6 +63,7 @@ class PagesControllerTest extends ApplicationTest
      * Test for /pages/glossary
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testGlossary()
     {
@@ -72,6 +75,7 @@ class PagesControllerTest extends ApplicationTest
      * Test for /pages/faq-community
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testFaqCommunity()
     {
@@ -83,6 +87,7 @@ class PagesControllerTest extends ApplicationTest
      * Test for /pages/credits
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testCredits()
     {
@@ -94,6 +99,7 @@ class PagesControllerTest extends ApplicationTest
      * Test for /pages/enroll
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testEnroll()
     {
@@ -125,6 +131,7 @@ class PagesControllerTest extends ApplicationTest
      * Test that missing template renders 404 page in production
      *
      * @return void
+     * @throws \PHPUnit\Exception
      */
     public function testMissingTemplate()
     {
