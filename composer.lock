@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "6848dab1a2d37b92f890907d6967c9be",
@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BallStateCBER/datacenter-plugin-cakephp3.git",
-                "reference": "a42c7959a19f8cd7c9b8ff83449931957eb52a5d"
+                "reference": "0bd96d29d06727ff8ec07e3c34e1596b42b56434"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BallStateCBER/datacenter-plugin-cakephp3/zipball/a42c7959a19f8cd7c9b8ff83449931957eb52a5d",
-                "reference": "a42c7959a19f8cd7c9b8ff83449931957eb52a5d",
+                "url": "https://api.github.com/repos/BallStateCBER/datacenter-plugin-cakephp3/zipball/0bd96d29d06727ff8ec07e3c34e1596b42b56434",
+                "reference": "0bd96d29d06727ff8ec07e3c34e1596b42b56434",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "description": "Ball State CBER DataCenter plugin for CakePHP 3",
-            "time": "2018-09-04T20:58:49+00:00"
+            "time": "2019-05-23T19:09:36+00:00"
         },
         {
             "name": "cakephp/cakephp",
@@ -2061,6 +2061,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2018-08-09T05:50:03+00:00"
         },
         {
