@@ -22,7 +22,8 @@
         "liogi/surveymonkey-api-v3": "1.*",
         "muffin/slug": "^1.1",
         "dereuromark/cakephp-queue": "^3.4",
-        "dereuromark/cakephp-tools": "^1.4"
+        "dereuromark/cakephp-tools": "^1.4",
+        "ext-json": "*"
     },
     "require-dev": {
         "psy/psysh": "@stable",
