@@ -36,7 +36,7 @@ class OptOutsTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('OptOuts') ? [] : ['className' => 'App\Model\Table\OptOutsTable'];
-        $this->OptOuts = TableRegistry::get('OptOuts', $config);
+        $this->OptOuts = TableRegistry::getTableLocator()->get('OptOuts', $config);
     }
 
     /**

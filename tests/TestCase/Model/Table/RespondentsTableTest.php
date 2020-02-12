@@ -31,7 +31,7 @@ class RespondentsTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Respondents') ? [] : ['className' => 'App\Model\Table\RespondentsTable'];
-        $this->Respondents = TableRegistry::get('Respondents', $config);
+        $this->Respondents = TableRegistry::getTableLocator()->get('Respondents', $config);
     }
 
     /**

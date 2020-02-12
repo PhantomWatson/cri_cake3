@@ -37,7 +37,7 @@ class DeliverablesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Deliverables') ? [] : ['className' => 'App\Model\Table\DeliverablesTable'];
-        $this->Deliverables = TableRegistry::get('Deliverables', $config);
+        $this->Deliverables = TableRegistry::getTableLocator()->get('Deliverables', $config);
     }
 
     /**

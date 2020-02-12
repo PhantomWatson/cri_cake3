@@ -167,7 +167,7 @@ class ApplicationTest extends IntegrationTestCase
      */
     private function getAdminTaskEmailCount($mailerMethod)
     {
-        $queuedJobsTable = TableRegistry::get('Queue.QueuedJobs');
+        $queuedJobsTable = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
 
         return $queuedJobsTable
             ->find()

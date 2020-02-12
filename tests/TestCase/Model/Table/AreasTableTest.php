@@ -31,7 +31,7 @@ class AreasTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Areas') ? [] : ['className' => 'App\Model\Table\AreasTable'];
-        $this->Areas = TableRegistry::get('Areas', $config);
+        $this->Areas = TableRegistry::getTableLocator()->get('Areas', $config);
     }
 
     /**

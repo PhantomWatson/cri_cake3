@@ -33,7 +33,7 @@ class CommunitiesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Communities') ? [] : ['className' => 'App\Model\Table\CommunitiesTable'];
-        $this->Communities = TableRegistry::get('Communities', $config);
+        $this->Communities = TableRegistry::getTableLocator()->get('Communities', $config);
     }
 
     /**

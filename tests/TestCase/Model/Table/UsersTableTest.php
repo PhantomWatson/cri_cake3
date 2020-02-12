@@ -38,7 +38,7 @@ class UsersTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Users') ? [] : ['className' => 'App\Model\Table\UsersTable'];
-        $this->Users = TableRegistry::get('Users', $config);
+        $this->Users = TableRegistry::getTableLocator()->get('Users', $config);
     }
 
     /**

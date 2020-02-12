@@ -30,7 +30,7 @@ class ProductsTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Products') ? [] : ['className' => 'App\Model\Table\ProductsTable'];
-        $this->Products = TableRegistry::get('Products', $config);
+        $this->Products = TableRegistry::getTableLocator()->get('Products', $config);
     }
 
     /**

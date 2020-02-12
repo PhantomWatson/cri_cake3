@@ -57,13 +57,13 @@ class AlertableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->communities = TableRegistry::get('Communities');
-        $this->deliveries = TableRegistry::get('Deliveries');
-        $this->optOuts = TableRegistry::get('OptOuts');
-        $this->purchases = TableRegistry::get('Purchases');
-        $this->responses = TableRegistry::get('Responses');
-        $this->surveys = TableRegistry::get('Surveys');
-        $this->users = TableRegistry::get('Users');
+        $this->communities = TableRegistry::getTableLocator()->get('Communities');
+        $this->deliveries = TableRegistry::getTableLocator()->get('Deliveries');
+        $this->optOuts = TableRegistry::getTableLocator()->get('OptOuts');
+        $this->purchases = TableRegistry::getTableLocator()->get('Purchases');
+        $this->responses = TableRegistry::getTableLocator()->get('Responses');
+        $this->surveys = TableRegistry::getTableLocator()->get('Surveys');
+        $this->users = TableRegistry::getTableLocator()->get('Users');
     }
 
     /**

@@ -159,7 +159,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->assertResponseOk();
 
         // Confirm community is inactive
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $query = $communitiesTable->find()->where([
             'id' => 3,
             'active' => 0,
