@@ -46,8 +46,8 @@ class CommunitiesController extends AppController
     public function isAuthorized($user)
     {
         if ($this->request->action == 'view') {
-            if (isset($this->request->pass[0]) && ! empty($this->request->pass[0])) {
-                $communitySlug = $this->request->pass[0];
+            if (isset($this->request->getParam('pass')[0]) && !empty($this->request->getParam('pass')[0])) {
+                $communitySlug = $this->request->getParam('pass')[0];
             } else {
                 $communitySlug = $this->request->getQuery('community_slug');
                 if (! $communitySlug) {
