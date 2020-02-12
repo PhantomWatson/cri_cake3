@@ -159,7 +159,7 @@ class OfficialsSurveySheet
     {
         $groupingHeaders = [];
 
-        $colNum = $colNum = array_search('vs Local Area', $columnTitles);
+        $colNum = array_search('vs Local Area', $columnTitles);
         $groupingHeaders[$colNum] = 'PWRRR Alignment';
 
         $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
