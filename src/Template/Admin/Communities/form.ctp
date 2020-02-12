@@ -94,7 +94,7 @@
 </div>
 
 <?php
-    $label = $this->request->action == 'add'
+    $label = $this->request->getParam('action') == 'add'
         ? 'Add Community'
         : 'Update Community';
     echo $this->Form->button(

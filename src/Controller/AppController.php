@@ -170,7 +170,7 @@ class AppController extends Controller
                 'glossary',
                 'sendTestEmail'
             ];
-            if (! in_array($this->request->action, $allowedActions)) {
+            if (!in_array($this->request->getParam('action'), $allowedActions)) {
                 return $this->redirect([
                     'prefix' => false,
                     'controller' => 'Pages',
