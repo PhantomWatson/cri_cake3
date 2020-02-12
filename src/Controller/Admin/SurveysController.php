@@ -101,7 +101,6 @@ class SurveysController extends AppController
 
         $surveyId = $this->Surveys->getSurveyId($community->id, $surveyType);
 
-        /** @var \App\Model\Entity\Survey $survey */
         if ($surveyId) {
             $survey = $this->Surveys->get($surveyId);
         } else {
