@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class StatisticsFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -255,7 +254,7 @@ class StatisticsFixture extends TestFixture
                 19,8810,2009,2013-10-07 20:19:09,2013-10-07 20:19:09
                 19,8717,2010,2013-10-07 20:19:09,2013-10-07 20:19:09
                 19,8931,2011,2013-10-07 20:19:09,2013-10-07 20:19:09
-            '
+            ',
         ];
         foreach ($dbDump as $areaId => $dumpText) {
             $lines = explode("\n", $dumpText);
@@ -274,7 +273,7 @@ class StatisticsFixture extends TestFixture
                     'value' => $fields[1],
                     'year' => $fields[2],
                     'created' => $fields[3],
-                    'modified' => $fields[4]
+                    'modified' => $fields[4],
                 ];
             }
         }

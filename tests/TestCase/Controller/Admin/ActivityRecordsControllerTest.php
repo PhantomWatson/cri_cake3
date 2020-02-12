@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Controller\Admin;
 
 use App\Test\TestCase\ApplicationTest;
@@ -9,7 +11,6 @@ use Cake\Routing\Router;
  */
 class ActivityRecordsControllerTest extends ApplicationTest
 {
-
     /**
      * Fixtures
      *
@@ -19,7 +20,7 @@ class ActivityRecordsControllerTest extends ApplicationTest
         'app.ActivityRecords',
         'app.Users',
         'app.Communities',
-        'app.Surveys'
+        'app.Surveys',
     ];
 
     /**
@@ -31,7 +32,7 @@ class ActivityRecordsControllerTest extends ApplicationTest
     {
         parent::setUp();
         $this->configRequest([
-            'environment' => ['HTTPS' => 'on']
+            'environment' => ['HTTPS' => 'on'],
         ]);
     }
 
@@ -46,7 +47,7 @@ class ActivityRecordsControllerTest extends ApplicationTest
         $url = Router::url([
             'prefix' => 'admin',
             'controller' => 'ActivityRecords',
-            'action' => 'index'
+            'action' => 'index',
         ]);
 
         // Unauthenticated
@@ -64,7 +65,7 @@ class ActivityRecordsControllerTest extends ApplicationTest
         $url = Router::url([
             'prefix' => 'admin',
             'controller' => 'ActivityRecords',
-            'action' => 'index'
+            'action' => 'index',
         ]);
 
         // Authenticated
@@ -85,7 +86,7 @@ class ActivityRecordsControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'ActivityRecords',
             'action' => 'community',
-            1
+            1,
         ]);
 
         // Unauthenticated
@@ -104,7 +105,7 @@ class ActivityRecordsControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'ActivityRecords',
             'action' => 'community',
-            1
+            1,
         ]);
 
         // Authenticated

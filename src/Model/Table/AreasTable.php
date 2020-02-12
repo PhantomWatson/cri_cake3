@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -24,7 +26,6 @@ use Cake\Validation\Validator;
  */
 class AreasTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -38,7 +39,7 @@ class AreasTable extends Table
         $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
         $this->hasMany('Statistics', [
-            'foreignKey' => 'area_id'
+            'foreignKey' => 'area_id',
         ]);
     }
 
@@ -115,7 +116,7 @@ class AreasTable extends Table
                             return $exp->in('Statistics.stat_category_id', $allRelevantCatIds);
                         })
                         ->contain(['StatCategories']);
-                }
+                },
             ])
             ->first();
         if (empty($area) || empty($area->statistics)) {
@@ -134,42 +135,42 @@ class AreasTable extends Table
         $columns = [
             'category' => [
                 'type' => 'string',
-                'label' => 'Category'
+                'label' => 'Category',
             ],
             'score_production' => [
                 'type' => 'number',
-                'label' => 'Production'
+                'label' => 'Production',
             ],
             'score_wholesale' => [
                 'type' => 'number',
-                'label' => 'Wholesale'
+                'label' => 'Wholesale',
             ],
             'score_retail' => [
                 'type' => 'number',
-                'label' => 'Retail'
+                'label' => 'Retail',
             ],
             'score_residential' => [
                 'type' => 'number',
-                'label' => 'Residential'
+                'label' => 'Residential',
             ],
             'score_recreation' => [
                 'type' => 'number',
-                'label' => 'Recreation'
+                'label' => 'Recreation',
             ],
             'average' => [
                 'type' => 'number',
-                'label' => 'National average'
+                'label' => 'National average',
             ],
             'certainty' => [
                 'type' => 'boolean',
                 'role' => 'certainty',
-                'label' => 'Certainty'
+                'label' => 'Certainty',
             ],
             'annotation' => [
                 'type' => 'string',
                 'role' => 'annotation',
-                'label' => 'Annotation'
-            ]
+                'label' => 'Annotation',
+            ],
         ];
         $chart->columns($columns);
 
@@ -212,7 +213,7 @@ class AreasTable extends Table
             $row['certainty'] = 'false';
 
             // Place an annotation above the second column
-            $row['annotation'] = ($i == 1) ? 'National Average' : null;
+            $row['annotation'] = $i == 1 ? 'National Average' : null;
 
             $chart->addRow($row);
         }
@@ -224,9 +225,9 @@ class AreasTable extends Table
 
         // Determine the min and max values of the vertical axis based on the min and max values
         $maxValue = max($allValues);
-        $axisMax = ceil(($maxValue * 2)) / 2;
+        $axisMax = ceil($maxValue * 2) / 2;
         $minValue = min($allValues);
-        $axisMin = floor(($minValue * 2)) / 2;
+        $axisMin = floor($minValue * 2) / 2;
 
         /* Determine what ticks are marked on the vertical axis
          * A maximum of 14 ticks can fit on the axis without overlapping,
@@ -241,25 +242,25 @@ class AreasTable extends Table
 
         $chart->options([
             'bar' => [
-                'groupWidth' => '95%'
+                'groupWidth' => '95%',
             ],
             'chartArea' => [
                 'width' => '90%',
-                'height' => '80%'
+                'height' => '80%',
             ],
             'hAxis' => [
                 'textPosition' => 'none',
                 'viewWindow' => [
                     'min' => 1,
-                    'max' => count($area['statistics']) + 1
-                ]
+                    'max' => count($area['statistics']) + 1,
+                ],
             ],
             'isStacked' => true,
             'legend' => 'bottom',
             'series' => [
                 [
                     'color' => '#ce845f',
-                    'targetAxisIndex' => 1
+                    'targetAxisIndex' => 1,
                 ],
                 ['color' => '#d9bc7b'],
                 ['color' => '#a8b28a'],
@@ -269,8 +270,8 @@ class AreasTable extends Table
                     'color' => '#cc0022',
                     'lineWidth' => 1,
                     'type' => 'line',
-                    'visibleInLegend' => false
-                ]
+                    'visibleInLegend' => false,
+                ],
             ],
             'seriesType' => 'bars',
             'titlePosition' => 'none',
@@ -279,12 +280,12 @@ class AreasTable extends Table
                 'minValue' => $axisMin,
                 'viewWindow' => [
                     'max' => $axisMax + 0.5,
-                    'min' => $axisMin - 0.5
+                    'min' => $axisMin - 0.5,
                 ],
                 'ticks' => $ticks,
-                'format' => '#.0'
+                'format' => '#.0',
             ],
-            'width' => 725
+            'width' => 725,
         ]);
 
         return $chart;
@@ -320,7 +321,7 @@ class AreasTable extends Table
                             return $exp->in('Statistics.stat_category_id', $allRelevantCatIds);
                         })
                         ->contain(['StatCategories']);
-                }
+                },
             ])
             ->first();
         if (empty($area) || empty($area->statistics)) {
@@ -360,21 +361,21 @@ class AreasTable extends Table
         $chart->columns([
             'year' => [
                 'type' => 'number',
-                'label' => 'Year'
+                'label' => 'Year',
             ],
             'exportable' => [
                 'type' => 'number',
-                'label' => 'Exportable'
+                'label' => 'Exportable',
             ],
             'non_exportable' => [
                 'type' => 'number',
-                'label' => 'Non-Exportable'
+                'label' => 'Non-Exportable',
             ],
             'annotation' => [
                 'type' => 'string',
                 'role' => 'annotation',
-                'label' => 'Annotation'
-            ]
+                'label' => 'Annotation',
+            ],
         ]);
 
         $area = $this->find('all')
@@ -387,7 +388,7 @@ class AreasTable extends Table
                             return $exp->in('Statistics.stat_category_id', [18, 19]);
                         })
                         ->order(['Statistics.year' => 'ASC']);
-                }
+                },
             ])
             ->first();
         if (empty($area) || empty($area->statistics)) {
@@ -400,7 +401,7 @@ class AreasTable extends Table
             $year = $stat['year'];
             $value = $stat['value'];
             $categoryId = $stat['stat_category_id'];
-            $categoryKey = ($categoryId == 18) ? 'exportable' : 'non_exportable';
+            $categoryKey = $categoryId == 18 ? 'exportable' : 'non_exportable';
             $statistics[$year][$categoryKey] = $value;
         }
 
@@ -426,23 +427,23 @@ class AreasTable extends Table
         $chart->options([
             'chartArea' => [
                 'width' => '600',
-                'height' => '200'
+                'height' => '200',
             ],
             'hAxis' => [
                 'format' => '####',
                 'gridlines' => ['color' => 'transparent'],
                 'slantedText' => false,
-                'ticks' => range($minYear, $maxYear, 5)
+                'ticks' => range($minYear, $maxYear, 5),
             ],
             'legend' => 'bottom',
             'series' => [
                 ['color' => '#ce845f'],
                 ['color' => '#8baebc'],
-                ['color' => '#e8f0f0']
+                ['color' => '#e8f0f0'],
             ],
             'seriesType' => 'line',
             'titlePosition' => 'none',
-            'width' => 725
+            'width' => 725,
         ]);
 
         return $chart;
@@ -473,7 +474,7 @@ class AreasTable extends Table
                         })
                         ->order(['Statistics.year' => 'DESC'])
                         ->limit(1);
-                }
+                },
             ])
             ->first();
         if (empty($result) || empty($result->statistics)) {
@@ -494,7 +495,7 @@ class AreasTable extends Table
                             ->in('Statistics.stat_category_id', [18, 19])
                             ->in('Statistics.year', [$laterYear, $earlierYear]);
                     });
-                }
+                },
             ])
             ->first();
         if (empty($area) || empty($area->statistics)) {
@@ -506,14 +507,14 @@ class AreasTable extends Table
             $year = $stat['year'];
             $value = $stat['value'];
             $categoryId = $stat['stat_category_id'];
-            $label = ($categoryId == 18) ? 'Exportable' : 'Non-exportable';
+            $label = $categoryId == 18 ? 'Exportable' : 'Non-exportable';
             $statistics[$label][$year] = $value;
         }
 
         $table = [
             'earlier_year' => $earlierYear,
             'later_year' => $laterYear,
-            'rows' => []
+            'rows' => [],
         ];
         foreach ($statistics as $label => $years) {
             $row = ['label' => $label];
@@ -526,7 +527,7 @@ class AreasTable extends Table
             if ($difference == 0) {
                 $row['change'] = 'No change';
             } else {
-                $percentDifference = round(($difference / $earlierValue) * 100);
+                $percentDifference = round($difference / $earlierValue * 100);
                 $row['change'] = "$percentDifference% ";
                 if ($percentDifference > 0) {
                     $row['change'] .= '<img src="/img/chart-up-color.png" />';
@@ -619,7 +620,7 @@ class AreasTable extends Table
                 'retail_rank' => $fields[6],
                 'residential_rank' => $fields[7],
                 'recreation_rank' => $fields[8],
-                'parent_id' => $this->getIdFromFips($parentFips)
+                'parent_id' => $this->getIdFromFips($parentFips),
             ];
             $area = $this->newEntity($data);
             $errors = $area->getErrors();

@@ -1,15 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Model\Table\ActivityRecordsTable;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\TableRegistry;
 
 class ActivityRecordsListener implements EventListenerInterface
 {
-
     /**
      * @var null|int The logged-in user's ID
      */
@@ -46,7 +45,7 @@ class ActivityRecordsListener implements EventListenerInterface
             'Model.Survey.afterLinkUpdated',
             'Model.Survey.afterRemindersSent',
             'Model.User.afterAdd',
-            'Model.User.afterDelete'
+            'Model.User.afterDelete',
         ];
 
         return array_fill_keys($events, 'recordActivity');
@@ -75,13 +74,13 @@ class ActivityRecordsListener implements EventListenerInterface
      * @param array $meta Array of metadata (userId, communityId, etc.)
      * @return void
      */
-    public function recordActivity(Event $event, array $meta = null)
+    public function recordActivity(Event $event, ?array $meta = null)
     {
         if (! isset($meta['userId']) && $this->userId()) {
             $meta['userId'] = $this->userId();
         }
 
-        /** @var ActivityRecordsTable $activityRecordsTable */
+        /** @var \App\Model\Table\ActivityRecordsTable $activityRecordsTable */
         $activityRecordsTable = TableRegistry::get('ActivityRecords');
         $activityRecordsTable->add($event->getName(), $meta);
     }

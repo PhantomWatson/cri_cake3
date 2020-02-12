@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Component;
 
 use Cake\Controller\Component;
@@ -45,7 +47,7 @@ class SurveyResultsComponent extends Component
                 'Respondents.name',
                 'Respondents.title',
                 'Respondents.invited',
-                'Respondents.approved'
+                'Respondents.approved',
             ])
             ->where(['Respondents.survey_id' => $surveyId])
             ->contain([
@@ -53,7 +55,7 @@ class SurveyResultsComponent extends Component
                     return $q
                         ->select(['respondent_id', 'response_date'])
                         ->order(['Responses.response_date' => 'DESC']);
-                }
+                },
             ])
             ->order(['name' => 'ASC']);
 
@@ -82,7 +84,7 @@ class SurveyResultsComponent extends Component
         }
 
         if ($invitationCount) {
-            $responseRate = round(($approvedResponseCount / $invitationCount) * 100) . '%';
+            $responseRate = round($approvedResponseCount / $invitationCount * 100) . '%';
         } else {
             $responseRate = 'N/A';
         }
@@ -99,7 +101,7 @@ class SurveyResultsComponent extends Component
             'respondents' => $paginatedRespondents,
             'responseRate' => $responseRate,
             'surveyType' => $surveyType,
-            'titleForLayout' => $community->name . ' ' . ucwords($surveyType) . ' Questionnaire Respondents'
+            'titleForLayout' => $community->name . ' ' . ucwords($surveyType) . ' Questionnaire Respondents',
         ]);
     }
 }

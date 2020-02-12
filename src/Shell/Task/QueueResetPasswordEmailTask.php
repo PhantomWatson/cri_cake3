@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Shell\Task;
 
 use Cake\Mailer\MailerAwareTrait;
@@ -31,7 +33,7 @@ class QueueResetPasswordEmailTask extends QueueTask
     {
         try {
             $this->getMailer('User')->send('resetPassword', [
-                $data['userId']
+                $data['userId'],
             ]);
         } catch (\Exception $e) {
             return false;

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
@@ -47,7 +49,7 @@ class InvoicesController extends AppController
             // Save
             $invoice = $this->Invoices->newEntity([
                 'purchase_id' => $purchaseId,
-                'paid' => false
+                'paid' => false,
             ]);
             if (! $this->Invoices->save($invoice)) {
                 $msg = 'There was an error updating the database. Details: ' . $invoice->getErrors();
@@ -94,7 +96,7 @@ class InvoicesController extends AppController
 
             // Save
             $this->Invoices->patchEntity($invoice, [
-                'paid' => true
+                'paid' => true,
             ]);
             if (! $this->Invoices->save($invoice)) {
                 $msg = 'There was an error updating the database. Details: ' . $invoice->getErrors();

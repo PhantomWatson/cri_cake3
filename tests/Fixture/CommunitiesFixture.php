@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class CommunitiesFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -56,17 +55,17 @@ class CommunitiesFixture extends TestFixture
         [
             'id' => 1,
             'name' => 'Test Community (public)',
-            'public' => true
+            'public' => true,
         ],
         [
             'id' => 2,
             'name' => 'Test Community (non-public)',
-            'public' => false
+            'public' => false,
         ],
         [
             'id' => 3,
             'name' => 'Test Community (inactive)',
-            'active' => false
+            'active' => false,
         ],
         [
             'id' => 4,
@@ -87,7 +86,7 @@ class CommunitiesFixture extends TestFixture
         [
             'id' => 8,
             'name' => 'Test Community (alertable: deliver policy dev)',
-            'score' => 4
+            'score' => 4,
         ],
     ];
 
@@ -118,7 +117,7 @@ class CommunitiesFixture extends TestFixture
             'active' => true,
             'slug' => 'test-community',
             'created' => '2017-04-18 23:18:27',
-            'modified' => '2017-04-18 23:18:27'
+            'modified' => '2017-04-18 23:18:27',
         ];
 
         foreach ($this->records as &$record) {

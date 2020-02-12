@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
 use Cake\Core\Configure;
@@ -21,11 +23,11 @@ use Cake\Validation\Validator;
  */
 class ProductsTable extends Table
 {
-    const OFFICIALS_SURVEY = 1;
-    const OFFICIALS_SUMMIT = 2;
-    const ORGANIZATIONS_SURVEY = 3;
-    const ORGANIZATIONS_SUMMIT = 4;
-    const POLICY_DEVELOPMENT = 5;
+    public const OFFICIALS_SURVEY = 1;
+    public const OFFICIALS_SUMMIT = 2;
+    public const ORGANIZATIONS_SURVEY = 3;
+    public const ORGANIZATIONS_SUMMIT = 4;
+    public const POLICY_DEVELOPMENT = 5;
 
     /**
      * Initialize method
@@ -39,7 +41,7 @@ class ProductsTable extends Table
         $this->setDisplayField('description');
         $this->setPrimaryKey('id');
         $this->hasMany('Purchases', [
-            'foreignKey' => 'product_id'
+            'foreignKey' => 'product_id',
         ]);
     }
 
@@ -84,7 +86,7 @@ class ProductsTable extends Table
         $count = $purchasesTable->find('all')
             ->where([
                 'product_id' => $productId,
-                'community_id' => $communityId
+                'community_id' => $communityId,
             ])
             ->where(function ($exp, $q) {
                 return $exp->isNull('refunded');
@@ -190,7 +192,7 @@ class ProductsTable extends Table
      *
      * @param string $presentationLetter Presentation letter
      * @return int
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     public function getProductIdForPresentation($presentationLetter)
     {

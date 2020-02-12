@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
-use App\Model\Entity\Community;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
@@ -28,7 +29,6 @@ use Cake\Validation\Validator;
  */
 class UsersTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -42,24 +42,24 @@ class UsersTable extends Table
         $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
         $this->hasMany('Purchases', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
         $this->hasMany('OptOuts', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
         $this->belongsToMany('ConsultantCommunities', [
             'className' => 'Communities',
             'joinTable' => 'communities_consultants',
             'foreignKey' => 'consultant_id',
             'targetForeignKey' => 'community_id',
-            'saveStrategy' => 'replace'
+            'saveStrategy' => 'replace',
         ]);
         $this->belongsToMany('ClientCommunities', [
             'className' => 'Communities',
             'joinTable' => 'clients_communities',
             'foreignKey' => 'client_id',
             'targetForeignKey' => 'community_id',
-            'saveStrategy' => 'replace'
+            'saveStrategy' => 'replace',
         ]);
     }
 
@@ -85,25 +85,25 @@ class UsersTable extends Table
                     }
 
                     return 'Role must be admin, client, or consultant.';
-                }
+                },
             ]);
 
         $validator
             ->requirePresence('name', 'create')
             ->add('name', 'notBlank', [
                 'rule' => 'notBlank',
-                'message' => 'A non-blank name is required.'
+                'message' => 'A non-blank name is required.',
             ]);
 
         $validator
             ->add('email', 'valid', [
                 'rule' => 'email',
-                'message' => 'That doesn\'t appear to be a valid email address.'
+                'message' => 'That doesn\'t appear to be a valid email address.',
             ])
             ->add('email', 'unique', [
                 'rule' => 'validateUnique',
                 'provider' => 'table',
-                'message' => 'Sorry, another account has already been created with that email address.'
+                'message' => 'Sorry, another account has already been created with that email address.',
             ])
             ->requirePresence('email', 'create')
             ->notEmpty('email');
@@ -112,13 +112,13 @@ class UsersTable extends Table
             ->requirePresence('password', 'create')
             ->add('password', 'notBlank', [
                 'rule' => 'notBlank',
-                'message' => 'A non-blank password is required.'
+                'message' => 'A non-blank password is required.',
             ]);
 
         $validator
             ->add('unhashed_password', 'notBlank', [
                 'rule' => 'notBlank',
-                'message' => 'A non-blank password is required.'
+                'message' => 'A non-blank password is required.',
             ]);
 
         $validator
@@ -126,7 +126,7 @@ class UsersTable extends Table
             ->allowEmpty('new_password', 'update')
             ->add('new_password', 'validNewPassword1', [
                 'rule' => ['compareWith', 'confirm_password'],
-                'message' => 'Sorry, those passwords did not match.'
+                'message' => 'Sorry, those passwords did not match.',
             ]);
 
         $validator
@@ -186,7 +186,7 @@ class UsersTable extends Table
      * Returns TRUE if the specified user is allowed to view the specified community
      *
      * @param int $userId User ID
-     * @param Community $community Community entity
+     * @param \App\Model\Entity\Community $community Community entity
      * @return bool
      */
     public function canAccessCommunity($userId, $community)
@@ -326,8 +326,8 @@ class UsersTable extends Table
             return $this->find()->where([
                 'OR' => [
                     'cber_email_optin' => true,
-                    'ici_email_optin' => true
-                ]
+                    'ici_email_optin' => true,
+                ],
             ])->all();
         }
 

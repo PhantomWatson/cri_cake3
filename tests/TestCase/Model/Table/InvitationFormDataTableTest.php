@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\InvitationFormDataTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -10,7 +11,6 @@ use Cake\TestSuite\TestCase;
  */
 class InvitationFormDataTableTest extends TestCase
 {
-
     /**
      * Test subject
      *
@@ -24,7 +24,7 @@ class InvitationFormDataTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.invitation_form_data'
+        'app.invitation_form_data',
     ];
 
     /**

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Shell\Task;
 
 use Cake\Mailer\MailerAwareTrait;
@@ -35,7 +37,7 @@ class QueueInvitationTask extends QueueTask
                 'communityId' => $data['communityId'],
                 'senderEmail' => $data['senderEmail'],
                 'senderName' => $data['senderName'],
-                'recipient' => $data['recipient']
+                'recipient' => $data['recipient'],
             ]]);
         } catch (\Exception $e) {
             return false;

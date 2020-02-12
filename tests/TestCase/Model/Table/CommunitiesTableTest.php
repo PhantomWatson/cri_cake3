@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\CommunitiesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -10,7 +11,6 @@ use Cake\TestSuite\TestCase;
  */
 class CommunitiesTableTest extends TestCase
 {
-
     /**
      * Fixtures
      *
@@ -21,7 +21,7 @@ class CommunitiesTableTest extends TestCase
         'app.Areas',
         'app.Statistics',
         'app.Purchases',
-        'app.Surveys'
+        'app.Surveys',
     ];
 
     /**

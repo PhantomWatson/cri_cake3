@@ -1,10 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Event;
 
 use App\Event\EmailListener;
 use App\Test\TestCase\ApplicationTest;
-use Cake\Event\Event;
-use Cake\ORM\TableRegistry;
 
 class EmailListenerTest extends ApplicationTest
 {
@@ -15,7 +15,7 @@ class EmailListenerTest extends ApplicationTest
         'app.Deliveries',
         'app.QueuedJobs',
         'app.Surveys',
-        'app.Users'
+        'app.Users',
     ];
 
     /**
@@ -37,7 +37,7 @@ class EmailListenerTest extends ApplicationTest
     {
         $required = [
             'Model.Community.afterAutomaticAdvancement' => 'sendCommunityPromotedEmail',
-            'Model.Community.afterScoreIncrease' => 'sendCommunityPromotedEmail'
+            'Model.Community.afterScoreIncrease' => 'sendCommunityPromotedEmail',
         ];
         $listener = new EmailListener();
         $actual = $listener->implementedEvents();

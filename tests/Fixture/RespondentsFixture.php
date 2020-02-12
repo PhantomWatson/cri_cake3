@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class RespondentsFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -46,16 +45,16 @@ class RespondentsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'survey_id' => 1
+            'survey_id' => 1,
         ],
         [
             'id' => 2,
-            'survey_id' => 4
+            'survey_id' => 4,
         ],
         [
             'id' => 3,
-            'survey_id' => 5
-        ]
+            'survey_id' => 5,
+        ],
     ];
 
     /**
@@ -73,7 +72,7 @@ class RespondentsFixture extends TestFixture
             'approved' => 1,
             'response_date' => null,
             'created' => '2014-07-24 16:38:14',
-            'modified' => '2014-07-24 16:38:15'
+            'modified' => '2014-07-24 16:38:15',
         ];
 
         foreach ($this->records as &$record) {

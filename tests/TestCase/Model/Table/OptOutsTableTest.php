@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\OptOutsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -10,7 +11,6 @@ use Cake\TestSuite\TestCase;
  */
 class OptOutsTableTest extends TestCase
 {
-
     /**
      * Test subject
      *
@@ -24,7 +24,7 @@ class OptOutsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.OptOuts'
+        'app.OptOuts',
     ];
 
     /**

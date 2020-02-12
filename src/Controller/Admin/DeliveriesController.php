@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
@@ -24,9 +26,9 @@ class DeliveriesController extends AppController
             'contain' => [
                 'Communities',
                 'Deliverables',
-                'Users'
+                'Users',
             ],
-            'order' => ['created' => 'DESC']
+            'order' => ['created' => 'DESC'],
         ];
         if (! $this->request->getQuery('show-dummy')) {
             $this->paginate['conditions'] = ['Communities.dummy' => 0];
@@ -34,7 +36,7 @@ class DeliveriesController extends AppController
 
         $this->set([
             'deliveries' => $this->paginate($this->Deliveries),
-            'titleForLayout' => 'Deliverables'
+            'titleForLayout' => 'Deliverables',
         ]);
     }
 
@@ -50,10 +52,10 @@ class DeliveriesController extends AppController
             'contain' => [
                 'Communities',
                 'Deliverables',
-                'Users'
+                'Users',
             ],
             'order' => ['created' => 'DESC'],
-            'conditions' => ['Deliveries.community_id' => $communityId]
+            'conditions' => ['Deliveries.community_id' => $communityId],
         ];
         $communitiesTable = TableRegistry::get('Communities');
         $communityName = null;
@@ -68,7 +70,7 @@ class DeliveriesController extends AppController
         $this->set([
             'deliveries' => $deliveries,
             'communityId' => $communityId,
-            'titleForLayout' => "Deliveries: $communityName"
+            'titleForLayout' => "Deliveries: $communityName",
         ]);
     }
 
@@ -99,14 +101,14 @@ class DeliveriesController extends AppController
                 $event = new Event('Model.Delivery.afterAdd', $this, ['meta' => [
                     'communityId' => $delivery->community_id,
                     'deliverableId' => $delivery->deliverable_id,
-                    'deliverableName' => $deliverable->name
+                    'deliverableName' => $deliverable->name,
                 ]]);
                 $this->getEventManager()->dispatch($event);
 
                 return $this->redirect([
                     'prefix' => 'admin',
                     'controller' => 'Deliveries',
-                    'action' => 'index'
+                    'action' => 'index',
                 ]);
             }
         } elseif ($communityId) {

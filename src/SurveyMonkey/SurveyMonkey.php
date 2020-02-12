@@ -1,15 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace App\SurveyMonkey;
 
-use App\Model\Entity\Respondent;
-use App\Model\Entity\Response;
-use App\Model\Entity\Survey;
-use App\Model\Table\SurveysTable;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
@@ -98,7 +96,7 @@ class SurveyMonkey
         while (true) {
             $defaultParams = [
                 'page' => $page,
-                'per_page' => $pageSize
+                'per_page' => $pageSize,
             ];
             $params = array_merge($defaultParams, $params);
             $result = $this->api->getSurveyList($params);
@@ -107,7 +105,7 @@ class SurveyMonkey
                     $retval[] = [
                         'sm_id' => $survey['id'],
                         'title' => $survey['title'],
-                        'url' => $this->getCachedSMSurveyUrl($survey['id'])
+                        'url' => $this->getCachedSMSurveyUrl($survey['id']),
                     ];
                 }
                 if (count($result['data']['data']) == $pageSize) {
@@ -129,12 +127,12 @@ class SurveyMonkey
      *
      * @param int $respondentId Respondent ID
      * @return string
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     public function getSmRespondentId($respondentId)
     {
         $respondentsTable = TableRegistry::get('Respondents');
-        /** @var Respondent $respondent */
+        /** @var \App\Model\Entity\Respondent $respondent */
         $respondent = $respondentsTable->find('all')
             ->select(['email', 'survey_id'])
             ->where(['id' => $respondentId])
@@ -143,7 +141,7 @@ class SurveyMonkey
         $surveyId = $respondent->survey_id;
 
         $responsesTable = TableRegistry::get('Responses');
-        /** @var Response $response */
+        /** @var \App\Model\Entity\Response $response */
         $response = $responsesTable->find('all')
             ->select(['response_date'])
             ->where(['respondent_id' => $respondentId])
@@ -152,7 +150,7 @@ class SurveyMonkey
         $responseDate = $response->response_date->i18nFormat('yyyy-MM-ddTHH:mm:ss');
 
         $surveysTable = TableRegistry::get('Surveys');
-        /** @var Survey $survey */
+        /** @var \App\Model\Entity\Survey $survey */
         $survey = $surveysTable->find('all')
             ->select(['sm_id'])
             ->where(['id' => $surveyId])
@@ -160,7 +158,7 @@ class SurveyMonkey
         $smSurveyId = $survey->sm_id;
 
         $result = $this->getRespondentList((string)$smSurveyId, [
-            'start_modified_at' => $responseDate
+            'start_modified_at' => $responseDate,
         ]);
         if (! $result['success']) {
             $msg = 'Error retrieving response data from SurveyMonkey.';
@@ -184,7 +182,7 @@ class SurveyMonkey
      * @param string $smSurveyId SurveyMonkey survey ID
      * @param string $smRespondentId SurveyMonkey respondent ID
      * @return array
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function getFullResponse($smSurveyId, $smRespondentId)
     {
@@ -278,7 +276,7 @@ class SurveyMonkey
      *
      * @param string $smSurveyId SurveyMonkey-defined survey ID
      * @return string
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function getSurveyUrl($smSurveyId = null)
     {
@@ -327,7 +325,7 @@ class SurveyMonkey
     {
         $retval = [
             'name' => '',
-            'email' => ''
+            'email' => '',
         ];
 
         // Assume the first field contains the respondent's name
@@ -408,7 +406,7 @@ class SurveyMonkey
         }
 
         // Create an array to save this data with
-        /** @var SurveysTable $surveysTable */
+        /** @var \App\Model\Table\SurveysTable $surveysTable */
         $surveysTable = TableRegistry::get('Surveys');
         $sectors = $surveysTable->getSectors();
         $qnaIdFields = $surveysTable->getQnaIdFieldNames();
@@ -418,13 +416,13 @@ class SurveyMonkey
         // Find the PWRRR-ranking question and store its corresponding Q&A IDs in $data
         $keyPhrases = [
             'PWR3 is a tool for thinking about the economic future of your community.',
-            'Each Indiana community uses a combination of 5 activities'
+            'Each Indiana community uses a combination of 5 activities',
         ];
         $pwrrrQuestion = $this->findQuestion($result, $keyPhrases);
         if (! $pwrrrQuestion) {
             return [
                 false,
-                'Error: This questionnaire does not contain a PWR<sup>3</sup> ranking question.'
+                'Error: This questionnaire does not contain a PWR<sup>3</sup> ranking question.',
             ];
         }
         $data['pwrrr_qid'] = $pwrrrQuestion['id'];
@@ -439,7 +437,7 @@ class SurveyMonkey
                     case '5':
                         $field = $choice['text'] . '_aid';
                         $data[$field] = $choice['id'];
-                        continue;
+                        break;
                 }
                 foreach ($sectors as $sector) {
                     if (stripos($choice['text'], $sector) !== false) {
@@ -461,7 +459,7 @@ class SurveyMonkey
                 'City' => 'aware_of_city_plan_aid',
                 'County' => 'aware_of_county_plan_aid',
                 'Regional' => 'aware_of_regional_plan_aid',
-                'I do not know' => 'unaware_of_plan_aid'
+                'I do not know' => 'unaware_of_plan_aid',
             ];
             foreach ($awareOfPlanQuestion['answers']['choices'] as $choice) {
                 foreach ($keyPhrases as $phrase => $field) {

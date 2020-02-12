@@ -1,18 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Alerts;
 
 use App\Alerts\Alertable;
-use App\Model\Entity\Response;
-use App\Model\Entity\Survey;
-use App\Model\Table\CommunitiesTable;
 use App\Model\Table\DeliverablesTable;
-use App\Model\Table\DeliveriesTable;
-use App\Model\Table\OptOutsTable;
 use App\Model\Table\ProductsTable;
-use App\Model\Table\PurchasesTable;
-use App\Model\Table\ResponsesTable;
-use App\Model\Table\SurveysTable;
-use App\Model\Table\UsersTable;
 use Cake\I18n\Date;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
@@ -188,7 +181,7 @@ class AlertableTest extends TestCase
         $this->optOuts->addOptOut([
             'community_id' => $communityId,
             'product_id' => $productId,
-            'user_id' => 1
+            'user_id' => 1,
         ]);
         $this->assertUnalertable($communityId, "deliverPresentation$presentationLetter");
     }

@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class DeliverablesFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -41,31 +40,31 @@ class DeliverablesFixture extends TestFixture
             'id' => 1,
             'name' => 'Presentation A materials',
             'delivered_by' => 'CBER',
-            'delivered_to' => 'ICI'
+            'delivered_to' => 'ICI',
         ],
         [
             'id' => 2,
             'name' => 'Presentation B materials',
             'delivered_by' => 'CBER',
-            'delivered_to' => 'ICI'
+            'delivered_to' => 'ICI',
         ],
         [
             'id' => 3,
             'name' => 'Presentation C materials',
             'delivered_by' => 'CBER',
-            'delivered_to' => 'ICI'
+            'delivered_to' => 'ICI',
         ],
         [
             'id' => 4,
             'name' => 'Presentation D materials',
             'delivered_by' => 'CBER',
-            'delivered_to' => 'ICI'
+            'delivered_to' => 'ICI',
         ],
         [
             'id' => 5,
             'name' => 'policy development',
             'delivered_by' => 'CBER / ICI',
-            'delivered_to' => 'client community'
-        ]
+            'delivered_to' => 'client community',
+        ],
     ];
 }

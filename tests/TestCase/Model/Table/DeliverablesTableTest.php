@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\DeliverablesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -10,7 +11,6 @@ use Cake\TestSuite\TestCase;
  */
 class DeliverablesTableTest extends TestCase
 {
-
     /**
      * Test subject
      *
@@ -25,7 +25,7 @@ class DeliverablesTableTest extends TestCase
      */
     public $fixtures = [
         'app.Deliverables',
-        'app.Deliveries'
+        'app.Deliveries',
     ];
 
     /**

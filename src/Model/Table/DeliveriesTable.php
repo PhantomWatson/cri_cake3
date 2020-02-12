@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
-use App\Model\Entity\Delivery;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -14,19 +14,18 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  * @property \App\Model\Table\CommunitiesTable|\Cake\ORM\Association\BelongsTo $Communities
  *
- * @method Delivery get($primaryKey, $options = [])
- * @method Delivery newEntity($data = null, array $options = [])
- * @method Delivery[] newEntities(array $data, array $options = [])
- * @method Delivery|bool save(EntityInterface $entity, $options = [])
- * @method Delivery patchEntity(EntityInterface $entity, array $data, array $options = [])
- * @method Delivery[] patchEntities($entities, array $data, array $options = [])
- * @method Delivery findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Delivery get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Delivery newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\Delivery[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Delivery|bool save(\App\Model\Table\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Delivery patchEntity(\App\Model\Table\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Delivery[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Delivery findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class DeliveriesTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -45,15 +44,15 @@ class DeliveriesTable extends Table
 
         $this->belongsTo('Deliverables', [
             'foreignKey' => 'deliverable_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->belongsTo('Communities', [
             'foreignKey' => 'community_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
     }
 
@@ -101,7 +100,7 @@ class DeliveriesTable extends Table
             ->select(['id'])
             ->where([
                 'community_id' => $communityId,
-                'deliverable_id' => $deliverableId
+                'deliverable_id' => $deliverableId,
             ])
             ->count();
 
@@ -117,12 +116,12 @@ class DeliveriesTable extends Table
      */
     public function getDate($deliverableId, $communityId)
     {
-        /** @var Delivery $result Delivery entity */
+        /** @var \App\Model\Entity\Delivery $result Delivery entity */
         $result = $this->find('all')
             ->select(['created'])
             ->where([
                 'community_id' => $communityId,
-                'deliverable_id' => $deliverableId
+                'deliverable_id' => $deliverableId,
             ])
             ->orderDesc('created')
             ->first();

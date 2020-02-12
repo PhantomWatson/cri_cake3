@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
-use App\Model\Entity\Respondent;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Http\Exception\NotFoundException;
@@ -38,10 +39,10 @@ class RespondentsController extends AppController
             'community' => $community,
             'respondents' => [
                 'unaddressed' => $this->Respondents->getUnaddressedUnapproved($surveyId),
-                'dismissed' => $this->Respondents->getDismissed($surveyId)
+                'dismissed' => $this->Respondents->getDismissed($surveyId),
             ],
             'survey' => $survey,
-            'titleForLayout' => $community->name . ' Uninvited ' . ucwords($survey->type) . ' Questionnaire Respondents'
+            'titleForLayout' => $community->name . ' Uninvited ' . ucwords($survey->type) . ' Questionnaire Respondents',
         ]);
         $this->render('/Client/Respondents/unapproved');
     }
@@ -61,7 +62,7 @@ class RespondentsController extends AppController
             $this->dispatchUninvitedEvent(true, $respondent);
         }
         $this->set([
-            'success' => (bool)$result
+            'success' => (bool)$result,
         ]);
         $this->viewBuilder()->setLayout('blank');
         $this->render(DS . 'Client' . DS . 'Respondents' . DS . 'approve_uninvited');
@@ -82,7 +83,7 @@ class RespondentsController extends AppController
             $this->dispatchUninvitedEvent(false, $respondent);
         }
         $this->set([
-            'success' => (bool)$result
+            'success' => (bool)$result,
         ]);
         $this->viewBuilder()->setLayout('blank');
         $this->render(DS . 'Client' . DS . 'Respondents' . DS . 'dismiss_uninvited');
@@ -92,7 +93,7 @@ class RespondentsController extends AppController
      * Dispatches an event for uninvited respondent approval or dismissal
      *
      * @param bool $approved True for approved and false for dismissed
-     * @param Respondent $respondent Respondent entity
+     * @param \App\Model\Entity\Respondent $respondent Respondent entity
      * @return void
      */
     private function dispatchUninvitedEvent($approved, $respondent)
@@ -106,7 +107,7 @@ class RespondentsController extends AppController
             'surveyId' => $surveyId,
             'respondentId' => $respondent->id,
             'respondentName' => $respondent->name,
-            'surveyType' => $survey->type
+            'surveyType' => $survey->type,
         ]]);
         $this->getEventManager()->dispatch($event);
     }

@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -23,7 +24,6 @@ use Cake\Validation\Validator;
  */
 class InvoicesTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -42,7 +42,7 @@ class InvoicesTable extends Table
 
         $this->belongsTo('Purchases', [
             'foreignKey' => 'purchase_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
     }
 

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\View\Helper;
 
 use Cake\View\Helper;
@@ -20,7 +22,7 @@ class ReportsHelper extends Helper
             'Responses',
             'Completion Rate',
             'vs Local Area',
-            'vs Wider Area'
+            'vs Wider Area',
         ];
         foreach ($sectors as $sector) {
             $cells[] = ucwords($sector);
@@ -66,7 +68,7 @@ class ReportsHelper extends Helper
                 'Wholesale' => 'W',
                 'Retail' => 'Ret',
                 'Residential' => 'Res',
-                'Recreation' => 'Rec'
+                'Recreation' => 'Rec',
             ];
             if (isset($abbreviations[$cell])) {
                 $cell = $abbreviations[$cell];

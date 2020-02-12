@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\View\Helper;
 
 use App\Model\Table\ProductsTable;
@@ -30,7 +32,7 @@ class ClientHomeHelper extends Helper
      * Returns the non-null userRole property or throws an exception
      *
      * @return string
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     private function getUserRole()
     {
@@ -46,7 +48,7 @@ class ClientHomeHelper extends Helper
      *
      * @param bool|string $status Boolean for success or failure, or "waiting"
      * @return string
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     public function glyphicon($status)
     {
@@ -181,14 +183,14 @@ class ClientHomeHelper extends Helper
                     'prefix' => 'admin',
                     'controller' => 'Surveys',
                     'action' => 'invite',
-                    $params['surveyId']
+                    $params['surveyId'],
                 ];
             } else {
                 $path = [
                     'prefix' => 'client',
                     'controller' => 'Surveys',
                     'action' => 'invite',
-                    $params['respondentType']
+                    $params['respondentType'],
                 ];
             }
             $actions = $this->Html->link(
@@ -208,7 +210,7 @@ class ClientHomeHelper extends Helper
      *
      * @param array $params Parameters
      * @return string
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     public function responsesRow($params)
     {
@@ -273,14 +275,14 @@ class ClientHomeHelper extends Helper
                     'prefix' => 'admin',
                     'controller' => 'Respondents',
                     'action' => 'view',
-                    $params['surveyId']
+                    $params['surveyId'],
                 ];
             } else {
                 $path = [
                     'prefix' => 'client',
                     'controller' => 'Respondents',
                     'action' => 'index',
-                    $surveyType
+                    $surveyType,
                 ];
             }
 
@@ -310,7 +312,7 @@ class ClientHomeHelper extends Helper
                     'prefix' => 'admin',
                     'controller' => 'Surveys',
                     'action' => 'remind',
-                    $params['surveyId']
+                    $params['surveyId'],
                 ];
             } else {
                 if ($params['step'] == 2) {
@@ -324,7 +326,7 @@ class ClientHomeHelper extends Helper
                     'prefix' => 'client',
                     'controller' => 'Surveys',
                     'action' => 'remind',
-                    $surveyType
+                    $surveyType,
                 ];
             }
             $actions = $this->Html->link(
@@ -355,14 +357,14 @@ class ClientHomeHelper extends Helper
                     'prefix' => 'admin',
                     'controller' => 'Respondents',
                     'action' => 'unapproved',
-                    $params['surveyId']
+                    $params['surveyId'],
                 ];
             } else {
                 $path = [
                     'prefix' => 'client',
                     'controller' => 'Respondents',
                     'action' => 'unapproved',
-                    'official'
+                    'official',
                 ];
             }
             $actions = $this->Html->link(
@@ -512,7 +514,7 @@ class ClientHomeHelper extends Helper
      * @param int $productId Product ID
      * @param null|int $communityId Community ID (if user is an admin)
      * @return string
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     public function optOutLink($productId, $communityId = null)
     {
@@ -525,14 +527,14 @@ class ClientHomeHelper extends Helper
                 'controller' => 'OptOuts',
                 'action' => 'optOut',
                 $communityId,
-                $productId
+                $productId,
             ]);
         } else {
             $optOutUrl = Router::url([
                 'prefix' => 'client',
                 'controller' => 'OptOuts',
                 'action' => 'optOut',
-                $productId
+                $productId,
             ]);
         }
 

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
 use Cake\ORM\RulesChecker;
@@ -22,7 +24,6 @@ use Cake\Validation\Validator;
  */
 class StatisticsTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -37,11 +38,11 @@ class StatisticsTable extends Table
         $this->addBehavior('Timestamp');
         $this->belongsTo('Areas', [
             'foreignKey' => 'area_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->belongsTo('StatCategories', [
             'foreignKey' => 'stat_category_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
     }
 
@@ -144,7 +145,7 @@ class StatisticsTable extends Table
                     ->select(['id', 'value'])
                     ->where([
                         'area_id' => $areaId,
-                        'stat_category_id' => $categoryId
+                        'stat_category_id' => $categoryId,
                     ])
                     ->first();
                 if ($existingRecord) {
@@ -172,7 +173,7 @@ class StatisticsTable extends Table
                     $data = [
                         'area_id' => $areaId,
                         'stat_category_id' => $categoryId,
-                        'value' => $value
+                        'value' => $value,
                     ];
                     $statistic = $this->newEntity($data);
                     $errors = $statistic->getErrors();
@@ -265,7 +266,7 @@ class StatisticsTable extends Table
                     ->where([
                         'area_id' => $areaId,
                         'stat_category_id' => $categoryId,
-                        'year' => $year
+                        'year' => $year,
                     ])
                     ->first();
 
@@ -300,7 +301,7 @@ class StatisticsTable extends Table
                     'area_id' => $areaId,
                     'stat_category_id' => $categoryId,
                     'value' => $value,
-                    'year' => $year
+                    'year' => $year,
                 ];
                 $statistic = $this->newEntity($data);
                 $errors = $statistic->getErrors();

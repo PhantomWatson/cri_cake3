@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Controller\Admin;
 
 use App\Model\Table\DeliverablesTable;
-use App\Model\Table\DeliveriesTable;
 use App\Test\TestCase\ApplicationTest;
 use Cake\Event\EventList;
 use Cake\ORM\TableRegistry;
@@ -25,7 +26,7 @@ class DeliveriesControllerTest extends ApplicationTest
         'app.Deliveries',
         'app.Deliverables',
         'app.QueuedJobs',
-        'app.Users'
+        'app.Users',
     ];
 
     /**
@@ -38,7 +39,7 @@ class DeliveriesControllerTest extends ApplicationTest
         parent::setUp();
 
         $this->configRequest([
-            'environment' => ['HTTPS' => 'on']
+            'environment' => ['HTTPS' => 'on'],
         ]);
 
         $this->Deliveries = TableRegistry::get('Surveys');
@@ -57,11 +58,11 @@ class DeliveriesControllerTest extends ApplicationTest
         $url = [
             'prefix' => 'admin',
             'controller' => 'Deliveries',
-            'action' => 'add'
+            'action' => 'add',
         ];
         $data = [
             'community_id' => 1,
-            'deliverable_id' => DeliverablesTable::PRESENTATION_A_MATERIALS
+            'deliverable_id' => DeliverablesTable::PRESENTATION_A_MATERIALS,
         ];
         $this->post($url, $data);
         $this->assertEventFired('Model.Delivery.afterAdd', $this->_controller->getEventManager());

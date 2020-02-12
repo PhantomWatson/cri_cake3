@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class InvoicesFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -43,7 +42,7 @@ class InvoicesFixture extends TestFixture
             'purchase_id' => 1,
             'paid' => 0,
             'created' => '2017-04-14 20:35:34',
-            'modified' => '2017-04-14 20:35:34'
+            'modified' => '2017-04-14 20:35:34',
         ],
     ];
 }

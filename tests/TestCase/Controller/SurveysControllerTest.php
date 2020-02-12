@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Controller;
 
 use App\Test\TestCase\ApplicationTest;
@@ -8,7 +10,6 @@ use App\Test\TestCase\ApplicationTest;
  */
 class SurveysControllerTest extends ApplicationTest
 {
-
     /**
      * Fixtures
      *
@@ -23,7 +24,7 @@ class SurveysControllerTest extends ApplicationTest
         'app.Responses',
         'app.Statistics',
         'app.Surveys',
-        'app.Users'
+        'app.Users',
     ];
 
     /**
@@ -35,7 +36,7 @@ class SurveysControllerTest extends ApplicationTest
     {
         parent::setUp();
         $this->configRequest([
-            'environment' => ['HTTPS' => 'on']
+            'environment' => ['HTTPS' => 'on'],
         ]);
     }
 

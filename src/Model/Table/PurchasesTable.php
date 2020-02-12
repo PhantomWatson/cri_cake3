@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
-use App\Model\Entity\Purchase;
-use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -27,7 +27,6 @@ use Cake\Validation\Validator;
  */
 class PurchasesTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -42,19 +41,19 @@ class PurchasesTable extends Table
         $this->addBehavior('Timestamp');
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType' => 'LEFT'
+            'joinType' => 'LEFT',
         ]);
         $this->belongsTo('Communities', [
             'foreignKey' => 'community_id',
-            'joinType' => 'LEFT'
+            'joinType' => 'LEFT',
         ]);
         $this->belongsTo('Products', [
             'foreignKey' => 'product_id',
-            'joinType' => 'LEFT'
+            'joinType' => 'LEFT',
         ]);
         $this->belongsTo('Refunders', [
             'className' => 'App\Model\Table\UsersTable',
-            'foreignKey' => 'refunder_id'
+            'foreignKey' => 'refunder_id',
         ]);
         $this->hasOne('Invoices')
             ->setDependent(true);
@@ -81,7 +80,7 @@ class PurchasesTable extends Table
                     }
                     $ocraFundedProducts = [
                         ProductsTable::OFFICIALS_SURVEY,
-                        ProductsTable::OFFICIALS_SUMMIT
+                        ProductsTable::OFFICIALS_SUMMIT,
                     ];
                     $productId = $context['data']['product_id'];
                     if (in_array($productId, $ocraFundedProducts)) {
@@ -90,7 +89,7 @@ class PurchasesTable extends Table
 
                     return false;
                 },
-                'message' => 'OCRA is only funding products related to Step Two at this time'
+                'message' => 'OCRA is only funding products related to Step Two at this time',
             ]);
 
         $validator
@@ -168,23 +167,23 @@ class PurchasesTable extends Table
             ->where([
                 'community_id' => $communityId,
                 function ($exp) {
-                    /** @var QueryExpression $exp */
+                    /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                     return $exp->isNull('refunded');
-                }
+                },
             ])
             ->order(['Purchases.created' => 'ASC'])
             ->contain([
                 'Products' => function ($q) {
-                    /** @var Query $q */
+                    /** @var \Cake\ORM\Query $q */
 
                     return $q->select(['description', 'price']);
                 },
                 'Users' => function ($q) {
-                    /** @var Query $q */
+                    /** @var \Cake\ORM\Query $q */
 
                     return $q->select(['name', 'email']);
-                }
+                },
             ])
             ->toArray();
     }
@@ -199,7 +198,7 @@ class PurchasesTable extends Table
         return [
             'ocra' => 'OCRA',
             'bsu' => 'Ball State University',
-            'self' => 'Paid for by client community'
+            'self' => 'Paid for by client community',
         ];
     }
 
@@ -215,13 +214,13 @@ class PurchasesTable extends Table
             ->where([
                 'Purchases.source' => 'ocra',
                 function ($exp) {
-                    /** @var QueryExpression $exp */
+                    /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                     return $exp->in('Purchases.product_id', [
                         ProductsTable::OFFICIALS_SURVEY,
-                        ProductsTable::OFFICIALS_SUMMIT
+                        ProductsTable::OFFICIALS_SUMMIT,
                     ]);
-                }
+                },
             ])
             ->contain(['Communities', 'Products'])
             ->order(['Purchases.created' => 'DESC']);
@@ -238,7 +237,7 @@ class PurchasesTable extends Table
         return $query
             ->where(['OR' => [
                 function ($exp) {
-                    /** @var QueryExpression $exp */
+                    /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                     return $exp
                         ->eq('Products.id', ProductsTable::OFFICIALS_SURVEY)
@@ -247,7 +246,7 @@ class PurchasesTable extends Table
                         ->lt('Communities.presentation_a', date('Y-m-d'));
                 },
                 function ($exp) {
-                    /** @var QueryExpression $exp */
+                    /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                     return $exp
                         ->eq('Products.id', ProductsTable::OFFICIALS_SUMMIT)
@@ -256,7 +255,7 @@ class PurchasesTable extends Table
                         ->lt('Communities.presentation_b', date('Y-m-d'));
                 },
                 function ($exp) {
-                    /** @var QueryExpression $exp */
+                    /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                     return $exp
                         ->eq('Products.id', ProductsTable::ORGANIZATIONS_SURVEY)
@@ -265,7 +264,7 @@ class PurchasesTable extends Table
                         ->lt('Communities.presentation_c', date('Y-m-d'));
                 },
                 function ($exp) {
-                    /** @var QueryExpression $exp */
+                    /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                     return $exp
                         ->eq('Products.id', ProductsTable::ORGANIZATIONS_SUMMIT)
@@ -274,7 +273,7 @@ class PurchasesTable extends Table
                         ->lt('Communities.presentation_d', date('Y-m-d'));
                 },
                 function ($exp) {
-                    /** @var QueryExpression $exp */
+                    /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                     return $exp
                         ->eq('Products.id', ProductsTable::POLICY_DEVELOPMENT)
@@ -284,7 +283,7 @@ class PurchasesTable extends Table
                 },
             ]])
             ->where(function ($exp) {
-                /** @var QueryExpression $exp */
+                /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                 return $exp->isNull('refunded');
             })
@@ -305,73 +304,73 @@ class PurchasesTable extends Table
                     'Products.id' => ProductsTable::OFFICIALS_SURVEY,
                     'OR' => [
                         function ($exp) {
-                            /** @var QueryExpression $exp */
+                            /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                             return $exp->gte('Communities.presentation_a', date('Y-m-d'));
                         },
                         function ($exp) {
-                            /** @var QueryExpression $exp */
+                            /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                             return $exp->isNull('Communities.presentation_a');
-                        }
-                    ]
+                        },
+                    ],
                 ],
                 [
                     'Products.id' => ProductsTable::OFFICIALS_SUMMIT,
                     'OR' => [
                         function ($exp) {
-                            /** @var QueryExpression $exp */
+                            /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                             return $exp->gte('Communities.presentation_b', date('Y-m-d'));
                         },
                         function ($exp) {
-                            /** @var QueryExpression $exp */
+                            /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                             return $exp->isNull('Communities.presentation_b');
-                        }
-                    ]
+                        },
+                    ],
                 ],
                 [
                     'Products.id' => ProductsTable::ORGANIZATIONS_SURVEY,
                     'OR' => [
                         function ($exp) {
-                            /** @var QueryExpression $exp */
+                            /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                             return $exp->gte('Communities.presentation_c', date('Y-m-d'));
                         },
                         function ($exp) {
-                            /** @var QueryExpression $exp */
+                            /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                             return $exp->isNull('Communities.presentation_c');
-                        }
-                    ]
+                        },
+                    ],
                 ],
                 [
                     'Products.id' => ProductsTable::ORGANIZATIONS_SUMMIT,
                     'OR' => [
                         function ($exp) {
-                            /** @var QueryExpression $exp */
+                            /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                             return $exp->gte('Communities.presentation_d', date('Y-m-d'));
                         },
                         function ($exp) {
-                            /** @var QueryExpression $exp */
+                            /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                             return $exp->isNull('Communities.presentation_d');
-                        }
-                    ]
+                        },
+                    ],
                 ],
                 [
                     'Products.id' => ProductsTable::POLICY_DEVELOPMENT,
                     function ($exp) {
-                        /** @var QueryExpression $exp */
+                        /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                         return $exp->lt('Communities.score', 4);
-                    }
-                ]
+                    },
+                ],
             ]])
             ->where(function ($exp) {
-                /** @var QueryExpression $exp */
+                /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                 return $exp->isNull('refunded');
             })
@@ -388,12 +387,12 @@ class PurchasesTable extends Table
     {
         return $query
             ->where(function ($exp) {
-                /** @var QueryExpression $exp */
+                /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                 return $exp->isNull('refunded');
             })
             ->matching('Invoices', function ($q) {
-                /** @var Query $q */
+                /** @var \Cake\ORM\Query $q */
 
                 return $q->where(['paid' => false]);
             });
@@ -409,12 +408,12 @@ class PurchasesTable extends Table
     {
         return $query
             ->where(function ($exp) {
-                /** @var QueryExpression $exp */
+                /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                 return $exp->isNull('refunded');
             })
             ->matching('Invoices', function ($q) {
-                /** @var Query $q */
+                /** @var \Cake\ORM\Query $q */
 
                 return $q->where(['paid' => true]);
             });
@@ -429,12 +428,12 @@ class PurchasesTable extends Table
      */
     public function getPurchaseDate($productId, $communityId)
     {
-        /** @var Purchase $result */
+        /** @var \App\Model\Entity\Purchase $result */
         $result = $this->find()
             ->select('created')
             ->where([
                 'product_id' => $productId,
-                'community_id' => $communityId
+                'community_id' => $communityId,
             ])
             ->orderDesc('created')
             ->first();
@@ -458,9 +457,9 @@ class PurchasesTable extends Table
                 'product_id' => $productId,
                 'community_id' => $communityId,
                 function ($exp) {
-                    /** @var QueryExpression $exp */
+                    /** @var \Cake\Database\Expression\QueryExpression $exp */
                     return $exp->isNull('refunded');
-                }
+                },
             ])
         ->count();
 

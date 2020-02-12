@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -28,7 +30,6 @@ use Cake\View\View;
  */
 class AppView extends View
 {
-
     /**
      * Initialization hook method.
      *
@@ -40,7 +41,7 @@ class AppView extends View
     public function initialize()
     {
         $this->loadHelper('Form', [
-            'templates' => 'bootstrap_form'
+            'templates' => 'bootstrap_form',
         ]);
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Component;
 
 use Cake\Controller\Component;
@@ -49,7 +51,7 @@ class ClientHomeComponent extends Component
             'autoImportFrequency' => $surveysTable->getPerSurveyAutoImportFrequency(),
             'importErrors' => [
                 'official' => $surveysTable->getImportErrors($officialSurveyId),
-                'organization' => $surveysTable->getImportErrors($organizationSurveyId)
+                'organization' => $surveysTable->getImportErrors($organizationSurveyId),
             ],
             'officialResponsesChecked' => $surveysTable->getChecked($officialSurveyId),
             'officialUninvitedRespondents' => $respondentsTable->getUninvitedCount($officialSurveyId),
@@ -61,17 +63,17 @@ class ClientHomeComponent extends Component
             'step3PolicyDevPurchased' => $criteria[3]['policy_dev_purchased'],
             'surveyExists' => [
                 'official' => (bool)$officialSurveyId,
-                'organization' => (bool)$organizationSurveyId
+                'organization' => (bool)$organizationSurveyId,
             ],
             'surveyIsActive' => [
                 'official' => $surveysTable->isActive($officialSurveyId),
-                'organization' => $surveysTable->isActive($organizationSurveyId)
+                'organization' => $surveysTable->isActive($organizationSurveyId),
             ],
             'surveyIsComplete' => [
                 'official' => $surveysTable->isComplete($officialSurveyId),
-                'organization' => $surveysTable->isComplete($organizationSurveyId)
+                'organization' => $surveysTable->isComplete($organizationSurveyId),
             ],
-            'titleForLayout' => $community->name . '\'s Progress in the CRI Program'
+            'titleForLayout' => $community->name . '\'s Progress in the CRI Program',
         ]);
         $this->_registry->getController()->set(compact(
             'community',

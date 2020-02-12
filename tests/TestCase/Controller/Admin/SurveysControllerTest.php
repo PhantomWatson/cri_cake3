@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Controller\Admin;
 
-use App\Model\Table\SurveysTable;
 use App\Test\TestCase\ApplicationTest;
 use Cake\Event\EventList;
 use Cake\ORM\TableRegistry;
@@ -42,7 +43,7 @@ class SurveysControllerTest extends ApplicationTest
         parent::setUp();
 
         $this->configRequest([
-            'environment' => ['HTTPS' => 'on']
+            'environment' => ['HTTPS' => 'on'],
         ]);
 
         $this->Surveys = TableRegistry::get('Surveys');
@@ -163,7 +164,7 @@ class SurveysControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Surveys',
             'action' => 'activate',
-            $surveyId
+            $surveyId,
         ];
         $data = ['active' => false];
         $this->put($url, $data);

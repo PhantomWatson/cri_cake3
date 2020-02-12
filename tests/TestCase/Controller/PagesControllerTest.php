@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Controller;
 
 use App\Test\TestCase\ApplicationTest;
@@ -9,14 +11,13 @@ use Cake\Core\Configure;
  */
 class PagesControllerTest extends ApplicationTest
 {
-
     /**
      * Fixtures
      *
      * @var array
      */
     public $fixtures = [
-        'app.QueuedJobs'
+        'app.QueuedJobs',
     ];
 
     /**
@@ -28,7 +29,7 @@ class PagesControllerTest extends ApplicationTest
     {
         parent::setUp();
         $this->configRequest([
-            'environment' => ['HTTPS' => 'on']
+            'environment' => ['HTTPS' => 'on'],
         ]);
     }
 

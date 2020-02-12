@@ -1,21 +1,17 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
-use App\Model\Entity\Community;
-use App\Model\Entity\Survey;
-use App\Model\Table\RespondentsTable;
 use App\SurveyMonkey\SurveyMonkey;
 use Cake\Core\Configure;
-use Cake\Database\Expression\QueryExpression;
 use Cake\Event\Event;
-use Cake\Mailer\MailerAwareTrait;
 use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\Query;
+use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
-use Queue\Model\Table\QueuedJobsTable;
 
 class SurveysController extends AppController
 {
@@ -39,7 +35,7 @@ class SurveysController extends AppController
      * @param string|null $communitySlug Community slug
      * @param int|null $surveyType Survey type
      * @return \Cake\Http\Response|null
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function view($communitySlug = null, $surveyType = null)
     {
@@ -49,7 +45,7 @@ class SurveysController extends AppController
 
         $communitiesTable = TableRegistry::get('Communities');
 
-        /** @var Community $community */
+        /** @var \App\Model\Entity\Community $community */
         $community = $communitiesTable->find('slugged', ['slug' => $communitySlug])->first();
         if (! $community) {
             throw new NotFoundException("Community not found");
@@ -61,7 +57,7 @@ class SurveysController extends AppController
             return $this->redirect([
                 'action' => 'link',
                 $communitySlug,
-                $surveyType
+                $surveyType,
             ]);
         }
 
@@ -72,7 +68,7 @@ class SurveysController extends AppController
             'community' => $community,
             'currentlyActive' => $survey->active,
             'survey' => $survey,
-            'titleForLayout' => $community->name . ': ' . ucwords($surveyType) . 's Questionnaire Overview'
+            'titleForLayout' => $community->name . ': ' . ucwords($surveyType) . 's Questionnaire Overview',
         ]);
 
         return null;
@@ -84,7 +80,7 @@ class SurveysController extends AppController
      * @param string|null $communitySlug Community slug
      * @param int|null $surveyType Survey type
      * @return void
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function link($communitySlug = null, $surveyType = null)
     {
@@ -94,7 +90,7 @@ class SurveysController extends AppController
 
         $communitiesTable = TableRegistry::get('Communities');
 
-        /** @var Community $community */
+        /** @var \App\Model\Entity\Community $community */
         $community = $communitiesTable->find('slugged', ['slug' => $communitySlug])->first();
         if (! $community) {
             throw new NotFoundException("Community not found");
@@ -102,7 +98,7 @@ class SurveysController extends AppController
 
         $surveyId = $this->Surveys->getSurveyId($community->id, $surveyType);
 
-        /** @var Survey $survey */
+        /** @var \App\Model\Entity\Survey $survey */
         if ($surveyId) {
             $survey = $this->Surveys->get($surveyId);
         } else {
@@ -129,14 +125,14 @@ class SurveysController extends AppController
                 $event = new Event($eventName, $this, ['meta' => [
                     'communityId' => $community->id,
                     'surveyId' => $survey->id,
-                    'surveyType' => $surveyType
+                    'surveyType' => $surveyType,
                 ]]);
                 $this->getEventManager()->dispatch($event);
                 if ($isNew && $survey->active) {
                     $event = new Event('Model.Survey.afterActivate', $this, ['meta' => [
                         'communityId' => $community->id,
                         'surveyId' => $survey->id,
-                        'surveyType' => $survey->type
+                        'surveyType' => $survey->type,
                     ]]);
                     $this->getEventManager()->dispatch($event);
                 }
@@ -144,7 +140,7 @@ class SurveysController extends AppController
                 $this->redirect([
                     'action' => 'view',
                     $communitySlug,
-                    $surveyType
+                    $surveyType,
                 ]);
             } else {
                 $msg = 'There was an error ';
@@ -163,7 +159,7 @@ class SurveysController extends AppController
                 ->select(['id', 'active'])
                 ->where([
                     'community_id' => $community->id,
-                    'type' => 'official'
+                    'type' => 'official',
                 ])
                 ->first();
             if ($officialsSurvey && $officialsSurvey->active) {
@@ -171,7 +167,7 @@ class SurveysController extends AppController
                     'prefix' => 'admin',
                     'controller' => 'Surveys',
                     'action' => 'activate',
-                    $officialsSurvey->id
+                    $officialsSurvey->id,
                 ]);
                 $warning =
                     'This community\'s officials questionnaire is still active. ' .
@@ -184,15 +180,15 @@ class SurveysController extends AppController
             'qnaIdFields' => $this->Surveys->getQnaIdFieldNames(),
             'survey' => $survey,
             'titleForLayout' => $community->name . ': ' . ucwords($surveyType) . 's Questionnaire Link',
-            'warning' => $warning
+            'warning' => $warning,
         ]);
     }
 
     /**
      * Sets variables for the view used in survey overview page
      *
-     * @param Survey $survey Survey
-     * @param Community $community Community
+     * @param \App\Model\Entity\Survey $survey Survey
+     * @param \App\Model\Entity\Community $community Community
      * @return void
      */
     private function prepareSurveyStatus($survey, $community)
@@ -206,7 +202,7 @@ class SurveysController extends AppController
 
         $autoImportFrequency = $isAutomaticallyImported ? $this->Surveys->getPerSurveyAutoImportFrequency() : '';
 
-        /** @var RespondentsTable $respondentsTable */
+        /** @var \App\Model\Table\RespondentsTable $respondentsTable */
         $respondentsTable = TableRegistry::get('Respondents');
         $this->set([
             'autoImportFrequency' => $autoImportFrequency,
@@ -219,7 +215,7 @@ class SurveysController extends AppController
             'percentInvitedResponded' => $surveyStatus['percent_invited_responded'],
             'responsesChecked' => $surveyStatus['responses_checked'],
             'stageForAutoImport' => $stageForAutoImport,
-            'uninvitedRespondentCount' => $surveyStatus['uninvited_respondent_count']
+            'uninvitedRespondentCount' => $surveyStatus['uninvited_respondent_count'],
         ]);
     }
 
@@ -251,7 +247,7 @@ class SurveysController extends AppController
                 $this->SurveyProcessing->clearSavedInvitations($surveyId, $userId);
                 $invitees = $this->SurveyProcessing->pendingInvitees;
             } elseif (stripos($submitMode, 'save') !== false) {
-                list($saveResult, $msg) = $this->SurveyProcessing->saveInvitations(
+                [$saveResult, $msg] = $this->SurveyProcessing->saveInvitations(
                     $this->request->getData('invitees'),
                     $surveyId,
                     $userId
@@ -262,7 +258,7 @@ class SurveysController extends AppController
                     return $this->redirect([
                         'prefix' => 'admin',
                         'controller' => 'Communities',
-                        'action' => 'index'
+                        'action' => 'index',
                     ]);
                 } else {
                     $this->Flash->error($msg);
@@ -276,7 +272,7 @@ class SurveysController extends AppController
             $invitees = $this->SurveyProcessing->getSavedInvitations($surveyId, $userId);
         }
 
-        /** @var RespondentsTable $respondentsTable */
+        /** @var \App\Model\Table\RespondentsTable $respondentsTable */
         $respondentsTable = TableRegistry::get('Respondents');
         $approvedRespondents = $respondentsTable->getApprovedList($surveyId);
         $unaddressedUnapprovedRespondents = $respondentsTable->getUnaddressedUnapprovedList($surveyId);
@@ -326,14 +322,14 @@ class SurveysController extends AppController
         $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($survey->community_id);
 
-        /** @var RespondentsTable $respondentsTable */
+        /** @var \App\Model\Table\RespondentsTable $respondentsTable */
         $respondentsTable = TableRegistry::get('Respondents');
         if ($this->request->is('post')) {
             $sender = $this->Auth->user();
             $recipients = $respondentsTable->getUnresponsive($surveyId);
             $recipients = Hash::extract($recipients, '{n}.email');
             try {
-                /** @var QueuedJobsTable $queuedJobs */
+                /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
                 $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
                 foreach ($recipients as $recipient) {
                     $queuedJobs->createJob(
@@ -357,7 +353,7 @@ class SurveysController extends AppController
                     'prefix' => 'admin',
                     'controller' => 'Surveys',
                     'action' => 'remind',
-                    $survey->id
+                    $survey->id,
                 ]);
             }
 
@@ -369,7 +365,7 @@ class SurveysController extends AppController
                 'communityId' => $survey->community_id,
                 'surveyId' => $surveyId,
                 'surveyType' => $survey->type,
-                'remindedCount' => count($recipients)
+                'remindedCount' => count($recipients),
             ]]);
             $this->getEventManager()->dispatch($event);
 
@@ -378,7 +374,7 @@ class SurveysController extends AppController
                 'controller' => 'Surveys',
                 'action' => 'view',
                 $community->slug,
-                $survey->type
+                $survey->type,
             ]);
         }
 
@@ -388,7 +384,7 @@ class SurveysController extends AppController
             'survey' => $survey,
             'titleForLayout' => $community->name . ': Remind Community ' . ucwords($survey->type) . 's',
             'unresponsive' => $unresponsive,
-            'unresponsiveCount' => count($unresponsive)
+            'unresponsiveCount' => count($unresponsive),
         ]);
         $this->render('..' . DS . '..' . DS . 'Client' . DS . 'Surveys' . DS . 'remind');
 
@@ -403,7 +399,7 @@ class SurveysController extends AppController
      */
     public function activate($surveyId)
     {
-        /** @var Survey $survey */
+        /** @var \App\Model\Entity\Survey $survey */
         $survey = $this->Surveys->get($surveyId);
         $currentlyActive = $survey->active;
         $communitiesTable = TableRegistry::get('Communities');
@@ -423,7 +419,7 @@ class SurveysController extends AppController
                 $event = new Event($eventName, $this, ['meta' => [
                     'communityId' => $survey->community_id,
                     'surveyId' => $survey->id,
-                    'surveyType' => $survey->type
+                    'surveyType' => $survey->type,
                 ]]);
                 $this->getEventManager()->dispatch($event);
             } else {
@@ -436,7 +432,7 @@ class SurveysController extends AppController
                 ->select(['id', 'active'])
                 ->where([
                     'community_id' => $community->id,
-                    'type' => 'official'
+                    'type' => 'official',
                 ])
                 ->first();
             if ($officialsSurvey && $officialsSurvey->active) {
@@ -444,7 +440,7 @@ class SurveysController extends AppController
                     'prefix' => 'admin',
                     'controller' => 'Surveys',
                     'action' => 'activate',
-                    $officialsSurvey->id
+                    $officialsSurvey->id,
                 ]);
                 $warning =
                     'This community\'s officials questionnaire is still active. ' .
@@ -458,7 +454,7 @@ class SurveysController extends AppController
             'currentlyActive' => $currentlyActive,
             'survey' => $survey,
             'titleForLayout' => $community->name . ': ' . ucwords($survey->type) . 's Questionnaire Activation',
-            'warning' => $warning
+            'warning' => $warning,
         ]);
     }
 
@@ -484,7 +480,7 @@ class SurveysController extends AppController
             if ($this->request->getData('confirmed')) {
                 $step = 'results';
 
-                /** @var QueuedJobsTable $queuedJobs */
+                /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
                 $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
 
                 foreach ($recipients as $recipient) {
@@ -495,7 +491,7 @@ class SurveysController extends AppController
                             'communityId' => $survey->community_id,
                             'senderEmail' => $user->email,
                             'senderName' => $user->name,
-                            'recipient' => $recipient
+                            'recipient' => $recipient,
                         ],
                         ['reference' => $recipient]
                     );
@@ -508,7 +504,7 @@ class SurveysController extends AppController
                     'communityId' => $survey->community_id,
                     'surveyId' => $surveyId,
                     'surveyType' => $survey->type,
-                    'invitedCount' => count($recipients)
+                    'invitedCount' => count($recipients),
                 ]]);
                 $this->getEventManager()->dispatch($event);
 
@@ -519,7 +515,7 @@ class SurveysController extends AppController
                     'survey' => $survey,
                     'community' => $community,
                     'recipients' => $recipients,
-                    'sender' => $user
+                    'sender' => $user,
                 ]);
             }
         } else {
@@ -527,7 +523,7 @@ class SurveysController extends AppController
         }
         $this->set([
             'step' => $step,
-            'titleForLayout' => 'Resend All Invitations for Survey' . (isset($surveyId) ? " #$surveyId" : null)
+            'titleForLayout' => 'Resend All Invitations for Survey' . (isset($surveyId) ? " #$surveyId" : null),
         ]);
     }
 
@@ -556,15 +552,15 @@ class SurveysController extends AppController
             ->where([
                 'type' => 'official',
                 function ($exp) {
-                    /** @var QueryExpression $exp */
+                    /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                     return $exp->isNotNull('sm_id');
                 },
                 function ($exp) {
-                    /** @var QueryExpression $exp */
+                    /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                     return $exp->isNull('aware_of_plan_qid');
-                }
+                },
             ])
             ->all();
 
@@ -615,21 +611,21 @@ class SurveysController extends AppController
             ->select(['id', 'name'])
             ->contain([
                 'OfficialSurvey' => function ($q) {
-                    /** @var Query $q */
+                    /** @var \Cake\ORM\Query $q */
 
                     return $q->select(['id', 'aware_of_plan_qid', 'pwrrr_qid', 'active']);
                 },
                 'OrganizationSurvey' => function ($q) {
-                    /** @var Query $q */
+                    /** @var \Cake\ORM\Query $q */
 
                     return $q->select(['id', 'pwrrr_qid', 'active']);
-                }
+                },
             ])
             ->order(['name' => 'ASC'])
             ->all();
         $this->set([
             'communities' => $communities,
-            'titleForLayout' => 'Clear and Import Responses'
+            'titleForLayout' => 'Clear and Import Responses',
         ]);
     }
 
@@ -652,16 +648,16 @@ class SurveysController extends AppController
             'alignment_vs_parent' => null,
             'internal_alignment' => null,
             'alignment_calculated_date' => null,
-            'import_errors' => null
+            'import_errors' => null,
         ];
         $this->Surveys->patchEntity($survey, $data);
 
-        /** @var Survey|bool $result */
+        /** @var \App\Model\Entity\Survey|bool $result */
         $result = $this->Surveys->save($survey);
         if (! $result) {
             $this->set([
                 'success' => false,
-                'message' => 'Survey errors: ' . print_r($result->getErrors(), true)
+                'message' => 'Survey errors: ' . print_r($result->getErrors(), true),
             ]);
 
             return;

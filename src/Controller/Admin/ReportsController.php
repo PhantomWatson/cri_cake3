@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
-use App\Model\Table\SurveysTable;
 use App\Reports\FullReports\AdminReport;
 use App\Reports\FullReports\OcraReport;
 use App\Reports\Reports;
@@ -18,7 +19,7 @@ class ReportsController extends AppController
      */
     public function index()
     {
-        /** @var SurveysTable $surveysTable */
+        /** @var \App\Model\Table\SurveysTable $surveysTable */
         $surveysTable = TableRegistry::get('Surveys');
         $reports = new Reports();
         $report = $reports->getReport();
@@ -32,7 +33,7 @@ class ReportsController extends AppController
             'notes' => $notes,
             'report' => $report,
             'sectors' => $surveysTable->getSectors(),
-            'titleForLayout' => 'CRI Reports'
+            'titleForLayout' => 'CRI Reports',
         ]);
         $this->viewBuilder()->setHelpers(['ActivityRecords', 'Reports']);
     }

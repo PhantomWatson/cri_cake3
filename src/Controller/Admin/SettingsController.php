@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
-use App\Model\Entity\Setting;
-use Cake\Database\Expression\QueryExpression;
 
 class SettingsController extends AppController
 {
@@ -17,7 +17,7 @@ class SettingsController extends AppController
         if ($this->request->is(['post', 'put'])) {
             $settings = [];
             foreach ($this->request->getData('settings') as $settingId => $settingValue) {
-                /** @var Setting $setting */
+                /** @var \App\Model\Entity\Setting $setting */
                 $setting = $this->Settings->get($settingId);
                 $setting = $this->Settings->patchEntity($setting, ['value' => $settingValue]);
                 $errors = $setting->getErrors();
@@ -33,7 +33,7 @@ class SettingsController extends AppController
             $settingNames = ['intAlignmentAdjustment', 'intAlignmentThreshold'];
             $settings = $this->Settings->find('all')
                 ->where(function ($exp) use ($settingNames) {
-                    /** @var QueryExpression $exp */
+                    /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                     return $exp->in('name', $settingNames);
                 })
@@ -41,7 +41,7 @@ class SettingsController extends AppController
         }
         $this->set([
             'settings' => $settings,
-            'titleForLayout' => 'Update Default Internal Alignment Calculation Settings'
+            'titleForLayout' => 'Update Default Internal Alignment Calculation Settings',
         ]);
     }
 }

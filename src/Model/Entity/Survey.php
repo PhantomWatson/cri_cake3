@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -41,7 +43,6 @@ use Cake\ORM\Entity;
  */
 class Survey extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -78,6 +79,6 @@ class Survey extends Entity
         'sm' => true,
         'respondents' => true,
         'responses' => true,
-        'active' => true
+        'active' => true,
     ];
 }

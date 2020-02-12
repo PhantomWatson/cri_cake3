@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
 use Cake\ORM\Table;
@@ -19,7 +21,6 @@ use Cake\Validation\Validator;
  */
 class StatCategoriesTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -33,7 +34,7 @@ class StatCategoriesTable extends Table
         $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
         $this->hasMany('Statistic', [
-            'foreignKey' => 'stat_category_id'
+            'foreignKey' => 'stat_category_id',
         ]);
     }
 
@@ -112,7 +113,7 @@ class StatCategoriesTable extends Table
             'wholesale' => [3, 4, 5, 22, 23, 24],
             'retail' => [6, 7, 8, 25, 26],
             'residential' => [9, 10, 11, 12, 27],
-            'recreation' => [13, 14, 15, 16, 17, 29, 30, 31]
+            'recreation' => [13, 14, 15, 16, 17, 29, 30, 31],
         ];
     }
 }

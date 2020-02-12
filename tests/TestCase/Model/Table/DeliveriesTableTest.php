@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\DeliveriesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -10,7 +11,6 @@ use Cake\TestSuite\TestCase;
  */
 class DeliveriesTableTest extends TestCase
 {
-
     /**
      * Test subject
      *
@@ -27,7 +27,7 @@ class DeliveriesTableTest extends TestCase
         'app.Deliveries',
         'app.Deliverables',
         'app.Users',
-        'app.Communities'
+        'app.Communities',
     ];
 
     /**

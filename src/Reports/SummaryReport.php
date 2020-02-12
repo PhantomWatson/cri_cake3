@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Reports;
 
-use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\View\Helper\TimeHelper;
 use Cake\View\View;
@@ -19,7 +20,7 @@ class SummaryReport
         $columnTitles = [
             'Community',
             'Status',
-            'Last Activity'
+            'Last Activity',
         ];
         $spreadsheet = new Spreadsheet();
         $spreadsheet
@@ -33,12 +34,12 @@ class SummaryReport
             ->styleRow([
                 'alignment' => [
                     'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                    'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER
+                    'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
                 ],
                 'borders' => [
-                    'outline' => ['style' => \PHPExcel_Style_Border::BORDER_THIN]
+                    'outline' => ['style' => \PHPExcel_Style_Border::BORDER_THIN],
                 ],
-                'font' => ['bold' => true]
+                'font' => ['bold' => true],
             ])
             ->nextRow();
 
@@ -65,13 +66,13 @@ class SummaryReport
                 ->writeRow([
                     $community->name,
                     $communitiesTable->getStatusDescription($community),
-                    $recentActivity
+                    $recentActivity,
                 ])
                 ->styleRow([
                     'borders' => [
-                        'right' => ['style' => \PHPExcel_Style_Border::BORDER_THIN]
+                        'right' => ['style' => \PHPExcel_Style_Border::BORDER_THIN],
                     ],
-                    'font' => ['bold' => true]
+                    'font' => ['bold' => true],
                 ], 0, 0)
                 ->nextRow();
         }

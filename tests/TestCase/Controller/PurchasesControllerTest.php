@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Controller;
 
 use App\Test\TestCase\ApplicationTest;
@@ -9,7 +11,6 @@ use Cake\ORM\TableRegistry;
  */
 class PurchasesControllerTest extends ApplicationTest
 {
-
     /**
      * Fixtures
      *
@@ -21,7 +22,7 @@ class PurchasesControllerTest extends ApplicationTest
         'app.Products',
         'app.Purchases',
         'app.QueuedJobs',
-        'app.Users'
+        'app.Users',
     ];
 
     /**
@@ -33,7 +34,7 @@ class PurchasesControllerTest extends ApplicationTest
     {
         parent::setUp();
         $this->configRequest([
-            'environment' => ['HTTPS' => 'on']
+            'environment' => ['HTTPS' => 'on'],
         ]);
     }
 
@@ -58,7 +59,7 @@ class PurchasesControllerTest extends ApplicationTest
                 ->where([
                     'user_id' => $userId,
                     'community_id' => $communityId,
-                    'product_id' => $productId
+                    'product_id' => $productId,
                 ])
                 ->count();
         };
@@ -67,7 +68,7 @@ class PurchasesControllerTest extends ApplicationTest
         // Fire off postback
         $url = [
             'controller' => 'Purchases',
-            'action' => 'postback'
+            'action' => 'postback',
         ];
         $data = [
             'respmessage' => 'SUCCESS',

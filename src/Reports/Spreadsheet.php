@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Reports;
 
 use Cake\Network\Exception\InternalErrorException;
@@ -232,8 +234,8 @@ class Spreadsheet
         $this->objPHPExcel->getActiveSheet()->getStyle('A1:A1')->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 24
-            ]
+                'size' => 24,
+            ],
         ]);
         $lastCol = $this->getLastColumnLetter();
         $span = "A1:{$lastCol}1";
@@ -260,8 +262,8 @@ class Spreadsheet
         $this->objPHPExcel->getActiveSheet()->getStyle("$firstCell:$firstCell")->applyFromArray([
             'font' => [
                 'bold' => true,
-                'size' => 18
-            ]
+                'size' => 18,
+            ],
         ]);
         $this->objPHPExcel->getActiveSheet()->mergeCells("$firstCell:$lastCell");
 
@@ -341,7 +343,7 @@ class Spreadsheet
     public function styleRow($styles, $fromCol = 0, $toCol = null)
     {
         $fromCell = $this->getColumnKey($fromCol) . $this->currentRow;
-        $toColLetter = ($toCol === null) ? $this->getLastColumnLetter() : $this->getColumnKey($toCol);
+        $toColLetter = $toCol === null ? $this->getLastColumnLetter() : $this->getColumnKey($toCol);
         $toCell = $toColLetter . $this->currentRow;
 
         $this->objPHPExcel->getActiveSheet()
@@ -378,9 +380,9 @@ class Spreadsheet
                         'top' => $this->getBorder(),
                         'left' => $this->getBorder(),
                         'right' => $this->getBorder(),
-                        'bottom' => $this->getBorder('none')
+                        'bottom' => $this->getBorder('none'),
                     ],
-                    'font' => ['bold' => true]
+                    'font' => ['bold' => true],
                 ]);
         }
 
@@ -392,7 +394,7 @@ class Spreadsheet
      *
      * @param string $style 'thin' or 'none'
      * @return array
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     private function getBorder($style = 'thin')
     {
@@ -551,7 +553,7 @@ class Spreadsheet
     public function setWrapText($fromCol = 0, $toCol = null)
     {
         $fromCell = $this->getColumnKey($fromCol) . $this->currentRow;
-        $toColLetter = ($toCol === null) ? $this->getLastColumnLetter() : $this->getColumnKey($toCol);
+        $toColLetter = $toCol === null ? $this->getLastColumnLetter() : $this->getColumnKey($toCol);
         $toCell = $toColLetter . $this->currentRow;
 
         $this->objPHPExcel

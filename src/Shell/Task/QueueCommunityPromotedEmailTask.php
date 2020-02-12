@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Shell\Task;
 
 use Cake\Mailer\MailerAwareTrait;
@@ -33,7 +35,7 @@ class QueueCommunityPromotedEmailTask extends QueueTask
             $this->getMailer('Community')->send('communityPromoted', [
                 $data['user'],
                 $data['community'],
-                $data['toStep']
+                $data['toStep'],
             ]);
         } catch (\Exception $e) {
             return false;

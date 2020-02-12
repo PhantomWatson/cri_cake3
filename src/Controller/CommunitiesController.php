@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use Cake\Http\Exception\NotFoundException;
@@ -12,7 +14,6 @@ use Muffin\Slug\Slugger\CakeSlugger;
  */
 class CommunitiesController extends AppController
 {
-
     /**
      * initialize method
      *
@@ -41,7 +42,7 @@ class CommunitiesController extends AppController
      *
      * @param array $user User
      * @return bool
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function isAuthorized($user)
     {
@@ -55,7 +56,7 @@ class CommunitiesController extends AppController
                 }
             }
             $community = $this->Communities->find('slugged', ['slug' => $communitySlug])->first();
-            $userId = isset($user['id']) ? $user['id'] : null;
+            $userId = $user['id'] ?? null;
             $usersTable = TableRegistry::get('Users');
 
             return $usersTable->canAccessCommunity($userId, $community);
@@ -76,7 +77,7 @@ class CommunitiesController extends AppController
             ->where([
                 function ($q) {
                     return $q->notLike('name', 'Test %');
-                }
+                },
             ])
             ->order(['Communities.name' => 'ASC'])
             ->toArray();
@@ -87,9 +88,9 @@ class CommunitiesController extends AppController
                 'Community officials alignment assessment',
                 'Community organizations alignment assessment',
                 'Preliminary community readiness findings',
-                'Community readiness report'
+                'Community readiness report',
             ],
-            'titleForLayout' => 'Community Progress'
+            'titleForLayout' => 'Community Progress',
         ]);
     }
 
@@ -146,7 +147,7 @@ class CommunitiesController extends AppController
             'barChart' => $barChart,
             'pwrTable' => $pwrTable,
             'lineChart' => $lineChart,
-            'growthTable' => $growthTable
+            'growthTable' => $growthTable,
         ]);
     }
 
@@ -171,7 +172,7 @@ class CommunitiesController extends AppController
             "$term %",
             "$term%",
             "% $term%",
-            "%$term%"
+            "%$term%",
         ];
 
         // Collect communities up to $limit
@@ -186,7 +187,7 @@ class CommunitiesController extends AppController
                         }
 
                         return $exp;
-                    }
+                    },
                 ])
                 ->limit($limit - count($retval))
                 ->toArray();
@@ -212,13 +213,13 @@ class CommunitiesController extends AppController
             ->where([
                 function ($q) {
                     return $q->isNull('slug');
-                }
+                },
             ]);
         $slugger = new CakeSlugger();
         foreach ($communities as $community) {
             $slug = $slugger->slug($community->name);
             $community = $this->Communities->patchEntity($community, [
-                'slug' => $slug
+                'slug' => $slug,
             ]);
             if ($this->Communities->save($community)) {
                 $this->Flash->success("Slug $slug added for community $community->name");

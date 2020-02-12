@@ -1,21 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace App\AdminToDo;
 
-use App\Model\Table\ActivityRecordsTable;
-use App\Model\Table\CommunitiesTable;
 use App\Model\Table\DeliverablesTable;
-use App\Model\Table\DeliveriesTable;
-use App\Model\Table\OptOutsTable;
 use App\Model\Table\ProductsTable;
-use App\Model\Table\PurchasesTable;
-use App\Model\Table\RespondentsTable;
-use App\Model\Table\ResponsesTable;
-use App\Model\Table\SurveysTable;
-use Cake\Chronos\Date;
-use Cake\Database\Expression\QueryExpression;
-use Cake\I18n\FrozenDate;
-use Cake\I18n\FrozenTime;
-use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use NumberFormatter;
@@ -32,31 +21,49 @@ use NumberFormatter;
  */
 class AdminToDo
 {
-    /** @var CommunitiesTable $communitiesTable */
+    /**
+     * @var \App\Model\Table\CommunitiesTable $communitiesTable
+     */
     public $communitiesTable;
 
-    /** @var OptOutsTable $optOutsTable */
+    /**
+     * @var \App\Model\Table\OptOutsTable $optOutsTable
+     */
     public $optOutsTable;
 
-    /** @var ProductsTable $productsTable */
+    /**
+     * @var \App\Model\Table\ProductsTable $productsTable
+     */
     public $productsTable;
 
-    /** @var RespondentsTable $respondentsTable */
+    /**
+     * @var \App\Model\Table\RespondentsTable $respondentsTable
+     */
     public $respondentsTable;
 
-    /** @var ResponsesTable $responsesTable */
+    /**
+     * @var \App\Model\Table\ResponsesTable $responsesTable
+     */
     public $responsesTable;
 
-    /** @var SurveysTable $surveysTable */
+    /**
+     * @var \App\Model\Table\SurveysTable $surveysTable
+     */
     public $surveysTable;
 
-    /** @var DeliveriesTable $deliveriesTable */
+    /**
+     * @var \App\Model\Table\DeliveriesTable $deliveriesTable
+     */
     public $deliveriesTable;
 
-    /** @var ActivityRecordsTable $activityRecordsTable */
+    /**
+     * @var \App\Model\Table\ActivityRecordsTable $activityRecordsTable
+     */
     public $activityRecordsTable;
 
-    /** @var PurchasesTable $purchasesTable */
+    /**
+     * @var \App\Model\Table\PurchasesTable $purchasesTable
+     */
     public $purchasesTable;
 
     /**
@@ -89,7 +96,7 @@ class AdminToDo
                 'prefix' => 'admin',
                 'controller' => 'Communities',
                 'action' => 'clients',
-                $communityId
+                $communityId,
             ]);
 
             $community = $this->communitiesTable->get($communityId);
@@ -100,8 +107,8 @@ class AdminToDo
                 'responsible' => ['ICI'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($community->created),
-                    'since' => 'community added'
-                ]
+                    'since' => 'community added',
+                ],
             ];
         }
 
@@ -110,7 +117,7 @@ class AdminToDo
                 'class' => 'complete',
                 'done' => true,
                 'msg' => 'Opted out of further participation',
-                'responsible' => null
+                'responsible' => null,
             ];
         }
 
@@ -124,8 +131,8 @@ class AdminToDo
                 'responsible' => ['Client'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($community->created),
-                    'since' => 'purchase'
-                ]
+                    'since' => 'purchase',
+                ],
             ];
         }
 
@@ -139,8 +146,8 @@ class AdminToDo
                 'responsible' => ['ICI'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($purchaseDate),
-                    'since' => 'officials questionnaire purchased'
-                ]
+                    'since' => 'officials questionnaire purchased',
+                ],
             ];
         }
 
@@ -154,8 +161,8 @@ class AdminToDo
                 'responsible' => ['ICI'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($promotionDate),
-                    'since' => 'community advanced to Step Two'
-                ]
+                    'since' => 'community advanced to Step Two',
+                ],
             ];
         }
 
@@ -171,8 +178,8 @@ class AdminToDo
                 'responsible' => ['ICI'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($createdDate),
-                    'since' => 'questionnaire created'
-                ]
+                    'since' => 'questionnaire created',
+                ],
             ];
         }
 
@@ -189,8 +196,8 @@ class AdminToDo
                 'responsible' => ['Client'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($since),
-                    'since' => 'questionnaire activated'
-                ]
+                    'since' => 'questionnaire activated',
+                ],
             ];
         }
 
@@ -204,8 +211,8 @@ class AdminToDo
                 'responsible' => null,
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($since),
-                    'since' => $invitationDate ? 'first invitation sent' : 'questionnaire created'
-                ]
+                    'since' => $invitationDate ? 'first invitation sent' : 'questionnaire created',
+                ],
             ];
         }
 
@@ -218,8 +225,8 @@ class AdminToDo
                 'responsible' => ['CBER'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($lastResponseDate),
-                    'since' => 'last response'
-                ]
+                    'since' => 'last response',
+                ],
             ];
         }
 
@@ -234,8 +241,8 @@ class AdminToDo
                 'responsible' => ['CBER'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($deactivationDate),
-                    'since' => 'questionnaire deactivated'
-                ]
+                    'since' => 'questionnaire deactivated',
+                ],
             ];
         }
 
@@ -248,8 +255,8 @@ class AdminToDo
                 'responsible' => ['ICI'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($deactivationDate),
-                    'since' => 'questionnaire deactivated'
-                ]
+                    'since' => 'questionnaire deactivated',
+                ],
             ];
         }
 
@@ -258,7 +265,7 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for Presentation A to complete ' .
                     '(' . $community->presentation_a->format('F j, Y') . ')',
-                'responsible' => null
+                'responsible' => null,
             ];
         }
 
@@ -273,12 +280,12 @@ class AdminToDo
                 if ($deactivationDate > $purchaseDate) {
                     $elapsed = [
                         'time' => $this->getWaitingPeriod($deactivationDate),
-                        'since' => 'questionnaire deactivated'
+                        'since' => 'questionnaire deactivated',
                     ];
                 } else {
                     $elapsed = [
                         'time' => $this->getWaitingPeriod($purchaseDate),
-                        'since' => 'summit purchased'
+                        'since' => 'summit purchased',
                     ];
                 }
 
@@ -286,7 +293,7 @@ class AdminToDo
                     'class' => 'ready',
                     'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation B materials</a> to ICI',
                     'responsible' => ['CBER'],
-                    'elapsed' => $elapsed
+                    'elapsed' => $elapsed,
                 ];
             }
 
@@ -300,8 +307,8 @@ class AdminToDo
                     'responsible' => ['ICI'],
                     'elapsed' => [
                         'time' => $this->getWaitingPeriod($deliveryDate),
-                        'since' => 'presentation materials delivered'
-                    ]
+                        'since' => 'presentation materials delivered',
+                    ],
                 ];
             }
 
@@ -310,7 +317,7 @@ class AdminToDo
                     'class' => 'waiting',
                     'msg' => 'Waiting for Presentation B to complete ' .
                         '(' . $community->presentation_b->format('F j, Y') . ')',
-                    'responsible' => null
+                    'responsible' => null,
                 ];
             }
         } elseif (! $optedOut) {
@@ -322,8 +329,8 @@ class AdminToDo
                 'responsible' => ['Client'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($community->presentation_a),
-                    'since' => 'Presentation A concluded'
-                ]
+                    'since' => 'Presentation A concluded',
+                ],
             ];
         }
 
@@ -333,7 +340,7 @@ class AdminToDo
                 'class' => 'complete',
                 'done' => true,
                 'msg' => 'Opted out of further participation',
-                'responsible' => null
+                'responsible' => null,
             ];
         }
 
@@ -347,8 +354,8 @@ class AdminToDo
                 'responsible' => ['Client'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($mostRecentPresentation),
-                    'since' => $community->presentation_b ? 'Presentation B concluded' : 'Presentation A concluded'
-                ]
+                    'since' => $community->presentation_b ? 'Presentation B concluded' : 'Presentation A concluded',
+                ],
             ];
         }
 
@@ -358,12 +365,12 @@ class AdminToDo
             if ($purchaseDate > $mostRecentPresentation) {
                 $elapsed = [
                     'time' => $this->getWaitingPeriod($purchaseDate),
-                    'since' => 'organizations questionnaire purchased'
+                    'since' => 'organizations questionnaire purchased',
                 ];
             } else {
                 $elapsed = [
                     'time' => $this->getWaitingPeriod($mostRecentPresentation),
-                    'since' => $community->presentation_b ? 'Presentation B concluded' : 'Presentation A concluded'
+                    'since' => $community->presentation_b ? 'Presentation B concluded' : 'Presentation A concluded',
                 ];
             }
 
@@ -371,7 +378,7 @@ class AdminToDo
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">advance to Step Three</a>',
                 'responsible' => ['ICI'],
-                'elapsed' => $elapsed
+                'elapsed' => $elapsed,
             ];
         }
 
@@ -385,8 +392,8 @@ class AdminToDo
                 'responsible' => ['ICI'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($promotionDate),
-                    'since' => 'community advanced to Step Three'
-                ]
+                    'since' => 'community advanced to Step Three',
+                ],
             ];
         }
 
@@ -402,8 +409,8 @@ class AdminToDo
                 'responsible' => ['ICI'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($createdDate),
-                    'since' => 'questionnaire created'
-                ]
+                    'since' => 'questionnaire created',
+                ],
             ];
         }
 
@@ -421,8 +428,8 @@ class AdminToDo
                 'responsible' => ['Client'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($since),
-                    'since' => 'questionnaire activated'
-                ]
+                    'since' => 'questionnaire activated',
+                ],
             ];
         }
 
@@ -436,8 +443,8 @@ class AdminToDo
                 'responsible' => null,
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($since),
-                    'since' => $invitationDate ? 'first invitation sent' : 'questionnaire created'
-                ]
+                    'since' => $invitationDate ? 'first invitation sent' : 'questionnaire created',
+                ],
             ];
         }
 
@@ -450,8 +457,8 @@ class AdminToDo
                 'responsible' => ['CBER'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($lastResponseDate),
-                    'since' => 'last response'
-                ]
+                    'since' => 'last response',
+                ],
             ];
         }
 
@@ -466,8 +473,8 @@ class AdminToDo
                 'responsible' => ['CBER'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($deactivationDate),
-                    'since' => 'questionnaire deactivated'
-                ]
+                    'since' => 'questionnaire deactivated',
+                ],
             ];
         }
 
@@ -480,8 +487,8 @@ class AdminToDo
                 'responsible' => ['ICI'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($deactivationDate),
-                    'since' => 'questionnaire deactivated'
-                ]
+                    'since' => 'questionnaire deactivated',
+                ],
             ];
         }
 
@@ -490,7 +497,7 @@ class AdminToDo
                 'class' => 'waiting',
                 'msg' => 'Waiting for Presentation C to complete ' .
                     '(' . $community->presentation_c->format('F j, Y') . ')',
-                'responsible' => null
+                'responsible' => null,
             ];
         }
 
@@ -505,12 +512,12 @@ class AdminToDo
                 if ($deactivationDate > $purchaseDate) {
                     $elapsed = [
                         'time' => $this->getWaitingPeriod($deactivationDate),
-                        'since' => 'questionnaire deactivated'
+                        'since' => 'questionnaire deactivated',
                     ];
                 } else {
                     $elapsed = [
                         'time' => $this->getWaitingPeriod($purchaseDate),
-                        'since' => 'summit purchased'
+                        'since' => 'summit purchased',
                     ];
                 }
 
@@ -518,7 +525,7 @@ class AdminToDo
                     'class' => 'ready',
                     'msg' => 'Ready for CBER to <a href="' . $url . '">deliver Presentation D materials</a> to ICI',
                     'responsible' => ['CBER'],
-                    $elapsed
+                    $elapsed,
                 ];
             }
 
@@ -532,8 +539,8 @@ class AdminToDo
                     'responsible' => ['ICI'],
                     'elapsed' => [
                         'time' => $this->getWaitingPeriod($deliveryDate),
-                        'since' => 'presentation materials delivered'
-                    ]
+                        'since' => 'presentation materials delivered',
+                    ],
                 ];
             }
 
@@ -542,7 +549,7 @@ class AdminToDo
                     'class' => 'waiting',
                     'msg' => 'Waiting for Presentation D to complete ' .
                         '(' . $community->presentation_d->format('F j, Y') . ')',
-                    'responsible' => null
+                    'responsible' => null,
                 ];
             }
         } elseif (! $optedOut) {
@@ -552,8 +559,8 @@ class AdminToDo
                 'responsible' => ['Client'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($community->presentation_c),
-                    'since' => 'Presentation C concluded'
-                ]
+                    'since' => 'Presentation C concluded',
+                ],
             ];
         }
 
@@ -562,7 +569,7 @@ class AdminToDo
                 'class' => 'complete',
                 'done' => true,
                 'msg' => 'Opted out of further participation',
-                'responsible' => null
+                'responsible' => null,
             ];
         }
 
@@ -576,8 +583,8 @@ class AdminToDo
                 'responsible' => ['Client'],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($mostRecentPresentation),
-                    'since' => $community->presentation_d ? 'Presentation D concluded' : 'Presentation C concluded'
-                ]
+                    'since' => $community->presentation_d ? 'Presentation D concluded' : 'Presentation C concluded',
+                ],
             ];
         }
 
@@ -587,12 +594,12 @@ class AdminToDo
             if ($purchaseDate > $mostRecentPresentation) {
                 $elapsed = [
                     'time' => $this->getWaitingPeriod($purchaseDate),
-                    'since' => 'policy development purchased'
+                    'since' => 'policy development purchased',
                 ];
             } else {
                 $elapsed = [
                     'time' => $this->getWaitingPeriod($mostRecentPresentation),
-                    'since' => $community->presentation_d ? 'Presentation D concluded' : 'Presentation C concluded'
+                    'since' => $community->presentation_d ? 'Presentation D concluded' : 'Presentation C concluded',
                 ];
             }
 
@@ -600,7 +607,7 @@ class AdminToDo
                 'class' => 'ready',
                 'msg' => 'Ready to <a href="' . $url . '">advance to Step Four</a>',
                 'responsible' => ['ICI'],
-                'elapsed' => $elapsed
+                'elapsed' => $elapsed,
             ];
         }
 
@@ -613,12 +620,12 @@ class AdminToDo
                 'msg' => 'Ready to <a href="' . $url . '">deliver policy development</a>',
                 'responsible' => [
                     'CBER',
-                    'ICI'
+                    'ICI',
                 ],
                 'elapsed' => [
                     'time' => $this->getWaitingPeriod($purchaseDate),
-                    'since' => 'policy development purchased'
-                ]
+                    'since' => 'policy development purchased',
+                ],
             ];
         }
 
@@ -626,7 +633,7 @@ class AdminToDo
             'class' => 'complete',
             'done' => true,
             'msg' => 'Complete',
-            'responsible' => null
+            'responsible' => null,
         ];
     }
 
@@ -761,10 +768,10 @@ class AdminToDo
             ->where([
                 'id' => $communityId,
                 function ($exp) use ($presentationLetter) {
-                    /** @var QueryExpression $exp */
+                    /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                     return $exp->isNotNull("presentation_$presentationLetter");
-                }
+                },
             ])
             ->count();
 
@@ -838,7 +845,7 @@ class AdminToDo
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'presentations',
-            $communityId
+            $communityId,
         ]);
     }
 
@@ -854,7 +861,7 @@ class AdminToDo
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'progress',
-            $communityId
+            $communityId,
         ]);
     }
 
@@ -870,7 +877,7 @@ class AdminToDo
             'prefix' => 'admin',
             'controller' => 'Surveys',
             'action' => 'activate',
-            $surveyId
+            $surveyId,
         ]);
     }
 
@@ -888,7 +895,7 @@ class AdminToDo
             'controller' => 'Surveys',
             'action' => 'link',
             $communitySlug,
-            $surveyType
+            $surveyType,
         ]);
     }
 
@@ -904,7 +911,7 @@ class AdminToDo
             'prefix' => 'admin',
             'controller' => 'Surveys',
             'action' => 'invite',
-            $surveyId
+            $surveyId,
         ]);
     }
 
@@ -943,7 +950,7 @@ class AdminToDo
     {
         $community = $this->communitiesTable->get($communityId);
 
-        /** @var Date $presentationDate */
+        /** @var \Cake\Chronos\Date $presentationDate */
         $presentationDate = $community->{"presentation_$presentationLetter"};
         $today = date('Y-m-d');
 
@@ -954,7 +961,7 @@ class AdminToDo
      * Returns a string like "more than a year", "five months", "12 days", or "less than a minute", depending
      * on how much time has passed since $time
      *
-     * @param Time|FrozenTime|FrozenDate|null $time Time object
+     * @param \Cake\I18n\Time|\App\AdminToDo\FrozenTime|\App\AdminToDo\FrozenDate|null $time Time object
      * @return string
      */
     private function getWaitingPeriod($time)
@@ -1034,7 +1041,7 @@ class AdminToDo
             'controller' => 'Deliveries',
             'action' => 'add',
             $communityId,
-            $deliverableId
+            $deliverableId,
         ]);
     }
 

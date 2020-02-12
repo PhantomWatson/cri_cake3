@@ -1,12 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Maps;
 
-use App\Model\Entity\Community;
 use App\Model\Table\DeliverablesTable;
-use App\Model\Table\DeliveriesTable;
 use App\Model\Table\ProductsTable;
-use App\Model\Table\PurchasesTable;
-use App\Model\Table\SurveysTable;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Log\Log;
@@ -17,26 +15,26 @@ use Cake\Utility\Text;
 /**
  * Class Map
  * @package App\Maps
- * @property Community $community
+ * @property \App\Model\Entity\Community $community
  */
 class Map
 {
-    const STEP_ONE_PROSPECT = 'Prospective community';
-    const STEP_ONE_ENROLLED = 'Enrolled';
-    const STEP_TWO_SURVEY = 'Leadership alignment survey phase';
-    const STEP_TWO_ANALYSIS = 'Leadership alignment analysis phase';
-    const STEP_TWO_CLOSED = 'Leadership alignment complete';
-    const STEP_THREE_SURVEY = 'Community org alignment survey phase';
-    const STEP_THREE_ANALYSIS = 'Community org alignment analysis phase';
-    const STEP_THREE_CLOSED = 'Community org alignment complete';
-    const STEP_FOUR_PENDING = 'Policy development in progress';
-    const STEP_FOUR_CLOSED = 'Policy development complete';
+    public const STEP_ONE_PROSPECT = 'Prospective community';
+    public const STEP_ONE_ENROLLED = 'Enrolled';
+    public const STEP_TWO_SURVEY = 'Leadership alignment survey phase';
+    public const STEP_TWO_ANALYSIS = 'Leadership alignment analysis phase';
+    public const STEP_TWO_CLOSED = 'Leadership alignment complete';
+    public const STEP_THREE_SURVEY = 'Community org alignment survey phase';
+    public const STEP_THREE_ANALYSIS = 'Community org alignment analysis phase';
+    public const STEP_THREE_CLOSED = 'Community org alignment complete';
+    public const STEP_FOUR_PENDING = 'Policy development in progress';
+    public const STEP_FOUR_CLOSED = 'Policy development complete';
     public $community;
 
     /**
      * Map constructor.
      *
-     * @param Community $community Community entity
+     * @param \App\Model\Entity\Community $community Community entity
      */
     public function __construct($community)
     {
@@ -89,7 +87,7 @@ class Map
             return null;
         }
 
-        /** @var PurchasesTable $purchasesTable */
+        /** @var \App\Model\Table\PurchasesTable $purchasesTable */
         $purchasesTable = TableRegistry::get('Purchases');
         $productId = ProductsTable::OFFICIALS_SURVEY;
         $isPurchased = $purchasesTable->isPurchased($productId, $this->community->id);
@@ -104,7 +102,7 @@ class Map
      */
     public function getStepTwoPhase()
     {
-        /** @var SurveysTable $surveysTable */
+        /** @var \App\Model\Table\SurveysTable $surveysTable */
         $surveysTable = TableRegistry::get('Surveys');
         $surveyId = $surveysTable->getSurveyId($this->community->id, 'official');
         $hasResponses = $surveysTable->hasResponses($surveyId);
@@ -129,7 +127,7 @@ class Map
      */
     public function getStepThreePhase()
     {
-        /** @var SurveysTable $surveysTable */
+        /** @var \App\Model\Table\SurveysTable $surveysTable */
         $surveysTable = TableRegistry::get('Surveys');
         $surveyId = $surveysTable->getSurveyId($this->community->id, 'official');
         $hasResponses = $surveysTable->hasResponses($surveyId);
@@ -154,7 +152,7 @@ class Map
      */
     public function getStepFourPhase()
     {
-        /** @var DeliveriesTable $deliveriesTable */
+        /** @var \App\Model\Table\DeliveriesTable $deliveriesTable */
         $deliveriesTable = TableRegistry::get('Deliveries');
         $deliverableId = DeliverablesTable::POLICY_DEVELOPMENT;
         $delivered = $deliveriesTable->isRecorded($this->community->id, $deliverableId);
@@ -171,25 +169,25 @@ class Map
      *
      * @param int $step Either 2 or 3
      * @return bool
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     private function arePaidPresentationsGiven($step)
     {
         if ($step == 2) {
             $presentations = [
                 'a' => ProductsTable::OFFICIALS_SURVEY,
-                'b' => ProductsTable::OFFICIALS_SUMMIT
+                'b' => ProductsTable::OFFICIALS_SUMMIT,
             ];
         } elseif ($step == 3) {
             $presentations = [
                 'c' => ProductsTable::ORGANIZATIONS_SURVEY,
-                'd' => ProductsTable::ORGANIZATIONS_SUMMIT
+                'd' => ProductsTable::ORGANIZATIONS_SUMMIT,
             ];
         } else {
             throw new InternalErrorException('Invalid CRI Step specified: ' . $step);
         }
 
-        /** @var PurchasesTable $purchasesTable */
+        /** @var \App\Model\Table\PurchasesTable $purchasesTable */
         $purchasesTable = TableRegistry::get('Purchases');
         $purchases = $purchasesTable->getAllForCommunity($this->community->id);
         foreach ($purchases as $purchase) {
@@ -234,7 +232,7 @@ class Map
             self::STEP_THREE_ANALYSIS => '#93c2e8',
             self::STEP_THREE_CLOSED => '#0088ce',
             self::STEP_FOUR_PENDING => '#a287a7',
-            self::STEP_FOUR_CLOSED => '#510856'
+            self::STEP_FOUR_CLOSED => '#510856',
         ];
     }
 
@@ -255,7 +253,7 @@ class Map
             self::STEP_THREE_ANALYSIS,
             self::STEP_THREE_CLOSED,
             self::STEP_FOUR_PENDING,
-            self::STEP_FOUR_CLOSED
+            self::STEP_FOUR_CLOSED,
         ];
     }
 
@@ -282,9 +280,9 @@ class Map
                 'Is County',
                 [
                     'type' => 'string',
-                    'role' => 'tooltip'
-                ]
-            ]
+                    'role' => 'tooltip',
+                ],
+            ],
         ];
         foreach ($communities as $i => $community) {
             $map = new Map($community);
@@ -300,8 +298,8 @@ class Map
                     $coordinates['lng'],
                     $community->name,
                     $phaseNum + 1,
-                    (stripos($community->name, ' county') === false) ? 0 : 1,
-                    $phase
+                    stripos($community->name, ' county') === false ? 0 : 1,
+                    $phase,
                 ];
             }
         }
@@ -328,7 +326,7 @@ class Map
             if ($geocode->status == 'OK') {
                 return [
                     'lat' => $geocode->results[0]->geometry->location->lat,
-                    'lng' => $geocode->results[0]->geometry->location->lng
+                    'lng' => $geocode->results[0]->geometry->location->lng,
                 ];
             }
 

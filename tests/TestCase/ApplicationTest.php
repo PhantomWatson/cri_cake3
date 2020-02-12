@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -16,7 +18,6 @@ namespace App\Test\TestCase;
 
 use App\Application;
 use App\Test\Fixture\UsersFixture;
-use Cake\Database\Expression\QueryExpression;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\EventList;
 use Cake\Http\MiddlewareQueue;
@@ -49,13 +50,13 @@ class ApplicationTest extends IntegrationTestCase
         $usersFixture = new UsersFixture();
         $this->adminUser = [
             'Auth' => [
-                'User' => $usersFixture->records[0]
-            ]
+                'User' => $usersFixture->records[0],
+            ],
         ];
         $this->clientUser = [
             'Auth' => [
-                'User' => $usersFixture->records[1]
-            ]
+                'User' => $usersFixture->records[1],
+            ],
         ];
     }
 
@@ -125,7 +126,7 @@ class ApplicationTest extends IntegrationTestCase
         $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
-            'action' => 'login'
+            'action' => 'login',
         ]));
     }
 

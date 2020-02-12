@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Alerts;
 
-use App\Model\Entity\User;
 use Cake\Network\Exception\InternalErrorException;
-use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
 class AlertRecipients
@@ -57,7 +57,7 @@ class AlertRecipients
      * Returns an array of users who should receive an alert of the specified type
      *
      * @param string $alertMethodName Alert method name (e.g. deliverPresentationA)
-     * @return User[]
+     * @return \App\Model\Entity\User[]
      */
     public function getRecipients($alertMethodName)
     {
@@ -70,8 +70,8 @@ class AlertRecipients
      * Returns a Query for finding users subscribed to the specified mailing list
      *
      * @param string $adminGroup Either 'CBER', 'ICI', or 'both'
-     * @return Query
-     * @throws InternalErrorException
+     * @return \Cake\ORM\Query
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     public function findRecipients($adminGroup)
     {
@@ -89,8 +89,8 @@ class AlertRecipients
             return $usersTable->find()->where([
                 'OR' => [
                     'cber_email_optin' => true,
-                    'ici_email_optin' => true
-                ]
+                    'ici_email_optin' => true,
+                ],
             ]);
         }
 

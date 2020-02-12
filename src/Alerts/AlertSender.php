@@ -1,27 +1,21 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Alerts;
 
-use App\Model\Entity\Community;
-use App\Model\Entity\User;
-use App\Model\Table\CommunitiesTable;
-use App\Model\Table\DeliveriesTable;
-use App\Model\Table\ProductsTable;
-use App\Model\Table\SurveysTable;
-use App\Model\Table\UsersTable;
 use Cake\ORM\TableRegistry;
 use DateTime;
-use Queue\Model\Table\QueuedJobsTable;
 
 /**
  * Class AlertSender
  * @package App\Alerts
- * @property CommunitiesTable $communities
- * @property Community $community
- * @property DeliveriesTable $deliveries
- * @property ProductsTable $products
- * @property QueuedJobsTable $queuedJobs
- * @property SurveysTable $surveys
- * @property UsersTable $users
+ * @property \App\Model\Table\CommunitiesTable $communities
+ * @property \App\Model\Entity\Community $community
+ * @property \App\Model\Table\DeliveriesTable $deliveries
+ * @property \App\Model\Table\ProductsTable $products
+ * @property \Queue\Model\Table\QueuedJobsTable $queuedJobs
+ * @property \App\Model\Table\SurveysTable $surveys
+ * @property \App\Model\Table\UsersTable $users
  */
 class AlertSender
 {
@@ -50,7 +44,7 @@ class AlertSender
     /**
      * Enqueues an alert email
      *
-     * @param User $recipient Alert recipient
+     * @param \App\Model\Entity\User $recipient Alert recipient
      * @param string $alertName Such as createClients or deliverPolicyDev
      * @param array|null $data Metadata to include in queued job in addition to default data
      * @throws \Exception
@@ -102,7 +96,7 @@ class AlertSender
      *
      * @param string $email Recipient email address
      * @param string $alertName Name of mailer method for alert
-     * @return DateTime|bool
+     * @return \DateTime|bool
      */
     public function isRecentlySent($email, $alertName)
     {
@@ -112,7 +106,7 @@ class AlertSender
             ->where([
                 'job_type' => 'AdminAlertEmail',
                 'reference' => $email,
-                'created >=' => new DateTime($this->recentThreshold)
+                'created >=' => new DateTime($this->recentThreshold),
             ])
             ->orderDesc('created')
             ->all();

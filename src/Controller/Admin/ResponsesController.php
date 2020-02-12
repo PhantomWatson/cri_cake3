@@ -1,17 +1,17 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
-use App\Model\Entity\Community;
 use App\SurveyMonkey\SurveyMonkey;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
 class ResponsesController extends AppController
 {
-
     /**
      * Initialize method
      *
@@ -53,7 +53,7 @@ class ResponsesController extends AppController
 
         $communitiesTable = TableRegistry::get('Communities');
         $community = $communitiesTable->get($survey->community_id, [
-            'contain' => ['LocalAreas', 'ParentAreas']
+            'contain' => ['LocalAreas', 'ParentAreas'],
         ]);
 
         $internalAlignment = $this->Responses->getInternalAlignmentPerSector($surveyId);
@@ -123,7 +123,7 @@ class ResponsesController extends AppController
             'sectors' => $sectors,
             'survey' => $survey,
             'titleForLayout' => $community->name . ': Community ' . ucwords($survey->type) . 's Alignment',
-            'unaddressedUnapprovedCount' => $unaddressedUnapprovedCount
+            'unaddressedUnapprovedCount' => $unaddressedUnapprovedCount,
         ]);
     }
 
@@ -132,7 +132,7 @@ class ResponsesController extends AppController
      * total internal alignment for a questionnaire
      *
      * @param float $sum Sum of internal alignments
-     * @param Community $community Community
+     * @param \App\Model\Entity\Community $community Community
      * @return string
      */
     private function getInternalAlignmentClass($sum, $community)
@@ -170,8 +170,8 @@ class ResponsesController extends AppController
                     },
                     function ($exp, $q) {
                         return $exp->isNull('alignment_vs_parent');
-                    }
-                ]
+                    },
+                ],
             ])
             ->all();
         if ($responses->isEmpty()) {
@@ -209,7 +209,7 @@ class ResponsesController extends AppController
                     'wholesale' => $response->wholesale_rank,
                     'retail' => $response->retail_rank,
                     'residential' => $response->residential_rank,
-                    'recreation' => $response->recreation_rank
+                    'recreation' => $response->recreation_rank,
                 ];
                 $alignment = $this->Responses->calculateAlignment($actualRanks, $responseRanks);
 
@@ -230,7 +230,7 @@ class ResponsesController extends AppController
      *
      * @param int $respondentId Respondent ID
      * @return void
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     public function getFullResponse($respondentId)
     {
@@ -247,7 +247,7 @@ class ResponsesController extends AppController
 
             // And save it in this respondent's DB record
             $respondent = $respondentsTable->patchEntity($respondent, [
-                'sm_respondent_id' => $smRespondentId
+                'sm_respondent_id' => $smRespondentId,
             ]);
             if ($respondent->getErrors()) {
                 $msg = 'There was an error saving the respondent\'s sm_respondent_id (' . $smRespondentId . ')';

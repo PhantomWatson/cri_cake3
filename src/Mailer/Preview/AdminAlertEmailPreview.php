@@ -1,15 +1,15 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Mailer\Preview;
 
-use App\Mailer\AdminAlertMailer;
-use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
 use DebugKit\Mailer\MailPreview;
 
 /**
  * Class AdminAlertEmailPreview
  * @package App\Mailer\Preview
- * @property AdminAlertMailer $mailer
+ * @property \App\Mailer\AdminAlertMailer $mailer
  */
 class AdminAlertEmailPreview extends MailPreview
 {
@@ -29,20 +29,20 @@ class AdminAlertEmailPreview extends MailPreview
         $this->data = [
             'user' => [
                 'name' => 'Recipient Name',
-                'email' => 'recipient@example.com'
+                'email' => 'recipient@example.com',
             ],
             'community' => [
                 'id' => $communityId,
                 'name' => 'Community Name',
-                'slug' => 'community-name'
-            ]
+                'slug' => 'community-name',
+            ],
         ];
     }
 
     /**
      * Preview method for AdminAlertMailer::deliverPresentationA()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function deliverPresentationA()
     {
@@ -52,7 +52,7 @@ class AdminAlertEmailPreview extends MailPreview
     /**
      * Preview method for AdminAlertMailer::()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function deliverPresentationB()
     {
@@ -62,7 +62,7 @@ class AdminAlertEmailPreview extends MailPreview
     /**
      * Preview method for AdminAlertMailer::()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function deliverPresentationC()
     {
@@ -72,7 +72,7 @@ class AdminAlertEmailPreview extends MailPreview
     /**
      * Preview method for AdminAlertMailer::()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function deliverPresentationD()
     {
@@ -82,7 +82,7 @@ class AdminAlertEmailPreview extends MailPreview
     /**
      * Preview method for AdminAlertMailer::()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function createOfficialsSurvey()
     {
@@ -92,7 +92,7 @@ class AdminAlertEmailPreview extends MailPreview
     /**
      * Preview method for AdminAlertMailer::()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function createOrganizationsSurvey()
     {
@@ -102,7 +102,7 @@ class AdminAlertEmailPreview extends MailPreview
     /**
      * Preview method for AdminAlertMailer::()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function createClients()
     {
@@ -112,7 +112,7 @@ class AdminAlertEmailPreview extends MailPreview
     /**
      * Preview method for AdminAlertMailer::()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function activateOfficialsSurvey()
     {
@@ -122,7 +122,7 @@ class AdminAlertEmailPreview extends MailPreview
     /**
      * Preview method for AdminAlertMailer::()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function activateOrganizationsSurvey()
     {
@@ -132,7 +132,7 @@ class AdminAlertEmailPreview extends MailPreview
     /**
      * Preview method for AdminAlertMailer::()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function schedulePresentationA()
     {
@@ -142,7 +142,7 @@ class AdminAlertEmailPreview extends MailPreview
     /**
      * Preview method for AdminAlertMailer::()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function schedulePresentationB()
     {
@@ -152,7 +152,7 @@ class AdminAlertEmailPreview extends MailPreview
     /**
      * Preview method for AdminAlertMailer::()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function schedulePresentationC()
     {
@@ -162,7 +162,7 @@ class AdminAlertEmailPreview extends MailPreview
     /**
      * Preview method for AdminAlertMailer::()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function schedulePresentationD()
     {
@@ -172,7 +172,7 @@ class AdminAlertEmailPreview extends MailPreview
     /**
      * Preview method for AdminAlertMailer::()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function deliverPolicyDev()
     {

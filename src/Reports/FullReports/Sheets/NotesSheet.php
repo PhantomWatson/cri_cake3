@@ -1,14 +1,14 @@
 <?php
-namespace App\Reports\FullReports\Sheets;
+declare(strict_types=1);
 
-use App\Reports\Spreadsheet;
+namespace App\Reports\FullReports\Sheets;
 
 class NotesSheet
 {
     /**
      * Adds an Officials Survey sheet to the provided workbook and returns the workbook
      *
-     * @param Spreadsheet $workbook Spreadsheet workbook
+     * @param \App\Reports\Spreadsheet $workbook Spreadsheet workbook
      * @param array $data Report data
      * @return mixed
      */
@@ -52,7 +52,7 @@ class NotesSheet
         $workbook
             ->applyBorders('bottom')
             ->setCellWidth([
-                'Notes' => 60
+                'Notes' => 60,
             ]);
 
         return $workbook;
@@ -68,7 +68,7 @@ class NotesSheet
         return [
             'Community',
             'Area',
-            'Notes'
+            'Notes',
         ];
     }
 
@@ -83,7 +83,7 @@ class NotesSheet
         return [
             $community['name'],
             $community['parentArea'],
-            $community['notes']
+            $community['notes'],
         ];
     }
 }

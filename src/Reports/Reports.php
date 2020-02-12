@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Reports;
 
-use App\Model\Entity\Community;
-use App\Model\Entity\Survey;
 use App\Model\Table\ProductsTable;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -31,7 +31,7 @@ class Reports
                 'parentArea' => $community->parent_area->name,
                 'presentationsGiven' => $this->getPresentationStatuses($community),
                 'notes' => $community->notes,
-                'recentActivity' => $community->activity_records
+                'recentActivity' => $community->activity_records,
             ];
 
             // Collect information about survey responses and alignment
@@ -49,12 +49,12 @@ class Reports
                     'responseRate' => $this->getResponseRate($invitationCount, $approvedResponseCount),
                     'alignments' => [
                         'vsLocal' => $survey['alignment_vs_local'],
-                        'vsParent' => $survey['alignment_vs_parent']
+                        'vsParent' => $survey['alignment_vs_parent'],
                     ],
                     'internalAlignment' => $this->getInternalAlignment($survey),
                     'awareOfPlanCount' => $responsesTable->getApprovedAwareOfPlanCount($survey['id']),
                     'unawareOfPlanCount' => $responsesTable->getApprovedUnawareOfPlanCount($survey['id']),
-                    'status' => $surveysTable->getStatusDescription($community, $surveyType)
+                    'status' => $surveysTable->getStatusDescription($community, $surveyType),
                 ];
             }
         }
@@ -65,7 +65,7 @@ class Reports
     /**
      * Returns an array of letter => status for each presentation
      *
-     * @param Community $community Community entity
+     * @param \App\Model\Entity\Community $community Community entity
      * @return array
      */
     private function getPresentationStatuses($community)
@@ -76,7 +76,7 @@ class Reports
             'a' => ProductsTable::OFFICIALS_SURVEY,
             'b' => ProductsTable::OFFICIALS_SUMMIT,
             'c' => ProductsTable::ORGANIZATIONS_SURVEY,
-            'd' => ProductsTable::ORGANIZATIONS_SUMMIT
+            'd' => ProductsTable::ORGANIZATIONS_SUMMIT,
         ];
         foreach (['a', 'b', 'c', 'd'] as $letter) {
             if (isset($presentationsGiven[$letter])) {
@@ -121,7 +121,7 @@ class Reports
     private function getResponseRate($invitationCount, $approvedResponseCount)
     {
         if ($invitationCount) {
-            return round(($approvedResponseCount / $invitationCount) * 100) . '%';
+            return round($approvedResponseCount / $invitationCount * 100) . '%';
         } else {
             return 'N/A';
         }
@@ -130,7 +130,7 @@ class Reports
     /**
      * Returns the number of invitations that were sent out for this survey
      *
-     * @param Survey $survey Survey entity
+     * @param \App\Model\Entity\Survey $survey Survey entity
      * @param array $respondents Array of $surveyId => $respondentId => $respondent
      * @return int
      */
@@ -151,7 +151,7 @@ class Reports
     /**
      * Returns the number of responses for this survey that have been approved
      *
-     * @param Survey $survey Survey entity
+     * @param \App\Model\Entity\Survey $survey Survey entity
      * @param array $respondents Array of $surveyId => $respondentId => $respondent
      * @return int
      */
@@ -172,7 +172,7 @@ class Reports
     /**
      * Returns formatted and summed internal alignment scores
      *
-     * @param Survey $survey Survey entity
+     * @param \App\Model\Entity\Survey $survey Survey entity
      * @return array
      */
     private function getInternalAlignment($survey)
@@ -211,7 +211,7 @@ class Reports
             ->contain([
                 'Responses' => function ($q) {
                     return $q->select(['id', 'respondent_id']);
-                }
+                },
             ])
             ->toArray();
 

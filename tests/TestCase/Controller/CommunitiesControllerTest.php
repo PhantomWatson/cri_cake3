@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Controller;
 
 use App\Test\Fixture\UsersFixture;
@@ -11,7 +13,6 @@ use Cake\Routing\Router;
  */
 class CommunitiesControllerTest extends ApplicationTest
 {
-
     /**
      * Fixtures
      *
@@ -33,7 +34,7 @@ class CommunitiesControllerTest extends ApplicationTest
         'app.StatCategories',
         'app.Statistics',
         'app.Surveys',
-        'app.Users'
+        'app.Users',
     ];
 
     /**
@@ -45,7 +46,7 @@ class CommunitiesControllerTest extends ApplicationTest
     {
         parent::setUp();
         $this->configRequest([
-            'environment' => ['HTTPS' => 'on']
+            'environment' => ['HTTPS' => 'on'],
         ]);
     }
 
@@ -73,7 +74,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->get([
             'controller' => 'Communities',
             'action' => 'view',
-            'test-community-1'
+            'test-community-1',
         ]);
         $this->assertResponseOk();
 
@@ -81,7 +82,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->get([
             'controller' => 'Communities',
             'action' => 'view',
-            'test-community-2'
+            'test-community-2',
         ]);
         $this->assertResponseError();
         $this->assertResponseCode(403);
@@ -114,7 +115,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $url = Router::url([
             'prefix' => 'client',
             'controller' => 'Communities',
-            'action' => 'index'
+            'action' => 'index',
         ]);
 
         // Unauthenticated
@@ -137,7 +138,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $url = Router::url([
             'prefix' => 'client',
             'controller' => 'Communities',
-            'action' => 'reactivate'
+            'action' => 'reactivate',
         ]);
 
         // Unauthenticated
@@ -148,8 +149,8 @@ class CommunitiesControllerTest extends ApplicationTest
         $clientSession = [
             'Auth' => [
                 // Client account associated with inactive community
-                'User' => $usersFixture->records[2]
-            ]
+                'User' => $usersFixture->records[2],
+            ],
         ];
         $this->session($clientSession);
         $this->get($url);
@@ -159,7 +160,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $communitiesTable = TableRegistry::get('Communities');
         $query = $communitiesTable->find()->where([
             'id' => 3,
-            'active' => 0
+            'active' => 0,
         ]);
         $this->assertEquals(1, $query->count());
 
@@ -169,7 +170,7 @@ class CommunitiesControllerTest extends ApplicationTest
         // Confirm community has been reactivated
         $query = $communitiesTable->find()->where([
             'id' => 3,
-            'active' => 1
+            'active' => 1,
         ]);
         $this->assertEquals(1, $query->count());
     }
