@@ -6,7 +6,7 @@ use App\Model\Entity\Community;
 use App\SurveyMonkey\SurveyMonkey;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
 class ResponsesController extends AppController

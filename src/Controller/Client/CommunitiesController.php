@@ -4,7 +4,7 @@ namespace App\Controller\Client;
 use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\NotFoundException;
 
 class CommunitiesController extends AppController
 {

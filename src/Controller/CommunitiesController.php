@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Muffin\Slug\Slugger\CakeSlugger;
 
@@ -98,7 +98,7 @@ class CommunitiesController extends AppController
      *
      * @param string|null $communitySlug Community slug
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     * @throws \Cake\Http\Exception\NotFoundException When record not found.
      */
     public function view($communitySlug = null)
     {
