@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Alerts;
 
 use App\Alerts\AlertSender;
+use App\Model\Table\UsersTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -11,7 +12,6 @@ use Cake\TestSuite\TestCase;
  * Class AlertableTest
  * @package App\Test\TestCase\Alerts
  * @property array $fixtures
- * @property CommunitiesTable $communities
  * @property UsersTable $users
  */
 class AlertSenderTest extends TestCase
@@ -26,7 +26,6 @@ class AlertSenderTest extends TestCase
         'app.QueuedJobs',
         'app.Users',
     ];
-    private $communities;
     private $users;
 
     /**
@@ -37,7 +36,6 @@ class AlertSenderTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->communities = TableRegistry::get('Communities');
         $this->users = TableRegistry::get('Users');
     }
 
