@@ -9,13 +9,13 @@ use Cake\ORM\TableRegistry;
 class EmailListenerTest extends ApplicationTest
 {
     public $fixtures = [
-        'app.clients_communities',
-        'app.communities',
-        'app.deliverables',
-        'app.deliveries',
-        'app.queued_jobs',
-        'app.surveys',
-        'app.users'
+        'app.ClientsCommunities',
+        'app.Communities',
+        'app.Deliverables',
+        'app.Deliveries',
+        'app.QueuedJobs',
+        'app.Surveys',
+        'app.Users'
     ];
 
     /**

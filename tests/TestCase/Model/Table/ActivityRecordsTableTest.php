@@ -24,10 +24,10 @@ class ActivityRecordsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.activity_records',
-        'app.users',
-        'app.communities',
-        'app.surveys'
+        'app.ActivityRecords',
+        'app.Users',
+        'app.Communities',
+        'app.Surveys'
     ];
 
     /**

@@ -25,10 +25,10 @@ class InvoicesTableTest extends TestCase
      */
     public $fixtures = [
         'app.invoices',
-        'app.purchases',
-        'app.users',
-        'app.communities',
-        'app.products'
+        'app.Purchases',
+        'app.Users',
+        'app.Communities',
+        'app.Products'
     ];
 
     /**

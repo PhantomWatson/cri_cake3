@@ -16,7 +16,7 @@ class PagesControllerTest extends ApplicationTest
      * @var array
      */
     public $fixtures = [
-        'app.queued_jobs'
+        'app.QueuedJobs'
     ];
 
     /**

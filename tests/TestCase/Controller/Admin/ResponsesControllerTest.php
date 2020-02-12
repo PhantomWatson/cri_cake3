@@ -15,15 +15,15 @@ class ResponsesControllerTest extends ApplicationTest
      * @var array
      */
     public $fixtures = [
-        'app.areas',
-        'app.communities',
-        'app.products',
-        'app.purchases',
-        'app.respondents',
-        'app.responses',
-        'app.statistics',
-        'app.surveys',
-        'app.users'
+        'app.Areas',
+        'app.Communities',
+        'app.Products',
+        'app.Purchases',
+        'app.Respondents',
+        'app.Responses',
+        'app.Statistics',
+        'app.Surveys',
+        'app.Users'
     ];
 
     /**

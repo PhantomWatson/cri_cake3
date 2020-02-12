@@ -37,16 +37,16 @@ class AlertableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.clients_communities',
-        'app.communities',
-        'app.deliverables',
-        'app.deliveries',
-        'app.opt_outs',
-        'app.products',
-        'app.purchases',
-        'app.responses',
-        'app.surveys',
-        'app.users',
+        'app.ClientsCommunities',
+        'app.Communities',
+        'app.Deliverables',
+        'app.Deliveries',
+        'app.OptOuts',
+        'app.Products',
+        'app.Purchases',
+        'app.Responses',
+        'app.Surveys',
+        'app.Users',
     ];
     private $communities;
     private $deliveries;

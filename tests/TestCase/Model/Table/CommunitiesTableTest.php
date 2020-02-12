@@ -17,11 +17,11 @@ class CommunitiesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.communities',
-        'app.areas',
-        'app.statistics',
-        'app.purchases',
-        'app.surveys'
+        'app.Communities',
+        'app.Areas',
+        'app.Statistics',
+        'app.Purchases',
+        'app.Surveys'
     ];
 
     /**

@@ -17,14 +17,14 @@ class StatisticsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.areas',
-        'app.communities',
-        'app.products',
-        'app.purchases',
-        'app.stat_categories',
-        'app.statistics',
-        'app.surveys',
-        'app.users'
+        'app.Areas',
+        'app.Communities',
+        'app.Products',
+        'app.Purchases',
+        'app.StatCategories',
+        'app.Statistics',
+        'app.Surveys',
+        'app.Users'
     ];
 
     /**
