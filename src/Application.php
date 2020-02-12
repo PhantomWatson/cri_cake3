@@ -55,12 +55,14 @@ class Application extends BaseApplication
             $this->addPlugin('Migrations');
         }
 
-        /*
-         * Only try to load DebugKit in development mode
-         * Debug Kit should not be installed on a production system
-         */
         if (Configure::read('debug')) {
+            /*
+             * Only try to load DebugKit in development mode
+             * Debug Kit should not be installed on a production system
+             */
             $this->addPlugin(\DebugKit\Plugin::class);
+
+            $this->addPlugin('IdeHelper');
         }
     }
 
