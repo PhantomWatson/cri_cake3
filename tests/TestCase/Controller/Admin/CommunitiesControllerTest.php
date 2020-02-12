@@ -18,23 +18,23 @@ class CommunitiesControllerTest extends ApplicationTest
      * @var array
      */
     public $fixtures = [
-        'app.activity_records',
-        'app.areas',
-        'app.clients_communities',
-        'app.communities',
-        'app.deliverables',
-        'app.deliveries',
-        'app.opt_outs',
-        'app.products',
-        'app.purchases',
-        'app.queued_jobs',
-        'app.respondents',
-        'app.responses',
-        'app.settings',
-        'app.stat_categories',
-        'app.statistics',
-        'app.surveys',
-        'app.users'
+        'app.ActivityRecords',
+        'app.Areas',
+        'app.ClientsCommunities',
+        'app.Communities',
+        'app.Deliverables',
+        'app.Deliveries',
+        'app.OptOuts',
+        'app.Products',
+        'app.Purchases',
+        'app.QueuedJobs',
+        'app.Respondents',
+        'app.Responses',
+        'app.Settings',
+        'app.StatCategories',
+        'app.Statistics',
+        'app.Surveys',
+        'app.Users'
     ];
 
     /**

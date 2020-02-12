@@ -20,12 +20,12 @@ class DeliveriesControllerTest extends ApplicationTest
      * @var array
      */
     public $fixtures = [
-        'app.activity_records',
-        'app.communities',
-        'app.deliveries',
-        'app.deliverables',
-        'app.queued_jobs',
-        'app.users'
+        'app.ActivityRecords',
+        'app.Communities',
+        'app.Deliveries',
+        'app.Deliverables',
+        'app.QueuedJobs',
+        'app.Users'
     ];
 
     /**

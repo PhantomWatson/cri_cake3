@@ -8,16 +8,16 @@ use Cake\TestSuite\ConsoleIntegrationTestCase;
 class AutoAdvanceShellTest extends ConsoleIntegrationTestCase
 {
     public $fixtures = [
-        'app.communities',
-        'app.queued_jobs',
-        'app.surveys',
-        'app.opt_outs',
-        'app.purchases',
-        'app.responses',
-        'app.respondents',
-        'app.activity_records',
-        'app.users',
-        'app.clients_communities',
+        'app.Communities',
+        'app.QueuedJobs',
+        'app.Surveys',
+        'app.OptOuts',
+        'app.Purchases',
+        'app.Responses',
+        'app.Respondents',
+        'app.ActivityRecords',
+        'app.Users',
+        'app.ClientsCommunities',
     ];
 
     /**

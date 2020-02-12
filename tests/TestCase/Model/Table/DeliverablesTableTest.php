@@ -24,8 +24,8 @@ class DeliverablesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.deliverables',
-        'app.deliveries'
+        'app.Deliverables',
+        'app.Deliveries'
     ];
 
     /**

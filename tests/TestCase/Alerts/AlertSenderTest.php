@@ -33,9 +33,9 @@ class AlertSenderTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.communities',
-        'app.queued_jobs',
-        'app.users'
+        'app.Communities',
+        'app.QueuedJobs',
+        'app.Users'
     ];
     private $communities;
     private $users;

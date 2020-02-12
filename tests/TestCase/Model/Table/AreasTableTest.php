@@ -17,9 +17,9 @@ class AreasTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.areas',
-        'app.communities',
-        'app.statistics'
+        'app.Areas',
+        'app.Communities',
+        'app.Statistics'
     ];
 
     /**

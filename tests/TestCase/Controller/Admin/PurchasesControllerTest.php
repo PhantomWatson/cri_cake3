@@ -18,17 +18,17 @@ class PurchasesControllerTest extends ApplicationTest
      * @var array
      */
     public $fixtures = [
-        'app.activity_records',
-        'app.areas',
-        'app.communities',
-        'app.products',
-        'app.purchases',
-        'app.queued_jobs',
-        'app.respondents',
-        'app.responses',
-        'app.statistics',
-        'app.surveys',
-        'app.users'
+        'app.ActivityRecords',
+        'app.Areas',
+        'app.Communities',
+        'app.Products',
+        'app.Purchases',
+        'app.QueuedJobs',
+        'app.Respondents',
+        'app.Responses',
+        'app.Statistics',
+        'app.Surveys',
+        'app.Users'
     ];
 
     /**

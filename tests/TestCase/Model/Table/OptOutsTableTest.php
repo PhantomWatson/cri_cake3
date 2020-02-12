@@ -24,7 +24,7 @@ class OptOutsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.opt_outs'
+        'app.OptOuts'
     ];
 
     /**

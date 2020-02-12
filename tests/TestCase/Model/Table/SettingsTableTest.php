@@ -24,7 +24,7 @@ class SettingsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.settings'
+        'app.Settings'
     ];
 
     /**
