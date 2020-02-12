@@ -22,10 +22,6 @@ function customNotify(message) {
     })
 }
 
-gulp.task('default', ['less', 'js', 'php', 'watch']);
-
-
-
 /**************
  *    PHP     *
  **************/
@@ -82,7 +78,7 @@ gulp.task('php_unit', function() {
 /**************
  * Javascript *
  **************/
-var srcJsFiles = [ 
+var srcJsFiles = [
     'webroot/js/script.js',
     'webroot/js/admin/*.js',
     'webroot/js/client/*.js',
@@ -135,18 +131,18 @@ gulp.task('watch', function() {
         .pipe(less({plugins: [cleanCSSPlugin]}))
         .pipe(gulp.dest('webroot/css'))
         .pipe(customNotify('LESS compiled'));
-    
+
     // JavaScript
     gulp.watch(srcJsFiles, ['js']);
-    
+
     // PHP
     // All tests if a .php file is changed
     var phpWatchFiles = [
         'config/*.php',
-        'src/**/*.php', 
+        'src/**/*.php',
         'tests/**/*.php'
     ];
     gulp.watch(phpWatchFiles, {debounceDelay: 2000}, ['php']);
-    // Only unit tests if a .ctp file is changed until a proper ruleset for template files is added 
+    // Only unit tests if a .ctp file is changed until a proper ruleset for template files is added
     gulp.watch('src/**/*.ctp', {debounceDelay: 2000}, ['php_unit']);
 });
