@@ -35,7 +35,7 @@ class CommunitiesController extends AppController
      */
     private function prepareForm($community)
     {
-        if ($this->request->action == 'add' && ! $this->request->is(['post', 'put'])) {
+        if ($this->request->getParam('action') == 'add' && ! $this->request->is(['post', 'put'])) {
             $community->public = false;
             $community->score = 0;
         }

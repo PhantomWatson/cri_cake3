@@ -100,7 +100,7 @@ class UsersController extends AppController
 
         $accessible = ['myAccount'];
 
-        return in_array($this->request->action, $accessible);
+        return in_array($this->request->getParam('action'), $accessible);
     }
 
     /**

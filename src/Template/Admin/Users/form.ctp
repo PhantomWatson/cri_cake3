@@ -122,7 +122,7 @@
         [
             'autocomplete' => 'off',
             'class' => 'form-control',
-            'label' => $this->request->action == 'add' ? 'Password' : 'New Password',
+            'label' => $this->request->getParam('action') == 'add' ? 'Password' : 'New Password',
             'type' => 'password',
             'value' => ''
         ]
@@ -138,7 +138,7 @@
     );
 ?>
 
-<?php if ($this->request->prefix == 'admin' && $this->request->action == 'edit'): ?>
+<?php if ($this->request->prefix == 'admin' && $this->request->getParam('action') == 'edit'): ?>
     <?php if ($hasPasswordError): ?>
         <?= $passwordFields ?>
     <?php else: ?>
@@ -151,12 +151,12 @@
             <?= $passwordFields ?>
         </div>
     <?php endif; ?>
-<?php elseif ($this->request->prefix == 'admin' && $this->request->action == 'add'): ?>
+<?php elseif ($this->request->prefix == 'admin' && $this->request->getParam('action') == 'add'): ?>
     <?= $passwordFields ?>
 <?php endif; ?>
 
 <?php
-    $label = ($this->request->action == 'add') ? 'Add User' : 'Update';
+    $label = ($this->request->getParam('action') == 'add') ? 'Add User' : 'Update';
     echo $this->Form->button(
         $label,
         ['class' => 'btn btn-primary']
