@@ -48,7 +48,7 @@ class UserMailer extends Mailer
     public function resetPassword($userId)
     {
         $timestamp = time();
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $hash = $usersTable->getPasswordResetHash($userId, $timestamp);
         $user = $usersTable->get($userId);
 

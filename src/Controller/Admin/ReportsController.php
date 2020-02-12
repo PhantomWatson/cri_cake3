@@ -20,7 +20,7 @@ class ReportsController extends AppController
     public function index()
     {
         /** @var \App\Model\Table\SurveysTable $surveysTable */
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $reports = new Reports();
         $report = $reports->getReport();
         $notes = [];

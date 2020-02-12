@@ -99,7 +99,7 @@ class AreasTable extends Table
         }
 
         // Determine what statistic categories (stat-cats?) will be used
-        $statCategoriesTable = TableRegistry::get('StatCategories');
+        $statCategoriesTable = TableRegistry::getTableLocator()->get('StatCategories');
         $groups = $statCategoriesTable->getGroups();
         $allRelevantCatIds = [];
         foreach ($groups as $groupName => $groupCatIds) {
@@ -304,7 +304,7 @@ class AreasTable extends Table
         }
 
         // Determine what statistic categories (stat-cats?) will be used
-        $statCategoriesTable = TableRegistry::get('StatCategories');
+        $statCategoriesTable = TableRegistry::getTableLocator()->get('StatCategories');
         $groups = $statCategoriesTable->getGroups();
         $allRelevantCatIds = [];
         foreach ($groups as $groupName => $groupCatIds) {
@@ -571,7 +571,7 @@ class AreasTable extends Table
             return false;
         }
 
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $sectors = $surveysTable->getSectors();
         $ranks = [];
         foreach ($sectors as $sector) {

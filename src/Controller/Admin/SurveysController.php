@@ -43,7 +43,7 @@ class SurveysController extends AppController
             throw new NotFoundException("Unknown questionnaire type: $surveyType");
         }
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
 
         /** @var \App\Model\Entity\Community $community */
         $community = $communitiesTable->find('slugged', ['slug' => $communitySlug])->first();
@@ -88,7 +88,7 @@ class SurveysController extends AppController
             throw new NotFoundException("Unknown questionnaire type: $surveyType");
         }
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
 
         /** @var \App\Model\Entity\Community $community */
         $community = $communitiesTable->find('slugged', ['slug' => $communitySlug])->first();
@@ -203,7 +203,7 @@ class SurveysController extends AppController
         $autoImportFrequency = $isAutomaticallyImported ? $this->Surveys->getPerSurveyAutoImportFrequency() : '';
 
         /** @var \App\Model\Table\RespondentsTable $respondentsTable */
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $this->set([
             'autoImportFrequency' => $autoImportFrequency,
             'hasNewResponses' => $this->Surveys->newResponsesHaveBeenReceived($survey->id),
@@ -273,7 +273,7 @@ class SurveysController extends AppController
         }
 
         /** @var \App\Model\Table\RespondentsTable $respondentsTable */
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $approvedRespondents = $respondentsTable->getApprovedList($surveyId);
         $unaddressedUnapprovedRespondents = $respondentsTable->getUnaddressedUnapprovedList($surveyId);
         $allRespondents = array_merge($approvedRespondents, $unaddressedUnapprovedRespondents);
@@ -281,7 +281,7 @@ class SurveysController extends AppController
         // Looks dumb, but this is because it's the parameter for client_invite(), which shares a view
         $respondentTypePlural = $respondentType . 's';
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $community = $communitiesTable->get($survey->community_id);
         $this->set([
             'community' => $community,
@@ -310,7 +310,7 @@ class SurveysController extends AppController
      */
     public function remind($surveyId)
     {
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $survey = $surveysTable->get($surveyId);
         if (! $survey->active) {
             $msg = 'Reminders cannot currently be sent out for that questionnaire because it is inactive';
@@ -319,18 +319,18 @@ class SurveysController extends AppController
             return $this->redirect($this->request->referer());
         }
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $community = $communitiesTable->get($survey->community_id);
 
         /** @var \App\Model\Table\RespondentsTable $respondentsTable */
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         if ($this->request->is('post')) {
             $sender = $this->Auth->user();
             $recipients = $respondentsTable->getUnresponsive($surveyId);
             $recipients = Hash::extract($recipients, '{n}.email');
             try {
                 /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
-                $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+                $queuedJobs = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
                 foreach ($recipients as $recipient) {
                     $queuedJobs->createJob(
                         'Reminder',
@@ -402,7 +402,7 @@ class SurveysController extends AppController
         /** @var \App\Model\Entity\Survey $survey */
         $survey = $this->Surveys->get($surveyId);
         $currentlyActive = $survey->active;
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $community = $communitiesTable->get($survey->community_id);
         $warning = null;
         if ($this->request->is('put')) {
@@ -468,20 +468,20 @@ class SurveysController extends AppController
         if ($this->request->is('post')) {
             $surveyId = $this->request->getData('surveyId');
             $survey = $this->Surveys->get($surveyId);
-            $communitiesTable = TableRegistry::get('Communities');
+            $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
             $community = $communitiesTable->get($survey->community_id);
-            $respondentsTable = TableRegistry::get('Respondents');
+            $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
             $recipients = $respondentsTable->find('list', ['valueField' => 'email'])
                 ->where(['survey_id' => $surveyId])
                 ->toArray();
-            $usersTable = TableRegistry::get('Users');
+            $usersTable = TableRegistry::getTableLocator()->get('Users');
             $user = $usersTable->get($this->request->getData('userId'));
 
             if ($this->request->getData('confirmed')) {
                 $step = 'results';
 
                 /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
-                $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+                $queuedJobs = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
 
                 foreach ($recipients as $recipient) {
                     $queuedJobs->createJob(
@@ -498,7 +498,7 @@ class SurveysController extends AppController
                 }
 
                 // Dispatch event
-                $surveysTable = TableRegistry::get('Surveys');
+                $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
                 $survey = $surveysTable->get($surveyId);
                 $event = new Event('Model.Survey.afterInvitationsSent', $this, ['meta' => [
                     'communityId' => $survey->community_id,
@@ -606,7 +606,7 @@ class SurveysController extends AppController
      */
     public function importAll()
     {
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $communities = $communitiesTable->find('all')
             ->select(['id', 'name'])
             ->contain([
@@ -663,7 +663,7 @@ class SurveysController extends AppController
             return;
         }
 
-        $responsesTable = TableRegistry::get('Responses');
+        $responsesTable = TableRegistry::getTableLocator()->get('Responses');
         $count = $responsesTable->find('all')
             ->where(['survey_id' => $surveyId])
             ->count();

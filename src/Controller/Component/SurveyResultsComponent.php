@@ -23,8 +23,8 @@ class SurveyResultsComponent extends Component
      */
     public function prepareRespondentsClientsPage($params)
     {
-        $surveysTable = TableRegistry::get('Surveys');
-        $communitiesTable = TableRegistry::get('Communities');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         if (isset($params['surveyId'])) {
             $surveyId = $params['surveyId'];
             $survey = $surveysTable->get($surveyId);
@@ -39,7 +39,7 @@ class SurveyResultsComponent extends Component
             $surveyId = $surveysTable->getSurveyId($community->id, $params['surveyType']);
         }
 
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $query = $respondentsTable->find('all')
             ->select([
                 'Respondents.id',

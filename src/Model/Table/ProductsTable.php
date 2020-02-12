@@ -82,7 +82,7 @@ class ProductsTable extends Table
      */
     public function isPurchased($communityId, $productId)
     {
-        $purchasesTable = TableRegistry::get('Purchases');
+        $purchasesTable = TableRegistry::getTableLocator()->get('Purchases');
         $count = $purchasesTable->find('all')
             ->where([
                 'product_id' => $productId,
@@ -153,7 +153,7 @@ class ProductsTable extends Table
 
         // Add client info
         $retval .= '&custcode=' . $clientId;
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $user = $usersTable->get($clientId);
         $nameSplit = explode(' ', $user->name);
         $retval .= '&lname=' . array_pop($nameSplit);

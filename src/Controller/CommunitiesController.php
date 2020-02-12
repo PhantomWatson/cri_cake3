@@ -57,7 +57,7 @@ class CommunitiesController extends AppController
             }
             $community = $this->Communities->find('slugged', ['slug' => $communitySlug])->first();
             $userId = $user['id'] ?? null;
-            $usersTable = TableRegistry::get('Users');
+            $usersTable = TableRegistry::getTableLocator()->get('Users');
 
             return $usersTable->canAccessCommunity($userId, $community);
         }
@@ -124,7 +124,7 @@ class CommunitiesController extends AppController
             return $this->redirect('/', 403);
         }
 
-        $areasTable = TableRegistry::get('Areas');
+        $areasTable = TableRegistry::getTableLocator()->get('Areas');
         $areas = [];
         $barChart = [];
         $pwrTable = [];

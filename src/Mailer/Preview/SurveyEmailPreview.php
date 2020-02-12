@@ -15,10 +15,10 @@ class SurveyEmailPreview extends MailPreview
      */
     public function reminders()
     {
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $survey = $surveysTable->find()->first();
 
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $sender = $usersTable->find()->first()->toArray();
 
         return $this->getMailer('Survey')
@@ -32,7 +32,7 @@ class SurveyEmailPreview extends MailPreview
      */
     public function invitations()
     {
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $survey = $surveysTable->find()->first();
 
         return $this->getMailer('Survey')

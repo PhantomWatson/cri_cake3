@@ -17,7 +17,7 @@ class OptOutsController extends AppController
     public function optOut($productId)
     {
         $clientId = $this->Auth->user('id');
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $communityId = $communitiesTable->getClientCommunityId($clientId);
         $result = $this->OptOuts->addOptOut([
             'user_id' => $clientId,

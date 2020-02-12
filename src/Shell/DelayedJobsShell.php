@@ -103,7 +103,7 @@ class DelayedJobsShell extends Shell
     private function getDelayedJobs()
     {
         /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobsTable */
-        $queuedJobsTable = TableRegistry::get('QueuedJobs');
+        $queuedJobsTable = TableRegistry::getTableLocator()->get('QueuedJobs');
         $createdEarlierThan = date('Y-m-d H:i:a', strtotime($this->threshold));
 
         return $queuedJobsTable->find()

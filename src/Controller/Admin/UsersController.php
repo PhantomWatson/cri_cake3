@@ -136,7 +136,7 @@ class UsersController extends AppController
 
                 try {
                     /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
-                    $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+                    $queuedJobs = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
                     $queuedJobs->createJob(
                         'NewAccountEmail',
                         [
@@ -273,7 +273,7 @@ class UsersController extends AppController
      */
     public function chooseClient()
     {
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         if ($this->request->is('post')) {
             $communityId = $this->request->getData('community_id');
             $this->Cookie->write('communityId', $communityId);

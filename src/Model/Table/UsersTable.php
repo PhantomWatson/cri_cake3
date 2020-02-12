@@ -169,7 +169,7 @@ class UsersTable extends Table
                 $role = null;
             }
         }
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $query = $communitiesTable->find()
             ->select(['id', 'name', 'slug'])
             ->order(['name' => 'ASC']);

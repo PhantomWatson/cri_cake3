@@ -19,10 +19,10 @@ class SurveyMailer extends Mailer
      */
     public function reminders($surveyId, $sender, $recipient)
     {
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $survey = $surveysTable->get($surveyId);
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $clients = $communitiesTable->getClients($survey->community_id);
 
         $email = $this
@@ -57,10 +57,10 @@ class SurveyMailer extends Mailer
         $senderName = $params['senderName'];
         $recipient = $params['recipient'];
 
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $survey = $surveysTable->get($surveyId);
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $clients = $communitiesTable->getClients($communityId);
 
         $email = $this

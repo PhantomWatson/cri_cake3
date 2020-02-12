@@ -48,7 +48,7 @@ class SurveysController extends AppController
         }
 
         // Collect responses
-        $responsesTable = TableRegistry::get('Responses');
+        $responsesTable = TableRegistry::getTableLocator()->get('Responses');
         $SurveyMonkey = new SurveyMonkey();
         [$success, $responses] = $SurveyMonkey->getNewResponses($surveyId);
         if (! $success) {
@@ -56,8 +56,8 @@ class SurveysController extends AppController
         }
 
         // Loop through each response and add to / update records
-        $areasTable = TableRegistry::get('Areas');
-        $respondentsTable = TableRegistry::get('Respondents');
+        $areasTable = TableRegistry::getTableLocator()->get('Areas');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $errorMsgs = [];
         if (is_array($responses)) {
             foreach ($responses as $smRespondentId => $response) {
@@ -135,7 +135,7 @@ class SurveysController extends AppController
                 }
 
                 // Calculate alignment
-                $communitiesTable = TableRegistry::get('Communities');
+                $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
                 $community = $communitiesTable->get($survey->community_id);
                 $actualRanksLocal = $areasTable->getPwrrrRanks($community->local_area_id);
                 $actualRanksParent = $areasTable->getPwrrrRanks($community->parent_area_id);
@@ -278,7 +278,7 @@ class SurveysController extends AppController
             $community = null;
         } else {
             $survey = $survey->first();
-            $communitiesTable = TableRegistry::get('Communities');
+            $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
             $community = [
                 'id' => $survey->community_id,
                 'name' => $communitiesTable->get($survey->community_id)->name,

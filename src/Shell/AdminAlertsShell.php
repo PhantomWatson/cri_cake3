@@ -198,7 +198,7 @@ class AdminAlertsShell extends Shell
     private function getAlertableCommunities()
     {
         // Get active communities
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $conditions = ['active' => true];
         if (!$this->includeDummy) {
             $conditions['dummy'] = false;
@@ -270,7 +270,7 @@ class AdminAlertsShell extends Shell
      */
     private function getSubscribers($ici, $cber)
     {
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
 
         return $usersTable->find()
             ->select(['name', 'email'])

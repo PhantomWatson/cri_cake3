@@ -71,15 +71,15 @@ class AdminToDo
      */
     public function __construct()
     {
-        $this->communitiesTable = TableRegistry::get('Communities');
-        $this->optOutsTable = TableRegistry::get('OptOuts');
-        $this->productsTable = TableRegistry::get('Products');
-        $this->respondentsTable = TableRegistry::get('Respondents');
-        $this->responsesTable = TableRegistry::get('Responses');
-        $this->surveysTable = TableRegistry::get('Surveys');
-        $this->deliveriesTable = TableRegistry::get('Deliveries');
-        $this->activityRecordsTable = TableRegistry::get('ActivityRecords');
-        $this->purchasesTable = TableRegistry::get('Purchases');
+        $this->communitiesTable = TableRegistry::getTableLocator()->get('Communities');
+        $this->optOutsTable = TableRegistry::getTableLocator()->get('OptOuts');
+        $this->productsTable = TableRegistry::getTableLocator()->get('Products');
+        $this->respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
+        $this->responsesTable = TableRegistry::getTableLocator()->get('Responses');
+        $this->surveysTable = TableRegistry::getTableLocator()->get('Surveys');
+        $this->deliveriesTable = TableRegistry::getTableLocator()->get('Deliveries');
+        $this->activityRecordsTable = TableRegistry::getTableLocator()->get('ActivityRecords');
+        $this->purchasesTable = TableRegistry::getTableLocator()->get('Purchases');
     }
 
     /**

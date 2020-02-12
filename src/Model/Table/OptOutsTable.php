@@ -102,7 +102,7 @@ class OptOutsTable extends Table
         if (isset($params['product_id'])) {
             $productId = $params['product_id'];
         } elseif (isset($params['presentation_letter'])) {
-            $productsTable = TableRegistry::get('Products');
+            $productsTable = TableRegistry::getTableLocator()->get('Products');
             $productId = $productsTable->getProductIdForPresentation($params['presentation_letter']);
         } else {
             throw new InternalErrorException('Could not opt out (missing product ID)');

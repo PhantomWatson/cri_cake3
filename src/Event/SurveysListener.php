@@ -34,7 +34,7 @@ class SurveysListener implements EventListenerInterface
      */
     public function updateAlignment(Event $event, array $meta = [])
     {
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         if (isset($meta['surveyId'])) {
             $surveysTable->updateAlignment($meta['surveyId']);
         } elseif (isset($meta['communityId'])) {
@@ -60,7 +60,7 @@ class SurveysListener implements EventListenerInterface
     public function updateReminderSentDate(Event $event, array $meta = [])
     {
         $surveyId = $meta['surveyId'];
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $survey = $surveysTable->get($surveyId);
         $survey->reminder_sent = date('Y-m-d H:i:s');
         $surveysTable->save($survey);

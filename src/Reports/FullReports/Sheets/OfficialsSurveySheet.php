@@ -114,7 +114,7 @@ class OfficialsSurveySheet
      */
     private function getColumnTitles()
     {
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $columnTitles = [
             'Community',
             'Area',
@@ -162,7 +162,7 @@ class OfficialsSurveySheet
         $colNum = $colNum = array_search('vs Local Area', $columnTitles);
         $groupingHeaders[$colNum] = 'PWRRR Alignment';
 
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $sectors = $surveysTable->getSectors();
         $colNum = array_search(ucwords($sectors[0]), $columnTitles);
         $groupingHeaders[$colNum] = 'Internal Alignment';
@@ -187,7 +187,7 @@ class OfficialsSurveySheet
         $cellspans[] = [$colNum, $colNum + 1];
 
         $colNum = array_search('Internal Alignment', $groupingHeaders);
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $sectors = $surveysTable->getSectors();
         $cellspans[] = [$colNum, $colNum + count($sectors)];
 
@@ -205,7 +205,7 @@ class OfficialsSurveySheet
      */
     private function getDataRow($community)
     {
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $sectors = $surveysTable->getSectors();
         $survey = $community['official_survey'];
         $row = [

@@ -57,7 +57,7 @@ class DeliveriesController extends AppController
             'order' => ['created' => 'DESC'],
             'conditions' => ['Deliveries.community_id' => $communityId],
         ];
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $communityName = null;
         $deliveries = $this->paginate($this->Deliveries);
         try {
@@ -83,7 +83,7 @@ class DeliveriesController extends AppController
      */
     public function add($communityId = null, $deliverableId = null)
     {
-        $deliverablesTable = TableRegistry::get('Deliverables');
+        $deliverablesTable = TableRegistry::getTableLocator()->get('Deliverables');
         $delivery = $this->Deliveries->newEntity();
 
         if ($this->request->is('post')) {
@@ -116,7 +116,7 @@ class DeliveriesController extends AppController
             $delivery->deliverable_id = $deliverableId;
         }
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $this->set([
             'delivery' => $delivery,
             'deliverables' => $deliverablesTable->find('list'),

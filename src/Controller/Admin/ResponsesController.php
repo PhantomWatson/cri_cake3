@@ -32,7 +32,7 @@ class ResponsesController extends AppController
      */
     public function view($surveyId = null)
     {
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
 
         if ($surveyId) {
             try {
@@ -51,7 +51,7 @@ class ResponsesController extends AppController
             $this->Flash->set('New responses have been received since this community\'s alignment was last set.');
         }
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $community = $communitiesTable->get($survey->community_id, [
             'contain' => ['LocalAreas', 'ParentAreas'],
         ]);
@@ -184,13 +184,13 @@ class ResponsesController extends AppController
 
         $missingAreaReports = [];
         foreach ($responses as $response) {
-            $surveysTable = TableRegistry::get('Surveys');
+            $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
             $survey = $surveysTable->get($response->survey_id);
 
             // Determine actual ranks for alignment calculation
-            $communitiesTable = TableRegistry::get('Communities');
+            $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
             $community = $communitiesTable->get($survey->community_id);
-            $areasTable = TableRegistry::get('Areas');
+            $areasTable = TableRegistry::getTableLocator()->get('Areas');
             foreach (['local', 'parent'] as $scope) {
                 $areaId = $community->{"{$scope}_area_id"};
                 if (! $areaId) {
@@ -234,7 +234,7 @@ class ResponsesController extends AppController
      */
     public function getFullResponse($respondentId)
     {
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $respondent = $respondentsTable->get($respondentId);
         $SurveyMonkey = new SurveyMonkey();
 
@@ -256,7 +256,7 @@ class ResponsesController extends AppController
             $respondentsTable->save($respondent);
         }
 
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $survey = $surveysTable->get($respondent->survey_id);
         try {
             $fullResponse = $SurveyMonkey->getFullResponse($survey->sm_id, $smRespondentId);

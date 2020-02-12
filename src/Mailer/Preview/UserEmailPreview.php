@@ -15,7 +15,7 @@ class UserEmailPreview extends MailPreview
      */
     public function newAccount()
     {
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $user = $usersTable->find()->first();
 
         return $this->getMailer('User')

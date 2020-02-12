@@ -25,7 +25,7 @@ class AdminAlertMailer extends Mailer
     public function __construct(?Email $email = null)
     {
         parent::__construct($email);
-        $this->communities = TableRegistry::get('Communities');
+        $this->communities = TableRegistry::getTableLocator()->get('Communities');
     }
 
     /**
