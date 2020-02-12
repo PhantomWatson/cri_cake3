@@ -41,7 +41,7 @@ class SurveyProcessingComponent extends Component
      */
     public function saveInvitations($formData, $surveyId, $userId)
     {
-        $formDataTable = TableRegistry::get('InvitationFormData');
+        $formDataTable = TableRegistry::getTableLocator()->get('InvitationFormData');
         $existingRecord = $formDataTable->find('all')
             ->where([
                 'survey_id' => $surveyId,
@@ -85,7 +85,7 @@ class SurveyProcessingComponent extends Component
      */
     public function clearSavedInvitations($surveyId, $userId)
     {
-        $formDataTable = TableRegistry::get('InvitationFormData');
+        $formDataTable = TableRegistry::getTableLocator()->get('InvitationFormData');
         $result = $formDataTable->find('all')
             ->select(['id'])
             ->where([
@@ -111,7 +111,7 @@ class SurveyProcessingComponent extends Component
      */
     public function getSavedInvitations($surveyId, $userId)
     {
-        $formDataTable = TableRegistry::get('InvitationFormData');
+        $formDataTable = TableRegistry::getTableLocator()->get('InvitationFormData');
 
         /** @var \App\Model\Entity\InvitationFormData $savedData */
         $savedData = $formDataTable->find('all')
@@ -136,7 +136,7 @@ class SurveyProcessingComponent extends Component
     public function sendInvitations($communityId, $respondentType, $surveyId)
     {
         /** @var \App\Model\Table\RespondentsTable $respondentsTable */
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $this->approvedRespondents = $respondentsTable->getApprovedList($surveyId);
         $this->unaddressedUnapprovedRespondents = $respondentsTable->getUnaddressedUnapprovedList($surveyId);
         $this->communityId = $communityId;
@@ -158,7 +158,7 @@ class SurveyProcessingComponent extends Component
 
         try {
             /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
-            $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+            $queuedJobs = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
             foreach ($this->recipients as $recipient) {
                 $queuedJobs->createJob(
                     'Invitation',
@@ -177,7 +177,7 @@ class SurveyProcessingComponent extends Component
             $this->removeFromPending($this->recipients);
 
             // Dispatch event
-            $surveysTable = TableRegistry::get('Surveys');
+            $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
             $survey = $surveysTable->get($this->surveyId);
             $event = new Event('Model.Survey.afterInvitationsSent', $this, ['meta' => [
                 'communityId' => $this->communityId,
@@ -253,7 +253,7 @@ class SurveyProcessingComponent extends Component
         $this->uninvApprovedEmails[] = $invitee['email'];
 
         /** @var \App\Model\Table\RespondentsTable $respondentsTable */
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
 
         /** @var \App\Model\Entity\Respondent $respondent */
         $respondent = $respondentsTable->findBySurveyIdAndEmail($this->surveyId, $invitee['email'])->first();
@@ -300,7 +300,7 @@ class SurveyProcessingComponent extends Component
      */
     private function createRespondent($invitee)
     {
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $respondent = $respondentsTable->newEntity([
             'approved' => 1,
             'community_id' => $this->communityId,
@@ -439,7 +439,7 @@ class SurveyProcessingComponent extends Component
      */
     public function getCurrentResponses($surveyId)
     {
-        $responsesTable = TableRegistry::get('Responses');
+        $responsesTable = TableRegistry::getTableLocator()->get('Responses');
         $responses = $responsesTable->find('all')
             ->where(['Responses.survey_id' => $surveyId])
             ->contain([

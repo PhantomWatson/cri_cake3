@@ -15,7 +15,7 @@ class PurchasesController extends AppController
      */
     public function index()
     {
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $clientId = $this->getClientId();
         if (! $clientId) {
             return $this->chooseClientToImpersonate();
@@ -28,7 +28,7 @@ class PurchasesController extends AppController
             return $this->render('../Communities/notready');
         }
 
-        $productsTable = TableRegistry::get('Products');
+        $productsTable = TableRegistry::getTableLocator()->get('Products');
         $products = $productsTable->find('all')->toArray();
 
         foreach ($products as &$product) {

@@ -82,7 +82,7 @@ class ActivityRecordsController extends AppController
             'order' => ['created' => 'DESC'],
             'conditions' => ['ActivityRecords.community_id' => $communityId],
         ];
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $communityName = null;
         $activityRecords = $this->paginate($this->ActivityRecords);
         try {

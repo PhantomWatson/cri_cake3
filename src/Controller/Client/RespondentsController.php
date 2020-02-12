@@ -44,7 +44,7 @@ class RespondentsController extends AppController
         }
 
         $clientId = $this->Auth->user('id');
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $communityId = $communitiesTable->getClientCommunityId($clientId);
 
         if ($communityId) {
@@ -72,7 +72,7 @@ class RespondentsController extends AppController
             throw new NotFoundException('Invalid questionnaire type');
         }
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $clientId = $this->getClientId();
         if (! $clientId) {
             return $this->chooseClientToImpersonate();
@@ -84,7 +84,7 @@ class RespondentsController extends AppController
         }
 
         $community = $communitiesTable->get($communityId);
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
 
         $this->set([
@@ -160,7 +160,7 @@ class RespondentsController extends AppController
     private function dispatchUninvitedEvent($approved, $respondent)
     {
         $surveyId = $respondent->survey_id;
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $survey = $surveysTable->get($surveyId);
         $eventName = 'Model.Respondent.afterUninvited' . ($approved ? 'Approve' : 'Dismiss');
         $event = new Event($eventName, $this, ['meta' => [

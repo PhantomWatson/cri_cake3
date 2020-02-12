@@ -20,7 +20,7 @@ class RespondentsController extends AppController
      */
     public function unapproved($surveyId = null)
     {
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         if ($surveyId) {
             try {
                 $survey = $surveysTable->get($surveyId);
@@ -32,7 +32,7 @@ class RespondentsController extends AppController
             throw new NotFoundException('Questionnaire ID not specified.');
         }
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $community = $communitiesTable->get($survey->community_id);
 
         $this->set([
@@ -99,7 +99,7 @@ class RespondentsController extends AppController
     private function dispatchUninvitedEvent($approved, $respondent)
     {
         $surveyId = $respondent->survey_id;
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $survey = $surveysTable->get($surveyId);
         $eventName = 'Model.Respondent.afterUninvited' . ($approved ? 'Approve' : 'Dismiss');
         $event = new Event($eventName, $this, ['meta' => [

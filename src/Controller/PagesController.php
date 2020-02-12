@@ -117,7 +117,7 @@ class PagesController extends AppController
     public function sendTestEmail($recipient)
     {
         /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
-        $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+        $queuedJobs = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
         $queuedJobs->createJob(
             'EmailTest',
             ['email' => $recipient],

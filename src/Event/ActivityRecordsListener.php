@@ -81,7 +81,7 @@ class ActivityRecordsListener implements EventListenerInterface
         }
 
         /** @var \App\Model\Table\ActivityRecordsTable $activityRecordsTable */
-        $activityRecordsTable = TableRegistry::get('ActivityRecords');
+        $activityRecordsTable = TableRegistry::getTableLocator()->get('ActivityRecords');
         $activityRecordsTable->add($event->getName(), $meta);
     }
 }

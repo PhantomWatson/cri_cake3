@@ -146,7 +146,7 @@ class AppController extends Controller
         $this->Security->requireSecure();
 
         // Set accessible communities
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $this->set([
             'accessibleCommunities' => $usersTable->getAccessibleCommunities($this->Auth->user('id')),
         ]);
@@ -315,7 +315,7 @@ class AppController extends Controller
     {
         // Set up variables for sidebar
         if ($this->viewBuilder()->getLayout() == 'default' && $this->Auth->user('role') == 'admin') {
-            $communitiesTable = TableRegistry::get('Communities');
+            $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
             $this->set([
                 'sidebar' => [
                     'communities' => $communitiesTable->getClientCommunityList(),

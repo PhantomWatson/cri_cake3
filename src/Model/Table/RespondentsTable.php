@@ -311,9 +311,9 @@ class RespondentsTable extends Table
     public function clientCanApproveRespondent($clientId, $respondentId)
     {
         $respondent = $this->get($respondentId);
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $survey = $surveysTable->get($respondent->survey_id);
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $assignedCommunityId = $communitiesTable->getClientCommunityId($clientId);
         $idsFound = (bool)($respondent->survey_id && $survey->community_id);
         $communityIsAssigned = $survey->community_id == $assignedCommunityId;
@@ -365,7 +365,7 @@ class RespondentsTable extends Table
         }
 
         // Responses from a community's client are auto-approved
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $userId = $usersTable->getIdWithEmail($email);
         if ($userId) {
             return $usersTable->isCommunityClient($survey->community_id, $userId);
@@ -383,7 +383,7 @@ class RespondentsTable extends Table
     public function getUnresponsive($surveyId)
     {
         // Get IDs of participants who have responded
-        $responsesTable = TableRegistry::get('Responses');
+        $responsesTable = TableRegistry::getTableLocator()->get('Responses');
         $responses = $responsesTable->find('all')
             ->select(['respondent_id'])
             ->where(['survey_id' => $surveyId])

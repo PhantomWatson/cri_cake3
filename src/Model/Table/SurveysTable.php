@@ -219,8 +219,8 @@ class SurveysTable extends Table
             $types = $allTypes;
         }
 
-        $respondentsTable = TableRegistry::get('Respondents');
-        $responsesTable = TableRegistry::get('Responses');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
+        $responsesTable = TableRegistry::getTableLocator()->get('Responses');
         $surveyStatus = [];
 
         foreach ($types as $type) {
@@ -381,9 +381,9 @@ class SurveysTable extends Table
      */
     public function getInvitedResponsePercentage($surveyId)
     {
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $invitations = $respondentsTable->getInvitedCount($surveyId);
-        $responsesTable = TableRegistry::get('Responses');
+        $responsesTable = TableRegistry::getTableLocator()->get('Responses');
         $responses = $responsesTable->getInvitedCount($surveyId);
         if (! $invitations || ! $responses) {
             return 0;
@@ -418,7 +418,7 @@ class SurveysTable extends Table
      */
     public function hasUninvitedResponses($surveyId)
     {
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $count = $respondentsTable->find('all')
             ->where([
                 'survey_id' => $surveyId,
@@ -435,7 +435,7 @@ class SurveysTable extends Table
      */
     public function hasUnaddressedUnapprovedRespondents($surveyId)
     {
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $count = $respondentsTable->find('all')
             ->where([
                 'survey_id' => $surveyId,
@@ -488,7 +488,7 @@ class SurveysTable extends Table
         } catch (RecordNotFoundException $e) {
             return false;
         }
-        $responsesTable = TableRegistry::get('Responses');
+        $responsesTable = TableRegistry::getTableLocator()->get('Responses');
         $count = $responsesTable->find('all')
             ->where([
                 'survey_id' => $surveyId,
@@ -664,7 +664,7 @@ class SurveysTable extends Table
      */
     public function hasResponses($surveyId)
     {
-        $responsesTable = TableRegistry::get('Responses');
+        $responsesTable = TableRegistry::getTableLocator()->get('Responses');
         $count = $responsesTable->find('all')
             ->where([
                 'survey_id' => $surveyId,
@@ -698,7 +698,7 @@ class SurveysTable extends Table
         $survey = $this->get($surveyId);
 
         $communityId = $this->getCommunityId(['id' => $surveyId]);
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $community = $communitiesTable->find('all')
             ->select(['id', 'local_area_id', 'parent_area_id'])
             ->where(['id' => $communityId])
@@ -708,7 +708,7 @@ class SurveysTable extends Table
             throw new RecordNotFoundException($msg);
         }
 
-        $responsesTable = TableRegistry::get('Responses');
+        $responsesTable = TableRegistry::getTableLocator()->get('Responses');
         $responses = $responsesTable->getCurrentApproved($surveyId);
         if (!$responses) {
             return;
@@ -719,7 +719,7 @@ class SurveysTable extends Table
             'vsLocal' => [],
             'vsParent' => [],
         ];
-        $areasTable = TableRegistry::get('Areas');
+        $areasTable = TableRegistry::getTableLocator()->get('Areas');
         $actualRanksLocal = $areasTable->getPwrrrRanks($community->local_area_id);
         $actualRanksParent = $areasTable->getPwrrrRanks($community->parent_area_id);
         foreach ($responses as $response) {
@@ -790,7 +790,7 @@ class SurveysTable extends Table
                 return $exp->isNotNull('internal_alignment');
             });
         if (! $includeDummy) {
-            $communitiesTable = TableRegistry::get('Communities');
+            $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
             $dummyCommunityIds = $communitiesTable->getDummyCommunityIds();
             if ($dummyCommunityIds) {
                 $query->where(function ($exp, $q) use ($dummyCommunityIds) {
@@ -818,7 +818,7 @@ class SurveysTable extends Table
      */
     public function hasSentInvitations($surveyId)
     {
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $count = $respondentsTable->find('all')
             ->where([
                 'survey_id' => $surveyId,
@@ -839,7 +839,7 @@ class SurveysTable extends Table
      */
     public function getStatusDescription(Community $community, $surveyType)
     {
-        $optOutsTable = TableRegistry::get('OptOuts');
+        $optOutsTable = TableRegistry::getTableLocator()->get('OptOuts');
         $productId = $surveyType == 'official'
             ? ProductsTable::OFFICIALS_SURVEY
             : ProductsTable::ORGANIZATIONS_SURVEY;
@@ -848,7 +848,7 @@ class SurveysTable extends Table
             return 'Opted out';
         }
 
-        $productsTable = TableRegistry::get('Products');
+        $productsTable = TableRegistry::getTableLocator()->get('Products');
         $hasPurchased = $productsTable->isPurchased($community->id, $productId);
         if (! $hasPurchased) {
             return 'Not purchased yet';

@@ -36,11 +36,11 @@ class Alertable
      */
     public function __construct($communityId)
     {
-        $this->communities = TableRegistry::get('Communities');
-        $this->deliveries = TableRegistry::get('Deliveries');
-        $this->optOuts = TableRegistry::get('OptOuts');
-        $this->products = TableRegistry::get('Products');
-        $this->surveys = TableRegistry::get('Surveys');
+        $this->communities = TableRegistry::getTableLocator()->get('Communities');
+        $this->deliveries = TableRegistry::getTableLocator()->get('Deliveries');
+        $this->optOuts = TableRegistry::getTableLocator()->get('OptOuts');
+        $this->products = TableRegistry::getTableLocator()->get('Products');
+        $this->surveys = TableRegistry::getTableLocator()->get('Surveys');
         $this->community = $this->communities->get($communityId);
     }
 

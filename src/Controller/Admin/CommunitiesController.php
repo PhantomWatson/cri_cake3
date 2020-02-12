@@ -31,7 +31,7 @@ class CommunitiesController extends AppController
             $community->score = 0;
         }
         /** @var \App\Model\Table\AreasTable $areasTable */
-        $areasTable = TableRegistry::get('Areas');
+        $areasTable = TableRegistry::getTableLocator()->get('Areas');
         $areas = $areasTable->getGroupedList();
         $areaTypes = array_keys($areas);
         $this->set(compact('areas', 'areaTypes', 'community'));
@@ -172,7 +172,7 @@ class CommunitiesController extends AppController
         } else {
             $community->score = 1;
             /** @var \App\Model\Table\SettingsTable $settingsTable */
-            $settingsTable = TableRegistry::get('Settings');
+            $settingsTable = TableRegistry::getTableLocator()->get('Settings');
             $community->intAlignmentAdjustment = $settingsTable->getIntAlignmentAdjustment();
             $community->intAlignmentThreshold = $settingsTable->getIntAlignmentThreshold();
         }
@@ -396,7 +396,7 @@ class CommunitiesController extends AppController
     public function addClient($communityId)
     {
         /** @var \App\Model\Table\UsersTable $usersTable */
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $community = $this->Communities->get($communityId);
 
         $this->set([
@@ -435,7 +435,7 @@ class CommunitiesController extends AppController
 
         try {
             /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
-            $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+            $queuedJobs = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
             $queuedJobs->createJob(
                 'NewAccountEmail',
                 [
@@ -490,7 +490,7 @@ class CommunitiesController extends AppController
      */
     public function removeClient($clientId, $communityId)
     {
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $client = $usersTable->get($clientId);
         $community = $this->Communities->get($communityId);
         $this->Communities->Clients->unlink($community, [$client]);
@@ -517,7 +517,7 @@ class CommunitiesController extends AppController
     public function selectClient($communityId)
     {
         /** @var \App\Model\Table\UsersTable $usersTable */
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $community = $this->Communities->get($communityId);
 
         $this->set([
@@ -597,7 +597,7 @@ class CommunitiesController extends AppController
      */
     public function alignmentCalcSettings()
     {
-        $settingsTable = TableRegistry::get('Settings');
+        $settingsTable = TableRegistry::getTableLocator()->get('Settings');
         $settings = $settingsTable->find('all')
             ->select(['name', 'value'])
             ->where(function ($exp) {
@@ -624,7 +624,7 @@ class CommunitiesController extends AppController
             ->order(['created' => 'DESC']);
 
         /** @var \App\Model\Table\SurveysTable $surveysTable */
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $avgIntAlignment = $surveysTable->getAvgIntAlignment($includeDummy);
 
         $this->set([
@@ -656,7 +656,7 @@ class CommunitiesController extends AppController
 
         $community = $this->Communities->patchEntity($community, $this->request->getData());
         /** @var \App\Model\Table\OptOutsTable $optOutsTable */
-        $optOutsTable = TableRegistry::get('OptOuts');
+        $optOutsTable = TableRegistry::getTableLocator()->get('OptOuts');
         if ($this->request->is('post') || $this->request->is('put')) {
             foreach (['a', 'b', 'c', 'd'] as $letter) {
                 $selection = $this->request->getData('presentation_' . $letter . '_scheduled');
@@ -707,11 +707,11 @@ class CommunitiesController extends AppController
         }
 
         /** @var \App\Model\Table\PurchasesTable $purchasesTable */
-        $purchasesTable = TableRegistry::get('Purchases');
+        $purchasesTable = TableRegistry::getTableLocator()->get('Purchases');
         $purchases = $purchasesTable->getAllForCommunity($community->id);
         $purchasedProductIds = Hash::extract($purchases, '{n}.product_id');
 
-        $productsTable = TableRegistry::get('Products');
+        $productsTable = TableRegistry::getTableLocator()->get('Products');
         $this->set([
             'community' => $community,
             'titleForLayout' => $community->name . ' Presentations',

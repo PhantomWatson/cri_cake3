@@ -98,8 +98,8 @@ class StatisticsTable extends Table
         $data = '';
         $data = trim($data);
         $lines = explode("\n", $data);
-        $areasTable = TableRegistry::get('Areas');
-        $statCategoriesTable = TableRegistry::get('StatCategories');
+        $areasTable = TableRegistry::getTableLocator()->get('Areas');
+        $statCategoriesTable = TableRegistry::getTableLocator()->get('StatCategories');
         $categoryCount = count($categoryNames);
         $areaIds = [];
         $categoryIds = [];
@@ -208,8 +208,8 @@ class StatisticsTable extends Table
         $data = '';
         $data = trim($data);
         $lines = explode("\n", $data);
-        $areasTable = TableRegistry::get('Areas');
-        $statCategoriesTable = TableRegistry::get('StatCategories');
+        $areasTable = TableRegistry::getTableLocator()->get('Areas');
+        $statCategoriesTable = TableRegistry::getTableLocator()->get('StatCategories');
         $fips = null;
         $areaName = null;
         $currentAreaId = null;

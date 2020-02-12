@@ -27,7 +27,7 @@ class ClientHomeComponent extends Component
             return false;
         }
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         try {
             $community = $communitiesTable->get($communityId);
         } catch (RecordNotFoundException $e) {
@@ -35,18 +35,18 @@ class ClientHomeComponent extends Component
         }
 
         $purchaseUrls = [];
-        $productsTable = TableRegistry::get('Products');
+        $productsTable = TableRegistry::getTableLocator()->get('Products');
         $userId = $this->Auth->user('id');
         for ($productId = 1; $productId <= 5; $productId++) {
             $purchaseUrls[$productId] = $productsTable->getPurchaseUrl($productId, $userId, $communityId);
         }
 
-        $respondentsTable = TableRegistry::get('Respondents');
-        $surveysTable = TableRegistry::get('Surveys');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $officialSurveyId = $surveysTable->getSurveyId($communityId, 'official');
         $organizationSurveyId = $surveysTable->getSurveyId($communityId, 'organization');
         $criteria = $communitiesTable->getProgress($communityId);
-        $optOutsTable = TableRegistry::get('OptOuts');
+        $optOutsTable = TableRegistry::getTableLocator()->get('OptOuts');
         $this->_registry->getController()->set([
             'autoImportFrequency' => $surveysTable->getPerSurveyAutoImportFrequency(),
             'importErrors' => [

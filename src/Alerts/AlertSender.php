@@ -33,9 +33,9 @@ class AlertSender
      */
     public function __construct($communityId)
     {
-        $this->communities = TableRegistry::get('Communities');
-        $this->queuedJobs = TableRegistry::get('Queue.QueuedJobs');
-        $this->users = TableRegistry::get('Users');
+        $this->communities = TableRegistry::getTableLocator()->get('Communities');
+        $this->queuedJobs = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
+        $this->users = TableRegistry::getTableLocator()->get('Users');
         $this->alertRecipients = new AlertRecipients();
 
         $this->community = $this->communities->get($communityId);
@@ -100,7 +100,7 @@ class AlertSender
      */
     public function isRecentlySent($email, $alertName)
     {
-        $queuedJobsTable = TableRegistry::get('Queue.QueuedJobs');
+        $queuedJobsTable = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
         $recentEmails = $queuedJobsTable->find()
             ->select(['created', 'data'])
             ->where([

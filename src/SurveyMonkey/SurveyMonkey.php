@@ -131,7 +131,7 @@ class SurveyMonkey
      */
     public function getSmRespondentId($respondentId)
     {
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         /** @var \App\Model\Entity\Respondent $respondent */
         $respondent = $respondentsTable->find('all')
             ->select(['email', 'survey_id'])
@@ -140,7 +140,7 @@ class SurveyMonkey
         $email = $respondent->email;
         $surveyId = $respondent->survey_id;
 
-        $responsesTable = TableRegistry::get('Responses');
+        $responsesTable = TableRegistry::getTableLocator()->get('Responses');
         /** @var \App\Model\Entity\Response $response */
         $response = $responsesTable->find('all')
             ->select(['response_date'])
@@ -149,7 +149,7 @@ class SurveyMonkey
             ->first();
         $responseDate = $response->response_date->i18nFormat('yyyy-MM-ddTHH:mm:ss');
 
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         /** @var \App\Model\Entity\Survey $survey */
         $survey = $surveysTable->find('all')
             ->select(['sm_id'])
@@ -359,7 +359,7 @@ class SurveyMonkey
      */
     public function getNewResponses($surveyId)
     {
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         try {
             $survey = $surveysTable->get($surveyId);
         } catch (RecordNotFoundException $e) {
@@ -407,7 +407,7 @@ class SurveyMonkey
 
         // Create an array to save this data with
         /** @var \App\Model\Table\SurveysTable $surveysTable */
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $sectors = $surveysTable->getSectors();
         $qnaIdFields = $surveysTable->getQnaIdFieldNames();
         $nulls = array_fill(0, count($qnaIdFields), null);

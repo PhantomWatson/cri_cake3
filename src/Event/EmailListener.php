@@ -34,7 +34,7 @@ class EmailListener implements EventListenerInterface
      */
     public function sendCommunityPromotedEmail(Event $event, array $meta = [])
     {
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $toStep = $this->getToStep($meta);
 
         /** @var \App\Model\Entity\Community $community */
@@ -51,7 +51,7 @@ class EmailListener implements EventListenerInterface
             ->first();
 
         /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
-        $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+        $queuedJobs = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
 
         foreach ($community->clients as $client) {
             $queuedJobs->createJob(

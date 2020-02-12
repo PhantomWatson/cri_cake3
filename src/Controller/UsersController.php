@@ -136,7 +136,7 @@ class UsersController extends AppController
         if ($userId) {
             try {
                 /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
-                $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+                $queuedJobs = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
                 $queuedJobs->createJob(
                     'ResetPasswordEmail',
                     ['userId' => $userId],

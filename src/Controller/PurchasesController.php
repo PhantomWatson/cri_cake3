@@ -35,7 +35,7 @@ class PurchasesController extends AppController
     {
         if ($this->request->getData('respmessage') == 'SUCCESS') {
             /** @var \App\Model\Table\ProductsTable $productsTable */
-            $productsTable = TableRegistry::get('Products');
+            $productsTable = TableRegistry::getTableLocator()->get('Products');
             $itemCode = explode('-', $this->request->getData('itemcode1'));
             $productId = $productsTable->getIdFromItemCode($itemCode[1]);
             $amount = (float)$this->request->getData('amount1') * 100; // Stored as cents

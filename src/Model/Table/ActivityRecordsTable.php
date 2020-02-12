@@ -110,12 +110,12 @@ class ActivityRecordsTable extends Table
 
         // Remember some entity names in case the entity is deleted in the future
         if (isset($meta['communityId']) && ! isset($meta['communityName'])) {
-            $communitiesTable = TableRegistry::get('Communities');
+            $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
             $community = $communitiesTable->get($meta['communityId']);
             $meta['communityName'] = $community->name;
         }
         if (isset($meta['userId'])) {
-            $usersTable = TableRegistry::get('Users');
+            $usersTable = TableRegistry::getTableLocator()->get('Users');
             $user = $usersTable->get($meta['userId']);
             if (! isset($meta['userName'])) {
                 $meta['userName'] = $user->name;

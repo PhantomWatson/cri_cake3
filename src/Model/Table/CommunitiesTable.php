@@ -169,7 +169,7 @@ class CommunitiesTable extends Table
                     return true;
                 }
 
-                $productsTable = TableRegistry::get('Products');
+                $productsTable = TableRegistry::getTableLocator()->get('Products');
                 $productId = $productsTable->getProductIdForPresentation($letter);
                 if ($productsTable->isPurchased($entity->id, $productId)) {
                     return true;
@@ -198,14 +198,14 @@ class CommunitiesTable extends Table
      */
     public function getClientCommunityList($clientId = null)
     {
-        $joinTable = TableRegistry::get('ClientsCommunities');
+        $joinTable = TableRegistry::getTableLocator()->get('ClientsCommunities');
         $query = $joinTable->find('list')
             ->select(['id' => 'community_id'])
             ->distinct(['community_id']);
         if ($clientId) {
             $query->where(['client_id' => $clientId]);
         } else {
-            $usersTable = TableRegistry::get('Users');
+            $usersTable = TableRegistry::getTableLocator()->get('Users');
             $clients = $usersTable->getClientList();
             $clientIds = array_keys($clients);
 
@@ -332,12 +332,12 @@ class CommunitiesTable extends Table
     public function getProgress($communityId, $isAdmin = false)
     {
         $criteria = [];
-        $deliveriesTable = TableRegistry::get('Deliveries');
-        $optOutsTable = TableRegistry::get('OptOuts');
-        $productsTable = TableRegistry::get('Products');
-        $respondentsTable = TableRegistry::get('Respondents');
-        $responsesTable = TableRegistry::get('Responses');
-        $surveysTable = TableRegistry::get('Surveys');
+        $deliveriesTable = TableRegistry::getTableLocator()->get('Deliveries');
+        $optOutsTable = TableRegistry::getTableLocator()->get('OptOuts');
+        $productsTable = TableRegistry::getTableLocator()->get('Products');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
+        $responsesTable = TableRegistry::getTableLocator()->get('Responses');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
 
         // Step 1
         $criteria[1]['client_assigned'] = [
@@ -564,7 +564,7 @@ class CommunitiesTable extends Table
     public function removeAllClientAssociations($communityId)
     {
         $community = $this->get($communityId);
-        $joinTable = TableRegistry::get('ClientsCommunities');
+        $joinTable = TableRegistry::getTableLocator()->get('ClientsCommunities');
         $clients = $joinTable->find('all')
             ->select(['id'])
             ->where(['community_id' => $communityId])
@@ -582,7 +582,7 @@ class CommunitiesTable extends Table
     public function removeAllConsultantAssociations($communityId)
     {
         $community = $this->get($communityId);
-        $joinTable = TableRegistry::get('CommunitiesConsultants');
+        $joinTable = TableRegistry::getTableLocator()->get('CommunitiesConsultants');
         $consultants = $joinTable->find('all')
             ->select(['id'])
             ->where(['community_id' => $communityId])
@@ -783,8 +783,8 @@ class CommunitiesTable extends Table
     {
         $community = $this->get($communityId);
 
-        $productsTable = TableRegistry::get('Products');
-        $deliveriesTable = TableRegistry::get('Deliveries');
+        $productsTable = TableRegistry::getTableLocator()->get('Products');
+        $deliveriesTable = TableRegistry::getTableLocator()->get('Deliveries');
         $presentations = [
             'a' => [
                 'product_id' => ProductsTable::OFFICIALS_SURVEY,
@@ -853,7 +853,7 @@ class CommunitiesTable extends Table
         }
 
         // Return the status of the current survey, if one is in progress
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         foreach (['official', 'organization'] as $surveyType) {
             $surveyStatus = $surveysTable->getStatusDescription($community, $surveyType);
 
@@ -868,17 +868,17 @@ class CommunitiesTable extends Table
             return 'Community ' . ucwords($surveyType) . 's Questionnaire: ' . $surveyStatus;
         }
 
-        $optOutsTable = TableRegistry::get('OptOuts');
+        $optOutsTable = TableRegistry::getTableLocator()->get('OptOuts');
         $productId = ProductsTable::POLICY_DEVELOPMENT;
         $optedOut = $optOutsTable->optedOut($community->id, $productId);
         if ($optedOut) {
             return 'Opted out of further participation';
         }
 
-        $productsTable = TableRegistry::get('Products');
+        $productsTable = TableRegistry::getTableLocator()->get('Products');
         $hasPurchased = $productsTable->isPurchased($community->id, $productId);
         if ($hasPurchased) {
-            $deliveriesTable = TableRegistry::get('Deliveries');
+            $deliveriesTable = TableRegistry::getTableLocator()->get('Deliveries');
             $policyDevDelivered = $deliveriesTable->isRecorded($community->id, DeliverablesTable::POLICY_DEVELOPMENT);
 
             return $policyDevDelivered

@@ -88,7 +88,7 @@ class Map
         }
 
         /** @var \App\Model\Table\PurchasesTable $purchasesTable */
-        $purchasesTable = TableRegistry::get('Purchases');
+        $purchasesTable = TableRegistry::getTableLocator()->get('Purchases');
         $productId = ProductsTable::OFFICIALS_SURVEY;
         $isPurchased = $purchasesTable->isPurchased($productId, $this->community->id);
 
@@ -103,7 +103,7 @@ class Map
     public function getStepTwoPhase()
     {
         /** @var \App\Model\Table\SurveysTable $surveysTable */
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $surveyId = $surveysTable->getSurveyId($this->community->id, 'official');
         $hasResponses = $surveysTable->hasResponses($surveyId);
         $isActive = $surveysTable->isActive($surveyId);
@@ -128,7 +128,7 @@ class Map
     public function getStepThreePhase()
     {
         /** @var \App\Model\Table\SurveysTable $surveysTable */
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $surveyId = $surveysTable->getSurveyId($this->community->id, 'official');
         $hasResponses = $surveysTable->hasResponses($surveyId);
         $isActive = $surveysTable->isActive($surveyId);
@@ -153,7 +153,7 @@ class Map
     public function getStepFourPhase()
     {
         /** @var \App\Model\Table\DeliveriesTable $deliveriesTable */
-        $deliveriesTable = TableRegistry::get('Deliveries');
+        $deliveriesTable = TableRegistry::getTableLocator()->get('Deliveries');
         $deliverableId = DeliverablesTable::POLICY_DEVELOPMENT;
         $delivered = $deliveriesTable->isRecorded($this->community->id, $deliverableId);
 
@@ -188,7 +188,7 @@ class Map
         }
 
         /** @var \App\Model\Table\PurchasesTable $purchasesTable */
-        $purchasesTable = TableRegistry::get('Purchases');
+        $purchasesTable = TableRegistry::getTableLocator()->get('Purchases');
         $purchases = $purchasesTable->getAllForCommunity($this->community->id);
         foreach ($purchases as $purchase) {
             if (in_array($purchase->product_id, $presentations)) {
@@ -264,7 +264,7 @@ class Map
      */
     public static function getMapData()
     {
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $communities = $communitiesTable->find()
             ->where(['dummy' => false])
             ->orderAsc('name')

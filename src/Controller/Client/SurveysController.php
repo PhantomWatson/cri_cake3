@@ -50,7 +50,7 @@ class SurveysController extends AppController
             return $this->chooseClientToImpersonate();
         }
         /** @var \App\Model\Table\CommunitiesTable $communitiesTable */
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $communityId = $communitiesTable->getClientCommunityId($clientId);
         if (! $communityId || ! $communitiesTable->exists(['id' => $communityId])) {
             $msg = 'Sorry, we couldn\'t find the community corresponding with your account (#' . $clientId . ')';
@@ -102,7 +102,7 @@ class SurveysController extends AppController
         }
 
         /** @var \App\Model\Table\RespondentsTable $respondentsTable */
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $approvedRespondents = $respondentsTable->getApprovedList($surveyId);
         $unaddressedUnapprovedRespondents = $respondentsTable->getUnaddressedUnapprovedList($surveyId);
         $allRespondents = array_merge($approvedRespondents, $unaddressedUnapprovedRespondents);
@@ -142,14 +142,14 @@ class SurveysController extends AppController
         }
 
         /** @var \App\Model\Table\CommunitiesTable $communitiesTable */
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $communityId = $communitiesTable->getClientCommunityId($clientId);
         if (! $communityId) {
             throw new NotFoundException('Your account is not currently assigned to a community');
         }
 
         /** @var \App\Model\Table\SurveysTable $surveysTable */
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
         $survey = $surveysTable->get($surveyId);
         if (! $survey->active) {
@@ -157,14 +157,14 @@ class SurveysController extends AppController
         }
 
         /** @var \App\Model\Table\RespondentsTable $respondentsTable */
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         if ($this->request->is('post')) {
             $sender = $this->Auth->user();
             $recipients = $respondentsTable->getUnresponsive($surveyId);
             $recipients = Hash::extract($recipients, '{n}.email');
             try {
                 /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
-                $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
+                $queuedJobs = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
                 foreach ($recipients as $recipient) {
                     $queuedJobs->createJob(
                         'Reminder',

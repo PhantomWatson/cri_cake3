@@ -70,7 +70,7 @@ class PurchasesController extends AppController
      */
     public function view($communitySlug)
     {
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         /** @var \App\Model\Entity\Community $community */
         $community = $communitiesTable->find('slugged', ['slug' => $communitySlug])->first();
 
@@ -111,7 +111,7 @@ class PurchasesController extends AppController
             if ($purchase->refunded) {
                 $timestamp = strtotime($purchase->refunded);
                 $date = date('F j, Y', $timestamp);
-                $usersTable = TableRegistry::get('Users');
+                $usersTable = TableRegistry::getTableLocator()->get('Users');
                 try {
                     $user = $usersTable->get($purchase->refunder_id);
                     $admin = $user->name;
@@ -128,7 +128,7 @@ class PurchasesController extends AppController
 
                     // Dispatch event
                     $productId = $purchase->product_id;
-                    $productsTable = TableRegistry::get('Products');
+                    $productsTable = TableRegistry::getTableLocator()->get('Products');
                     $product = $productsTable->get($productId);
                     $event = new Event('Model.Purchase.afterRefund', $this, ['meta' => [
                         'communityId' => $purchase->community_id,
@@ -153,7 +153,7 @@ class PurchasesController extends AppController
     {
         /** @var \App\Model\Entity\Purchase $purchase */
         $purchase = $this->Purchases->newEntity();
-        $productsTable = TableRegistry::get('Products');
+        $productsTable = TableRegistry::getTableLocator()->get('Products');
         if ($this->request->is('post')) {
             $productId = $this->request->getData('product_id');
             $product = $productsTable->get($productId);
@@ -184,7 +184,7 @@ class PurchasesController extends AppController
             $this->Flash->error('There was an error adding a new purchase record');
         }
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $results = $productsTable->find('all')
             ->select(['id', 'description', 'price'])
             ->order(['id' => 'ASC']);

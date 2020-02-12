@@ -22,7 +22,7 @@ class AdminAlertEmailPreview extends MailPreview
     public function __construct()
     {
         // Get an arbitrary existing community ID so AdminAlertMailer's calls to CommunitiesTable::get() don't fail
-        $communities = TableRegistry::get('Communities');
+        $communities = TableRegistry::getTableLocator()->get('Communities');
         $communityId = $communities->find()->select(['id'])->first()->id;
 
         $this->mailer = $this->getMailer('AdminAlert');

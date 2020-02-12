@@ -21,7 +21,7 @@ class InvoicesController extends AppController
     public function markBilled()
     {
         $purchaseIds = $this->request->getData('purchaseIds');
-        $purchasesTable = TableRegistry::get('Purchases');
+        $purchasesTable = TableRegistry::getTableLocator()->get('Purchases');
         $successCount = 0;
         foreach ($purchaseIds as $purchaseId) {
             if (! $purchaseId) {

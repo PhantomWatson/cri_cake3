@@ -43,12 +43,12 @@ class SummaryReport
             ])
             ->nextRow();
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $communities = $communitiesTable->find()
             ->order(['name' => 'ASC'])
             ->all();
 
-        $activityRecordsTable = TableRegistry::get('ActivityRecords');
+        $activityRecordsTable = TableRegistry::getTableLocator()->get('ActivityRecords');
         $View = new View();
         $Time = new TimeHelper($View);
         foreach ($communities as $community) {

@@ -75,7 +75,7 @@ class AlertRecipients
      */
     public function findRecipients($adminGroup)
     {
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
 
         if ($adminGroup == 'ICI') {
             return $usersTable->find()->where(['ici_email_optin' => true]);

@@ -220,7 +220,7 @@ class ResponsesTable extends Table
         }
 
         // Determine sector weights
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $sectors = $surveysTable->getSectors();
         $sectorWeight = [];
         foreach ($sectors as $sector) {
@@ -283,7 +283,7 @@ class ResponsesTable extends Table
             }
         }
 
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $sectors = $surveysTable->getSectors();
         if (count($retval) == count($sectors)) {
             return $retval;
@@ -341,9 +341,9 @@ class ResponsesTable extends Table
      */
     public function getCurrentApproved($surveyId)
     {
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
 
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $respondents = $respondentsTable->find('all')
             ->select(['id'])
             ->where([
@@ -390,7 +390,7 @@ class ResponsesTable extends Table
      */
     public function getChoiceCounts($responses)
     {
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $sectors = $surveysTable->getSectors();
         $retval = [];
         foreach ($sectors as $sector) {
@@ -498,7 +498,7 @@ class ResponsesTable extends Table
      */
     public function getDeviationsFromAverage($responseAverages)
     {
-        $surveysTable = TableRegistry::get('Surveys');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $sectors = $surveysTable->getSectors();
         $retval = [];
         foreach ($sectors as $sector) {

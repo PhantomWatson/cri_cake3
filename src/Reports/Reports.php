@@ -18,11 +18,11 @@ class Reports
     {
         $report = [];
 
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $communities = $communitiesTable->find('forReport');
         $respondents = $this->getRespondents();
-        $responsesTable = TableRegistry::get('Responses');
-        $surveysTable = TableRegistry::get('Surveys');
+        $responsesTable = TableRegistry::getTableLocator()->get('Responses');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
 
         foreach ($communities as $community) {
             // Collect general information about this community
@@ -71,7 +71,7 @@ class Reports
     private function getPresentationStatuses($community)
     {
         $presentationsGiven = [];
-        $optOutsTable = TableRegistry::get('OptOuts');
+        $optOutsTable = TableRegistry::getTableLocator()->get('OptOuts');
         $productIds = [
             'a' => ProductsTable::OFFICIALS_SURVEY,
             'b' => ProductsTable::OFFICIALS_SUMMIT,
@@ -177,8 +177,8 @@ class Reports
      */
     private function getInternalAlignment($survey)
     {
-        $responsesTable = TableRegistry::get('Responses');
-        $surveysTable = TableRegistry::get('Surveys');
+        $responsesTable = TableRegistry::getTableLocator()->get('Responses');
+        $surveysTable = TableRegistry::getTableLocator()->get('Surveys');
         $sectors = $surveysTable->getSectors();
         $internalAlignment = [];
         if ($survey) {
@@ -205,7 +205,7 @@ class Reports
      */
     private function getRespondents()
     {
-        $respondentsTable = TableRegistry::get('Respondents');
+        $respondentsTable = TableRegistry::getTableLocator()->get('Respondents');
         $respondents = $respondentsTable->find('all')
             ->select(['id', 'approved', 'invited', 'survey_id'])
             ->contain([
