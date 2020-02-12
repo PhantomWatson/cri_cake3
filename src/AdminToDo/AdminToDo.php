@@ -299,7 +299,10 @@ class AdminToDo
 
             if ($this->readyToSchedulePresentation($communityId, 'b')) {
                 $url = $this->getPresentationsUrl($communityId);
-                $deliveryDate = $this->deliveriesTable->getDate(DeliverablesTable::PRESENTATION_B_MATERIALS, $communityId);
+                $deliveryDate = $this->deliveriesTable->getDate(
+                    DeliverablesTable::PRESENTATION_B_MATERIALS,
+                    $communityId
+                );
 
                 return [
                     'class' => 'ready',
@@ -508,7 +511,10 @@ class AdminToDo
             if ($this->deliveryNotMade($communityId, $deliverableId)) {
                 $url = $this->getDeliveryReportUrl($communityId, $deliverableId);
                 $deactivationDate = $this->activityRecordsTable->getSurveyDeactivationDate($organizationsSurveyId);
-                $purchaseDate = $this->purchasesTable->getPurchaseDate(ProductsTable::ORGANIZATIONS_SUMMIT, $communityId);
+                $purchaseDate = $this->purchasesTable->getPurchaseDate(
+                    ProductsTable::ORGANIZATIONS_SUMMIT,
+                    $communityId
+                );
                 if ($deactivationDate > $purchaseDate) {
                     $elapsed = [
                         'time' => $this->getWaitingPeriod($deactivationDate),
@@ -531,7 +537,10 @@ class AdminToDo
 
             if ($this->readyToSchedulePresentation($communityId, 'd')) {
                 $url = $this->getPresentationsUrl($communityId);
-                $deliveryDate = $this->deliveriesTable->getDate(DeliverablesTable::PRESENTATION_D_MATERIALS, $communityId);
+                $deliveryDate = $this->deliveriesTable->getDate(
+                    DeliverablesTable::PRESENTATION_D_MATERIALS,
+                    $communityId
+                );
 
                 return [
                     'class' => 'ready',

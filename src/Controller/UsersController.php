@@ -175,7 +175,10 @@ class UsersController extends AppController
     public function resetPassword($userId = null, $timestamp = null, $hash = null)
     {
         if (! $userId || ! $timestamp && ! $hash) {
-            throw new NotFoundException('Incomplete URL for password-resetting. Did you leave out part of the URL when you copied and pasted it?');
+            throw new NotFoundException(
+                'Incomplete URL for password-resetting. ' .
+                'Did you leave out part of the URL when you copied and pasted it?'
+            );
         }
 
         if (time() - $timestamp > 60 * 60 * 24) {

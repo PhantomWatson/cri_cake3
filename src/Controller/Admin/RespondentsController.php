@@ -45,7 +45,11 @@ class RespondentsController extends AppController
                 'dismissed' => $this->Respondents->getDismissed($surveyId),
             ],
             'survey' => $survey,
-            'titleForLayout' => $community->name . ' Uninvited ' . ucwords($survey->type) . ' Questionnaire Respondents',
+            'titleForLayout' => sprintf(
+                '%s Uninvited %s Questionnaire Respondents',
+                $community->name,
+                ucwords($survey->type)
+            ),
         ]);
         $this->render('/Client/Respondents/unapproved');
     }

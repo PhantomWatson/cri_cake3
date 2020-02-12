@@ -402,7 +402,10 @@ class SurveyMonkey
     {
         $result = $this->getSurveyDetails((string)$smId);
         if (! isset($result['data'])) {
-            return [false, 'Could not get questionnaire details from SurveyMonkey. This might be a temporary network error.'];
+            return [
+                false,
+                'Could not get questionnaire details from SurveyMonkey. This might be a temporary network error.'
+            ];
         }
 
         // Create an array to save this data with

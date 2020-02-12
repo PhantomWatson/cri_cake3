@@ -130,10 +130,12 @@ class ActivityRecordsHelper extends Helper
                 'Survey' => [
                     'afterActivate' => 'Community [surveyType]s questionnaire',
                     'afterDeactivate' => 'Community [surveyType]s questionnaire',
-                    'afterInvitationsSent' => '[invitedCount] invitation(s) to the community [surveyType]s questionnaire sent',
+                    'afterInvitationsSent' =>
+                        '[invitedCount] invitation(s) to the community [surveyType]s questionnaire sent',
                     'afterLinked' => 'Community [surveyType]s questionnaire',
                     'afterLinkUpdated' => 'Community [surveyType]s questionnaire',
-                    'afterRemindersSent' => '[remindedCount] reminder(s) to complete the community [surveyType]s questionnaire sent',
+                    'afterRemindersSent' =>
+                        '[remindedCount] reminder(s) to complete the community [surveyType]s questionnaire sent',
                 ],
                 'Respondent' => [
                     'afterUninvitedApprove' => '[respondentName], responding to community [surveyType]s questionnaire',
