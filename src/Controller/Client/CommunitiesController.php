@@ -72,7 +72,7 @@ class CommunitiesController extends AppController
                 $event = new Event($eventName, $this, ['meta' => [
                     'communityId' => $communityId
                 ]]);
-                $this->getgetEventManager()->dispatch($event);
+                $this->getEventManager()->dispatch($event);
             } else {
                 $this->Flash->error($errorMsg);
             }
