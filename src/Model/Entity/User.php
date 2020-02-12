@@ -21,6 +21,13 @@ use Cake\ORM\Entity;
  * @property bool $all_communities
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property bool $ici_email_optin
+ * @property bool $cber_email_optin
+ * @property string $full_name
+ * @property \App\Model\Entity\Purchase[] $purchases
+ * @property \App\Model\Entity\OptOut[] $opt_outs
+ * @property \App\Model\Entity\Community[] $consultant_communities
+ * @property \App\Model\Entity\Community[] $client_communities
  */
 class User extends Entity
 {

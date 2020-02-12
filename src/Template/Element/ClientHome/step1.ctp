@@ -1,6 +1,11 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var array $community
+ * @var array $criteria
+ * @var mixed $optOuts
+ * @var array $purchaseUrls
+ * @var mixed $score
  */
 ?>
 <?= $this->ClientHome->tbodyForStep(1, $score) ?>

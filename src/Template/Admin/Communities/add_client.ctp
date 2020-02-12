@@ -1,6 +1,12 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var mixed $client
+ * @var mixed $communityId
+ * @var mixed $communityName
+ * @var string $role
+ * @var mixed $salutations
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

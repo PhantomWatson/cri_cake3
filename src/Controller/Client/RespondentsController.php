@@ -10,6 +10,9 @@ use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @property \App\Model\Table\RespondentsTable $Respondents
+ */
 class RespondentsController extends AppController
 {
     /**

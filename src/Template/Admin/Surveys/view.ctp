@@ -2,6 +2,8 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Community $community
+ * @var array $survey
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

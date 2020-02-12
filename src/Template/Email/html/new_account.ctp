@@ -1,6 +1,12 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var string $email
+ * @var string $homeUrl
+ * @var string $loginUrl
+ * @var string $name
+ * @var string $password
+ * @var mixed $role
  */
 ?>
 <p>

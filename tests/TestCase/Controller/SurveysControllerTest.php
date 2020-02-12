@@ -7,6 +7,8 @@ use App\Test\TestCase\ApplicationTest;
 
 /**
  * App\Controller\SurveysController Test Case
+ *
+ * @uses \App\Controller\SurveysController
  */
 class SurveysControllerTest extends ApplicationTest
 {

@@ -1,6 +1,10 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var mixed $notes
+ * @var mixed $report
+ * @var mixed $sectors
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

@@ -13,6 +13,9 @@ use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
 
+/**
+ * @property \App\Model\Table\SurveysTable $Surveys
+ */
 class SurveysController extends AppController
 {
     use MailerAwareTrait;

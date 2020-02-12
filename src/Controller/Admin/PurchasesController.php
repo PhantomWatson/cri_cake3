@@ -10,6 +10,11 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
+/**
+ * @property \App\Model\Table\PurchasesTable $Purchases
+ *
+ * @method \App\Model\Entity\Purchase[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ */
 class PurchasesController extends AppController
 {
     public $paginate = [

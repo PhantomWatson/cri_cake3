@@ -1,4 +1,9 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var array $clients
+ * @var string $surveyUrl
+ */
     $toParticipateBlurb = "to participate in a <a href=\"$criUrl\">Community Readiness Initiative</a> questionnaire for your community";
 ?>
 

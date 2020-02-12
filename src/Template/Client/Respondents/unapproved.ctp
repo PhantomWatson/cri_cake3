@@ -3,6 +3,8 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Community $community
  * @var \App\Model\Entity\Survey $survey
+ * @var array $respondents
+ * @var string $titleForLayout
  */
 ?>
 <?php use Cake\Validation\Validation; ?>

@@ -1,6 +1,9 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var array $authUser
+ * @var mixed $optOuts
+ * @var string $titleForLayout
  */
 ?>
 <?php use App\Model\Table\ProductsTable; ?>

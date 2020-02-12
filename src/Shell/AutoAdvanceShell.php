@@ -11,6 +11,9 @@ use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Utility\Hash;
 
+/**
+ * @property \App\Model\Table\CommunitiesTable $Communities
+ */
 class AutoAdvanceShell extends Shell
 {
     /**

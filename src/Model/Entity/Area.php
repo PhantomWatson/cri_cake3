@@ -11,15 +11,16 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $name
  * @property string $type
- * @property int $fips
- * @property int $production_rank
- * @property int $wholesale_rank
- * @property int $retail_rank
- * @property int $residential_rank
- * @property int $recreation_rank
- * @property int $parent_id
+ * @property int|null $fips
+ * @property int|null $production_rank
+ * @property int|null $wholesale_rank
+ * @property int|null $retail_rank
+ * @property int|null $residential_rank
+ * @property int|null $recreation_rank
+ * @property int|null $parent_id
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property \App\Model\Entity\Statistic[] $statistics
  */
 class Area extends Entity
 {

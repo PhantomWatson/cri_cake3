@@ -10,6 +10,9 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @property \App\Model\Table\ResponsesTable $Responses
+ */
 class ResponsesController extends AppController
 {
     /**

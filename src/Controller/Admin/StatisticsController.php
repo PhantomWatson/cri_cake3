@@ -5,6 +5,9 @@ namespace App\Controller\Admin;
 
 use App\Controller\AppController;
 
+/**
+ * @property \App\Model\Table\StatisticsTable $Statistics
+ */
 class StatisticsController extends AppController
 {
     /**

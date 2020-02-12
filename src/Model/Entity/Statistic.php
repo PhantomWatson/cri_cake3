@@ -12,9 +12,11 @@ use Cake\ORM\Entity;
  * @property int $area_id
  * @property int $stat_category_id
  * @property float $value
- * @property int $year
+ * @property int|null $year
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property \App\Model\Entity\Area $area
+ * @property \App\Model\Entity\StatCategory $stat_category
  */
 class Statistic extends Entity
 {

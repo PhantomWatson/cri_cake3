@@ -36,6 +36,8 @@ use Cake\Utility\Hash;
  *
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  * @property \DataCenter\Controller\Component\FlashComponent $Flash
+ * @property \App\Model\Table\CommunitiesTable $Communities
+ * @property \App\Model\Table\SurveysTable $Surveys
  */
 class AppController extends Controller
 {

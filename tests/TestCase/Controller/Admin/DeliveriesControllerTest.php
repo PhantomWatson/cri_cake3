@@ -12,6 +12,7 @@ use Cake\ORM\TableRegistry;
  * App\Controller\DeliveriesController Test Case
  *
  * @property DeliveriesTable $Deliveries
+ * @uses \App\Controller\Admin\DeliveriesController
  */
 class DeliveriesControllerTest extends ApplicationTest
 {

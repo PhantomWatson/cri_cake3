@@ -3,6 +3,9 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Survey $survey
  * @var \App\Model\Entity\Community $community
+ * @var mixed $qnaIdFields
+ * @var string $titleForLayout
+ * @var string $warning
  */
 ?>
 <div class="page-header">

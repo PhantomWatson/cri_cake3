@@ -7,6 +7,8 @@ use App\Test\TestCase\ApplicationTest;
 
 /**
  * App\Controller\StatisticsController Test Case
+ *
+ * @uses \App\Controller\Admin\StatisticsController
  */
 class StatisticsControllerTest extends ApplicationTest
 {

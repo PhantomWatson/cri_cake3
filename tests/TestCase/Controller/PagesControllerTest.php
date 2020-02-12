@@ -8,6 +8,8 @@ use Cake\Core\Configure;
 
 /**
  * App\Controller\PagesController Test Case
+ *
+ * @uses \App\Controller\PagesController
  */
 class PagesControllerTest extends ApplicationTest
 {

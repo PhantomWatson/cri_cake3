@@ -4,6 +4,15 @@
  * @var \App\Model\Entity\Survey $survey
  * @var \App\Model\Entity\Community $community
  * @var \App\Model\Entity\Area $area
+ * @var array $internalAlignment
+ * @var string $internalAlignmentClass
+ * @var mixed $internalAlignmentSum
+ * @var array $params
+ * @var array $rankOrder
+ * @var mixed $responses
+ * @var mixed $sectors
+ * @var mixed $sortField
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

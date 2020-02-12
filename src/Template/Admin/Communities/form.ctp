@@ -2,6 +2,10 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Community $community
+ * @var mixed $areaTypes
+ * @var mixed $areas
+ * @var mixed $communityId
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

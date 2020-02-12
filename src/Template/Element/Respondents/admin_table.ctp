@@ -2,6 +2,15 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Response[]|\Cake\Collection\CollectionInterface $responses
+ * @var mixed $actualRank
+ * @var mixed $alignmentField
+ * @var array $area
+ * @var array $averageRanks
+ * @var array $rankOrder
+ * @var mixed $respondentRank
+ * @var mixed $sectors
+ * @var array $survey
+ * @var mixed $unaddressedUnapprovedCount
  */
     use Cake\Validation\Validation;
     use App\Controller\Component\SurveyProcessingComponent;

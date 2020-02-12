@@ -15,11 +15,16 @@ use Cake\ORM\Entity;
  * @property int $amount
  * @property string $postback
  * @property bool $admin_added
- * @property string $source
+ * @property string|null $source
  * @property string $notes
  * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $refunded
- * @property int $refunder_id
+ * @property \Cake\I18n\FrozenTime|null $refunded
+ * @property int|null $refunder_id
+ * @property \App\Model\Entity\User $user
+ * @property \App\Model\Entity\Community $community
+ * @property \App\Model\Entity\Product $product
+ * @property \App\Model\Entity\User|null $refunder
+ * @property \App\Model\Entity\Invoice|null $invoice
  */
 class Purchase extends Entity
 {

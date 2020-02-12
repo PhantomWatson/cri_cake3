@@ -1,6 +1,11 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var array $areas
+ * @var mixed $barChart
+ * @var mixed $growthTable
+ * @var array $lineChart
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

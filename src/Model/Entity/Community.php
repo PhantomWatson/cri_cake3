@@ -10,24 +10,34 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property string $name
- * @property int $local_area_id
- * @property int $parent_area_id
+ * @property int|null $local_area_id
+ * @property int|null $parent_area_id
  * @property bool $public
  * @property bool $fast_track
  * @property float $score
- * @property \Cake\I18n\FrozenDate $town_meeting_date
+ * @property \Cake\I18n\FrozenDate|null $town_meeting_date
  * @property float $intAlignmentAdjustment
  * @property float $intAlignmentThreshold
- * @property \Cake\I18n\FrozenDate $presentation_a
- * @property \Cake\I18n\FrozenDate $presentation_b
- * @property \Cake\I18n\FrozenDate $presentation_c
- * @property \Cake\I18n\FrozenDate $presentation_d
+ * @property \Cake\I18n\FrozenDate|null $presentation_a
+ * @property \Cake\I18n\FrozenDate|null $presentation_b
+ * @property \Cake\I18n\FrozenDate|null $presentation_c
+ * @property \Cake\I18n\FrozenDate|null $presentation_d
  * @property bool $dummy
  * @property string $notes
  * @property bool $active
- * @property string $slug
+ * @property string|null $slug
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property \App\Model\Entity\Area|null $local_area
+ * @property \App\Model\Entity\Area|null $parent_area
+ * @property \App\Model\Entity\Purchase[] $purchases
+ * @property \App\Model\Entity\OptOut[] $opt_outs
+ * @property \App\Model\Entity\Survey[] $surveys
+ * @property \Cake\ORM\Entity[] $surveys_backup
+ * @property \App\Model\Entity\Survey|null $official_survey
+ * @property \App\Model\Entity\Survey|null $organization_survey
+ * @property \App\Model\Entity\User[] $clients
+ * @property \App\Model\Entity\ActivityRecord[] $activity_records
  */
 class Community extends Entity
 {

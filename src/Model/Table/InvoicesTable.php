@@ -10,17 +10,19 @@ use Cake\Validation\Validator;
 /**
  * Invoices Model
  *
- * @property \App\Model\Table\PurchasesTable|\Cake\ORM\Association\BelongsTo $Purchases
+ * @property \App\Model\Table\PurchasesTable&\Cake\ORM\Association\BelongsTo $Purchases
  *
  * @method \App\Model\Entity\Invoice get($primaryKey, $options = [])
  * @method \App\Model\Entity\Invoice newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Invoice[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Invoice|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Invoice|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Invoice patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Invoice[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Invoice findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\Invoice saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Invoice[]|\Cake\Datasource\ResultSetInterface|false saveMany($entities, $options = [])
  */
 class InvoicesTable extends Table
 {

@@ -11,6 +11,7 @@ use Cake\ORM\TableRegistry;
  * ActivityRecords Controller
  *
  * @property \App\Model\Table\ActivityRecordsTable $ActivityRecords
+ * @method \App\Model\Entity\ActivityRecord[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class ActivityRecordsController extends AppController
 {

@@ -10,19 +10,21 @@ use Cake\Validation\Validator;
 /**
  * Deliveries Model
  *
- * @property \App\Model\Table\DeliverablesTable|\Cake\ORM\Association\BelongsTo $Deliverables
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @property \App\Model\Table\CommunitiesTable|\Cake\ORM\Association\BelongsTo $Communities
+ * @property \App\Model\Table\DeliverablesTable&\Cake\ORM\Association\BelongsTo $Deliverables
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\CommunitiesTable&\Cake\ORM\Association\BelongsTo $Communities
  *
  * @method \App\Model\Entity\Delivery get($primaryKey, $options = [])
  * @method \App\Model\Entity\Delivery newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Delivery[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Delivery|bool save(\App\Model\Table\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Delivery patchEntity(\App\Model\Table\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Delivery|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Delivery patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Delivery[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Delivery findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\Delivery saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Delivery[]|\Cake\Datasource\ResultSetInterface|false saveMany($entities, $options = [])
  */
 class DeliveriesTable extends Table
 {

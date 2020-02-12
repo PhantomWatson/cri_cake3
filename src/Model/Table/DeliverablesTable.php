@@ -10,15 +10,17 @@ use Cake\Validation\Validator;
 /**
  * Deliverables Model
  *
- * @property \App\Model\Table\DeliveriesTable|\Cake\ORM\Association\HasMany $Deliveries
+ * @property \App\Model\Table\DeliveriesTable&\Cake\ORM\Association\HasMany $Deliveries
  *
  * @method \App\Model\Entity\Deliverable get($primaryKey, $options = [])
  * @method \App\Model\Entity\Deliverable newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Deliverable[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Deliverable|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Deliverable|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Deliverable patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Deliverable[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Deliverable findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Deliverable saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Deliverable[]|\Cake\Datasource\ResultSetInterface|false saveMany($entities, $options = [])
  */
 class DeliverablesTable extends Table
 {

@@ -1,6 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var mixed $flashMessages
  */
     /* This creates the hidden #flash_messages container and fills it with
      * flash messages and displayed via a javascript animation if there are

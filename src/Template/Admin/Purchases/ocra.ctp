@@ -1,6 +1,8 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var mixed $purchases
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

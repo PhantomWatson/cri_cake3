@@ -8,6 +8,8 @@ use Cake\ORM\TableRegistry;
 
 /**
  * App\Controller\PurchasesController Test Case
+ *
+ * @uses \App\Controller\PurchasesController
  */
 class PurchasesControllerTest extends ApplicationTest
 {

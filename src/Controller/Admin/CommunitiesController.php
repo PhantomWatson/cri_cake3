@@ -14,6 +14,9 @@ use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
 
+/**
+ * @property \App\Model\Table\CommunitiesTable $Communities
+ */
 class CommunitiesController extends AppController
 {
     use MailerAwareTrait;

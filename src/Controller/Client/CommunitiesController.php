@@ -8,6 +8,9 @@ use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\NotFoundException;
 
+/**
+ * @property \App\Model\Table\CommunitiesTable $Communities
+ */
 class CommunitiesController extends AppController
 {
     /**

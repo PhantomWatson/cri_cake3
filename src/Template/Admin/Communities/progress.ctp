@@ -2,6 +2,10 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Community $community
+ * @var array $criteria
+ * @var string $criterion
+ * @var mixed $passed
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

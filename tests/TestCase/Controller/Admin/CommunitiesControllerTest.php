@@ -10,6 +10,8 @@ use Cake\Routing\Router;
 
 /**
  * App\Controller\Admin\CommunitiesController Test Case
+ *
+ * @uses \App\Controller\Admin\CommunitiesController
  */
 class CommunitiesControllerTest extends ApplicationTest
 {

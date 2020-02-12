@@ -11,6 +11,7 @@ use Cake\ORM\TableRegistry;
  * App\Controller\SurveysController Test Case
  *
  * @property SurveysTable $Surveys
+ * @uses \App\Controller\Admin\SurveysController
  */
 class SurveysControllerTest extends ApplicationTest
 {

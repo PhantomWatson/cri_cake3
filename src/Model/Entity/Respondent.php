@@ -16,9 +16,11 @@ use Cake\ORM\Entity;
  * @property string $sm_respondent_id
  * @property bool $invited
  * @property int $approved
- * @property \Cake\I18n\FrozenTime $response_date
+ * @property \Cake\I18n\FrozenTime|null $response_date
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property \App\Model\Entity\Survey $survey
+ * @property \App\Model\Entity\Response[] $responses
  */
 class Respondent extends Entity
 {

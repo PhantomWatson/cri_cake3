@@ -1,3 +1,15 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var string $actionUrl
+ * @var string $communityName
+ * @var mixed $presentationLetter
+ * @var string $userName
+ */
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <?= $userName ?>,
 
 Presentation <?= strtoupper($presentationLetter) ?> has been purchased for <?= $communityName ?>. The next step in the CRI process
