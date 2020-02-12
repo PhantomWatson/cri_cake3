@@ -131,14 +131,14 @@ class SurveysController extends AppController
                     'surveyId' => $survey->id,
                     'surveyType' => $surveyType
                 ]]);
-                $this->eventManager()->dispatch($event);
+                $this->getEventManager()->dispatch($event);
                 if ($isNew && $survey->active) {
                     $event = new Event('Model.Survey.afterActivate', $this, ['meta' => [
                         'communityId' => $community->id,
                         'surveyId' => $survey->id,
                         'surveyType' => $survey->type
                     ]]);
-                    $this->eventManager()->dispatch($event);
+                    $this->getEventManager()->dispatch($event);
                 }
 
                 $this->redirect([
@@ -371,7 +371,7 @@ class SurveysController extends AppController
                 'surveyType' => $survey->type,
                 'remindedCount' => count($recipients)
             ]]);
-            $this->eventManager()->dispatch($event);
+            $this->getEventManager()->dispatch($event);
 
             return $this->redirect([
                 'prefix' => 'admin',
@@ -425,7 +425,7 @@ class SurveysController extends AppController
                     'surveyId' => $survey->id,
                     'surveyType' => $survey->type
                 ]]);
-                $this->eventManager()->dispatch($event);
+                $this->getEventManager()->dispatch($event);
             } else {
                 $this->Flash->error('There was an error updating the selected questionnaire');
             }
@@ -510,7 +510,7 @@ class SurveysController extends AppController
                     'surveyType' => $survey->type,
                     'invitedCount' => count($recipients)
                 ]]);
-                $this->eventManager()->dispatch($event);
+                $this->getEventManager()->dispatch($event);
 
                 $this->set('result', true);
             } else {

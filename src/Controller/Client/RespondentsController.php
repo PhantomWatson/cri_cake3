@@ -169,6 +169,6 @@ class RespondentsController extends AppController
             'respondentName' => $respondent->name,
             'surveyType' => $survey->type
         ]]);
-        $this->eventManager()->dispatch($event);
+        $this->getEventManager()->dispatch($event);
     }
 }

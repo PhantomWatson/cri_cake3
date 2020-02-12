@@ -101,7 +101,7 @@ class DeliveriesController extends AppController
                     'deliverableId' => $delivery->deliverable_id,
                     'deliverableName' => $deliverable->name
                 ]]);
-                $this->eventManager()->dispatch($event);
+                $this->getEventManager()->dispatch($event);
 
                 return $this->redirect([
                     'prefix' => 'admin',

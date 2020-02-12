@@ -171,7 +171,7 @@ class CommunitiesController extends AppController
                 $event = new Event('Model.Community.afterAdd', $this, ['meta' => [
                     'communityId' => $community->id
                 ]]);
-                $this->eventManager()->dispatch($event);
+                $this->getEventManager()->dispatch($event);
 
                 return $this->redirect([
                     'prefix' => 'admin',
@@ -237,7 +237,7 @@ class CommunitiesController extends AppController
                     $event = new Event('Model.Community.afterUpdateCommunityArea', $this, ['meta' => [
                         'communityId' => $community->id
                     ]]);
-                    $this->eventManager()->dispatch($event);
+                    $this->getEventManager()->dispatch($event);
                 }
 
                 return $this->redirect([
@@ -281,7 +281,7 @@ class CommunitiesController extends AppController
             $event = new Event('Model.Community.afterDelete', $this, ['meta' => [
                 'communityName' => $community->name
             ]]);
-            $this->eventManager()->dispatch($event);
+            $this->getEventManager()->dispatch($event);
         } else {
             $this->Flash->error('There was an error deleting that community');
         }
@@ -468,13 +468,13 @@ class CommunitiesController extends AppController
                 'userRole' => $client->role,
                 'communityId' => $communityId
             ]]);
-            $this->eventManager()->dispatch($event);
+            $this->getEventManager()->dispatch($event);
             $event = new Event('Model.Community.afterAddClient', $this, ['meta' => [
                 'communityId' => $communityId,
                 'clientName' => $client->name,
                 'clientEmail' => $client->email
             ]]);
-            $this->eventManager()->dispatch($event);
+            $this->getEventManager()->dispatch($event);
 
             return $this->redirect([
                 'action' => 'clients',
@@ -512,7 +512,7 @@ class CommunitiesController extends AppController
             'clientName' => $client->name,
             'clientEmail' => $client->email
         ]]);
-        $this->eventManager()->dispatch($event);
+        $this->getEventManager()->dispatch($event);
 
         return $this->redirect($this->referer());
     }
@@ -563,7 +563,7 @@ class CommunitiesController extends AppController
                     'clientName' => $client->name,
                     'clientEmail' => $client->email
                 ]]);
-                $this->eventManager()->dispatch($event);
+                $this->getEventManager()->dispatch($event);
             }
         }
 
@@ -586,7 +586,7 @@ class CommunitiesController extends AppController
                 'clientName' => $client->name,
                 'clientEmail' => $client->email
             ]]);
-            $this->eventManager()->dispatch($event);
+            $this->getEventManager()->dispatch($event);
 
             return $this->redirect([
                 'action' => 'clients',
@@ -781,7 +781,7 @@ class CommunitiesController extends AppController
         $increase = $previousScore < $newScore;
         $eventName = 'Model.Community.afterScore' . ($increase ? 'Increase' : 'Decrease');
         $event = new Event($eventName, $this, ['meta' => compact('previousScore', 'newScore', 'communityId')]);
-        $this->eventManager()->dispatch($event);
+        $this->getEventManager()->dispatch($event);
     }
 
     /**
@@ -872,7 +872,7 @@ class CommunitiesController extends AppController
                 $event = new Event($eventName, $this, ['meta' => [
                     'communityId' => $community->id
                 ]]);
-                $this->eventManager()->dispatch($event);
+                $this->getEventManager()->dispatch($event);
             } else {
                 $msg = 'There was an error updating the selected community';
                 $this->Flash->error($msg);

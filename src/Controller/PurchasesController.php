@@ -56,7 +56,7 @@ class PurchasesController extends AppController
                     'productName' => $product->description,
                     'productId' => $product->id
                 ]]);
-                $this->eventManager()->dispatch($event);
+                $this->getEventManager()->dispatch($event);
             }
         }
 

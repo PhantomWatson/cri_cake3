@@ -133,7 +133,7 @@ class UsersController extends AppController
                     'userRole' => $user->role,
                     'communityId' => $clientCommunityId ? $clientCommunityId : null
                 ]]);
-                $this->eventManager()->dispatch($event);
+                $this->getEventManager()->dispatch($event);
 
                 try {
                     /** @var QueuedJobsTable $queuedJobs */
@@ -256,7 +256,7 @@ class UsersController extends AppController
                 'userName' => $user->name,
                 'userRole' => $user->role
             ]]);
-            $this->eventManager()->dispatch($event);
+            $this->getEventManager()->dispatch($event);
         } else {
             $this->Flash->error('User was not deleted');
         }
