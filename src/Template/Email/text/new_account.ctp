@@ -1,6 +1,12 @@
 <?php
 /**
  * @var \App\Model\Entity\User $user
+ * @var \App\View\AppView $this
+ * @var string $email
+ * @var string $loginUrl
+ * @var string $name
+ * @var string $password
+ * @var mixed $role
  */
 ?>
 <?= $name ?>,

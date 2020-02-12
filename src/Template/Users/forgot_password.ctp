@@ -2,6 +2,8 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
+ * @var mixed $success
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

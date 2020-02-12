@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var array $table
+ */
+?>
 <div class="employment_growth_table">
     <table>
         <thead>

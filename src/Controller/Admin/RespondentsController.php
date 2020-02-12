@@ -10,6 +10,9 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
+/**
+ * @property \App\Model\Table\RespondentsTable $Respondents
+ */
 class RespondentsController extends AppController
 {
     /**

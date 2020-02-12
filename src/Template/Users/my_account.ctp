@@ -3,6 +3,7 @@
      * @var \App\View\AppView $this
      * @var \App\Model\Entity\User $user
      * @var bool $hasPasswordErrors
+ * @var string $titleForLayout
      */
 ?>
 <div class="page-header">

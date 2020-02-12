@@ -13,19 +13,21 @@ use Cake\Validation\Validator;
 /**
  * OptOuts Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @property \App\Model\Table\CommunitiesTable|\Cake\ORM\Association\BelongsTo $Communities
- * @property \App\Model\Table\ProductsTable|\Cake\ORM\Association\BelongsTo $Products
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\CommunitiesTable&\Cake\ORM\Association\BelongsTo $Communities
+ * @property \App\Model\Table\ProductsTable&\Cake\ORM\Association\BelongsTo $Products
  *
  * @method \App\Model\Entity\OptOut get($primaryKey, $options = [])
  * @method \App\Model\Entity\OptOut newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\OptOut[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\OptOut|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\OptOut|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\OptOut patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\OptOut[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\OptOut findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\OptOut saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\OptOut[]|\Cake\Datasource\ResultSetInterface|false saveMany($entities, $options = [])
  */
 class OptOutsTable extends Table
 {

@@ -2,6 +2,7 @@
 /**
  * @var string[] $sentEmails
  * @var string[] $skippedEmails
+ * @var \App\View\AppView $this
  */
 ?>
 

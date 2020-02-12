@@ -13,16 +13,18 @@ use Cake\Validation\Validator;
 /**
  * Responses Model
  *
- * @property \App\Model\Table\RespondentsTable|\Cake\ORM\Association\BelongsTo $Respondents
- * @property \App\Model\Table\SurveysTable|\Cake\ORM\Association\BelongsTo $Surveys
+ * @property \App\Model\Table\RespondentsTable&\Cake\ORM\Association\BelongsTo $Respondents
+ * @property \App\Model\Table\SurveysTable&\Cake\ORM\Association\BelongsTo $Surveys
  * @method \App\Model\Entity\Response get($primaryKey, $options = [])
  * @method \App\Model\Entity\Response newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Response[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Response|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Response|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Response patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Response[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Response findOrCreate($search, callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\Response saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Response[]|\Cake\Datasource\ResultSetInterface|false saveMany($entities, $options = [])
  */
 class ResponsesTable extends Table
 {

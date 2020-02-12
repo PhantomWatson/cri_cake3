@@ -27,6 +27,7 @@ use Cake\View\View;
  * @property \App\View\Helper\ClientHomeHelper $ClientHome
  * @property \GoogleCharts\View\Helper\GoogleChartsHelper $GoogleCharts
  * @property \App\View\Helper\ActivityRecordsHelper $ActivityRecords
+ * @property \Tools\View\Helper\TimeHelper $Time
  */
 class AppView extends View
 {

@@ -12,14 +12,16 @@ use Cake\Validation\Validator;
 /**
  * Products Model
  *
- * @property \App\Model\Table\PurchasesTable|\Cake\ORM\Association\HasMany $Purchases
+ * @property \App\Model\Table\PurchasesTable&\Cake\ORM\Association\HasMany $Purchases
  * @method \App\Model\Entity\Product get($primaryKey, $options = [])
  * @method \App\Model\Entity\Product newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Product[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Product|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Product|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Product patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Product[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Product findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Product saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Product[]|\Cake\Datasource\ResultSetInterface|false saveMany($entities, $options = [])
  */
 class ProductsTable extends Table
 {

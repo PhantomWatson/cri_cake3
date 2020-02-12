@@ -11,16 +11,18 @@ use Cake\Validation\Validator;
 /**
  * Statistics Model
  *
- * @property \App\Model\Table\AreasTable|\Cake\ORM\Association\BelongsTo $Areas
- * @property \App\Model\Table\StatCategoriesTable|\Cake\ORM\Association\BelongsTo $StatCategories
+ * @property \App\Model\Table\AreasTable&\Cake\ORM\Association\BelongsTo $Areas
+ * @property \App\Model\Table\StatCategoriesTable&\Cake\ORM\Association\BelongsTo $StatCategories
  * @method \App\Model\Entity\Statistic get($primaryKey, $options = [])
  * @method \App\Model\Entity\Statistic newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Statistic[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Statistic|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Statistic|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Statistic patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Statistic[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Statistic findOrCreate($search, callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\Statistic saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Statistic[]|\Cake\Datasource\ResultSetInterface|false saveMany($entities, $options = [])
  */
 class StatisticsTable extends Table
 {

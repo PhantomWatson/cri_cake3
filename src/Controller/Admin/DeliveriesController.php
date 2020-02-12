@@ -12,6 +12,7 @@ use Cake\ORM\TableRegistry;
  * Deliveries Controller
  *
  * @property \App\Model\Table\DeliveriesTable $Deliveries
+ * @method \App\Model\Entity\Delivery[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class DeliveriesController extends AppController
 {

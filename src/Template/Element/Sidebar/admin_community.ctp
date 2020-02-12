@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Survey $survey
+ * @var array $adminHeader
  */
     if (! isset($communityId)) {
         $communityId = isset($community->id) ? $community->id : null;

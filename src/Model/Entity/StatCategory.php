@@ -12,6 +12,7 @@ use Cake\ORM\Entity;
  * @property string $name
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property \App\Model\Entity\Statistic[] $statistic
  */
 class StatCategory extends Entity
 {

@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 You can edit your subscription to administrator alert emails by visiting <?= \Cake\Routing\Router::url(
     [
         'controller' => 'Users',

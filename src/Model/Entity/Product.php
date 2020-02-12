@@ -13,7 +13,8 @@ use Cake\ORM\Entity;
  * @property string $item_code
  * @property int $price
  * @property int $step
- * @property int $prerequisite
+ * @property int|null $prerequisite
+ * @property \App\Model\Entity\Purchase[] $purchases
  */
 class Product extends Entity
 {

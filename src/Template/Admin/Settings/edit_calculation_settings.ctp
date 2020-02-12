@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Setting[]|\Cake\Collection\CollectionInterface $settings
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

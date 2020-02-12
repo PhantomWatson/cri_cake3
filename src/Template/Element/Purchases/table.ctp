@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Purchase[]|\Cake\Collection\CollectionInterface $purchases
+ * @var array $sources
  */
 ?>
 <?= $this->element('pagination') ?>

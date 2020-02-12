@@ -1,6 +1,8 @@
 <?php
 /**
  * @var \App\Model\Entity\User $user
+ * @var \App\View\AppView $this
+ * @var string $resetUrl
  */
 ?>
 <?= $user->name ?>,

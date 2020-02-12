@@ -14,11 +14,13 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Setting get($primaryKey, $options = [])
  * @method \App\Model\Entity\Setting newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Setting[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Setting|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Setting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Setting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Setting[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Setting findOrCreate($search, callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @method \App\Model\Entity\Setting saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Setting[]|\Cake\Datasource\ResultSetInterface|false saveMany($entities, $options = [])
  */
 class SettingsTable extends Table
 {

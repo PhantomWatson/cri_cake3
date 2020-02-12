@@ -8,6 +8,8 @@ use Cake\Routing\Router;
 
 /**
  * App\Controller\ActivityRecordsController Test Case
+ *
+ * @uses \App\Controller\Admin\ActivityRecordsController
  */
 class ActivityRecordsControllerTest extends ApplicationTest
 {

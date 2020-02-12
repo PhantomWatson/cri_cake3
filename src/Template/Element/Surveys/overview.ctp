@@ -2,6 +2,19 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Survey $survey
+ * @var mixed $autoImportFrequency
+ * @var array $community
+ * @var mixed $currentlyActive
+ * @var mixed $hasNewResponses
+ * @var mixed $hasUninvitedUnaddressed
+ * @var mixed $invitations
+ * @var string $invitedRespondentCount
+ * @var mixed $isActive
+ * @var mixed $isAutomaticallyImported
+ * @var string $percentInvitedResponded
+ * @var mixed $responsesChecked
+ * @var string $stageForAutoImport
+ * @var mixed $uninvitedRespondentCount
  */
     use Cake\Validation\Validation;
 ?>

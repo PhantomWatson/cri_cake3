@@ -1,6 +1,10 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var array $community
+ * @var mixed $score
+ * @var array $step3PolicyDevPurchased
+ * @var array $step4PolicyDev
  */
 ?>
 <?= $this->ClientHome->tbodyForStep(4, $score) ?>

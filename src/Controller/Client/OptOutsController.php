@@ -6,6 +6,9 @@ namespace App\Controller\Client;
 use App\Controller\AppController;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @property \App\Model\Table\OptOutsTable $OptOuts
+ */
 class OptOutsController extends AppController
 {
     /**

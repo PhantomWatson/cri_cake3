@@ -2,6 +2,9 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
+ * @var array $buttons
+ * @var mixed $currentFilter
+ * @var string $titleForLayout
  */
 ?>
 <div id="users_index">

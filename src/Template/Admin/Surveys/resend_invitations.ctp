@@ -3,6 +3,11 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Survey $survey
  * @var \App\Model\Entity\Community $community
+ * @var mixed $recipients
+ * @var mixed $result
+ * @var object $sender
+ * @var mixed $step
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

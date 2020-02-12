@@ -2,6 +2,8 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Community[]|\Cake\Collection\CollectionInterface $communities
+ * @var string $perPage
+ * @var string $titleForLayout
  */
     $Report = new \App\Reports\Reports();
 ?>

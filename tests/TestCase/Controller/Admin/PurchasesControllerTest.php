@@ -9,6 +9,7 @@ use Cake\ORM\TableRegistry;
 /**
  * App\Controller\PurchasesController Test Case
  * @property PurchasesTable $Purchases
+ * @uses \App\Controller\Admin\PurchasesController
  */
 class PurchasesControllerTest extends ApplicationTest
 {

@@ -2,6 +2,9 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Purchase $purchase
+ * @var array $group
+ * @var mixed $label
+ * @var array $totals
  */
 ?>
 <?php if ($group['form']): ?>

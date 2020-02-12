@@ -10,15 +10,15 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property string $event
- * @property int $user_id
- * @property int $community_id
- * @property int $survey_id
- * @property string $meta
+ * @property int|null $user_id
+ * @property int|null $community_id
+ * @property int|null $survey_id
+ * @property string|null $meta
  * @property \Cake\I18n\FrozenTime $created
  *
- * @property \App\Model\Entity\User $user
- * @property \App\Model\Entity\Community $community
- * @property \App\Model\Entity\Survey $survey
+ * @property \App\Model\Entity\User|null $user
+ * @property \App\Model\Entity\Community|null $community
+ * @property \App\Model\Entity\Survey|null $survey
  */
 class ActivityRecord extends Entity
 {

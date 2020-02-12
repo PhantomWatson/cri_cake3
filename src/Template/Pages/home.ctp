@@ -1,6 +1,8 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var array $authUser
+ * @var array $map
  */
 ?>
 <?php if (isset($authUser['role']) && $authUser['role'] == 'client'): ?>

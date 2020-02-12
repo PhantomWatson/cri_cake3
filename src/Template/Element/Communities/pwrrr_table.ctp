@@ -1,6 +1,8 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var string $areaScope
+ * @var array $pwrTable
  */
 ?>
 <?php $this->append('buffered'); ?>

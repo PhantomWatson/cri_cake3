@@ -1,3 +1,15 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var string $actionUrl
+ * @var array $clients
+ * @var string $communityName
+ * @var string $userName
+ */
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <p>
     <?= $userName ?>,
 </p>

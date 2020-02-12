@@ -1,6 +1,13 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var mixed $allRespondents
+ * @var mixed $approvedRespondents
+ * @var array $invitees
+ * @var string $surveyId
+ * @var mixed $surveyType
+ * @var string $titleForLayout
+ * @var mixed $unaddressedUnapprovedRespondents
  */
 ?>
 <div class="page-header">

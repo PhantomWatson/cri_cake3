@@ -11,8 +11,8 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $type
  * @property int $community_id
- * @property string $sm_url
- * @property int $sm_id
+ * @property string|null $sm_url
+ * @property int|null $sm_id
  * @property string $pwrrr_qid
  * @property string $production_aid
  * @property string $wholesale_aid
@@ -24,22 +24,25 @@ use Cake\ORM\Entity;
  * @property string $3_aid
  * @property string $4_aid
  * @property string $5_aid
- * @property string $aware_of_plan_qid
- * @property string $aware_of_city_plan_aid
- * @property string $aware_of_county_plan_aid
- * @property string $aware_of_regional_plan_aid
- * @property string $unaware_of_plan_aid
- * @property \Cake\I18n\FrozenTime $respondents_last_modified_date
- * @property \Cake\I18n\FrozenTime $responses_checked
- * @property int $alignment_vs_local
- * @property int $alignment_vs_parent
- * @property float $internal_alignment
- * @property \Cake\I18n\FrozenTime $alignment_calculated_date
- * @property \Cake\I18n\FrozenTime $reminder_sent
- * @property string $import_errors
+ * @property string|null $aware_of_plan_qid
+ * @property string|null $aware_of_city_plan_aid
+ * @property string|null $aware_of_county_plan_aid
+ * @property string|null $aware_of_regional_plan_aid
+ * @property string|null $unaware_of_plan_aid
+ * @property \Cake\I18n\FrozenTime|null $respondents_last_modified_date
+ * @property \Cake\I18n\FrozenTime|null $responses_checked
+ * @property int|null $alignment_vs_local
+ * @property int|null $alignment_vs_parent
+ * @property float|null $internal_alignment
+ * @property \Cake\I18n\FrozenTime|null $alignment_calculated_date
+ * @property \Cake\I18n\FrozenTime|null $reminder_sent
+ * @property string|null $import_errors
  * @property bool $active
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property \App\Model\Entity\Community $community
+ * @property \App\Model\Entity\Respondent[] $respondents
+ * @property \App\Model\Entity\Response[] $responses
  */
 class Survey extends Entity
 {

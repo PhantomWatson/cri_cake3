@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Delivery $deliveries
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

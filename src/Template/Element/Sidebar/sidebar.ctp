@@ -1,6 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var mixed $accessibleCommunities
  */
     use Cake\Core\Configure;
     if (! isset($authUser)) {

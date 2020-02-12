@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var mixed $invalidEmails
+ */
+?>
 <h1>
     Invalid email addresses in <em>respondents</em> table:
 </h1>

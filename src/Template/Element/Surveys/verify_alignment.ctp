@@ -1,4 +1,10 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var array $community
+ * @var mixed $responses
+ * @var mixed $survey
+ */
     use App\Controller\Component\SurveyProcessingComponent;
     $approvedCount = SurveyProcessingComponent::getApprovedCount($responses);
     $savedAlignmentError = false;

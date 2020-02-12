@@ -2,6 +2,10 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Community $community
+ * @var mixed $presentations
+ * @var array $products
+ * @var mixed $purchasedProductIds
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

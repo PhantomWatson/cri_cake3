@@ -1,4 +1,9 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var array $clients
+ * @var string $surveyUrl
+ */
     $toParticipateBlurb = "to participate in a Community Readiness Initiative ($criUrl) questionnaire for your community";
     echo 'You have been invited ';
     if (empty($clients)) {

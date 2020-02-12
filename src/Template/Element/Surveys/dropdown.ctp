@@ -1,6 +1,8 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var array $community
+ * @var mixed $surveyType
  */
 ?>
 <div class="dropdown">

@@ -2,6 +2,10 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Survey $survey
+ * @var array $community
+ * @var string $titleForLayout
+ * @var mixed $unresponsive
+ * @var string $unresponsiveCount
  */
 ?>
 <div class="page-header">

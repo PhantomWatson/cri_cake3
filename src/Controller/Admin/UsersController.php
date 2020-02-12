@@ -9,6 +9,11 @@ use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @property \App\Model\Table\UsersTable $Users
+ *
+ * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ */
 class UsersController extends AppController
 {
     use MailerAwareTrait;

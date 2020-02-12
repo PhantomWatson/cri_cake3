@@ -2,6 +2,9 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Community[]|\Cake\Collection\CollectionInterface $communities
+ * @var string $avgIntAlignment
+ * @var array $settings
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">

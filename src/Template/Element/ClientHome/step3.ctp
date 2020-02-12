@@ -2,6 +2,18 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Community $community
+ * @var mixed $autoImportFrequency
+ * @var array $criteria
+ * @var array $importErrors
+ * @var mixed $optOuts
+ * @var mixed $organizationResponsesChecked
+ * @var mixed $organizationSurveyId
+ * @var array $purchaseUrls
+ * @var mixed $score
+ * @var array $step3PolicyDevPurchased
+ * @var array $surveyExists
+ * @var array $surveyIsActive
+ * @var array $surveyIsComplete
  */
 ?>
 <?= $this->ClientHome->tbodyForStep(3, $score) ?>

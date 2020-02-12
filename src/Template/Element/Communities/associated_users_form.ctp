@@ -1,6 +1,10 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var array $errors
+ * @var string $role
+ * @var mixed $tableTemplate
+ * @var mixed $users
  */
 ?>
 <div class="panel panel-default" id="<?= $role ?>_interface">

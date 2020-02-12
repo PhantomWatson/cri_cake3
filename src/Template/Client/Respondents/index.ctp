@@ -2,6 +2,12 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Respondent[]|\Cake\Collection\CollectionInterface $respondents
+ * @var string $approvedResponseCount
+ * @var string $invitationCount
+ * @var string $mostRecentResponseDate
+ * @var string $responseRate
+ * @var mixed $surveyType
+ * @var string $titleForLayout
  */
     use Cake\Validation\Validation;
 ?>

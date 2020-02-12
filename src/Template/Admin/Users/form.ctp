@@ -1,6 +1,13 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var mixed $communities
+ * @var mixed $hasPasswordError
+ * @var mixed $roles
+ * @var mixed $salutations
+ * @var mixed $selectedCommunities
+ * @var string $titleForLayout
+ * @var mixed $user
  */
 ?>
 <div class="page-header">

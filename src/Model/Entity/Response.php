@@ -12,17 +12,19 @@ use Cake\ORM\Entity;
  * @property int $respondent_id
  * @property int $survey_id
  * @property string $response
- * @property int $production_rank
- * @property int $wholesale_rank
- * @property int $retail_rank
- * @property int $residential_rank
- * @property int $recreation_rank
- * @property int $alignment_vs_local
- * @property int $alignment_vs_parent
- * @property bool $aware_of_plan
- * @property \Cake\I18n\FrozenTime $response_date
+ * @property int|null $production_rank
+ * @property int|null $wholesale_rank
+ * @property int|null $retail_rank
+ * @property int|null $residential_rank
+ * @property int|null $recreation_rank
+ * @property int|null $alignment_vs_local
+ * @property int|null $alignment_vs_parent
+ * @property bool|null $aware_of_plan
+ * @property \Cake\I18n\FrozenTime|null $response_date
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property \App\Model\Entity\Respondent $respondent
+ * @property \App\Model\Entity\Survey $survey
  */
 class Response extends Entity
 {

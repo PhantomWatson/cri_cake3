@@ -1,6 +1,10 @@
 <?php
 /**
  * @var \App\Model\Entity\Product[]|\Cake\Collection\CollectionInterface $products
+ * @var \App\View\AppView $this
+ * @var mixed $code
+ * @var string $message
+ * @var string $titleForLayout
  */
 ?>
 <div class="page-header">
