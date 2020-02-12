@@ -30,7 +30,7 @@
         "cakephp/debug_kit": "~3.2",
         "cakephp/bake": "~1.1",
         "codeclimate/php-test-reporter": "dev-master",
-        "dereuromark/cakephp-ide-helper": "^0.8.1"
+        "dereuromark/cakephp-ide-helper": "^1.0.0"
     },
     "suggest": {
         "markstory/asset_compress": "An asset compression plugin which provides file concatenation and a flexible filter system for preprocessing and minification.",
