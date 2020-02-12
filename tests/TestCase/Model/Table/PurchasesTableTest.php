@@ -35,7 +35,7 @@ class PurchasesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Purchases') ? [] : ['className' => 'App\Model\Table\PurchasesTable'];
-        $this->Purchases = TableRegistry::get('Purchases', $config);
+        $this->Purchases = TableRegistry::getTableLocator()->get('Purchases', $config);
     }
 
     /**

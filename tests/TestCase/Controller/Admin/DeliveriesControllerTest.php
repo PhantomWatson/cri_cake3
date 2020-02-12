@@ -43,7 +43,7 @@ class DeliveriesControllerTest extends ApplicationTest
             'environment' => ['HTTPS' => 'on'],
         ]);
 
-        $this->Deliveries = TableRegistry::get('Surveys');
+        $this->Deliveries = TableRegistry::getTableLocator()->get('Surveys');
         $this->Deliveries->getEventManager()->setEventList(new EventList());
     }
 

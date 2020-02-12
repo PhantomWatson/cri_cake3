@@ -131,7 +131,7 @@ class CommunitiesControllerTest extends ApplicationTest
         ];
         $this->post($url, $data);
         $this->assertResponseSuccess();
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $query = $communitiesTable->find()->where(['name' => $data['name']]);
         $this->assertEquals(1, $query->count());
     }
@@ -171,7 +171,7 @@ class CommunitiesControllerTest extends ApplicationTest
         ];
         $this->post($url, $data);
         $this->assertResponseSuccess();
-        $usersTable = TableRegistry::get('Users');
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
         $query = $usersTable->find()->where([
             'name' => $data['name'],
             'role' => 'client',
@@ -315,7 +315,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->assertResponseSuccess();
 
         // Verify delete
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $query = $communitiesTable->find()->where(['id' => 1]);
         $this->assertEquals(0, $query->count());
     }
@@ -364,7 +364,7 @@ class CommunitiesControllerTest extends ApplicationTest
         ];
         $this->post($url, $data);
         $this->assertResponseSuccess();
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $query = $communitiesTable->find()->where(['name' => $data['name']]);
         $this->assertEquals(1, $query->count());
     }
@@ -421,7 +421,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->post($url, $data);
         $this->assertResponseOk();
         $this->assertResponseContains('Notes updated');
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $query = $communitiesTable->find()->where(['notes' => $data['notes']]);
         $this->assertEquals(1, $query->count());
     }
@@ -467,7 +467,7 @@ class CommunitiesControllerTest extends ApplicationTest
         ];
         $this->post($url, $data);
         $this->assertResponseSuccess();
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $query = $communitiesTable->find()->where([
             'id' => 1,
             'presentation_a' => implode('-', $data['presentation_a']),
@@ -485,7 +485,7 @@ class CommunitiesControllerTest extends ApplicationTest
             },
         ]);
         $this->assertEquals(1, $query->count());
-        $optOutsTable = TableRegistry::get('OptOuts');
+        $optOutsTable = TableRegistry::getTableLocator()->get('OptOuts');
         $query = $optOutsTable->find()->where([
             'user_id' => $this->adminUser['Auth']['User']['id'],
             'community_id' => 1,
@@ -521,7 +521,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $data = ['score' => 2];
         $this->put($url, $data);
         $this->assertResponseSuccess();
-        $communitiesTable = TableRegistry::get('Communities');
+        $communitiesTable = TableRegistry::getTableLocator()->get('Communities');
         $query = $communitiesTable->find()->where([
             'id' => 1,
             'score' => $data['score'],
@@ -549,7 +549,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->assertRedirectToLogin($url);
 
         // Confirm existing association
-        $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
+        $clientsCommunitiesTable = TableRegistry::getTableLocator()->get('ClientsCommunities');
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 1,
             'client_id' => 2,
@@ -593,7 +593,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->assertResponseOk();
 
         // Confirm existing association
-        $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
+        $clientsCommunitiesTable = TableRegistry::getTableLocator()->get('ClientsCommunities');
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 1,
             'client_id' => 2,

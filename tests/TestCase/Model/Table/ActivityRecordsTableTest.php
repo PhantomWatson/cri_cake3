@@ -39,7 +39,7 @@ class ActivityRecordsTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('ActivityRecords') ? [] : ['className' => 'App\Model\Table\ActivityRecordsTable'];
-        $this->ActivityRecords = TableRegistry::get('ActivityRecords', $config);
+        $this->ActivityRecords = TableRegistry::getTableLocator()->get('ActivityRecords', $config);
     }
 
     /**

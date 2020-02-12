@@ -37,7 +37,7 @@ class SurveysTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Surveys') ? [] : ['className' => 'App\Model\Table\SurveysTable'];
-        $this->Surveys = TableRegistry::get('Surveys', $config);
+        $this->Surveys = TableRegistry::getTableLocator()->get('Surveys', $config);
     }
 
     /**

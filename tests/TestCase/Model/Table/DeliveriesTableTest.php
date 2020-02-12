@@ -39,7 +39,7 @@ class DeliveriesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Deliveries') ? [] : ['className' => 'App\Model\Table\DeliveriesTable'];
-        $this->Deliveries = TableRegistry::get('Deliveries', $config);
+        $this->Deliveries = TableRegistry::getTableLocator()->get('Deliveries', $config);
     }
 
     /**

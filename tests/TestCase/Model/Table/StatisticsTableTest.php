@@ -36,7 +36,7 @@ class StatisticsTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Statistics') ? [] : ['className' => 'App\Model\Table\StatisticsTable'];
-        $this->Statistics = TableRegistry::get('Statistics', $config);
+        $this->Statistics = TableRegistry::getTableLocator()->get('Statistics', $config);
     }
 
     /**

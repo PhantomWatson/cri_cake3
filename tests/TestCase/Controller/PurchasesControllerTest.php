@@ -55,7 +55,7 @@ class PurchasesControllerTest extends ApplicationTest
         $productCode = 'EMC001-S483';
 
         // Confirm purchase has not yet been made
-        $purchasesTable = TableRegistry::get('Purchases');
+        $purchasesTable = TableRegistry::getTableLocator()->get('Purchases');
         $isPurchased = function () use ($purchasesTable, $userId, $communityId, $productId) {
             return (bool)$purchasesTable->find()
                 ->where([

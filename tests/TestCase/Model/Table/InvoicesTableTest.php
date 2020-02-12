@@ -40,7 +40,7 @@ class InvoicesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Invoices') ? [] : ['className' => 'App\Model\Table\InvoicesTable'];
-        $this->Invoices = TableRegistry::get('Invoices', $config);
+        $this->Invoices = TableRegistry::getTableLocator()->get('Invoices', $config);
     }
 
     /**

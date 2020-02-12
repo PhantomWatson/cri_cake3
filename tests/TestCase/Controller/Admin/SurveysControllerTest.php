@@ -47,7 +47,7 @@ class SurveysControllerTest extends ApplicationTest
             'environment' => ['HTTPS' => 'on'],
         ]);
 
-        $this->Surveys = TableRegistry::get('Surveys');
+        $this->Surveys = TableRegistry::getTableLocator()->get('Surveys');
         $this->Surveys->getEventManager()->setEventList(new EventList());
     }
 

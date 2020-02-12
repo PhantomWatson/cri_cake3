@@ -36,7 +36,7 @@ class AlertSenderTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->users = TableRegistry::get('Users');
+        $this->users = TableRegistry::getTableLocator()->get('Users');
     }
 
     /**

@@ -30,7 +30,7 @@ class StatCategoriesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('StatCategories') ? [] : ['className' => 'App\Model\Table\StatCategoriesTable'];
-        $this->StatCategories = TableRegistry::get('StatCategories', $config);
+        $this->StatCategories = TableRegistry::getTableLocator()->get('StatCategories', $config);
     }
 
     /**

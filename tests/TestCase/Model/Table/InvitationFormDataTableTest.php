@@ -36,7 +36,7 @@ class InvitationFormDataTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('InvitationFormData') ? [] : ['className' => 'App\Model\Table\InvitationFormDataTable'];
-        $this->InvitationFormData = TableRegistry::get('InvitationFormData', $config);
+        $this->InvitationFormData = TableRegistry::getTableLocator()->get('InvitationFormData', $config);
     }
 
     /**
