@@ -204,7 +204,7 @@ class SurveysController extends AppController
                 'surveyType' => $survey->type,
                 'remindedCount' => count($recipients)
             ]]);
-            $this->eventManager()->dispatch($event);
+            $this->getEventManager()->dispatch($event);
 
             return $this->redirect([
                 'prefix' => 'client',

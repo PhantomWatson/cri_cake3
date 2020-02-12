@@ -208,7 +208,7 @@ class SurveysController extends AppController
                 'surveyType' => $survey->type,
                 'responseCount' => $importedCount
             ]]);
-            $this->eventManager()->dispatch($event);
+            $this->getEventManager()->dispatch($event);
         }
 
         $this->set(compact('message'));

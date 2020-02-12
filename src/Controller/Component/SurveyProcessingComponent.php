@@ -188,7 +188,7 @@ class SurveyProcessingComponent extends Component
                 'surveyType' => $survey->type,
                 'invitedCount' => count($this->successEmails)
             ]]);
-            $this->_registry->getController()->eventManager()->dispatch($event);
+            $this->_registry->getController()->getEventManager()->dispatch($event);
         } catch (\Exception $e) {
             $this->errorEmails = array_merge($this->errorEmails, $this->recipients);
             $class = get_class($e);

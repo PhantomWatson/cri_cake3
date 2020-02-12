@@ -134,7 +134,7 @@ class PurchasesController extends AppController
                         'communityId' => $purchase->community_id,
                         'productName' => $product->description
                     ]]);
-                    $this->eventManager()->dispatch($event);
+                    $this->getEventManager()->dispatch($event);
                 } else {
                     $this->Flash->error('There was an error saving that refund record.');
                 }
@@ -175,7 +175,7 @@ class PurchasesController extends AppController
                     'productName' => $product->description,
                     'productId' => $product->id
                 ]]);
-                $this->eventManager()->dispatch($event);
+                $this->getEventManager()->dispatch($event);
 
                 return $this->redirect([
                     'action' => 'index'
