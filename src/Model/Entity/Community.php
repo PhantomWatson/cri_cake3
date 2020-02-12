@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -29,7 +31,6 @@ use Cake\ORM\Entity;
  */
 class Community extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -58,13 +59,13 @@ class Community extends Entity
         'active' => true,
         'intAlignmentAdjustment' => true,
         'intAlignmentThreshold' => true,
-        'slug' => true
+        'slug' => true,
     ];
 
     /**
      * Automatically set the 'type' field for OfficialSurvey entities
      *
-     * @param Entity $survey Survey entity
+     * @param \Cake\ORM\Entity $survey Survey entity
      * @return mixed
      */
     protected function _setOfficialSurvey($survey)
@@ -77,7 +78,7 @@ class Community extends Entity
     /**
      * Automatically set the 'type' field for OrganizationSurvey entities
      *
-     * @param Entity $survey Survey entity
+     * @param \Cake\ORM\Entity $survey Survey entity
      * @return mixed
      */
     protected function _setOrganizationSurvey($survey)

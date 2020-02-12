@@ -10,7 +10,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class DeliveriesFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -41,23 +40,23 @@ class DeliveriesFixture extends TestFixture
     public $records = [
         [
             'deliverable_id' => DeliverablesTable::PRESENTATION_A_MATERIALS,
-            'community_id' => 1
+            'community_id' => 1,
         ],
         [
             'deliverable_id' => DeliverablesTable::PRESENTATION_A_MATERIALS,
-            'community_id' => 7
+            'community_id' => 7,
         ],
         [
             'deliverable_id' => DeliverablesTable::PRESENTATION_B_MATERIALS,
-            'community_id' => 7
+            'community_id' => 7,
         ],
         [
             'deliverable_id' => DeliverablesTable::PRESENTATION_C_MATERIALS,
-            'community_id' => 7
+            'community_id' => 7,
         ],
         [
             'deliverable_id' => DeliverablesTable::PRESENTATION_D_MATERIALS,
-            'community_id' => 7
+            'community_id' => 7,
         ],
     ];
 
@@ -71,7 +70,7 @@ class DeliveriesFixture extends TestFixture
         parent::init();
         $defaultData = [
             'user_id' => 1,
-            'created' => '2017-05-10 19:10:17'
+            'created' => '2017-05-10 19:10:17',
         ];
 
         foreach ($this->records as $n => &$record) {

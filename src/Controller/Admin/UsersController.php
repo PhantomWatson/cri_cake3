@@ -1,14 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
-use App\Model\Entity\User;
 use Cake\Event\Event;
-use Cake\Http\Response;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\ORM\TableRegistry;
-use Queue\Model\Table\QueuedJobsTable;
 
 class UsersController extends AppController
 {
@@ -54,16 +53,16 @@ class UsersController extends AppController
                 'all' => 'All Users',
                 'client' => 'Clients',
                 'consultant' => 'Consultants',
-                'admin' => 'Admins'
+                'admin' => 'Admins',
             ],
-            'currentFilter' => $filter
+            'currentFilter' => $filter,
         ]);
     }
 
     /**
      * Sets variables in the view for the user add/edit form
      *
-     * @param User $user User
+     * @param \App\Model\Entity\User $user User
      * @return void
      */
     private function prepareForm($user)
@@ -77,7 +76,7 @@ class UsersController extends AppController
             foreach ($user->consultant_communities as $community) {
                 $selectedCommunities[] = [
                     'id' => $community->id,
-                    'name' => $communities[$community->id]
+                    'name' => $communities[$community->id],
                 ];
             }
         }
@@ -92,7 +91,7 @@ class UsersController extends AppController
             'roles' => [
                 'admin' => 'Admin',
                 'client' => 'Client',
-                'consultant' => 'Consultant'
+                'consultant' => 'Consultant',
             ],
             'salutations' => $this->Users->getSalutations(),
             'selectedCommunities' => $selectedCommunities,
@@ -103,7 +102,7 @@ class UsersController extends AppController
     /**
      * Add method
      *
-     * @return Response
+     * @return \Cake\Http\Response
      */
     public function add()
     {
@@ -131,12 +130,12 @@ class UsersController extends AppController
                     'newUserId' => $user->id,
                     'userName' => $user->name,
                     'userRole' => $user->role,
-                    'communityId' => $clientCommunityId ? $clientCommunityId : null
+                    'communityId' => $clientCommunityId ? $clientCommunityId : null,
                 ]]);
                 $this->getEventManager()->dispatch($event);
 
                 try {
-                    /** @var QueuedJobsTable $queuedJobs */
+                    /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
                     $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
                     $queuedJobs->createJob(
                         'NewAccountEmail',
@@ -144,9 +143,9 @@ class UsersController extends AppController
                             'user' => [
                                 'name' => $user->name,
                                 'email' => $user->email,
-                                'role' => $user->role
+                                'role' => $user->role,
                             ],
-                            'unhashedPassword' => $this->request->getData('new_password')
+                            'unhashedPassword' => $this->request->getData('new_password'),
                         ],
                         ['reference' => $user->email]
                     );
@@ -155,7 +154,7 @@ class UsersController extends AppController
 
                     return $this->redirect([
                         'prefix' => 'admin',
-                        'action' => 'index'
+                        'action' => 'index',
                     ]);
                 } catch (\Exception $e) {
                     $this->Users->delete($user);
@@ -176,7 +175,7 @@ class UsersController extends AppController
 
         $this->prepareForm($user);
         $this->set([
-            'titleForLayout' => 'Add User'
+            'titleForLayout' => 'Add User',
         ]);
         $this->render('/Admin/Users/form');
     }
@@ -220,7 +219,7 @@ class UsersController extends AppController
 
                     return $this->redirect([
                         'prefix' => 'admin',
-                        'action' => 'index'
+                        'action' => 'index',
                     ]);
                 }
             } else {
@@ -230,7 +229,7 @@ class UsersController extends AppController
 
         $this->prepareForm($user);
         $this->set([
-            'titleForLayout' => $user->name
+            'titleForLayout' => $user->name,
         ]);
         $this->render('/Admin/Users/form');
     }
@@ -254,7 +253,7 @@ class UsersController extends AppController
             // Dispatch event
             $event = new Event('Model.User.afterDelete', $this, ['meta' => [
                 'userName' => $user->name,
-                'userRole' => $user->role
+                'userRole' => $user->role,
             ]]);
             $this->getEventManager()->dispatch($event);
         } else {
@@ -263,7 +262,7 @@ class UsersController extends AppController
 
         return $this->redirect([
             'prefix' => 'admin',
-            'action' => 'index'
+            'action' => 'index',
         ]);
     }
 
@@ -291,14 +290,14 @@ class UsersController extends AppController
                 return $this->redirect([
                     'prefix' => 'client',
                     'controller' => 'Communities',
-                    'action' => 'index'
+                    'action' => 'index',
                 ]);
             }
         }
         $this->set([
             'communities' => $communitiesTable->getClientCommunityList(),
             'redirect' => urldecode($this->request->getQuery('redirect')),
-            'titleForLayout' => 'Choose client'
+            'titleForLayout' => 'Choose client',
         ]);
     }
 }

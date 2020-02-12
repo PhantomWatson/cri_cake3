@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller;
 
-use App\Model\Table\ProductsTable;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
@@ -12,7 +13,6 @@ use Cake\ORM\TableRegistry;
  */
 class PurchasesController extends AppController
 {
-
     /**
      * beforeFilter method
      *
@@ -34,7 +34,7 @@ class PurchasesController extends AppController
     public function postback()
     {
         if ($this->request->getData('respmessage') == 'SUCCESS') {
-            /** @var ProductsTable $productsTable */
+            /** @var \App\Model\Table\ProductsTable $productsTable */
             $productsTable = TableRegistry::get('Products');
             $itemCode = explode('-', $this->request->getData('itemcode1'));
             $productId = $productsTable->getIdFromItemCode($itemCode[1]);
@@ -45,7 +45,7 @@ class PurchasesController extends AppController
                 'product_id' => $productId,
                 'amount' => $amount,
                 'source' => 'self',
-                'postback' => base64_encode(serialize($this->request->getData()))
+                'postback' => base64_encode(serialize($this->request->getData())),
             ]);
             if ($this->Purchases->save($purchase)) {
                 // Dispatch event
@@ -54,7 +54,7 @@ class PurchasesController extends AppController
                     'userId' => $this->request->getData('custcode'),
                     'communityId' => $this->request->getData('ref1val1'),
                     'productName' => $product->description,
-                    'productId' => $product->id
+                    'productId' => $product->id,
                 ]]);
                 $this->getEventManager()->dispatch($event);
             }

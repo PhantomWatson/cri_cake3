@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\PurchasesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -10,7 +11,6 @@ use Cake\TestSuite\TestCase;
  */
 class PurchasesTableTest extends TestCase
 {
-
     /**
      * Fixtures
      *
@@ -23,7 +23,7 @@ class PurchasesTableTest extends TestCase
         'app.Purchases',
         'app.Statistics',
         'app.Surveys',
-        'app.Users'
+        'app.Users',
     ];
 
     /**

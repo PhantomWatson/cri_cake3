@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Client;
 
 use App\Controller\AppController;
@@ -55,7 +57,7 @@ class CommunitiesController extends AppController
         $currentlyActive = $community->active;
         if ($this->request->is('put')) {
             $community = $this->Communities->patchEntity($community, [
-                'active' => true
+                'active' => true,
             ]);
 
             $adminEmail = Configure::read('admin_email');
@@ -70,7 +72,7 @@ class CommunitiesController extends AppController
                 // Dispatch event
                 $eventName = 'Model.Community.afterActivate';
                 $event = new Event($eventName, $this, ['meta' => [
-                    'communityId' => $communityId
+                    'communityId' => $communityId,
                 ]]);
                 $this->getEventManager()->dispatch($event);
             } else {
@@ -81,7 +83,7 @@ class CommunitiesController extends AppController
         $this->set([
             'community' => $community,
             'currentlyActive' => $currentlyActive,
-            'titleForLayout' => 'Reactivate Account'
+            'titleForLayout' => 'Reactivate Account',
         ]);
     }
 }

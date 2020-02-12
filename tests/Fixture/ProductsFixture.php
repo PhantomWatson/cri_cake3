@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class ProductsFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -45,7 +44,7 @@ class ProductsFixture extends TestFixture
             'item_code' => 'S482',
             'price' => 3500,
             'step' => 1,
-            'prerequisite' => null
+            'prerequisite' => null,
         ],
         [
             'id' => 2,
@@ -53,7 +52,7 @@ class ProductsFixture extends TestFixture
             'item_code' => 'S483',
             'price' => 1500,
             'step' => 2,
-            'prerequisite' => 1
+            'prerequisite' => 1,
         ],
         [
             'id' => 3,
@@ -61,7 +60,7 @@ class ProductsFixture extends TestFixture
             'item_code' => 'S484',
             'price' => 3500,
             'step' => 2,
-            'prerequisite' => 1
+            'prerequisite' => 1,
         ],
         [
             'id' => 4,
@@ -69,7 +68,7 @@ class ProductsFixture extends TestFixture
             'item_code' => 'S485',
             'price' => 1500,
             'step' => 3,
-            'prerequisite' => 3
+            'prerequisite' => 3,
         ],
         [
             'id' => 5,
@@ -77,7 +76,7 @@ class ProductsFixture extends TestFixture
             'item_code' => 'S486',
             'price' => 5000,
             'step' => 3,
-            'prerequisite' => 3
+            'prerequisite' => 3,
         ],
     ];
 }

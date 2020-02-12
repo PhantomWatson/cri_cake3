@@ -1,13 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Event;
 
-use App\Model\Entity\Community;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Network\Exception\InternalErrorException;
-use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
-use Queue\Model\Table\QueuedJobsTable;
 
 class EmailListener implements EventListenerInterface
 {
@@ -20,7 +19,7 @@ class EmailListener implements EventListenerInterface
     {
         return [
             'Model.Community.afterAutomaticAdvancement' => 'sendCommunityPromotedEmail',
-            'Model.Community.afterScoreIncrease' => 'sendCommunityPromotedEmail'
+            'Model.Community.afterScoreIncrease' => 'sendCommunityPromotedEmail',
         ];
     }
 
@@ -30,7 +29,7 @@ class EmailListener implements EventListenerInterface
      * @param \Cake\Event\Event $event Event
      * @param array $meta Array of metadata (communityId, etc.)
      * @return void
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      * @throws \Exception
      */
     public function sendCommunityPromotedEmail(Event $event, array $meta = [])
@@ -38,20 +37,20 @@ class EmailListener implements EventListenerInterface
         $communitiesTable = TableRegistry::get('Communities');
         $toStep = $this->getToStep($meta);
 
-        /** @var Community $community */
+        /** @var \App\Model\Entity\Community $community */
         $community = $communitiesTable->find()
             ->select(['id', 'name', 'slug'])
             ->where(['id' => $meta['communityId']])
             ->contain([
                 'Clients' => function ($q) {
-                    /** @var Query $q */
+                    /** @var \Cake\ORM\Query $q */
 
                     return $q->select(['id', 'name', 'email']);
-                }
+                },
             ])
             ->first();
 
-        /** @var QueuedJobsTable $queuedJobs */
+        /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
         $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
 
         foreach ($community->clients as $client) {
@@ -60,10 +59,10 @@ class EmailListener implements EventListenerInterface
                 [
                     'user' => [
                         'name' => $client->name,
-                        'email' => $client->email
+                        'email' => $client->email,
                     ],
                     'community' => ['name' => $community->name],
-                    'toStep' => $toStep
+                    'toStep' => $toStep,
                 ],
                 ['reference' => $client->email]
             );
@@ -75,7 +74,7 @@ class EmailListener implements EventListenerInterface
      *
      * @param array $meta Event metadata
      * @return int
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     private function getToStep($meta)
     {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -37,7 +39,6 @@ use Cake\Utility\Hash;
  */
 class AppController extends Controller
 {
-
     public $helpers = ['Tools.Time'];
 
     /**
@@ -60,12 +61,12 @@ class AppController extends Controller
 
         $this->loadComponent('Security', [
             'blackHoleCallback' => 'forceSSL',
-            'validatePost' => false
+            'validatePost' => false,
         ]);
 
         $this->loadComponent('Cookie', [
             'encryption' => 'aes',
-            'key' => Configure::read('cookie_key')
+            'key' => Configure::read('cookie_key'),
         ]);
 
         $this->loadAuthComponent();
@@ -102,30 +103,30 @@ class AppController extends Controller
                 'prefix' => false,
                 'plugin' => false,
                 'controller' => 'Users',
-                'action' => 'login'
+                'action' => 'login',
             ],
             'logoutRedirect' => [
                 'prefix' => false,
                 'plugin' => false,
                 'controller' => 'Pages',
-                'action' => 'home'
+                'action' => 'home',
             ],
             'authenticate' => [
                 'Form' => [
                     'fields' => ['username' => 'email'],
                     'passwordHasher' => [
                         'className' => 'Fallback',
-                        'hashers' => ['Default', 'Legacy']
-                    ]
+                        'hashers' => ['Default', 'Legacy'],
+                    ],
                 ],
                 'Xety/Cake3CookieAuth.Cookie' => [
                     'cookie' => [
-                        'name' => 'CookieAuth'
+                        'name' => 'CookieAuth',
                     ],
-                    'fields' => ['username' => 'email']
-                ]
+                    'fields' => ['username' => 'email'],
+                ],
             ],
-            'authorize' => ['Controller']
+            'authorize' => ['Controller'],
         ]);
         $this->Auth->deny();
         $errorMessage = $this->Auth->user() ?
@@ -147,7 +148,7 @@ class AppController extends Controller
         // Set accessible communities
         $usersTable = TableRegistry::get('Users');
         $this->set([
-            'accessibleCommunities' => $usersTable->getAccessibleCommunities($this->Auth->user('id'))
+            'accessibleCommunities' => $usersTable->getAccessibleCommunities($this->Auth->user('id')),
         ]);
 
         // Automatically log in
@@ -168,13 +169,13 @@ class AppController extends Controller
                 'enroll',
                 'credits',
                 'glossary',
-                'sendTestEmail'
+                'sendTestEmail',
             ];
             if (!in_array($this->request->getParam('action'), $allowedActions)) {
                 return $this->redirect([
                     'prefix' => false,
                     'controller' => 'Pages',
-                    'action' => 'maintenance'
+                    'action' => 'maintenance',
                 ]);
             }
         }
@@ -194,7 +195,8 @@ class AppController extends Controller
             $this->prepareAdminHeader();
         }
 
-        if (!array_key_exists('_serialize', $this->viewVars) &&
+        if (
+            !array_key_exists('_serialize', $this->viewVars) &&
             in_array($this->response->getType(), ['application/json', 'application/xml'])
         ) {
             $this->set('_serialize', true);
@@ -238,7 +240,7 @@ class AppController extends Controller
      * Redirects (returns a redirect Response object) to the page used by admins for choosing a client to impersonate
      *
      * @return \Cake\Http\Response
-     * @throws ForbiddenException
+     * @throws \Cake\Network\Exception\ForbiddenException
      */
     protected function chooseClientToImpersonate()
     {
@@ -250,7 +252,7 @@ class AppController extends Controller
             'prefix' => 'admin',
             'controller' => 'Users',
             'action' => 'chooseClient',
-            'redirect' => urlencode(Router::url([]))
+            'redirect' => urlencode(Router::url([])),
         ]);
     }
 
@@ -318,13 +320,13 @@ class AppController extends Controller
                 'sidebar' => [
                     'communities' => $communitiesTable->getClientCommunityList(),
                     'communityId' => $this->Cookie->read('communityId'),
-                    'clientId' => $this->Cookie->read('clientId')
-                ]
+                    'clientId' => $this->Cookie->read('clientId'),
+                ],
             ]);
         }
 
         $this->set([
-            'authUser' => $this->Auth->user()
+            'authUser' => $this->Auth->user(),
         ]);
     }
 
@@ -344,7 +346,7 @@ class AppController extends Controller
         $route = [
             'prefix' => 'admin',
             'plugin' => false,
-            'controller' => 'Communities'
+            'controller' => 'Communities',
         ];
         $communityPages = [
             'Edit' => Router::url($route + ['action' => 'edit']) . '/{community-slug}',
@@ -357,15 +359,15 @@ class AppController extends Controller
                 'prefix' => 'admin',
                 'plugin' => false,
                 'controller' => 'Purchases',
-                'action' => 'view'
+                'action' => 'view',
             ]) . '/{community-slug}',
             'Activity' => Router::url([
                 'prefix' => 'admin',
                 'plugin' => false,
                 'controller' => 'ActivityRecords',
-                'action' => 'community'
+                'action' => 'community',
             ]) . '/{community-id}',
-            '(De)activate' => Router::url($route + ['action' => 'activate']) . '/{community-slug}'
+            '(De)activate' => Router::url($route + ['action' => 'activate']) . '/{community-slug}',
         ];
 
         $route = [
@@ -379,7 +381,7 @@ class AppController extends Controller
             'Invitations' => Router::url($route + ['controller' => 'Surveys', 'action' => 'invite']) . '/{survey-id}',
             'Reminders' => Router::url($route + ['controller' => 'Surveys', 'action' => 'remind']) . '/{survey-id}',
             'Respondents' => Router::url($route + ['controller' => 'Respondents', 'action' => 'view']) . '/{survey-id}',
-            'Alignment' => Router::url($route + ['controller' => 'Responses', 'action' => 'view']) . '/{survey-id}'
+            'Alignment' => Router::url($route + ['controller' => 'Responses', 'action' => 'view']) . '/{survey-id}',
         ];
 
         $this->loadModel('Surveys');
@@ -397,8 +399,8 @@ class AppController extends Controller
                 'currentUrl' => '/' . $this->request->getPath(),
                 'slugs' => $slugs,
                 'surveyIds' => $surveyIds,
-                'surveyPages' => $surveyPages
-            ]
+                'surveyPages' => $surveyPages,
+            ],
         ]);
     }
 }

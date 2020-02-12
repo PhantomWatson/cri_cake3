@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -17,7 +19,6 @@ namespace App\Controller;
 use App\Maps\Map;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\TableRegistry;
-use Queue\Model\Table\QueuedJobsTable;
 
 /**
  * Static content controller
@@ -51,9 +52,9 @@ class PagesController extends AppController
         $this->set([
             'map' => [
                 'colors' => Map::getColors(),
-                'data' => Map::getMapData()
+                'data' => Map::getMapData(),
             ],
-            'titleForLayout' => ''
+            'titleForLayout' => '',
         ]);
     }
 
@@ -115,7 +116,7 @@ class PagesController extends AppController
      */
     public function sendTestEmail($recipient)
     {
-        /** @var QueuedJobsTable $queuedJobs */
+        /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
         $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
         $queuedJobs->createJob(
             'EmailTest',

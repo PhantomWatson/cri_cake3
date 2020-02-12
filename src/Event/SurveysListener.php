@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Event;
 
@@ -52,7 +53,7 @@ class SurveysListener implements EventListenerInterface
     /**
      * Updates the reminder_sent field for the specified survey
      *
-     * @param Event $event Event entity
+     * @param \Cake\Event\Event $event Event entity
      * @param array $meta Array of metadata
      * @return void
      */

@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
 use Cake\Network\Exception\InternalErrorException;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -28,7 +29,6 @@ use Cake\Validation\Validator;
  */
 class OptOutsTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -47,15 +47,15 @@ class OptOutsTable extends Table
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->belongsTo('Communities', [
             'foreignKey' => 'community_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->belongsTo('Products', [
             'foreignKey' => 'product_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
     }
 
@@ -95,7 +95,7 @@ class OptOutsTable extends Table
      *
      * @param array $params Parameters
      * @return bool
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     public function addOptOut(array $params)
     {
@@ -112,7 +112,7 @@ class OptOutsTable extends Table
             ->where([
                 'user_id' => $params['user_id'],
                 'community_id' => $params['community_id'],
-                'product_id' => $productId
+                'product_id' => $productId,
             ])
             ->count();
 
@@ -124,7 +124,7 @@ class OptOutsTable extends Table
         $optOut = $this->newEntity([
             'user_id' => $params['user_id'],
             'community_id' => $params['community_id'],
-            'product_id' => $productId
+            'product_id' => $productId,
         ]);
 
         return (bool)$this->save($optOut);
@@ -158,7 +158,7 @@ class OptOutsTable extends Table
         $count = $this->find('all')
             ->where([
                 'community_id' => $communityId,
-                'product_id' => $productId
+                'product_id' => $productId,
             ])
             ->count();
 

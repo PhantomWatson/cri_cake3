@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Reports\FullReports\Sheets;
 
-use App\Reports\Spreadsheet;
 use App\View\Helper\ActivityRecordsHelper;
 use Cake\View\Helper\TimeHelper;
 
@@ -10,7 +11,7 @@ class RecentActivitySheet
     /**
      * Adds an Officials Survey sheet to the provided workbook and returns the workbook
      *
-     * @param Spreadsheet $workbook Spreadsheet workbook
+     * @param \App\Reports\Spreadsheet $workbook Spreadsheet workbook
      * @param array $data Report data
      * @return mixed
      */
@@ -64,7 +65,7 @@ class RecentActivitySheet
                 'Recreation' => 4,
                 'Overall' => 4,
                 'Yes' => 7,
-                'No / Unknown' => 7
+                'No / Unknown' => 7,
             ]);
 
         return $workbook;
@@ -81,7 +82,7 @@ class RecentActivitySheet
             'Community',
             'Area',
             'Activity',
-            'Date'
+            'Date',
         ];
     }
 
@@ -104,7 +105,7 @@ class RecentActivitySheet
                     'community' => $community['name'],
                     'area' => $community['parentArea'],
                     'event' => $ActivityRecordsHelper->event($activityRecord),
-                    'time' => $Time->format($activityRecord->created, 'MMM d Y, h:mma', false, 'America/New_York')
+                    'time' => $Time->format($activityRecord->created, 'MMM d Y, h:mma', false, 'America/New_York'),
                 ];
             }
         }

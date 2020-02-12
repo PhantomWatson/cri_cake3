@@ -1,26 +1,23 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Client;
 
 use App\Controller\AppController;
-use App\Controller\Component\SurveyProcessingComponent;
-use App\Model\Table\CommunitiesTable;
-use App\Model\Table\RespondentsTable;
-use App\Model\Table\SurveysTable;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
-use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Queue\Model\Table\QueuedJobsTable;
 
 /**
  * Surveys Controller
  *
  * @property \App\Model\Table\SurveysTable $Surveys
- * @property SurveyProcessingComponent $SurveyProcessing
+ * @property \App\Controller\Component\SurveyProcessingComponent $SurveyProcessing
  */
 class SurveysController extends AppController
 {
@@ -43,7 +40,7 @@ class SurveysController extends AppController
      *
      * @param string|null $respondentTypePlural Either 'officials' or 'organizations'
      * @return \Cake\Http\Response
-     * @throws BadRequestException
+     * @throws \Cake\Network\Exception\BadRequestException
      */
     public function invite($respondentTypePlural = null)
     {
@@ -52,7 +49,7 @@ class SurveysController extends AppController
         if (! $clientId) {
             return $this->chooseClientToImpersonate();
         }
-        /** @var CommunitiesTable $communitiesTable */
+        /** @var \App\Model\Table\CommunitiesTable $communitiesTable */
         $communitiesTable = TableRegistry::get('Communities');
         $communityId = $communitiesTable->getClientCommunityId($clientId);
         if (! $communityId || ! $communitiesTable->exists(['id' => $communityId])) {
@@ -79,7 +76,7 @@ class SurveysController extends AppController
                 $this->SurveyProcessing->clearSavedInvitations($surveyId, $userId);
                 $invitees = $this->SurveyProcessing->pendingInvitees;
             } elseif (stripos($submitMode, 'save') !== false) {
-                list($saveResult, $msg) = $this->SurveyProcessing->saveInvitations(
+                [$saveResult, $msg] = $this->SurveyProcessing->saveInvitations(
                     $this->request->getData('invitees'),
                     $surveyId,
                     $userId
@@ -90,7 +87,7 @@ class SurveysController extends AppController
                     return $this->redirect([
                         'prefix' => 'clients',
                         'controller' => 'Communities',
-                        'action' => 'index'
+                        'action' => 'index',
                     ]);
                 } else {
                     $this->Flash->error($msg);
@@ -104,7 +101,7 @@ class SurveysController extends AppController
             $invitees = $this->SurveyProcessing->getSavedInvitations($surveyId, $userId);
         }
 
-        /** @var RespondentsTable $respondentsTable */
+        /** @var \App\Model\Table\RespondentsTable $respondentsTable */
         $respondentsTable = TableRegistry::get('Respondents');
         $approvedRespondents = $respondentsTable->getApprovedList($surveyId);
         $unaddressedUnapprovedRespondents = $respondentsTable->getUnaddressedUnapprovedList($surveyId);
@@ -134,8 +131,8 @@ class SurveysController extends AppController
      *
      * @param string $surveyType Survey type
      * @return \Cake\Http\Response|null
-     * @throws NotFoundException
-     * @throws ForbiddenException
+     * @throws \Cake\Http\Exception\NotFoundException
+     * @throws \Cake\Network\Exception\ForbiddenException
      */
     public function remind($surveyType)
     {
@@ -144,14 +141,14 @@ class SurveysController extends AppController
             return $this->chooseClientToImpersonate();
         }
 
-        /** @var CommunitiesTable $communitiesTable */
+        /** @var \App\Model\Table\CommunitiesTable $communitiesTable */
         $communitiesTable = TableRegistry::get('Communities');
         $communityId = $communitiesTable->getClientCommunityId($clientId);
         if (! $communityId) {
             throw new NotFoundException('Your account is not currently assigned to a community');
         }
 
-        /** @var SurveysTable $surveysTable */
+        /** @var \App\Model\Table\SurveysTable $surveysTable */
         $surveysTable = TableRegistry::get('Surveys');
         $surveyId = $surveysTable->getSurveyId($communityId, $surveyType);
         $survey = $surveysTable->get($surveyId);
@@ -159,14 +156,14 @@ class SurveysController extends AppController
             throw new ForbiddenException('Reminders cannot currently be sent out: Questionnaire is inactive');
         }
 
-        /** @var RespondentsTable $respondentsTable */
+        /** @var \App\Model\Table\RespondentsTable $respondentsTable */
         $respondentsTable = TableRegistry::get('Respondents');
         if ($this->request->is('post')) {
             $sender = $this->Auth->user();
             $recipients = $respondentsTable->getUnresponsive($surveyId);
             $recipients = Hash::extract($recipients, '{n}.email');
             try {
-                /** @var QueuedJobsTable $queuedJobs */
+                /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
                 $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
                 foreach ($recipients as $recipient) {
                     $queuedJobs->createJob(
@@ -190,7 +187,7 @@ class SurveysController extends AppController
                     'prefix' => 'client',
                     'controller' => 'Surveys',
                     'action' => 'remind',
-                    $survey->type
+                    $survey->type,
                 ]);
             }
 
@@ -202,14 +199,14 @@ class SurveysController extends AppController
                 'communityId' => $survey->community_id,
                 'surveyId' => $surveyId,
                 'surveyType' => $survey->type,
-                'remindedCount' => count($recipients)
+                'remindedCount' => count($recipients),
             ]]);
             $this->getEventManager()->dispatch($event);
 
             return $this->redirect([
                 'prefix' => 'client',
                 'controller' => 'Communities',
-                'action' => 'index'
+                'action' => 'index',
             ]);
         }
 

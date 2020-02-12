@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class SurveysFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -69,44 +68,44 @@ class SurveysFixture extends TestFixture
             'id' => 1,
             'type' => 'official',
             'community_id' => 1,
-            'active' => true
+            'active' => true,
         ],
         [
             'id' => 2,
             'type' => 'official',
             'community_id' => 2,
-            'active' => true
+            'active' => true,
         ],
         [
             'id' => 3,
             'type' => 'official',
             'community_id' => 2,
-            'active' => true
+            'active' => true,
         ],
         [
             'id' => 4,
             'type' => 'official',
             'community_id' => 4,
-            'active' => false
+            'active' => false,
         ],
         [
             'id' => 5,
             'type' => 'organization',
             'community_id' => 4,
-            'active' => false
+            'active' => false,
         ],
         [
             'id' => 6,
             'type' => 'official',
             'community_id' => 6,
-            'active' => false
+            'active' => false,
         ],
         [
             'id' => 7,
             'type' => 'organization',
             'community_id' => 6,
-            'active' => false
-        ]
+            'active' => false,
+        ],
     ];
 
     /**
@@ -145,7 +144,7 @@ class SurveysFixture extends TestFixture
             'reminder_sent' => null,
             'import_errors' => null,
             'created' => '2016-01-25 16:40:38',
-            'modified' => '2017-02-14 19:48:55'
+            'modified' => '2017-02-14 19:48:55',
         ];
 
         foreach ($this->records as &$record) {

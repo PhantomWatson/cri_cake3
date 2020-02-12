@@ -1,12 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Mailer;
 
-use Cake\Core\Configure;
-use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
-use Cake\Utility\Hash;
 
 class SurveyMailer extends Mailer
 {
@@ -16,7 +15,7 @@ class SurveyMailer extends Mailer
      * @param int $surveyId Survey ID
      * @param array $sender User who is sending the email
      * @param string $recipient Recipient email address
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function reminders($surveyId, $sender, $recipient)
     {
@@ -34,7 +33,7 @@ class SurveyMailer extends Mailer
                 'clients' => $clients,
                 'criUrl' => Router::url('/', true),
                 'surveyType' => $survey->type,
-                'surveyUrl' => $survey->sm_url
+                'surveyUrl' => $survey->sm_url,
             ])
             ->setDomain('cri.cberdata.org');
         if ($sender['email']) {
@@ -48,7 +47,7 @@ class SurveyMailer extends Mailer
      * Sends survey invitations
      *
      * @param array $params [surveyId, communityId, senderEmail, senderName, recipients]
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function invitations($params)
     {
@@ -72,7 +71,7 @@ class SurveyMailer extends Mailer
                 'clients' => $clients,
                 'criUrl' => Router::url('/', true),
                 'surveyType' => $survey->type,
-                'surveyUrl' => $survey->sm_url
+                'surveyUrl' => $survey->sm_url,
             ])
             ->setDomain('cri.cberdata.org');
         if ($senderEmail) {

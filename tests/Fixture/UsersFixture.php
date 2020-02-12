@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class UsersFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -54,20 +53,20 @@ class UsersFixture extends TestFixture
             'email' => 'testadmin@example.com',
             'all_communities' => true,
             'ici_email_optin' => true,
-            'cber_email_optin' => true
+            'cber_email_optin' => true,
         ],
         [
             'id' => 2,
             'role' => 'client',
             'name' => 'Test Client',
-            'email' => 'testclient1@example.com'
+            'email' => 'testclient1@example.com',
         ],
         [
             'id' => 3,
             'role' => 'client',
             'name' => 'Test Client (inactive community)',
-            'email' => 'testclient2@example.com'
-        ]
+            'email' => 'testclient2@example.com',
+        ],
     ];
 
     /**
@@ -88,7 +87,7 @@ class UsersFixture extends TestFixture
             'ici_email_optin' => false,
             'cber_email_optin' => false,
             'created' => '2013-10-16 11:49:38',
-            'modified' => '2016-01-26 01:06:26'
+            'modified' => '2016-01-26 01:06:26',
         ];
 
         foreach ($this->records as &$record) {

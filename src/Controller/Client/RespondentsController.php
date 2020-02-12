@@ -1,12 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Client;
 
 use App\Controller\AppController;
-use App\Model\Entity\Respondent;
 use Cake\Event\Event;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
-use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
 class RespondentsController extends AppController
@@ -16,7 +17,7 @@ class RespondentsController extends AppController
      *
      * @param int $respondentId Respondent ID
      * @param int $clientId Client ID
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      * @return void
      */
     private function checkClientAuthorization($respondentId, $clientId)
@@ -53,7 +54,7 @@ class RespondentsController extends AppController
             $this->set([
                 'titleForLayout' => 'Questionnaire Respondents',
                 'respondents' => [],
-                'surveyType' => $surveyType
+                'surveyType' => $surveyType,
             ]);
         }
     }
@@ -63,7 +64,7 @@ class RespondentsController extends AppController
      *
      * @param string|null $surveyType Survey type
      * @return \Cake\Http\Response
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function unapproved($surveyType = null)
     {
@@ -90,10 +91,10 @@ class RespondentsController extends AppController
             'communityId' => $communityId,
             'respondents' => [
                 'unaddressed' => $this->Respondents->getUnaddressedUnapproved($surveyId),
-                'dismissed' => $this->Respondents->getDismissed($surveyId)
+                'dismissed' => $this->Respondents->getDismissed($surveyId),
             ],
             'surveyType' => $surveyType,
-            'titleForLayout' => $community->name . ' Uninvited ' . ucwords($surveyType) . ' Questionnaire Respondents'
+            'titleForLayout' => $community->name . ' Uninvited ' . ucwords($surveyType) . ' Questionnaire Respondents',
         ]);
     }
 
@@ -102,7 +103,7 @@ class RespondentsController extends AppController
      *
      * @param int $respondentId Respondent ID
      * @return \Cake\Http\Response
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function approveUninvited($respondentId)
     {
@@ -118,7 +119,7 @@ class RespondentsController extends AppController
             $this->dispatchUninvitedEvent(true, $respondent);
         }
         $this->set([
-            'success' => (bool)$result
+            'success' => (bool)$result,
         ]);
         $this->viewBuilder()->setLayout('blank');
     }
@@ -128,7 +129,7 @@ class RespondentsController extends AppController
      *
      * @param int $respondentId Respondent ID
      * @return \Cake\Http\Response
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function dismissUninvited($respondentId)
     {
@@ -144,7 +145,7 @@ class RespondentsController extends AppController
             $this->dispatchUninvitedEvent(false, $respondent);
         }
         $this->set([
-            'success' => (bool)$result
+            'success' => (bool)$result,
         ]);
         $this->viewBuilder()->setLayout('blank');
     }
@@ -153,7 +154,7 @@ class RespondentsController extends AppController
      * Dispatches an event for uninvited respondent approval or dismissal
      *
      * @param bool $approved True for approved and false for dismissed
-     * @param Respondent $respondent Respondent entity
+     * @param \App\Model\Entity\Respondent $respondent Respondent entity
      * @return void
      */
     private function dispatchUninvitedEvent($approved, $respondent)
@@ -167,7 +168,7 @@ class RespondentsController extends AppController
             'surveyId' => $surveyId,
             'respondentId' => $respondent->id,
             'respondentName' => $respondent->name,
-            'surveyType' => $survey->type
+            'surveyType' => $survey->type,
         ]]);
         $this->getEventManager()->dispatch($event);
     }

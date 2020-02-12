@@ -1,13 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Alerts;
 
-use App\Model\Entity\Community;
-use App\Model\Table\CommunitiesTable;
 use App\Model\Table\DeliverablesTable;
-use App\Model\Table\DeliveriesTable;
-use App\Model\Table\OptOutsTable;
 use App\Model\Table\ProductsTable;
-use App\Model\Table\SurveysTable;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -17,12 +14,12 @@ use Cake\ORM\TableRegistry;
  * specified alerts. Only active communities qualify for alerts.
  *
  * @package App\Alerts
- * @property CommunitiesTable $communities
- * @property Community $community
- * @property DeliveriesTable $deliveries
- * @property ProductsTable $products
- * @property SurveysTable $surveys
- * @property OptOutsTable $optOuts
+ * @property \App\Model\Table\CommunitiesTable $communities
+ * @property \App\Model\Entity\Community $community
+ * @property \App\Model\Table\DeliveriesTable $deliveries
+ * @property \App\Model\Table\ProductsTable $products
+ * @property \App\Model\Table\SurveysTable $surveys
+ * @property \App\Model\Table\OptOutsTable $optOuts
  */
 class Alertable
 {

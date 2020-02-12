@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Mailer\Preview;
 
-use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
 use DebugKit\Mailer\MailPreview;
 
@@ -10,7 +11,7 @@ class SurveyEmailPreview extends MailPreview
     /**
      * Preview method for SurveyMailer::reminder()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function reminders()
     {
@@ -27,7 +28,7 @@ class SurveyEmailPreview extends MailPreview
     /**
      * Preview method for SurveyMailer::invitations()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function invitations()
     {
@@ -40,7 +41,7 @@ class SurveyEmailPreview extends MailPreview
                 'communityId' => $survey->community_id,
                 'senderEmail' => 'sender@example.com',
                 'senderName' => 'Fake Sender',
-                'recipients' => ['recipient@example.com']
+                'recipients' => ['recipient@example.com'],
             ]);
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
@@ -17,7 +19,7 @@ class OptOutsController extends AppController
         $result = $this->OptOuts->addOptOut([
             'user_id' => $this->Auth->user('id'),
             'community_id' => $communityId,
-            'product_id' => $productId
+            'product_id' => $productId,
         ]);
         if ($result) {
             $this->Flash->success('Opt-out successful');

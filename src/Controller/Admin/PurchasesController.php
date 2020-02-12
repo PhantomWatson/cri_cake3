@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
-use App\Model\Entity\Community;
-use App\Model\Entity\Purchase;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Http\Exception\NotFoundException;
@@ -16,17 +16,17 @@ class PurchasesController extends AppController
         'conditions' => ['Communities.dummy' => false],
         'contain' => [
             'Communities' => [
-                'fields' => ['id', 'name', 'slug']
+                'fields' => ['id', 'name', 'slug'],
             ],
             'Products' => [
-                'fields' => ['id', 'description', 'price']
+                'fields' => ['id', 'description', 'price'],
             ],
             'Refunders' => [
-                'fields' => ['id', 'name']
+                'fields' => ['id', 'name'],
             ],
             'Users' => [
-                'fields' => ['id', 'name', 'email', 'phone', 'title', 'organization']
-            ]
+                'fields' => ['id', 'name', 'email', 'phone', 'title', 'organization'],
+            ],
         ],
         'fields' => [
             'admin_added',
@@ -39,12 +39,12 @@ class PurchasesController extends AppController
             'refunder_id',
             'source',
             'user_id',
-            'amount'
+            'amount',
         ],
         'limit' => 50,
         'order' => [
-            'Purchases.created' => 'DESC'
-        ]
+            'Purchases.created' => 'DESC',
+        ],
     ];
 
     /**
@@ -57,7 +57,7 @@ class PurchasesController extends AppController
         $this->set([
             'titleForLayout' => 'Payment Records',
             'purchases' => $this->paginate()->toArray(),
-            'sources' => $this->Purchases->getSourceOptions()
+            'sources' => $this->Purchases->getSourceOptions(),
         ]);
     }
 
@@ -66,12 +66,12 @@ class PurchasesController extends AppController
      *
      * @param string $communitySlug Community slug
      * @return void
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function view($communitySlug)
     {
         $communitiesTable = TableRegistry::get('Communities');
-        /** @var Community $community */
+        /** @var \App\Model\Entity\Community $community */
         $community = $communitiesTable->find('slugged', ['slug' => $communitySlug])->first();
 
         if (! $community) {
@@ -86,7 +86,7 @@ class PurchasesController extends AppController
                 ->paginate()
                 ->toArray(),
             'sources' => $this->Purchases->getSourceOptions(),
-            'titleForLayout' => $community->name . ' Payment Records'
+            'titleForLayout' => $community->name . ' Payment Records',
         ]);
     }
 
@@ -132,7 +132,7 @@ class PurchasesController extends AppController
                     $product = $productsTable->get($productId);
                     $event = new Event('Model.Purchase.afterRefund', $this, ['meta' => [
                         'communityId' => $purchase->community_id,
-                        'productName' => $product->description
+                        'productName' => $product->description,
                     ]]);
                     $this->getEventManager()->dispatch($event);
                 } else {
@@ -151,7 +151,7 @@ class PurchasesController extends AppController
      */
     public function add()
     {
-        /** @var Purchase $purchase */
+        /** @var \App\Model\Entity\Purchase $purchase */
         $purchase = $this->Purchases->newEntity();
         $productsTable = TableRegistry::get('Products');
         if ($this->request->is('post')) {
@@ -161,7 +161,7 @@ class PurchasesController extends AppController
                 'admin_added' => true,
                 'user_id' => $this->Auth->user('id'),
                 'postback' => '',
-                'amount' => $product->price
+                'amount' => $product->price,
             ]);
             $purchase = $this->Purchases->patchEntity($purchase, $data);
 
@@ -173,12 +173,12 @@ class PurchasesController extends AppController
                 $event = new Event('Model.Purchase.afterAdminAdd', $this, ['meta' => [
                     'communityId' => $purchase->community_id,
                     'productName' => $product->description,
-                    'productId' => $product->id
+                    'productId' => $product->id,
                 ]]);
                 $this->getEventManager()->dispatch($event);
 
                 return $this->redirect([
-                    'action' => 'index'
+                    'action' => 'index',
                 ]);
             }
             $this->Flash->error('There was an error adding a new purchase record');
@@ -197,7 +197,7 @@ class PurchasesController extends AppController
             'products' => $products,
             'purchase' => $purchase,
             'titleForLayout' => 'Add a New Payment Record',
-            'sources' => $this->Purchases->getSourceOptions()
+            'sources' => $this->Purchases->getSourceOptions(),
         ]);
 
         return null;
@@ -217,7 +217,7 @@ class PurchasesController extends AppController
                     ->find('notBillable')
                     ->toArray(),
                 'form' => null,
-                'date' => 'Purchased'
+                'date' => 'Purchased',
             ],
             'billable' => [
                 'purchases' => $this->Purchases
@@ -229,10 +229,10 @@ class PurchasesController extends AppController
                     'action' => [
                         'prefix' => 'admin',
                         'controller' => 'Invoices',
-                        'action' => 'markBilled'
-                    ]
+                        'action' => 'markBilled',
+                    ],
                 ],
-                'date' => 'Purchased'
+                'date' => 'Purchased',
             ],
             'billed' => [
                 'purchases' => $this->Purchases
@@ -245,10 +245,10 @@ class PurchasesController extends AppController
                     'action' => [
                         'prefix' => 'admin',
                         'controller' => 'Invoices',
-                        'action' => 'markPaid'
-                    ]
+                        'action' => 'markPaid',
+                    ],
                 ],
-                'date' => 'Billed'
+                'date' => 'Billed',
             ],
             'paid' => [
                 'purchases' => $this->Purchases
@@ -256,8 +256,8 @@ class PurchasesController extends AppController
                     ->find('paid')
                     ->toArray(),
                 'form' => null,
-                'date' => 'Billed'
-            ]
+                'date' => 'Billed',
+            ],
         ];
         $totals = [];
         foreach ($purchases as $label => $group) {
@@ -267,7 +267,7 @@ class PurchasesController extends AppController
         $this->set([
             'purchases' => $purchases,
             'titleForLayout' => 'Manage OCRA Funding',
-            'totals' => $totals
+            'totals' => $totals,
         ]);
     }
 
@@ -292,9 +292,9 @@ class PurchasesController extends AppController
             ->contain(['Products']);
 
         foreach ($purchases as $purchase) {
-            /** @var Purchase $purchase */
+            /** @var \App\Model\Entity\Purchase $purchase */
             $purchase = $this->Purchases->patchEntity($purchase, [
-                'amount' => $purchase->product->price
+                'amount' => $purchase->product->price,
             ]);
 
             if (! $this->Purchases->save($purchase)) {

@@ -1,17 +1,17 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Mailer;
 
-use App\Model\Table\CommunitiesTable;
 use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
-use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 
 /**
  * Class AdminAlertMailer
  * @package App\Mailer
- * @property CommunitiesTable $communities
+ * @property \App\Model\Table\CommunitiesTable $communities
  */
 class AdminAlertMailer extends Mailer
 {
@@ -20,9 +20,9 @@ class AdminAlertMailer extends Mailer
     /**
      * AdminAlertMailer constructor
      *
-     * @param Email|null $email Email object or null
+     * @param \Cake\Mailer\Email|null $email Email object or null
      */
-    public function __construct(Email $email = null)
+    public function __construct(?Email $email = null)
     {
         parent::__construct($email);
         $this->communities = TableRegistry::get('Communities');
@@ -32,7 +32,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "deliver presentation A" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function deliverPresentationA($data)
     {
@@ -45,7 +45,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "deliver presentation C" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function deliverPresentationC($data)
     {
@@ -58,7 +58,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "deliver presentation B" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function deliverPresentationB($data)
     {
@@ -71,7 +71,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "deliver presentation D" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function deliverPresentationD($data)
     {
@@ -84,8 +84,8 @@ class AdminAlertMailer extends Mailer
      * Defines a "deliver mandatory presentation" email
      *
      * @param array $data Metadata
-     * @return Email
-     * @throws InternalErrorException
+     * @return \Cake\Mailer\Email
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     private function deliverPresentation($data)
     {
@@ -95,9 +95,9 @@ class AdminAlertMailer extends Mailer
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Deliveries',
-                    'action' => 'add'
+                    'action' => 'add',
                 ]),
-                'presentationLetter' => $data['presentationLetter']
+                'presentationLetter' => $data['presentationLetter'],
             ]);
     }
 
@@ -105,7 +105,7 @@ class AdminAlertMailer extends Mailer
      * Sets mailer configuration shared by multiple methods in this class
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     private function setStandardConfig($data)
     {
@@ -115,7 +115,7 @@ class AdminAlertMailer extends Mailer
             ->setDomain('cri.cberdata.org')
             ->setViewVars([
                 'communityName' => $data['community']['name'],
-                'userName' => $data['user']['name']
+                'userName' => $data['user']['name'],
             ]);
     }
 
@@ -133,7 +133,7 @@ class AdminAlertMailer extends Mailer
         $url = $url + [
             'plugin' => false,
             'prefix' => 'admin',
-            '_full' => true
+            '_full' => true,
         ];
 
         return str_replace('http://', 'https://', Router::url($url));
@@ -143,7 +143,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "create officials survey" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function createOfficialsSurvey($data)
     {
@@ -156,7 +156,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "create organizations survey" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function createOrganizationsSurvey($data)
     {
@@ -169,7 +169,7 @@ class AdminAlertMailer extends Mailer
      * Defines an email informing an administrator that it's time to create a survey
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     private function createSurvey($data)
     {
@@ -183,9 +183,9 @@ class AdminAlertMailer extends Mailer
                     'controller' => 'Surveys',
                     'action' => 'link',
                     $slug,
-                    $data['surveyType']
+                    $data['surveyType'],
                 ]),
-                'surveyType' => $data['surveyType']
+                'surveyType' => $data['surveyType'],
             ]);
     }
 
@@ -193,7 +193,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "create clients" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function createClients($data)
     {
@@ -204,8 +204,8 @@ class AdminAlertMailer extends Mailer
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Communities',
                     'action' => 'addClient',
-                    $data['community']['id']
-                ])
+                    $data['community']['id'],
+                ]),
             ]);
     }
 
@@ -213,7 +213,7 @@ class AdminAlertMailer extends Mailer
      * Defines an "activate officials survey" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function activateOfficialsSurvey($data)
     {
@@ -226,7 +226,7 @@ class AdminAlertMailer extends Mailer
      * Defines an "activate organizations survey" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function activateOrganizationsSurvey($data)
     {
@@ -239,7 +239,7 @@ class AdminAlertMailer extends Mailer
      * Defines an "activate survey" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     private function activateSurvey($data)
     {
@@ -250,9 +250,9 @@ class AdminAlertMailer extends Mailer
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Surveys',
                     'action' => 'activate',
-                    $data['surveyType']
+                    $data['surveyType'],
                 ]),
-                'surveyType' => $data['surveyType']
+                'surveyType' => $data['surveyType'],
             ]);
     }
 
@@ -260,7 +260,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "schedule presentation A" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function schedulePresentationA($data)
     {
@@ -273,7 +273,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "schedule presentation B" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function schedulePresentationB($data)
     {
@@ -286,7 +286,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "schedule presentation C" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function schedulePresentationC($data)
     {
@@ -299,7 +299,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "schedule presentation D" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function schedulePresentationD($data)
     {
@@ -312,7 +312,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "schedule presentation" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     private function schedulePresentation($data)
     {
@@ -325,9 +325,9 @@ class AdminAlertMailer extends Mailer
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Communities',
                     'action' => 'presentations',
-                    $slug
+                    $slug,
                 ]),
-                'presentationLetter' => $data['presentationLetter']
+                'presentationLetter' => $data['presentationLetter'],
             ]);
     }
 
@@ -335,7 +335,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "delivery policy development materials" email
      *
      * @param array $data Metadata
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function deliverPolicyDev($data)
     {
@@ -347,9 +347,9 @@ class AdminAlertMailer extends Mailer
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Deliveries',
-                    'action' => 'add'
+                    'action' => 'add',
                 ]),
-                'clients' => $clients
+                'clients' => $clients,
             ]);
     }
 }

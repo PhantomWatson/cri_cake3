@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
@@ -12,7 +14,6 @@ use Cake\ORM\TableRegistry;
  */
 class ActivityRecordsController extends AppController
 {
-
     /**
      * Initialization hook method.
      *
@@ -36,8 +37,8 @@ class ActivityRecordsController extends AppController
             'contain' => ['Users', 'Communities', 'Surveys'],
             'order' => [
                 'created' => 'DESC',
-                'id' => 'DESC'
-            ]
+                'id' => 'DESC',
+            ],
         ];
         if (! $this->request->getQuery('show-dummy')) {
             $this->paginate['conditions'] = ['dummy' => 0];
@@ -58,12 +59,12 @@ class ActivityRecordsController extends AppController
             'Invitations sent',
             'Reminders sent',
             'Delivery recorded',
-            'Client added to or removed from community'
+            'Client added to or removed from community',
         ];
         $this->set([
             'activityRecords' => $this->paginate($this->ActivityRecords),
             'titleForLayout' => 'Activity Log',
-            'trackedEvents' => $trackedEvents
+            'trackedEvents' => $trackedEvents,
         ]);
         $this->set('_serialize', ['activityRecords']);
     }
@@ -79,7 +80,7 @@ class ActivityRecordsController extends AppController
         $this->paginate = [
             'contain' => ['Users', 'Communities', 'Surveys'],
             'order' => ['created' => 'DESC'],
-            'conditions' => ['ActivityRecords.community_id' => $communityId]
+            'conditions' => ['ActivityRecords.community_id' => $communityId],
         ];
         $communitiesTable = TableRegistry::get('Communities');
         $communityName = null;
@@ -100,7 +101,7 @@ class ActivityRecordsController extends AppController
         $this->set([
             'activityRecords' => $activityRecords,
             'communityId' => $communityId,
-            'titleForLayout' => 'Activity Log: ' . ($communityName ?: "Community #$communityId")
+            'titleForLayout' => 'Activity Log: ' . ($communityName ?: "Community #$communityId"),
         ]);
         $this->set('_serialize', ['activityRecords']);
     }

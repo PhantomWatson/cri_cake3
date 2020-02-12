@@ -1,12 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use Cake\Core\Configure;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\ForbiddenException;
-use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
-use Queue\Model\Table\QueuedJobsTable;
 
 /**
  * Users Controller
@@ -56,7 +57,7 @@ class UsersController extends AppController
         if ($this->Auth->authenticationProvider()->needsPasswordRehash()) {
             $user = $this->Users->get($this->Auth->user('id'));
             $user = $this->Users->patchEntity($user, [
-                'password' => $this->request->getData('password')
+                'password' => $this->request->getData('password'),
             ]);
             $this->Users->save($user);
         }
@@ -65,11 +66,11 @@ class UsersController extends AppController
         if ($this->request->getData('auto_login')) {
             $this->Cookie->configKey('CookieAuth', [
                 'expires' => '+1 year',
-                'httpOnly' => true
+                'httpOnly' => true,
             ]);
             $this->Cookie->write('CookieAuth', [
                 'email' => $this->request->getData('email'),
-                'password' => $this->request->getData('password')
+                'password' => $this->request->getData('password'),
             ]);
         }
 
@@ -112,7 +113,7 @@ class UsersController extends AppController
     {
         $this->set([
             'titleForLayout' => 'Forgot Password',
-            'user' => $this->Users->newEntity()
+            'user' => $this->Users->newEntity(),
         ]);
 
         if (! $this->request->is('post')) {
@@ -134,7 +135,7 @@ class UsersController extends AppController
         $userId = $this->Users->getIdWithEmail($email);
         if ($userId) {
             try {
-                /** @var QueuedJobsTable $queuedJobs */
+                /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
                 $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
                 $queuedJobs->createJob(
                     'ResetPasswordEmail',
@@ -168,8 +169,8 @@ class UsersController extends AppController
      * @param null|int $timestamp Timestamp of hash generation
      * @param null|string $hash Security hash emailed to user
      * @return \Cake\Http\Response|null
-     * @throws NotFoundException
-     * @throws ForbiddenException
+     * @throws \Cake\Http\Exception\NotFoundException
+     * @throws \Cake\Network\Exception\ForbiddenException
      */
     public function resetPassword($userId = null, $timestamp = null, $hash = null)
     {
@@ -203,7 +204,7 @@ class UsersController extends AppController
         $this->set([
             'email' => $email,
             'titleForLayout' => 'Reset Password',
-            'user' => $this->Users->newEntity()
+            'user' => $this->Users->newEntity(),
         ]);
     }
 
@@ -230,8 +231,8 @@ class UsersController extends AppController
                     'ici_email_optin',
                     'name',
                     'new_password',
-                    'password'
-                ]
+                    'password',
+                ],
             ]);
             if ($this->Users->save($user)) {
                 $this->Flash->success('Your account information has been updated');
@@ -243,7 +244,7 @@ class UsersController extends AppController
                 !empty($user->getError('new_password')) ||
                 !empty($user->getError('confirm_password')),
             'titleForLayout' => 'My Account',
-            'user' => $user
+            'user' => $user,
         ]);
     }
 }

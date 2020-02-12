@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Mailer;
 
-use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
 
 class TestMailer extends Mailer
@@ -10,7 +11,7 @@ class TestMailer extends Mailer
      * Defines a test email
      *
      * @param string $recipient Recipient's email address
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function test($recipient)
     {

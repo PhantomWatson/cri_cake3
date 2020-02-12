@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\UsersTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -11,7 +12,6 @@ use Cake\TestSuite\TestCase;
  */
 class UsersTableTest extends TestCase
 {
-
     /**
      * Fixtures
      *

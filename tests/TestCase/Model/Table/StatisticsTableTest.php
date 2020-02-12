@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\StatisticsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -10,7 +11,6 @@ use Cake\TestSuite\TestCase;
  */
 class StatisticsTableTest extends TestCase
 {
-
     /**
      * Fixtures
      *
@@ -24,7 +24,7 @@ class StatisticsTableTest extends TestCase
         'app.StatCategories',
         'app.Statistics',
         'app.Surveys',
-        'app.Users'
+        'app.Users',
     ];
 
     /**

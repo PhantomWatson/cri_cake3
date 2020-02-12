@@ -1,15 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Component;
 
-use App\Model\Entity\InvitationFormData;
-use App\Model\Entity\Respondent;
-use App\Model\Table\RespondentsTable;
 use Cake\Controller\Component;
 use Cake\Event\Event;
 use Cake\Mailer\MailerAwareTrait;
-use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
-use Queue\Model\Table\QueuedJobsTable;
 
 /**
  * @property \Cake\Controller\Component\FlashComponent $Flash
@@ -48,12 +45,12 @@ class SurveyProcessingComponent extends Component
         $existingRecord = $formDataTable->find('all')
             ->where([
                 'survey_id' => $surveyId,
-                'user_id' => $userId
+                'user_id' => $userId,
             ])
             ->first();
         if ($existingRecord) {
             $existingRecord = $formDataTable->patchEntity($existingRecord, [
-                'data' => serialize($formData)
+                'data' => serialize($formData),
             ]);
             $errors = $existingRecord->getErrors();
             $saveResult = $formDataTable->save($existingRecord);
@@ -61,7 +58,7 @@ class SurveyProcessingComponent extends Component
             $savedData = $formDataTable->newEntity([
                 'survey_id' => $surveyId,
                 'user_id' => $userId,
-                'data' => serialize($formData)
+                'data' => serialize($formData),
             ]);
             $errors = $savedData->getErrors();
             $saveResult = $formDataTable->save($savedData);
@@ -93,7 +90,7 @@ class SurveyProcessingComponent extends Component
             ->select(['id'])
             ->where([
                 'survey_id' => $surveyId,
-                'user_id' => $userId
+                'user_id' => $userId,
             ])
             ->first();
         if ($result) {
@@ -116,12 +113,12 @@ class SurveyProcessingComponent extends Component
     {
         $formDataTable = TableRegistry::get('InvitationFormData');
 
-        /** @var InvitationFormData $savedData */
+        /** @var \App\Model\Entity\InvitationFormData $savedData */
         $savedData = $formDataTable->find('all')
             ->select(['data'])
             ->where([
                 'survey_id' => $surveyId,
-                'user_id' => $userId
+                'user_id' => $userId,
             ])
             ->first();
 
@@ -138,7 +135,7 @@ class SurveyProcessingComponent extends Component
      */
     public function sendInvitations($communityId, $respondentType, $surveyId)
     {
-        /** @var RespondentsTable $respondentsTable */
+        /** @var \App\Model\Table\RespondentsTable $respondentsTable */
         $respondentsTable = TableRegistry::get('Respondents');
         $this->approvedRespondents = $respondentsTable->getApprovedList($surveyId);
         $this->unaddressedUnapprovedRespondents = $respondentsTable->getUnaddressedUnapprovedList($surveyId);
@@ -160,7 +157,7 @@ class SurveyProcessingComponent extends Component
         }
 
         try {
-            /** @var QueuedJobsTable $queuedJobs */
+            /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
             $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
             foreach ($this->recipients as $recipient) {
                 $queuedJobs->createJob(
@@ -170,7 +167,7 @@ class SurveyProcessingComponent extends Component
                         'communityId' => $this->communityId,
                         'senderEmail' => $this->Auth->user('email'),
                         'senderName' => $this->Auth->user('name'),
-                        'recipient' => $recipient
+                        'recipient' => $recipient,
                     ],
                     ['reference' => $recipient]
                 );
@@ -186,7 +183,7 @@ class SurveyProcessingComponent extends Component
                 'communityId' => $this->communityId,
                 'surveyId' => $this->surveyId,
                 'surveyType' => $survey->type,
-                'invitedCount' => count($this->successEmails)
+                'invitedCount' => count($this->successEmails),
             ]]);
             $this->_registry->getController()->getEventManager()->dispatch($event);
         } catch (\Exception $e) {
@@ -255,10 +252,10 @@ class SurveyProcessingComponent extends Component
     {
         $this->uninvApprovedEmails[] = $invitee['email'];
 
-        /** @var RespondentsTable $respondentsTable */
+        /** @var \App\Model\Table\RespondentsTable $respondentsTable */
         $respondentsTable = TableRegistry::get('Respondents');
 
-        /** @var Respondent $respondent */
+        /** @var \App\Model\Entity\Respondent $respondent */
         $respondent = $respondentsTable->findBySurveyIdAndEmail($this->surveyId, $invitee['email'])->first();
 
         // Approve
@@ -312,7 +309,7 @@ class SurveyProcessingComponent extends Component
             'name' => $invitee['name'],
             'survey_id' => $this->surveyId,
             'title' => $invitee['title'],
-            'type' => $this->respondentType
+            'type' => $this->respondentType,
         ]);
         $errors = $respondent->getErrors();
         if (empty($errors) && $respondentsTable->save($respondent)) {
@@ -447,10 +444,10 @@ class SurveyProcessingComponent extends Component
             ->where(['Responses.survey_id' => $surveyId])
             ->contain([
                 'Respondents' => function ($q) {
-                    /** @var Query $q */
+                    /** @var \Cake\ORM\Query $q */
 
                     return $q->select(['id', 'email', 'name', 'title', 'approved']);
-                }
+                },
             ])
             ->order(['Responses.response_date' => 'DESC'])
             ->all();

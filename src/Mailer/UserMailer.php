@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Mailer;
 
-use App\Model\Entity\User;
-use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
@@ -14,7 +14,7 @@ class UserMailer extends Mailer
      *
      * @param array $user User data
      * @param string $password Unhashed password
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function newAccount($user, $password)
     {
@@ -32,7 +32,7 @@ class UserMailer extends Mailer
                 'password' => $password,
                 'role' => $user['role'],
                 'name' => $user['name'],
-                'email' => $user['email']
+                'email' => $user['email'],
             ])
             ->setTemplate('new_account')
             ->setDomain('cri.cberdata.org');
@@ -43,7 +43,7 @@ class UserMailer extends Mailer
      * 24 hours to give the user access to /users/resetPassword
      *
      * @param int $userId User ID
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function resetPassword($userId)
     {
@@ -65,8 +65,8 @@ class UserMailer extends Mailer
                     'action' => 'resetPassword',
                     $userId,
                     $timestamp,
-                    $hash
-                ], true)
+                    $hash,
+                ], true),
             ])
             ->setDomain('cri.cberdata.org');
     }

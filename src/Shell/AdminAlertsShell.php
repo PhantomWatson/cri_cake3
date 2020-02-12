@@ -1,13 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Shell;
 
 use App\Alerts\Alertable;
 use App\Alerts\AlertRecipients;
 use App\Alerts\AlertSender;
 use App\Mailer\AdminAlertMailer;
-use App\Model\Entity\User;
 use Cake\Console\Shell;
-use Cake\Datasource\ResultSetInterface;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
@@ -40,7 +40,7 @@ class AdminAlertsShell extends Shell
             'short' => 'd',
             'boolean' => true,
             'help' => 'Include dummy communities',
-            'default' => false
+            'default' => false,
         ]);
 
         return $parser;
@@ -106,7 +106,7 @@ class AdminAlertsShell extends Shell
      * Returns the recipients who would receive the specified alert
      *
      * @param string $alertName Such as createClients or deliverPolicyDev
-     * @return User[]
+     * @return \App\Model\Entity\User[]
      */
     private function getRecipients($alertName)
     {
@@ -155,7 +155,7 @@ class AdminAlertsShell extends Shell
     /**
      * Attempts to send an alert, outputting the results
      *
-     * @param AlertSender $alertSender AlertSender object
+     * @param \App\Alerts\AlertSender $alertSender AlertSender object
      * @param string $alertName Such as createClients or deliverPolicyDev
      * @return void
      * @throws \Exception
@@ -228,7 +228,7 @@ class AdminAlertsShell extends Shell
                 $alertableCommunities[] = [
                     'id' => $communityId,
                     'name' => $communityName,
-                    'alerts' => $applicableAlerts
+                    'alerts' => $applicableAlerts,
                 ];
             }
         }
@@ -266,7 +266,7 @@ class AdminAlertsShell extends Shell
      * @param bool $ici True if selecting users subscribed to ICI alert emails
      * @param bool $cber True if selecting users subscribed to CBER alert emails
      *
-     * @return ResultSetInterface
+     * @return \Cake\Datasource\ResultSetInterface
      */
     private function getSubscribers($ici, $cber)
     {
@@ -277,7 +277,7 @@ class AdminAlertsShell extends Shell
             ->where([
                 'role' => 'admin',
                 'ici_email_optin' => $ici,
-                'cber_email_optin' => $cber
+                'cber_email_optin' => $cber,
             ])
             ->all();
     }

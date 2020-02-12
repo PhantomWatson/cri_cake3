@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Controller\Admin;
 
-use App\Model\Table\PurchasesTable;
 use App\Test\TestCase\ApplicationTest;
 use Cake\ORM\TableRegistry;
 
@@ -11,7 +12,6 @@ use Cake\ORM\TableRegistry;
  */
 class PurchasesControllerTest extends ApplicationTest
 {
-
     /**
      * Fixtures
      *
@@ -28,7 +28,7 @@ class PurchasesControllerTest extends ApplicationTest
         'app.Responses',
         'app.Statistics',
         'app.Surveys',
-        'app.Users'
+        'app.Users',
     ];
 
     /**
@@ -42,7 +42,7 @@ class PurchasesControllerTest extends ApplicationTest
         $config = TableRegistry::exists('Purchases') ? [] : ['className' => 'App\Model\Table\PurchasesTable'];
         $this->Purchases = TableRegistry::get('Purchases', $config);
         $this->configRequest([
-            'environment' => ['HTTPS' => 'on']
+            'environment' => ['HTTPS' => 'on'],
         ]);
     }
 
@@ -61,7 +61,7 @@ class PurchasesControllerTest extends ApplicationTest
         $purchases = $this->Purchases->find()
             ->where([
                 'community_id' => $communityId,
-                'product_id' => $productId
+                'product_id' => $productId,
             ])
             ->all();
         foreach ($purchases as $purchase) {
@@ -72,7 +72,7 @@ class PurchasesControllerTest extends ApplicationTest
         $url = [
             'prefix' => 'admin',
             'controller' => 'Purchases',
-            'action' => 'add'
+            'action' => 'add',
         ];
         $sources = array_keys($this->Purchases->getSourceOptions());
         $this->session($this->adminUser);
@@ -80,7 +80,7 @@ class PurchasesControllerTest extends ApplicationTest
             'community_id' => $communityId,
             'product_id' => $productId,
             'source' => $sources[0],
-            'notes' => ''
+            'notes' => '',
         ];
         $this->post($url, $data);
 
@@ -90,7 +90,7 @@ class PurchasesControllerTest extends ApplicationTest
         $actual = $this->Purchases->find()
             ->where([
                 'community_id' => $communityId,
-                'product_id' => $productId
+                'product_id' => $productId,
             ])
             ->count();
         $this->assertEquals($expected, $actual);

@@ -1,22 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Alerts;
 
-use App\Alerts\Alertable;
 use App\Alerts\AlertSender;
-use App\Model\Entity\Response;
-use App\Model\Entity\Survey;
-use App\Model\Table\CommunitiesTable;
-use App\Model\Table\DeliverablesTable;
-use App\Model\Table\DeliveriesTable;
-use App\Model\Table\OptOutsTable;
-use App\Model\Table\ProductsTable;
-use App\Model\Table\PurchasesTable;
-use App\Model\Table\ResponsesTable;
-use App\Model\Table\SurveysTable;
-use App\Model\Table\UsersTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use Queue\Model\Table\QueuedJobsTable;
 
 /**
  * Class AlertableTest
@@ -35,7 +24,7 @@ class AlertSenderTest extends TestCase
     public $fixtures = [
         'app.Communities',
         'app.QueuedJobs',
-        'app.Users'
+        'app.Users',
     ];
     private $communities;
     private $users;

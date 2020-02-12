@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
 use Cake\Http\Exception\NotFoundException;
@@ -20,7 +22,6 @@ use Cake\Validation\Validator;
  */
 class SettingsTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -63,7 +64,7 @@ class SettingsTable extends Table
 
     /**
      * @return float
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function getIntAlignmentAdjustment()
     {
@@ -80,7 +81,7 @@ class SettingsTable extends Table
 
     /**
      * @return float
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function getIntAlignmentThreshold()
     {

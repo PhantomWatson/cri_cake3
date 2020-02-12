@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Mailer;
 
-use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
 use Cake\Routing\Router;
 
@@ -13,7 +14,7 @@ class CommunityMailer extends Mailer
      * @param array $user User data
      * @param array $community Community data
      * @param int $toStep The step number the community has just been promoted to
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function communityPromoted($user, $community, $toStep)
     {
@@ -24,7 +25,7 @@ class CommunityMailer extends Mailer
                 'communityName' => $community['name'],
                 'homeUrl' => Router::url('/', true),
                 'toStep' => $toStep,
-                'userName' => $user['name']
+                'userName' => $user['name'],
             ])
             ->setTemplate('community_promoted')
             ->setDomain('cri.cberdata.org');

@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class AreasFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -57,7 +56,7 @@ class AreasFixture extends TestFixture
             'recreation_rank' => 5,
             'parent_id' => null,
             'created' => '2015-07-15 19:58:54',
-            'modified' => '2015-07-15 19:58:54'
+            'modified' => '2015-07-15 19:58:54',
         ],
         [
             'id' => 2,
@@ -71,7 +70,7 @@ class AreasFixture extends TestFixture
             'recreation_rank' => 5,
             'parent_id' => 1,
             'created' => '2015-07-15 19:58:54',
-            'modified' => '2015-07-15 19:58:54'
+            'modified' => '2015-07-15 19:58:54',
         ],
     ];
 }

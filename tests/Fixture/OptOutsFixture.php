@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class OptOutsFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -43,7 +42,7 @@ class OptOutsFixture extends TestFixture
             'user_id' => 1,
             'community_id' => 1,
             'product_id' => 1,
-            'created' => '2017-03-30 20:03:57'
+            'created' => '2017-03-30 20:03:57',
         ],
     ];
 }

@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class StatCategoriesFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -73,7 +72,7 @@ class StatCategoriesFixture extends TestFixture
                 'id' => $fields[0],
                 'name' => $fields[1],
                 'created' => $fields[2],
-                'modified' => $fields[3]
+                'modified' => $fields[3],
             ];
         }
         parent::init();

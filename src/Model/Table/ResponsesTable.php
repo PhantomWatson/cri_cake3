@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
-use App\Model\Entity\Response;
 use App\Model\Entity\Survey;
-use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -26,7 +26,6 @@ use Cake\Validation\Validator;
  */
 class ResponsesTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -41,11 +40,11 @@ class ResponsesTable extends Table
         $this->addBehavior('Timestamp');
         $this->belongsTo('Respondents', [
             'foreignKey' => 'respondent_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->belongsTo('Surveys', [
             'foreignKey' => 'survey_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
     }
 
@@ -239,7 +238,7 @@ class ResponsesTable extends Table
         foreach ($sectors as $sector) {
             $score += $sectorWeight[$sector] * $deviationWeight[$sector];
         }
-        $alignment = (($score - 1) / 2) * 100;
+        $alignment = ($score - 1) / 2 * 100;
 
         return (int)$alignment;
     }
@@ -263,7 +262,7 @@ class ResponsesTable extends Table
      * or NULL if any sector's rank is missing
      *
      * @param string $serializedResponse Serialized response
-     * @param Entity $survey The result of a call to SurveysTable::get()
+     * @param \Cake\ORM\Entity $survey The result of a call to SurveysTable::get()
      * @return array|null
      */
     public function getResponseRanks($serializedResponse, $survey)
@@ -279,7 +278,7 @@ class ResponsesTable extends Table
                 continue;
             }
             foreach ($section['answers'] as $answer) {
-                list($sector, $rank) = $this->decodeAnswer($answer, $survey);
+                [$sector, $rank] = $this->decodeAnswer($answer, $survey);
                 $retval[$sector] = $rank;
             }
         }
@@ -298,7 +297,7 @@ class ResponsesTable extends Table
      * answer is about and the rank the respondent gave to it.
      *
      * @param array $answer Answer array
-     * @param Entity $survey The result of a call to SurveysTable::get()
+     * @param \Cake\ORM\Entity $survey The result of a call to SurveysTable::get()
      * @return array [$sector, $rank]
      */
     public function decodeAnswer($answer, $survey)
@@ -328,7 +327,7 @@ class ResponsesTable extends Table
             ->contain([
                 'Respondent' => function ($q) {
                     return $q->select(['email', 'name', 'approved']);
-                }
+                },
             ])
             ->order(['created' => 'DESC']);
     }
@@ -349,7 +348,7 @@ class ResponsesTable extends Table
             ->select(['id'])
             ->where([
                 'survey_id' => $surveyId,
-                'approved' => 1
+                'approved' => 1,
             ])
             ->toArray();
         $respondentIds = Hash::extract($respondents, '{n}.id');
@@ -363,7 +362,7 @@ class ResponsesTable extends Table
                 'survey_id' => $surveyId,
                 function ($exp, $q) use ($respondentIds) {
                     return $exp->in('respondent_id', $respondentIds);
-                }
+                },
             ])
             ->order(['response_date' => 'DESC']);
 
@@ -551,7 +550,7 @@ class ResponsesTable extends Table
             $responseCount = array_sum($counts);
             for ($rank = 1; $rank <= 5; $rank++) {
                 $weight = $choiceWeights[$sector][$rank];
-                $frequency = $counts[$rank] ? ($counts[$rank] / $responseCount) : 0;
+                $frequency = $counts[$rank] ? $counts[$rank] / $responseCount : 0;
                 $deviation = $deviations[$sector][$rank];
                 $alignments[] = $weight * $frequency * $deviation;
             }
@@ -567,7 +566,7 @@ class ResponsesTable extends Table
      * answer that question or if that question's ID is unknown
      *
      * @param string $serializedResponse Serialized response
-     * @param Survey $survey The result of a call to SurveysTable::get()
+     * @param \App\Model\Entity\Survey $survey The result of a call to SurveysTable::get()
      * @return array|null
      */
     public function getAwareOfPlan($serializedResponse, Survey $survey)
@@ -581,7 +580,7 @@ class ResponsesTable extends Table
         $affirmativeAnswerIds = [
             $survey->aware_of_city_plan_aid,
             $survey->aware_of_county_plan_aid,
-            $survey->aware_of_regional_plan_aid
+            $survey->aware_of_regional_plan_aid,
         ];
         $negativeAnswerId = $survey->unaware_of_plan_aid;
 
@@ -639,8 +638,8 @@ class ResponsesTable extends Table
                     'Responses.aware_of_plan' => false,
                     function ($exp, $q) {
                         return $exp->isNull('Responses.aware_of_plan');
-                    }
-                ]
+                    },
+                ],
             ]);
         }
 
@@ -674,7 +673,7 @@ class ResponsesTable extends Table
      */
     public function getMostRecentResponseDate($surveyId)
     {
-        /** @var Response $mostRecentResponse */
+        /** @var \App\Model\Entity\Response $mostRecentResponse */
         $mostRecentResponse = $this->find('all')
             ->select(['response_date'])
             ->where(['survey_id' => $surveyId])

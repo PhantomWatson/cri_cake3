@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Shell\Task;
 
 use Cake\Mailer\MailerAwareTrait;
@@ -32,7 +34,7 @@ class QueueNewAccountEmailTask extends QueueTask
         try {
             $this->getMailer('User')->send('newAccount', [
                 $data['user'],
-                $data['unhashedPassword']
+                $data['unhashedPassword'],
             ]);
         } catch (\Exception $e) {
             return false;

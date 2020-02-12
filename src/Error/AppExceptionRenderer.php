@@ -1,12 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Error;
 
-use Cake\Core\Configure;
-use Cake\Core\Exception\Exception as CakeException;
-use Cake\Error\Debugger;
 use Cake\Error\ExceptionRenderer;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\HttpException;
 
 class AppExceptionRenderer extends ExceptionRenderer
 {
@@ -38,10 +35,10 @@ class AppExceptionRenderer extends ExceptionRenderer
                 'errors' => [
                     [
                         'status' => $code,
-                        'detail' => $message
-                    ]
-                ]
-            ]
+                        'detail' => $message,
+                    ],
+                ],
+            ],
         ];
         $this->controller->set($viewVars);
 

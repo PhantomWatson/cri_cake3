@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Shell\Task;
 
 use Cake\Mailer\MailerAwareTrait;
@@ -33,7 +35,7 @@ class QueueReminderTask extends QueueTask
             $this->getMailer('Survey')->send('reminders', [
                 $data['surveyId'],
                 $data['sender'],
-                $data['recipient']
+                $data['recipient'],
             ]);
         } catch (\Exception $e) {
             return false;

@@ -1,14 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
 use App\Model\Entity\Community;
-use App\Model\Entity\Survey;
 use App\SurveyMonkey\SurveyMonkey;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
 use Cake\Network\Exception\InternalErrorException;
-use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -34,7 +33,6 @@ use Cake\Validation\Validator;
  */
 class SurveysTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -49,13 +47,13 @@ class SurveysTable extends Table
         $this->addBehavior('Timestamp');
         $this->belongsTo('Communities', [
             'foreignKey' => 'community_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->hasMany('Respondents', [
-            'foreignKey' => 'survey_id'
+            'foreignKey' => 'survey_id',
         ]);
         $this->hasMany('Responses', [
-            'foreignKey' => 'survey_id'
+            'foreignKey' => 'survey_id',
         ]);
     }
 
@@ -85,7 +83,7 @@ class SurveysTable extends Table
             ->add('sm_id', 'unique', [
                 'rule' => 'validateUnique',
                 'provider' => 'table',
-                'message' => 'Sorry, the selected questionnaire has already been linked to a community.'
+                'message' => 'Sorry, the selected questionnaire has already been linked to a community.',
             ]);
 
         $validator
@@ -188,11 +186,11 @@ class SurveysTable extends Table
      * Returns the value for 'created' for the selected survey
      *
      * @param int $surveyId Survey ID
-     * @return FrozenTime|null
+     * @return \Cake\I18n\FrozenTime|null
      */
     public function getCreatedDate($surveyId)
     {
-        /** @var Survey $result Survey entity */
+        /** @var \App\Model\Entity\Survey $result Survey entity */
         $result = $this->find('all')
             ->select(['created'])
             ->where(['id' => $surveyId])
@@ -230,7 +228,7 @@ class SurveysTable extends Table
                 ->select(['id', 'responses_checked'])
                 ->where([
                     'community_id' => $communityId,
-                    'type' => $type
+                    'type' => $type,
                 ])
                 ->first();
             $invitedRespondentCount = $respondentsTable->getInvitedCount($survey->id);
@@ -244,7 +242,7 @@ class SurveysTable extends Table
                 'uninvited_respondent_count' => $uninvitedRespondentCount,
                 'percent_invited_responded' => round($percentInvitedResponded * 100),
                 'responses_checked' => strtotime($survey->responses_checked),
-                'survey_id' => $survey->id
+                'survey_id' => $survey->id,
             ];
         }
         if ($surveyType) {
@@ -267,7 +265,7 @@ class SurveysTable extends Table
             ->select(['id'])
             ->where([
                 'community_id' => $communityId,
-                'type' => $type
+                'type' => $type,
             ])
             ->limit(1);
 
@@ -292,7 +290,7 @@ class SurveysTable extends Table
      * Returns the responses_checked date or null
      *
      * @param int $surveyId Survey ID
-     * @return FrozenTime|null
+     * @return \Cake\I18n\FrozenTime|null
      */
     public function getChecked($surveyId)
     {
@@ -341,7 +339,7 @@ class SurveysTable extends Table
             'aware_of_city_plan_aid',
             'aware_of_county_plan_aid',
             'aware_of_regional_plan_aid',
-            'unaware_of_plan_aid'
+            'unaware_of_plan_aid',
         ];
     }
 
@@ -391,7 +389,7 @@ class SurveysTable extends Table
             return 0;
         }
 
-        return round(($responses / $invitations) * 100);
+        return round($responses / $invitations * 100);
     }
 
     /**
@@ -404,7 +402,7 @@ class SurveysTable extends Table
         $count = $this->find('all')
             ->where([
                 'community_id' => $communityId,
-                'type' => $surveyType
+                'type' => $surveyType,
             ])
             ->where(function ($exp, $q) {
                 return $exp->notEq('sm_url', '');
@@ -424,7 +422,7 @@ class SurveysTable extends Table
         $count = $respondentsTable->find('all')
             ->where([
                 'survey_id' => $surveyId,
-                'invited' => 0
+                'invited' => 0,
             ])
             ->count();
 
@@ -441,7 +439,7 @@ class SurveysTable extends Table
         $count = $respondentsTable->find('all')
             ->where([
                 'survey_id' => $surveyId,
-                'approved' => 0
+                'approved' => 0,
             ])
             ->count();
 
@@ -458,7 +456,7 @@ class SurveysTable extends Table
             'wholesale',
             'retail',
             'residential',
-            'recreation'
+            'recreation',
         ];
     }
 
@@ -494,7 +492,7 @@ class SurveysTable extends Table
         $count = $responsesTable->find('all')
             ->where([
                 'survey_id' => $surveyId,
-                'created >' => $survey->alignment_calculated_date
+                'created >' => $survey->alignment_calculated_date,
             ])
             ->count();
 
@@ -506,9 +504,9 @@ class SurveysTable extends Table
      * sorted with the surveys whose responses have been least-recently
      * imported first.
      *
-     * @param Query $query Query
+     * @param \Cake\ORM\Query $query Query
      * @param array $options Query options
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findAutoImportCandidate(Query $query, array $options)
     {
@@ -527,7 +525,7 @@ class SurveysTable extends Table
                         },
                         function ($exp, $q) {
                             return $exp->lt('Communities.score', '3');
-                        }
+                        },
                     ],
                     [
                         'Surveys.type' => 'organization',
@@ -536,17 +534,17 @@ class SurveysTable extends Table
                         },
                         function ($exp, $q) {
                             return $exp->lt('Communities.score', '4');
-                        }
-                    ]
-                ]
+                        },
+                    ],
+                ],
             ])
             ->join([
                 'table' => 'communities',
                 'alias' => 'Communities',
                 'type' => 'LEFT',
                 'conditions' => [
-                    'Communities.id = Surveys.community_id'
-                ]
+                    'Communities.id = Surveys.community_id',
+                ],
             ])
             ->order(['responses_checked' => 'ASC']);
     }
@@ -608,7 +606,7 @@ class SurveysTable extends Table
         $minutes = floor($minutesDivisor / 60);
 
         if ($hours > 0) {
-            $msg = ($hours == 1) ? 'every hour' : "every $hours hours";
+            $msg = $hours == 1 ? 'every hour' : "every $hours hours";
             if ($minutes >= 10) {
                 return "$msg and $minutes minutes";
             }
@@ -618,7 +616,7 @@ class SurveysTable extends Table
 
         $minutes = max($minutes, 1);
 
-        return ($minutes == 1) ? 'every minute' : "every $minutes minutes";
+        return $minutes == 1 ? 'every minute' : "every $minutes minutes";
     }
 
     /**
@@ -669,7 +667,7 @@ class SurveysTable extends Table
         $responsesTable = TableRegistry::get('Responses');
         $count = $responsesTable->find('all')
             ->where([
-                'survey_id' => $surveyId
+                'survey_id' => $surveyId,
             ])
             ->count();
 
@@ -692,8 +690,8 @@ class SurveysTable extends Table
      *
      * @param int $surveyId Survey ID
      * @return void
-     * @throws NotFoundException
-     * @throws InternalErrorException
+     * @throws \Cake\Http\Exception\NotFoundException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     public function updateAlignment($surveyId)
     {
@@ -719,7 +717,7 @@ class SurveysTable extends Table
         // Collect alignments for individual responses
         $alignments = [
             'vsLocal' => [],
-            'vsParent' => []
+            'vsParent' => [],
         ];
         $areasTable = TableRegistry::get('Areas');
         $actualRanksLocal = $areasTable->getPwrrrRanks($community->local_area_id);
@@ -730,7 +728,7 @@ class SurveysTable extends Table
                 'wholesale' => $response->wholesale_rank,
                 'retail' => $response->retail_rank,
                 'residential' => $response->residential_rank,
-                'recreation' => $response->recreation_rank
+                'recreation' => $response->recreation_rank,
             ];
 
             // Calculate each response's PWRRR alignment
@@ -742,12 +740,12 @@ class SurveysTable extends Table
             // Update stored response alignment if it differs from the value that was just calculated
             if ($alignmentVsLocal != $response->alignment_vs_local) {
                 $response = $responsesTable->patchEntity($response, [
-                    'alignment_vs_local' => $alignmentVsLocal
+                    'alignment_vs_local' => $alignmentVsLocal,
                 ]);
             }
             if ($alignmentVsParent != $response->alignment_vs_parent) {
                 $response = $responsesTable->patchEntity($response, [
-                    'alignment_vs_parent' => $alignmentVsParent
+                    'alignment_vs_parent' => $alignmentVsParent,
                 ]);
             }
             if ($response->dirty()) {
@@ -768,7 +766,7 @@ class SurveysTable extends Table
             'alignment_vs_local' => (int)$alignmentVsLocal,
             'alignment_vs_parent' => (int)$alignmentVsParent,
             'internal_alignment' => $intAlignment,
-            'alignment_calculated_date' => Time::now()
+            'alignment_calculated_date' => Time::now(),
         ]);
         if ($survey->getErrors()) {
             $msg = 'There was an error updating that questionnaire\'s response alignments: ';
@@ -824,7 +822,7 @@ class SurveysTable extends Table
         $count = $respondentsTable->find('all')
             ->where([
                 'survey_id' => $surveyId,
-                'invited' => 1
+                'invited' => 1,
             ])
             ->count();
 
@@ -835,14 +833,14 @@ class SurveysTable extends Table
      * Returns a string that sums up the status of the specified community
      * and the specified survey type
      *
-     * @param Community $community Community entity
+     * @param \App\Model\Entity\Community $community Community entity
      * @param string $surveyType Either 'official' or 'organization'
      * @return string
      */
     public function getStatusDescription(Community $community, $surveyType)
     {
         $optOutsTable = TableRegistry::get('OptOuts');
-        $productId = ($surveyType == 'official')
+        $productId = $surveyType == 'official'
             ? ProductsTable::OFFICIALS_SURVEY
             : ProductsTable::ORGANIZATIONS_SURVEY;
         $optedOut = $optOutsTable->optedOut($community->id, $productId);
@@ -856,7 +854,7 @@ class SurveysTable extends Table
             return 'Not purchased yet';
         }
 
-        $correspondingStep = ($surveyType == 'official') ? 2 : 3;
+        $correspondingStep = $surveyType == 'official' ? 2 : 3;
         if ($community->score < $correspondingStep) {
             return 'Not started yet';
         }
@@ -874,7 +872,7 @@ class SurveysTable extends Table
             return 'Questionnaire not activated yet';
         }
 
-        if ($community->score >= ($correspondingStep + 1)) {
+        if ($community->score >= $correspondingStep + 1) {
             return 'Questionnaire should be deactivated';
         }
 

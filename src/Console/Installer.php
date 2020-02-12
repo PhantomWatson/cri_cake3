@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -14,15 +16,10 @@
  */
 namespace App\Console;
 
-use Cake\Utility\Security;
-use Composer\Script\Event;
-use Exception;
-
 /**
  * Provides installation hooks for when this application is installed via
  * composer. Customize this class to suit your needs.
  */
 class Installer
 {
-
 }

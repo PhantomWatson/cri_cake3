@@ -1,11 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Shell;
 
 use Cake\Console\Shell;
 use Cake\Core\Configure;
-use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\TableRegistry;
-use Queue\Model\Table\QueuedJobsTable;
 
 class DelayedJobsShell extends Shell
 {
@@ -52,7 +52,7 @@ class DelayedJobsShell extends Shell
             'channel' => '#cri',
             'text' => $msg,
             'icon_emoji' => ':robot_face:',
-            'username' => 'CBER Web Server'
+            'username' => 'CBER Web Server',
         ]);
 
         // You can get your webhook endpoint from your Slack settings
@@ -83,7 +83,7 @@ class DelayedJobsShell extends Shell
             $delayedJobs[] = [
                 'type' => $result['job_type'],
                 'reference' => $result['reference'],
-                'created' => $waiting
+                'created' => $waiting,
             ];
         }
 
@@ -102,13 +102,13 @@ class DelayedJobsShell extends Shell
      */
     private function getDelayedJobs()
     {
-        /** @var QueuedJobsTable $queuedJobsTable */
+        /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobsTable */
         $queuedJobsTable = TableRegistry::get('QueuedJobs');
         $createdEarlierThan = date('Y-m-d H:i:a', strtotime($this->threshold));
 
         return $queuedJobsTable->find()
             ->where(function ($exp) use ($createdEarlierThan) {
-                /** @var QueryExpression $exp */
+                /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                 return $exp
                     ->lt('created', $createdEarlierThan)

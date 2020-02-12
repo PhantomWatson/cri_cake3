@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Client;
 
 use App\Controller\AppController;
@@ -40,7 +42,7 @@ class PurchasesController extends AppController
         $this->set([
             'currentStep' => $community->score,
             'titleForLayout' => 'CRI Products Purchased for ' . $community->name,
-            'products' => $products
+            'products' => $products,
         ]);
     }
 }

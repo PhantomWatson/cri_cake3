@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
 use Cake\Network\Exception\InternalErrorException;
-use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -22,11 +22,11 @@ use Cake\Validation\Validator;
  */
 class DeliverablesTable extends Table
 {
-    const PRESENTATION_A_MATERIALS = 1;
-    const PRESENTATION_B_MATERIALS = 2;
-    const PRESENTATION_C_MATERIALS = 3;
-    const PRESENTATION_D_MATERIALS = 4;
-    const POLICY_DEVELOPMENT = 5;
+    public const PRESENTATION_A_MATERIALS = 1;
+    public const PRESENTATION_B_MATERIALS = 2;
+    public const PRESENTATION_C_MATERIALS = 3;
+    public const PRESENTATION_D_MATERIALS = 4;
+    public const POLICY_DEVELOPMENT = 5;
 
     /**
      * Initialize method
@@ -43,7 +43,7 @@ class DeliverablesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->hasMany('Deliveries', [
-            'foreignKey' => 'deliverable_id'
+            'foreignKey' => 'deliverable_id',
         ]);
     }
 
@@ -86,7 +86,7 @@ class DeliverablesTable extends Table
             self::PRESENTATION_A_MATERIALS,
             self::PRESENTATION_B_MATERIALS,
             self::PRESENTATION_C_MATERIALS,
-            self::PRESENTATION_D_MATERIALS
+            self::PRESENTATION_D_MATERIALS,
         ];
 
         return in_array($deliverableId, $presentations);
@@ -97,7 +97,7 @@ class DeliverablesTable extends Table
      *
      * @param int $deliverableId Deliverable ID
      * @return string
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     public function getPresentationLetter($deliverableId)
     {
@@ -105,7 +105,7 @@ class DeliverablesTable extends Table
             self::PRESENTATION_A_MATERIALS => 'a',
             self::PRESENTATION_B_MATERIALS => 'b',
             self::PRESENTATION_C_MATERIALS => 'c',
-            self::PRESENTATION_D_MATERIALS => 'd'
+            self::PRESENTATION_D_MATERIALS => 'd',
         ];
 
         if (array_key_exists($deliverableId, $presentations)) {

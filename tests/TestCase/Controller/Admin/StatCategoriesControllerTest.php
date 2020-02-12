@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Controller\Admin;
 
 use App\Test\TestCase\ApplicationTest;
@@ -8,7 +10,6 @@ use App\Test\TestCase\ApplicationTest;
  */
 class StatCategoriesControllerTest extends ApplicationTest
 {
-
     /**
      * Fixtures
      *
@@ -16,7 +17,7 @@ class StatCategoriesControllerTest extends ApplicationTest
      */
     public $fixtures = [
         'app.StatCategories',
-        'app.Statistics'
+        'app.Statistics',
     ];
 
     /**

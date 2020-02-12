@@ -5,7 +5,7 @@ try {
         'filepath' => __DIR__ . DS . '.env',
         'toServer' => false,
         'skipExisting' => ['toServer'],
-        'raiseExceptions' => true
+        'raiseExceptions' => true,
     ]);
 } catch (InvalidArgumentException $e) {
     // If there's a problem loading the .env file - load .env.default
@@ -15,7 +15,7 @@ try {
         'filepath' => __DIR__ . DS . '.env.default',
         'toServer' => false,
         'skipExisting' => ['toServer'],
-        'raiseExceptions' => false
+        'raiseExceptions' => false,
     ]);
 }
 
@@ -87,7 +87,7 @@ $config = [
         'salt' => env('SECURITY_SALT', '__SALT__'),
 
         // Salt used in CakePHP 2 version of website
-        'legacySalt' => env('LEGACY_SALT')
+        'legacySalt' => env('LEGACY_SALT'),
     ],
 
     /**
@@ -149,7 +149,7 @@ $config = [
             'serialize' => true,
             'duration' => '+1 year',
             'url' => null,
-        ]
+        ],
     ],
 
     /**
@@ -232,7 +232,7 @@ $config = [
             'password' => env('BSU_RELAY_PASSWORD'),
             'client' => null,
             'tls' => true,
-            'url' => null
+            'url' => null,
         ],
 
         'office365' => [
@@ -244,7 +244,7 @@ $config = [
             'password' => env('OFFICE_365_PASSWORD'),
             'client' => null,
             'tls' => true,
-            'url' => null
+            'url' => null,
         ],
 
         'localhost' => [
@@ -256,7 +256,7 @@ $config = [
             'password' => env('CBERDATA_PASSWORD'),
             'client' => null,
             'tls' => false,
-            'url' => null
+            'url' => null,
         ],
 
         'Debug' => [
@@ -268,7 +268,7 @@ $config = [
             'password' => null,
             'client' => null,
             'tls' => false,
-            'url' => null
+            'url' => null,
         ],
     ],
 
@@ -293,29 +293,29 @@ $config = [
             'emailFormat' => 'both',
             'log' => [
                 'level' => 'info',
-                'scope' => 'email'
-            ]
+                'scope' => 'email',
+            ],
         ],
 
         'survey_invitation' => [
             'subject' => 'Invitation to participate in Community Readiness Initiative questionnaire',
-            'template' => 'survey_invitation'
+            'template' => 'survey_invitation',
         ],
 
         'new_account' => [
             'subject' => 'Your new Community Readiness Initiative account has been created',
-            'template' => 'new_account'
+            'template' => 'new_account',
         ],
 
         'new_official_survey' => [
             'subject' => 'Your Community Readiness Initiative questionnaire is ready',
-            'template' => 'new_official_survey'
+            'template' => 'new_official_survey',
         ],
 
         'reset_password' => [
             'subject' => 'CRI Account Password Reset',
-            'template' => 'reset_password'
-        ]
+            'template' => 'reset_password',
+        ],
     ],
 
     /**
@@ -477,7 +477,7 @@ $config = [
     'maintenance_mode' => false,
     'cashNetId' => env('CASHNET_ID'),
     'slack_webhook_url' => env('SLACK_WEBHOOK_URL'),
-    'google_maps_api_key' => 'AIzaSyAv_1WWbcrZO6NVRI1Uz9IO6kJlmNBrTQk'
+    'google_maps_api_key' => 'AIzaSyAv_1WWbcrZO6NVRI1Uz9IO6kJlmNBrTQk',
 ];
 
 /**

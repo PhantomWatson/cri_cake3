@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\View\Helper;
 
-use App\Model\Entity\ActivityRecord;
 use Cake\Utility\Hash;
 use Cake\View\Helper;
 
@@ -15,7 +16,7 @@ class ActivityRecordsHelper extends Helper
     /**
      * Returns a human-readable description of an activity record
      *
-     * @param ActivityRecord $activityRecord ActivityRecord entity
+     * @param \App\Model\Entity\ActivityRecord $activityRecord ActivityRecord entity
      * @return string
      */
     public function event($activityRecord)
@@ -31,13 +32,13 @@ class ActivityRecordsHelper extends Helper
                     'afterDeactivate' => 'Community marked inactive',
                     'afterAddClient' => 'Client added to community',
                     'afterRemoveClient' => 'Client removed from community',
-                    'afterAutomaticAdvancement' => 'Community automatically promoted'
+                    'afterAutomaticAdvancement' => 'Community automatically promoted',
                 ],
                 'Delivery' => [
-                    'afterAdd' => 'Delivery recorded'
+                    'afterAdd' => 'Delivery recorded',
                 ],
                 'Product' => [
-                    'afterPurchase' => 'Product purchased'
+                    'afterPurchase' => 'Product purchased',
                 ],
                 'Purchase' => [
                     'afterAdminAdd' => 'Payment record added',
@@ -48,7 +49,7 @@ class ActivityRecordsHelper extends Helper
                     'afterUninvitedDismiss' => 'Uninvited respondent dismissed',
                 ],
                 'Response' => [
-                    'afterImport' => 'Responses imported'
+                    'afterImport' => 'Responses imported',
                 ],
                 'Survey' => [
                     'afterActivate' => 'Questionnaire activated',
@@ -60,9 +61,9 @@ class ActivityRecordsHelper extends Helper
                 ],
                 'User' => [
                     'afterAdd' => 'User account added',
-                    'afterDelete' => 'User account deleted'
-                ]
-            ]
+                    'afterDelete' => 'User account deleted',
+                ],
+            ],
         ];
         $eventDescription = Hash::extract($eventDescriptions, $activityRecord->event);
 
@@ -72,7 +73,7 @@ class ActivityRecordsHelper extends Helper
     /**
      * Returns a string indicating what user was responsible for an action
      *
-     * @param ActivityRecord $activityRecord ActivityRecord entity
+     * @param \App\Model\Entity\ActivityRecord $activityRecord ActivityRecord entity
      * @return string
      */
     public function user($activityRecord)
@@ -103,7 +104,7 @@ class ActivityRecordsHelper extends Helper
     /**
      * Outputs any supplementary details relevant to this record
      *
-     * @param ActivityRecord $activityRecord ActivityRecord entity
+     * @param \App\Model\Entity\ActivityRecord $activityRecord ActivityRecord entity
      * @return string|null
      */
     public function details($activityRecord)
@@ -116,7 +117,7 @@ class ActivityRecordsHelper extends Helper
                     'afterScoreIncrease' => 'From Step [previousScore] to Step [newScore]',
                     'afterAddClient' => '[clientName] ([clientEmail])',
                     'afterRemoveClient' => '[clientName] ([clientEmail])',
-                    'afterAutomaticAdvancement' => 'To Step [toStep]'
+                    'afterAutomaticAdvancement' => 'To Step [toStep]',
                 ],
                 'Delivery' => [
                     'afterAdd' => '[deliverableName] delivered',
@@ -124,7 +125,7 @@ class ActivityRecordsHelper extends Helper
                 'Product' => [
                     'afterAdminAdd' => '[productName]',
                     'afterPurchase' => '[productName]',
-                    'afterRefund' => '[productName]'
+                    'afterRefund' => '[productName]',
                 ],
                 'Survey' => [
                     'afterActivate' => 'Community [surveyType]s questionnaire',
@@ -132,20 +133,20 @@ class ActivityRecordsHelper extends Helper
                     'afterInvitationsSent' => '[invitedCount] invitation(s) to the community [surveyType]s questionnaire sent',
                     'afterLinked' => 'Community [surveyType]s questionnaire',
                     'afterLinkUpdated' => 'Community [surveyType]s questionnaire',
-                    'afterRemindersSent' => '[remindedCount] reminder(s) to complete the community [surveyType]s questionnaire sent'
+                    'afterRemindersSent' => '[remindedCount] reminder(s) to complete the community [surveyType]s questionnaire sent',
                 ],
                 'Respondent' => [
                     'afterUninvitedApprove' => '[respondentName], responding to community [surveyType]s questionnaire',
-                    'afterUninvitedDismiss' => '[respondentName], responding to community [surveyType]s questionnaire'
+                    'afterUninvitedDismiss' => '[respondentName], responding to community [surveyType]s questionnaire',
                 ],
                 'Response' => [
-                    'afterImport' => '[responseCount] response(s) to the community [surveyType]s questionnaire'
+                    'afterImport' => '[responseCount] response(s) to the community [surveyType]s questionnaire',
                 ],
                 'User' => [
                     'afterAdd' => '[userRole] account created for [userName]',
-                    'afterDelete' => '[userName]\'s  [userRole] account deleted'
-                ]
-            ]
+                    'afterDelete' => '[userName]\'s  [userRole] account deleted',
+                ],
+            ],
         ];
 
         $detailsFormat = Hash::extract($detailsFormats, $activityRecord->event);
@@ -184,7 +185,7 @@ class ActivityRecordsHelper extends Helper
     /**
      * Returns the name of the community associated with this activity record, or null if unspecified
      *
-     * @param ActivityRecord $activityRecord Activity record entity
+     * @param \App\Model\Entity\ActivityRecord $activityRecord Activity record entity
      * @return string|null
      */
     public function community($activityRecord)
@@ -196,7 +197,7 @@ class ActivityRecordsHelper extends Helper
         // Use stored community name in case community record is no longer in the database
         } else {
             $meta = unserialize($activityRecord->meta);
-            $name = isset($meta['communityName']) ? $meta['communityName'] : null;
+            $name = $meta['communityName'] ?? null;
         }
 
         if ($name) {
@@ -206,7 +207,7 @@ class ActivityRecordsHelper extends Helper
                     'prefix' => 'admin',
                     'controller' => 'ActivityRecords',
                     'action' => 'community',
-                    $activityRecord->community_id
+                    $activityRecord->community_id,
                 ],
                 ['title' => 'View all activity associated with this community']
             );

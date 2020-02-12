@@ -1,7 +1,6 @@
 <?php
 namespace App\Test\Fixture;
 
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
@@ -10,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class ActivityRecordsFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -48,7 +46,7 @@ class ActivityRecordsFixture extends TestFixture
             'community_id' => 1,
             'survey_id' => null,
             'meta' => 'a:3:{s:13:"communityName";s:14:"Test Community";s:8:"userName";s:13:"Graham Watson";s:8:"userRole";s:5:"admin";}',
-            'created' => '2016-12-21 19:13:51'
+            'created' => '2016-12-21 19:13:51',
         ],
     ];
 }

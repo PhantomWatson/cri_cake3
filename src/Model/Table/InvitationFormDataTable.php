@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
 use Cake\ORM\RulesChecker;
@@ -23,7 +25,6 @@ use Cake\Validation\Validator;
  */
 class InvitationFormDataTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -40,11 +41,11 @@ class InvitationFormDataTable extends Table
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->belongsTo('Surveys', [
             'foreignKey' => 'survey_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
     }
 

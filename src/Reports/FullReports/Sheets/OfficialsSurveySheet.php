@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Reports\FullReports\Sheets;
 
-use App\Reports\Spreadsheet;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
@@ -18,7 +19,7 @@ class OfficialsSurveySheet
      * OfficialsSurveySheet constructor.
      *
      * @param string $mode Either 'admin' or 'ocra'
-     * @throws InternalErrorException
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     public function __construct($mode)
     {
@@ -32,7 +33,7 @@ class OfficialsSurveySheet
     /**
      * Adds an Officials Survey sheet to the provided workbook and returns the workbook
      *
-     * @param Spreadsheet $workbook Spreadsheet workbook
+     * @param \App\Reports\Spreadsheet $workbook Spreadsheet workbook
      * @param array $data Report data
      * @return mixed
      */
@@ -56,7 +57,7 @@ class OfficialsSurveySheet
                 ->styleColGroupHeaders($colGroupSpans)
                 ->nextRow();
         }
-        $borders = ($this->mode == 'admin')
+        $borders = $this->mode == 'admin'
             ? ['bottom', 'left', 'right']
             : ['outline'];
         $workbook
@@ -66,7 +67,7 @@ class OfficialsSurveySheet
             ->styleRow(['font' => ['bold' => true]])
             ->applyBorders($borders)
             ->styleRow([
-                'alignment' => ['rotation' => -90]
+                'alignment' => ['rotation' => -90],
             ], 2, count($columnTitles) - 2)
             ->nextRow();
 
@@ -100,7 +101,7 @@ class OfficialsSurveySheet
                 'Recreation' => 4,
                 'Overall' => 4,
                 'Yes' => 7,
-                'No / Unknown' => 7
+                'No / Unknown' => 7,
             ]);
 
         return $workbook;
@@ -119,14 +120,14 @@ class OfficialsSurveySheet
             'Area',
             'Invitations',
             'Responses',
-            'Completion Rate'
+            'Completion Rate',
         ];
         if ($this->mode == 'ocra') {
             $columnTitles[] = 'Alignment Calculated';
         } elseif ($this->mode == 'admin') {
             $columnTitles = array_merge($columnTitles, [
                 'vs Local Area',
-                'vs Wider Area'
+                'vs Wider Area',
             ]);
             foreach ($surveysTable->getSectors() as $sector) {
                 $columnTitles[] = ucwords($sector);
@@ -134,14 +135,14 @@ class OfficialsSurveySheet
             $columnTitles = array_merge($columnTitles, [
                 'Overall',
                 'Yes',
-                'No / Unknown'
+                'No / Unknown',
             ]);
         }
 
         $columnTitles = array_merge($columnTitles, [
             'Presentation A',
             'Presentation B',
-            'Status'
+            'Status',
         ]);
 
         return $columnTitles;
@@ -226,7 +227,7 @@ class OfficialsSurveySheet
             $row = array_merge($row, [
                 $survey['internalAlignment']['total'],
                 $survey['awareOfPlanCount'],
-                $survey['unawareOfPlanCount']
+                $survey['unawareOfPlanCount'],
             ]);
         } elseif ($this->mode == 'ocra') {
             $alignmentCalculated = ($survey['alignments']['vsLocal'] || $survey['alignments']['vsParent']);
@@ -236,7 +237,7 @@ class OfficialsSurveySheet
         $row = array_merge($row, [
             $community['presentationsGiven']['a'],
             $community['presentationsGiven']['b'],
-            $survey['status']
+            $survey['status'],
         ]);
 
         return $row;

@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Mailer\Preview;
 
-use Cake\Mailer\Email;
 use DebugKit\Mailer\MailPreview;
 
 class TestEmailPreview extends MailPreview
@@ -9,7 +10,7 @@ class TestEmailPreview extends MailPreview
     /**
      * Preview method for TestMailer::test()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function test()
     {

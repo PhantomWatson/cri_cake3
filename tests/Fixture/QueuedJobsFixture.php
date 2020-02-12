@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class QueuedJobsFixture extends TestFixture
 {
-
     /**
      * Fields
      *

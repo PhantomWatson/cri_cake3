@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Mailer\Preview;
 
-use Cake\Mailer\Email;
 use DebugKit\Mailer\MailPreview;
 
 class CommunityEmailPreview extends MailPreview
@@ -9,16 +10,16 @@ class CommunityEmailPreview extends MailPreview
     /**
      * Preview method for CommunityMailer::communityPromoted()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function communityPromoted()
     {
         $user = [
             'name' => 'Client Name',
-            'email' => 'client@example.com'
+            'email' => 'client@example.com',
         ];
         $community = [
-            'name' => 'Community Name'
+            'name' => 'Community Name',
         ];
         $toStep = 3;
 

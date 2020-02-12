@@ -1,27 +1,18 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\AdminToDo\AdminToDo;
 use App\Controller\AppController;
-use App\Model\Entity\Community;
-use App\Model\Table\AreasTable;
-use App\Model\Table\OptOutsTable;
 use App\Model\Table\ProductsTable;
-use App\Model\Table\PurchasesTable;
-use App\Model\Table\SettingsTable;
-use App\Model\Table\SurveysTable;
-use App\Model\Table\UsersTable;
-use Cake\Database\Expression\QueryExpression;
 use Cake\Event\Event;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\MethodNotAllowedException;
-use Cake\Http\Exception\NotFoundException;
-use Cake\ORM\Entity;
-use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
-use Queue\Model\Table\QueuedJobsTable;
 
 class CommunitiesController extends AppController
 {
@@ -30,7 +21,7 @@ class CommunitiesController extends AppController
     /**
      * Passes necessary variables the view to be used by the adding/editing form
      *
-     * @param Entity $community Community
+     * @param \Cake\ORM\Entity $community Community
      * @return void
      */
     private function prepareForm($community)
@@ -39,7 +30,7 @@ class CommunitiesController extends AppController
             $community->public = false;
             $community->score = 0;
         }
-        /** @var AreasTable $areasTable */
+        /** @var \App\Model\Table\AreasTable $areasTable */
         $areasTable = TableRegistry::get('Areas');
         $areas = $areasTable->getGroupedList();
         $areaTypes = array_keys($areas);
@@ -59,7 +50,7 @@ class CommunitiesController extends AppController
                 'OfficialSurvey',
                 'OptOuts',
                 'OrganizationSurvey',
-                'ParentAreas'
+                'ParentAreas',
             ])
             ->order(['Communities.name' => 'ASC'])
             ->toArray();
@@ -68,7 +59,7 @@ class CommunitiesController extends AppController
         $this->set([
             'communities' => $communities,
             'perPage' => 20,
-            'titleForLayout' => 'Indiana Communities'
+            'titleForLayout' => 'Indiana Communities',
         ]);
     }
 
@@ -95,7 +86,7 @@ class CommunitiesController extends AppController
     /**
      * Adds the field $community[$surveyType]['status']
      *
-     * @param Community $community Community entity
+     * @param \App\Model\Entity\Community $community Community entity
      * @param string $surveyType 'official_survey' or 'organization_survey'
      * @return string
      */
@@ -140,9 +131,9 @@ class CommunitiesController extends AppController
         $community = $this->Communities->newEntity();
 
         if ($this->request->is('post')) {
-            /** @var $community Community */
+            /** @var \App\Model\Entity\Community $community */
             $community = $this->Communities->patchEntity($community, $this->request->getData(), [
-                'associated' => ['OfficialSurvey', 'OrganizationSurvey']
+                'associated' => ['OfficialSurvey', 'OrganizationSurvey'],
             ]);
 
             $errors = $community->getErrors();
@@ -152,14 +143,14 @@ class CommunitiesController extends AppController
                 // Set flash message
                 $clientUrl = Router::url([
                     'action' => 'addClient',
-                    $community->id
+                    $community->id,
                 ]);
                 $surveyUrl = Router::url([
                     'prefix' => 'admin',
                     'controller' => 'Surveys',
                     'action' => 'link',
                     $community->slug,
-                    'official'
+                    'official',
                 ]);
                 $message =
                     $community->name . ' has been added.' .
@@ -169,18 +160,18 @@ class CommunitiesController extends AppController
 
                 // Dispatch event
                 $event = new Event('Model.Community.afterAdd', $this, ['meta' => [
-                    'communityId' => $community->id
+                    'communityId' => $community->id,
                 ]]);
                 $this->getEventManager()->dispatch($event);
 
                 return $this->redirect([
                     'prefix' => 'admin',
-                    'action' => 'index'
+                    'action' => 'index',
                 ]);
             }
         } else {
             $community->score = 1;
-            /** @var $settingsTable SettingsTable */
+            /** @var \App\Model\Table\SettingsTable $settingsTable */
             $settingsTable = TableRegistry::get('Settings');
             $community->intAlignmentAdjustment = $settingsTable->getIntAlignmentAdjustment();
             $community->intAlignmentThreshold = $settingsTable->getIntAlignmentThreshold();
@@ -198,7 +189,7 @@ class CommunitiesController extends AppController
      *
      * @param string|null $communitySlug Community slug
      * @return \Cake\Http\Response|null
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function edit($communitySlug = null)
     {
@@ -209,7 +200,7 @@ class CommunitiesController extends AppController
         $community = $this->Communities->find('slugged', ['slug' => $communitySlug])
             ->contain([
                 'OfficialSurvey',
-                'OrganizationSurvey'
+                'OrganizationSurvey',
             ])
             ->first();
         if (!$community) {
@@ -219,9 +210,9 @@ class CommunitiesController extends AppController
         $previousScore = $community->score;
 
         if ($this->request->is('post') || $this->request->is('put')) {
-            /** @var $community Community */
+            /** @var \App\Model\Entity\Community $community */
             $community = $this->Communities->patchEntity($community, $this->request->getData(), [
-                'associated' => ['OfficialSurvey', 'OrganizationSurvey']
+                'associated' => ['OfficialSurvey', 'OrganizationSurvey'],
             ]);
             $areaUpdated = $community->isDirty('local_area_id') || $community->isDirty('parent_area_id');
             $errors = $community->getErrors();
@@ -235,14 +226,14 @@ class CommunitiesController extends AppController
                 }
                 if ($areaUpdated) {
                     $event = new Event('Model.Community.afterUpdateCommunityArea', $this, ['meta' => [
-                        'communityId' => $community->id
+                        'communityId' => $community->id,
                     ]]);
                     $this->getEventManager()->dispatch($event);
                 }
 
                 return $this->redirect([
                     'prefix' => 'admin',
-                    'action' => 'index'
+                    'action' => 'index',
                 ]);
             }
         }
@@ -250,7 +241,7 @@ class CommunitiesController extends AppController
         $this->prepareForm($community);
         $this->set([
             'communityId' => $community->id,
-            'titleForLayout' => 'Edit ' . $community->name
+            'titleForLayout' => 'Edit ' . $community->name,
         ]);
         $this->render('form');
 
@@ -262,8 +253,8 @@ class CommunitiesController extends AppController
      *
      * @param int|null $communityId Community ID
      * @return \Cake\Http\Response|null
-     * @throws MethodNotAllowedException
-     * @throws NotFoundException
+     * @throws \Cake\Network\Exception\MethodNotAllowedException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function delete($communityId = null)
     {
@@ -279,7 +270,7 @@ class CommunitiesController extends AppController
 
             // Dispatch event
             $event = new Event('Model.Community.afterDelete', $this, ['meta' => [
-                'communityName' => $community->name
+                'communityName' => $community->name,
             ]]);
             $this->getEventManager()->dispatch($event);
         } else {
@@ -302,15 +293,15 @@ class CommunitiesController extends AppController
             ->where(['slug' => $communitySlug])
             ->contain([
                 'Clients' => function ($q) {
-                    /** @var $q Query */
+                    /** @var \Cake\ORM\Query $q */
 
                     return $q->order(['name' => 'ASC']);
                 },
                 'Surveys' => function ($q) {
-                    /** @var $q Query */
+                    /** @var \Cake\ORM\Query $q */
 
                     return $q->where(['type' => 'official']);
-                }
+                },
             ])
             ->first();
         if (! $community) {
@@ -318,7 +309,7 @@ class CommunitiesController extends AppController
         }
         $this->set([
             'community' => $community,
-            'titleForLayout' => $community->name . ' Clients'
+            'titleForLayout' => $community->name . ' Clients',
         ]);
     }
 
@@ -327,7 +318,7 @@ class CommunitiesController extends AppController
      *
      * @param string $communitySlug Community slug
      * @return void
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function progress($communitySlug)
     {
@@ -341,7 +332,7 @@ class CommunitiesController extends AppController
         if ($this->request->is('put')) {
             $options = ['fieldList' => ['score']];
 
-            /** @var $community Community */
+            /** @var \App\Model\Entity\Community $community */
             $community = $this->Communities->patchEntity($community, $this->request->getData(), $options);
             if ($community->isDirty('score')) {
                 if ($this->Communities->save($community)) {
@@ -359,7 +350,7 @@ class CommunitiesController extends AppController
         $this->set([
             'titleForLayout' => $community->name . ' Progress',
             'community' => $community,
-            'criteria' => $this->Communities->getProgress($community->id, true)
+            'criteria' => $this->Communities->getProgress($community->id, true),
         ]);
     }
 
@@ -368,7 +359,7 @@ class CommunitiesController extends AppController
      *
      * @param string $communitySlug Community slug
      * @return \Cake\Http\Response|null
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function clienthome($communitySlug)
     {
@@ -392,7 +383,7 @@ class CommunitiesController extends AppController
         return $this->redirect([
             'prefix' => 'admin',
             'controller' => 'Communities',
-            'action' => 'index'
+            'action' => 'index',
         ]);
     }
 
@@ -404,7 +395,7 @@ class CommunitiesController extends AppController
      */
     public function addClient($communityId)
     {
-        /** @var $usersTable UsersTable */
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = TableRegistry::get('Users');
         $community = $this->Communities->get($communityId);
 
@@ -443,7 +434,7 @@ class CommunitiesController extends AppController
         }
 
         try {
-            /** @var QueuedJobsTable $queuedJobs */
+            /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
             $queuedJobs = TableRegistry::get('Queue.QueuedJobs');
             $queuedJobs->createJob(
                 'NewAccountEmail',
@@ -451,9 +442,9 @@ class CommunitiesController extends AppController
                     'user' => [
                         'name' => $client->name,
                         'email' => $client->email,
-                        'role' => $client->role
+                        'role' => $client->role,
                     ],
-                    'unhashedPassword' => $this->request->getData('unhashed_password')
+                    'unhashedPassword' => $this->request->getData('unhashed_password'),
                 ],
                 ['reference' => $client->email]
             );
@@ -466,19 +457,19 @@ class CommunitiesController extends AppController
                 'newUserId' => $client->id,
                 'userName' => $client->name,
                 'userRole' => $client->role,
-                'communityId' => $communityId
+                'communityId' => $communityId,
             ]]);
             $this->getEventManager()->dispatch($event);
             $event = new Event('Model.Community.afterAddClient', $this, ['meta' => [
                 'communityId' => $communityId,
                 'clientName' => $client->name,
-                'clientEmail' => $client->email
+                'clientEmail' => $client->email,
             ]]);
             $this->getEventManager()->dispatch($event);
 
             return $this->redirect([
                 'action' => 'clients',
-                $community->slug
+                $community->slug,
             ]);
         } catch (\Exception $e) {
             $msg = 'There was an error emailing account login info to ' . $client->name . '.';
@@ -510,7 +501,7 @@ class CommunitiesController extends AppController
         $event = new Event('Model.Community.afterRemoveClient', $this, ['meta' => [
             'communityId' => $communityId,
             'clientName' => $client->name,
-            'clientEmail' => $client->email
+            'clientEmail' => $client->email,
         ]]);
         $this->getEventManager()->dispatch($event);
 
@@ -525,7 +516,7 @@ class CommunitiesController extends AppController
      */
     public function selectClient($communityId)
     {
-        /** @var $usersTable UsersTable */
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = TableRegistry::get('Users');
         $community = $this->Communities->get($communityId);
 
@@ -533,7 +524,7 @@ class CommunitiesController extends AppController
             'clients' => $usersTable->getClientList(),
             'communityId' => $communityId,
             'communityName' => $community->name,
-            'titleForLayout' => 'Add a New Client for ' . $community->name
+            'titleForLayout' => 'Add a New Client for ' . $community->name,
         ]);
 
         if (! $this->request->is('post')) {
@@ -561,7 +552,7 @@ class CommunitiesController extends AppController
                 $event = new Event('Model.Community.afterRemoveClient', $this, ['meta' => [
                     'communityId' => $linkedCommunity['id'],
                     'clientName' => $client->name,
-                    'clientEmail' => $client->email
+                    'clientEmail' => $client->email,
                 ]]);
                 $this->getEventManager()->dispatch($event);
             }
@@ -573,7 +564,7 @@ class CommunitiesController extends AppController
 
             return $this->redirect([
                 'action' => 'clients',
-                $community->slug
+                $community->slug,
             ]);
         }
 
@@ -584,13 +575,13 @@ class CommunitiesController extends AppController
             $event = new Event('Model.Community.afterAddClient', $this, ['meta' => [
                 'communityId' => $communityId,
                 'clientName' => $client->name,
-                'clientEmail' => $client->email
+                'clientEmail' => $client->email,
             ]]);
             $this->getEventManager()->dispatch($event);
 
             return $this->redirect([
                 'action' => 'clients',
-                $community->slug
+                $community->slug,
             ]);
         }
 
@@ -610,7 +601,7 @@ class CommunitiesController extends AppController
         $settings = $settingsTable->find('all')
             ->select(['name', 'value'])
             ->where(function ($exp) {
-                /** @var $exp QueryExpression */
+                /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                 return $exp->in('name', ['intAlignmentAdjustment', 'intAlignmentThreshold']);
             })
@@ -627,12 +618,12 @@ class CommunitiesController extends AppController
                 'name',
                 'intAlignmentAdjustment',
                 'intAlignmentThreshold',
-                'slug'
+                'slug',
             ])
             ->where($conditions)
             ->order(['created' => 'DESC']);
 
-        /** @var $surveysTable SurveysTable */
+        /** @var \App\Model\Table\SurveysTable $surveysTable */
         $surveysTable = TableRegistry::get('Surveys');
         $avgIntAlignment = $surveysTable->getAvgIntAlignment($includeDummy);
 
@@ -640,7 +631,7 @@ class CommunitiesController extends AppController
             'avgIntAlignment' => $avgIntAlignment,
             'communities' => $communities,
             'settings' => $settings,
-            'titleForLayout' => 'Internal Alignment Calculation Settings'
+            'titleForLayout' => 'Internal Alignment Calculation Settings',
         ]);
     }
 
@@ -649,7 +640,7 @@ class CommunitiesController extends AppController
      *
      * @param null|string $communitySlug Community slug
      * @return \Cake\Http\Response|null
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function presentations($communitySlug = null)
     {
@@ -657,14 +648,14 @@ class CommunitiesController extends AppController
             throw new NotFoundException('Community not specified');
         }
 
-        /** @var $community Community */
+        /** @var \App\Model\Entity\Community $community */
         $community = $this->Communities->find('slugged', ['slug' => $communitySlug])->first();
         if (! $community) {
             throw new NotFoundException('Community not found');
         }
 
         $community = $this->Communities->patchEntity($community, $this->request->getData());
-        /** @var $optOutsTable OptOutsTable */
+        /** @var \App\Model\Table\OptOutsTable $optOutsTable */
         $optOutsTable = TableRegistry::get('OptOuts');
         if ($this->request->is('post') || $this->request->is('put')) {
             foreach (['a', 'b', 'c', 'd'] as $letter) {
@@ -673,7 +664,7 @@ class CommunitiesController extends AppController
                     $addResult = $optOutsTable->addOptOut([
                         'user_id' => $this->Auth->user('id'),
                         'community_id' => $community->id,
-                        'presentation_letter' => $letter
+                        'presentation_letter' => $letter,
                     ]);
                     if (! $addResult) {
                         $msg = 'There was an error opting this community out of Presentation ' .
@@ -692,7 +683,7 @@ class CommunitiesController extends AppController
 
                 return $this->redirect([
                     'prefix' => 'admin',
-                    'action' => 'index'
+                    'action' => 'index',
                 ]);
             }
         }
@@ -702,20 +693,20 @@ class CommunitiesController extends AppController
             ProductsTable::OFFICIALS_SURVEY => 'a',
             ProductsTable::OFFICIALS_SUMMIT => 'b',
             ProductsTable::ORGANIZATIONS_SURVEY => 'c',
-            ProductsTable::ORGANIZATIONS_SUMMIT => 'd'
+            ProductsTable::ORGANIZATIONS_SUMMIT => 'd',
         ];
         foreach ($presentations as $productId => $letter) {
             $field = 'presentation_' . $letter . '_scheduled';
             $optedOut = $optOutsTable->find('all')
                 ->where([
                     'community_id' => $community->id,
-                    'product_id' => $productId
+                    'product_id' => $productId,
                 ])
                 ->count();
             $community->$field = $optedOut ? 'opted-out' : isset($community->{'presentation_' . $letter});
         }
 
-        /** @var $purchasesTable PurchasesTable */
+        /** @var \App\Model\Table\PurchasesTable $purchasesTable */
         $purchasesTable = TableRegistry::get('Purchases');
         $purchases = $purchasesTable->getAllForCommunity($community->id);
         $purchasedProductIds = Hash::extract($purchases, '{n}.product_id');
@@ -726,7 +717,7 @@ class CommunitiesController extends AppController
             'titleForLayout' => $community->name . ' Presentations',
             'presentations' => $presentations,
             'products' => $productsTable->find('list')->toArray(),
-            'purchasedProductIds' => $purchasedProductIds
+            'purchasedProductIds' => $purchasedProductIds,
         ]);
 
         return null;
@@ -737,11 +728,11 @@ class CommunitiesController extends AppController
      *
      * @param string $communitySlug Community slug
      * @return void
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function notes($communitySlug)
     {
-        /** @var $community Community */
+        /** @var \App\Model\Entity\Community $community */
         $community = $this->Communities->find('slugged', ['slug' => $communitySlug])->first();
 
         if (! $community) {
@@ -761,7 +752,7 @@ class CommunitiesController extends AppController
 
         $this->set([
             'community' => $community,
-            'titleForLayout' => $community->name . ' Notes'
+            'titleForLayout' => $community->name . ' Notes',
         ]);
     }
 
@@ -797,7 +788,7 @@ class CommunitiesController extends AppController
             ->select(['id', 'name'])
             ->where([
                 'active' => true,
-                'dummy' => false
+                'dummy' => false,
             ])
             ->order(['name' => 'ASC'])
             ->toArray();
@@ -836,7 +827,7 @@ class CommunitiesController extends AppController
 
         $this->set([
             'communities' => $communities,
-            'titleForLayout' => $title
+            'titleForLayout' => $title,
         ]);
     }
 
@@ -845,11 +836,11 @@ class CommunitiesController extends AppController
      *
      * @param string $communitySlug Community slug
      * @return void
-     * @throws NotFoundException
+     * @throws \Cake\Http\Exception\NotFoundException
      */
     public function activate($communitySlug)
     {
-        /** @var $community Community */
+        /** @var \App\Model\Entity\Community $community */
         $community = $this->Communities->find('slugged', ['slug' => $communitySlug])->first();
 
         if (! $community) {
@@ -870,7 +861,7 @@ class CommunitiesController extends AppController
                 // Event
                 $eventName = 'Model.Community.after' . ($currentlyActive ? 'Activate' : 'Deactivate');
                 $event = new Event($eventName, $this, ['meta' => [
-                    'communityId' => $community->id
+                    'communityId' => $community->id,
                 ]]);
                 $this->getEventManager()->dispatch($event);
             } else {
@@ -892,10 +883,10 @@ class CommunitiesController extends AppController
                 'All',
                 'ICI',
                 'CBER',
-                'Client'
+                'Client',
             ],
             'titleForLayout' => $title,
-            'warning' => $this->Communities->getDeactivationWarning($community->id)
+            'warning' => $this->Communities->getDeactivationWarning($community->id),
         ]);
     }
 }

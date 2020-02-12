@@ -10,7 +10,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class PurchasesFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -47,55 +46,55 @@ class PurchasesFixture extends TestFixture
     public $records = [
         [
             'community_id' => 1,
-            'product_id' => ProductsTable::OFFICIALS_SURVEY
+            'product_id' => ProductsTable::OFFICIALS_SURVEY,
         ],
         [
             'community_id' => 4,
-            'product_id' => ProductsTable::OFFICIALS_SURVEY
+            'product_id' => ProductsTable::OFFICIALS_SURVEY,
         ],
         [
             'community_id' => 4,
-            'product_id' => ProductsTable::ORGANIZATIONS_SURVEY
+            'product_id' => ProductsTable::ORGANIZATIONS_SURVEY,
         ],
         [
             'community_id' => 4,
-            'product_id' => ProductsTable::OFFICIALS_SUMMIT
+            'product_id' => ProductsTable::OFFICIALS_SUMMIT,
         ],
         [
             'community_id' => 4,
-            'product_id' => ProductsTable::ORGANIZATIONS_SUMMIT
+            'product_id' => ProductsTable::ORGANIZATIONS_SUMMIT,
         ],
         [
             'community_id' => 5,
-            'product_id' => ProductsTable::OFFICIALS_SURVEY
+            'product_id' => ProductsTable::OFFICIALS_SURVEY,
         ],
         [
             'community_id' => 5,
-            'product_id' => ProductsTable::ORGANIZATIONS_SURVEY
+            'product_id' => ProductsTable::ORGANIZATIONS_SURVEY,
         ],
         [
             'community_id' => 6,
-            'product_id' => ProductsTable::OFFICIALS_SURVEY
+            'product_id' => ProductsTable::OFFICIALS_SURVEY,
         ],
         [
             'community_id' => 6,
-            'product_id' => ProductsTable::ORGANIZATIONS_SURVEY
+            'product_id' => ProductsTable::ORGANIZATIONS_SURVEY,
         ],
         [
             'community_id' => 7,
-            'product_id' => ProductsTable::OFFICIALS_SURVEY
+            'product_id' => ProductsTable::OFFICIALS_SURVEY,
         ],
         [
             'community_id' => 7,
-            'product_id' => ProductsTable::OFFICIALS_SUMMIT
+            'product_id' => ProductsTable::OFFICIALS_SUMMIT,
         ],
         [
             'community_id' => 7,
-            'product_id' => ProductsTable::ORGANIZATIONS_SURVEY
+            'product_id' => ProductsTable::ORGANIZATIONS_SURVEY,
         ],
         [
             'community_id' => 7,
-            'product_id' => ProductsTable::ORGANIZATIONS_SUMMIT
+            'product_id' => ProductsTable::ORGANIZATIONS_SUMMIT,
         ],
     ];
 
@@ -115,7 +114,7 @@ class PurchasesFixture extends TestFixture
             'notes' => 'Paid for by OCRA',
             'created' => '2016-01-22 16:55:26',
             'refunded' => null,
-            'refunder_id' => null
+            'refunder_id' => null,
         ];
 
         foreach ($this->records as $n => &$record) {

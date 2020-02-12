@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller\Client;
 
 use App\Controller\AppController;
@@ -20,7 +22,7 @@ class OptOutsController extends AppController
         $result = $this->OptOuts->addOptOut([
             'user_id' => $clientId,
             'community_id' => $communityId,
-            'product_id' => $productId
+            'product_id' => $productId,
         ]);
         if ($result) {
             $this->Flash->success('Opt-out successful');
@@ -32,7 +34,7 @@ class OptOutsController extends AppController
         return $this->redirect([
             'prefix' => 'client',
             'controller' => 'Communities',
-            'action' => 'index'
+            'action' => 'index',
         ]);
     }
 }

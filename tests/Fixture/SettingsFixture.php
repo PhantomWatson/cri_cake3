@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class SettingsFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -43,14 +42,14 @@ class SettingsFixture extends TestFixture
             'name' => 'intAlignmentAdjustment',
             'value' => '8.98',
             'created' => '2016-02-09 22:51:03',
-            'modified' => '2016-02-09 22:51:03'
+            'modified' => '2016-02-09 22:51:03',
         ],
         [
             'id' => 2,
             'name' => 'intAlignmentThreshold',
             'value' => '1',
             'created' => '2016-02-09 22:51:32',
-            'modified' => '2016-02-09 22:51:32'
+            'modified' => '2016-02-09 22:51:32',
         ],
     ];
 }

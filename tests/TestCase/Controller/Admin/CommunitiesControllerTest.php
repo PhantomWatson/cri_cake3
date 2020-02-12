@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Test\TestCase\Controller\Admin;
 
 use App\Model\Table\ProductsTable;
@@ -11,7 +13,6 @@ use Cake\Routing\Router;
  */
 class CommunitiesControllerTest extends ApplicationTest
 {
-
     /**
      * Fixtures
      *
@@ -34,7 +35,7 @@ class CommunitiesControllerTest extends ApplicationTest
         'app.StatCategories',
         'app.Statistics',
         'app.Surveys',
-        'app.Users'
+        'app.Users',
     ];
 
     /**
@@ -46,7 +47,7 @@ class CommunitiesControllerTest extends ApplicationTest
     {
         parent::setUp();
         $this->configRequest([
-            'environment' => ['HTTPS' => 'on']
+            'environment' => ['HTTPS' => 'on'],
         ]);
     }
 
@@ -62,7 +63,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'activate',
-            'test-community-1'
+            'test-community-1',
         ]);
 
         // Unauthenticated
@@ -75,7 +76,7 @@ class CommunitiesControllerTest extends ApplicationTest
 
         // Deactivating
         $this->put($url, [
-            'active' => 0
+            'active' => 0,
         ]);
         $this->assertResponseSuccess();
 
@@ -85,7 +86,7 @@ class CommunitiesControllerTest extends ApplicationTest
 
         // Reactivating
         $this->put($url, [
-            'active' => 1
+            'active' => 1,
         ]);
         $this->assertResponseSuccess();
 
@@ -105,7 +106,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $url = Router::url([
             'prefix' => 'admin',
             'controller' => 'Communities',
-            'action' => 'add'
+            'action' => 'add',
         ]);
 
         // Unauthenticated
@@ -124,7 +125,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'score' => 1,
             'public' => 0,
             'intAlignmentAdjustment' => 8.98,
-            'intAlignmentThreshold' => 1
+            'intAlignmentThreshold' => 1,
         ];
         $this->post($url, $data);
         $this->assertResponseSuccess();
@@ -145,7 +146,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'addClient',
-            1
+            1,
         ]);
 
         // Unauthenticated
@@ -164,14 +165,14 @@ class CommunitiesControllerTest extends ApplicationTest
             'organization' => 'Test Organization',
             'email' => 'test@example.com',
             'phone' => '555-555-5555',
-            'unhashed_password' => 'password'
+            'unhashed_password' => 'password',
         ];
         $this->post($url, $data);
         $this->assertResponseSuccess();
         $usersTable = TableRegistry::get('Users');
         $query = $usersTable->find()->where([
             'name' => $data['name'],
-            'role' => 'client'
+            'role' => 'client',
         ]);
         $this->assertEquals(1, $query->count());
     }
@@ -187,7 +188,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $url = Router::url([
             'prefix' => 'admin',
             'controller' => 'Communities',
-            'action' => 'alignmentCalcSettings'
+            'action' => 'alignmentCalcSettings',
         ]);
 
         // Unauthenticated
@@ -211,7 +212,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'clienthome',
-            'test-community-1'
+            'test-community-1',
         ]);
 
         // Unauthenticated
@@ -227,7 +228,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'clienthome',
-            'invalid-slug'
+            'invalid-slug',
         ]);
         $this->get($url);
         $this->assertResponseError();
@@ -245,7 +246,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'clients',
-            'test-community-1'
+            'test-community-1',
         ]);
 
         // Unauthenticated
@@ -261,7 +262,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'clients',
-            'invalid-slug'
+            'invalid-slug',
         ]);
         $this->get($url);
         $this->assertResponseError();
@@ -279,7 +280,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'delete',
-            1
+            1,
         ]);
 
         // Unauthenticated
@@ -287,7 +288,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $this->assertRedirectContains(Router::url([
             'prefix' => false,
             'controller' => 'Users',
-            'action' => 'login'
+            'action' => 'login',
         ]));
 
         // Authenticated
@@ -302,7 +303,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'delete',
-            999
+            999,
         ]);
         $this->post($invalidUrl);
         $this->assertResponseError();
@@ -329,7 +330,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'edit',
-            'test-community-1'
+            'test-community-1',
         ]);
 
         // Unauthenticated
@@ -345,7 +346,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'edit',
-            'invalid-slug'
+            'invalid-slug',
         ]));
         $this->assertResponseError();
 
@@ -357,7 +358,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'score' => 1,
             'public' => 1,
             'intAlignmentAdjustment' => 9,
-            'intAlignmentThreshold' => 2
+            'intAlignmentThreshold' => 2,
         ];
         $this->post($url, $data);
         $this->assertResponseSuccess();
@@ -377,7 +378,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $url = Router::url([
             'prefix' => 'admin',
             'controller' => 'Communities',
-            'action' => 'index'
+            'action' => 'index',
         ]);
 
         // Unauthenticated
@@ -402,7 +403,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'notes',
-            'test-community-1'
+            'test-community-1',
         ]);
 
         // Unauthenticated
@@ -435,7 +436,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'presentations',
-            'test-community-1'
+            'test-community-1',
         ]);
 
         // Unauthenticated
@@ -450,7 +451,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $date = [
             'year' => 2099,
             'month' => 1,
-            'day' => 1
+            'day' => 1,
         ];
         $data = [
             'presentation_a_scheduled' => 1,
@@ -460,14 +461,14 @@ class CommunitiesControllerTest extends ApplicationTest
             'presentation_c_scheduled' => 0,
             'presentation_c' => $date,
             'presentation_d_scheduled' => 0,
-            'presentation_d' => $date
+            'presentation_d' => $date,
         ];
         $this->post($url, $data);
         $this->assertResponseSuccess();
         $communitiesTable = TableRegistry::get('Communities');
         $query = $communitiesTable->find()->where([
             'id' => 1,
-            'presentation_a' => implode('-', $data['presentation_a'])
+            'presentation_a' => implode('-', $data['presentation_a']),
         ]);
         $this->assertEquals(1, $query->count());
 
@@ -479,14 +480,14 @@ class CommunitiesControllerTest extends ApplicationTest
             'id' => 1,
             function ($exp, $q) {
                 return $exp->isNull('presentation_b');
-            }
+            },
         ]);
         $this->assertEquals(1, $query->count());
         $optOutsTable = TableRegistry::get('OptOuts');
         $query = $optOutsTable->find()->where([
             'user_id' => $this->adminUser['Auth']['User']['id'],
             'community_id' => 1,
-            'product_id' => ProductsTable::OFFICIALS_SUMMIT
+            'product_id' => ProductsTable::OFFICIALS_SUMMIT,
         ]);
         $this->assertEquals(1, $query->count());
     }
@@ -503,7 +504,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'progress',
-            'test-community-1'
+            'test-community-1',
         ]);
 
         // Unauthenticated
@@ -521,7 +522,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $communitiesTable = TableRegistry::get('Communities');
         $query = $communitiesTable->find()->where([
             'id' => 1,
-            'score' => $data['score']
+            'score' => $data['score'],
         ]);
         $this->assertEquals(1, $query->count());
     }
@@ -539,7 +540,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'controller' => 'Communities',
             'action' => 'removeClient',
             2,
-            1
+            1,
         ]);
 
         // Unauthenticated
@@ -549,7 +550,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 1,
-            'client_id' => 2
+            'client_id' => 2,
         ]);
         $this->assertEquals(1, $query->count());
 
@@ -561,7 +562,7 @@ class CommunitiesControllerTest extends ApplicationTest
         // Confirm removed association
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 1,
-            'client_id' => 2
+            'client_id' => 2,
         ]);
         $this->assertEquals(0, $query->count());
     }
@@ -578,7 +579,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'selectClient',
-            2
+            2,
         ]);
 
         // Unauthenticated
@@ -593,7 +594,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $clientsCommunitiesTable = TableRegistry::get('ClientsCommunities');
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 1,
-            'client_id' => 2
+            'client_id' => 2,
         ]);
         $this->assertEquals(1, $query->count());
 
@@ -604,14 +605,14 @@ class CommunitiesControllerTest extends ApplicationTest
         // Confirm new association
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 2,
-            'client_id' => 3
+            'client_id' => 3,
         ]);
         $this->assertEquals(1, $query->count());
 
         // Confirm old association was removed
         $query = $clientsCommunitiesTable->find()->where([
             'community_id' => 3,
-            'client_id' => 3
+            'client_id' => 3,
         ]);
         $this->assertEquals(0, $query->count());
     }
@@ -627,7 +628,7 @@ class CommunitiesControllerTest extends ApplicationTest
         $url = Router::url([
             'prefix' => 'admin',
             'controller' => 'Communities',
-            'action' => 'toDo'
+            'action' => 'toDo',
         ]);
 
         // Unauthenticated
@@ -652,7 +653,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'edit',
-            'test-community-1'
+            'test-community-1',
         ]);
 
         // Test event for score increase
@@ -679,7 +680,7 @@ class CommunitiesControllerTest extends ApplicationTest
             'prefix' => 'admin',
             'controller' => 'Communities',
             'action' => 'progress',
-            'test-community-1'
+            'test-community-1',
         ]);
 
         // Test event for score increase

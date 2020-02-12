@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
 use App\Model\Entity\Community;
 use Cake\Chronos\Date;
-use Cake\Database\Expression\QueryExpression;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -37,7 +38,6 @@ use DateTime;
  */
 class CommunitiesTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -60,38 +60,38 @@ class CommunitiesTable extends Table
             'foreignKey' => 'parent_area_id',
         ]);
         $this->hasMany('Purchases', [
-            'foreignKey' => 'community_id'
+            'foreignKey' => 'community_id',
         ]);
         $this->hasMany('OptOuts', [
-            'foreignKey' => 'community_id'
+            'foreignKey' => 'community_id',
         ]);
         $this->hasMany('Surveys', [
-            'foreignKey' => 'community_id'
+            'foreignKey' => 'community_id',
         ]);
         $this->hasMany('SurveysBackup', [
-            'foreignKey' => 'community_id'
+            'foreignKey' => 'community_id',
         ]);
         $this->hasOne('OfficialSurvey', [
             'className' => 'Surveys',
             'foreignKey' => 'community_id',
             'conditions' => ['OfficialSurvey.type' => 'official'],
-            'dependent' => true
+            'dependent' => true,
         ]);
         $this->hasOne('OrganizationSurvey', [
             'className' => 'Surveys',
             'foreignKey' => 'community_id',
             'conditions' => ['OrganizationSurvey.type' => 'organization'],
-            'dependent' => true
+            'dependent' => true,
         ]);
         $this->belongsToMany('Clients', [
             'className' => 'Users',
             'joinTable' => 'clients_communities',
             'foreignKey' => 'community_id',
             'targetForeignKey' => 'client_id',
-            'saveStrategy' => 'replace'
+            'saveStrategy' => 'replace',
         ]);
         $this->hasMany('ActivityRecords', [
-            'foreignKey' => 'community_id'
+            'foreignKey' => 'community_id',
         ]);
     }
 
@@ -127,19 +127,19 @@ class CommunitiesTable extends Table
 
         $validator
             ->add('intAlignmentAdjustment', 'decimalFormat', [
-                'rule' => ['decimal', null]
+                'rule' => ['decimal', null],
             ])
             ->add('intAlignmentAdjustment', 'valueInRange', [
-                'rule' => ['range', 0, 99.99]
+                'rule' => ['range', 0, 99.99],
             ])
             ->requirePresence('intAlignmentAdjustment', 'create');
 
         $validator
             ->add('intAlignmentThreshold', 'decimalFormat', [
-                'rule' => ['decimal', null]
+                'rule' => ['decimal', null],
             ])
             ->add('intAlignmentThreshold', 'valueInRange', [
-                'rule' => ['range', 0, 99.99]
+                'rule' => ['range', 0, 99.99],
             ])
             ->requirePresence('intAlignmentThreshold', 'create');
 
@@ -182,10 +182,10 @@ class CommunitiesTable extends Table
                 'presentation' . strtoupper($letter) . 'Purchased',
                 [
                     'errorField' => 'presentation_' . $letter,
-                    'message' => 'Presentation ' . strtoupper($letter) . ' has not been purchased yet'
+                    'message' => 'Presentation ' . strtoupper($letter) . ' has not been purchased yet',
                 ]
             );
-        };
+        }
 
         return $rules;
     }
@@ -270,7 +270,7 @@ class CommunitiesTable extends Table
                         ->autoFields(false)
                         ->select(['id'])
                         ->limit(1);
-                }
+                },
             ])
             ->enableHydration(false)
             ->first();
@@ -294,7 +294,7 @@ class CommunitiesTable extends Table
                     return $q
                         ->select(['id', 'salutation', 'name', 'email'])
                         ->order(['Clients.name' => 'ASC']);
-                }
+                },
             ])
             ->first();
 
@@ -342,7 +342,7 @@ class CommunitiesTable extends Table
         // Step 1
         $criteria[1]['client_assigned'] = [
             'At least one client account has been created for this community',
-            $this->getClientCount($communityId) > 0
+            $this->getClientCount($communityId) > 0,
         ];
 
         $productId = ProductsTable::OFFICIALS_SURVEY;
@@ -352,12 +352,12 @@ class CommunitiesTable extends Table
         if (in_array($productId, $optOuts)) {
             $criteria[1]['survey_purchased'] = [
                 "Opted out of purchasing $productDescription",
-                true
+                true,
             ];
         } else {
             $criteria[1]['survey_purchased'] = [
                 "Purchased $productDescription",
-                $productsTable->isPurchased($communityId, $productId)
+                $productsTable->isPurchased($communityId, $productId),
             ];
         }
 
@@ -378,7 +378,7 @@ class CommunitiesTable extends Table
         $step = $surveyId ? 2 : 1;
         $criteria[$step]['survey_created'] = [
             'Leadership alignment assessment questionnaire has been prepared' . $note,
-            $completed
+            $completed,
         ];
 
         // Step 2
@@ -386,19 +386,19 @@ class CommunitiesTable extends Table
         $note = $count ? " ($count " . __n('invitation', 'invitations', $count) . ' sent)' : '';
         $criteria[2]['invitations_sent'] = [
             'Community leaders have been sent questionnaire invitations' . $note,
-            $surveyId && $count > 0
+            $surveyId && $count > 0,
         ];
 
         $count = $surveyId ? $responsesTable->getDistinctCount($surveyId) : 0;
         $note = $count ? " ($count " . __n('response', 'responses', $count) . ' received)' : '';
         $criteria[2]['responses_received'] = [
             'Responses to the questionnaire have been collected' . $note,
-            $surveyId && $count > 0
+            $surveyId && $count > 0,
         ];
 
         $criteria[2]['response_threshold_reached'] = [
             'At least 25% of invited community leaders have responded to the questionnaire',
-            $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
+            $surveysTable->getInvitedResponsePercentage($surveyId) >= 25,
         ];
 
         $hasUninvitedResponses = $surveysTable->hasUninvitedResponses($surveyId);
@@ -406,12 +406,12 @@ class CommunitiesTable extends Table
         if ($hasUninvitedResponses) {
             $criteria[2]['unapproved_addressed'] = [
                 'All unapproved responses have been approved or dismissed',
-                ! $surveysTable->hasUnaddressedUnapprovedRespondents($surveyId)
+                ! $surveysTable->hasUnaddressedUnapprovedRespondents($surveyId),
             ];
         } else {
             $criteria[2]['unapproved_addressed'] = [
                 'This questionnaire has no uninvited responses',
-                true
+                true,
             ];
         }
 
@@ -422,12 +422,12 @@ class CommunitiesTable extends Table
         if ($optedOut) {
             $criteria[2]['leadership_summit_purchased'] = [
                 "Opted out of purchasing $productDescription",
-                true
+                true,
             ];
         } else {
             $criteria[2]['leadership_summit_purchased'] = [
                 "Purchased optional $productDescription",
-                $productsTable->isPurchased($communityId, $productId)
+                $productsTable->isPurchased($communityId, $productId),
             ];
         }
 
@@ -436,11 +436,11 @@ class CommunitiesTable extends Table
             $date = $community->{"presentation_$letter"};
             $criteria[2]["presentation_{$letter}_scheduled"] = [
                 'Scheduled Presentation ' . strtoupper($letter),
-                $date != null
+                $date != null,
             ];
             $criteria[2]["presentation_{$letter}_completed"] = [
                 'Completed Presentation ' . strtoupper($letter),
-                $date ? ($date->format('Y-m-d') <= date('Y-m-d')) : false
+                $date ? ($date->format('Y-m-d') <= date('Y-m-d')) : false,
             ];
         }
 
@@ -451,12 +451,12 @@ class CommunitiesTable extends Table
         if ($optedOut) {
             $criteria[2]['survey_purchased'] = [
                 "Opted out of purchasing $productDescription",
-                true
+                true,
             ];
         } else {
             $criteria[2]['survey_purchased'] = [
                 "Purchased $productDescription",
-                $productsTable->isPurchased($communityId, $productId)
+                $productsTable->isPurchased($communityId, $productId),
             ];
         }
 
@@ -471,14 +471,14 @@ class CommunitiesTable extends Table
         }
         $criteria[3]['survey_created'] = [
             'Community organization alignment assessment questionnaire has been prepared' . $note,
-            (bool)$surveyId
+            (bool)$surveyId,
         ];
 
         $count = $surveyId ? $respondentsTable->getInvitedCount($surveyId) : 0;
         $note = $count ? " ($count " . __n('invitation', 'invitations', $count) . ' sent)' : '';
         $criteria[3]['invitations_sent'] = [
             'Community organizations have been sent questionnaire invitations' . $note,
-            $surveyId && $count > 0
+            $surveyId && $count > 0,
         ];
 
         $count = $surveyId ? $responsesTable->getDistinctCount($surveyId) : 0;
@@ -489,12 +489,12 @@ class CommunitiesTable extends Table
         }
         $criteria[3]['responses_received'] = [
             'Responses to the questionnaire have been collected' . $note,
-            $surveyId && $count > 0
+            $surveyId && $count > 0,
         ];
 
         $criteria[3]['response_threshold_reached'] = [
             'At least 25% of invited community organizations have responded to the questionnaire',
-            $surveysTable->getInvitedResponsePercentage($surveyId) >= 25
+            $surveysTable->getInvitedResponsePercentage($surveyId) >= 25,
         ];
 
         $productId = ProductsTable::ORGANIZATIONS_SUMMIT;
@@ -504,12 +504,12 @@ class CommunitiesTable extends Table
         if ($optedOut) {
             $criteria[3]['orgs_summit_purchased'] = [
                 "Opted out of purchasing optional $productDescription",
-                true
+                true,
             ];
         } else {
             $criteria[3]['orgs_summit_purchased'] = [
                 "Purchased optional $productDescription",
-                $productsTable->isPurchased($communityId, $productId)
+                $productsTable->isPurchased($communityId, $productId),
             ];
         }
 
@@ -517,11 +517,11 @@ class CommunitiesTable extends Table
             $date = $community->{"presentation_$letter"};
             $criteria[3]["presentation_{$letter}_scheduled"] = [
                 'Scheduled Presentation ' . strtoupper($letter),
-                $date != null
+                $date != null,
             ];
             $criteria[3]["presentation_{$letter}_completed"] = [
                 'Completed Presentation ' . strtoupper($letter),
-                $date ? ($date->format('Y-m-d') <= date('Y-m-d')) : false
+                $date ? ($date->format('Y-m-d') <= date('Y-m-d')) : false,
             ];
         }
 
@@ -533,12 +533,12 @@ class CommunitiesTable extends Table
         if ($optedOut) {
             $criteria[3]['policy_dev_purchased'] = [
                 "Opted out of purchasing $productDescription",
-                true
+                true,
             ];
         } else {
             $criteria[3]['policy_dev_purchased'] = [
                 "Purchased $productDescription ($price)",
-                $productsTable->isPurchased($communityId, $productId)
+                $productsTable->isPurchased($communityId, $productId),
             ];
         }
 
@@ -549,7 +549,7 @@ class CommunitiesTable extends Table
             : "Your $productDescription is currently being prepared";
         $criteria[4]['policy_dev_delivered'] = [
             $msg,
-            $isDelivered
+            $isDelivered,
         ];
 
         return $criteria;
@@ -605,7 +605,7 @@ class CommunitiesTable extends Table
                 'Clients' => function ($q) {
                     return $q->select([
                         'Clients.email',
-                        'Clients.name'
+                        'Clients.name',
                     ]);
                 },
                 'OfficialSurvey' => function ($q) {
@@ -615,7 +615,7 @@ class CommunitiesTable extends Table
                         'OfficialSurvey.alignment_vs_local',
                         'OfficialSurvey.alignment_vs_parent',
                         'OfficialSurvey.respondents_last_modified_date',
-                        'OfficialSurvey.active'
+                        'OfficialSurvey.active',
                     ]);
                 },
                 'OrganizationSurvey' => function ($q) {
@@ -625,12 +625,12 @@ class CommunitiesTable extends Table
                         'OrganizationSurvey.alignment_vs_local',
                         'OrganizationSurvey.alignment_vs_parent',
                         'OrganizationSurvey.respondents_last_modified_date',
-                        'OrganizationSurvey.active'
+                        'OrganizationSurvey.active',
                     ]);
                 },
                 'ParentAreas' => function ($q) {
                     return $q->select(['ParentAreas.name']);
-                }
+                },
             ])
             ->group('Communities.id')
             ->select([
@@ -639,7 +639,7 @@ class CommunitiesTable extends Table
                 'Communities.score',
                 'Communities.created',
                 'Communities.active',
-                'Communities.slug'
+                'Communities.slug',
             ])
             ->order(['Communities.name' => 'ASC']);
 
@@ -664,7 +664,7 @@ class CommunitiesTable extends Table
                 'presentation_a',
                 'presentation_b',
                 'presentation_c',
-                'notes'
+                'notes',
             ])
             ->where(['dummy' => 0])
             ->contain([
@@ -707,49 +707,49 @@ class CommunitiesTable extends Table
                 'presentation_a',
                 'presentation_b',
                 'presentation_c',
-                'presentation_d'
+                'presentation_d',
             ])
             ->contain([
                 'OptOuts',
                 'OfficialSurvey' => function ($q) {
-                    /** @var Query $q */
+                    /** @var \Cake\ORM\Query $q */
 
                     return $q
                         ->select(['id', 'community_id', 'active'])
                         ->contain([
                             'Responses' => function ($q) {
-                                /** @var Query $q */
+                                /** @var \Cake\ORM\Query $q */
 
                                 return $q
                                     ->select(['id', 'survey_id'])
                                     ->matching('Respondents', function ($q) {
-                                        /** @var Query $q */
+                                        /** @var \Cake\ORM\Query $q */
 
                                         return $q->where(['approved' => true]);
                                     });
-                            }
+                            },
                         ]);
                 },
                 'OrganizationSurvey' => function ($q) {
-                    /** @var Query $q */
+                    /** @var \Cake\ORM\Query $q */
 
                     return $q
                         ->select(['id', 'community_id', 'active'])
                         ->contain([
                             'Responses' => function ($q) {
-                                /** @var Query $q */
+                                /** @var \Cake\ORM\Query $q */
 
                                 return $q->select(['id', 'survey_id']);
-                            }
+                            },
                         ]);
                 },
                 'Purchases' => function ($q) {
-                    /** @var Query $q */
+                    /** @var \Cake\ORM\Query $q */
 
                     return $q
                         ->select(['id', 'product_id', 'community_id'])
                         ->where(function ($exp) {
-                            /** @var QueryExpression $exp */
+                            /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                             return $exp->isNull('refunded');
                         });
@@ -788,20 +788,20 @@ class CommunitiesTable extends Table
         $presentations = [
             'a' => [
                 'product_id' => ProductsTable::OFFICIALS_SURVEY,
-                'deliverable_id' => DeliverablesTable::PRESENTATION_A_MATERIALS
+                'deliverable_id' => DeliverablesTable::PRESENTATION_A_MATERIALS,
             ],
             'b' => [
                 'product_id' => ProductsTable::OFFICIALS_SUMMIT,
-                'deliverable_id' => DeliverablesTable::PRESENTATION_B_MATERIALS
+                'deliverable_id' => DeliverablesTable::PRESENTATION_B_MATERIALS,
             ],
             'c' => [
                 'product_id' => ProductsTable::ORGANIZATIONS_SURVEY,
-                'deliverable_id' => DeliverablesTable::PRESENTATION_C_MATERIALS
+                'deliverable_id' => DeliverablesTable::PRESENTATION_C_MATERIALS,
             ],
             'd' => [
                 'product_id' => ProductsTable::ORGANIZATIONS_SUMMIT,
-                'deliverable_id' => DeliverablesTable::PRESENTATION_D_MATERIALS
-            ]
+                'deliverable_id' => DeliverablesTable::PRESENTATION_D_MATERIALS,
+            ],
         ];
 
         foreach ($presentations as $letter => $presentation) {
@@ -843,7 +843,7 @@ class CommunitiesTable extends Table
     /**
      * Returns a string that sums up the status of the specified community
      *
-     * @param Community $community Community entity
+     * @param \App\Model\Entity\Community $community Community entity
      * @return string
      */
     public function getStatusDescription(Community $community)
@@ -903,10 +903,10 @@ class CommunitiesTable extends Table
             ->where([
                 'id' => $communityId,
                 function ($exp, $q) use ($presentationLetter) {
-                    /** @var QueryExpression $exp */
+                    /** @var \Cake\Database\Expression\QueryExpression $exp */
 
                     return $exp->isNotNull('presentation_' . strtolower($presentationLetter));
-                }
+                },
             ]);
 
         return !$result->isEmpty();
@@ -918,15 +918,15 @@ class CommunitiesTable extends Table
      * Skips over recently-created communities (within last two hours) to avoid sending unnecessary alerts to
      * administrators who are in the process of adding clients
      *
-     * @param Query $query Query
-     * @return Query
+     * @param \Cake\ORM\Query $query Query
+     * @return \Cake\ORM\Query
      */
     public function findNoClientAssignedAlertable(Query $query)
     {
         return $query->select(['id', 'name'])
             ->where([
                 'Communities.active' => true,
-                'Communities.created <=' => new DateTime('-2 hours')
+                'Communities.created <=' => new DateTime('-2 hours'),
             ])
             ->matching('OfficialSurvey')
             ->notMatching('Clients');
@@ -938,15 +938,15 @@ class CommunitiesTable extends Table
      * Skips over recently-created communities (within last two hours) to avoid sending unnecessary alerts to
      * administrators who are in the process of adding clients
      *
-     * @param Query $query Query
-     * @return Query
+     * @param \Cake\ORM\Query $query Query
+     * @return \Cake\ORM\Query
      */
     public function findNoOfficialsSurveyAlertable(Query $query)
     {
         return $query->select(['id', 'name', 'slug'])
             ->where([
                 'Communities.active' => true,
-                'Communities.created <=' => new DateTime('-2 hours')
+                'Communities.created <=' => new DateTime('-2 hours'),
             ])
             ->notMatching('OfficialSurvey');
     }
@@ -957,10 +957,10 @@ class CommunitiesTable extends Table
      * Skips over recently-created communities and surveys (within last two hours) to avoid sending unnecessary alerts
      * to administrators who are in the process of adding clients
      *
-     * @param Query $query Query
+     * @param \Cake\ORM\Query $query Query
      * @param array $options Query options
-     * @return Query
-     * @throws InternalErrorException
+     * @return \Cake\ORM\Query
+     * @throws \Cake\Network\Exception\InternalErrorException
      */
     public function findSurveyInactiveAlertable(Query $query, array $options = [])
     {
@@ -974,22 +974,22 @@ class CommunitiesTable extends Table
             ->select(['id', 'name'])
             ->contain([
                 $associationName => function ($q) {
-                    /** @var Query $q */
+                    /** @var \Cake\ORM\Query $q */
 
                     return $q->select(['id', 'type', 'community_id']);
-                }
+                },
             ])
             ->where([
                 'Communities.active' => true,
-                'Communities.created <=' => new DateTime('-2 hours')
+                'Communities.created <=' => new DateTime('-2 hours'),
             ])
             ->matching($associationName, function ($q) use ($associationName) {
-                /** @var Query $q */
+                /** @var \Cake\ORM\Query $q */
 
                 return $q
                     ->where([
                         $associationName . '.active' => false,
-                        $associationName . '.created <=' => new DateTime('-2 hours')
+                        $associationName . '.created <=' => new DateTime('-2 hours'),
                     ])
                     ->notMatching('Responses');
             });

@@ -1,10 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model\Table;
 
-use App\Model\Entity\Respondent;
-use App\Model\Entity\Survey;
-use Cake\I18n\Time;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -17,7 +15,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\SurveysTable|\Cake\ORM\Association\BelongsTo $Surveys
  * @property \Cake\ORM\Association\BelongsTo $SmRespondents
  * @property \App\Model\Table\ResponsesTable|\Cake\ORM\Association\HasMany $Responses
- * @method Query findBySurveyIdAndEmail($surveyId, $email)
+ * @method \Cake\ORM\Query findBySurveyIdAndEmail($surveyId, $email)
  * @method \App\Model\Entity\Respondent get($primaryKey, $options = [])
  * @method \App\Model\Entity\Respondent newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Respondent[] newEntities(array $data, array $options = [])
@@ -29,7 +27,6 @@ use Cake\Validation\Validator;
  */
 class RespondentsTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -44,10 +41,10 @@ class RespondentsTable extends Table
         $this->addBehavior('Timestamp');
         $this->belongsTo('Surveys', [
             'foreignKey' => 'survey_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->hasMany('Responses', [
-            'foreignKey' => 'respondent_id'
+            'foreignKey' => 'respondent_id',
         ]);
     }
 
@@ -67,7 +64,7 @@ class RespondentsTable extends Table
             ->requirePresence('email', 'create')
             ->add('email', 'validFormat', [
                 'rule' => 'email',
-                'message' => 'Email address must be in valid format'
+                'message' => 'Email address must be in valid format',
             ]);
 
         $validator
@@ -146,7 +143,7 @@ class RespondentsTable extends Table
             ->select(['id', 'name', 'email', 'title'])
             ->where([
                 'survey_id' => $surveyId,
-                'invited' => 1
+                'invited' => 1,
             ])
             ->order(['name' => 'ASC'])
             ->all();
@@ -188,7 +185,7 @@ class RespondentsTable extends Table
         return $this->find('all')
             ->where([
                 'survey_id' => $surveyId,
-                'invited' => true
+                'invited' => true,
             ])
             ->count();
     }
@@ -217,7 +214,7 @@ class RespondentsTable extends Table
         return $this->find('all')
             ->where([
                 'survey_id' => $surveyId,
-                'invited' => false
+                'invited' => false,
             ])
             ->count();
     }
@@ -234,7 +231,7 @@ class RespondentsTable extends Table
             ->select(['id', 'email', 'name', 'title', 'approved'])
             ->where([
                 'survey_id' => $surveyId,
-                'approved' => 0
+                'approved' => 0,
             ])
             ->order(['created' => 'DESC'])
             ->toArray();
@@ -250,11 +247,11 @@ class RespondentsTable extends Table
     {
         return $this->find('list', [
                 'keyField' => 'id',
-                'valueField' => 'email'
+                'valueField' => 'email',
             ])
             ->where([
                 'survey_id' => $surveyId,
-                'approved' => 0
+                'approved' => 0,
             ])
             ->where(function ($exp, $q) {
                 return $exp->notEq('email', '');
@@ -273,11 +270,11 @@ class RespondentsTable extends Table
     {
         return $this->find('list', [
                 'keyField' => 'id',
-                'valueField' => 'email'
+                'valueField' => 'email',
             ])
             ->where([
                 'survey_id' => $surveyId,
-                'approved' => 1
+                'approved' => 1,
             ])
             ->where(function ($exp, $q) {
                 return $exp->notEq('email', '');
@@ -298,7 +295,7 @@ class RespondentsTable extends Table
             ->select(['id', 'email', 'name', 'title', 'approved'])
             ->where([
                 'survey_id' => $surveyId,
-                'approved' => -1
+                'approved' => -1,
             ])
             ->order(['created' => 'DESC'])
             ->toArray();
@@ -331,7 +328,7 @@ class RespondentsTable extends Table
      * @param int $surveyId Survey ID
      * @param array $respondent Respondent array
      * @param int $smRespondentId SurveyMonkey respondent ID
-     * @return Respondent
+     * @return \App\Model\Entity\Respondent
      */
     public function getMatching($surveyId, $respondent, $smRespondentId)
     {
@@ -347,8 +344,8 @@ class RespondentsTable extends Table
                             ->like('email', '%@%.%')
                             ->eq('email', $respondent['email']);
                     },
-                    ['sm_respondent_id' => $smRespondentId]
-                ]
+                    ['sm_respondent_id' => $smRespondentId],
+                ],
             ])
             ->first();
     }
@@ -356,7 +353,7 @@ class RespondentsTable extends Table
     /**
      * Returns TRUE if this respondent's responses should be auto-approved
      *
-     * @param Survey $survey Survey entity
+     * @param \App\Model\Entity\Survey $survey Survey entity
      * @param string $email Email address
      * @return bool
      */
@@ -398,7 +395,7 @@ class RespondentsTable extends Table
         $query = $this->find('all')
             ->select(['id', 'name', 'title', 'email'])
             ->where([
-                'survey_id' => $surveyId
+                'survey_id' => $surveyId,
             ])
             ->order(['name' => 'ASC']);
         if (! empty($responsiveRespondentIds)) {
@@ -414,7 +411,7 @@ class RespondentsTable extends Table
      * Returns the earliest date of an invitation sent for the specified survey
      *
      * @param int $surveyId Survey ID
-     * @return Time|null
+     * @return \Cake\I18n\Time|null
      */
     public function getFirstInvitationDate($surveyId)
     {
@@ -422,7 +419,7 @@ class RespondentsTable extends Table
             ->select(['created'])
             ->where([
                 'survey_id' => $surveyId,
-                'invited' => 1
+                'invited' => 1,
             ])
             ->order(['created' => 'ASC'])
             ->first();

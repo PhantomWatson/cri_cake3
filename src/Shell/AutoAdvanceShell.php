@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Shell;
 
 use App\Event\ActivityRecordsListener;
 use App\Event\EmailListener;
-use App\Model\Entity\Community;
 use App\Model\Table\ProductsTable;
 use Cake\Console\Shell;
 use Cake\Event\Event;
@@ -12,7 +13,6 @@ use Cake\Utility\Hash;
 
 class AutoAdvanceShell extends Shell
 {
-
     /**
      * Initialize method
      *
@@ -58,7 +58,7 @@ class AutoAdvanceShell extends Shell
         $communities = $this->Communities->find('forAutoAdvancement')->all();
 
         $statuses = [
-            ['Community', 'Step', 'Advanceable', 'Reason']
+            ['Community', 'Step', 'Advanceable', 'Reason'],
         ];
         foreach ($communities as $community) {
             $advanceable = $this->isAdvanceable($community);
@@ -66,7 +66,7 @@ class AutoAdvanceShell extends Shell
                 $community->name,
                 $community->score,
                 $advanceable === true ? 'Yes' : 'No',
-                $advanceable === true ? null : $advanceable
+                $advanceable === true ? null : $advanceable,
             ];
         }
 
@@ -99,7 +99,7 @@ class AutoAdvanceShell extends Shell
     /**
      * Advances the provided community
      *
-     * @param Community $community Community entity
+     * @param \App\Model\Entity\Community $community Community entity
      * @return bool
      */
     private function advance($community)
@@ -108,7 +108,7 @@ class AutoAdvanceShell extends Shell
         $oldStep = $community->score;
         $newStep = $oldStep + 1;
         $data = [
-            'score' => $newStep
+            'score' => $newStep,
         ];
         $community = $this->Communities->patchEntity($community, $data);
         if ($this->Communities->save($community)) {
@@ -119,8 +119,8 @@ class AutoAdvanceShell extends Shell
             $metadata = [
                 'meta' => [
                     'toStep' => $newStep,
-                    'communityId' => $community->id
-                ]
+                    'communityId' => $community->id,
+                ],
             ];
             $event = new Event($eventName, $this, $metadata);
             EventManager::instance()->dispatch($event);
@@ -138,7 +138,7 @@ class AutoAdvanceShell extends Shell
      *
      * Returns boolean TRUE if it does, or a string explaining why it doesn't
      *
-     * @param Community $community Community entity
+     * @param \App\Model\Entity\Community $community Community entity
      * @return bool|string
      */
     private function isAdvanceable($community)
@@ -166,7 +166,7 @@ class AutoAdvanceShell extends Shell
      *
      * Returns boolean TRUE if it does, or a string explaining why it doesn't
      *
-     * @param Community $community Community Entity
+     * @param \App\Model\Entity\Community $community Community Entity
      * @return bool|string
      */
     private function qualifiedForStepTwo($community)
@@ -193,7 +193,7 @@ class AutoAdvanceShell extends Shell
      *
      * Returns boolean TRUE if it does, or a string explaining why it doesn't
      *
-     * @param Community $community Community entity
+     * @param \App\Model\Entity\Community $community Community entity
      * @return bool|string
      */
     private function qualifiedForStepThree($community)
@@ -247,7 +247,7 @@ class AutoAdvanceShell extends Shell
      *
      * Returns boolean TRUE if it does, or a string explaining why it doesn't
      *
-     * @param Community $community Community entity
+     * @param \App\Model\Entity\Community $community Community entity
      * @return bool|string
      */
     private function qualifiedForStepFour($community)

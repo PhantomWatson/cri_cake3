@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\SurveyMonkey\SurveyMonkey;
@@ -48,7 +50,7 @@ class SurveysController extends AppController
         // Collect responses
         $responsesTable = TableRegistry::get('Responses');
         $SurveyMonkey = new SurveyMonkey();
-        list($success, $responses) = $SurveyMonkey->getNewResponses($surveyId);
+        [$success, $responses] = $SurveyMonkey->getNewResponses($surveyId);
         if (! $success) {
             return $this->renderImportError($responses);
         }
@@ -90,7 +92,7 @@ class SurveysController extends AppController
                         'survey_id' => $surveyId,
                         'sm_respondent_id' => $smRespondentId,
                         'invited' => false,
-                        'approved' => $approved ? 1 : 0
+                        'approved' => $approved ? 1 : 0,
                     ]);
                     $errors = $newRespondent->getErrors();
                     if (empty($errors)) {
@@ -148,7 +150,7 @@ class SurveysController extends AppController
                     'alignment_vs_local' => $alignmentVsLocal,
                     'alignment_vs_parent' => $alignmentVsParent,
                     'response_date' => new Time($response['date_modified']),
-                    'aware_of_plan' => $responsesTable->getAwareOfPlan($serializedResponse, $survey)
+                    'aware_of_plan' => $responsesTable->getAwareOfPlan($serializedResponse, $survey),
                 ];
                 foreach ($responseRanks as $sector => $rank) {
                     $responseFields["{$sector}_rank"] = $rank;
@@ -206,7 +208,7 @@ class SurveysController extends AppController
                 'communityId' => $survey->community_id,
                 'surveyId' => $survey->id,
                 'surveyType' => $survey->type,
-                'responseCount' => $importedCount
+                'responseCount' => $importedCount,
             ]]);
             $this->getEventManager()->dispatch($event);
         }
@@ -238,7 +240,7 @@ class SurveysController extends AppController
         $SurveyMonkey = new SurveyMonkey();
         $result = $SurveyMonkey->getSurveyList($this->request->getQueryParams());
         $this->set([
-            'result' => json_encode($result)
+            'result' => json_encode($result),
         ]);
         $this->viewBuilder()->setLayout('json');
         $this->render('api');
@@ -254,7 +256,7 @@ class SurveysController extends AppController
     {
         $SurveyMonkey = new SurveyMonkey();
         $this->set([
-            'result' => $SurveyMonkey->getSurveyUrl($smId)
+            'result' => $SurveyMonkey->getSurveyUrl($smId),
         ]);
         $this->viewBuilder()->setLayout('json');
         $this->render('api');
@@ -280,7 +282,7 @@ class SurveysController extends AppController
             $community = [
                 'id' => $survey->community_id,
                 'name' => $communitiesTable->get($survey->community_id)->name,
-                'type' => $survey->type
+                'type' => $survey->type,
             ];
         }
         $this->viewBuilder()->setLayout('json');

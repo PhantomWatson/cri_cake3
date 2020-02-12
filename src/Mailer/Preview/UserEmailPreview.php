@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Mailer\Preview;
 
-use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
 use DebugKit\Mailer\MailPreview;
 
@@ -10,7 +11,7 @@ class UserEmailPreview extends MailPreview
     /**
      * Preview method for UserMailer::newAccount()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function newAccount()
     {
@@ -24,7 +25,7 @@ class UserEmailPreview extends MailPreview
     /**
      * Preview method for UserMailer::resetPassword()
      *
-     * @return Email
+     * @return \Cake\Mailer\Email
      */
     public function resetPassword()
     {
