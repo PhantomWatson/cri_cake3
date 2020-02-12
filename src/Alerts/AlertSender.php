@@ -15,14 +15,12 @@ use DateTime;
  * @property \App\Model\Table\ProductsTable $products
  * @property \Queue\Model\Table\QueuedJobsTable $queuedJobs
  * @property \App\Model\Table\SurveysTable $surveys
- * @property \App\Model\Table\UsersTable $users
  */
 class AlertSender
 {
     private $communities;
     private $community;
     private $queuedJobs;
-    private $users;
     private $alertRecipients;
     private $recentThreshold = '-7 days';
 
@@ -35,7 +33,6 @@ class AlertSender
     {
         $this->communities = TableRegistry::getTableLocator()->get('Communities');
         $this->queuedJobs = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
-        $this->users = TableRegistry::getTableLocator()->get('Users');
         $this->alertRecipients = new AlertRecipients();
 
         $this->community = $this->communities->get($communityId);
