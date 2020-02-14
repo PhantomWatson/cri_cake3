@@ -27,7 +27,7 @@ class PagesControllerTest extends ApplicationTest
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->configRequest([

@@ -7,6 +7,7 @@ use App\Alerts\AlertSender;
 use App\Model\Table\UsersTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Exception;
 
 /**
  * Class AlertableTest
@@ -33,7 +34,7 @@ class AlertSenderTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->users = TableRegistry::getTableLocator()->get('Users');
@@ -43,7 +44,7 @@ class AlertSenderTest extends TestCase
      * Test for AlertSender::isRecentlySent()
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function testIsRecentlySent()
     {

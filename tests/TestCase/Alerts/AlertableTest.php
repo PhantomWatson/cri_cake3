@@ -54,7 +54,7 @@ class AlertableTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->communities = TableRegistry::getTableLocator()->get('Communities');

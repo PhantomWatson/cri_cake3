@@ -27,7 +27,7 @@ class RespondentsTableTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::exists('Respondents') ? [] : ['className' => 'App\Model\Table\RespondentsTable'];
@@ -39,7 +39,7 @@ class RespondentsTableTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Respondents);
 

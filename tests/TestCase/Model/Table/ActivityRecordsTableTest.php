@@ -35,7 +35,7 @@ class ActivityRecordsTableTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::exists('ActivityRecords') ? [] : ['className' => 'App\Model\Table\ActivityRecordsTable'];
@@ -47,7 +47,7 @@ class ActivityRecordsTableTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->ActivityRecords);
 
