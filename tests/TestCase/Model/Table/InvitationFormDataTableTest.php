@@ -32,7 +32,7 @@ class InvitationFormDataTableTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::exists('InvitationFormData') ? [] : ['className' => 'App\Model\Table\InvitationFormDataTable'];
@@ -44,7 +44,7 @@ class InvitationFormDataTableTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->InvitationFormData);
 

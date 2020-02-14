@@ -33,7 +33,7 @@ class DeliverablesTableTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::exists('Deliverables') ? [] : ['className' => 'App\Model\Table\DeliverablesTable'];
@@ -45,7 +45,7 @@ class DeliverablesTableTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Deliverables);
 

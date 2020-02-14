@@ -35,7 +35,7 @@ class DeliveriesTableTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $config = TableRegistry::exists('Deliveries') ? [] : ['className' => 'App\Model\Table\DeliveriesTable'];
@@ -47,7 +47,7 @@ class DeliveriesTableTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Deliveries);
 
