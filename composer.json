@@ -23,7 +23,8 @@
         "muffin/slug": "^1.1",
         "dereuromark/cakephp-queue": "^3.4",
         "dereuromark/cakephp-tools": "^1.4",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-intl": "*"
     },
     "require-dev": {
         "psy/psysh": "@stable",
