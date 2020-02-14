@@ -477,7 +477,7 @@ $config = [
     'maintenance_mode' => false,
     'cashNetId' => env('CASHNET_ID'),
     'slack_webhook_url' => env('SLACK_WEBHOOK_URL'),
-    'google_maps_api_key' => 'AIzaSyAv_1WWbcrZO6NVRI1Uz9IO6kJlmNBrTQk',
+    'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY'),
 ];
 
 /**
