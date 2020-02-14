@@ -404,7 +404,7 @@ class SurveyMonkey
         if (! isset($result['data'])) {
             return [
                 false,
-                'Could not get questionnaire details from SurveyMonkey. This might be a temporary network error.'
+                'Could not get questionnaire details from SurveyMonkey. This might be a temporary network error.',
             ];
         }
 
