@@ -729,7 +729,7 @@ class CommunitiesTable extends Table
                                     ->matching('Respondents', function ($q) {
                                         /** @var \Cake\ORM\Query $q */
 
-                                        return $q->where(['approved' => true]);
+                                        return $q->where(['approved' => 1]);
                                     });
                             },
                         ]);
