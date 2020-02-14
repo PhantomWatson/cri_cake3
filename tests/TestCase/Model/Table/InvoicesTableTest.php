@@ -24,7 +24,7 @@ class InvoicesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.invoices',
+        'app.Invoices',
         'app.Purchases',
         'app.Users',
         'app.Communities',
