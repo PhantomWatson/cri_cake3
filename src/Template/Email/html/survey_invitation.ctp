@@ -3,6 +3,7 @@
  * @var \App\View\AppView $this
  * @var array $clients
  * @var string $surveyUrl
+ * @var string $criUrl
  */
     $toParticipateBlurb = "to participate in a <a href=\"$criUrl\">Community Readiness Initiative</a> questionnaire for your community";
 ?>

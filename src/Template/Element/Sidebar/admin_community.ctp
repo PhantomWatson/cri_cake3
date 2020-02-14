@@ -1,15 +1,21 @@
 <?php
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Survey $survey
+ * @var AppView $this
+ * @var Survey $survey
  * @var array $adminHeader
+ * @var Community $community
  */
-    if (! isset($communityId)) {
-        $communityId = isset($community->id) ? $community->id : null;
-    }
-    if (! isset($surveyId)) {
-        $surveyId = isset($survey->id) ? $survey->id : null;
-    }
+
+use App\Model\Entity\Community;
+use App\Model\Entity\Survey;
+use App\View\AppView;
+
+if (! isset($communityId)) {
+    $communityId = isset($community->id) ? $community->id : null;
+}
+if (! isset($surveyId)) {
+    $surveyId = isset($survey->id) ? $survey->id : null;
+}
 ?>
 <form id="admin-sidebar-community">
     <select class="form-control" name="community">

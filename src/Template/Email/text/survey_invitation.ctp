@@ -3,6 +3,7 @@
  * @var \App\View\AppView $this
  * @var array $clients
  * @var string $surveyUrl
+ * @var string $criUrl
  */
     $toParticipateBlurb = "to participate in a Community Readiness Initiative ($criUrl) questionnaire for your community";
     echo 'You have been invited ';
