@@ -4,16 +4,14 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Alerts;
 
 use App\Alerts\AlertSender;
-use App\Model\Table\UsersTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use Exception;
 
 /**
  * Class AlertableTest
  * @package App\Test\TestCase\Alerts
  * @property array $fixtures
- * @property UsersTable $users
+ * @property App\Model\Table\UsersTable $users
  */
 class AlertSenderTest extends TestCase
 {
@@ -44,7 +42,7 @@ class AlertSenderTest extends TestCase
      * Test for AlertSender::isRecentlySent()
      *
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public function testIsRecentlySent()
     {
