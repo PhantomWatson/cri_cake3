@@ -13,7 +13,6 @@
         "cakephp/plugin-installer": "~1.0",
         "mobiledetect/mobiledetectlib": "2.*",
         "phpoffice/phpexcel": "~1.8",
-        "phpunit/phpunit": "*",
         "twbs/bootstrap": "~3.0",
         "xety/cake3-cookieauth": "1.*",
         "dereuromark/cakephp-shim": "^1.0",
@@ -32,7 +31,8 @@
         "cakephp/debug_kit": "~3.2",
         "cakephp/bake": "1.*",
         "codeclimate/php-test-reporter": "dev-master",
-        "dereuromark/cakephp-ide-helper": "^1.0.0"
+        "dereuromark/cakephp-ide-helper": "^1.0.0",
+        "phpunit/phpunit": "^5|^6"
     },
     "suggest": {
         "markstory/asset_compress": "An asset compression plugin which provides file concatenation and a flexible filter system for preprocessing and minification.",
