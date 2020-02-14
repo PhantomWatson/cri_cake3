@@ -24,7 +24,8 @@
         "dereuromark/cakephp-queue": "^3.4",
         "dereuromark/cakephp-tools": "^1.4",
         "ext-json": "*",
-        "ext-intl": "*"
+        "ext-intl": "*",
+        "ext-curl": "*"
     },
     "require-dev": {
         "psy/psysh": "@stable",
