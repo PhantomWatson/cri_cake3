@@ -24,7 +24,7 @@ class InvitationFormDataTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.invitation_form_data',
+        'app.InvitationFormData',
     ];
 
     /**
