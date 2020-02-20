@@ -14,7 +14,7 @@ class UserMailer extends Mailer
      *
      * @param array $user User data
      * @param string $password Unhashed password
-     * @return \Cake\Mailer\Email
+     * @return Mailer
      */
     public function newAccount($user, $password)
     {
@@ -43,7 +43,7 @@ class UserMailer extends Mailer
      * 24 hours to give the user access to /users/resetPassword
      *
      * @param int $userId User ID
-     * @return \Cake\Mailer\Email
+     * @return Mailer
      */
     public function resetPassword($userId)
     {

@@ -11,7 +11,7 @@ class TestMailer extends Mailer
      * Defines a test email
      *
      * @param string $recipient Recipient's email address
-     * @return \Cake\Mailer\Email
+     * @return Mailer
      */
     public function test($recipient)
     {

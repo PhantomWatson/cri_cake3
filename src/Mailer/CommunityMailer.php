@@ -14,7 +14,7 @@ class CommunityMailer extends Mailer
      * @param array $user User data
      * @param array $community Community data
      * @param int $toStep The step number the community has just been promoted to
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function communityPromoted($user, $community, $toStep)
     {
