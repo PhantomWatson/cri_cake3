@@ -18,7 +18,7 @@
     </h1>
 </div>
 
-<?php if ($this->request->prefix == 'client'): ?>
+<?php if ($this->request->getParam('prefix') == 'client'): ?>
     <p>
         <?= $this->Html->link(
             '<span class="glyphicon glyphicon-arrow-left"></span> Back to Client Home',
@@ -33,7 +33,7 @@
             ]
         ) ?>
     </p>
-<?php elseif ($this->request->prefix == 'admin'): ?>
+<?php elseif ($this->request->getParam('prefix') == 'admin'): ?>
     <?= $this->element('back_to_overview_link') ?>
 <?php endif; ?>
 

@@ -14,7 +14,7 @@
     </h1>
 </div>
 
-<?php if ($this->request->prefix == 'admin'): ?>
+<?php if ($this->request->getParam('prefix') == 'admin'): ?>
     <?= $this->element('back_to_overview_link', [
         'communityId' => $community['id'],
         'surveyType' => $survey['type']
@@ -109,7 +109,7 @@
                 [
                     'controller' => 'Surveys',
                     'action' => 'remind',
-                    $this->request->prefix == 'admin' ? $survey->id : $survey->type
+                    $this->request->getParam('prefix') == 'admin' ? $survey->id : $survey->type
                 ],
                 ['class' => 'btn btn-primary']
             );

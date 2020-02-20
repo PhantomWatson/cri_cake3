@@ -145,7 +145,7 @@
     );
 ?>
 
-<?php if ($this->request->prefix == 'admin' && $this->request->getParam('action') == 'edit'): ?>
+<?php if ($this->request->getParam('prefix') == 'admin' && $this->request->getParam('action') == 'edit'): ?>
     <?php if ($hasPasswordError): ?>
         <?= $passwordFields ?>
     <?php else: ?>
@@ -158,7 +158,7 @@
             <?= $passwordFields ?>
         </div>
     <?php endif; ?>
-<?php elseif ($this->request->prefix == 'admin' && $this->request->getParam('action') == 'add'): ?>
+<?php elseif ($this->request->getParam('prefix') == 'admin' && $this->request->getParam('action') == 'add'): ?>
     <?= $passwordFields ?>
 <?php endif; ?>
 

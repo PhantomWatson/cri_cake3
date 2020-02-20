@@ -54,7 +54,7 @@
 </div>
 
 <p id="score-editing-note">
-    <?php if ($this->request->prefix == 'admin' && $community->slug): ?>
+    <?php if ($this->request->getParam('prefix') == 'admin' && $community->slug): ?>
         <strong>Note:</strong>
         You're encouraged to edit this community's score through its
         <?= $this->Html->link(

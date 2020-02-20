@@ -16,12 +16,12 @@
     </h1>
 </div>
 
-<?php if ($this->request->prefix == 'admin'): ?>
+<?php if ($this->request->getParam('prefix') == 'admin'): ?>
     <?= $this->element('back_to_overview_link') ?>
 <?php endif; ?>
 
 <p>
-    <?php if ($this->request->prefix != 'admin'): ?>
+    <?php if ($this->request->getParam('prefix') != 'admin'): ?>
         <?= $this->Html->link(
             '<span class="glyphicon glyphicon-arrow-left"></span> Back to Client Home',
             [

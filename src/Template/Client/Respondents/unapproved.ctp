@@ -17,7 +17,7 @@
 
 <p>
     <?php
-        if ($this->request->prefix == 'admin') {
+        if ($this->request->getParam('prefix') == 'admin') {
             echo $this->Html->link(
                 '<span class="glyphicon glyphicon-arrow-left"></span> Back to Questionnaire Overview',
                 [
@@ -112,7 +112,7 @@
                                 <?= $this->Html->link(
                                     'Approve',
                                     [
-                                        $this->request->prefix => true,
+                                        $this->request->getParam('prefix') => true,
                                         'controller' => 'Respondents',
                                         'action' => 'approveUninvited',
                                         $respondent['id']
@@ -125,7 +125,7 @@
                                 <?= $this->Html->link(
                                     'Dismiss',
                                     [
-                                        $this->request->prefix => true,
+                                        $this->request->getParam('prefix') => true,
                                         'controller' => 'Respondents',
                                         'action' => 'dismissUninvited',
                                         $respondent['id']
