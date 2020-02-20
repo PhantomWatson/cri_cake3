@@ -333,7 +333,7 @@ class CommunitiesController extends AppController
         $previousScore = $community->score;
 
         if ($this->request->is('put')) {
-            $options = ['fieldList' => ['score']];
+            $options = ['fields' => ['score']];
 
             /** @var \App\Model\Entity\Community $community */
             $community = $this->Communities->patchEntity($community, $this->request->getData(), $options);

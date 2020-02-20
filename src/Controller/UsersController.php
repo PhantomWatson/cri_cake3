@@ -227,7 +227,7 @@ class UsersController extends AppController
                 $data['password'] = $this->request->getData('new_password');
             }
             $user = $this->Users->patchEntity($user, $data, [
-                'fieldList' => [
+                'fields' => [
                     'cber_email_optin',
                     'confirm_password',
                     'email',
