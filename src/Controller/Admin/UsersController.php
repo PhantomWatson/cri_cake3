@@ -5,8 +5,8 @@ namespace App\Controller\Admin;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use Cake\Http\Exception\MethodNotAllowedException;
 use Cake\Mailer\MailerAwareTrait;
-use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\ORM\TableRegistry;
 
 /**

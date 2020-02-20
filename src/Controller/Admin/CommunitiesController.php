@@ -7,9 +7,9 @@ use App\AdminToDo\AdminToDo;
 use App\Controller\AppController;
 use App\Model\Table\ProductsTable;
 use Cake\Event\Event;
+use Cake\Http\Exception\MethodNotAllowedException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Mailer\MailerAwareTrait;
-use Cake\Network\Exception\MethodNotAllowedException;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
@@ -256,7 +256,7 @@ class CommunitiesController extends AppController
      *
      * @param int|null $communityId Community ID
      * @return \Cake\Http\Response|null
-     * @throws \Cake\Network\Exception\MethodNotAllowedException
+     * @throws \Cake\Http\Exception\MethodNotAllowedException
      * @throws \Cake\Http\Exception\NotFoundException
      */
     public function delete($communityId = null)
