@@ -32,7 +32,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "deliver presentation A" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function deliverPresentationA($data)
     {
@@ -45,7 +45,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "deliver presentation C" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function deliverPresentationC($data)
     {
@@ -58,7 +58,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "deliver presentation B" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function deliverPresentationB($data)
     {
@@ -71,7 +71,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "deliver presentation D" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function deliverPresentationD($data)
     {
@@ -84,7 +84,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "deliver mandatory presentation" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      * @throws \Cake\Network\Exception\InternalErrorException
      */
     private function deliverPresentation($data)
@@ -107,7 +107,7 @@ class AdminAlertMailer extends Mailer
      * Sets mailer configuration shared by multiple methods in this class
      *
      * @param array $data Metadata
-     * @return Mailer
+     * @return \Cake\Mailer\Mailer
      */
     private function setStandardConfig($data)
     {
@@ -145,7 +145,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "create officials survey" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function createOfficialsSurvey($data)
     {
@@ -158,7 +158,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "create organizations survey" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function createOrganizationsSurvey($data)
     {
@@ -171,7 +171,7 @@ class AdminAlertMailer extends Mailer
      * Defines an email informing an administrator that it's time to create a survey
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     private function createSurvey($data)
     {
@@ -196,7 +196,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "create clients" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function createClients($data)
     {
@@ -218,7 +218,7 @@ class AdminAlertMailer extends Mailer
      * Defines an "activate officials survey" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function activateOfficialsSurvey($data)
     {
@@ -231,7 +231,7 @@ class AdminAlertMailer extends Mailer
      * Defines an "activate organizations survey" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function activateOrganizationsSurvey($data)
     {
@@ -244,7 +244,7 @@ class AdminAlertMailer extends Mailer
      * Defines an "activate survey" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     private function activateSurvey($data)
     {
@@ -267,7 +267,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "schedule presentation A" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function schedulePresentationA($data)
     {
@@ -280,7 +280,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "schedule presentation B" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function schedulePresentationB($data)
     {
@@ -293,7 +293,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "schedule presentation C" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function schedulePresentationC($data)
     {
@@ -306,7 +306,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "schedule presentation D" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function schedulePresentationD($data)
     {
@@ -319,7 +319,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "schedule presentation" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     private function schedulePresentation($data)
     {
@@ -343,7 +343,7 @@ class AdminAlertMailer extends Mailer
      * Defines a "delivery policy development materials" email
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return \Cake\Mailer\Mailer
      */
     public function deliverPolicyDev($data)
     {

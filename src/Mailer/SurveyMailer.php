@@ -15,7 +15,7 @@ class SurveyMailer extends Mailer
      * @param int $surveyId Survey ID
      * @param array $sender User who is sending the email
      * @param string $recipient Recipient email address
-     * @return Mailer
+     * @return \Cake\Mailer\Mailer
      */
     public function reminders($surveyId, $sender, $recipient)
     {
@@ -47,7 +47,7 @@ class SurveyMailer extends Mailer
      * Sends survey invitations
      *
      * @param array $params [surveyId, communityId, senderEmail, senderName, recipients]
-     * @return Mailer
+     * @return \Cake\Mailer\Mailer
      */
     public function invitations($params)
     {
