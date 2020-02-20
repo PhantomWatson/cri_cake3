@@ -59,7 +59,7 @@
     ?>
     <table class="table">
         <?php
-            echo $this->Form->input(
+            echo $this->Form->control(
                 'salutation',
                 [
                     'class' => 'form-control',
@@ -67,7 +67,7 @@
                     'options' => $salutations
                 ]
             );
-            echo $this->Form->input(
+            echo $this->Form->control(
                 'name',
                 [
                     'class' => 'form-control',
@@ -75,7 +75,7 @@
                     'label' => 'Name'
                 ]
             );
-            echo $this->Form->input(
+            echo $this->Form->control(
                 'title',
                 [
                     'class' => 'form-control',
@@ -83,14 +83,14 @@
                     'label' => 'Job Title'
                 ]
             );
-            echo $this->Form->input(
+            echo $this->Form->control(
                 'organization',
                 [
                     'class' => 'form-control',
                     'div' => ['class' => 'form-group']
                 ]
             );
-            echo $this->Form->input(
+            echo $this->Form->control(
                 'email',
                 [
                     'class' => 'form-control',
@@ -98,14 +98,14 @@
                     'type' => 'email'
                 ]
             );
-            echo $this->Form->input(
+            echo $this->Form->control(
                 'phone',
                 [
                     'class' => 'form-control',
                     'div' => ['class' => 'form-group']
                 ]
             );
-            echo $this->Form->input(
+            echo $this->Form->control(
                 'unhashed_password',
                 [
                     'class' => 'form-control',

@@ -34,20 +34,20 @@
 
 <?= $this->Form->create($purchase) ?>
 
-<?= $this->Form->input('community_id', [
+<?= $this->Form->control('community_id', [
     'class' => 'form-control',
     'empty' => true
 ]) ?>
 
-<?= $this->Form->input('product_id', ['class' => 'form-control']) ?>
+<?= $this->Form->control('product_id', ['class' => 'form-control']) ?>
 
-<?= $this->Form->input('source', [
+<?= $this->Form->control('source', [
     'class' => 'form-control',
     'empty' => true,
     'label' => 'Funding Source'
 ]) ?>
 
-<?= $this->Form->input('notes', ['class' => 'form-control']) ?>
+<?= $this->Form->control('notes', ['class' => 'form-control']) ?>
 
 <?= $this->Form->button(
     'Add Payment Record',

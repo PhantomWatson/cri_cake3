@@ -13,7 +13,7 @@
 
 <?php
     echo $this->Form->create(false);
-    echo $this->Form->input(
+    echo $this->Form->control(
         'community_id',
         [
             'class' => 'form-control',
@@ -21,7 +21,7 @@
         ]
     );
     if ($redirect) {
-        echo $this->Form->input(
+        echo $this->Form->control(
             'redirect',
             [
                 'type' => 'hidden',

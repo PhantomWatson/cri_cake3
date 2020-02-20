@@ -13,7 +13,7 @@
 
 <?php
     echo $this->Form->create($community);
-    echo $this->Form->input('notes');
+    echo $this->Form->control('notes');
     echo $this->Form->button(
         'Update',
         ['class' => 'btn btn-primary']

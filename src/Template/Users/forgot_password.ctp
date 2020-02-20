@@ -22,7 +22,7 @@
     echo $this->Form->create($user, [
         'valueSources' => isset($success) ? [] : ['context', 'data']
     ]);
-    echo $this->Form->input(
+    echo $this->Form->control(
         'email',
         [
             'class' => 'form-control',

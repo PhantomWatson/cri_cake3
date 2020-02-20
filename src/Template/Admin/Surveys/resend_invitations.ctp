@@ -19,11 +19,11 @@
 <?php if ($step == 'input'): ?>
     <?php
         echo $this->Form->create();
-        echo $this->Form->input(
+        echo $this->Form->control(
             'surveyId',
             ['type' => 'number']
         );
-        echo $this->Form->input(
+        echo $this->Form->control(
             'userId',
             [
                 'label' => 'User ID of sender',

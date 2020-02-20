@@ -18,7 +18,7 @@
 <?= $this->Form->create() ?>
 
 <?php foreach ($settings as $setting): ?>
-    <?= $this->Form->input(
+    <?= $this->Form->control(
         'settings.' . $setting->id,
         [
             'label' => $setting->name,

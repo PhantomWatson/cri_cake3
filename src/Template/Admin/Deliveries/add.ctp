@@ -30,11 +30,11 @@
     'id' => 'report-delivery-form'
 ]) ?>
 
-<?= $this->Form->input('deliverable_id', [
+<?= $this->Form->control('deliverable_id', [
     'label' => 'What was delivered?'
 ]) ?>
 
-<?= $this->Form->input('community_id', [
+<?= $this->Form->control('community_id', [
     'label' => 'What community was it delivered for?'
 ]) ?>
 

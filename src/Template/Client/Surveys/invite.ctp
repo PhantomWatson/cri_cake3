@@ -163,7 +163,7 @@
                             $this->Form->unlockField("invitees.$n.email");
                             $this->Form->unlockField("invitees.$n.title");
                         ?>
-                        <?= $this->Form->input(
+                        <?= $this->Form->control(
                             "invitees.$n.name",
                             [
                                 'class' => 'form-control',
@@ -174,7 +174,7 @@
                                 'value' => isset($invitees[$n]['name']) ? $invitees[$n]['name'] : null
                             ]
                         ) ?>
-                        <?= $this->Form->input(
+                        <?= $this->Form->control(
                             "invitees.$n.email",
                             [
                                 'class' => 'form-control',
@@ -185,7 +185,7 @@
                                 'value' => isset($invitees[$n]['email']) ? $invitees[$n]['email'] : null
                             ]
                         ) ?>
-                        <?= $this->Form->input(
+                        <?= $this->Form->control(
                             "invitees.$n.title",
                             [
                                 'class' => 'form-control',
@@ -222,7 +222,7 @@
         Done
     </h2>
     <div class="form-group">
-        <?= $this->Form->input(
+        <?= $this->Form->control(
             'Send invitations',
             [
                 'class' => 'btn btn-primary',
@@ -232,7 +232,7 @@
                 'type' => 'submit'
             ]
         ) ?>
-        <?= $this->Form->input(
+        <?= $this->Form->control(
             'Save for later',
             [
                 'class' => 'btn btn-default',

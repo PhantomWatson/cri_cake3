@@ -19,8 +19,8 @@
         $community,
         ['id' => 'CommunityAdminEditForm']
     );
-    echo $this->Form->input('name');
-    echo $this->Form->input(
+    echo $this->Form->control('name');
+    echo $this->Form->control(
         'local_area_id',
         [
             'empty' => true,
@@ -28,7 +28,7 @@
             'options' => $areas
         ]
     );
-    echo $this->Form->input(
+    echo $this->Form->control(
         'parent_area_id',
         [
             'empty' => true,
@@ -39,7 +39,7 @@
     $scores = [1, 2, 3, 4, 5];
 ?>
 <div id="score-input-wrapper">
-    <?= $this->Form->input(
+    <?= $this->Form->control(
         'score',
         [
             'escape' => false,
@@ -70,7 +70,7 @@
 </p>
 
 <div class="custom_radio">
-    <?= $this->Form->input(
+    <?= $this->Form->control(
         'public',
         [
             'escape' => false,
@@ -85,12 +85,12 @@
         ]
     ) ?>
 
-    <?= $this->Form->input('intAlignmentAdjustment', [
+    <?= $this->Form->control('intAlignmentAdjustment', [
         'label' => 'Internal Alignment Adjustment',
         'max' => '99.99',
         'min' => '0'
     ]) ?>
-    <?= $this->Form->input('intAlignmentThreshold', [
+    <?= $this->Form->control('intAlignmentThreshold', [
         'label' => 'Internal Alignment Threshold',
         'max' => '99.99',
         'min' => '0'

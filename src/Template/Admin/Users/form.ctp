@@ -36,39 +36,39 @@
         $user,
         ['id' => 'UserForm']
     );
-    echo $this->Form->input(
+    echo $this->Form->control(
         'salutation',
         [
             'class' => 'form-control',
             'options' => $salutations
         ]
     );
-    echo $this->Form->input(
+    echo $this->Form->control(
         'name',
         ['class' => 'form-control']
     );
-    echo $this->Form->input(
+    echo $this->Form->control(
         'title',
         [
             'class' => 'form-control',
             'label' => 'Job Title'
         ]
     );
-    echo $this->Form->input(
+    echo $this->Form->control(
         'organization',
         ['class' => 'form-control']
     );
-    echo $this->Form->input(
+    echo $this->Form->control(
         'email',
         ['class' => 'form-control']
     );
-    echo $this->Form->input(
+    echo $this->Form->control(
         'phone',
         ['class' => 'form-control']
     );
 ?>
 
-<?= $this->Form->input(
+<?= $this->Form->control(
     'role',
     [
         'after' => '<span class="note">Admins automatically have access to all communities and site functions</span>',
@@ -79,7 +79,7 @@
 
 <div id="consultant_communities">
     <?php
-        echo $this->Form->input(
+        echo $this->Form->control(
             'all_communities',
             [
                 'label' =>  false,
@@ -96,7 +96,7 @@
                 'type' => 'radio'
             ]
         );
-        echo $this->Form->input(
+        echo $this->Form->control(
             'community',
             [
                 'class' => 'form-control',
@@ -109,7 +109,7 @@
 </div>
 
 <div id="client_communities">
-    <?= $this->Form->input(
+    <?= $this->Form->control(
         'client_communities.0.id',
         [
             'class' => 'form-control',
@@ -124,7 +124,7 @@
 </div>
 
 <?php
-    $passwordFields = $this->Form->input(
+    $passwordFields = $this->Form->control(
         'new_password',
         [
             'autocomplete' => 'off',
@@ -134,7 +134,7 @@
             'value' => ''
         ]
     );
-    $passwordFields .= $this->Form->input(
+    $passwordFields .= $this->Form->control(
         'confirm_password',
         [
             'class' => 'form-control',

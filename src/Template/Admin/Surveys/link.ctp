@@ -112,14 +112,14 @@
                 <table class="table">
                     <?php
                         $this->Form->templates($tableTemplate);
-                        echo $this->Form->input(
+                        echo $this->Form->control(
                             'sm_id',
                             [
                                 'label' => 'SurveyMonkey Survey ID',
                                 'type' => 'number'
                             ]
                         );
-                        echo $this->Form->input(
+                        echo $this->Form->control(
                             'sm_url',
                             [
                                 'label' => 'SurveyMonkey Survey URL'
@@ -131,7 +131,7 @@
                             $label = str_ireplace('qid', 'Question ID', $label);
                             $label = str_ireplace('aid', 'Answer ID', $label);
                             $label = str_ireplace('pwrrr', 'PWR<sup>3</sup>&trade;', $label);
-                            echo $this->Form->input(
+                            echo $this->Form->control(
                                 $qnaIdField,
                                 [
                                     'data-fieldname' => $qnaIdField,

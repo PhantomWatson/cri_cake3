@@ -47,7 +47,7 @@
 
     <div class="panel-body">
         <div id="<?= $role ?>_select" class="form-group well">
-            <?= $this->Form->input(
+            <?= $this->Form->control(
                 $role.'_id',
                 [
                     'class' => 'form-control',
@@ -62,7 +62,7 @@
             <table class="table">
                 <?php
                     $this->Form->templates($tableTemplate);
-                    echo $this->Form->input(
+                    echo $this->Form->control(
                         'new_'.$role.'s_entry.name',
                         [
                             'class' => 'form-control',
@@ -71,7 +71,7 @@
                             'required' => false
                         ]
                     );
-                    echo $this->Form->input(
+                    echo $this->Form->control(
                         'new_'.$role.'s_entry.title',
                         [
                             'class' => 'form-control',
@@ -79,14 +79,14 @@
                             'label' => 'Job Title'
                         ]
                     );
-                    echo $this->Form->input(
+                    echo $this->Form->control(
                         'new_'.$role.'s_entry.organization',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group']
                         ]
                     );
-                    echo $this->Form->input(
+                    echo $this->Form->control(
                         'new_'.$role.'s_entry.email',
                         [
                             'class' => 'form-control',
@@ -94,14 +94,14 @@
                             'type' => 'email'
                         ]
                     );
-                    echo $this->Form->input(
+                    echo $this->Form->control(
                         'new_'.$role.'s_entry.phone',
                         [
                             'class' => 'form-control',
                             'div' => ['class' => 'form-group']
                         ]
                     );
-                    echo $this->Form->input(
+                    echo $this->Form->control(
                         'new_'.$role.'s_entry.password',
                         [
                             'class' => 'form-control',

@@ -47,7 +47,7 @@
                     ) ?>
                 </div>
                 <?php if ($purchased): ?>
-                    <?= $this->Form->input(
+                    <?= $this->Form->control(
                         'presentation_' . $letter,
                         ['label' => false]
                     ) ?>

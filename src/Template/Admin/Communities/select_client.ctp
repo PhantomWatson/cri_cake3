@@ -45,7 +45,7 @@
 
 <?= $this->Form->create($client) ?>
 
-<?= $this->Form->input(
+<?= $this->Form->control(
     'client_id',
     [
         'class' => 'form-control',
