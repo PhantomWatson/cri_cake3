@@ -89,9 +89,8 @@ class AdminAlertMailer extends Mailer
      */
     private function deliverPresentation($data)
     {
-        return $this
+        $email = $this
             ->setStandardConfig($data)
-            ->setTemplate('admin_alert/deliver_presentation')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Deliveries',
@@ -99,13 +98,16 @@ class AdminAlertMailer extends Mailer
                 ]),
                 'presentationLetter' => $data['presentationLetter'],
             ]);
+        $email->viewBuilder()->setTemplate('admin_alert/deliver_presentation');
+
+        return $email;
     }
 
     /**
      * Sets mailer configuration shared by multiple methods in this class
      *
      * @param array $data Metadata
-     * @return \Cake\Mailer\Email
+     * @return Mailer
      */
     private function setStandardConfig($data)
     {
@@ -174,10 +176,8 @@ class AdminAlertMailer extends Mailer
     private function createSurvey($data)
     {
         $slug = $this->communities->get($data['community']['id'])->slug;
-
-        return $this
+        $email = $this
             ->setStandardConfig($data)
-            ->setTemplate('admin_alert/create_survey')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Surveys',
@@ -187,6 +187,9 @@ class AdminAlertMailer extends Mailer
                 ]),
                 'surveyType' => $data['surveyType'],
             ]);
+        $email->viewBuilder()->setTemplate('admin_alert/create_survey');
+
+        return $email;
     }
 
     /**
@@ -197,9 +200,8 @@ class AdminAlertMailer extends Mailer
      */
     public function createClients($data)
     {
-        return $this
+        $email = $this
             ->setStandardConfig($data)
-            ->setTemplate('admin_alert/create_clients')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Communities',
@@ -207,6 +209,9 @@ class AdminAlertMailer extends Mailer
                     $data['community']['id'],
                 ]),
             ]);
+        $email->viewBuilder()->setTemplate('admin_alert/create_clients');
+
+        return $email;
     }
 
     /**
@@ -243,9 +248,8 @@ class AdminAlertMailer extends Mailer
      */
     private function activateSurvey($data)
     {
-        return $this
+        $email = $this
             ->setStandardConfig($data)
-            ->setTemplate('admin_alert/activate_survey')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Surveys',
@@ -254,6 +258,9 @@ class AdminAlertMailer extends Mailer
                 ]),
                 'surveyType' => $data['surveyType'],
             ]);
+        $email->viewBuilder()->setTemplate('admin_alert/activate_survey');
+
+        return $email;
     }
 
     /**
@@ -317,10 +324,8 @@ class AdminAlertMailer extends Mailer
     private function schedulePresentation($data)
     {
         $slug = $this->communities->get($data['community']['id'])->slug;
-
-        return $this
+        $email = $this
             ->setStandardConfig($data)
-            ->setTemplate('admin_alert/schedule_presentation')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Communities',
@@ -329,6 +334,9 @@ class AdminAlertMailer extends Mailer
                 ]),
                 'presentationLetter' => $data['presentationLetter'],
             ]);
+        $email->viewBuilder()->setTemplate('admin_alert/schedule_presentation');
+
+        return $email;
     }
 
     /**
@@ -340,10 +348,8 @@ class AdminAlertMailer extends Mailer
     public function deliverPolicyDev($data)
     {
         $clients = $this->communities->getClients($data['community']['id']);
-
-        return $this
+        $email = $this
             ->setStandardConfig($data)
-            ->setTemplate('admin_alert/deliver_policy_dev')
             ->setViewVars([
                 'actionUrl' => $this->getTaskUrl([
                     'controller' => 'Deliveries',
@@ -351,5 +357,8 @@ class AdminAlertMailer extends Mailer
                 ]),
                 'clients' => $clients,
             ]);
+        $email->viewBuilder()->setTemplate('admin_alert/deliver_policy_dev');
+
+        return $email;
     }
 }
