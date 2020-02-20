@@ -750,7 +750,7 @@ class SurveysTable extends Table
                     'alignment_vs_parent' => $alignmentVsParent,
                 ]);
             }
-            if ($response->dirty()) {
+            if ($response->isDirty()) {
                 $responsesTable->save($response);
             }
         }

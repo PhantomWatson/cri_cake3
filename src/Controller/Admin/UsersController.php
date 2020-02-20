@@ -212,7 +212,7 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $data);
             $errors = $user->getErrors();
             if (empty($errors)) {
-                $roleChanged = $user->dirty('role');
+                $roleChanged = $user->isDirty('role');
 
                 if ($this->Users->save($user)) {
                     $msg = 'User info updated';
