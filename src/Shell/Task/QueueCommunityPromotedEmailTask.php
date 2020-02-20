@@ -27,20 +27,14 @@ class QueueCommunityPromotedEmailTask extends QueueTask
      *
      * @param array $data The array passed to QueuedTask->createJob()
      * @param int $id The id of the QueuedTask
-     * @return bool Success
+     * @return void
      */
     public function run(array $data, $id)
     {
-        try {
-            $this->getMailer('Community')->send('communityPromoted', [
-                $data['user'],
-                $data['community'],
-                $data['toStep'],
-            ]);
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return true;
+        $this->getMailer('Community')->send('communityPromoted', [
+            $data['user'],
+            $data['community'],
+            $data['toStep'],
+        ]);
     }
 }

@@ -27,22 +27,16 @@ class QueueInvitationTask extends QueueTask
      *
      * @param array $data The array passed to QueuedTask->createJob()
      * @param int $id The id of the QueuedTask
-     * @return bool Success
+     * @return void
      */
     public function run(array $data, $id)
     {
-        try {
-            $this->getMailer('Survey')->send('invitations', [[
-                'surveyId' => $data['surveyId'],
-                'communityId' => $data['communityId'],
-                'senderEmail' => $data['senderEmail'],
-                'senderName' => $data['senderName'],
-                'recipient' => $data['recipient'],
-            ]]);
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return true;
+        $this->getMailer('Survey')->send('invitations', [[
+            'surveyId' => $data['surveyId'],
+            'communityId' => $data['communityId'],
+            'senderEmail' => $data['senderEmail'],
+            'senderName' => $data['senderName'],
+            'recipient' => $data['recipient'],
+        ]]);
     }
 }

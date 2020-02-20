@@ -27,20 +27,14 @@ class QueueReminderTask extends QueueTask
      *
      * @param array $data The array passed to QueuedTask->createJob()
      * @param int $id The id of the QueuedTask
-     * @return bool Success
+     * @return void
      */
     public function run(array $data, $id)
     {
-        try {
-            $this->getMailer('Survey')->send('reminders', [
-                $data['surveyId'],
-                $data['sender'],
-                $data['recipient'],
-            ]);
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return true;
+        $this->getMailer('Survey')->send('reminders', [
+            $data['surveyId'],
+            $data['sender'],
+            $data['recipient'],
+        ]);
     }
 }

@@ -44,16 +44,10 @@ class QueueEmailTestTask extends QueueTask
      *
      * @param array $data The array passed to QueuedTask->createJob()
      * @param int $id The id of the QueuedTask
-     * @return bool Success
+     * @return void
      */
     public function run(array $data, $id)
     {
-        try {
-            $this->getMailer('Test')->send('test', [$data['email']]);
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return true;
+        $this->getMailer('Test')->send('test', [$data['email']]);
     }
 }

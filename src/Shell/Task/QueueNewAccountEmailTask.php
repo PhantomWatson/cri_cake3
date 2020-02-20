@@ -27,19 +27,13 @@ class QueueNewAccountEmailTask extends QueueTask
      *
      * @param array $data The array passed to QueuedTask->createJob()
      * @param int $id The id of the QueuedTask
-     * @return bool Success
+     * @return void
      */
     public function run(array $data, $id)
     {
-        try {
-            $this->getMailer('User')->send('newAccount', [
-                $data['user'],
-                $data['unhashedPassword'],
-            ]);
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return true;
+        $this->getMailer('User')->send('newAccount', [
+            $data['user'],
+            $data['unhashedPassword'],
+        ]);
     }
 }

@@ -28,19 +28,13 @@ class QueueAdminAlertEmailTask extends QueueTask
      *
      * @param array $data The array passed to QueuedTask->createJob()
      * @param int $id The id of the QueuedTask
-     * @return bool Success
+     * @return void
      */
     public function run(array $data, $id)
     {
         if (!isset($data['alert'])) {
             throw new InternalErrorException('Mailer method not specified');
         }
-        try {
-            $this->getMailer('AdminAlert')->send($data['alert'], [$data]);
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return true;
+        $this->getMailer('AdminAlert')->send($data['alert'], [$data]);
     }
 }
