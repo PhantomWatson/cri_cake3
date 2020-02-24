@@ -485,7 +485,7 @@ $config = [
  */
 
 // Set default EmailTransport in debug vs. production mode
-$config['EmailTransport']['default'] = $config['EmailTransport']['office365'];
+$config['EmailTransport']['default'] = $config['EmailTransport']['bsurelay'];
 if ($config['debug']) {
     $config['EmailTransport']['default']['className'] = 'Debug';
 }
