@@ -222,11 +222,10 @@ $config = [
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
 
-        // Upon most recent testing (2016-12-05), using this transport has resulted in an SMTP timeout error
         'bsurelay' => [
-            'className' => 'Smtp',
+            'className' => 'Mail',
             'host' => 'emailrelay.bsu.edu',
-            'port' => 587,
+            'port' => 25,
             'timeout' => 300,
             'username' => env('BSU_RELAY_USERNAME'),
             'password' => env('BSU_RELAY_PASSWORD'),
