@@ -18,7 +18,6 @@ namespace App\Controller;
 
 use App\Maps\Map;
 use Cake\Mailer\MailerAwareTrait;
-use Cake\ORM\TableRegistry;
 
 /**
  * Static content controller
@@ -106,23 +105,5 @@ class PagesController extends AppController
     public function maintenance()
     {
         $this->set('titleForLayout', 'Temporarily Unavailable');
-    }
-
-    /**
-     * Page for sending a test email
-     *
-     * @param string $recipient Email address to send test email to
-     * @return void
-     */
-    public function sendTestEmail($recipient)
-    {
-        /** @var \Queue\Model\Table\QueuedJobsTable $queuedJobs */
-        $queuedJobs = TableRegistry::getTableLocator()->get('Queue.QueuedJobs');
-        $queuedJobs->createJob(
-            'EmailTest',
-            ['email' => $recipient],
-            ['reference' => $recipient]
-        );
-        $this->Flash->success('Email added to queue');
     }
 }
