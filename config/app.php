@@ -223,7 +223,7 @@ $config = [
         ],
 
         'bsurelay' => [
-            'className' => 'Mail',
+            'className' => 'Smtp',
             'host' => 'emailrelay.bsu.edu',
             'port' => 25,
             'timeout' => 300,
