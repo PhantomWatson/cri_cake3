@@ -18,7 +18,7 @@ class UserMailer extends Mailer
      */
     public function newAccount($user, $password)
     {
-        return $this
+        $email = $this
             ->setTo($user['email'])
             ->setSubject('Your new Community Readiness Initiative account has been created')
             ->setViewVars([
@@ -34,8 +34,10 @@ class UserMailer extends Mailer
                 'name' => $user['name'],
                 'email' => $user['email'],
             ])
-            ->setTemplate('new_account')
             ->setDomain('cri.cberdata.org');
+        $email->viewBuilder()->setTemplate('new_account');
+
+        return $email;
     }
 
     /**
@@ -52,9 +54,8 @@ class UserMailer extends Mailer
         $hash = $usersTable->getPasswordResetHash($userId, $timestamp);
         $user = $usersTable->get($userId);
 
-        return $this
+        $email = $this
             ->setTo($user->email)
-            ->setTemplate('reset_password')
             ->setSubject('CRI Account Password Reset')
             ->setViewVars([
                 'user' => $user,
@@ -69,5 +70,8 @@ class UserMailer extends Mailer
                 ], true),
             ])
             ->setDomain('cri.cberdata.org');
+        $email->viewBuilder()->setTemplate('reset_password');
+
+        return $email;
     }
 }

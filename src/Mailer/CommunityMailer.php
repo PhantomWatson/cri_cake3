@@ -18,7 +18,7 @@ class CommunityMailer extends Mailer
      */
     public function communityPromoted($user, $community, $toStep)
     {
-        return $this
+        $email = $this
             ->setTo($user['email'])
             ->setSubject('Community Readiness Initiative - Your community has advanced to Step ' . $toStep)
             ->setViewVars([
@@ -27,7 +27,9 @@ class CommunityMailer extends Mailer
                 'toStep' => $toStep,
                 'userName' => $user['name'],
             ])
-            ->setTemplate('community_promoted')
             ->setDomain('cri.cberdata.org');
+        $email->viewBuilder()->setTemplate('community_promoted');
+
+        return $email;
     }
 }

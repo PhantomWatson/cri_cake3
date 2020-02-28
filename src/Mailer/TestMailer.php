@@ -15,10 +15,13 @@ class TestMailer extends Mailer
      */
     public function test($recipient)
     {
-        return $this
+        $email = $this
             ->setTo($recipient)
             ->setSubject('CRI: Test email')
-            ->setTemplate('test')
             ->setDomain('cri.cberdata.org');
+
+        $email->viewBuilder()->setTemplate('test');
+
+        return $email;
     }
 }

@@ -27,7 +27,6 @@ class SurveyMailer extends Mailer
 
         $email = $this
             ->setTo($recipient)
-            ->setTemplate('survey_invitation')
             ->setSubject('Invitation to participate in Community Readiness Initiative questionnaire')
             ->setViewVars([
                 'clients' => $clients,
@@ -39,6 +38,7 @@ class SurveyMailer extends Mailer
         if ($sender['email']) {
             $email->setReplyTo($sender['email'], $sender['name']);
         }
+        $email->viewBuilder()->setTemplate('survey_invitation');
 
         return $email;
     }
@@ -64,7 +64,6 @@ class SurveyMailer extends Mailer
         $clients = $communitiesTable->getClients($communityId);
 
         $email = $this
-            ->setTemplate('survey_invitation')
             ->setTo($recipient)
             ->setSubject('Invitation to participate in Community Readiness Initiative questionnaire')
             ->setViewVars([
@@ -77,6 +76,7 @@ class SurveyMailer extends Mailer
         if ($senderEmail) {
             $email->setReplyTo($senderEmail, $senderName);
         }
+        $email->viewBuilder()->setTemplate('survey_invitation');
 
         return $email;
     }
