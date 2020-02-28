@@ -92,7 +92,7 @@ class EmailTestCommand extends Command
         $queuedJobs->createJob(
             'EmailTest',
             ['email' => $email],
-            ['reference' => $email],
+            ['reference' => $email]
         );
 
         return null;
