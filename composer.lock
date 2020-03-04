@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d8178f678c5e12719026759558ccd389",
+    "content-hash": "ce7cd8ace0ee9a3196f9deefa551271b",
     "packages": [
         {
             "name": "aura/intl",
@@ -2855,16 +2855,16 @@
         },
         {
             "name": "dereuromark/cakephp-ide-helper",
-            "version": "dev-master",
+            "version": "0.14.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dereuromark/cakephp-ide-helper.git",
-                "reference": "c3cf7c5909f3d2cfeab7c29bf597c5d1618f32d6"
+                "reference": "d193766d7636ed5eadd0e89dba732b7be2eaf08d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dereuromark/cakephp-ide-helper/zipball/c3cf7c5909f3d2cfeab7c29bf597c5d1618f32d6",
-                "reference": "c3cf7c5909f3d2cfeab7c29bf597c5d1618f32d6",
+                "url": "https://api.github.com/repos/dereuromark/cakephp-ide-helper/zipball/d193766d7636ed5eadd0e89dba732b7be2eaf08d",
+                "reference": "d193766d7636ed5eadd0e89dba732b7be2eaf08d",
                 "shasum": ""
             },
             "require": {
@@ -2920,7 +2920,7 @@
                 "phpstorm",
                 "plugin"
             ],
-            "time": "2020-02-05T14:49:22+00:00"
+            "time": "2020-02-24T15:27:54+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
